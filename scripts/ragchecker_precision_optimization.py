@@ -13,7 +13,7 @@ from typing import Any
 import numpy as np
 
 # Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))
+# sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 sys.path.insert(0, str(Path(__file__).parent))
 
 from ragchecker_enhanced_with_limit_features import EnhancedRAGCheckerWithLimitFeatures

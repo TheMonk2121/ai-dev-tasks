@@ -16,7 +16,7 @@ from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
 
 from evals.gold import gold_hit
-from evals.load_cases import load_eval_cases
+from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 # Ablation stages
 ABLATION_STAGES = [

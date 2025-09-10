@@ -85,6 +85,5 @@ echo ""
 echo "🚀 Running evaluation with precision push configuration..."
 echo "=========================================================="
 
-# Run the evaluation
-source venv/bin/activate
-python3 scripts/ragchecker_production_evaluation.py
+# Run the evaluation (uv-managed env)
+bin/py scripts/ragchecker_production_evaluation.py

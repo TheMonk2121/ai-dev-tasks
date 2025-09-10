@@ -71,7 +71,7 @@ export ANSWER_EVIDENCE_GATE=0.60
 
 # Run evaluation
 echo "🚀 Running evaluation with optimized configuration..."
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 echo ""
 echo "📊 Check results for:"

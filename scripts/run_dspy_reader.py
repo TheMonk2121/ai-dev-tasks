@@ -3,7 +3,7 @@ import json
 import os
 import sys
 
-sys.path.insert(0, "dspy-rag-system/src")
+# sys.path.insert(0, "dspy-rag-system/src")  # REMOVED: DSPy venv consolidated into main project
 import dspy
 from dspy_modules.dspy_reader_program import RAGAnswer, _lm
 

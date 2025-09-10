@@ -1441,10 +1441,11 @@ Return a JSON array of strings with exactly {k} reformulations:
 ["reformulation 1", "reformulation 2", ...]"""
 
         try:
-            payload = {"messages": [{"role": "user", "content": expansion_prompt}], "max_tokens": 500}
-            response = self.local_llm.bedrock_client.invoke_model_with_retries(
-                "anthropic.claude-3-5-sonnet-20240620-v1:0",
-                payload,
+            response, usage = self.local_llm.bedrock_client.invoke_model_with_retries(
+                prompt=expansion_prompt,
+                max_tokens=500,
+                temperature=0.1,
+                json_mode=True,
             )
 
             import json

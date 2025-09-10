@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 # Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))
+# sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 
 # Import the RAG Pipeline Governance system
 sys.path.insert(0, str(Path(__file__).parent.parent / "300_experiments"))

@@ -131,10 +131,10 @@ echo ""
 # Check if we should validate only
 if [ "$1" = "--validate" ]; then
     echo "🔍 Running configuration validation only..."
-    python3 scripts/ragchecker_final_ragas_push_evaluation.py --validate-only
+    bin/py scripts/ragchecker_final_ragas_push_evaluation.py --validate-only
 else
     echo "🎯 Running full 15-case evaluation with Haiku judge..."
-    python3 scripts/ragchecker_final_ragas_push_evaluation.py --output "final_ragas_push_results.json"
+    bin/py scripts/ragchecker_final_ragas_push_evaluation.py --output "final_ragas_push_results.json"
 fi
 
 echo ""

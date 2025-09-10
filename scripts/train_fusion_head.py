@@ -23,7 +23,7 @@ from torch.utils.data import DataLoader, TensorDataset
 # Add project root to path for imports
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
-sys.path.insert(0, str(project_root / "dspy-rag-system"))
+# sys.path.insert(0, str(project_root / "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 from train.fusion_dataset import build_pairs, load_gold_cases
 from train.fusion_head import FusionHead

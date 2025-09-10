@@ -96,7 +96,7 @@ echo ""
 echo "🚀 Running RAGAS-Competitive Evaluation..."
 echo ""
 
-python3 scripts/ragchecker_ragas_competitive_evaluation.py \
+bin/py scripts/ragchecker_ragas_competitive_evaluation.py \
     --output "metrics/ragas_competitive_evaluation_$(date +%Y%m%d_%H%M%S).json" \
     --test-cases 15
 

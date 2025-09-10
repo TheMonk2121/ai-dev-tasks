@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 # Add src to path for enhanced components
-sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))
+# sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 
 from dspy_modules.enhanced_answer_generator import create_enhanced_generator
 from dspy_modules.retrieval_pipeline import create_enhanced_pipeline

@@ -17,7 +17,7 @@ from dspy_modules.retriever.query_rewrite import PHRASE_HINTS, build_channel_que
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 from sentence_transformers import SentenceTransformer
 
-from evals.load_cases import load_eval_cases
+from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 READER_GOLD = os.getenv("READER_GOLD_FILE", "evals/reader_gold.jsonl")
 READER_ID_MAP = os.getenv("READER_ID_MAP")  # optional mapping of old_id -> new_id during migration

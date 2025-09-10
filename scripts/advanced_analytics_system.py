@@ -949,7 +949,7 @@ class TrendAnalyzer:
             future_x_norm = 1.0  # Next normalized time point
             prediction = np.polyval(coeffs, future_x_norm)
 
-            return max(0, prediction)  # Ensure non-negative
+            return max(0, float(prediction))  # Ensure non-negative
 
         except Exception as e:
             logger.warning(f"Failed to make prediction: {e}")

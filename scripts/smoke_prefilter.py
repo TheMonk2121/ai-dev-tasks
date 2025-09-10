@@ -17,7 +17,7 @@ from dspy_modules.retriever.query_rewrite import build_channel_queries
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 
 from evals.gold import gold_hit
-from evals.load_cases import load_eval_cases
+from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 ## Cases now come from evals/load_cases with CASES_FILE env var
 

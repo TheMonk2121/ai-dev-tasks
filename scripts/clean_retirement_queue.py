@@ -62,8 +62,9 @@ def main() -> int:
         group_sorted = sorted(group, key=lambda r: parse_date(r.get("first_quarantined_at", "9999-12-31")))
         base = dict(group_sorted[0])
         # reason: first non-empty
-        base["reason"] = next(
-            (r.get("reason") for r in group_sorted if r.get("reason")), base.get("reason", "quarantine")
+        base["reason"] = (
+            next((r.get("reason") for r in group_sorted if r.get("reason")), base.get("reason", "quarantine"))
+            or "quarantine"
         )
         # score: max as string comparison won't work for decimals; coerce to float
         try:

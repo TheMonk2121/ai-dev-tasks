@@ -25,21 +25,21 @@ def get_used_names(file_path: Path) -> set[str]:
                 used_names.add(node.attr)
             elif isinstance(node, ast.AnnAssign):
                 # Check type annotations
-                if hasattr(node.annotation, "id"):
+                if isinstance(node.annotation, ast.Name):
                     used_names.add(node.annotation.id)
-                elif hasattr(node.annotation, "slice"):
+                elif isinstance(node.annotation, ast.Subscript):
                     # Handle generic types like Dict[str, int]
-                    if hasattr(node.annotation.slice, "elts"):
+                    if isinstance(node.annotation.slice, ast.Tuple):
                         for elt in node.annotation.slice.elts:
-                            if hasattr(elt, "id"):
+                            if isinstance(elt, ast.Name):
                                 used_names.add(elt.id)
             elif isinstance(node, ast.FunctionDef):
                 # Check function return type annotations
-                if node.returns and hasattr(node.returns, "id"):
+                if node.returns and isinstance(node.returns, ast.Name):
                     used_names.add(node.returns.id)
                 # Check function parameter type annotations
                 for arg in node.args.args:
-                    if arg.annotation and hasattr(arg.annotation, "id"):
+                    if arg.annotation and isinstance(arg.annotation, ast.Name):
                         used_names.add(arg.annotation.id)
 
         return used_names

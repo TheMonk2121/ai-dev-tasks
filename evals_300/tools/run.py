@@ -18,6 +18,10 @@ except Exception:  # pragma: no cover - only hit if typer isn't installed
         class BadParameter(Exception):
             pass
 
+        class Option:
+            def __init__(self, *_, **__):
+                pass
+
         def __call__(self, *_, **__):
             pass
 
@@ -27,7 +31,16 @@ except Exception:  # pragma: no cover - only hit if typer isn't installed
 
             return _decorator
 
-    typer = _TyperStub()  # type: ignore
+    class TyperStub(_TyperStub):
+        Typer = _TyperStub
+
+        def command(self, *_, **__):
+            def _decorator(f):
+                return f
+
+            return _decorator
+
+    typer = TyperStub()  # type: ignore
 
 from src.config.resolve import effective_rerank_config
 
@@ -54,7 +67,21 @@ LAYER_DIR = Path("configs/evals_layers")
 LATEST_DIR = Path("metrics/latest")
 LATEST_DIR.mkdir(parents=True, exist_ok=True)
 
-app = typer.Typer() if _HAS_TYPER else typer  # type: ignore
+if _HAS_TYPER:
+    app = typer.Typer()
+else:
+
+    class AppStub:
+        def command(self, *_, **__):
+            def _decorator(f):
+                return f
+
+            return _decorator
+
+        def __call__(self, *_, **__):
+            pass
+
+    app = AppStub()
 
 
 def _load_layer(name: str) -> dict[str, str]:
@@ -232,13 +259,17 @@ def run_impl(
                     cases = TypeAdapter(list[CaseResult]).validate_python(case_dicts)  # type: ignore
 
                     # Build reranker config from environment
+                    # Parse and narrow device string to valid literal
+                    device_str = os.getenv("TORCH_DEVICE", "cpu")
+                    device = device_str if device_str in ("cpu", "cuda", "mps") else None
+
                     rr_cfg = RerankerConfig(
                         enable=os.getenv("RERANK_ENABLE", "1") == "1",
                         model=os.getenv("RERANK_MODEL", "bge-reranker-base"),
                         input_topk=int(os.getenv("RERANK_POOL", "60")),
                         keep=int(os.getenv("RERANK_TOPN", "18")),
                         batch=int(os.getenv("RERANK_BATCH", "8")),
-                        device=os.getenv("TORCH_DEVICE", "cpu"),
+                        device=device,
                         cache=bool(os.getenv("RERANK_CACHE_BACKEND", "1")),
                     )
 
@@ -246,11 +277,12 @@ def run_impl(
 
                     erun = EvaluationRun(
                         profile=os.getenv("EVAL_PROFILE", "default"),
+                        pass_id=os.getenv("EVAL_PASS_ID", "default_pass"),
                         driver=os.getenv("EVAL_DRIVER", "ragchecker"),
                         reranker=rr_cfg,
                         seed=int(os.getenv("SEED", "0")) or None,
-                        started_at=datetime.fromtimestamp(found_path.stat().st_mtime).isoformat(),
-                        finished_at=datetime.now().isoformat(),
+                        started_at=datetime.fromtimestamp(found_path.stat().st_mtime),
+                        finished_at=datetime.now(),
                         overall=overall,
                         artifact_paths={
                             "results_json": str(found_path),
@@ -274,27 +306,29 @@ def run_impl(
 
                 if os.getenv("EVAL_TIMESERIES_SINK", "0") == "1" and os.getenv("POSTGRES_DSN"):
                     run_uuid = uuid.uuid4()
-                    with psycopg.connect(os.getenv("POSTGRES_DSN")) as conn:
-                        with conn.cursor() as cur:
-                            cur.execute(
-                                """
-                                INSERT INTO evaluation_metrics
-                                  (ts, run_id, profile, pass_id, f1, precision, recall, faithfulness, artifact_path, git_sha)
-                                VALUES
-                                  (now(), %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                                """,
-                                (
-                                    run_uuid,
-                                    os.getenv("EVAL_PROFILE", "default"),
-                                    p.id,
-                                    payload.get("f1"),
-                                    payload.get("precision"),
-                                    payload.get("recall"),
-                                    payload.get("faithfulness"),
-                                    str(found_path),
-                                    repo_head().get("sha"),
-                                ),
-                            )
+                    postgres_dsn = os.getenv("POSTGRES_DSN")
+                    if postgres_dsn:
+                        with psycopg.connect(postgres_dsn) as conn:
+                            with conn.cursor() as cur:
+                                cur.execute(
+                                    """
+                                    INSERT INTO evaluation_metrics
+                                      (ts, run_id, profile, pass_id, f1, precision, recall, faithfulness, artifact_path, git_sha)
+                                    VALUES
+                                      (now(), %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                    """,
+                                    (
+                                        run_uuid,
+                                        os.getenv("EVAL_PROFILE", "default"),
+                                        p.id,
+                                        payload.get("f1"),
+                                        payload.get("precision"),
+                                        payload.get("recall"),
+                                        payload.get("faithfulness"),
+                                        str(found_path),
+                                        repo_head().get("sha"),
+                                    ),
+                                )
             except Exception:
                 pass
         else:
@@ -340,29 +374,35 @@ def run_impl(
 
 @app.command()
 def run(
-    suite: str = typer.Option(..., "--suite", "-s", help="Evaluation suite id (e.g., 300_core)"),
-    pass_id: str = typer.Option(..., "--pass", "-p", help="Evaluation pass id"),
-    out: str = typer.Option("", "--out", help="Optional output directory for artifacts"),
-    seed: int | None = typer.Option(None, "--seed", help="Optional random seed to export as SEED/FEW_SHOT_SEED"),
-    concurrency: int | None = typer.Option(None, "--concurrency", help="Optional max workers to export as MAX_WORKERS"),
+    suite: str = typer.Option(..., "--suite", "-s", help="Evaluation suite id (e.g., 300_core)"),  # type: ignore
+    pass_id: str = typer.Option(..., "--pass", "-p", help="Evaluation pass id"),  # type: ignore
+    out: str = typer.Option("", "--out", help="Optional output directory for artifacts"),  # type: ignore
+    seed: int | None = typer.Option(None, "--seed", help="Optional random seed to export as SEED/FEW_SHOT_SEED"),  # type: ignore
+    concurrency: int | None = typer.Option(None, "--concurrency", help="Optional max workers to export as MAX_WORKERS"),  # type: ignore
 ) -> None:
     # Delegate to implementation (keeps internal calls type-checkable)
     run_impl(suite=suite, pass_id=pass_id, out=(out or ""), seed=seed, concurrency=concurrency)
 
 
 if __name__ == "__main__":
-    app()
+    if _HAS_TYPER:
+        app()
+    else:
+        print("Typer not available, running in stub mode")
 
 
 @app.command()
 def run_ablation_suite(
-    suite: str = typer.Option(..., "--suite", "-s", help="Evaluation suite id (e.g., 300_core)"),
-    seed: int = typer.Option(42, "--seed", help="Random seed for both passes"),
-    concurrency: int = typer.Option(3, "--concurrency", help="Concurrency for both passes"),
+    suite: str = typer.Option(..., "--suite", "-s", help="Evaluation suite id (e.g., 300_core)"),  # type: ignore
+    seed: int = typer.Option(42, "--seed", help="Random seed for both passes"),  # type: ignore
+    concurrency: int = typer.Option(3, "--concurrency", help="Concurrency for both passes"),  # type: ignore
 ):
     """Runs reranker_ablation_off and _on and writes a comparison artifact."""
     _run_ablation_suite_impl(suite=suite, seed=seed, concurrency=concurrency)
 
 
 def main():  # legacy-compat import hook
-    app()
+    if _HAS_TYPER:
+        app()
+    else:
+        print("Typer not available, running in stub mode")

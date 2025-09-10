@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 # Add DSPy RAG system to path
-sys.path.insert(0, "dspy-rag-system/src")
+# sys.path.insert(0, "dspy-rag-system/src")  # REMOVED: DSPy venv consolidated into main project
 
 try:
     from litellm_compatibility_shim import patch_litellm_imports
@@ -27,7 +27,7 @@ try:
     from utils.database_resilience import get_database_manager
 except ImportError:
     # Fallback for when running from outside src directory
-    sys.path.insert(0, "dspy-rag-system/src")
+# sys.path.insert(0, "dspy-rag-system/src")  # REMOVED: DSPy venv consolidated into main project
     from utils.database_resilience import get_database_manager
 
 

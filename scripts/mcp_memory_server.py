@@ -28,7 +28,7 @@ from fastapi.responses import PlainTextResponse, StreamingResponse
 from pydantic import BaseModel
 
 # Add project paths
-sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))
+# sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 # Import your existing systems

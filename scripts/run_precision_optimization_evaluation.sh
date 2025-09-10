@@ -98,7 +98,7 @@ echo ""
 
 # Test single query first
 echo "🧪 Testing precision optimization on single query..."
-python3 scripts/ragchecker_precision_optimization.py \
+bin/py scripts/ragchecker_precision_optimization.py \
     --test-query "DSPy integration patterns" \
     --output "test_precision_optimization.json"
 
@@ -108,7 +108,7 @@ echo ""
 
 # Run full evaluation if single query shows promise
 echo "🚀 Running full precision optimization evaluation..."
-python3 scripts/ragchecker_ragas_competitive_evaluation.py \
+bin/py scripts/ragchecker_ragas_competitive_evaluation.py \
     --output "metrics/precision_optimized_evaluation_$(date +%Y%m%d_%H%M%S).json" \
     --test-cases 15
 

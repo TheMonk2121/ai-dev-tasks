@@ -25,6 +25,7 @@ try:
     # Optional DSPy imports (unused in this script’s simulation path)
     import importlib.util as _importlib_util  # noqa: F401
 
+    # DEPRECATED: dspy_rag_system module has been consolidated into main project
     # from dspy_rag_system.src.dspy_modules.rag_system import create_rag_interface  # noqa: F401
     # from dspy_rag_system.src.dspy_modules.vector_store import HybridVectorStore  # noqa: F401
     # from dspy_rag_system.src.utils.ltst_memory_system import LTSTMemorySystem  # noqa: F401

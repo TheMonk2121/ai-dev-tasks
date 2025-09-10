@@ -36,7 +36,7 @@ def test_ltst_import():
 
     try:
         # Try to import the updated LTST system
-        sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src"))
+# sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
         from utils.ltst_memory_system import LTSTMemorySystem
 
         print("✅ LTST Memory System imported successfully")

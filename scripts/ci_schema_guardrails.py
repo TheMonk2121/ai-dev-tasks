@@ -72,7 +72,11 @@ def run_schema_tests():
     print("🔍 Running schema tests...")
 
     try:
-        result = subprocess.run(["python3", "tests/test_schema_roundtrip.py"], capture_output=True, text=True)
+        result = subprocess.run(
+            ["python3", "-m", "pytest", "tests/test_schema_roundtrip.py", "tests/test_enhanced_schemas.py", "-q"],
+            capture_output=True,
+            text=True,
+        )
 
         if result.returncode != 0:
             print("❌ Schema tests failed:")

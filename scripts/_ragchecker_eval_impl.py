@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 
 # Setup observability if available
@@ -79,6 +80,12 @@ dspy_rag_path = os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src")
 if dspy_rag_path and dspy_rag_path not in sys.path:
     sys.path.insert(0, dspy_rag_path)
 
+# Optional: import reranker env shim globally so it's available where needed
+try:
+    from src.rag import reranker_env as RENV  # type: ignore
+except Exception:  # noqa: F401 - keep a sentinel for type checkers
+    RENV = None  # type: ignore
+
 # Reader + snippetizer
 try:
     from dspy_modules.reader.program import ExtractiveReader
@@ -110,26 +117,22 @@ def _assemble_passages(retrieval_rows, q, tag):
 
 
 def load_cases_any(path: str):
-    """Load cases from either JSON or JSONL format."""
-    import pathlib
+    """Load cases from either JSON or JSONL format using Pydantic Evals framework."""
+    import warnings
 
-    p = pathlib.Path(path)
-    text = p.read_text(encoding="utf-8").strip()
-    # JSONL?
-    if "\n{" in text or text.startswith("{") and "\n" in text:
-        # Heuristic: try JSONL first
-        try:
-            return [json.loads(line) for line in text.splitlines() if line.strip()]
-        except json.JSONDecodeError:
-            pass
-    # JSON array fallback
-    try:
-        obj = json.loads(text)
-        if isinstance(obj, list):
-            return obj
-    except json.JSONDecodeError:
-        raise
-    raise ValueError(f"Unsupported cases format: {path}")
+    # Issue deprecation warning
+    warnings.warn(
+        "load_cases_any is deprecated. Use scripts.migrate_to_pydantic_evals.load_eval_cases instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+
+    # Use the new Pydantic Evals framework
+    from scripts.migrate_to_pydantic_evals import load_eval_cases
+
+    # Convert to legacy format for compatibility
+    cases = load_eval_cases(path)
+    return [case.model_dump() for case in cases]
 
 
 class DspyRagDriver:
@@ -486,17 +489,16 @@ class CleanRAGCheckerEvaluator:
 
         # Include resolved reranker config
         try:
-            from src.rag import reranker_env as RENV  # type: ignore
-
-            results["reranker_config"] = {
-                "enable": int(getattr(RENV, "RERANK_ENABLE", False)),
-                "model": getattr(RENV, "RERANKER_MODEL", None),
-                "input_topk": getattr(RENV, "RERANK_INPUT_TOPK", None),
-                "keep": getattr(RENV, "RERANK_KEEP", None),
-                "batch": getattr(RENV, "RERANK_BATCH", None),
-                "device": getattr(RENV, "TORCH_DEVICE", None),
-                "cache": getattr(RENV, "RERANK_CACHE_BACKEND", None),
-            }
+            if RENV is not None:
+                results["reranker_config"] = {
+                    "enable": int(getattr(RENV, "RERANK_ENABLE", False)),
+                    "model": getattr(RENV, "RERANKER_MODEL", None),
+                    "input_topk": getattr(RENV, "RERANK_INPUT_TOPK", None),
+                    "keep": getattr(RENV, "RERANK_KEEP", None),
+                    "batch": getattr(RENV, "RERANK_BATCH", None),
+                    "device": getattr(RENV, "TORCH_DEVICE", None),
+                    "cache": getattr(RENV, "RERANK_CACHE_BACKEND", None),
+                }
         except Exception:
             pass
 
@@ -535,7 +537,7 @@ class CleanRAGCheckerEvaluator:
         self, cases_file: str, outdir: str, use_bedrock: bool = False, reader=None, args=None
     ) -> dict[str, Any]:
         """Run evaluation with real DSPy RAG system."""
-        start_wall = time.strftime("%Y-%m-%dT%H:%M:%S")
+        start_wall = datetime.now()
         print("📊 EVALUATION SUMMARY (CLEAN HARNESS)")
         print("=" * 60)
 
@@ -746,7 +748,7 @@ class CleanRAGCheckerEvaluator:
                 case_id = case.get("id", f"case_{i}")
                 log_scoring_span(logfire, case_id, precision, recall, f1_score)
             try:
-                total_faithfulness
+                _ = total_faithfulness
             except NameError:
                 total_faithfulness = 0.0
             total_faithfulness += faithfulness
@@ -799,27 +801,27 @@ class CleanRAGCheckerEvaluator:
                 rr_cfg = {
                     "enable": (
                         int(getattr(RENV, "RERANK_ENABLE", int(os.getenv("RERANK_ENABLE", "1")))) == 1
-                        if "RENV" in globals()
+                        if RENV is not None
                         else (os.getenv("RERANK_ENABLE", "1") == "1")
                     ),
                     "model": (
                         getattr(RENV, "RERANKER_MODEL", os.getenv("RERANK_MODEL", "bge-reranker-base"))
-                        if "RENV" in globals()
+                        if RENV is not None
                         else os.getenv("RERANK_MODEL", "bge-reranker-base")
                     ),
                     "input_topk": (
                         getattr(RENV, "RERANK_INPUT_TOPK", int(os.getenv("RERANK_POOL", "60")))
-                        if "RENV" in globals()
+                        if RENV is not None
                         else int(os.getenv("RERANK_POOL", "60"))
                     ),
                     "keep": (
                         getattr(RENV, "RERANK_KEEP", int(os.getenv("RERANK_TOPN", "18")))
-                        if "RENV" in globals()
+                        if RENV is not None
                         else int(os.getenv("RERANK_TOPN", "18"))
                     ),
                     "batch": (
                         getattr(RENV, "RERANK_BATCH", int(os.getenv("RERANK_BATCH", "8")))
-                        if "RENV" in globals()
+                        if RENV is not None
                         else int(os.getenv("RERANK_BATCH", "8"))
                     ),
                     "device": os.getenv("TORCH_DEVICE", "cpu"),
@@ -827,11 +829,12 @@ class CleanRAGCheckerEvaluator:
                 }
                 erun = EvaluationRun(
                     profile=os.getenv("EVAL_PROFILE", "default"),
+                    pass_id=os.getenv("EVAL_PASS_ID", "default"),
                     driver=tag,
                     reranker=RerankerConfig(**rr_cfg),
                     seed=int(os.getenv("SEED", str(getattr(args, "seed", 0) or 0))) or None,
                     started_at=start_wall,
-                    finished_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    finished_at=datetime.now(),
                     overall=results.get("overall_metrics", {}),
                     artifact_paths={
                         "results_json": str(out_file),

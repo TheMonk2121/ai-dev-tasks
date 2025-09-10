@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any
 
 # Add the dspy-rag-system src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 
 
 @dataclass

@@ -10,7 +10,7 @@ import os
 import sys
 
 # Add dspy-rag-system/src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 
 from utils.predictive_intelligence import PredictiveIntelligence
 

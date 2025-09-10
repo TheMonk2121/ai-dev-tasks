@@ -14,7 +14,7 @@ from functools import wraps
 from typing import Any
 
 # Add dspy-rag-system to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
     from pydantic import BaseModel, Field, ValidationError

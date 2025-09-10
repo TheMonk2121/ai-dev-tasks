@@ -19,7 +19,7 @@ from dspy_modules.retriever.query_rewrite import build_channel_queries
 from dspy_modules.retriever.weights import load_weights
 
 from evals.gold import gold_hit
-from evals.load_cases import load_eval_cases
+from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 GRID = {
     "w_path": [2.0, 2.2, 2.4],

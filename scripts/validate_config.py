@@ -126,7 +126,7 @@ def dump_pydantic_schemas() -> None:
     # Add dspy-rag-system to path for imports
     import sys
 
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "dspy-rag-system"))
+# sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
     # Import locally to avoid heavy imports on unrelated runs
     from ragchecker_pydantic_models import RAGCheckerInput, RAGCheckerMetrics, RAGCheckerResult

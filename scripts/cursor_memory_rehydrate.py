@@ -47,7 +47,7 @@ except ImportError:
     print("⚠️  venv_manager not available - continuing without venv check")
 
 # Add the dspy-rag-system src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 
 # Note: Import of memory_rehydrator functions moved to main() where they're actually used
 
@@ -172,7 +172,7 @@ def main():
     except ImportError:
         try:
             # Fallback to direct path
-            sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
             from utils.memory_rehydrator import rehydrate
         except ImportError:
             print("❌ Error: Could not import memory_rehydrator module")

@@ -29,7 +29,7 @@ from _bootstrap import ROOT, SRC  # noqa: F401
 
 sys.path.insert(0, str(SRC))
 
-from evals.load_cases import load_eval_cases
+from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 # Import reader gate helpers
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))

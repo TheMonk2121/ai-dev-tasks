@@ -18,7 +18,7 @@ from datetime import datetime
 from typing import Any
 
 # Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 
 from utils.conversation_storage import ConversationMessage, ConversationSession
 from utils.logger import setup_logger

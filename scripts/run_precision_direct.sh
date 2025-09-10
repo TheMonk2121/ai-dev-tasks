@@ -65,7 +65,7 @@ echo ""
 
 # Run evaluation WITHOUT --stable flag to avoid loading stable config
 echo "🚀 Running evaluation with direct precision optimization..."
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 echo ""
 echo "📊 Check results for:"

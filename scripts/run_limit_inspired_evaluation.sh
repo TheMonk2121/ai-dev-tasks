@@ -11,7 +11,7 @@ echo "=============================================="
 export AWS_REGION=us-east-1
 
 echo "📋 Applying LIMIT-inspired configuration..."
-python3 scripts/limit_inspired_precision_recovery.py
+bin/py scripts/limit_inspired_precision_recovery.py
 
 echo ""
 echo "🚀 Running LIMIT-inspired evaluation..."
@@ -24,7 +24,7 @@ if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
   FAST_FLAG="--fast-mode"
 fi
 
-python3 scripts/ragchecker_limit_inspired_evaluation.py \
+bin/py scripts/ragchecker_limit_inspired_evaluation.py \
     ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/limit_inspired_evaluation_$(date +%s).json"
 

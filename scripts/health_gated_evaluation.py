@@ -119,7 +119,9 @@ class HealthGatedEvaluator:
 
         # Check if database has data
         try:
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            # DEPRECATED: dspy_rag_system module has been consolidated into main project
+            # from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            from src.common.db_dsn import get_dsn
 
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -168,7 +170,9 @@ class HealthGatedEvaluator:
         print("  🗄️ Checking database connectivity...")
 
         try:
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            # DEPRECATED: dspy_rag_system module has been consolidated into main project
+            # from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            from src.common.db_dsn import get_dsn
 
             db_manager = get_database_manager()
 

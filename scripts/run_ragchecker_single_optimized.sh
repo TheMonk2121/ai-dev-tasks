@@ -59,4 +59,4 @@ export RAGCHECKER_EVIDENCE_MAX_SENT=8
 export RAGCHECKER_EVIDENCE_KEEP_PERCENTILE=70
 
 # Run RAGChecker with optimized single key
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli

@@ -36,7 +36,7 @@ def env_to_dict(env_path: str) -> dict[str, str]:
     return env_dict
 
 
-def dict_to_env(env_dict: dict[str, str], header: str = None) -> str:
+def dict_to_env(env_dict: dict[str, str], header: str | None = None) -> str:
     """Convert dictionary to .env file content"""
     lines = []
     if header:

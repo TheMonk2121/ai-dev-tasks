@@ -7,7 +7,7 @@ import os
 import sys
 
 # Add the dspy-rag-system src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 
 
 def test_dspy_ltst_integration():

@@ -197,7 +197,9 @@ class NightlySmokeEvaluator:
     def _test_database_connectivity(self) -> dict[str, Any]:
         """Test database connectivity."""
         try:
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            # DEPRECATED: dspy_rag_system module has been consolidated into main project
+            # from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            from src.common.db_dsn import get_dsn
 
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -262,7 +264,9 @@ class NightlySmokeEvaluator:
     def _test_document_ingestion(self) -> dict[str, Any]:
         """Test document ingestion workflow."""
         try:
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            # DEPRECATED: dspy_rag_system module has been consolidated into main project
+            # from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            from src.common.db_dsn import get_dsn
 
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -280,7 +284,9 @@ class NightlySmokeEvaluator:
     def _test_chunk_processing(self) -> dict[str, Any]:
         """Test chunk processing workflow."""
         try:
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            # DEPRECATED: dspy_rag_system module has been consolidated into main project
+            # from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            from src.common.db_dsn import get_dsn
 
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -298,7 +304,9 @@ class NightlySmokeEvaluator:
     def _test_vector_indexing(self) -> dict[str, Any]:
         """Test vector indexing."""
         try:
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            # DEPRECATED: dspy_rag_system module has been consolidated into main project
+            # from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            from src.common.db_dsn import get_dsn
 
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -316,7 +324,9 @@ class NightlySmokeEvaluator:
     def _test_metadata_consistency(self) -> dict[str, Any]:
         """Test metadata consistency."""
         try:
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            # DEPRECATED: dspy_rag_system module has been consolidated into main project
+            # from dspy_rag_system.src.utils.database_resilience import get_database_manager
+            from src.common.db_dsn import get_dsn
 
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
