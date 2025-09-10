@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run python
 """
 Unified Workflow: Backlog ID → Executable Tasks (One Command)
 
 Usage:
-  python3 scripts/unified_workflow.py B-0001 --execute
-  python3 scripts/unified_workflow.py B-0001 --preview
-  python3 scripts/unified_workflow.py B-0001 --context-only
+  uv run python scripts/unified_workflow.py B-0001 --execute
+  uv run python scripts/unified_workflow.py B-0001 --preview
+  uv run python scripts/unified_workflow.py B-0001 --context-only
 
 Flow:
   1. Extract context bundle from backlog ID
@@ -102,9 +102,9 @@ def create_execution_plan(backlog_id: str, context: dict[str, Any], prd_path: st
         "next_steps": next_steps,
         "priority": priority,
         "commands": {
-            "context": f"python3 scripts/handoff_context.py {backlog_id}",
-            "prd": f"python3 scripts/template_integrator.py {backlog_id} --generate-prd" if not prd_path else None,
-            "pickup": f"python3 scripts/unified_workflow.py {backlog_id} --context-only",
+            "context": f"uv run python scripts/handoff_context.py {backlog_id}",
+            "prd": f"uv run python scripts/template_integrator.py {backlog_id} --generate-prd" if not prd_path else None,
+            "pickup": f"uv run python scripts/unified_workflow.py {backlog_id} --context-only",
         },
     }
 
@@ -165,9 +165,9 @@ def main() -> None:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python3 scripts/unified_workflow.py B-0001 --execute
-  python3 scripts/unified_workflow.py B-0001 --preview
-  python3 scripts/unified_workflow.py B-0001 --context-only
+  uv run python scripts/unified_workflow.py B-0001 --execute
+  uv run python scripts/unified_workflow.py B-0001 --preview
+  uv run python scripts/unified_workflow.py B-0001 --context-only
         """,
     )
     ap.add_argument("backlog_id", help="Backlog ID (e.g., B-0001)")
@@ -195,7 +195,7 @@ Examples:
 **Where**: {where}
 **Next**: {next_action}
 
-**Full context**: `python3 scripts/handoff_context.py {args.backlog_id} --format json`
+**Full context**: `uv run python scripts/handoff_context.py {args.backlog_id} --format json`
 """
         )
         return
