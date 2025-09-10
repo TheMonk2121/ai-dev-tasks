@@ -23,13 +23,15 @@ jobs:
           python3 scripts/lib/config_loader.py --profile real --help || true
           echo "✅ Real profile configuration validated"
       
+      - name: Setup environment
+        run: |
+          echo "POSTGRES_DSN=${{ secrets.POSTGRES_DSN }}" >> $GITHUB_ENV
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
+          echo "BEDROCK_REGION=${{ secrets.BEDROCK_REGION }}" >> $GITHUB_ENV
+          echo "BEDROCK_ACCESS_KEY=${{ secrets.BEDROCK_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "BEDROCK_SECRET_KEY=${{ secrets.BEDROCK_SECRET_KEY }}" >> $GITHUB_ENV
+
       - name: Eval (real, higher concurrency)
-        env:
-          POSTGRES_DSN: ${{ secrets.POSTGRES_DSN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          BEDROCK_REGION: ${{ secrets.BEDROCK_REGION }}
-          BEDROCK_ACCESS_KEY: ${{ secrets.BEDROCK_ACCESS_KEY }}
-          BEDROCK_SECRET_KEY: ${{ secrets.BEDROCK_SECRET_KEY }}
         run: |
           ./scripts/eval_real.sh --concurrency 12
       
