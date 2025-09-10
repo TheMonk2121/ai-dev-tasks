@@ -114,7 +114,8 @@ class VenvManager:
         # Check if venv exists
         if not self.venv_exists():
             print(f"❌ Virtual environment not found at {self.venv_path}")
-            print("💡 Create it with: uv venv --python 3.12")
+            print("💡 Please create it manually with: uv venv --python 3.12")
+            print("💡 Then run: uv sync")
             return False
 
         # Try to activate if not already active

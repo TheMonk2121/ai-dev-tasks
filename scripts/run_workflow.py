@@ -16,8 +16,9 @@ def main():
     # Ensure we're in the project root
     project_root = Path(__file__).parent.parent
     if not (project_root / ".venv").exists():
-        print("❌ Virtual environment not found")
-        print("💡 Create it with: uv venv --python 3.12")
+        print("❌ Virtual environment not found at .venv/")
+        print("💡 Please create it manually with: uv venv --python 3.12")
+        print("💡 Then run: uv sync")
         sys.exit(1)
 
     # Check venv status

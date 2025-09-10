@@ -42,16 +42,10 @@ if [ -d ".venv" ]; then
         exit 1
     fi
 else
-    echo "⚠️ No virtual environment found. Creating one..."
-    uv venv --python 3.12
-    if [ -f ".venv/bin/activate" ]; then
-        # shellcheck source=/dev/null
-        source .venv/bin/activate
-        echo "✅ Virtual environment created and activated"
-    else
-        echo "❌ Error: Failed to create virtual environment"
-        exit 1
-    fi
+    echo "❌ Error: Virtual environment not found at .venv/"
+    echo "💡 Please create it manually with: uv venv --python 3.12"
+    echo "💡 Then run: uv sync"
+    exit 1
 fi
 
 echo ""

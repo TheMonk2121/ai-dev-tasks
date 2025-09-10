@@ -8,7 +8,6 @@ set -e
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
@@ -24,22 +23,13 @@ fi
 
 # Check if virtual environment exists
 if [ ! -f ".venv/bin/python" ]; then
-    echo -e "${YELLOW}⚠️  Virtual environment not found${NC}"
-    echo "💡 Creating virtual environment with uv..."
-    if ! command -v uv >/dev/null 2>&1; then
-        echo -e "${RED}❌ Error: uv is required but not installed${NC}"
-        echo "💡 Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
-        exit 1
-    fi
-    uv venv --python 3.12
-    echo "💡 Installing dependencies with uv..."
-    if ! uv sync; then
-        echo -e "${YELLOW}⚠️  Dependency installation failed, continuing without full dependencies${NC}"
-        echo "💡 This is expected due to version conflicts - the memory system will work with basic functionality"
-    fi
+    echo -e "${RED}❌ Virtual environment not found at .venv/${NC}"
+    echo "💡 Please create it manually with: uv venv --python 3.12"
+    echo "💡 Then run: uv sync"
+    exit 1
 else
     echo -e "${GREEN}✅ Virtual environment found${NC}"
-    echo "💡 Using existing virtual environment - no dependency installation needed"
+    echo "💡 Using existing virtual environment"
 fi
 
 # Default values
