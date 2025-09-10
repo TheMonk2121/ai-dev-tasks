@@ -135,7 +135,7 @@ class TaskStatusUpdater:
             print("\n🎉 **All Tasks Complete!**")
 
 
-def update_and_display_task_status(task_file: str, completed_task_id: str = None) -> None:
+def update_and_display_task_status(task_file: str, completed_task_id: str | None = None) -> None:
     """
     Update task status and display the current state.
 

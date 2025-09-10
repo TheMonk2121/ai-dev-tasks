@@ -27,7 +27,7 @@
 ### **📚 Testing Documentation & Methodology**
 - **[300_testing-methodology-log.md](300_testing-methodology-log.md)** - Testing strategies, methodologies, and lessons learned
 - **[300_complete-testing-coverage.md](300_complete-testing-coverage.md)** - Complete testing coverage overview and analysis
-- **[300_testing-infrastructure-guide.md](300_testing-infrastructure-guide.md)** - Testing infrastructure setup and configuration
+- **[300_testing-methodology-log.md](300_testing-methodology-log.md)** - Testing infrastructure setup and configuration
 - **[300_historical-testing-archive.md](300_historical-testing-archive.md)** - Historical testing results and learnings
 
 ### **🔍 Specialized Testing Results**
@@ -106,7 +106,7 @@ ls -la baseline_results/
 
 **Current Testing Status**: Check `300_testing-methodology-log.md`
 **Testing Coverage**: Review `300_complete-testing-coverage.md`
-**Testing Infrastructure**: See `300_testing-infrastructure-guide.md`
+**Testing Infrastructure**: See `300_testing-methodology-log.md`
 **Historical Results**: Browse `300_historical-testing-archive.md`
 
 ---

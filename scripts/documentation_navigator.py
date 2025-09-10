@@ -85,7 +85,7 @@ def get_documentation_inventory() -> dict[str, list[str]]:
     }
 
 
-def get_context_guidance() -> dict[str, list[str]]:
+def get_context_guidance() -> dict[str, list[str] | dict[str, list[str]]]:
     """Get context-specific guidance for when to read what"""
     return {
         "NEW_SESSIONS": [

@@ -4,7 +4,7 @@
 
 # start templated
 # Resolve repo root and point to project-local .venv
-REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo "$(cd "$(dirname "$0")"/.. && pwd)")"
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "$0")"/.. && pwd))"
 INSTALL_PYTHON="$REPO_ROOT/.venv/bin/python3"
 ARGS=(hook-impl --config=.pre-commit-config.yml --hook-type=pre-commit)
 # end templated

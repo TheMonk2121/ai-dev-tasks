@@ -53,7 +53,7 @@ class CodeReviewIssue:
 class CodeReviewCore:
     """Core code review process implementation."""
 
-    def __init__(self, project_root: str = None):
+    def __init__(self, project_root: str | None = None):
         self.project_root = Path(project_root) if project_root else Path.cwd()
         self.reviews_dir = self.project_root / ".cache" / "code_reviews"
         self.reviews_dir.mkdir(parents=True, exist_ok=True)
@@ -69,7 +69,7 @@ class CodeReviewCore:
         except ImportError:
             logger.warning("Performance monitoring not available")
 
-    def start_review(self, review_id: str, target_paths: list[str] = None) -> CodeReviewMetrics:
+    def start_review(self, review_id: str, target_paths: list[str] | None = None) -> CodeReviewMetrics:
         """Start a new code review session."""
         logger.info(f"🔍 Starting code review: {review_id}")
 
@@ -85,7 +85,7 @@ class CodeReviewCore:
 
         return self.current_review
 
-    def _start_review_internal(self, review_id: str, target_paths: list[str] = None):
+    def _start_review_internal(self, review_id: str, target_paths: list[str] | None = None):
         """Internal review start implementation."""
         if target_paths is None:
             target_paths = ["scripts/", "dspy-rag-system/src/"]

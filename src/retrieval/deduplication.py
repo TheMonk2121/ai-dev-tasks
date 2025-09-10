@@ -21,9 +21,10 @@ try:
     HAS_SKLEARN = True
 except ImportError:
     HAS_SKLEARN = False
-    cosine_similarity = None
-    TfidfVectorizer = None
-    np = None
+    from typing import Any as _Any
+    cosine_similarity: _Any = None
+    TfidfVectorizer: _Any = None
+    np: _Any = None
 
 
 class CosineDeduplicator:

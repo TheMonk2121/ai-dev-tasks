@@ -195,7 +195,7 @@ class EvaluationSuiteRunner:
 
         return {"status": "skipped", "reason": "no_gates_for_ops_smoke"}
 
-    def run_full_suite(self, eval_types: list[str] = None) -> dict[str, Any]:
+    def run_full_suite(self, eval_types: list[str] | None = None) -> dict[str, Any]:
         """Run full evaluation suite."""
         if eval_types is None:
             eval_types = ["ops_smoke", "repo_gold"]

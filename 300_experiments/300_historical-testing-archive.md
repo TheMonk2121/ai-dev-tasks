@@ -310,8 +310,8 @@ This archive preserves all the valuable testing knowledge, strategies, and lesso
 - **[300_integration-testing-results.md](300_integration-testing-results.md)** - Current integration testing
 
 ### **Related Guides**
-- **[400_06_memory-and-context-systems.md](../400_guides/400_06_memory-and-context-systems.md)** - Memory system architecture
-- **[400_08_integrations-editor-and-models.md](../400_guides/400_08_integrations-editor-and-models.md)** - Integration patterns
+- **[Cursor Memory Context](../100_memory/100_cursor-memory-context.md)** - Memory system architecture
+- **[Integrations: Models](../400_guides/400_10_integrations-models.md)** - Integration patterns
 
 ## 🔄 **Maintenance & Updates**
 

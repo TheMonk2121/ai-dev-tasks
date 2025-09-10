@@ -121,7 +121,7 @@ class ONNXCrossEncoder:
         self.input_names = [input.name for input in self.session.get_inputs()]
         self.output_names = [output.name for output in self.session.get_outputs()]
 
-    def encode_pairs(self, query_doc_pairs: list[tuple[str, str]]) -> dict[str, np.ndarray]:
+    def encode_pairs(self, query_doc_pairs: list[tuple[str, str]]) -> dict[str, Any]:
         """Tokenize query-document pairs for ONNX model."""
 
         queries = [pair[0] for pair in query_doc_pairs]
@@ -134,7 +134,7 @@ class ONNXCrossEncoder:
 
         return {name: encoded[name] for name in self.input_names if name in encoded}
 
-    def predict_scores(self, inputs: dict[str, np.ndarray]) -> np.ndarray:
+    def predict_scores(self, inputs: dict[str, Any]) -> Any:
         """Run ONNX inference to get relevance scores."""
 
         outputs = self.session.run(self.output_names, inputs)

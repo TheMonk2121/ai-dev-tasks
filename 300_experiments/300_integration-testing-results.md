@@ -419,8 +419,8 @@ This log tracks detailed testing results for system integration between differen
 - **[300_memory-system-testing.md](300_memory-system-testing.md)** - Memory system testing results
 
 ### **Related Guides**
-- **[400_06_memory-and-context-systems.md](../400_guides/400_06_memory-and-context-systems.md)** - Memory system architecture
-- **[400_08_integrations-editor-and-models.md](../400_guides/400_08_integrations-editor-and-models.md)** - Integration patterns
+- **[Cursor Memory Context](../100_memory/100_cursor-memory-context.md)** - Memory system architecture
+- **[Integrations: Models](../400_guides/400_10_integrations-models.md)** - Integration patterns
 
 ## 🔄 **Maintenance & Updates**
 

@@ -140,6 +140,10 @@ exclude = [
     "docs/legacy",
     "**/__pycache__",
     "dspy-rag-system/**", # Exclude entire dspy-rag-system for migration
+    "scripts/demos/**",
+    "**/scripts/demos/**",
+    "**/scripts/*evaluation*",
+    "**/scripts/*prototype*",
 ]
 
 [tool.ruff.lint]
@@ -224,5 +228,19 @@ update_changelog_on_bump = true
 allow_unconventional_commits = true
 
 [tool.commitizen.customize]
-allowed_types = ["feat", "fix", "refactor", "docs", "chore", "ci", "test", "build", "bump", "perf", "revert", "style", "merge"]
+allowed_types = [
+    "feat",
+    "fix",
+    "refactor",
+    "docs",
+    "chore",
+    "ci",
+    "test",
+    "build",
+    "bump",
+    "perf",
+    "revert",
+    "style",
+    "merge",
+]
 message_template = "{type}{scope}: {subject}\n\n{body}\n\n{footer}"

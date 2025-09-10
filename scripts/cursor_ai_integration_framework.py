@@ -560,6 +560,27 @@ class CursorAIIntegrationFramework:
         self.fallback_to_native = enabled
         logger.info(f"Fallback to native AI {'enabled' if enabled else 'disabled'}")
 
+    # Compatibility shim for integrations expecting a dict interface
+    def process_code_review_request(self, ai_request: dict[str, Any]) -> dict[str, Any]:
+        """Process a code review request in dict form and return suggestions.
+
+        This bridges older integration code that passes a plain dict.
+        """
+        try:
+            issues = ai_request.get("issues", [])
+            suggestions = [
+                {
+                    "issue_id": i.get("issue_id", f"issue_{idx}"),
+                    "action": "review_and_fix",
+                    "priority": i.get("severity", "medium"),
+                }
+                for idx, i in enumerate(issues)
+            ]
+            return {"suggestions": suggestions, "received": True}
+        except Exception as e:
+            logger.error(f"process_code_review_request failed: {e}")
+            return {"suggestions": [], "received": False, "error": str(e)}
+
 
 def _env_bool(name: str, default: bool) -> bool:
     """Read boolean from environment with sensible defaults."""

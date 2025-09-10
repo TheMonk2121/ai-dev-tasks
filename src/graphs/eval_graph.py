@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from typing import TYPE_CHECKING, Any, Literal
 
-try:
-    from pydantic_graph.graph import Graph
-    from pydantic_graph.nodes import End, Node
-except Exception:
-    # Defer hard dependency: allow import in environments without pydantic-graph installed
+if TYPE_CHECKING:
+    from pydantic_graph.graph import Graph  # type: ignore
+    from pydantic_graph.nodes import End, Node  # type: ignore
+else:
     Graph = object  # type: ignore
     End = object  # type: ignore
-    Node = object  # type: ignore
+    class Node:  # type: ignore
+        pass
 
 from src.schemas.eval import CaseResult, ContextChunk, RetrievalCandidate
 
@@ -41,36 +42,45 @@ class Score(Node[CaseResult]):
     def run(
         self,
         case_id: str,
-        mode: str,
+        mode: Literal["rag", "baseline", "oracle"],
         tags: list[str],
         query: str,
         candidates: list[RetrievalCandidate],
         used: list[ContextChunk] | None = None,
     ) -> CaseResult:
         # Minimal scoring using existing harness logic (Jaccard-based metrics)
-        from scripts._ragchecker_eval_impl import CleanRAGCheckerEvaluator
+        try:
+            from scripts._ragchecker_eval_impl import CleanRAGCheckerEvaluator  # type: ignore
+        except Exception:
+            CleanRAGCheckerEvaluator = None  # type: ignore
 
-        ev = CleanRAGCheckerEvaluator()
-        # Build a faux case_result payload and reuse evaluator compute helpers
-        retrieved_context = [c.chunk for c in candidates][:12]
-        precision = ev._calculate_precision("", "", query)
-        recall = ev._calculate_recall("", "")
-        f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+        precision = recall = f1 = 0.0
+        if CleanRAGCheckerEvaluator is not None:
+            ev = CleanRAGCheckerEvaluator()
+            precision = ev._calculate_precision("", "", query)
+            recall = ev._calculate_recall("", "")
+            f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+
+        # Convert candidates to ContextChunk list for schema compatibility
+        retrieved_context = [
+            ContextChunk(source_id=c.doc_id, text=c.chunk) for c in candidates[:12]
+        ]
+
         return CaseResult(
-            id=case_id,
+            case_id=case_id,
             mode=mode,
-            tags=tags,
             query=query,
             predicted_answer="",
             retrieved_context=retrieved_context,
             retrieval_snapshot=candidates,
-            metrics={"precision": precision, "recall": recall, "f1": f1},
-            timings={},
+            precision=precision,
+            recall=recall,
+            f1=f1,
         )
 
 
-def build_graph() -> Graph:
-    g = Graph(nodes=[LoadCases(), Retrieve(), Score()])
+def build_graph() -> Any:
+    g = Graph(nodes=[LoadCases(), Retrieve(), Score()])  # type: ignore
     return g
 
 

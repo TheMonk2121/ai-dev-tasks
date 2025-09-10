@@ -56,7 +56,7 @@ class CaseResult(BaseModel):
 
 
 class EvaluationRun(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid", computed_fields_exclude=True)
+    model_config = ConfigDict(strict=True, extra="forbid")
     run_id: UUID = Field(default_factory=uuid4)
     started_at: datetime
     finished_at: datetime | None = None

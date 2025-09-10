@@ -23,7 +23,7 @@ sys.path.insert(0, str(dspy_rag_path))
 from src.utils.config_lock import ConfigLockManager, LockedConfig, ShadowIndexManager
 
 
-def run_command(cmd: str, cwd: Path = None) -> subprocess.CompletedProcess:
+def run_command(cmd: str, cwd: Path | None = None) -> subprocess.CompletedProcess:
     """Run a command and return the result"""
     print(f"🔧 Running: {cmd}")
     result = subprocess.run(

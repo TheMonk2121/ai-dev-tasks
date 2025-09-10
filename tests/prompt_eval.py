@@ -64,7 +64,7 @@ class PromptEvaluator:
             "cache_hits": 0.3 + (threshold - 0.80) * 0.4,
         }
 
-    def run_evaluation(self, prompt_category: str = None) -> dict[str, Any]:
+    def run_evaluation(self, prompt_category: str | None = None) -> dict[str, Any]:
         """Run prompt evaluation with current configuration."""
         if self.config.dynamic_threshold and prompt_category:
             threshold = self.choose_threshold(prompt_category)

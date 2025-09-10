@@ -16,7 +16,7 @@ from pathlib import Path
 
 
 class DuplicateFinder:
-    def __init__(self, path: str = ".", extensions: list[str] = None, exclude_patterns: list[str] = None):
+    def __init__(self, path: str = ".", extensions: list[str] | None = None, exclude_patterns: list[str] | None = None):
         self.root_path = Path(path)
         self.extensions = extensions or ["md", "txt", "py"]
         self.exclude_patterns = exclude_patterns or ["venv", "node_modules", "__pycache__", ".git"]

@@ -86,7 +86,7 @@ def apply() -> None:
     data = _load_yaml(RETRIEVAL_YAML)
 
     # Capture previous values to state (for precise revert)
-    prev: dict[str, Any] = {}
+    prev: dict[tuple[str, str], Any] = {}
     for (k1, k2), target_val in TARGET.items():
         prev[(k1, k2)] = _get(data, k1, k2)
         _set(data, k1, k2, target_val)

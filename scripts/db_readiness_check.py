@@ -81,7 +81,8 @@ def table_exists(cur, table: str) -> bool:
         """,
         (table,),
     )
-    return bool(cur.fetchone()[0])
+    row = cur.fetchone()
+    return bool(row[0]) if row else False
 
 
 def check_tables(cur, tables: Iterable[str]) -> tuple[bool, list[str]]:
@@ -113,7 +114,8 @@ def main() -> int:
 
         # Basic server info
         cur.execute("SHOW server_version;")
-        server_version = cur.fetchone()[0]
+        _row = cur.fetchone()
+        server_version = _row[0] if _row else "unknown"
 
         # Extensions
         ext_ok, ext_msgs = check_extensions(cur)

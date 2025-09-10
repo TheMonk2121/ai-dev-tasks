@@ -39,7 +39,7 @@ class GiantGuideSplitter:
             "400_system-overview.md",  # 768 lines
         ]
 
-    def analyze_file_structure(self, file_path: str) -> dict[str, Any]:
+    def analyze_file_structure(self, file_path: str) -> dict[str, Any] | None:
         """Analyze the structure of a file to determine splitting strategy"""
         try:
             with open(file_path, encoding="utf-8") as f:

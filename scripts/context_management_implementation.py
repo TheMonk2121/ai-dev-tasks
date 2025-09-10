@@ -328,7 +328,8 @@ class ContextStore:
                 FROM contexts 
                 WHERE content LIKE ?
             """
-            params = [f"%{query}%"]
+            from typing import Any
+            params: list[Any] = [f"%{query}%"]
 
             if context_type:
                 sql += " AND type = ?"

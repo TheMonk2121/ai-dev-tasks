@@ -68,7 +68,7 @@ class UserFeedback:
     # Additional metadata
     feedback_text: str | None = None
     priority: FeedbackPriority = FeedbackPriority.MEDIUM
-    tags: list[str] = None
+    tags: list[str] | None = None
 
     # Processing status
     processed: bool = False

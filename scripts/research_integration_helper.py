@@ -7,7 +7,7 @@ Assists in dispersing research findings to appropriate documentation files
 from typing import Any
 
 
-def get_research_integration_map() -> dict[str, list[str]]:
+def get_research_integration_map() -> dict[str, Any]:
     """Map research findings to appropriate documentation files"""
     return {
         "complete_research": {

@@ -51,11 +51,12 @@ class SystemHealthChecker:
 
             # Use main project database utilities instead
             try:
-                from src.common.db_dsn import get_dsn
-                from src.utils.retry_wrapper import retry_with_backoff
+                # Use local resolver and retry utilities if available
+                from common.db_dsn import resolve_dsn
+                from src.utils.retry_wrapper import retry_database as _retry_db  # noqa: F401
 
                 # Basic database connection check
-                dsn = get_dsn()
+                dsn = resolve_dsn(strict=False)
                 if dsn:
                     self.log("Database connection: ✅ OK", "INFO")
                     self.components["database"] = True
@@ -90,8 +91,9 @@ class SystemHealthChecker:
 
             # Use main project agent utilities instead
             try:
-                from src.agents.ollama_qa import OllamaQAAgent
-                from src.agents.qa import QAAgent
+                # Import modules to verify availability without assuming specific symbols
+                import src.agents.ollama_qa  # noqa: F401
+                import src.agents.qa  # noqa: F401
 
                 # Basic AI model availability check
                 self.log("AI models available: ✅ OK", "INFO")
@@ -123,7 +125,8 @@ class SystemHealthChecker:
 
             # Use main project quality gates instead
             try:
-                from src.retrieval.quality_gates import QualityGate
+                # Validate quality gates module imports successfully
+                from src.retrieval.quality_gates import load_quality_gates  # noqa: F401
 
                 # Basic file processing availability check
                 self.log("File processing available: ✅ OK", "INFO")
@@ -286,10 +289,10 @@ class SystemHealthChecker:
                 )
 
                 try:
-                    from src.common.db_dsn import get_dsn
+                    from common.db_dsn import resolve_dsn
 
                     # Basic database reset using main project utilities
-                    dsn = get_dsn()
+                    dsn = resolve_dsn(strict=False)
                     if dsn:
                         self.log("Database auto-fix: ✅ OK", "INFO")
                         return True
@@ -312,8 +315,8 @@ class SystemHealthChecker:
                 )
 
                 try:
-                    from src.agents.ollama_qa import OllamaQAAgent
-                    from src.agents.qa import QAAgent
+                    import src.agents.ollama_qa  # noqa: F401
+                    import src.agents.qa  # noqa: F401
 
                     # Basic AI model restart using main project utilities
                     self.log("AI models auto-fix: ✅ OK", "INFO")

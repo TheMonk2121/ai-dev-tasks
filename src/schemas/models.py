@@ -45,7 +45,7 @@ class PRDSummary(BaseModel):
     title: str = Field(..., min_length=1)
     problem: str = Field(..., min_length=1, description="What's broken")
     solution: str = Field(..., min_length=1, description="What we're building")
-    acceptance_criteria: list[str] = Field(..., min_items=1)
+    acceptance_criteria: list[str] = Field(..., min_length=1)
     risks: list[str] = Field(default_factory=list)
     estimated_points: int | None = Field(None, ge=1, le=20)
 
@@ -59,7 +59,7 @@ class Task(BaseModel):
     priority: str = Field(..., description="Critical/High/Medium/Low")
     estimated_hours: int | None = Field(None, ge=1, le=40)
     dependencies: list[str] = Field(default_factory=list)
-    acceptance_criteria: list[str] = Field(..., min_items=1)
+    acceptance_criteria: list[str] = Field(..., min_length=1)
 
 
 class TaskList(BaseModel):
@@ -68,7 +68,7 @@ class TaskList(BaseModel):
     backlog_id: str = Field(..., pattern=r"^B-\d{4}$")
     title: str = Field(..., min_length=1)
     total_tasks: int = Field(..., ge=1)
-    tasks: list[Task] = Field(..., min_items=1)
+    tasks: list[Task] = Field(..., min_length=1)
     estimated_total_hours: int | None = Field(None, ge=1)
 
     def validate_task_count(self) -> bool:

@@ -136,7 +136,7 @@ class ConfidenceCalibrator:
 
         # Use cross-validation for isotonic calibration
         self.isotonic_calibrator = CalibratedClassifierCV(
-            base_estimator=None, cv=self.config.cv_folds, method="isotonic"  # Use isotonic regression
+            estimator=None, cv=self.config.cv_folds, method="isotonic"  # Use isotonic regression
         )
 
         # Reshape for sklearn compatibility
@@ -163,7 +163,7 @@ class ConfidenceCalibrator:
 
         # Use cross-validation for Platt scaling
         self.platt_calibrator = CalibratedClassifierCV(
-            base_estimator=None, cv=self.config.cv_folds, method="sigmoid"  # Use logistic regression
+            estimator=None, cv=self.config.cv_folds, method="sigmoid"  # Use logistic regression
         )
 
         # Reshape for sklearn compatibility
@@ -264,7 +264,7 @@ class ConfidenceCalibrator:
         # Return original scores if no calibration method available
         return scores
 
-    def _calculate_calibration_metrics(self, calibrated_scores: np.ndarray, labels: np.ndarray) -> dict[str, float]:
+    def _calculate_calibration_metrics(self, calibrated_scores: np.ndarray, labels: np.ndarray) -> dict[str, Any]:
         """Calculate calibration error and ECE score."""
         from sklearn.calibration import calibration_curve
 

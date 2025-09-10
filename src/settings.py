@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from pydantic import ConfigDict, SecretStr
-from pydantic_settings import BaseSettings
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class EvalSettings(BaseSettings):
-    model_config = ConfigDict(strict=True, extra="ignore", env_file=".env", env_prefix="")
+    model_config = SettingsConfigDict(extra="ignore", env_file=".env", env_prefix="")
 
     # Core eval controls
     EVAL_PROFILE: str = "default"

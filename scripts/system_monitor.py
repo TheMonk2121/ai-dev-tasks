@@ -82,13 +82,16 @@ class SystemMonitor:
                 with conn.cursor() as cursor:
                     # Get basic counts
                     cursor.execute("SELECT COUNT(*) FROM documents")
-                    doc_count = cursor.fetchone()[0]
+                    row = cursor.fetchone()
+                    doc_count = int(row[0]) if row else 0
 
                     cursor.execute("SELECT COUNT(*) FROM document_chunks")
-                    chunk_count = cursor.fetchone()[0]
+                    row = cursor.fetchone()
+                    chunk_count = int(row[0]) if row else 0
 
                     cursor.execute("SELECT COUNT(*) FROM conversation_memory")
-                    memory_count = cursor.fetchone()[0]
+                    row = cursor.fetchone()
+                    memory_count = int(row[0]) if row else 0
 
                     # Check vector extension
                     cursor.execute("SELECT extname FROM pg_extension WHERE extname = 'vector'")
@@ -96,7 +99,8 @@ class SystemMonitor:
 
                     # Get connection info
                     cursor.execute("SELECT COUNT(*) FROM pg_stat_activity WHERE datname = 'dspy_rag'")
-                    active_connections = cursor.fetchone()[0]
+                    row = cursor.fetchone()
+                    active_connections = int(row[0]) if row else 0
 
             response_time = time.time() - start_time
 
@@ -173,16 +177,18 @@ class SystemMonitor:
         lines.append("=" * 60)
         lines.append("🤖 AI DEVELOPMENT TASKS - SYSTEM MONITOR")
         lines.append("=" * 60)
-        lines.append(f"Timestamp: {report['system_health']['timestamp']}")
-        lines.append(f"Uptime: {report['system_health']['uptime']}")
+        health = report.get("system_health", {})
+        lines.append(f"Timestamp: {health.get('timestamp', datetime.now().isoformat())}")
+        lines.append(f"Uptime: {health.get('uptime', 'unknown')}")
         lines.append("")
 
         # Overall Status
         lines.append("📊 OVERALL STATUS")
         lines.append("-" * 20)
-        lines.append(f"Status: {report['system_health']['overall_status'].upper()}")
-        lines.append(f"Unhealthy Dependencies: {report['system_health']['unhealthy_count']}")
-        lines.append(f"Degraded Dependencies: {report['system_health']['degraded_count']}")
+        overall = str(health.get('overall_status', 'unknown')).upper()
+        lines.append(f"Status: {overall}")
+        lines.append(f"Unhealthy Dependencies: {health.get('unhealthy_count', 0)}")
+        lines.append(f"Degraded Dependencies: {health.get('degraded_count', 0)}")
         lines.append("")
 
         # Database Status
@@ -231,10 +237,13 @@ class SystemMonitor:
         # Dependencies
         lines.append("🔗 DEPENDENCIES")
         lines.append("-" * 12)
-        deps = report["system_health"]["dependencies"]
-        for name, dep in deps.items():
-            status_icon = "✅" if dep["status"] == "healthy" else "⚠️" if dep["status"] == "degraded" else "❌"
-            lines.append(f"{status_icon} {name}: {dep['status']} ({dep['response_time']:.3f}s)")
+        deps = health.get("dependencies", {}) or {}
+        if isinstance(deps, dict):
+            for name, dep in deps.items():
+                status = dep.get("status", "unknown") if isinstance(dep, dict) else str(dep)
+                rt = dep.get("response_time", 0.0) if isinstance(dep, dict) else 0.0
+                status_icon = "✅" if status == "healthy" else "⚠️" if status == "degraded" else "❌"
+                lines.append(f"{status_icon} {name}: {status} ({float(rt):.3f}s)")
 
         lines.append("")
         lines.append("=" * 60)

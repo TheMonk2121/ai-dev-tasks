@@ -22,6 +22,7 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
+import sqlite3
 
 logger = logging.getLogger(__name__)
 
@@ -630,7 +631,9 @@ def retry_with_backoff(
                 time.sleep(delay)
 
         # This should never be reached, but just in case
-        raise last_exception
+        if last_exception is not None:
+            raise last_exception
+        raise RuntimeError("Unknown error in retry_with_backoff wrapper")
 
     return wrapper
 

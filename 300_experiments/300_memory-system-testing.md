@@ -438,8 +438,8 @@ This log tracks detailed testing results and performance metrics for the memory 
 - **[300_testing-methodology-log.md](300_testing-methodology-log.md)** - Central testing and methodology log
 
 ### **Related Guides**
-- **[400_06_memory-and-context-systems.md](../400_guides/400_06_memory-and-context-systems.md)** - Memory system architecture
-- **[400_08_integrations-editor-and-models.md](../400_guides/400_08_integrations-editor-and-models.md)** - Integration patterns
+- **[Cursor Memory Context](../100_memory/100_cursor-memory-context.md)** - Memory system architecture
+- **[Integrations: Models](../400_guides/400_10_integrations-models.md)** - Integration patterns
 
 ### **Related PRDs**
 - **[PRD-B-1069-Cursor-Memory-System-Direct-Integration.md](../PRD-B-1069-Cursor-Memory-System-Direct-Integration.md)** - Detailed PRD for B-1069

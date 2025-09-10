@@ -61,7 +61,7 @@ async def check_ollama_status(ctx: RunContext[OllamaDeps]) -> str:
 
 
 # Alternative agent configurations for different models
-def create_ollama_agent(model_name: str, system_prompt: str = None) -> Agent:
+def create_ollama_agent(model_name: str, system_prompt: str | None = None) -> Agent[OllamaDeps, OllamaQAAnswer]:
     """Create an Ollama agent with a specific model."""
 
     if system_prompt is None:

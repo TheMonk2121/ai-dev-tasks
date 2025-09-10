@@ -127,7 +127,7 @@ class MemoryBenchmark:
             return self.test_models[model]["fallback_model"]
         return None
 
-    def run_model_specific_test(self, model: str, structure: str = None) -> list[BenchmarkResult]:
+    def run_model_specific_test(self, model: str, structure: str | None = None) -> list[BenchmarkResult]:
         """Run comprehensive testing for a specific model type"""
         print(f"🧪 Running model-specific tests for {model}")
 
@@ -150,7 +150,9 @@ class MemoryBenchmark:
                 self.results.append(result)
 
         # Calculate model-specific metrics
-        self.model_metrics[model] = self._calculate_model_metrics(model, results)
+        metrics = self._calculate_model_metrics(model, results)
+        if metrics is not None:
+            self.model_metrics[model] = metrics
 
         return results
 

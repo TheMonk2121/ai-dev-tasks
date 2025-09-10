@@ -51,7 +51,7 @@ class BaselineModule(Module):
     def forward(self, input_field):  # Missing type hints
         # Missing docstring
         result = self.predictor(input_field=input_field)
-        return {"output_field": result.output_field}  # No error handling
+        return {"output_field": getattr(result, "output_field", "")}  # No error handling
 
 
 class OptimizedModule(Module):
@@ -86,7 +86,7 @@ class OptimizedModule(Module):
             result = self.predictor(input_field=sanitized_input)
 
             return {
-                "output_field": result.output_field,
+                "output_field": getattr(result, "output_field", ""),
                 "input_field": sanitized_input,
                 "processing_time": time.time(),
                 "validation_status": "passed",

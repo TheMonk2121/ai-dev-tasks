@@ -5,6 +5,7 @@ Ignores line length violations but enforces critical structural issues.
 """
 
 import sys
+import re
 from pathlib import Path
 
 # Add the scripts directory to the path so we can import the main validator
@@ -18,6 +19,13 @@ class RelaxedDocValidator(DocCoherenceValidator):
         super().__init__(*args, **kwargs)
         # Override the line length pattern to not match anything (effectively disabling MD013)
         self.line_length_pattern = None
+        # Ensure required patterns exist for relaxed checks
+        self.heading_increment_pattern = re.compile(r"^#{1,6}\s+")
+        self.trailing_spaces_pattern = re.compile(r"[ \t]+$")
+        self.hard_tabs_pattern = re.compile(r"\t")
+
+    def log(self, message: str, level: str = "INFO") -> None:  # minimal logger shim
+        print(f"[{level}] {message}")
 
     def task_7_validate_markdown_rules(self) -> bool:
         """Validate VS Code markdown rules compliance (ignoring line length)."""

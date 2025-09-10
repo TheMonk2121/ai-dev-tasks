@@ -3,19 +3,20 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal
+from typing import TYPE_CHECKING, Any, Literal
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict
 
 from src.agents.qa import Deps, QAAnswer, agent
 
-try:
-    from pydantic_graph import Graph, Node
-except ImportError:
-    # Fallback for environments without pydantic-graph
+if TYPE_CHECKING:  # type-only imports to satisfy Pyright without runtime dependency
+    from pydantic_graph import Graph, Node  # type: ignore
+else:
     Graph = object  # type: ignore
-    Node = object  # type: ignore
+
+    class Node:  # type: ignore
+        pass
 
 
 class FlowState(BaseModel):

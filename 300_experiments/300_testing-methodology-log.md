@@ -885,8 +885,8 @@ export RAGCHECKER_ENABLE_FUSED_SCORER=1
 
 ### **Related Guides**
 - **[400_11_performance-optimization.md](../400_guides/400_11_performance-optimization.md)** - Performance optimization strategies
-- **[400_06_memory-and-context-systems.md](../400_guides/400_06_memory-and-context-systems.md)** - Memory system architecture
-- **[400_08_integrations-editor-and-models.md](../400_guides/400_08_integrations-editor-and-models.md)** - Integration patterns
+- **[Cursor Memory Context](../100_memory/100_cursor-memory-context.md)** - Memory system architecture
+- **[Integrations: Models](../400_guides/400_10_integrations-models.md)** - Integration patterns
 
 ## 🔄 **Maintenance & Updates**
 

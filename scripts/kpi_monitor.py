@@ -174,7 +174,7 @@ def calculate_data_quality_metrics(eval_data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def check_kpi_thresholds(current_metrics: dict[str, float], baseline_metrics: dict[str, float]) -> dict[str, Any]:
+def check_kpi_thresholds(current_metrics: dict[str, Any], baseline_metrics: dict[str, float]) -> dict[str, Any]:
     """Check KPI thresholds against baseline"""
     alerts = []
     warnings = []
@@ -215,6 +215,8 @@ def check_kpi_thresholds(current_metrics: dict[str, float], baseline_metrics: di
 
     # Data quality
     data_quality = current_metrics.get("data_quality", {})
+    if not isinstance(data_quality, dict):
+        data_quality = {}
     over_budget = data_quality.get("over_budget_chunks", 0)
 
     if over_budget > 0:

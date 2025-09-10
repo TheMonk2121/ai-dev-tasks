@@ -180,17 +180,17 @@ class SelectiveAnswering:
 
         # Basic statistics
         evidence_count = len(scores)
-        max_evidence_score = np.max(scores)
-        mean_evidence_score = np.mean(scores)
+        max_evidence_score = float(np.max(scores))
+        mean_evidence_score = float(np.mean(scores))
 
         # Top score analysis (top 3)
         top_k = min(3, evidence_count)
         top_scores = np.sort(scores)[-top_k:]
-        top_score_mean = np.mean(top_scores)
-        top_score_std = np.std(top_scores) if top_k > 1 else 0.0
+        top_score_mean = float(np.mean(top_scores))
+        top_score_std = float(np.std(top_scores)) if top_k > 1 else 0.0
 
         # Dispersion analysis
-        dispersion_score = self._calculate_dispersion(scores)
+        dispersion_score = float(self._calculate_dispersion(scores))
 
         # Coverage analysis
         coverage_score, claim_coverage = self._calculate_coverage(evidence_chunks, sub_claims)
@@ -225,9 +225,9 @@ class SelectiveAnswering:
         # Calculate coefficient of variation
         mean_score = np.mean(normalized_scores)
         if mean_score > 0:
-            cv = np.std(normalized_scores) / mean_score
+            cv = float(np.std(normalized_scores) / mean_score)
             # Convert to 0-1 scale where 0 = no dispersion, 1 = high dispersion
-            return min(1.0, cv)
+            return float(min(1.0, cv))
         else:
             return 0.0
 
@@ -239,7 +239,7 @@ class SelectiveAnswering:
         if not sub_claims:
             # If no sub-claims specified, use overall evidence strength
             if evidence_chunks:
-                avg_score = np.mean([chunk.get("score", 0.0) for chunk in evidence_chunks])
+                avg_score = float(np.mean([chunk.get("score", 0.0) for chunk in evidence_chunks]))
                 return avg_score, {}
             else:
                 return 0.0, {}
@@ -255,8 +255,8 @@ class SelectiveAnswering:
             if supporting_chunks:
                 # Calculate claim coverage based on evidence strength
                 claim_scores = [chunk.get("score", 0.0) for chunk in supporting_chunks]
-                claim_coverage[claim] = np.mean(claim_scores)
-                if np.mean(claim_scores) >= self.config.min_claim_coverage:
+                claim_coverage[claim] = float(np.mean(claim_scores))
+                if float(np.mean(claim_scores)) >= self.config.min_claim_coverage:
                     covered_claims += 1
             else:
                 claim_coverage[claim] = 0.0
@@ -302,7 +302,7 @@ class SelectiveAnswering:
                     similarities.append(similarity)
 
             if similarities:
-                avg_similarity = np.mean(similarities)
+                avg_similarity = float(np.mean(similarities))
                 # Low similarity with high scores suggests potential contradictions
                 if avg_similarity < 0.3:
                     has_contradictions = True

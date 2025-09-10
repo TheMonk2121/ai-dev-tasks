@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import random
 from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
@@ -149,9 +150,7 @@ class DataPipeline:
 
         if len(self.hard_negative_examples) > target_negatives:
             # Sample hard negatives to maintain balance
-            selected_negatives = np.random.choice(
-                self.hard_negative_examples, size=target_negatives, replace=False
-            ).tolist()
+            selected_negatives = random.sample(self.hard_negative_examples, k=target_negatives)
         else:
             selected_negatives = self.hard_negative_examples
 

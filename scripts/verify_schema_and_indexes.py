@@ -44,13 +44,15 @@ def main():
             # pgvector
             try:
                 cur.execute("SELECT EXISTS(SELECT 1 FROM pg_available_extensions WHERE name='vector');")
-                has_vector_available = bool(cur.fetchone()[0])
+                row = cur.fetchone()
+                has_vector_available = bool(row[0]) if row else False
             except Exception:
                 has_vector_available = False
 
             try:
                 cur.execute("SELECT EXISTS(SELECT 1 FROM pg_extension WHERE extname='vector');")
-                has_vector_installed = bool(cur.fetchone()[0])
+                row2 = cur.fetchone()
+                has_vector_installed = bool(row2[0]) if row2 else False
             except Exception:
                 has_vector_installed = False
 

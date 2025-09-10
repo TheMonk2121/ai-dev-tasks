@@ -12,10 +12,22 @@
     "reportAssignmentType": "none",
     "reportPossiblyUnboundVariable": "none",
     "extraPaths": [],
+    "include": [
+        "src",
+        "tests",
+        "scripts"
+    ],
     "ignore": [
         "**/600_archives/**",
         "**/scripts/eval/**",
-        "dspy-rag-system/**"
+        "**/300_experiments/**",
+        "**/300_evals/**",
+        "**/evals/**",
+        "**/eval/**",
+        "dspy-rag-system/**",
+        "**/scripts/demos/**",
+        "**/scripts/*evaluation*",
+        "**/scripts/*prototype*"
     ],
     "exclude": [
         "**/node_modules/**",
@@ -23,6 +35,13 @@
         ".pytest_cache/**",
         "**/venv/**",
         "**/.venv/**",
-        "dspy-rag-system/**"
+        "dspy-rag-system/**",
+        "**/300_experiments/**",
+        "**/300_evals/**",
+        "**/evals/**",
+        "**/eval/**",
+        "**/scripts/demos/**",
+        "**/scripts/*evaluation*",
+        "**/scripts/*prototype*"
     ]
 }

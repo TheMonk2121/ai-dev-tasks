@@ -26,7 +26,8 @@ try:
 except ImportError:
     # Fallback to word-based approximation
     def count_tokens(text: str) -> int:
-        return len(text.split()) * 1.3  # rough token approximation
+        # Rough token approximation; ensure integer return
+        return max(1, int(len(text.split()) * 1.3))
 
     def decode_tokens(tokens: list[int]) -> str:
         return ""  # not implemented for fallback
@@ -65,6 +66,7 @@ class DocumentWindower:
         preserve_paragraph_boundaries: bool = True,
     ):
         self.window_size_tokens = window_size_tokens
+        self.overlap_pct = overlap_pct
         self.overlap_tokens = max(1, int(window_size_tokens * overlap_pct / 100))
         self.min_window_tokens = min_window_tokens
         self.preserve_doc_boundaries = preserve_doc_boundaries

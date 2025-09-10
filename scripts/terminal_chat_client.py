@@ -39,7 +39,10 @@ class ChatClient:
     async def listen_for_messages(self):
         """Listen for incoming messages"""
         try:
-            async for message in self.websocket:
+            ws = self.websocket
+            if ws is None:
+                return
+            async for message in ws:
                 data = json.loads(message)
                 if data.get("type") == "message":
                     sender = data.get("sender", "unknown")
@@ -90,7 +93,8 @@ class ChatClient:
                     break
 
                 if message.strip():
-                    await self.websocket.send(json.dumps({"type": "message", "message": message}))
+                    if self.websocket:
+                        await self.websocket.send(json.dumps({"type": "message", "message": message}))
 
         except KeyboardInterrupt:
             print("\n👋 Goodbye!")

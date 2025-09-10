@@ -108,7 +108,10 @@ class MultiHopPlanner:
             Dict with final answer, evidence, metrics, and planning trace
         """
         # Initialize planning state
-        state = PlanningState(original_query=query, token_budget_used=len(query.split()) * 1.3)  # Rough token estimate
+        state = PlanningState(
+            original_query=query,
+            token_budget_used=int(len(query.split()) * 1.3),  # Rough token estimate
+        )
 
         # Decompose initial query into sub-questions
         initial_subqs = self._decompose_query(query, sub_claims)
@@ -220,7 +223,7 @@ class MultiHopPlanner:
 
                 # Update token budget
                 for span in high_score_spans:
-                    tokens = len(span.get("text", "").split()) * 1.3
+                    tokens = int(len(span.get("text", "").split()) * 1.3)
                     state.token_budget_used += tokens
 
             except Exception as e:

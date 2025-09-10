@@ -85,6 +85,8 @@ class ComprehensiveTestingSuite:
         self.integration: CacheInvalidationIntegration | None = None
         self.ltst_integration: LTSTMemoryIntegration | None = None
         self.performance_monitor: CachePerformanceMonitor | None = None
+        # Accumulates integration test results keyed by name
+        self.integration_results: dict[str, TestResult] = {}
 
         logger.info("Comprehensive Testing Suite initialized")
 

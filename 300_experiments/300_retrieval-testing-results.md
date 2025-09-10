@@ -412,7 +412,7 @@ This log tracks detailed testing results and performance metrics for the intelli
 
 ### **Related Guides**
 - **[400_11_performance-optimization.md](../400_guides/400_11_performance-optimization.md)** - Performance optimization strategies
-- **[400_06_memory-and-context-systems.md](../400_guides/400_06_memory-and-context-systems.md)** - Memory system architecture
+- **[Cursor Memory Context](../100_memory/100_cursor-memory-context.md)** - Memory system architecture
 
 ## 🔄 **Maintenance & Updates**
 

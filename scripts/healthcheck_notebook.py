@@ -305,7 +305,10 @@ class HealthcheckNotebook:
 
             latency = (time.time() - start_time) * 1000
 
-            doc_count, chunk_count = counts
+            if counts is None:
+                doc_count, chunk_count = 0, 0
+            else:
+                doc_count, chunk_count = counts
             avg_chunks_per_doc = chunk_count / doc_count if doc_count > 0 else 0
 
             if doc_count == 0:
@@ -363,7 +366,10 @@ class HealthcheckNotebook:
 
             latency = (time.time() - start_time) * 1000
 
-            last_ingestion, unique_runs, unique_variants = result
+            if result is None:
+                last_ingestion, unique_runs, unique_variants = None, 0, 0
+            else:
+                last_ingestion, unique_runs, unique_variants = result
 
             if last_ingestion is None:
                 status = HealthStatus.RED

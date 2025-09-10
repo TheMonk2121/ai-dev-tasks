@@ -348,7 +348,7 @@ class PostgreSQLCacheService:
             raise
 
     async def retrieve_cache_entry(
-        self, prompt: str, user_id: str | None = None, similarity_threshold: float | None = None
+        self, prompt: str | None, user_id: str | None = None, similarity_threshold: float | None = None
     ) -> CacheEntry | None:
         """Retrieve a cache entry entry by prompt similarity"""
         try:
@@ -385,7 +385,7 @@ class PostgreSQLCacheService:
                         ORDER BY similarity_score DESC, last_verified DESC
                         LIMIT 1;
                     """
-                    result = await conn.fetchrow(query, user_id, prompt, threshold)
+                    result = await conn.fetchrow(query, user_id, prompt or "", threshold)
                 else:
                     # Fallback to exact text matching when similarity function not available
                     if user_id:
@@ -399,7 +399,7 @@ class PostgreSQLCacheService:
                             ORDER BY similarity_score DESC, last_verified DESC
                             LIMIT 1;
                         """
-                        result = await conn.fetchrow(query, user_id, prompt)
+                        result = await conn.fetchrow(query, user_id, prompt or "")
                     else:
                         query = """
                             SELECT id, user_id, model_type, prompt, response, tokens_used,
@@ -410,7 +410,7 @@ class PostgreSQLCacheService:
                             ORDER BY similarity_score DESC, last_verified DESC
                             LIMIT 1;
                         """
-                        result = await conn.fetchrow(query, prompt)
+                        result = await conn.fetchrow(query, prompt or "")
 
                 if result:
                     # Create cache entry from result

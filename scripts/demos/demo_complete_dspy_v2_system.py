@@ -40,13 +40,20 @@ from dspy_modules.system_integration import (
 )
 
 
+class TaskResult:
+    """Type annotation for DSPy predictor result"""
+
+    task_result: str
+    quality_score: str
+
+
 class TaskSignature(Signature):
     """Signature for task execution"""
 
     task_description = InputField(desc="Description of the task to execute")
     task_type = InputField(desc="Type of task (coding, analysis, planning)")
     complexity = InputField(desc="Task complexity (simple, moderate, complex)")
-    result = OutputField(desc="Result of task execution")
+    task_result = OutputField(desc="Result of task execution")
     quality_score = OutputField(desc="Quality score of the result (0-100)")
 
 
@@ -60,9 +67,11 @@ class TaskExecutionModule(Module):
     def forward(self, task_description: str, task_type: str, complexity: str) -> dict[str, Any]:
         """Execute a task with optimization"""
         try:
-            result = self.predictor(task_description=task_description, task_type=task_type, complexity=complexity)
+            result: TaskResult = self.predictor(
+                task_description=task_description, task_type=task_type, complexity=complexity
+            )
 
-            return {"result": result.result, "quality_score": int(result.quality_score), "success": True}
+            return {"result": getattr(result, "task_result", ""), "quality_score": int(getattr(result, "quality_score", 0)), "success": True}
 
         except Exception as e:
             return {"result": f"Error: {str(e)}", "quality_score": 0, "success": False}

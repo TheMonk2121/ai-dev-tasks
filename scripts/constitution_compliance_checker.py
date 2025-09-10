@@ -11,6 +11,7 @@ this checker ensures persistent rule enforcement across all AI operations.
 
 import json
 from dataclasses import dataclass
+from typing import Any, Callable
 from datetime import datetime
 
 
@@ -21,7 +22,7 @@ class ConstitutionRule:
     article: str
     rule_id: str
     description: str
-    validation_function: callable
+    validation_function: Callable[[dict[str, Any]], tuple[bool, str]]
     critical: bool = False
 
 
@@ -287,7 +288,7 @@ class ConstitutionComplianceChecker:
 
     def validate_file_operation(self, file_path: str, operation_type: str) -> dict:
         """Validate a file operation against constitution rules."""
-        operation = {
+        operation: dict[str, Any] = {
             "type": "file_operation",
             "file_path": file_path,
             "operation_type": operation_type,

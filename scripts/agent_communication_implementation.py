@@ -221,7 +221,7 @@ class AgentCommunicationManager:
             del self.agent_registry[agent_id]
             logger.info(f"Unregistered agent: {agent_id}")
 
-    async def create_session(self, participants: list[str], context: dict[str, Any] = None) -> str:
+    async def create_session(self, participants: list[str], context: dict[str, Any] | None = None) -> str:
         """Create a new communication session."""
         session = AgentSession(participants=participants, context=context or {})
 
@@ -239,7 +239,7 @@ class AgentCommunicationManager:
         content: dict[str, Any],
         message_type: MessageType = MessageType.REQUEST,
         priority: int = 1,
-        metadata: dict[str, Any] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> str:
         """Send a message between agents."""
         message = AgentMessage(

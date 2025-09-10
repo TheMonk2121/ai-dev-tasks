@@ -7,6 +7,7 @@ Generates comprehensive run manifests for production-grade traceability and repr
 import hashlib
 import json
 import os
+import sys
 import time
 import uuid
 from datetime import datetime
@@ -138,7 +139,7 @@ class EvalManifestGenerator:
     def _capture_infrastructure_config(self) -> dict[str, Any]:
         """Capture infrastructure configuration."""
         return {
-            "python_version": os.sys.version,
+            "python_version": sys.version,
             "platform": os.name,
             "dspy_rag_path": os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src"),
             "database_url": self._mask_sensitive_data(os.getenv("DATABASE_URL", "postgresql://***")),

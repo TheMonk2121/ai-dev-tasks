@@ -290,8 +290,8 @@ print(f'Config valid: {validation[\"valid\"]}')
 ## 📚 Additional Resources
 
 - [Production Configuration Locking Guide](400_guides/400_production-configuration-locking.md)
-- [Enhanced Chunking Documentation](dspy-rag-system/src/utils/enhanced_chunking.py)
-- [Configuration Lock System](dspy-rag-system/src/utils/config_lock.py)
+- [Enhanced Chunking Documentation](src/retrieval/windowing.py)
+- [Configuration Lock System](scripts/shadow_ingest.py)
 
 ## 🆘 Support
 

@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+from typing import Any, cast
 
 
 def _load_module_by_path():
@@ -12,7 +13,7 @@ def _load_module_by_path():
 
 
 def test_disabled_flag_returns_false(tmp_path, monkeypatch):
-    mod = _load_module_by_path()
+    mod = cast(Any, _load_module_by_path())
     # Redirect state file to a temp path
     mod.STATE_PATH = Path(tmp_path / ".rehydrate_state.json")
 
@@ -24,7 +25,7 @@ def test_disabled_flag_returns_false(tmp_path, monkeypatch):
 
 
 def test_debounce_logic(tmp_path, monkeypatch):
-    mod = _load_module_by_path()
+    mod = cast(Any, _load_module_by_path())
     # Redirect state file to a temp path
     mod.STATE_PATH = Path(tmp_path / ".rehydrate_state.json")
 

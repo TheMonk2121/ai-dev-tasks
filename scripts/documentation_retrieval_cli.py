@@ -40,7 +40,7 @@ _LOG = logging.getLogger("documentation_retrieval_cli")
 class DocumentationRetrievalCLI:
     """Command-line interface for documentation retrieval"""
 
-    def __init__(self, db_connection_string: str = None):
+    def __init__(self, db_connection_string: str | None = None):
         if db_connection_string is None:
             db_connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
 
@@ -52,7 +52,7 @@ class DocumentationRetrievalCLI:
         )
         self.indexer = DocumentationIndexer(db_connection_string)
 
-    def search(self, query: str, category: str = None, limit: int = 5, format_output: str = "json") -> None:
+    def search(self, query: str, category: str | None = None, limit: int = 5, format_output: str = "json") -> None:
         """Search documentation"""
         try:
             if not self.service:

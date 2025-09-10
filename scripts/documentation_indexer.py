@@ -474,7 +474,7 @@ class DocumentationIndexer:
             categories[category] = categories.get(category, 0) + 1
         return categories
 
-    def search_documentation(self, query: str, category: str = None, limit: int = 5) -> dict[str, Any]:
+    def search_documentation(self, query: str, category: str | None = None, limit: int = 5) -> dict[str, Any]:
         """Search documentation using the RAG system"""
         search_params = {
             "query": query,
