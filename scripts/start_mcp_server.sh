@@ -14,7 +14,7 @@ cd "$PROJECT_ROOT"
 export UV_PROJECT_ENVIRONMENT=.venv
 
 # Set environment variables
-export PYTHONPATH="$PROJECT_ROOT/dspy-rag-system/src:$PROJECT_ROOT/scripts:$PYTHONPATH"
+export PYTHONPATH="$PROJECT_ROOT/src:$PROJECT_ROOT/scripts:$PYTHONPATH"
 export POSTGRES_DSN="${POSTGRES_DSN:-postgresql://danieljacobs@localhost:5432/ai_agency}"
 
 # Default port

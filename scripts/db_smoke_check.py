@@ -17,9 +17,9 @@ from __future__ import annotations
 import os
 import sys
 
-# Ensure imports from dspy-rag-system
+# DSPy modules moved to main src directory
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DSRC = os.path.join(ROOT, "dspy-rag-system", "src")
+DSRC = os.path.join(ROOT, "src")
 if DSRC not in sys.path:
     sys.path.insert(0, DSRC)
 

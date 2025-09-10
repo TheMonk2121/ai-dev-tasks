@@ -49,7 +49,7 @@ class CoderRoleValidator:
             results["errors"].append("Memory rehydrator script not found")
 
         # Check DSPy memory rehydrator
-        dspy_path = self.project_root / "dspy-rag-system" / "src" / "utils" / "memory_rehydrator.py"
+        dspy_path = self.project_root / "src" / "utils" / "memory_rehydrator.py"
         if dspy_path.exists():
             results["checks"]["dspy_rehydrator_exists"] = True
         else:
@@ -90,7 +90,7 @@ class CoderRoleValidator:
 
         results = {"status": "PENDING", "checks": {}, "errors": []}
 
-        rehydrator_path = self.project_root / "dspy-rag-system" / "src" / "utils" / "memory_rehydrator.py"
+        rehydrator_path = self.project_root / "src" / "utils" / "memory_rehydrator.py"
 
         if not rehydrator_path.exists():
             results["status"] = "FAIL"
@@ -448,7 +448,7 @@ Overall Status: {self.results['overall_status']}
 - Project Root: {self.project_root}
 - Integration Test File: tests/test_coder_role_integration.py
 - Memory Rehydrator: scripts/memory_up.sh
-- DSPy Rehydrator: dspy-rag-system/src/utils/memory_rehydrator.py
+- DSPy Rehydrator: src/utils/memory_rehydrator.py
 
 ================================================================================
 """

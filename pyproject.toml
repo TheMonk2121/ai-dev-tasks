@@ -80,7 +80,7 @@ dependencies = [
     "websockets>=12.0",
     # Explicit fastapi pin for clarity (logfire includes it)
     "fastapi>=0.111.0",
-    "pydantic-settings>=2.10.1",
+    "pydantic-settings>=2.0.0",
     "pydantic-ai>=0.0.17",
     "pydantic-evals>=1.0.2",
     "httpx>=0.27",
@@ -139,7 +139,7 @@ exclude = [
     "600_archives",
     "docs/legacy",
     "**/__pycache__",
-    "dspy-rag-system/**", # Exclude entire dspy-rag-system for migration
+    "dspy-rag-system/**",      # Exclude entire dspy-rag-system for migration
     "scripts/demos/**",
     "**/scripts/demos/**",
     "**/scripts/*evaluation*",

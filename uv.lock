@@ -188,7 +188,7 @@ requires-dist = [
     { name = "pydantic-ai", specifier = ">=0.0.17" },
     { name = "pydantic-evals", specifier = ">=1.0.2" },
     { name = "pydantic-graph", specifier = ">=0.2" },
-    { name = "pydantic-settings", specifier = ">=2.10.1" },
+    { name = "pydantic-settings", specifier = ">=2.0.0" },
     { name = "pymupdf", specifier = "==1.23.8" },
     { name = "pyright", marker = "extra == 'dev'", specifier = ">=1.1.350" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.3" },

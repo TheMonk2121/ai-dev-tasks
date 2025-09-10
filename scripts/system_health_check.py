@@ -204,7 +204,7 @@ class SystemHealthChecker:
             logger.info("Health check test message")
 
             # Check if log files exist and are writable
-            log_dir = Path("dspy-rag-system")
+            log_dir = Path("logs")
             log_files = ["watch_folder.log", "watch_folder_error.log"]
 
             for log_file in log_files:
@@ -424,8 +424,8 @@ def assert_no_schema_drift() -> None:
     """Check for schema drift between current snapshot and baseline."""
     import pathlib
 
-    base = pathlib.Path("dspy-rag-system/config/database/schemas/db_schema.baseline.json")
-    curr = pathlib.Path("dspy-rag-system/config/database/schemas/db_schema.snapshot.json")
+    base = pathlib.Path("config/database/schemas/db_schema.baseline.json")
+    curr = pathlib.Path("config/database/schemas/db_schema.snapshot.json")
 
     if not base.exists() or not curr.exists():
         print("ℹ️  Schema baseline or snapshot missing; run validate_config.py --dump-schemas to generate.")
@@ -437,7 +437,7 @@ def assert_no_schema_drift() -> None:
     if json.dumps(_load(base), sort_keys=True) != json.dumps(_load(curr), sort_keys=True):
         print("❌ Schema drift detected vs baseline. If intentional, update baseline.")
         print(
-            "   To update baseline: cp dspy-rag-system/config/database/schemas/db_schema.snapshot.json dspy-rag-system/config/database/schemas/db_schema.baseline.json"
+            "   To update baseline: cp config/database/schemas/db_schema.snapshot.json config/database/schemas/db_schema.baseline.json"
         )
         sys.exit(2)
 

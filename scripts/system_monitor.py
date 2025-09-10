@@ -17,8 +17,7 @@ import time
 from datetime import datetime
 from typing import Any
 
-# Add DSPy RAG system to path
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
+# DSPy RAG system modules moved to main src directory
 
 try:
     from monitoring.health_endpoints import HealthEndpointManager
@@ -185,7 +184,7 @@ class SystemMonitor:
         # Overall Status
         lines.append("📊 OVERALL STATUS")
         lines.append("-" * 20)
-        overall = str(health.get('overall_status', 'unknown')).upper()
+        overall = str(health.get("overall_status", "unknown")).upper()
         lines.append(f"Status: {overall}")
         lines.append(f"Unhealthy Dependencies: {health.get('unhealthy_count', 0)}")
         lines.append(f"Degraded Dependencies: {health.get('degraded_count', 0)}")

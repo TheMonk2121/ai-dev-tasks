@@ -20,8 +20,8 @@ from typing import Any
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# Add dspy-rag-system to path
-dspy_rag_path = project_root / "dspy-rag-system"
+# DSPy modules moved to main src directory
+dspy_rag_path = project_root / "src"
 sys.path.insert(0, str(dspy_rag_path))
 
 from src.utils.config_lock import ConfigLockManager, LockedConfig
