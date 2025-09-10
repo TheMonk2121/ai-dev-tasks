@@ -6,6 +6,23 @@ on:
 jobs:
   baseline:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_agency
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ai_agency"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       
@@ -18,18 +35,57 @@ jobs:
         run: |
           pip install -r requirements.txt
       
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
       - name: Validate profile configuration
         run: |
           python3 scripts/lib/config_loader.py --profile real --help || true
           echo "✅ Real profile configuration validated"
       
       - name: Setup environment
+        env:
+          PGPORT: ${{ job.services.postgres.ports[5432] }}
+          OPENAI: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          echo "POSTGRES_DSN=${{ secrets.POSTGRES_DSN }}" >> $GITHUB_ENV
-          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
-          echo "BEDROCK_REGION=${{ secrets.BEDROCK_REGION }}" >> $GITHUB_ENV
-          echo "BEDROCK_ACCESS_KEY=${{ secrets.BEDROCK_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "BEDROCK_SECRET_KEY=${{ secrets.BEDROCK_SECRET_KEY }}" >> $GITHUB_ENV
+          # Compute DSN from service container published port
+          echo "POSTGRES_DSN=postgresql://postgres:postgres@localhost:${PGPORT}/ai_agency" >> $GITHUB_ENV
+          # Other app secrets
+          echo "OPENAI_API_KEY=${OPENAI}" >> $GITHUB_ENV
+          # Region used by Bedrock client libraries
+          echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Initialize database schema
+        env:
+          PGPORT: ${{ job.services.postgres.ports[5432] }}
+        run: |
+          export PGPASSWORD=postgres
+          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" || true
+          # 'vector' extension may not be available in default image; ignore errors
+          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;" || true
+          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE TABLE IF NOT EXISTS episodic_logs (
+            id SERIAL PRIMARY KEY,
+            user_id TEXT,
+            model_type TEXT,
+            prompt TEXT,
+            response TEXT,
+            tokens_used INTEGER,
+            cache_hit BOOLEAN DEFAULT FALSE,
+            similarity_score DOUBLE PRECISION DEFAULT 0.0,
+            last_verified TIMESTAMPTZ,
+            created_at TIMESTAMPTZ DEFAULT NOW(),
+            updated_at TIMESTAMPTZ DEFAULT NOW()
+          );
+          SQL
 
       - name: Eval (real, higher concurrency)
         run: |

@@ -24,6 +24,9 @@ jobs:
   ragchecker-evaluation:
     runs-on: ubuntu-latest
     name: RAGChecker Evaluation Pipeline
+    permissions:
+      id-token: write
+      contents: read
     env:
       ENFORCE_GATES: "false"  # soft gates (warnings only)
       EVAL_MODE: "bedrock_only"
@@ -50,6 +53,16 @@ jobs:
           uv pip install spacy
           uv run python -m spacy download en_core_web_sm
           uv pip install pytest psutil
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+      - name: Setup environment
+        run: |
+          echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
 
       - name: Run RAGChecker Tests
         run: |
