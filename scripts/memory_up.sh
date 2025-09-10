@@ -23,21 +23,22 @@ if [ ! -f "pyproject.toml" ]; then
 fi
 
 # Check if virtual environment exists
-if [ ! -f "venv/bin/python" ]; then
+if [ ! -f ".venv/bin/python" ]; then
     echo -e "${YELLOW}⚠️  Virtual environment not found${NC}"
-    echo "💡 Creating virtual environment..."
-    python3 -m venv venv
-    # shellcheck disable=SC1091
-    source venv/bin/activate
-    echo "💡 Attempting to install dependencies..."
-    if ! pip install -r requirements.txt; then
+    echo "💡 Creating virtual environment with uv..."
+    if ! command -v uv >/dev/null 2>&1; then
+        echo -e "${RED}❌ Error: uv is required but not installed${NC}"
+        echo "💡 Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
+        exit 1
+    fi
+    uv venv --python 3.12
+    echo "💡 Installing dependencies with uv..."
+    if ! uv sync; then
         echo -e "${YELLOW}⚠️  Dependency installation failed, continuing without full dependencies${NC}"
         echo "💡 This is expected due to version conflicts - the memory system will work with basic functionality"
     fi
 else
     echo -e "${GREEN}✅ Virtual environment found${NC}"
-    # shellcheck disable=SC1091
-    source venv/bin/activate
     echo "💡 Using existing virtual environment - no dependency installation needed"
 fi
 
@@ -250,7 +251,7 @@ esac
 # Add development environment info
 MEMORY_CONTEXT+="## 🔧 **Development Environment**\n\n"
 MEMORY_CONTEXT+="- **Virtual Environment**: $(if [ -n "$VIRTUAL_ENV" ]; then echo "✅ Active"; else echo "❌ Not Active"; fi)\n"
-MEMORY_CONTEXT+="- **Python Version**: $(python3 --version)\n"
+MEMORY_CONTEXT+="- **Python Version**: $(uv run python --version)\n"
 MEMORY_CONTEXT+="- **Project Root**: $(pwd)\n"
 MEMORY_CONTEXT+="- **Query**: $QUERY\n"
 MEMORY_CONTEXT+="- **Role**: $ROLE\n"

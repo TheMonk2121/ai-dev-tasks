@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run python
 # ANCHOR_KEY: venv-manager
 # ANCHOR_PRIORITY: 30
 # ROLE_PINS: ["coder", "implementer", "planner", "researcher"]
@@ -20,8 +20,8 @@ class VenvManager:
 
     def __init__(self, project_root: Path | None = None):
         self.project_root = project_root or Path.cwd()
-        self.venv_path = self.project_root / "venv"
-        self.venv_python = self.venv_path / "bin" / "python3"
+        self.venv_path = self.project_root / ".venv"
+        self.venv_python = self.venv_path / "bin" / "python"
         self.venv_activate = self.venv_path / "bin" / "activate"
 
     def is_venv_active(self) -> bool:
@@ -114,7 +114,7 @@ class VenvManager:
         # Check if venv exists
         if not self.venv_exists():
             print(f"❌ Virtual environment not found at {self.venv_path}")
-            print("💡 Create it with: python3 -m venv venv")
+            print("💡 Create it with: uv venv --python 3.12")
             return False
 
         # Try to activate if not already active
@@ -126,7 +126,7 @@ class VenvManager:
         deps_ok, missing = self.validate_dependencies()
         if not deps_ok:
             print(f"❌ Missing dependencies: {', '.join(missing)}")
-            print("💡 Install with: source venv/bin/activate && pip install -r requirements.txt")
+            print("💡 Install with: uv sync")
             return False
 
         print("✅ Virtual environment is active and ready")

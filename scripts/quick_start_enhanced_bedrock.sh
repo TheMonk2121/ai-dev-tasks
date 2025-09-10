@@ -20,32 +20,33 @@ fi
 echo "✅ Project structure verified"
 echo ""
 
-# Check Python environment
-if ! command -v python3 &> /dev/null; then
-    echo "❌ Error: Python 3 is required but not installed"
+# Check for uv
+if ! command -v uv &> /dev/null; then
+    echo "❌ Error: uv is required but not installed"
+    echo "💡 Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
     exit 1
 fi
 
-echo "✅ Python 3 found: $(python3 --version)"
+echo "✅ uv found: $(uv --version)"
 echo ""
 
 # Check virtual environment
-if [ -d "venv" ]; then
+if [ -d ".venv" ]; then
     echo "🔧 Activating virtual environment..."
-    if [ -f "venv/bin/activate" ]; then
+    if [ -f ".venv/bin/activate" ]; then
         # shellcheck source=/dev/null
-        source venv/bin/activate
+        source .venv/bin/activate
         echo "✅ Virtual environment activated"
     else
-        echo "❌ Error: venv/bin/activate not found"
+        echo "❌ Error: .venv/bin/activate not found"
         exit 1
     fi
 else
     echo "⚠️ No virtual environment found. Creating one..."
-    python3 -m venv venv
-    if [ -f "venv/bin/activate" ]; then
+    uv venv --python 3.12
+    if [ -f ".venv/bin/activate" ]; then
         # shellcheck source=/dev/null
-        source venv/bin/activate
+        source .venv/bin/activate
         echo "✅ Virtual environment created and activated"
     else
         echo "❌ Error: Failed to create virtual environment"
@@ -57,7 +58,7 @@ echo ""
 
 # Install required dependencies
 echo "📦 Installing required dependencies..."
-pip install boto3 botocore asyncio
+uv add boto3 botocore
 echo "✅ Dependencies installed"
 echo ""
 
@@ -87,7 +88,7 @@ echo ""
 echo "🧪 Testing Enhanced Bedrock Client..."
 echo ""
 
-if python3 scripts/test_enhanced_bedrock.py; then
+if uv run python scripts/test_enhanced_bedrock.py; then
     echo ""
     echo "🎉 Enhanced Bedrock Client is working!"
     echo ""
@@ -95,7 +96,7 @@ if python3 scripts/test_enhanced_bedrock.py; then
     echo "   1. Review the test results above"
     echo "   2. Configure additional API keys if needed (optional)"
     echo "   3. Integrate with RAGChecker:"
-    echo "      python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli"
+    echo "      uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli"
     echo "   4. Monitor performance improvements"
     echo ""
     echo "📚 For detailed integration instructions, see:"

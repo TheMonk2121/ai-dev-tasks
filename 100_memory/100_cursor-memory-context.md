@@ -76,7 +76,7 @@ CONTEXT_INDEX -->
 
 **🚨 MANDATORY FIRST STEP**: Run this command before any project work:
 ```bash
-export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 **📊 CURRENT PROJECT STATUS**:
@@ -91,7 +91,7 @@ export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator
 - Check `metrics/lessons/lessons.jsonl` for current lessons
 - Check `metrics/derived_configs/` for generated configurations
 - Check `configs/EVOLUTION.md` for configuration evolution
-- Use `python3 scripts/lessons_quality_check.py` to verify system health
+- Use `uv run python scripts/lessons_quality_check.py` to verify system health
 
 | what this file is | read when | do next |
 |---|---|---|
@@ -106,7 +106,7 @@ export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator
 
 1. **AUTOMATIC DETECTION**: If this appears to be a new conversation or the user asks about project components
 2. **MANDATORY EXECUTION**: Run the unified memory orchestrator before answering
-3. **COMMAND**: `export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
+3. **COMMAND**: `export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
 4. **OUTPUT INCLUSION**: Include the memory context output in your response
 5. **NO EXCEPTIONS**: Do not answer project questions without this context
 
@@ -136,7 +136,7 @@ export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator
 2. **Read**: `000_core/000_evaluation-system-entry-point.md` for evaluation SOP
 3. **Use**: Lessons engine with `--lessons-mode advisory` first
 4. **Check**: Quality gates and baseline requirements
-5. **Command**: `python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
+5. **Command**: `uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
 6. **DOCUMENT**: Update `000_core/000_backlog.md` with evaluation results and lessons learned
 
 ### **Path 4: Memory System Work**
@@ -184,7 +184,7 @@ Add standard snippet to paste into `000_core/000_backlog.md`:
 **Example Documentation**:
 ```markdown
 ### **Evaluation Run - [DATE]**
-- **Command**: `python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
+- **Command**: `uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
 - **Results**: [precision, recall, f1 scores]
 - **Lessons Generated**: [list of new lessons]
 - **Configurations Created**: [list of generated configs]
@@ -195,16 +195,16 @@ Add standard snippet to paste into `000_core/000_backlog.md`:
 
 ### **Memory Rehydration (MANDATORY)**
 ```bash
-export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 ### **Lessons Engine**
 ```bash
 # Run evaluation with lessons
-python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
 
 # Check system health
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 
 # Generate evolution tracking
 python3 scripts/evolution_tracker.py
@@ -216,7 +216,7 @@ python3 scripts/evolution_tracker.py
 cat metrics/lessons/lessons.jsonl
 
 # 2. Run evaluation with lessons engine
-python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
 
 # 3. Check new lessons generated
 cat metrics/lessons/lessons.jsonl
@@ -228,19 +228,19 @@ ls -la metrics/derived_configs/
 python3 scripts/evolution_tracker.py
 
 # 6. Verify system health
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 ```
 
 ### **DSPy Role Access**
 ```bash
 # Planner context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
 
 # Coder context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
 
 # Researcher context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
 ```
 
 ### **System Health Checks**
@@ -249,7 +249,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role researche
 python3 scripts/memory_healthcheck.py
 
 # Lessons quality check
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 
 # Update memory context
 python3 scripts/update_cursor_memory.py
@@ -270,7 +270,7 @@ ls -la metrics/derived_configs/ | tail -5
 cat configs/EVOLUTION.md | tail -20
 
 # Check system status
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 ```
 
 **⚠️ SAFETY OPS**: Before any file operations, read these critical policies:
@@ -299,10 +299,10 @@ python3 scripts/lessons_quality_check.py
 ### **Usage**
 ```bash
 # Run evaluation with lessons engine
-python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
 
 # Check system health
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 
 # Generate evolution tracking
 python3 scripts/evolution_tracker.py
@@ -340,14 +340,14 @@ python3 scripts/evolution_tracker.py
 ### **📊 Progress Tracking & Baseline Management**
 
 **Where Results Are Stored**: `metrics/baseline_evaluations/`
-**How to Track Progress**: Run `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli`
+**How to Track Progress**: Run `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli`
 **Baseline Lock**: Current metrics are the performance floor - no regression allowed
 
 **Example Commands**:
 ```bash
 # Run RAGChecker evaluation to check progress
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 # Check latest results
 ls -la metrics/baseline_evaluations/
@@ -382,7 +382,7 @@ Read these files in order (1–2 min total):
 ```bash
 # Quick baseline check
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 # View current metrics
 ls -la metrics/baseline_evaluations/
@@ -404,13 +404,13 @@ ls -la metrics/baseline_evaluations/
 export POSTGRES_DSN="mock://test"
 
 # Access specific DSPy roles for context and insights
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
 
 # Full memory context with all systems
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 
 # Episodic Memory System (Complete Learning System)
 python3 scripts/episodic_memory_system.py --query "implement database error handling" --role coder
@@ -518,7 +518,7 @@ See `UV_MIGRATION_COMPLETE.md` and `VENV_MAPPING_VERIFICATION.md` for complete d
 ### **Key Scripts & Tools**
 ```bash
 # AWS Bedrock evaluation
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock
 
 # Results management
 python3 scripts/ragchecker_with_monitoring.py
@@ -1071,7 +1071,7 @@ without requiring the AI to read multiple files.
 ## 🔒 **Canonical Evaluation System (CRITICAL)**
 
 **🎯 PRIMARY ENTRY POINT**: `000_core/000_evaluation-system-entry-point.md`
-**📋 Standard Command**: `source throttle_free_eval.sh && python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable`
+**📋 Standard Command**: `source throttle_free_eval.sh && uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable`
 **💨 Fast Testing**: `./scripts/run_ragchecker_smoke_test.sh`
 **🔧 Configuration**: `configs/stable_bedrock.env` (LOCKED - do not modify without versioning)
 **📖 Complete SOP**: `400_guides/400_canonical-evaluation-sop.md`

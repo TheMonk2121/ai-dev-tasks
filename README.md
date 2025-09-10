@@ -58,7 +58,7 @@ cd ai-dev-tasks
 
 # 2. Run evaluations (PRIMARY)
 source throttle_free_eval.sh
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
 # 📋 See: 000_core/000_evaluation-system-entry-point.md
 
 # Install UV (if not already installed)
@@ -484,10 +484,10 @@ MIT License - see [LICENSE](LICENSE) for details.
 ### Usage:
 ```bash
 # Run ops smoke test
-python3 scripts/ragchecker_official_evaluation.py --gold-profile ops_smoke --outdir metrics/baseline_evaluations --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --gold-profile ops_smoke --outdir metrics/baseline_evaluations --use-bedrock --bypass-cli
 
 # Run repo gold evaluation
-python3 scripts/ragchecker_official_evaluation.py --gold-profile repo_gold --outdir metrics/baseline_evaluations --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --gold-profile repo_gold --outdir metrics/baseline_evaluations --use-bedrock --bypass-cli
 ```
 
 **Implementation Location**: `evals/gold/v1/`, `src/utils/gold_loader.py`, updated evaluation scripts

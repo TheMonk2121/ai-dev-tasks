@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run python
 """
 Workflow Runner
 --------------
@@ -15,9 +15,9 @@ def main():
 
     # Ensure we're in the project root
     project_root = Path(__file__).parent.parent
-    if not (project_root / "venv").exists():
+    if not (project_root / ".venv").exists():
         print("❌ Virtual environment not found")
-        print("💡 Create it with: python3 -m venv venv")
+        print("💡 Create it with: uv venv --python 3.12")
         sys.exit(1)
 
     # Check venv status
