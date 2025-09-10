@@ -5,6 +5,7 @@ Retrieval Tuning Utility
 Performs hyperparameter search over retrieval configuration space
 to optimize RAGChecker evaluation metrics.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -163,7 +164,7 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
     best_config = None
 
     for i, config_variant in enumerate(search_configs):
-        print(f"⚡ Evaluating configuration {i+1}/{len(search_configs)}")
+        print(f"⚡ Evaluating configuration {i + 1}/{len(search_configs)}")
 
         start_time = time.time()
         metrics = simulate_evaluation(config_variant)
@@ -222,7 +223,7 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
     for i, result in enumerate(results[:5]):
         metrics = result["metrics"]
         print(
-            f"   {i+1}. Score: {result['score']:.3f}, "
+            f"   {i + 1}. Score: {result['score']:.3f}, "
             f"F1: {metrics['f1_score']:.3f}, "
             f"Recall: {metrics['recall_at_20']:.3f}"
         )

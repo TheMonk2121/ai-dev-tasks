@@ -76,21 +76,9 @@ def main() -> int:
     recent = _collect_results(args.results_dir, args.window)
 
     # Gather series
-    prec = [
-        _get_overall(r).get("precision", 0.0)
-        for r in recent
-        if isinstance(r, dict)
-    ]
-    rec = [
-        _get_overall(r).get("recall", 0.0)
-        for r in recent
-        if isinstance(r, dict)
-    ]
-    f1 = [
-        _get_overall(r).get("f1", 0.0)
-        for r in recent
-        if isinstance(r, dict)
-    ]
+    prec = [_get_overall(r).get("precision", 0.0) for r in recent if isinstance(r, dict)]
+    rec = [_get_overall(r).get("recall", 0.0) for r in recent if isinstance(r, dict)]
+    f1 = [_get_overall(r).get("f1", 0.0) for r in recent if isinstance(r, dict)]
     lat_ms = [
         _get_overall(r).get("latency_ms", 0.0)
         for r in recent
@@ -142,4 +130,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

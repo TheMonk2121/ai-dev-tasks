@@ -896,7 +896,7 @@ class ProductionDeploymentValidator:
         """Generate production deployment script"""
         return f"""#!/bin/bash
 # Production Deployment Script for Generation Cache System
-# Generated on: {time.strftime('%Y-%m-%d %H:%M:%S')}
+# Generated on: {time.strftime("%Y-%m-%d %H:%M:%S")}
 
 set -e
 
@@ -927,7 +927,7 @@ echo "✅ Production deployment completed successfully!"
         """Generate production rollback script"""
         return f"""#!/bin/bash
 # Production Rollback Script for Generation Cache System
-# Generated on: {time.strftime('%Y-%m-%d %H:%M:%S')}
+# Generated on: {time.strftime("%Y-%m-%d %H:%M:%S")}
 
 set -e
 

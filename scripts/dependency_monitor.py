@@ -299,6 +299,7 @@ class DependencyMonitor:
         summary.append("=" * 60)
         return "\n".join(summary)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Dependency Graph Monitor")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without saving")
@@ -323,6 +324,7 @@ def main():
     except Exception as e:
         monitor.log(f"Analysis failed: {e}", "ERROR")
         sys.exit(2)
+
 
 if __name__ == "__main__":
     main()

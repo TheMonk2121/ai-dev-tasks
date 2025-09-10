@@ -20,44 +20,52 @@ def main():
     """Main summary function."""
     print("🎯 REPO-GOLD EVALUATION SYSTEM SETUP SUMMARY")
     print("=" * 60)
-    
+
     # Dataset information
     dataset_file = Path("datasets/dev_gold.jsonl")
     if dataset_file.exists():
-        with open(dataset_file, 'r') as f:
+        with open(dataset_file, "r") as f:
             records = [json.loads(line) for line in f if line.strip()]
-        
+
         categories = {}
         for record in records:
-            cat = record.get('category', 'unknown')
+            cat = record.get("category", "unknown")
             categories[cat] = categories.get(cat, 0) + 1
-        
-        print_section("📊 Dataset Overview", f"""
+
+        print_section(
+            "📊 Dataset Overview",
+            f"""
 Total records: {len(records)}
 Categories:
 {chr(10).join(f"  • {cat}: {count}" for cat, count in categories.items())}
 File: {dataset_file}
-        """)
-    
+        """,
+        )
+
     # Few-shot pool information
     pool_file = Path("datasets/few_shot_pool.jsonl")
     if pool_file.exists():
-        with open(pool_file, 'r') as f:
+        with open(pool_file, "r") as f:
             pool_records = [json.loads(line) for line in f if line.strip()]
-        
-        print_section("🔒 Leakage Guard", f"""
+
+        print_section(
+            "🔒 Leakage Guard",
+            f"""
 Few-shot pool size: {len(pool_records)}
 Pool file: {pool_file}
 Leakage guard: ✅ Implemented
-        """)
-    
+        """,
+        )
+
     # Configuration information
     config_file = Path("configs/repo_gold_evaluation.env")
     if config_file.exists():
-        with open(config_file, 'r') as f:
-            config_lines = [line.strip() for line in f if line.strip() and not line.startswith('#')]
-        
-        print_section("⚙️ Configuration", f"""
+        with open(config_file, "r") as f:
+            config_lines = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+
+        print_section(
+            "⚙️ Configuration",
+            f"""
 Config file: {config_file}
 Key settings:
   • DATASET_HAS_GOLD=1
@@ -65,20 +73,26 @@ Key settings:
   • ORACLE_PREFILTER_TARGET=0.85
   • READER_USED_GOLD_TARGET=0.70
   • RERANK_ENABLE=1
-        """)
-    
+        """,
+        )
+
     # Evaluation scripts
-    print_section("🚀 Evaluation Scripts", """
+    print_section(
+        "🚀 Evaluation Scripts",
+        """
 Available scripts:
   • scripts/bootstrap_repo_gold_dataset.py - Create repo-gold dataset
   • scripts/leakage_guard.py - Validate no data leakage
   • scripts/run_evaluation_suite.py - Run comprehensive evaluations
   • scripts/ci_evaluation_pipeline.py - CI integration
   • scripts/gate_and_promote.py - Quality gates and promotion
-        """)
-    
+        """,
+    )
+
     # Usage examples
-    print_section("📋 Usage Examples", """
+    print_section(
+        "📋 Usage Examples",
+        """
 Run repo-gold evaluation:
   python3 scripts/run_evaluation_suite.py --repo-gold-only
 
@@ -93,10 +107,13 @@ Validate leakage guard:
 
 Run CI pipeline:
   python3 scripts/ci_evaluation_pipeline.py
-        """)
-    
+        """,
+    )
+
     # Current status
-    print_section("📈 Current Status", """
+    print_section(
+        "📈 Current Status",
+        """
 ✅ Repo-gold dataset created (30 records)
 ✅ Few-shot pool created (3 records)
 ✅ Leakage guard implemented
@@ -110,10 +127,13 @@ Next steps:
 2. Calibrate oracle thresholds based on results
 3. Integrate into CI/CD pipeline
 4. Set up nightly evaluation runs
-        """)
-    
+        """,
+    )
+
     # Gate thresholds
-    print_section("🚪 Quality Gates", """
+    print_section(
+        "🚪 Quality Gates",
+        """
 Current thresholds:
   • F1 Score: ≥ 0.22
   • Precision Drift: ≤ 0.02
@@ -123,7 +143,8 @@ Current thresholds:
   • Tool Schema Conformance: ≥ 95%
 
 Note: Oracle metrics will be 0% on first run until calibrated.
-        """)
+        """,
+    )
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ def test_smart_chunker_integration():
     # Create document processor with smart chunking
     processor = DocumentProcessor(chunk_size=300, chunk_overlap=64)  # Coach's recommendation
 
-    print(f"📊 Processor config: chunk_size={processor.chunk_size}, " f"chunk_overlap={processor.chunk_overlap}")
+    print(f"📊 Processor config: chunk_size={processor.chunk_size}, chunk_overlap={processor.chunk_overlap}")
 
     # Test processing
     print("\n🔍 Processing DSPy code...")
@@ -39,7 +39,7 @@ def test_smart_chunker_integration():
         chunk_type = chunk.get("metadata", {}).get("chunk_type", "unknown")
         function_name = chunk.get("metadata", {}).get("function_name", "N/A")
 
-        print(f"\nChunk {i+1}: {chunk_id}")
+        print(f"\nChunk {i + 1}: {chunk_id}")
         print(f"  Type: {chunk_type}")
         print(f"  Function: {function_name}")
         print(f"  Text length: {len(chunk.get('text', ''))}")

@@ -14,6 +14,7 @@ cd "$PROJECT_ROOT"
 if [ -f "venv/bin/activate" ]; then
     echo "📦 Activating virtual environment..."
     # shellcheck source=venv/bin/activate
+    # shellcheck disable=SC1091
     source venv/bin/activate
 else
     echo "⚠️  Virtual environment not found, using system Python"

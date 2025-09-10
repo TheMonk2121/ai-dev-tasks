@@ -121,7 +121,7 @@ def generate_edge_cases() -> List[Dict[str, Any]]:
     return edge_cases
 
 
-def test_retrieval_robustness(retrieval_fn, test_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
+def run_retrieval_robustness_tests(retrieval_fn, test_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Test retrieval pipeline robustness with edge cases."""
     results = {"total_cases": len(test_cases), "passed": 0, "failed": 0, "errors": 0, "case_results": []}
 
@@ -292,7 +292,7 @@ def run_comprehensive_tests(retrieval_fn, output_path: str = "test_hardening_res
 
     # Run robustness tests
     print("⚡ Running robustness tests...")
-    robustness_results = test_retrieval_robustness(retrieval_fn, edge_cases)
+    robustness_results = run_retrieval_robustness_tests(retrieval_fn, edge_cases)
 
     # Validate pipeline configuration
     print("🔧 Validating pipeline configuration...")

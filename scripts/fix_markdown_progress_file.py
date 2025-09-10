@@ -85,5 +85,6 @@ def fix_markdown_progress_file():
         print(f"ℹ️  No changes needed for {file_path}")
         return False
 
+
 if __name__ == "__main__":
     fix_markdown_progress_file()

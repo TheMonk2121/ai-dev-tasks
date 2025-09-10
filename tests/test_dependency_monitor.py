@@ -212,6 +212,7 @@ class TestDependencyMonitor:
             saved_state = json.load(f)
             assert saved_state == state
 
+
 class TestDependencyMonitorIntegration:
     """Integration tests for DependencyMonitor."""
 
@@ -247,6 +248,7 @@ class TestDependencyMonitorIntegration:
         assert not (Path(temp_dir) / "circular_dependencies.json").exists()  # Not created when skipped
         assert (Path(temp_dir) / "import_conflicts.json").exists()
         assert (Path(temp_dir) / "dependency_changes.log").exists()
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

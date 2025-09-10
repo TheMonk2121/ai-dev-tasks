@@ -135,7 +135,7 @@ def create_baseline_locked():
 **Region**: `{aws_region}`
 **Rate Limit**: `{max_rps} RPS`
 **Concurrency**: `1`
-**Cooldown**: `{os.getenv('BEDROCK_COOLDOWN_SEC', '30')}s`
+**Cooldown**: `{os.getenv("BEDROCK_COOLDOWN_SEC", "30")}s`
 
 ## 📊 **Baseline Results**
 

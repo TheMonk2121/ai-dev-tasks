@@ -15,17 +15,15 @@ def extract_memory_context(file_path):
     if not file_path.exists():
         return None
 
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         content = f.read()
 
     # Look for MEMORY_CONTEXT comment
-    match = re.search(r'', content)
+    match = re.search(r"", content)
     if match:
-        return {
-            'level': match.group(1),
-            'description': match.group(2)
-        }
+        return {"level": match.group(1), "description": match.group(2)}
     return None
+
 
 def get_file_info(file_path):
     """Get basic file information"""
@@ -33,10 +31,8 @@ def get_file_info(file_path):
         return None
 
     stat = file_path.stat()
-    return {
-        'size': stat.st_size,
-        'modified': stat.st_mtime
-    }
+    return {"size": stat.st_size, "modified": stat.st_mtime}
+
 
 def display_memory_hierarchy():
     """Display the memory context hierarchy"""
@@ -47,26 +43,20 @@ def display_memory_hierarchy():
 
     # Define the hierarchy
     hierarchy = {
-        'HIGH': [
-                    '100_cursor-memory-context.md',
-        '400_system-overview.md',
-        '000_backlog.md',
-        'README.md'
+        "HIGH": ["100_cursor-memory-context.md", "400_system-overview.md", "000_backlog.md", "README.md"],
+        "MEDIUM": [
+            "001_create-prd.md",
+            "002_generate-tasks.md",
+            "003_process-task-list.md",
+            "104_dspy-development-context.md",
         ],
-        'MEDIUM': [
-            '001_create-prd.md',
-            '002_generate-tasks.md',
-            '003_process-task-list.md',
-            '104_dspy-development-context.md'
-        ],
-        'LOW': [
-            '103_yi-coder-integration.md',
-            '100_backlog-guide.md'
-        ]
+        "LOW": ["103_yi-coder-integration.md", "100_backlog-guide.md"],
     }
 
     for level, files in hierarchy.items():
-        print(f"📋 {level} PRIORITY (Read {'First' if level == 'HIGH' else 'as Needed' if level == 'MEDIUM' else 'for Specific Tasks'})")
+        print(
+            f"📋 {level} PRIORITY (Read {'First' if level == 'HIGH' else 'as Needed' if level == 'MEDIUM' else 'for Specific Tasks'})"
+        )
         print("-" * 40)
 
         for filename in files:
@@ -76,7 +66,7 @@ def display_memory_hierarchy():
 
             if file_path.exists():
                 status = "✅"
-                size_kb = file_info['size'] / 1024 if file_info else 0
+                size_kb = file_info["size"] / 1024 if file_info else 0
                 print(f"{status} {filename}")
                 print(f"   📄 Size: {size_kb:.1f} KB")
 
@@ -97,9 +87,11 @@ def display_memory_hierarchy():
     print()
     print("🔄 Update memory context: python3 scripts/update_cursor_memory.py")
 
+
 def main():
     """Main function"""
     display_memory_hierarchy()
+
 
 if __name__ == "__main__":
     main()

@@ -26,7 +26,7 @@ Score = float
 
 
 def _as_rank_map(
-    items: Union[Sequence[DocId], Sequence[Tuple[DocId, Score]], Mapping[DocId, Score]]
+    items: Union[Sequence[DocId], Sequence[Tuple[DocId, Score]], Mapping[DocId, Score]],
 ) -> Dict[DocId, Rank]:
     """Normalize various input formats into a 1-indexed rank map.
 

@@ -129,11 +129,11 @@ def main():
     print(f"📊 Surveyed {len(agents_feedback)} DSPy agents")
     print("🎯 Top themes:")
     for agent_name, agent_data in agents_feedback.items():
-        print(f'  {agent_name}: {agent_data["top_failure_mode"]}')
+        print(f"  {agent_name}: {agent_data['top_failure_mode']}")
 
     print("\n🚀 Priority actions from agents:")
     for action in feedback_data["summary"]["priority_actions"]:
-        print(f'  • {action["action"]} (votes: {action["votes"]}, risk: {action["risk"]})')
+        print(f"  • {action['action']} (votes: {action['votes']}, risk: {action['risk']})")
 
     return output_file
 

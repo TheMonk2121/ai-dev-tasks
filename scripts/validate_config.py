@@ -130,7 +130,6 @@ def dump_pydantic_schemas() -> None:
 
     # Import locally to avoid heavy imports on unrelated runs
     from ragchecker_pydantic_models import RAGCheckerInput, RAGCheckerMetrics, RAGCheckerResult
-
     from src.dspy_modules.constitution_validation import ConstitutionCompliance, ProgramOutput
 
     # Import DSPy module models

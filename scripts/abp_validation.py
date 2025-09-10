@@ -72,7 +72,11 @@ def main() -> int:
         print(f"✅ Baseline Manifest OK: {manifest}")
 
     # Find most recent ABP
-    abps = sorted(glob.glob(os.path.join("metrics", "briefings", f"*_ {args.profile}_ABP.md").replace(" _", "_")), key=os.path.getmtime, reverse=True)
+    abps = sorted(
+        glob.glob(os.path.join("metrics", "briefings", f"*_ {args.profile}_ABP.md").replace(" _", "_")),
+        key=os.path.getmtime,
+        reverse=True,
+    )
     if not abps:
         msg = "No ABP files found. They are generated during evaluation runs."
         print(f"⚠️ {msg}")
@@ -85,7 +89,11 @@ def main() -> int:
     print(f"✅ Latest ABP: {latest_abp}")
 
     # Optionally check that context meta sidecar exists for latest results
-    metas = sorted(glob.glob(os.path.join("metrics", "baseline_evaluations", "*_context_meta.json")), key=os.path.getmtime, reverse=True)
+    metas = sorted(
+        glob.glob(os.path.join("metrics", "baseline_evaluations", "*_context_meta.json")),
+        key=os.path.getmtime,
+        reverse=True,
+    )
     if metas:
         meta = _load(metas[0]) or {}
         if meta.get("abp_path") and os.path.exists(str(meta.get("abp_path"))):

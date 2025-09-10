@@ -15,6 +15,7 @@ Usage:
   export READER_SRC=evals/reader_gold.jsonl
   python3 scripts/sync_reader_case_ids.py
 """
+
 import json
 import os
 import pathlib

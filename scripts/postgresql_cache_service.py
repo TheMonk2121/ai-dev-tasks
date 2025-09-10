@@ -568,7 +568,7 @@ class PostgreSQLCacheService:
 
                 query = f"""
                     UPDATE episodic_logs
-                    SET {', '.join(set_clauses)}
+                    SET {", ".join(set_clauses)}
                     WHERE id = ${param_count};
                 """
 

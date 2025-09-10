@@ -51,6 +51,7 @@ FILE_EXTENSION_TYPES = {
     ".log": "artifact",
 }
 
+
 @dataclass
 class RoleAssignment:
     """Represents a role assignment for a file."""
@@ -59,6 +60,7 @@ class RoleAssignment:
     source: str  # "metadata", "content_analysis", "default", "manual"
     confidence: float  # 0.0 to 1.0
     metadata: Optional[Dict] = None
+
 
 class RoleAssignmentMetadata:
     """Handles metadata parsing and role assignment for archived files."""
@@ -346,6 +348,7 @@ class RoleAssignmentMetadata:
 
         return True
 
+
 def main():
     """Test the role assignment metadata system."""
     metadata_system = RoleAssignmentMetadata()
@@ -368,6 +371,7 @@ def main():
 
     if metadata_system.validation_errors:
         print(f"Validation errors: {metadata_system.validation_errors}")
+
 
 if __name__ == "__main__":
     main()

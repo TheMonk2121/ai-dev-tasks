@@ -69,7 +69,7 @@ def parse_complexity():
     blob = json.loads(CC_JSON.read_text())
     for fpath, items in blob.items():
         vals = [it.get("complexity", 1) for it in items]
-        cc_by_file[fpath] = (stats.mean(vals) if vals else 1.0)
+        cc_by_file[fpath] = stats.mean(vals) if vals else 1.0
     return cc_by_file
 
 
@@ -96,25 +96,25 @@ def parse_flake_rates():
     flake_rates = defaultdict(list)
     if not FLAKE_TXT.exists():
         return {}
-    
+
     # Simple parsing - count failures per test across multiple runs
     # This is a basic implementation; could be enhanced with more sophisticated parsing
     current_test = None
     for line in FLAKE_TXT.read_text().splitlines():
         if "FAILED" in line or "PASSED" in line:
             # Extract test name from pytest output
-            m = re.search(r'([^:]+::[^:]+) - (FAILED|PASSED)', line)
+            m = re.search(r"([^:]+::[^:]+) - (FAILED|PASSED)", line)
             if m:
                 test_name = m.group(1)
                 status = m.group(2)
                 flake_rates[test_name].append(1.0 if status == "FAILED" else 0.0)
-    
+
     # Calculate average failure rate per test
     result = {}
     for test_name, failures in flake_rates.items():
         if failures:
             result[test_name] = sum(failures) / len(failures)
-    
+
     return result
 
 
@@ -231,10 +231,9 @@ def main():
     with OUT_CSV.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         writer.writeheader()
-        writer.writerows(sorted(rows, key=lambda r: (-r["score"], r["test_id"])) )
+        writer.writerows(sorted(rows, key=lambda r: (-r["score"], r["test_id"])))
     print(f"Wrote {OUT_CSV} with {len(rows)} rows")
 
 
 if __name__ == "__main__":
     main()
-

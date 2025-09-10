@@ -18,15 +18,18 @@ class SOPNodeType(Enum):
     GATEWAY = "gateway"
     RESULT = "result"
 
+
 class SOPEdgeType(Enum):
     CONTROL_FLOW = "control_flow"
     DATA_FLOW = "data_flow"
     CONDITIONAL = "conditional"
     SEQUENTIAL = "sequential"
 
+
 @dataclass
 class SOPNode:
     """Represents a node in an SOP process graph"""
+
     node_id: str
     node_type: SOPNodeType
     label: str
@@ -35,14 +38,17 @@ class SOPNode:
     preconditions: List[str] = None
     effects: List[str] = None
 
+
 @dataclass
 class SOPEdge:
     """Represents an edge in an SOP process graph"""
+
     source_id: str
     target_id: str
     edge_type: SOPEdgeType
     condition: Optional[str] = None
     metadata: Dict[str, Any] = None
+
 
 class SOPEngine:
     """Graph-based SOP engine for lessons-learned → SOP conversion"""
@@ -69,16 +75,16 @@ class SOPEngine:
             sop_node = SOPNode(
                 node_id=node_id,
                 node_type=node_type,
-                label=step.get("title", f"Step {i+1}"),
+                label=step.get("title", f"Step {i + 1}"),
                 description=step.get("description", ""),
                 metadata={
                     "step_order": i,
                     "source_lessons": step.get("source_lessons", []),
                     "confidence": step.get("confidence", 0.8),
-                    "category": step.get("category", "general")
+                    "category": step.get("category", "general"),
                 },
                 preconditions=step.get("preconditions", []),
-                effects=step.get("effects", [])
+                effects=step.get("effects", []),
             )
 
             graph.add_node(node_id, **sop_node.__dict__)
@@ -94,7 +100,7 @@ class SOPEngine:
             "source_lessons": [l.get("id") for l in lessons],
             "created_at": lessons[0].get("timestamp"),
             "node_count": len(graph.nodes),
-            "edge_count": len(graph.edges)
+            "edge_count": len(graph.edges),
         }
 
         return sop_id
@@ -121,11 +127,10 @@ class SOPEngine:
         # Swap adjacent tasks (Cat-2)
         nodes = list(graph.nodes())
         for i in range(len(nodes) - 1):
-            if (graph.nodes[nodes[i]]["node_type"] == "task" and
-                graph.nodes[nodes[i+1]]["node_type"] == "task"):
+            if graph.nodes[nodes[i]]["node_type"] == "task" and graph.nodes[nodes[i + 1]]["node_type"] == "task":
                 # Swap node positions in metadata
                 graph.nodes[nodes[i]]["metadata"]["step_order"] = i + 1
-                graph.nodes[nodes[i+1]]["metadata"]["step_order"] = i
+                graph.nodes[nodes[i + 1]]["metadata"]["step_order"] = i
 
         # Modify metadata fields
         for node_id in graph.nodes():
@@ -140,7 +145,7 @@ class SOPEngine:
         self.sop_metadata[augmented_id] = {
             **self.sop_metadata[augmented_id.split("_aug_")[0]],
             "augmentation_type": "syntactic",
-            "original_sop": augmented_id.split("_aug_")[0]
+            "original_sop": augmented_id.split("_aug_")[0],
         }
 
         return augmented_id
@@ -154,8 +159,7 @@ class SOPEngine:
         for node_id in graph.nodes():
             node_data = graph.nodes[node_id]
             # Don't delete critical nodes (start/end, decision points)
-            if (node_data["node_type"] not in ["gateway", "decision"] and
-                len(nodes_to_delete) < len(graph.nodes) * 0.15):
+            if node_data["node_type"] not in ["gateway", "decision"] and len(nodes_to_delete) < len(graph.nodes) * 0.15:
                 nodes_to_delete.append(node_id)
 
         # Remove selected nodes
@@ -172,7 +176,7 @@ class SOPEngine:
         self.sop_metadata[augmented_id] = {
             **self.sop_metadata[augmented_id.split("_aug_")[0]],
             "augmentation_type": "semantic",
-            "original_sop": augmented_id.split("_aug_")[0]
+            "original_sop": augmented_id.split("_aug_")[0],
         }
 
         return augmented_id
@@ -223,13 +227,15 @@ class SOPEngine:
 
             # Simple step extraction (in practice, use NLP)
             if "step" in content.lower() or "process" in content.lower():
-                steps.append({
-                    "title": lesson.get("title", "Process Step"),
-                    "description": content,
-                    "source_lessons": [lesson.get("id")],
-                    "category": lesson.get("category", "general"),
-                    "confidence": lesson.get("confidence", 0.8)
-                })
+                steps.append(
+                    {
+                        "title": lesson.get("title", "Process Step"),
+                        "description": content,
+                        "source_lessons": [lesson.get("id")],
+                        "category": lesson.get("category", "general"),
+                        "confidence": lesson.get("confidence", 0.8),
+                    }
+                )
 
         return steps
 
@@ -265,9 +271,7 @@ class SOPEngine:
             else:
                 edge_type = SOPEdgeType.SEQUENTIAL
 
-            graph.add_edge(source, target,
-                          edge_type=edge_type.value,
-                          metadata={"sop_id": sop_id, "step_sequence": i})
+            graph.add_edge(source, target, edge_type=edge_type.value, metadata={"sop_id": sop_id, "step_sequence": i})
 
     def _calculate_graph_similarity(self, graph1: nx.DiGraph, graph2: nx.DiGraph) -> float:
         """Calculate similarity between two SOP graphs"""
@@ -299,7 +303,9 @@ class SOPEngine:
 
         # Match on complexity (node count)
         req_complexity = requirements.get("complexity", "medium")
-        actual_complexity = "high" if metadata.get("node_count", 0) > 10 else "medium" if metadata.get("node_count", 0) > 5 else "low"
+        actual_complexity = (
+            "high" if metadata.get("node_count", 0) > 10 else "medium" if metadata.get("node_count", 0) > 5 else "low"
+        )
 
         if req_complexity == actual_complexity:
             match_score += 0.3
@@ -325,9 +331,10 @@ class SOPEngine:
             "metadata": self.sop_metadata[sop_id],
             "graph": {
                 "nodes": dict(graph.nodes(data=True)),
-                "edges": [(u, v, d) for u, v, d in graph.edges(data=True)]
-            }
+                "edges": [(u, v, d) for u, v, d in graph.edges(data=True)],
+            },
         }
+
 
 # Example usage
 if __name__ == "__main__":
@@ -341,7 +348,7 @@ if __name__ == "__main__":
             "title": "RAG Optimization Process",
             "description": "Step 1: Analyze current performance. Step 2: Identify bottlenecks. Step 3: Apply optimizations.",
             "category": "technical",
-            "confidence": 0.9
+            "confidence": 0.9,
         }
     ]
 

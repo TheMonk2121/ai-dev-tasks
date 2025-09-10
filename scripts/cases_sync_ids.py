@@ -16,11 +16,12 @@ import argparse
 import json
 import os
 import sys
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 # Add project paths (repo root)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
+
 sys.path.insert(0, str(SRC))
 
 from common.case_id import canonical_case_id
@@ -109,4 +110,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

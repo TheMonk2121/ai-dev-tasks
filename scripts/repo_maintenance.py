@@ -33,18 +33,18 @@ class RepoMaintenance:
         self.prd_skip_if_score_ge = 3.0
 
         # File patterns to check
-        self.markdown_files = list(Path('.').rglob('*.md'))
-        self.python_files = list(Path('.').rglob('*.py'))
+        self.markdown_files = list(Path(".").rglob("*.md"))
+        self.python_files = list(Path(".").rglob("*.py"))
 
         # Exclude patterns
         self.exclude_patterns = [
-            'venv/',
-            'node_modules/',
-            'docs/legacy/',
-            '__pycache__/',
-            '.git/',
-            '999_repo-maintenance.md',
-            'REPO_MAINTENANCE_SUMMARY.md'
+            "venv/",
+            "node_modules/",
+            "docs/legacy/",
+            "__pycache__/",
+            ".git/",
+            "999_repo-maintenance.md",
+            "REPO_MAINTENANCE_SUMMARY.md",
         ]
 
     def log(self, message: str, level: str = "INFO"):
@@ -55,8 +55,7 @@ class RepoMaintenance:
         """Pre-flight checks for git safety."""
         try:
             # Check for dirty working tree
-            dirty = subprocess.run(['git', 'status', '--porcelain'],
-                                 capture_output=True, text=True, check=True)
+            dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
             if dirty.stdout.strip():
                 self.log("Working tree dirty; aborting", "ERROR")
                 self.log("Please commit or stash changes before running maintenance", "ERROR")
@@ -64,10 +63,9 @@ class RepoMaintenance:
 
             # Check branch if auto-commit is enabled
             if self.auto_commit:
-                branch = subprocess.run(['git', 'branch', '--show-current'],
-                                      capture_output=True, text=True, check=True)
+                branch = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True, check=True)
                 current_branch = branch.stdout.strip()
-                if current_branch != 'main':
+                if current_branch != "main":
                     self.log(f"Auto-commit enabled but not on main branch ({current_branch}); aborting", "ERROR")
                     self.log("Auto-commit is only allowed on main branch", "ERROR")
                     sys.exit(1)
@@ -83,7 +81,7 @@ class RepoMaintenance:
     def read_file(self, file_path: Path) -> Optional[str]:
         """Read file content with error handling."""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 return f.read()
         except Exception as e:
             self.errors.append(f"Error reading {file_path}: {e}")
@@ -92,7 +90,7 @@ class RepoMaintenance:
     def write_file(self, file_path: Path, content: str) -> bool:
         """Write file content with error handling."""
         try:
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
             return True
         except Exception as e:
@@ -108,8 +106,8 @@ class RepoMaintenance:
             (r'"defaultModel":\s*"mistral"', '"defaultModel": "cursor-native-ai"'),
             (r'"defaultModel":\s*"yi-coder"', '"defaultModel": "cursor-native-ai"'),
             (r'"defaultModel":\s*"mistral-7b-instruct"', '"defaultModel": "cursor-native-ai"'),
-            (r'\(default:\s*mistral\)', '(default: cursor-native-ai)'),
-            (r'\(default:\s*Yi-Coder-9B-Chat-Q6_K\)', '(default: cursor-native-ai)'),
+            (r"\(default:\s*mistral\)", "(default: cursor-native-ai)"),
+            (r"\(default:\s*Yi-Coder-9B-Chat-Q6_K\)", "(default: cursor-native-ai)"),
         ]
 
         for file_path in self.markdown_files:
@@ -142,10 +140,16 @@ class RepoMaintenance:
 
         changes_made = False
         patterns_to_fix = [
-            (r'003.*optional.*default_executor', '003_process-task-list.md is the execution engine; it loads whether or not a PRD was created'),
-            (r'loads.*003.*only if.*default_executor', '003_process-task-list.md is the execution engine; it loads whether or not a PRD was created'),
-            (r'\b003\s+optional\b(?=\s|$)', '003_process-task-list.md (the execution engine)'),
-            (r'\b\(optional\)\b', '(the execution engine)'),
+            (
+                r"003.*optional.*default_executor",
+                "003_process-task-list.md is the execution engine; it loads whether or not a PRD was created",
+            ),
+            (
+                r"loads.*003.*only if.*default_executor",
+                "003_process-task-list.md is the execution engine; it loads whether or not a PRD was created",
+            ),
+            (r"\b003\s+optional\b(?=\s|$)", "003_process-task-list.md (the execution engine)"),
+            (r"\b\(optional\)\b", "(the execution engine)"),
         ]
 
         for file_path in self.markdown_files:
@@ -175,7 +179,7 @@ class RepoMaintenance:
     def calculate_file_hash(self, file_path: Path) -> Optional[str]:
         """Calculate SHA-256 hash of file content."""
         try:
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 content = f.read()
                 return hashlib.sha256(content).hexdigest()
         except Exception as e:
@@ -200,8 +204,7 @@ class RepoMaintenance:
                 hash_to_files[file_hash].append(file_path)
 
         # Filter to only hashes with multiple files
-        duplicates = {hash_val: files for hash_val, files in hash_to_files.items()
-                     if len(files) > 1}
+        duplicates = {hash_val: files for hash_val, files in hash_to_files.items() if len(files) > 1}
 
         return duplicates
 
@@ -211,8 +214,10 @@ class RepoMaintenance:
 
         for hash_val, files in duplicates.items():
             # Sort files by priority (main files first, then archives)
-            main_files = [f for f in files if not any(pattern in str(f) for pattern in ['archives', 'backup', 'legacy'])]
-            archive_files = [f for f in files if any(pattern in str(f) for pattern in ['archives', 'backup', 'legacy'])]
+            main_files = [
+                f for f in files if not any(pattern in str(f) for pattern in ["archives", "backup", "legacy"])
+            ]
+            archive_files = [f for f in files if any(pattern in str(f) for pattern in ["archives", "backup", "legacy"])]
 
             if main_files and archive_files:
                 # Keep the first main file, archive the rest
@@ -252,7 +257,7 @@ class RepoMaintenance:
 
                 if not self.dry_run:
                     # Archive duplicate to legacy
-                    legacy_dir = Path('docs/legacy')
+                    legacy_dir = Path("docs/legacy")
                     legacy_dir.mkdir(exist_ok=True)
 
                     new_path = legacy_dir / archive_file.name
@@ -275,7 +280,7 @@ class RepoMaintenance:
             r"points.*5.*score.*3\.0",
             r"Skip PRD.*points.*5.*score.*3\.0",
             r"points.*5.*pts.*score.*3\.0",
-            r"pts.*5.*score.*3\.0"
+            r"pts.*5.*score.*3\.0",
         ]
 
         all_consistent = True
@@ -290,10 +295,12 @@ class RepoMaintenance:
             # Check if file contains PRD-skip rules
             if any(re.search(pattern, content, re.IGNORECASE) for pattern in rule_variations):
                 # Verify consistency - check for various patterns
-                has_valid_rule = (re.search(r"points.*5.*score.*3\.0", content, re.IGNORECASE) or
-                                re.search(r"points.*5.*pts.*score.*3\.0", content, re.IGNORECASE) or
-                                re.search(r"pts.*5.*score.*3\.0", content, re.IGNORECASE) or
-                                re.search(r"skip.*items.*5.*pts.*score.*3\.0", content, re.IGNORECASE))
+                has_valid_rule = (
+                    re.search(r"points.*5.*score.*3\.0", content, re.IGNORECASE)
+                    or re.search(r"points.*5.*pts.*score.*3\.0", content, re.IGNORECASE)
+                    or re.search(r"pts.*5.*score.*3\.0", content, re.IGNORECASE)
+                    or re.search(r"skip.*items.*5.*pts.*score.*3\.0", content, re.IGNORECASE)
+                )
 
                 if not has_valid_rule:
                     self.log(f"PRD-skip rule inconsistency found in {file_path}")
@@ -310,11 +317,7 @@ class RepoMaintenance:
         """T-5: Contradiction scan."""
         self.log("Running T-5: Contradiction scan...")
 
-        contradiction_patterns = [
-            r"yi-coder.*default",
-            r"mistral 7b instruct.*default",
-            r"003 optional"
-        ]
+        contradiction_patterns = [r"yi-coder.*default", r"mistral 7b instruct.*default", r"003 optional"]
 
         contradictions_found = []
         for file_path in self.markdown_files:
@@ -352,11 +355,11 @@ class RepoMaintenance:
         if self.auto_commit:
             try:
                 # Stage changes
-                subprocess.run(['git', 'add', '.'], check=True)
+                subprocess.run(["git", "add", "."], check=True)
 
                 # Commit with descriptive message
                 commit_message = "chore: cursor-first doc alignment and langextract integration"
-                subprocess.run(['git', 'commit', '-m', commit_message], check=True)
+                subprocess.run(["git", "commit", "-m", commit_message], check=True)
 
                 self.log("Changes committed successfully")
                 return True
@@ -394,9 +397,9 @@ class RepoMaintenance:
                 all_success = False
 
         # Report results
-        self.log("\n" + "="*50)
+        self.log("\n" + "=" * 50)
         self.log("MAINTENANCE SUMMARY")
-        self.log("="*50)
+        self.log("=" * 50)
 
         if self.changes_made:
             self.log("Changes made:")
@@ -417,16 +420,15 @@ class RepoMaintenance:
 
         return all_success
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Repository Maintenance Script')
-    parser.add_argument('--dry-run', action='store_true', default=True,
-                       help='Show what would be changed without making changes')
-    parser.add_argument('--apply', action='store_true', default=False,
-                       help='Apply changes (overrides --dry-run)')
-    parser.add_argument('--auto-commit', action='store_true', default=False,
-                       help='Automatically commit changes')
-    parser.add_argument('--skip-git-check', action='store_true', default=False,
-                       help='Skip git preflight checks')
+    parser = argparse.ArgumentParser(description="Repository Maintenance Script")
+    parser.add_argument(
+        "--dry-run", action="store_true", default=True, help="Show what would be changed without making changes"
+    )
+    parser.add_argument("--apply", action="store_true", default=False, help="Apply changes (overrides --dry-run)")
+    parser.add_argument("--auto-commit", action="store_true", default=False, help="Automatically commit changes")
+    parser.add_argument("--skip-git-check", action="store_true", default=False, help="Skip git preflight checks")
 
     args = parser.parse_args()
 
@@ -437,6 +439,7 @@ def main():
     success = maintenance.run_all_tasks()
 
     sys.exit(0 if success else 1)
+
 
 if __name__ == "__main__":
     main()

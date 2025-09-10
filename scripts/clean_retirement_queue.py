@@ -13,6 +13,7 @@ Rules:
   - reinstated: "no" if any row says "no" (else keep original value)
   - deleted_at: empty for quarantined rows
 """
+
 from __future__ import annotations
 
 import csv
@@ -35,15 +36,19 @@ def main() -> int:
     rows: List[Dict[str, str]] = list(csv.DictReader(QUEUE.open()))
 
     # Preserve header order if present; else use canonical order
-    header = list(rows[0].keys()) if rows else [
-        "file",
-        "status",
-        "first_quarantined_at",
-        "score",
-        "reason",
-        "reinstated",
-        "deleted_at",
-    ]
+    header = (
+        list(rows[0].keys())
+        if rows
+        else [
+            "file",
+            "status",
+            "first_quarantined_at",
+            "score",
+            "reason",
+            "reinstated",
+            "deleted_at",
+        ]
+    )
 
     # Keep all non-quarantined rows as-is
     kept: List[Dict[str, str]] = [r for r in rows if r.get("status") != "quarantined"]
@@ -59,18 +64,20 @@ def main() -> int:
         group_sorted = sorted(group, key=lambda r: parse_date(r.get("first_quarantined_at", "9999-12-31")))
         base = dict(group_sorted[0])
         # reason: first non-empty
-        base["reason"] = next((r.get("reason") for r in group_sorted if r.get("reason")), base.get("reason", "quarantine"))
+        base["reason"] = next(
+            (r.get("reason") for r in group_sorted if r.get("reason")), base.get("reason", "quarantine")
+        )
         # score: max as string comparison won't work for decimals; coerce to float
         try:
             score_vals = []
             for r in group_sorted:
                 try:
-                    score_vals.append(float(r.get('score') or 0.0))
+                    score_vals.append(float(r.get("score") or 0.0))
                 except Exception:
                     pass
-            base['score'] = f"{(max(score_vals) if score_vals else 0.0):.3f}"
+            base["score"] = f"{(max(score_vals) if score_vals else 0.0):.3f}"
         except Exception:
-            base['score'] = base.get('score', '')
+            base["score"] = base.get("score", "")
         # reinstated: if any row says "no", keep "no"; else keep the earliest row's value
         if any((r.get("reinstated", "no").lower() == "no") for r in group_sorted):
             base["reinstated"] = "no"

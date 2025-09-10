@@ -20,11 +20,13 @@ def load(path: str) -> Dict[str, Any]:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
+
 def pct(a: float, b: float) -> str:
     """Calculate percentage change."""
     if a == 0:
         return "n/a"
-    return f"{((b-a)/a)*100:.1f}%"
+    return f"{((b - a) / a) * 100:.1f}%"
+
 
 def main() -> None:
     """Main function to generate A/B test summary."""
@@ -98,6 +100,7 @@ def main() -> None:
     print(f"- Avg Tokens: {avg_tokens:.0f} {'✅' if avg_tokens <= 1200 else '❌'}")
     print(f"- Expansion Latency: {expansion_latency:.1f}ms {'✅' if expansion_latency <= 200 else '❌'}")
     print(f"- Recall Improvement: {recall_improvement:.1f}% {'✅' if recall_improvement >= 10.0 else '❌'}")
+
 
 if __name__ == "__main__":
     main()

@@ -97,7 +97,10 @@ if __name__ == "__main__":
     # Test with old chunking strategy (300 tokens, 50 overlap)
     print("📊 OLD CHUNKING STRATEGY (300 tokens, 50 overlap):")
     old_chunker = create_smart_chunker(
-        max_tokens=300, overlap_tokens=50, preserve_code_units=False, enable_stitching=False  # Old behavior
+        max_tokens=300,
+        overlap_tokens=50,
+        preserve_code_units=False,
+        enable_stitching=False,  # Old behavior
     )
 
     old_chunks = old_chunker.create_smart_chunks(dspy_implementation_code, "test_dspy.py")
@@ -108,11 +111,11 @@ if __name__ == "__main__":
         chunk_text = chunk["text"]
         # Check if function boundaries are broken
         if "def compile(" in chunk_text and "def _preprocess_trainset(" in chunk_text:
-            print(f"  ❌ Chunk {i+1}: Function boundaries BROKEN (compile + _preprocess_trainset)")
+            print(f"  ❌ Chunk {i + 1}: Function boundaries BROKEN (compile + _preprocess_trainset)")
         elif "def compile(" in chunk_text and "def _split_validation(" in chunk_text:
-            print(f"  ❌ Chunk {i+1}: Function boundaries BROKEN (compile + _split_validation)")
+            print(f"  ❌ Chunk {i + 1}: Function boundaries BROKEN (compile + _split_validation)")
         else:
-            print(f"  ✅ Chunk {i+1}: Function boundaries preserved")
+            print(f"  ✅ Chunk {i + 1}: Function boundaries preserved")
 
     print("\n" + "=" * 50)
 
@@ -134,7 +137,7 @@ if __name__ == "__main__":
         function_name = chunk.get("function_name", "N/A")
         is_complete = chunk.get("metadata", {}).get("is_complete_function", False)
 
-        print(f"  Chunk {i+1}: {chunk_type} - {function_name}")
+        print(f"  Chunk {i + 1}: {chunk_type} - {function_name}")
         print(f"    Complete function: {is_complete}")
         print(f"    Stitching key: {chunk.get('metadata', {}).get('stitching_key', 'N/A')}")
 

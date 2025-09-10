@@ -14,10 +14,10 @@ from typing import Any, Dict, List
 
 import yaml
 from _bootstrap import ROOT, SRC
+
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
 from dspy_modules.retriever.weights import load_weights
-
 from evals.gold import gold_hit
 from evals.load_cases import load_eval_cases
 
@@ -62,7 +62,7 @@ def eval_combo(ws: Dict[str, float], cases: List[Any]) -> tuple[int, Dict[str, i
             tag_total[case.tag] += 1
             tag_hits[case.tag] += hit
         except Exception as e:
-            print(f"Error evaluating case {getattr(case,'id',None) or case.get('id')}: {e}")
+            print(f"Error evaluating case {getattr(case, 'id', None) or case.get('id')}: {e}")
             tag_total[case.tag] += 1  # Count as miss
 
     return hits, dict(tag_hits), dict(tag_total)
@@ -184,7 +184,7 @@ def main():
                 best_tag_total = tag_total
 
             current_best_score = best[1] if best else 0
-            print(f"Progress: {i+1}/{total_combos} - Current best: {current_best_score}/{len(cases)}")
+            print(f"Progress: {i + 1}/{total_combos} - Current best: {current_best_score}/{len(cases)}")
 
     print("=" * 50)
     print("Baseline hits:", baseline_hits, "/", len(cases))
@@ -194,7 +194,7 @@ def main():
         return None
 
     print("Best weights:", best[0])
-    print("Prefilter hits:", best[1], "/", len(cases), f"(+{best[1]-baseline_hits})")
+    print("Prefilter hits:", best[1], "/", len(cases), f"(+{best[1] - baseline_hits})")
 
     # Print per-tag metrics
     print_tag_metrics(best_tag_hits, best_tag_total)

@@ -134,7 +134,7 @@ class RAGCheckerGovernanceIntegration:
         # Evaluate each variant
         variant_results = []
         for i, variant in enumerate(variants):
-            logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({variant['type']})")
+            logger.info(f"🧪 Evaluating variant {i + 1}/{len(variants)} ({variant['type']})")
 
             try:
                 # Run evaluation for this variant
@@ -147,7 +147,7 @@ class RAGCheckerGovernanceIntegration:
                 )
 
             except Exception as e:
-                logger.error(f"❌ Variant {i+1} evaluation failed: {e}")
+                logger.error(f"❌ Variant {i + 1} evaluation failed: {e}")
                 variant_results.append(
                     {"variant_id": i + 1, "type": variant["type"], "config": variant["config"], "error": str(e)}
                 )

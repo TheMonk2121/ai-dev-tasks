@@ -209,7 +209,7 @@ def print_comparison_summary(report: Dict):
     print(f"   Precision: {your_results['precision']:.3f}")
     print(f"   Recall: {your_results['recall']:.3f}")
     print(f"   F1 Score: {your_results['f1_score']:.3f}")
-    print(f"   Latency: {your_results['latency_ms']/1000:.1f}s per query")
+    print(f"   Latency: {your_results['latency_ms'] / 1000:.1f}s per query")
     print(f"   Context Utilization: {your_results['context_utilization']:.1%}")
     print(f"   Hallucination Rate: {your_results['hallucination_rate']:.1%}")
 

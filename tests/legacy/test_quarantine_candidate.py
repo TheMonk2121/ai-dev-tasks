@@ -2,6 +2,7 @@
 """
 Test file that should be quarantined - low signal, redundant.
 """
+
 import pytest
 
 

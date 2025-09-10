@@ -23,10 +23,7 @@ from uncertainty.feedback_loops import FeedbackConfig, FeedbackPriority, Feedbac
 from uncertainty.selective_answering import SelectiveAnsweringConfig
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -37,51 +34,51 @@ def create_mock_evaluation_data() -> list:
 
     # High confidence, correct answers
     for i in range(20):
-        mock_data.append({
-            "confidence_score": 0.8 + (i * 0.01),
-            "is_correct": True,
-            "query": f"High confidence correct query {i}",
-            "answer": f"Correct answer {i}",
-            "evidence_chunks": [
-                {"text": f"Supporting evidence {i}", "score": 0.85 + (i * 0.01)}
-            ]
-        })
+        mock_data.append(
+            {
+                "confidence_score": 0.8 + (i * 0.01),
+                "is_correct": True,
+                "query": f"High confidence correct query {i}",
+                "answer": f"Correct answer {i}",
+                "evidence_chunks": [{"text": f"Supporting evidence {i}", "score": 0.85 + (i * 0.01)}],
+            }
+        )
 
     # High confidence, incorrect answers (overconfidence)
     for i in range(10):
-        mock_data.append({
-            "confidence_score": 0.85 + (i * 0.01),
-            "is_correct": False,
-            "query": f"High confidence incorrect query {i}",
-            "answer": f"Incorrect answer {i}",
-            "evidence_chunks": [
-                {"text": f"Weak evidence {i}", "score": 0.6 + (i * 0.01)}
-            ]
-        })
+        mock_data.append(
+            {
+                "confidence_score": 0.85 + (i * 0.01),
+                "is_correct": False,
+                "query": f"High confidence incorrect query {i}",
+                "answer": f"Incorrect answer {i}",
+                "evidence_chunks": [{"text": f"Weak evidence {i}", "score": 0.6 + (i * 0.01)}],
+            }
+        )
 
     # Low confidence, correct answers (underconfidence)
     for i in range(15):
-        mock_data.append({
-            "confidence_score": 0.3 + (i * 0.02),
-            "is_correct": True,
-            "query": f"Low confidence correct query {i}",
-            "answer": f"Correct answer {i}",
-            "evidence_chunks": [
-                {"text": f"Strong evidence {i}", "score": 0.8 + (i * 0.01)}
-            ]
-        })
+        mock_data.append(
+            {
+                "confidence_score": 0.3 + (i * 0.02),
+                "is_correct": True,
+                "query": f"Low confidence correct query {i}",
+                "answer": f"Correct answer {i}",
+                "evidence_chunks": [{"text": f"Strong evidence {i}", "score": 0.8 + (i * 0.01)}],
+            }
+        )
 
     # Low confidence, incorrect answers
     for i in range(15):
-        mock_data.append({
-            "confidence_score": 0.2 + (i * 0.02),
-            "is_correct": False,
-            "query": f"Low confidence incorrect query {i}",
-            "answer": f"Incorrect answer {i}",
-            "evidence_chunks": [
-                {"text": f"Weak evidence {i}", "score": 0.4 + (i * 0.01)}
-            ]
-        })
+        mock_data.append(
+            {
+                "confidence_score": 0.2 + (i * 0.02),
+                "is_correct": False,
+                "query": f"Low confidence incorrect query {i}",
+                "answer": f"Incorrect answer {i}",
+                "evidence_chunks": [{"text": f"Weak evidence {i}", "score": 0.4 + (i * 0.01)}],
+            }
+        )
 
     return mock_data
 
@@ -94,41 +91,41 @@ def create_mock_evidence_chunks() -> list:
             "text": "The RAG system uses hybrid retrieval combining BM25 and dense vector search for optimal performance.",
             "score": 0.85,
             "source": "technical_docs.pdf",
-            "chunk_id": "chunk_001"
+            "chunk_id": "chunk_001",
         },
         {
             "text": "Cross-encoder reranking improves retrieval quality by 15-20% compared to single-stage retrieval.",
             "score": 0.78,
             "source": "research_paper.pdf",
-            "chunk_id": "chunk_002"
+            "chunk_id": "chunk_002",
         },
         {
             "text": "Phase 3 domain tuning provides data-driven fine-tuning for breaking through performance plateaus.",
             "score": 0.72,
             "source": "implementation_guide.pdf",
-            "chunk_id": "chunk_003"
+            "chunk_id": "chunk_003",
         },
         {
             "text": "Confidence calibration using temperature scaling improves uncertainty quantification accuracy.",
             "score": 0.68,
             "source": "uncertainty_research.pdf",
-            "chunk_id": "chunk_004"
+            "chunk_id": "chunk_004",
         },
         {
             "text": "Selective answering with evidence quality analysis prevents low-quality responses.",
             "score": 0.65,
             "source": "quality_control.pdf",
-            "chunk_id": "chunk_005"
-        }
+            "chunk_id": "chunk_005",
+        },
     ]
 
 
 def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
     """Demonstrate confidence calibration capabilities."""
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("🎯 DEMO: Confidence Calibration")
-    print("="*60)
+    print("=" * 60)
 
     # Create mock evaluation data
     mock_data = create_mock_evaluation_data()
@@ -145,9 +142,7 @@ def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
 
     # Perform confidence calibration
     print("\n🔄 Performing confidence calibration...")
-    calibration_results = phase4_system.calibrate_confidence_model(
-        mock_data, method="temperature"
-    )
+    calibration_results = phase4_system.calibrate_confidence_model(mock_data, method="temperature")
 
     if "error" in calibration_results:
         print(f"❌ Calibration failed: {calibration_results['error']}")
@@ -164,7 +159,7 @@ def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
     test_queries = [
         {"confidence": 0.9, "expected": "overconfident"},
         {"confidence": 0.3, "expected": "underconfident"},
-        {"confidence": 0.7, "expected": "well_calibrated"}
+        {"confidence": 0.7, "expected": "well_calibrated"},
     ]
 
     for test in test_queries:
@@ -181,9 +176,9 @@ def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
 def demo_selective_answering(phase4_system: Phase4RAGSystem):
     """Demonstrate selective answering capabilities."""
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("🎯 DEMO: Selective Answering")
-    print("="*60)
+    print("=" * 60)
 
     # Test queries with different characteristics
     test_cases = [
@@ -192,29 +187,29 @@ def demo_selective_answering(phase4_system: Phase4RAGSystem):
             "query": "What is the RAG system architecture?",
             "answer": "The RAG system uses hybrid retrieval combining BM25 and dense vector search with cross-encoder reranking for optimal performance.",
             "confidence": 0.85,
-            "expected": "should answer"
+            "expected": "should answer",
         },
         {
             "name": "Low Evidence Coverage",
             "query": "What are the latest performance benchmarks?",
             "answer": "Recent benchmarks show 15-20% improvement in retrieval quality.",
             "confidence": 0.6,
-            "expected": "might abstain"
+            "expected": "might abstain",
         },
         {
             "name": "Contradictory Evidence",
             "query": "What is the optimal batch size?",
             "answer": "The optimal batch size is 32 for most use cases.",
             "confidence": 0.7,
-            "expected": "might abstain"
+            "expected": "might abstain",
         },
         {
             "name": "Unclear Intent",
             "query": "How do I...",
             "answer": "This query appears incomplete and unclear.",
             "confidence": 0.5,
-            "expected": "should abstain"
-        }
+            "expected": "should abstain",
+        },
     ]
 
     evidence_chunks = create_mock_evidence_chunks()
@@ -227,10 +222,10 @@ def demo_selective_answering(phase4_system: Phase4RAGSystem):
 
         # Process with uncertainty quantification
         response = phase4_system.process_query_with_uncertainty(
-            query=test_case['query'],
+            query=test_case["query"],
             evidence_chunks=evidence_chunks,
-            raw_confidence_score=test_case['confidence'],
-            answer=test_case['answer']
+            raw_confidence_score=test_case["confidence"],
+            answer=test_case["answer"],
         )
 
         if response.get("abstained", False):
@@ -248,9 +243,9 @@ def demo_selective_answering(phase4_system: Phase4RAGSystem):
 def demo_feedback_loops(phase4_system: Phase4RAGSystem):
     """Demonstrate feedback loop capabilities."""
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("🎯 DEMO: Feedback Loops")
-    print("="*60)
+    print("=" * 60)
 
     # Collect various types of feedback
     print("📝 Collecting user feedback...")
@@ -260,32 +255,32 @@ def demo_feedback_loops(phase4_system: Phase4RAGSystem):
             "type": FeedbackType.CORRECT_ANSWER,
             "value": True,
             "priority": FeedbackPriority.LOW,
-            "description": "User confirms answer is correct"
+            "description": "User confirms answer is correct",
         },
         {
             "type": FeedbackType.INCORRECT_ANSWER,
             "value": False,
             "priority": FeedbackPriority.HIGH,
-            "description": "User indicates answer is wrong"
+            "description": "User indicates answer is wrong",
         },
         {
             "type": FeedbackType.CONFIDENCE_TOO_HIGH,
             "value": "The system was overconfident in this response",
             "priority": FeedbackPriority.MEDIUM,
-            "description": "User feedback on confidence calibration"
+            "description": "User feedback on confidence calibration",
         },
         {
             "type": FeedbackType.ABSTENTION_APPROPRIATE,
             "value": True,
             "priority": FeedbackPriority.LOW,
-            "description": "User agrees with abstention decision"
+            "description": "User agrees with abstention decision",
         },
         {
             "type": FeedbackType.RESPONSE_SPEED,
             "value": 4,  # Rating 1-5
             "priority": FeedbackPriority.MEDIUM,
-            "description": "User rating of response speed"
-        }
+            "description": "User rating of response speed",
+        },
     ]
 
     evidence_chunks = create_mock_evidence_chunks()
@@ -303,7 +298,7 @@ def demo_feedback_loops(phase4_system: Phase4RAGSystem):
             session_id=f"session_{i}",
             feedback_text=feedback_case["description"],
             priority=feedback_case["priority"],
-            tags=["demo", feedback_case["type"].value]
+            tags=["demo", feedback_case["type"].value],
         )
 
         if feedback_id:
@@ -357,9 +352,9 @@ def demo_feedback_loops(phase4_system: Phase4RAGSystem):
 def demo_system_integration(phase4_system: Phase4RAGSystem):
     """Demonstrate full system integration."""
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("🎯 DEMO: Full System Integration")
-    print("="*60)
+    print("=" * 60)
 
     # Show system status
     print("📊 System Status:")
@@ -390,7 +385,7 @@ def demo_system_integration(phase4_system: Phase4RAGSystem):
         raw_confidence_score=0.75,
         answer=test_answer,
         user_id="demo_user",
-        session_id="demo_session"
+        session_id="demo_session",
     )
 
     print(f"   Query: {test_query}")
@@ -409,7 +404,7 @@ def main():
     """Main demo function."""
 
     print("🚀 Phase 4 Demo: Uncertainty, Calibration & Feedback")
-    print("="*60)
+    print("=" * 60)
 
     # Create Phase 4 configuration
     config = Phase4Config(
@@ -419,7 +414,7 @@ def main():
         enable_confidence_calibration=True,
         enable_selective_answering=True,
         enable_feedback_loops=True,
-        auto_calibration=True
+        auto_calibration=True,
     )
 
     # Initialize Phase 4 system
@@ -448,11 +443,12 @@ def main():
     except Exception as e:
         print(f"❌ Demo failed: {e}")
         import traceback
+
         traceback.print_exc()
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("🎉 Phase 4 Demo Complete!")
-    print("="*60)
+    print("=" * 60)
 
     # Final system status
     try:

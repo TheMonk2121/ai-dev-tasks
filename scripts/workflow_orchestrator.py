@@ -133,8 +133,8 @@ def format_execution_output(context: Dict[str, Any], execution_plan: Dict[str, A
     output += f"""
 
 **Quick Commands**:
-• Context: `{execution_plan['commands']['context']}`
-• Pickup: `{execution_plan['commands']['pickup']}`"""
+• Context: `{execution_plan["commands"]["context"]}`
+• Pickup: `{execution_plan["commands"]["pickup"]}`"""
 
     if execution_plan["commands"]["prd"]:
         output += f"\n• PRD: `{execution_plan['commands']['prd']}`"
@@ -147,13 +147,13 @@ def format_execution_output(context: Dict[str, Any], execution_plan: Dict[str, A
 **For Clean Chat Pickup**:
 ```bash
 # Get immediate context
-{execution_plan['commands']['pickup']}
+{execution_plan["commands"]["pickup"]}
 
 # Get full context bundle
-{execution_plan['commands']['context']} --format json
+{execution_plan["commands"]["context"]} --format json
 ```
 
-**Execution Approach**: {execution_plan['approach'].replace('_', ' ').title()}
+**Execution Approach**: {execution_plan["approach"].replace("_", " ").title()}
 """
 
     return output

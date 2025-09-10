@@ -19,6 +19,7 @@ dependencies = [
     # Documentation and validation
     "markdown>=3.4.0",
     "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
     # DSPy RAG System dependencies
     "dspy==3.0.1",
     "sentence-transformers>=5.0.0",
@@ -75,8 +76,10 @@ dependencies = [
     "pytest-xdist>=3.8.0",
     "coverage>=7.10.6",
     "jinja2>=3.1.6",
+    "typer>=0.12.0",
     "websockets>=15.0.1",
     "fastapi>=0.116.1",
+    "hypothesis>=6.138.15",
 ]
 
 [project.optional-dependencies]
@@ -84,6 +87,8 @@ dev = [
     "pytest>=7.4.3",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.23.0",
+    "hypothesis>=6.0.0",
     "black>=23.0.0",
     "isort>=5.12.0",
     "ruff>=0.1.0",
@@ -93,7 +98,13 @@ dev = [
     "radon>=5.1.0",
     "mccabe>=0.7.0",
 ]
-test = ["pytest>=7.4.3", "pytest-cov>=4.1.0", "pytest-mock>=3.10.0"]
+test = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.23.0",
+    "hypothesis>=6.0.0",
+]
 security = ["bandit>=1.7.5", "safety>=2.3.0", "pip-audit>=2.6.0"]
 ml = [
     "dspy==3.0.1",

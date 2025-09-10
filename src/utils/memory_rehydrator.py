@@ -113,8 +113,6 @@ ROLE_FILES = {
     "coder": [
         "400_guides/400_04_development-workflow-and-standards.md",
         # Use existing docs focused on workflow, organization, and performance
-        "400_guides/400_code-criticality-guide.md",
-        "400_guides/400_testing-strategy-guide.md",
         "400_guides/400_05_codebase-organization-patterns.md",
         "400_guides/400_11_performance-optimization.md",
         "100_memory/104_dspy-development-context.md",
@@ -1012,7 +1010,7 @@ class MemoryRehydrator:
                     )
 
                 status_emoji = "🟢" if status == "open" else "🔴" if status == "superseded" else "🟡"
-                context_parts.append(f"{i+1}. {status_emoji} {decision.merged_content}")
+                context_parts.append(f"{i + 1}. {status_emoji} {decision.merged_content}")
 
                 if include_metadata and decision.metadata:
                     if decision.metadata.get("decision_heads"):

@@ -117,7 +117,7 @@ def generate_mermaid_diagram(evolution_graph: Dict[str, Any]) -> str:
 
     # Add edges
     for edge in evolution_graph["edges"]:
-        mermaid.append(f'    {edge["from"]} --> {edge["to"]}')
+        mermaid.append(f"    {edge['from']} --> {edge['to']}")
 
     return "\n".join(mermaid)
 

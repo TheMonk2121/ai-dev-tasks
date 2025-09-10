@@ -113,7 +113,6 @@ class DataPipeline:
                 # Find high-scoring chunks that weren't cited
                 for chunk in retrieved_chunks:
                     if chunk.get("score", 0.0) >= self.config.min_positive_score and chunk not in cited_chunks:
-
                         example = TrainingExample(
                             query=query,
                             positive_context="",  # Empty for negative examples

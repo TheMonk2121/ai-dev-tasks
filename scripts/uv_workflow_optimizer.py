@@ -408,7 +408,7 @@ if __name__ == "__main__":
         """Generate a comprehensive workflow optimization guide."""
         guide = f"""# 🚀 UV Workflow Optimization Guide
 
-**Generated**: {patterns['timestamp']}
+**Generated**: {patterns["timestamp"]}
 
 ## 📊 Workflow Analysis
 

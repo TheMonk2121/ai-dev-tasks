@@ -12,9 +12,9 @@ from typing import Any, Dict, List
 # bootstrap
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
+
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
-
 from evals.gold import gold_hit
 from evals.load_cases import load_eval_cases
 
@@ -179,7 +179,7 @@ def main():
     baseline_hits = None
 
     for i, stage in enumerate(ABLATION_STAGES):
-        print(f"\n[{i+1}/{len(ABLATION_STAGES)}] Testing: {stage['name']}")
+        print(f"\n[{i + 1}/{len(ABLATION_STAGES)}] Testing: {stage['name']}")
         print(f"Description: {stage['description']}")
 
         result = eval_stage(stage, cases)

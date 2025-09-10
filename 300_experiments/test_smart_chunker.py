@@ -65,12 +65,13 @@ if __name__ == "__main__":
 
     # Create smart chunker with coach's recommended settings
     smart_chunker = create_smart_chunker(
-        max_tokens=300, overlap_tokens=64, preserve_code_units=True, enable_stitching=True  # Coach's recommendation
+        max_tokens=300,
+        overlap_tokens=64,
+        preserve_code_units=True,
+        enable_stitching=True,  # Coach's recommendation
     )
 
-    print(
-        f"📊 Chunker config: max_tokens={smart_chunker.max_tokens}, " f"overlap_tokens={smart_chunker.overlap_tokens}"
-    )
+    print(f"📊 Chunker config: max_tokens={smart_chunker.max_tokens}, overlap_tokens={smart_chunker.overlap_tokens}")
 
     # Test with the DSPy code
     print("\n🔍 Creating smart chunks...")
@@ -85,7 +86,7 @@ if __name__ == "__main__":
         is_complete = chunk.get("metadata", {}).get("is_complete_function", False)
         stitching_key = chunk.get("metadata", {}).get("stitching_key", "N/A")
 
-        print(f"Chunk {i+1}:")
+        print(f"Chunk {i + 1}:")
         print(f"  Type: {chunk_type}")
         print(f"  Function: {function_name}")
         print(f"  Complete: {is_complete}")
@@ -173,7 +174,7 @@ pipeline = MyModule() >> AnotherModule() >> OutputModule()
     for i, chunk in enumerate(chunks):
         heading = chunk.get("heading", "No heading")
         is_complete = chunk.get("metadata", {}).get("is_complete_section", False)
-        print(f"  Chunk {i+1}: {heading} (Complete: {is_complete})")
+        print(f"  Chunk {i + 1}: {heading} (Complete: {is_complete})")
 
 
 if __name__ == "__main__":

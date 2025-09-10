@@ -25,22 +25,28 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class ContextType(Enum):
     """Enumeration of context types."""
+
     PROJECT = "project"
     FILE = "file"
     USER = "user"
     AGENT = "agent"
 
+
 class ContextVisibility(Enum):
     """Enumeration of context visibility levels."""
+
     PRIVATE = "private"
     SHARED = "shared"
     PUBLIC = "public"
 
+
 @dataclass
 class ContextData:
     """Data structure for context information."""
+
     id: str = field(default_factory=lambda: str(uuid4()))
     type: ContextType = ContextType.FILE
     source: str = "cursor"
@@ -56,9 +62,11 @@ class ContextData:
     size_bytes: int = 0
     access_count: int = 0
 
+
 @dataclass
 class ContextRelationship:
     """Data structure for context relationships."""
+
     id: str = field(default_factory=lambda: str(uuid4()))
     source_context_id: str = ""
     target_context_id: str = ""
@@ -67,9 +75,11 @@ class ContextRelationship:
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
+
 @dataclass
 class ContextAccessLog:
     """Data structure for context access logs."""
+
     id: str = field(default_factory=lambda: str(uuid4()))
     context_id: str = ""
     agent_id: str = ""
@@ -77,6 +87,7 @@ class ContextAccessLog:
     user_id: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
+
 
 class ContextStore:
     """Database-backed context storage system."""
@@ -147,8 +158,12 @@ class ContextStore:
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_contexts_source ON contexts(source)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_contexts_owner ON contexts(owner_id)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_contexts_created ON contexts(created_at)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_relationships_source ON context_relationships(source_context_id)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_relationships_target ON context_relationships(target_context_id)")
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_relationships_source ON context_relationships(source_context_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_relationships_target ON context_relationships(target_context_id)"
+            )
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_access_log_context ON context_access_log(context_id)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_access_log_agent ON context_access_log(agent_id)")
 
@@ -164,27 +179,30 @@ class ContextStore:
             # Calculate size
             context.size_bytes = len(json.dumps(context.content))
 
-            cursor.execute("""
+            cursor.execute(
+                """
                 INSERT OR REPLACE INTO contexts 
                 (id, type, source, content, relationships, metadata, created_at, updated_at, accessed_at, 
                  owner_id, permissions, visibility, size_bytes, access_count)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                context.id,
-                context.type.value,
-                context.source,
-                json.dumps(context.content),
-                json.dumps(context.relationships),
-                json.dumps(context.metadata),
-                context.created_at,
-                context.updated_at,
-                context.accessed_at,
-                context.owner_id,
-                json.dumps(context.permissions),
-                context.visibility.value,
-                context.size_bytes,
-                context.access_count
-            ))
+            """,
+                (
+                    context.id,
+                    context.type.value,
+                    context.source,
+                    json.dumps(context.content),
+                    json.dumps(context.relationships),
+                    json.dumps(context.metadata),
+                    context.created_at,
+                    context.updated_at,
+                    context.accessed_at,
+                    context.owner_id,
+                    json.dumps(context.permissions),
+                    context.visibility.value,
+                    context.size_bytes,
+                    context.access_count,
+                ),
+            )
 
             conn.commit()
             conn.close()
@@ -198,11 +216,14 @@ class ContextStore:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
 
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT id, type, source, content, relationships, metadata, created_at, updated_at, accessed_at,
                        owner_id, permissions, visibility, size_bytes, access_count
                 FROM contexts WHERE id = ?
-            """, (context_id,))
+            """,
+                (context_id,),
+            )
 
             row = cursor.fetchone()
             conn.close()
@@ -222,7 +243,7 @@ class ContextStore:
                     permissions=json.loads(row[10]) if row[10] else [],
                     visibility=ContextVisibility(row[11]),
                     size_bytes=row[12],
-                    access_count=row[13]
+                    access_count=row[13],
                 )
 
                 # Update access count and timestamp
@@ -255,17 +276,14 @@ class ContextStore:
                 current_metadata.update(updates["metadata"])
 
             # Update context
-            cursor.execute("""
+            cursor.execute(
+                """
                 UPDATE contexts 
                 SET content = ?, metadata = ?, updated_at = ?, accessed_at = ?
                 WHERE id = ?
-            """, (
-                json.dumps(current_content),
-                json.dumps(current_metadata),
-                time.time(),
-                time.time(),
-                context_id
-            ))
+            """,
+                (json.dumps(current_content), json.dumps(current_metadata), time.time(), time.time(), context_id),
+            )
 
             conn.commit()
             conn.close()
@@ -280,8 +298,10 @@ class ContextStore:
             cursor = conn.cursor()
 
             cursor.execute("DELETE FROM contexts WHERE id = ?", (context_id,))
-            cursor.execute("DELETE FROM context_relationships WHERE source_context_id = ? OR target_context_id = ?",
-                         (context_id, context_id))
+            cursor.execute(
+                "DELETE FROM context_relationships WHERE source_context_id = ? OR target_context_id = ?",
+                (context_id, context_id),
+            )
             cursor.execute("DELETE FROM context_access_log WHERE context_id = ?", (context_id,))
 
             conn.commit()
@@ -290,8 +310,7 @@ class ContextStore:
             logger.info(f"Deleted context {context_id}")
             return True
 
-    def search_contexts(self, query: str, context_type: Optional[str] = None,
-                       limit: int = 10) -> List[ContextData]:
+    def search_contexts(self, query: str, context_type: Optional[str] = None, limit: int = 10) -> List[ContextData]:
         """Search contexts by query."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
@@ -332,7 +351,7 @@ class ContextStore:
                     permissions=json.loads(row[10]) if row[10] else [],
                     visibility=ContextVisibility(row[11]),
                     size_bytes=row[12],
-                    access_count=row[13]
+                    access_count=row[13],
                 )
                 contexts.append(context)
 
@@ -344,14 +363,18 @@ class ContextStore:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
 
-            cursor.execute("""
+            cursor.execute(
+                """
                 UPDATE contexts 
                 SET accessed_at = ?, access_count = access_count + 1
                 WHERE id = ?
-            """, (time.time(), context_id))
+            """,
+                (time.time(), context_id),
+            )
 
             conn.commit()
             conn.close()
+
 
 class ContextCache:
     """In-memory cache for frequently accessed context data."""
@@ -386,10 +409,7 @@ class ContextCache:
                 del self.cache[oldest_key]
                 del self.access_times[oldest_key]
 
-            self.cache[key] = {
-                "context": context,
-                "timestamp": time.time()
-            }
+            self.cache[key] = {"context": context, "timestamp": time.time()}
             self.access_times[key] = time.time()
 
     async def invalidate(self, key: str):
@@ -404,6 +424,7 @@ class ContextCache:
         with self.lock:
             self.cache.clear()
             self.access_times.clear()
+
 
 class ContextManager:
     """Main context management system."""
@@ -459,8 +480,9 @@ class ContextManager:
 
         return success
 
-    async def search_contexts(self, query: str, context_type: Optional[str] = None,
-                            limit: int = 10) -> List[ContextData]:
+    async def search_contexts(
+        self, query: str, context_type: Optional[str] = None, limit: int = 10
+    ) -> List[ContextData]:
         """Search contexts by query."""
         return self.store.search_contexts(query, context_type, limit)
 
@@ -477,8 +499,9 @@ class ContextManager:
 
             return related_contexts
 
-    async def add_relationship(self, source_id: str, target_id: str,
-                             relationship_type: str = "related", strength: float = 0.85):
+    async def add_relationship(
+        self, source_id: str, target_id: str, relationship_type: str = "related", strength: float = 0.85
+    ):
         """Add a relationship between contexts."""
         with self.lock:
             # Add to relationships dict
@@ -497,58 +520,66 @@ class ContextManager:
                 source_context_id=source_id,
                 target_context_id=target_id,
                 relationship_type=relationship_type,
-                strength=strength
+                strength=strength,
             )
 
             conn = sqlite3.connect(self.store.db_path)
             cursor = conn.cursor()
 
-            cursor.execute("""
+            cursor.execute(
+                """
                 INSERT OR REPLACE INTO context_relationships 
                 (id, source_context_id, target_context_id, relationship_type, strength, metadata, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-            """, (
-                relationship.id,
-                relationship.source_context_id,
-                relationship.target_context_id,
-                relationship.relationship_type,
-                relationship.strength,
-                json.dumps(relationship.metadata),
-                relationship.created_at
-            ))
+            """,
+                (
+                    relationship.id,
+                    relationship.source_context_id,
+                    relationship.target_context_id,
+                    relationship.relationship_type,
+                    relationship.strength,
+                    json.dumps(relationship.metadata),
+                    relationship.created_at,
+                ),
+            )
 
             conn.commit()
             conn.close()
 
             logger.info(f"Added relationship between {source_id} and {target_id}")
 
-    async def log_access(self, context_id: str, agent_id: str, operation: str,
-                        user_id: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None):
+    async def log_access(
+        self,
+        context_id: str,
+        agent_id: str,
+        operation: str,
+        user_id: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
         """Log context access."""
         access_log = ContextAccessLog(
-            context_id=context_id,
-            agent_id=agent_id,
-            operation=operation,
-            user_id=user_id,
-            metadata=metadata or {}
+            context_id=context_id, agent_id=agent_id, operation=operation, user_id=user_id, metadata=metadata or {}
         )
 
         conn = sqlite3.connect(self.store.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO context_access_log 
             (id, context_id, agent_id, operation, user_id, metadata, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (
-            access_log.id,
-            access_log.context_id,
-            access_log.agent_id,
-            access_log.operation,
-            access_log.user_id,
-            json.dumps(access_log.metadata),
-            access_log.created_at
-        ))
+        """,
+            (
+                access_log.id,
+                access_log.context_id,
+                access_log.agent_id,
+                access_log.operation,
+                access_log.user_id,
+                json.dumps(access_log.metadata),
+                access_log.created_at,
+            ),
+        )
 
         conn.commit()
         conn.close()
@@ -576,7 +607,7 @@ class ContextManager:
         cache_stats = {
             "cache_size": len(self.cache.cache),
             "cache_hits": 0,  # Would need to track this
-            "cache_misses": 0  # Would need to track this
+            "cache_misses": 0,  # Would need to track this
         }
 
         conn.close()
@@ -585,8 +616,9 @@ class ContextManager:
             "total_contexts": total_contexts,
             "contexts_by_type": contexts_by_type,
             "total_size_bytes": total_size,
-            "cache_stats": cache_stats
+            "cache_stats": cache_stats,
         }
+
 
 # Example usage and testing
 async def main():
@@ -603,9 +635,9 @@ async def main():
         content={
             "project_name": "AI Development Ecosystem",
             "description": "Comprehensive AI-powered development system",
-            "technologies": ["Python", "PostgreSQL", "DSPy"]
+            "technologies": ["Python", "PostgreSQL", "DSPy"],
         },
-        metadata={"version": "1.0.0", "status": "active"}
+        metadata={"version": "1.0.0", "status": "active"},
     )
 
     file_context = ContextData(
@@ -614,9 +646,9 @@ async def main():
         content={
             "file_path": "cursor_ai_integration_framework.py",
             "language": "python",
-            "purpose": "Core integration framework"
+            "purpose": "Core integration framework",
         },
-        metadata={"lines": 450, "complexity": "medium"}
+        metadata={"lines": 450, "complexity": "medium"},
     )
 
     # Store contexts
@@ -652,6 +684,7 @@ async def main():
     print(f"Context stats: {stats}")
 
     print("--- Context Management Test Complete ---")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

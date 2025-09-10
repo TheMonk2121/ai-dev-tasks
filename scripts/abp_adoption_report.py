@@ -60,8 +60,8 @@ def main() -> int:
     print("📊 ABP Adoption Report")
     print("======================")
     print(f"Window: last {total} runs")
-    print(f"ABP presence rate: {with_abp}/{total} ({with_abp/total:.1%})")
-    print(f"Carry-over rate:   {carry_over}/{total} ({carry_over/total:.1%})")
+    print(f"ABP presence rate: {with_abp}/{total} ({with_abp / total:.1%})")
+    print(f"Carry-over rate:   {carry_over}/{total} ({carry_over / total:.1%})")
     print(f"Lessons applied (total):   {applied_count}")
     print(f"Lessons suggested (total): {suggested_count}")
     return 0
@@ -69,4 +69,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

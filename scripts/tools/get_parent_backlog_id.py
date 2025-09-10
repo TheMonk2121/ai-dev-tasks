@@ -9,6 +9,7 @@ Order of precedence:
 Usage:
   python scripts/tools/get_parent_backlog_id.py /absolute/or/relative/path.md
 """
+
 from __future__ import annotations
 
 import os

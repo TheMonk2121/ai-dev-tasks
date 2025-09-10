@@ -70,12 +70,17 @@ except ImportError:
 _embeddings_available = False
 _bedrock_available = False
 
+# Torch/accelerator safety for constrained CI: prefer CPU, avoid GPU/MPS conflicts
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
+
 try:
     from sentence_transformers import SentenceTransformer
 
     _embeddings_available = True
-except ImportError:
-    print("⚠️ sentence-transformers not available - semantic features disabled")
+except Exception as e:
+    # Catch broad exceptions to tolerate torch binary/accelerator issues during import
+    print(f"⚠️ sentence-transformers unavailable ({e}); semantic features disabled")
     SentenceTransformer = None
 
 try:
@@ -319,7 +324,7 @@ class LocalLLMIntegration:
                 )
                 if retryable and attempt < retries:
                     sleep = min((self._bedrock_retry_base**attempt) + random.random(), self._bedrock_retry_max_sleep)
-                    print(f"⏳ Bedrock throttled; retrying in {sleep:.1f}s (attempt {attempt+1}/{retries})")
+                    print(f"⏳ Bedrock throttled; retrying in {sleep:.1f}s (attempt {attempt + 1}/{retries})")
                     time.sleep(sleep)
                     continue
 
@@ -439,7 +444,7 @@ Focused Answer:""".strip()
         self, query: str, draft_answer: str, context: list[str], target_words: int = 600, max_facts: int = 16
     ) -> str:
         """Coverage-first rewrite: extract facts from context, then compose answer from facts."""
-        labeled = [f"[{i+1}] {c}" for i, c in enumerate(context)]
+        labeled = [f"[{i + 1}] {c}" for i, c in enumerate(context)]
         ctx_blob = "\n".join(labeled)
 
         extract_prompt = f"""
@@ -2111,7 +2116,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
             if not isinstance(case, dict):
                 print(f"⚠️ Skipping non-dict case: {type(case)}")
                 continue
-            print(f"\n📝 Evaluating case {i+1}/{len(input_data)}: {case.get('query_id', f'case_{i+1}')}")
+            print(f"\n📝 Evaluating case {i + 1}/{len(input_data)}: {case.get('query_id', f'case_{i + 1}')}")
 
             try:
                 # Generate response using memory system
@@ -2183,7 +2188,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
                 case_result = {
-                    "query_id": case.get("query_id", f"case_{i+1}"),
+                    "query_id": case.get("query_id", f"case_{i + 1}"),
                     "query": case["query"],
                     "response": case["response"],
                     "gt_answer": case["gt_answer"],
@@ -2199,15 +2204,15 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 total_f1 += f1_score
 
                 print(
-                    f"✅ Case {case.get('query_id', f'case_{i+1}')}: P={precision:.3f}, R={recall:.3f}, F1={f1_score:.3f}"
+                    f"✅ Case {case.get('query_id', f'case_{i + 1}')}: P={precision:.3f}, R={recall:.3f}, F1={f1_score:.3f}"
                 )
 
             except Exception as e:
-                print(f"⚠️ Error evaluating case {case.get('query_id', f'case_{i+1}')}: {e}")
+                print(f"⚠️ Error evaluating case {case.get('query_id', f'case_{i + 1}')}: {e}")
                 # Add failed case with zero scores
                 case_results.append(
                     {
-                        "query_id": case.get("query_id", f"case_{i+1}"),
+                        "query_id": case.get("query_id", f"case_{i + 1}"),
                         "query": case["query"],
                         "response": "",
                         "gt_answer": case["gt_answer"],
@@ -2331,7 +2336,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
             f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
             case_result = {
-                "query_id": case.get("query_id", f"case_{i+1}"),
+                "query_id": case.get("query_id", f"case_{i + 1}"),
                 "query": case["query"],
                 "response": case["response"],
                 "gt_answer": case["gt_answer"],
@@ -2342,16 +2347,16 @@ Do not summarize or be concise - provide thorough, detailed information."""
             }
 
             print(
-                f"✅ Case {case.get('query_id', f'case_{i+1}')}: P={precision:.3f}, R={recall:.3f}, F1={f1_score:.3f}"
+                f"✅ Case {case.get('query_id', f'case_{i + 1}')}: P={precision:.3f}, R={recall:.3f}, F1={f1_score:.3f}"
             )
 
             return case_result
 
         except Exception as e:
-            print(f"⚠️ Error evaluating case {case.get('query_id', f'case_{i+1}')}: {e}")
+            print(f"⚠️ Error evaluating case {case.get('query_id', f'case_{i + 1}')}: {e}")
             # Return failed case with zero scores
             return {
-                "query_id": case.get("query_id", f"case_{i+1}"),
+                "query_id": case.get("query_id", f"case_{i + 1}"),
                 "query": case["query"],
                 "response": "",
                 "gt_answer": case["gt_answer"],

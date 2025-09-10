@@ -22,10 +22,12 @@ def find_markdown_files():
 
     return markdown_files
 
+
 def has_multiple_blanks(content):
     """Check if content has multiple consecutive blank lines."""
     # Look for patterns like \n\n\n or more
     return re.search(r"\n\s*\n\s*\n", content) is not None
+
 
 def fix_multiple_blanks(content):
     """Fix multiple consecutive blank lines."""
@@ -33,6 +35,7 @@ def fix_multiple_blanks(content):
     # This regex matches 2 or more consecutive blank lines and replaces with 1
     fixed_content = re.sub(r"\n\s*\n\s*\n+", "\n\n", content)
     return fixed_content
+
 
 def process_file(file_path):
     """Process a single file to fix multiple blank lines."""
@@ -59,6 +62,7 @@ def process_file(file_path):
 
     except Exception as e:
         return False, f"Error: {e}"
+
 
 def main():
     """Main function to fix multiple blank lines."""
@@ -96,6 +100,7 @@ def main():
         print(f"\n🎉 Successfully fixed {fixed_count} files!")
     else:
         print("\n⚠️  No files needed fixing.")
+
 
 if __name__ == "__main__":
     main()

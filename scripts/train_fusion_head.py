@@ -139,9 +139,7 @@ def train_epoch(
     return avg_loss, pairwise_acc
 
 
-def validate_epoch(
-    model: nn.Module, dataloader: DataLoader, loss_fn: str, device: torch.device
-) -> Tuple[float, float]:
+def validate_epoch(model: nn.Module, dataloader: DataLoader, loss_fn: str, device: torch.device) -> Tuple[float, float]:
     """
     Validate model for one epoch.
 
@@ -308,7 +306,7 @@ def main():
         val_accs.append(val_acc)
 
         logger.info(
-            f"Epoch {epoch+1}/{args.epochs}: "
+            f"Epoch {epoch + 1}/{args.epochs}: "
             f"Train Loss={train_loss:.4f}, Train Acc={train_acc:.4f}, "
             f"Val Loss={val_loss:.4f}, Val Acc={val_acc:.4f}"
         )

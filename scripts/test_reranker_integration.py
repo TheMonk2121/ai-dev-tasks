@@ -62,7 +62,7 @@ def test_reranker_functionality():
 
         print(f"✅ Reranking completed: {len(results)} results")
         for i, (chunk_id, text, score) in enumerate(results):
-            print(f"  {i+1}. {chunk_id}: {score:.3f} - {text[:50]}...")
+            print(f"  {i + 1}. {chunk_id}: {score:.3f} - {text[:50]}...")
 
         return True
 

@@ -96,7 +96,9 @@ class CoverageCalculator:
 
     @staticmethod
     def calculate_coverage(
-        sub_claims: List[str], retrieved_spans: List[str], threshold: float = 0.3  # Token overlap threshold
+        sub_claims: List[str],
+        retrieved_spans: List[str],
+        threshold: float = 0.3,  # Token overlap threshold
     ) -> Tuple[float, List[str]]:
         """
         Calculate coverage of sub-claims by retrieved spans.
@@ -175,7 +177,10 @@ class TemperatureScaler:
         self.fitted = False
 
     def fit(
-        self, confidences: List[float], correctness: List[bool], method: str = "isotonic"  # "platt" or "isotonic"
+        self,
+        confidences: List[float],
+        correctness: List[bool],
+        method: str = "isotonic",  # "platt" or "isotonic"
     ) -> float:
         """
         Fit temperature scaling to calibrate confidences.

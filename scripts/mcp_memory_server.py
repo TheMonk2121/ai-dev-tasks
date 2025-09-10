@@ -633,7 +633,7 @@ if __name__ == "__main__":
     print(f"📡 Health check: http://{args.host}:{args.port}/health")
     print(f"🔧 MCP tools: http://{args.host}:{args.port}/mcp/tools")
     # Helpful import diagnostics
-    print(f"🧩 PYTHONPATH={os.environ.get('PYTHONPATH','')}")
+    print(f"🧩 PYTHONPATH={os.environ.get('PYTHONPATH', '')}")
     try:
         print(f"🧭 sys.path[:3]={sys.path[:3]}")
     except Exception:

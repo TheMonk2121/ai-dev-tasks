@@ -212,10 +212,10 @@ class UVTeamOnboarding:
         guide_content = f"""# 🚀 Development Setup Guide
 
 ## System Information
-- **Platform**: {self.system_info['platform']}
-- **Architecture**: {self.system_info['architecture']}
-- **Python Version**: {self.system_info['python_version']}
-- **Shell**: {self.system_info['shell']}
+- **Platform**: {self.system_info["platform"]}
+- **Architecture**: {self.system_info["architecture"]}
+- **Python Version**: {self.system_info["python_version"]}
+- **Shell**: {self.system_info["shell"]}
 
 ## UV Commands Quick Reference
 

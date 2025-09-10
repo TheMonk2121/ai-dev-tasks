@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import os
 
 
@@ -63,4 +64,3 @@ def log_config(logger_print=print):
         f"batch={RERANK_BATCH} device={TORCH_DEVICE} "
         f"cache={RERANK_CACHE_BACKEND}"
     )
-

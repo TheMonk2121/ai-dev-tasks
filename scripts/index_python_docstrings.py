@@ -10,6 +10,7 @@ Outputs JSON to indexing/docstrings_index.json with entries:
   ]
 }
 """
+
 from __future__ import annotations
 
 import ast

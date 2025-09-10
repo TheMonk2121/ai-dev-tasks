@@ -64,7 +64,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
         results = []
 
         for i, test_case in enumerate(test_cases):
-            print(f"\n📋 Processing case {i+1}/{len(test_cases)}: {test_case.query_id}")
+            print(f"\n📋 Processing case {i + 1}/{len(test_cases)}: {test_case.query_id}")
 
             # Evaluate with LIMIT features
             result = self._evaluate_case_ragas_competitive(test_case)

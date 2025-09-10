@@ -28,6 +28,7 @@ def extract_context_index(content: str):
         return None
     return json.loads(block[jstart:])
 
+
 def validate_index(root: Path, index: dict) -> list:
     errors = []
     files = index.get("files", [])
@@ -41,8 +42,10 @@ def validate_index(root: Path, index: dict) -> list:
             errors.append(f"Missing file: {path}")
     return errors
 
+
 def main():
     import argparse
+
     ap = argparse.ArgumentParser(description="Validate CONTEXT_INDEX blocks")
     ap.add_argument("--root", default=".", help="Root path")
     args = ap.parse_args()
@@ -71,6 +74,6 @@ def main():
     else:
         print(json.dumps({"status": "ok"}, indent=2))
 
+
 if __name__ == "__main__":
     main()
-

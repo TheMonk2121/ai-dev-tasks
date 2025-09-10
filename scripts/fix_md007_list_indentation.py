@@ -100,5 +100,6 @@ def fix_md007_list_indentation():
     else:
         print("\nℹ️  No files needed fixing.")
 
+
 if __name__ == "__main__":
     fix_md007_list_indentation()

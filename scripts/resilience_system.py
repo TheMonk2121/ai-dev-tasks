@@ -1053,7 +1053,7 @@ def test_resilience_system():
 
     for i, orphan in enumerate(orphans[:3]):  # Show first 3
         print(
-            f"    Orphan {i+1}: {orphan.chunk_id} ({orphan.size_bytes} bytes, priority: {orphan.cleanup_priority:.2f})"
+            f"    Orphan {i + 1}: {orphan.chunk_id} ({orphan.size_bytes} bytes, priority: {orphan.cleanup_priority:.2f})"
         )
 
     # Test migration planning

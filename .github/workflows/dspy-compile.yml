@@ -73,15 +73,14 @@ jobs:
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
       
       - name: Setup environment
         env:
           CONFIG_HASH_INPUT: ${{ github.event.inputs.config_hash }}
           INGEST_RUN_ID_INPUT: ${{ github.event.inputs.ingest_run_id }}
-          PGPORT: ${{ job.services.postgres.ports[5432] }}
-          OPENAI: ${{ secrets.OPENAI_API_KEY }}
+          PGPORT: ${{ job.services.postgres.ports['5432'] }}
         run: |
           # Resolve CONFIG_HASH with precedence: workflow input -> secret -> default
           CONFIG_HASH="$CONFIG_HASH_INPUT"
@@ -100,7 +99,7 @@ jobs:
           # Compute DSN from service container published port
           echo "POSTGRES_DSN=postgresql://postgres:postgres@localhost:${PGPORT}/ai_agency" >> $GITHUB_ENV
           # Other app secrets and region
-          echo "OPENAI_API_KEY=${OPENAI}" >> $GITHUB_ENV
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
           if [ -z "${AWS_REGION:-}" ]; then echo "AWS_REGION=us-east-1" >> $GITHUB_ENV; else echo "AWS_REGION=$AWS_REGION" >> $GITHUB_ENV; fi
 
       - name: Install PostgreSQL client
@@ -112,25 +111,8 @@ jobs:
         env:
           PGPORT: ${{ job.services.postgres.ports[5432] }}
         run: |
-          export PGPASSWORD=postgres
-          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" || true
-          # 'vector' extension may not be available in default image; ignore errors
-          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;" || true
-          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 <<'SQL'
-          CREATE TABLE IF NOT EXISTS episodic_logs (
-            id SERIAL PRIMARY KEY,
-            user_id TEXT,
-            model_type TEXT,
-            prompt TEXT,
-            response TEXT,
-            tokens_used INTEGER,
-            cache_hit BOOLEAN DEFAULT FALSE,
-            similarity_score DOUBLE PRECISION DEFAULT 0.0,
-            last_verified TIMESTAMPTZ,
-            created_at TIMESTAMPTZ DEFAULT NOW(),
-            updated_at TIMESTAMPTZ DEFAULT NOW()
-          );
-          SQL
+          PGHOST=localhost PGUSER=postgres PGPASSWORD=postgres PGDATABASE=ai_agency \
+            bash scripts/ci_init_db.sh
       
       - name: Health-gated smoke evaluation
         run: |

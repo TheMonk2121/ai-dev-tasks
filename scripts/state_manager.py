@@ -661,9 +661,7 @@ class StateManager:
                 """
                 SELECT COUNT(*) FROM execution_history
                 WHERE timestamp < datetime('now', '-{} days')
-            """.format(
-                    days
-                )
+            """.format(days)
             )
 
             count = cursor.fetchone()[0]
@@ -673,9 +671,7 @@ class StateManager:
                 """
                 DELETE FROM execution_history
                 WHERE timestamp < datetime('now', '-{} days')
-            """.format(
-                    days
-                )
+            """.format(days)
             )
 
             self.conn.commit()

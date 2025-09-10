@@ -12,7 +12,7 @@ def read_micro_f1(path: Path) -> float:
             return float(data["overall_metrics"].get("f1_score") or 0.0)
         if "metrics" in data and isinstance(data["metrics"], dict):
             if "micro_f1" in data["metrics"]:
-                return float(data["metrics"]["micro_f1"]) 
+                return float(data["metrics"]["micro_f1"])
     raise KeyError("No F1 metric found in summary JSON")
 
 

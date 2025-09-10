@@ -317,7 +317,7 @@ class IntelligentBedrockQueue:
                     jitter = random.uniform(0.0, 0.5)
                     sleep_for = backoff + jitter
                     logger.warning(
-                        f"Request {request.request_id} throttled (attempt {attempt+1}/{self.max_retries}); "
+                        f"Request {request.request_id} throttled (attempt {attempt + 1}/{self.max_retries}); "
                         f"backing off {sleep_for:.1f}s"
                     )
                     time.sleep(sleep_for)

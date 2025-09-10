@@ -15,7 +15,7 @@ def check_context_loading():
         "100_cursor-memory-context.md",
         "000_backlog.md",
         "400_system-overview.md",
-        "400_project-overview.md"
+        "400_project-overview.md",
     ]
 
     missing_files = []
@@ -32,12 +32,10 @@ def check_context_loading():
     print("✅ Step 1: Context loading files available")
     return True
 
+
 def check_file_organization():
     """Step 2: Verify file organization understanding"""
-    required_files = [
-        "200_naming-conventions.md",
-        "400_context-priority-guide.md"
-    ]
+    required_files = ["200_naming-conventions.md", "400_context-priority-guide.md"]
 
     missing_files = []
     for file in required_files:
@@ -52,6 +50,7 @@ def check_file_organization():
 
     print("✅ Step 2: File organization files available")
     return True
+
 
 def analyze_file_references(target_file: str) -> Dict[str, Any]:
     """Step 3: Cross-reference analysis"""
@@ -72,7 +71,7 @@ def analyze_file_references(target_file: str) -> Dict[str, Any]:
             if file.endswith(".md"):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
+                    with open(file_path, "r", encoding="utf-8") as f:
                         content = f.read()
                         if target_file in content:
                             references.append(file_path)
@@ -86,8 +85,9 @@ def analyze_file_references(target_file: str) -> Dict[str, Any]:
         "total_references": len(references),
         "core_references": len(core_references),
         "references": references,
-        "core_references_list": core_references
+        "core_references_list": core_references,
     }
+
 
 def check_content_freshness(target_file: str) -> Dict[str, Any]:
     """Step 4: Content analysis"""
@@ -95,7 +95,7 @@ def check_content_freshness(target_file: str) -> Dict[str, Any]:
         return {"error": f"Target file {target_file} does not exist"}
 
     try:
-        with open(target_file, 'r', encoding='utf-8') as f:
+        with open(target_file, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Check for legacy model references
@@ -120,10 +120,11 @@ def check_content_freshness(target_file: str) -> Dict[str, Any]:
             "legacy_model_references": legacy_references,
             "memory_context_importance": memory_context,
             "is_recent": is_recent,
-            "content_length": len(content)
+            "content_length": len(content),
         }
     except Exception as e:
         return {"error": f"Could not analyze content: {e}"}
+
 
 def determine_file_tier(target_file: str, reference_analysis: Dict, content_analysis: Dict) -> str:
     """Step 6: Tier-based decision"""
@@ -151,6 +152,7 @@ def determine_file_tier(target_file: str, reference_analysis: Dict, content_anal
 
     return "TIER_2_HIGH"  # Default to high tier for safety
 
+
 def run_analysis_checklist(target_file: str):
     """Run the complete mandatory analysis checklist"""
     print("🚨 MANDATORY FILE ANALYSIS CHECKLIST")
@@ -177,7 +179,7 @@ def run_analysis_checklist(target_file: str):
 
     print(f"   - Total references: {reference_analysis['total_references']}")
     print(f"   - Core file references: {reference_analysis['core_references']}")
-    if reference_analysis['core_references_list']:
+    if reference_analysis["core_references_list"]:
         print(f"   - Referenced by: {', '.join(reference_analysis['core_references_list'])}")
 
     # Step 4: Content Analysis
@@ -194,7 +196,11 @@ def run_analysis_checklist(target_file: str):
     # Step 5: Safety Validation
     print("\n📋 Step 5: Safety Validation")
     print("   - Cross-references shown above")
-    print("   - Legacy evidence: Legacy model references found" if content_analysis['legacy_model_references'] else "   - Legacy evidence: No legacy models found")
+    print(
+        "   - Legacy evidence: Legacy model references found"
+        if content_analysis["legacy_model_references"]
+        else "   - Legacy evidence: No legacy models found"
+    )
     print("   - Alternative: Suggest archiving rather than deletion")
 
     # Step 6: Tier-Based Decision
@@ -222,6 +228,7 @@ def run_analysis_checklist(target_file: str):
     print(f"   - Legacy models: {content_analysis['legacy_model_references']}")
 
     return True
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

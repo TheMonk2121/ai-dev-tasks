@@ -690,9 +690,7 @@ class CleanRAGCheckerEvaluator:
             total_precision += precision
             total_recall += recall
             total_f1 += f1_score
-            try:
-                total_faithfulness
-            except NameError:
+            if "total_faithfulness" not in locals():
                 total_faithfulness = 0.0
             total_faithfulness += faithfulness
 
@@ -722,7 +720,7 @@ class CleanRAGCheckerEvaluator:
         self._save_results(results, str(out_file))
 
         print(f"✅ Evaluation complete. Results saved to: {out_file}")
-        print(f"📊 Overall metrics: P={total_precision/n:.3f}, R={total_recall/n:.3f}, F1={total_f1/n:.3f}")
+        print(f"📊 Overall metrics: P={total_precision / n:.3f}, R={total_recall / n:.3f}, F1={total_f1 / n:.3f}")
 
         return results
 

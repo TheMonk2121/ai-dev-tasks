@@ -164,7 +164,6 @@ class AutomatedRoleAssignment:
 
                             # Check if files are in the same subdirectory
                             if path1.parent == path2.parent and path1.name != path2.name:
-
                                 # Calculate role similarity
                                 common_roles = set(roles1) & set(roles2)
                                 total_roles = set(roles1) | set(roles2)
@@ -276,6 +275,7 @@ class AutomatedRoleAssignment:
 
         return report_content
 
+
 def main():
     """Main entry point for the automated role assignment script."""
     parser = argparse.ArgumentParser(description="Automated role assignment for 600_archives files")
@@ -302,6 +302,7 @@ def main():
     # Exit with error code if there were errors
     if stats["errors"] > 0:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -19,43 +19,45 @@ def extract_title_from_filename(file_path):
     title = name_without_ext
 
     # Remove numeric prefixes like "400_", "100_", etc.
-    title = re.sub(r'^\d+_', '', title)
+    title = re.sub(r"^\d+_", "", title)
 
     # Convert underscores and hyphens to spaces
-    title = re.sub(r'[_-]', ' ', title)
+    title = re.sub(r"[_-]", " ", title)
 
     # Convert to title case
     title = title.title()
 
     # Handle special cases
-    if title.lower() == 'readme':
-        return 'README'
-    elif title.lower() == 'index':
-        return 'Index'
+    if title.lower() == "readme":
+        return "README"
+    elif title.lower() == "index":
+        return "Index"
 
     return title
 
+
 def extract_title_from_content(content):
     """Attempt to extract a title from the content."""
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     # Look for existing headings
     for line in lines[:10]:  # Check first 10 lines
         line = line.strip()
-        if line.startswith('#'):
+        if line.startswith("#"):
             # Extract text from heading
-            title = re.sub(r'^#+\s*', '', line)
+            title = re.sub(r"^#+\s*", "", line)
             return title
 
     # Look for patterns that might indicate a title
     for line in lines[:10]:
         line = line.strip()
-        if line and not line.startswith('#') and not line.startswith('<!--'):
+        if line and not line.startswith("#") and not line.startswith("<!--"):
             # Check if it looks like a title (not too long, not a list item, etc.)
-            if len(line) < 100 and not line.startswith('-') and not line.startswith('*'):
+            if len(line) < 100 and not line.startswith("-") and not line.startswith("*"):
                 return line
 
     return None
+
 
 def fix_md041_missing_h1():
     """Fix MD041 violations by adding H1 headings to files that don't have them."""
@@ -64,13 +66,15 @@ def fix_md041_missing_h1():
 
     # Find all markdown files
     markdown_files = []
-    for pattern in ['**/*.md', '**/*.markdown']:
+    for pattern in ["**/*.md", "**/*.markdown"]:
         markdown_files.extend(glob.glob(pattern, recursive=True))
 
     # Remove files in certain directories
-    markdown_files = [f for f in markdown_files if not any(exclude in f for exclude in [
-        'node_modules', '.git', '__pycache__', '.pytest_cache', 'venv'
-    ])]
+    markdown_files = [
+        f
+        for f in markdown_files
+        if not any(exclude in f for exclude in ["node_modules", ".git", "__pycache__", ".pytest_cache", "venv"])
+    ]
 
     print(f"Found {len(markdown_files)} markdown files")
 
@@ -80,17 +84,17 @@ def fix_md041_missing_h1():
 
     for file_path in markdown_files:
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             original_content = content
 
             # Check if file already has an H1 heading
-            lines = content.split('\n')
+            lines = content.split("\n")
             has_h1 = False
 
             for line in lines[:10]:  # Check first 10 lines
-                if line.strip().startswith('# '):
+                if line.strip().startswith("# "):
                     has_h1 = True
                     break
 
@@ -104,26 +108,26 @@ def fix_md041_missing_h1():
                 title = extract_title_from_filename(file_path)
 
             # Add H1 heading at the beginning
-            if content.startswith('<!--'):
+            if content.startswith("<!--"):
                 # If file starts with HTML comment, add heading after it
-                lines = content.split('\n')
+                lines = content.split("\n")
                 insert_index = 0
                 for i, line in enumerate(lines):
-                    if line.strip().startswith('<!--'):
+                    if line.strip().startswith("<!--"):
                         insert_index = i + 1
                     else:
                         break
 
-                lines.insert(insert_index, f'# {title}')
-                lines.insert(insert_index + 1, '')  # Add blank line
-                content = '\n'.join(lines)
+                lines.insert(insert_index, f"# {title}")
+                lines.insert(insert_index + 1, "")  # Add blank line
+                content = "\n".join(lines)
             else:
                 # Add heading at the very beginning
-                content = f'# {title}\n\n{content}'
+                content = f"# {title}\n\n{content}"
 
             # Write back if changed
             if content != original_content:
-                with open(file_path, 'w', encoding='utf-8') as f:
+                with open(file_path, "w", encoding="utf-8") as f:
                     f.write(content)
 
                 print(f"✅ Fixed: {file_path} (Added: # {title})")
@@ -145,6 +149,7 @@ def fix_md041_missing_h1():
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
         print("\nℹ️  No files needed fixing.")
+
 
 if __name__ == "__main__":
     fix_md041_missing_h1()

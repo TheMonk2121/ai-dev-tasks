@@ -16,23 +16,21 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
             "100_cursor-memory-context.md",
             "000_backlog.md",
             "400_system-overview.md",
-            "400_project-overview.md"
+            "400_project-overview.md",
         ],
-        "CODE_CONTEXT": [
-            "400_code-criticality-guide.md"
-        ],
+        "CODE_CONTEXT": ["400_code-criticality-guide.md"],
         "WORKFLOW_FILES": [
             "001_create-prd.md",
             "002_generate-tasks.md",
             "003_process-task-list.md",
-            "100_backlog-guide.md"
+            "100_backlog-guide.md",
         ],
         "SYSTEM_ARCHITECTURE": [
             "104_dspy-development-context.md",
             "202_setup-requirements.md",
             "400_context-priority-guide.md",
             # compatibility merged into guide (appendix)
-            "400_cursor-context-engineering-guide.md"
+            "400_cursor-context-engineering-guide.md",
         ],
         "OPERATIONAL_GUIDES": [
             "400_testing-strategy-guide.md",
@@ -45,7 +43,7 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
             "400_metadata-quick-reference.md",
             "400_few-shot-context-examples.md",
             "400_prd-optimization-guide.md",
-            "400_n8n-backlog-scrubber-guide.md"
+            "400_n8n-backlog-scrubber-guide.md",
         ],
         "RESEARCH_DOCUMENTATION": [
             "500_research-summary.md",
@@ -58,13 +56,9 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
             "500_maintenance-safety-research.md",
             "500_performance-research.md",
             "500_monitoring-research.md",
-            "500_agent-orchestration-research.md"
+            "500_agent-orchestration-research.md",
         ],
-        "EXTERNAL_RESEARCH": [
-            "docs/research/papers/",
-            "docs/research/articles/",
-            "docs/research/tutorials/"
-        ],
+        "EXTERNAL_RESEARCH": ["docs/research/papers/", "docs/research/articles/", "docs/research/tutorials/"],
         "DOMAIN_SPECIFIC": [
             "CURSOR_NATIVE_AI_STRATEGY.md",
             "B-011-PRD.md",
@@ -75,21 +69,22 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
             "B-049-PRD.md",
             "B-049-Tasks.md",
             "B-072-PRD.md",
-            "B-072-Tasks.md"
+            "B-072-Tasks.md",
         ],
         "ANALYSIS_MAINTENANCE": [
             "400_file-analysis-guide.md",
             "200_naming-conventions.md",
             "400_cross-reference-strengthening-plan.md",
-            "999_repo-maintenance.md"
+            "999_repo-maintenance.md",
         ],
         "COMPLETION_SUMMARIES": [
             "500_b002-completion-summary.md",
             "500_b031-completion-summary.md",
             "500_b060-completion-summary.md",
-            "500_b065-completion-summary.md"
-        ]
+            "500_b065-completion-summary.md",
+        ],
     }
+
 
 def get_context_guidance() -> Dict[str, List[str]]:
     """Get context-specific guidance for when to read what"""
@@ -97,14 +92,14 @@ def get_context_guidance() -> Dict[str, List[str]]:
         "NEW_SESSIONS": [
             "100_cursor-memory-context.md - Current project state",
             "000_backlog.md - Current priorities",
-            "400_system-overview.md - Technical architecture"
+            "400_system-overview.md - Technical architecture",
         ],
         "DEVELOPMENT_TASKS": {
             "Planning": ["001_create-prd.md", "002_generate-tasks.md", "003_process-task-list.md"],
             "Implementation": ["104_dspy-development-context.md", "400_* guides"],
             "Testing": ["400_testing-strategy-guide.md"],
             "Security": ["400_security-best-practices-guide.md"],
-            "Performance": ["400_performance-optimization-guide.md"]
+            "Performance": ["400_performance-optimization-guide.md"],
         },
         "RESEARCH_TASKS": [
             "500_research-summary.md - Overview",
@@ -112,28 +107,30 @@ def get_context_guidance() -> Dict[str, List[str]]:
             "500_research-implementation-summary.md - Implementation",
             "docs/research/papers/ - External sources",
             "docs/research/articles/ - Industry articles",
-            "docs/research/tutorials/ - Implementation guides"
+            "docs/research/tutorials/ - Implementation guides",
         ],
         "FILE_MANAGEMENT": [
             "400_file-analysis-guide.md - Analysis (MANDATORY)",
             "200_naming-conventions.md - Naming",
-            "400_context-priority-guide.md - Organization"
+            "400_context-priority-guide.md - Organization",
         ],
         "SYSTEM_INTEGRATION": [
             "400_system-overview.md - Architecture",
             "400_integration-patterns-guide.md - Patterns",
             "400_deployment-environment-guide.md - Deployment",
-            "400_migration-upgrade-guide.md - Migration"
+            "400_migration-upgrade-guide.md - Migration",
         ],
         "CONTEXT_ENGINEERING": [
             "400_cursor-context-engineering-guide.md - Strategy & Compatibility",
-            "104_dspy-development-context.md - Implementation"
-        ]
+            "104_dspy-development-context.md - Implementation",
+        ],
     }
+
 
 def check_file_exists(file_path: str) -> bool:
     """Check if a file exists"""
     return os.path.exists(file_path)
+
 
 def display_documentation_inventory():
     """Display the complete documentation inventory"""
@@ -155,6 +152,7 @@ def display_documentation_inventory():
             else:
                 print(f"❌ {file_path} (not found)")
         print()
+
 
 def display_context_guidance():
     """Display context-specific guidance"""
@@ -178,6 +176,7 @@ def display_context_guidance():
                 print(f"  - {file}")
         print()
 
+
 def find_relevant_files(task_type: str) -> List[str]:
     """Find relevant files for a specific task type"""
     guidance = get_context_guidance()
@@ -191,7 +190,7 @@ def find_relevant_files(task_type: str) -> List[str]:
         "file_management": "FILE_MANAGEMENT",
         "system_integration": "SYSTEM_INTEGRATION",
         "context_engineering": "CONTEXT_ENGINEERING",
-        "new_session": "NEW_SESSIONS"
+        "new_session": "NEW_SESSIONS",
     }
 
     if task_type.lower() in task_mapping:
@@ -207,6 +206,7 @@ def find_relevant_files(task_type: str) -> List[str]:
 
     return relevant_files
 
+
 def main():
     """Main function"""
     if len(sys.argv) < 2:
@@ -218,7 +218,9 @@ def main():
         print("  python3 documentation_navigator.py guidance")
         print("  python3 documentation_navigator.py find <task_type>")
         print()
-        print("Task types: development, research, file_management, system_integration, context_engineering, new_session")
+        print(
+            "Task types: development, research, file_management, system_integration, context_engineering, new_session"
+        )
         return
 
     command = sys.argv[1]
@@ -237,6 +239,7 @@ def main():
             print(f"  - {file}")
     else:
         print("Invalid command. Use 'inventory', 'guidance', or 'find <task_type>'")
+
 
 if __name__ == "__main__":
     main()

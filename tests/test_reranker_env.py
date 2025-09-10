@@ -12,4 +12,3 @@ def test_legacy_aliases(monkeypatch):
     assert env.RERANK_ENABLE is True
     assert env.RERANK_INPUT_TOPK == 40
     assert env.RERANK_KEEP == 10
-

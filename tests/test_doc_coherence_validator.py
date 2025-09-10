@@ -287,7 +287,6 @@ This is a valid README file.
             patch.object(self.validator, "task_5_cursor_ai_semantic_validation", return_value=True),
             patch.object(self.validator, "task_6_generate_validation_report", return_value=True),
         ):
-
             result = self.validator.run_all_validations()
             assert result
             assert len(self.validator.validation_results) == 6
@@ -301,7 +300,6 @@ This is a valid README file.
             patch.object(self.validator, "task_5_cursor_ai_semantic_validation", return_value=True),
             patch.object(self.validator, "task_6_generate_validation_report", return_value=True),
         ):
-
             result = self.validator.run_all_validations()
             assert not result
 

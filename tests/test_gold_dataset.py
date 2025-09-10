@@ -2,6 +2,7 @@
 """
 Unit tests for the unified gold dataset system
 """
+
 import sys
 from pathlib import Path
 

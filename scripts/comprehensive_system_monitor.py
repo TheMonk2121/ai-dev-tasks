@@ -361,26 +361,26 @@ class MonitoringDashboard:
 
         report = f"""
 🏥 COMPREHENSIVE SYSTEM HEALTH REPORT
-{'='*50}
-📊 OVERALL STATUS: {health['status'].upper()}
-🎯 HEALTH SCORE: {health['score']:.1%}
-⏰ TIMESTAMP: {health['timestamp']}
+{"=" * 50}
+📊 OVERALL STATUS: {health["status"].upper()}
+🎯 HEALTH SCORE: {health["score"]:.1%}
+⏰ TIMESTAMP: {health["timestamp"]}
 
 🔍 DATABASE HEALTH:
-  • Active Connections: {db['connection_count']}
-  • Connection Time: {db['connection_time_ms']:.1f}ms
-  • Cache Hit Ratio: {db['cache_hit_ratio']:.1%}
-  • Active Queries: {db['active_queries']}
-  • Connection Errors: {db['connection_errors']}
+  • Active Connections: {db["connection_count"]}
+  • Connection Time: {db["connection_time_ms"]:.1f}ms
+  • Cache Hit Ratio: {db["cache_hit_ratio"]:.1%}
+  • Active Queries: {db["active_queries"]}
+  • Connection Errors: {db["connection_errors"]}
 
 ⚡ PIPELINE PERFORMANCE:
-  • Throughput: {pipeline['throughput_requests_per_second']:.1f} req/s
-  • P50 Latency: {pipeline['latency_p50_ms']:.1f}ms
-  • P95 Latency: {pipeline['latency_p95_ms']:.1f}ms
-  • P99 Latency: {pipeline['latency_p99_ms']:.1f}ms
-  • Error Rate: {pipeline['error_rate']:.1%}
-  • Memory Usage: {pipeline['memory_usage_mb']:.1f}MB
-  • CPU Usage: {pipeline['cpu_usage_percent']:.1f}%
+  • Throughput: {pipeline["throughput_requests_per_second"]:.1f} req/s
+  • P50 Latency: {pipeline["latency_p50_ms"]:.1f}ms
+  • P95 Latency: {pipeline["latency_p95_ms"]:.1f}ms
+  • P99 Latency: {pipeline["latency_p99_ms"]:.1f}ms
+  • Error Rate: {pipeline["error_rate"]:.1%}
+  • Memory Usage: {pipeline["memory_usage_mb"]:.1f}MB
+  • CPU Usage: {pipeline["cpu_usage_percent"]:.1f}%
 
 🚨 ISSUES IDENTIFIED:
 """

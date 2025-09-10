@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class AbstentionReason(Enum):
     """Reasons for abstaining from answering."""
+
     LOW_CONFIDENCE = "low_confidence"
     INSUFFICIENT_EVIDENCE = "insufficient_evidence"
     LOW_COVERAGE = "low_coverage"
@@ -86,7 +87,7 @@ class SelectiveAnsweringConfig:
 class SelectiveAnswering:
     """
     Implements selective answering with evidence quality-based abstention.
-    
+
     Features:
     - Evidence coverage and concentration analysis
     - Contradiction detection
@@ -105,27 +106,25 @@ class SelectiveAnswering:
         answer: str,
         evidence_chunks: List[Dict[str, Any]],
         confidence_score: float,
-        sub_claims: Optional[List[str]] = None
+        sub_claims: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """
         Evaluate the quality of an answer for selective answering decisions.
-        
+
         Args:
             query: User query
             answer: Generated answer
             evidence_chunks: List of evidence chunks with scores
             confidence_score: Raw confidence score
             sub_claims: List of sub-claims to check coverage
-            
+
         Returns:
             Quality evaluation results
         """
         logger.info(f"Evaluating answer quality for query: {query[:50]}...")
 
         # Extract evidence quality metrics
-        evidence_quality = self._analyze_evidence_quality(
-            evidence_chunks, sub_claims
-        )
+        evidence_quality = self._analyze_evidence_quality(evidence_chunks, sub_claims)
 
         # Analyze answer consistency with evidence
         consistency_score = self._check_answer_consistency(answer, evidence_chunks)
@@ -153,13 +152,11 @@ class SelectiveAnswering:
             "consistency_score": consistency_score,
             "intent_classification": intent_classification,
             "quality_score": abstention_decision["quality_score"],
-            "recommendations": abstention_decision["recommendations"]
+            "recommendations": abstention_decision["recommendations"],
         }
 
     def _analyze_evidence_quality(
-        self,
-        evidence_chunks: List[Dict[str, Any]],
-        sub_claims: Optional[List[str]] = None
+        self, evidence_chunks: List[Dict[str, Any]], sub_claims: Optional[List[str]] = None
     ) -> EvidenceQuality:
         """Analyze the quality of evidence chunks."""
 
@@ -174,7 +171,7 @@ class SelectiveAnswering:
                 mean_evidence_score=0.0,
                 evidence_count=0,
                 has_contradictions=False,
-                contradiction_score=0.0
+                contradiction_score=0.0,
             )
 
         # Extract scores
@@ -196,14 +193,10 @@ class SelectiveAnswering:
         dispersion_score = self._calculate_dispersion(scores)
 
         # Coverage analysis
-        coverage_score, claim_coverage = self._calculate_coverage(
-            evidence_chunks, sub_claims
-        )
+        coverage_score, claim_coverage = self._calculate_coverage(evidence_chunks, sub_claims)
 
         # Contradiction detection
-        has_contradictions, contradiction_score = self._detect_contradictions(
-            evidence_chunks
-        )
+        has_contradictions, contradiction_score = self._detect_contradictions(evidence_chunks)
 
         return EvidenceQuality(
             coverage_score=coverage_score,
@@ -215,7 +208,7 @@ class SelectiveAnswering:
             mean_evidence_score=mean_evidence_score,
             evidence_count=evidence_count,
             has_contradictions=has_contradictions,
-            contradiction_score=contradiction_score
+            contradiction_score=contradiction_score,
         )
 
     def _calculate_dispersion(self, scores: np.ndarray) -> float:
@@ -239,9 +232,7 @@ class SelectiveAnswering:
             return 0.0
 
     def _calculate_coverage(
-        self,
-        evidence_chunks: List[Dict[str, Any]],
-        sub_claims: Optional[List[str]] = None
+        self, evidence_chunks: List[Dict[str, Any]], sub_claims: Optional[List[str]] = None
     ) -> Tuple[float, Dict[str, float]]:
         """Calculate coverage of evidence across sub-claims."""
 
@@ -259,10 +250,7 @@ class SelectiveAnswering:
 
         for claim in sub_claims:
             # Find evidence chunks that support this claim
-            supporting_chunks = [
-                chunk for chunk in evidence_chunks
-                if self._claim_supported_by_chunk(claim, chunk)
-            ]
+            supporting_chunks = [chunk for chunk in evidence_chunks if self._claim_supported_by_chunk(claim, chunk)]
 
             if supporting_chunks:
                 # Calculate claim coverage based on evidence strength
@@ -278,11 +266,7 @@ class SelectiveAnswering:
 
         return overall_coverage, claim_coverage
 
-    def _claim_supported_by_chunk(
-        self,
-        claim: str,
-        chunk: Dict[str, Any]
-    ) -> bool:
+    def _claim_supported_by_chunk(self, claim: str, chunk: Dict[str, Any]) -> bool:
         """Check if a claim is supported by an evidence chunk."""
         # Simple keyword matching - could be enhanced with semantic similarity
         chunk_text = chunk.get("text", "").lower()
@@ -292,10 +276,7 @@ class SelectiveAnswering:
         keyword_matches = sum(1 for keyword in claim_keywords if keyword in chunk_text)
         return keyword_matches >= max(1, len(claim_keywords) // 2)
 
-    def _detect_contradictions(
-        self,
-        evidence_chunks: List[Dict[str, Any]]
-    ) -> Tuple[bool, float]:
+    def _detect_contradictions(self, evidence_chunks: List[Dict[str, Any]]) -> Tuple[bool, float]:
         """Detect contradictions in evidence chunks."""
 
         if len(evidence_chunks) < 2:
@@ -309,15 +290,14 @@ class SelectiveAnswering:
 
         # Check for high-scoring chunks with very different content
         high_scoring_chunks = [
-            chunk for chunk in evidence_chunks
-            if chunk.get("score", 0.0) > self.config.min_max_evidence_score
+            chunk for chunk in evidence_chunks if chunk.get("score", 0.0) > self.config.min_max_evidence_score
         ]
 
         if len(high_scoring_chunks) >= 2:
             # Calculate pairwise similarity (simplified)
             similarities = []
             for i, chunk1 in enumerate(high_scoring_chunks):
-                for j, chunk2 in enumerate(high_scoring_chunks[i+1:], i+1):
+                for j, chunk2 in enumerate(high_scoring_chunks[i + 1 :], i + 1):
                     similarity = self._calculate_chunk_similarity(chunk1, chunk2)
                     similarities.append(similarity)
 
@@ -330,11 +310,7 @@ class SelectiveAnswering:
 
         return has_contradictions, contradiction_score
 
-    def _calculate_chunk_similarity(
-        self,
-        chunk1: Dict[str, Any],
-        chunk2: Dict[str, Any]
-    ) -> float:
+    def _calculate_chunk_similarity(self, chunk1: Dict[str, Any], chunk2: Dict[str, Any]) -> float:
         """Calculate similarity between two evidence chunks."""
         # Simple Jaccard similarity on words
         text1 = set(chunk1.get("text", "").lower().split())
@@ -348,11 +324,7 @@ class SelectiveAnswering:
 
         return intersection / union if union > 0 else 0.0
 
-    def _check_answer_consistency(
-        self,
-        answer: str,
-        evidence_chunks: List[Dict[str, Any]]
-    ) -> float:
+    def _check_answer_consistency(self, answer: str, evidence_chunks: List[Dict[str, Any]]) -> float:
         """Check if the answer is consistent with the evidence."""
 
         if not evidence_chunks:
@@ -383,11 +355,7 @@ class SelectiveAnswering:
 
         return (avg_supporting_score + support_ratio) / 2
 
-    def _chunk_supports_answer(
-        self,
-        chunk_text: str,
-        answer_keywords: set
-    ) -> bool:
+    def _chunk_supports_answer(self, chunk_text: str, answer_keywords: set) -> bool:
         """Check if a chunk supports the answer content."""
         # Simple keyword overlap check
         chunk_words = set(chunk_text.split())
@@ -410,7 +378,7 @@ class SelectiveAnswering:
             "comparison": ["compare", "difference", "vs", "versus", "better"],
             "explanation": ["why", "how", "explain", "reason", "cause"],
             "analysis": ["analyze", "evaluate", "assess", "review"],
-            "structured": ["sql", "query", "table", "data", "number"]
+            "structured": ["sql", "query", "table", "data", "number"],
         }
 
         intent_scores = {}
@@ -428,7 +396,7 @@ class SelectiveAnswering:
             "intent": best_intent[0] if not is_unclear else "unclear",
             "confidence": best_intent[1],
             "is_unclear": is_unclear,
-            "all_scores": intent_scores
+            "all_scores": intent_scores,
         }
 
     def _make_abstention_decision(
@@ -436,7 +404,7 @@ class SelectiveAnswering:
         confidence_score: float,
         evidence_quality: EvidenceQuality,
         consistency_score: float,
-        intent_classification: Dict[str, Any]
+        intent_classification: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Make the final abstention decision."""
 
@@ -470,8 +438,10 @@ class SelectiveAnswering:
             reasons.append("Too few evidence pieces")
 
         # Check contradictions
-        if evidence_quality.has_contradictions and \
-           evidence_quality.contradiction_score > self.config.max_contradiction_score:
+        if (
+            evidence_quality.has_contradictions
+            and evidence_quality.contradiction_score > self.config.max_contradiction_score
+        ):
             should_abstain = True
             reasons.append("Contradictory evidence detected")
 
@@ -486,15 +456,13 @@ class SelectiveAnswering:
         )
 
         # Generate recommendations
-        recommendations = self._generate_recommendations(
-            should_abstain, reasons, quality_score, evidence_quality
-        )
+        recommendations = self._generate_recommendations(should_abstain, reasons, quality_score, evidence_quality)
 
         return {
             "should_abstain": should_abstain,
             "quality_score": quality_score,
             "reasons": reasons,
-            "recommendations": recommendations
+            "recommendations": recommendations,
         }
 
     def _calculate_quality_score(
@@ -502,18 +470,12 @@ class SelectiveAnswering:
         confidence_score: float,
         evidence_quality: EvidenceQuality,
         consistency_score: float,
-        intent_classification: Dict[str, Any]
+        intent_classification: Dict[str, Any],
     ) -> float:
         """Calculate overall quality score."""
 
         # Weighted combination of factors
-        weights = {
-            "confidence": 0.3,
-            "coverage": 0.25,
-            "concentration": 0.2,
-            "consistency": 0.15,
-            "intent": 0.1
-        }
+        weights = {"confidence": 0.3, "coverage": 0.25, "concentration": 0.2, "consistency": 0.15, "intent": 0.1}
 
         # Normalize scores to 0-1 range
         coverage_norm = min(1.0, evidence_quality.coverage_score / self.config.min_coverage)
@@ -521,21 +483,17 @@ class SelectiveAnswering:
         intent_norm = intent_classification.get("confidence", 0.0)
 
         quality_score = (
-            weights["confidence"] * confidence_score +
-            weights["coverage"] * coverage_norm +
-            weights["concentration"] * concentration_norm +
-            weights["consistency"] * consistency_score +
-            weights["intent"] * intent_norm
+            weights["confidence"] * confidence_score
+            + weights["coverage"] * coverage_norm
+            + weights["concentration"] * concentration_norm
+            + weights["consistency"] * consistency_score
+            + weights["intent"] * intent_norm
         )
 
         return min(1.0, max(0.0, quality_score))
 
     def _generate_recommendations(
-        self,
-        should_abstain: bool,
-        reasons: List[str],
-        quality_score: float,
-        evidence_quality: EvidenceQuality
+        self, should_abstain: bool, reasons: List[str], quality_score: float, evidence_quality: EvidenceQuality
     ) -> List[str]:
         """Generate actionable recommendations."""
 
@@ -580,7 +538,7 @@ class SelectiveAnswering:
         confidence_score: float,
         evidence_quality: EvidenceQuality,
         consistency_score: float,
-        intent_classification: Dict[str, Any]
+        intent_classification: Dict[str, Any],
     ) -> AbstentionReason:
         """Determine the primary reason for abstention."""
 
@@ -606,10 +564,7 @@ class SelectiveAnswering:
         return AbstentionReason.INSUFFICIENT_EVIDENCE
 
     def format_abstention_response(
-        self,
-        query: str,
-        evaluation_result: Dict[str, Any],
-        evidence_chunks: List[Dict[str, Any]]
+        self, query: str, evaluation_result: Dict[str, Any], evidence_chunks: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """Format a response when abstaining from answering."""
 
@@ -619,7 +574,7 @@ class SelectiveAnswering:
             "abstained": True,
             "abstention_reason": evaluation_result["abstention_reason"].value,
             "confidence_score": evaluation_result["confidence_score"],
-            "quality_score": evaluation_result["quality_score"]
+            "quality_score": evaluation_result["quality_score"],
         }
 
         if self.config.include_abstention_reason:
@@ -628,17 +583,13 @@ class SelectiveAnswering:
 
         if self.config.show_evidence_on_abstain and evidence_chunks:
             # Show top evidence pieces to help user understand
-            top_chunks = sorted(
-                evidence_chunks,
-                key=lambda x: x.get("score", 0.0),
-                reverse=True
-            )[:3]
+            top_chunks = sorted(evidence_chunks, key=lambda x: x.get("score", 0.0), reverse=True)[:3]
 
             response["top_evidence"] = [
                 {
                     "text": chunk.get("text", "")[:200] + "...",
                     "score": chunk.get("score", 0.0),
-                    "source": chunk.get("source", "unknown")
+                    "source": chunk.get("source", "unknown"),
                 }
                 for chunk in top_chunks
             ]
@@ -648,7 +599,7 @@ class SelectiveAnswering:
                 "Refine your query to be more specific",
                 "Use different search terms",
                 "Check if the information exists in our knowledge base",
-                "Contact support for assistance"
+                "Contact support for assistance",
             ]
 
         return response

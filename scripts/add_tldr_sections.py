@@ -91,7 +91,7 @@ class TLDRAdder:
                     "description": "Final summary of completed script optimizations",
                     "read_when": "After completing optimizations or reviewing performance improvements",
                     "do_next": (
-                        "All optimizations are complete and deployed - " "monitor performance and maintain as needed"
+                        "All optimizations are complete and deployed - monitor performance and maintain as needed"
                     ),
                 },
                 "400_script-optimization-guide.md": {
@@ -166,7 +166,7 @@ class TLDRAdder:
 
 | what this file is | read when | do next |
 |---|---|---|
-| {template['description']} | {template['read_when']} | {template['do_next']} |
+| {template["description"]} | {template["read_when"]} | {template["do_next"]} |
 
 """
 

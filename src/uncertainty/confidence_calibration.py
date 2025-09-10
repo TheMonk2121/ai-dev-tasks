@@ -136,7 +136,9 @@ class ConfidenceCalibrator:
 
         # Use cross-validation for isotonic calibration
         self.isotonic_calibrator = CalibratedClassifierCV(
-            base_estimator=None, cv=self.config.cv_folds, method="isotonic"  # Use isotonic regression
+            base_estimator=None,
+            cv=self.config.cv_folds,
+            method="isotonic",  # Use isotonic regression
         )
 
         # Reshape for sklearn compatibility
@@ -163,7 +165,9 @@ class ConfidenceCalibrator:
 
         # Use cross-validation for Platt scaling
         self.platt_calibrator = CalibratedClassifierCV(
-            base_estimator=None, cv=self.config.cv_folds, method="sigmoid"  # Use logistic regression
+            base_estimator=None,
+            cv=self.config.cv_folds,
+            method="sigmoid",  # Use logistic regression
         )
 
         # Reshape for sklearn compatibility

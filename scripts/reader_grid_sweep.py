@@ -26,14 +26,14 @@ from typing import Any, Dict, List, Tuple
 # Bootstrap path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
+
 sys.path.insert(0, str(SRC))
 
 from evals.load_cases import load_eval_cases
 
 # Import reader gate helpers
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from scripts.ci_gate_reader import load_reader_gold, eval_reader  # type: ignore
-
+from scripts.ci_gate_reader import eval_reader, load_reader_gold  # type: ignore
 
 Config = Dict[str, Any]
 
@@ -139,9 +139,7 @@ def main() -> None:
         os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
         payload = {
             "baseline_micro": baseline_micro,
-            "results": [
-                {"config": cfg, "metrics": met} for cfg, met in results
-            ],
+            "results": [{"config": cfg, "metrics": met} for cfg, met in results],
         }
         with open(args.out, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2)
@@ -149,4 +147,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

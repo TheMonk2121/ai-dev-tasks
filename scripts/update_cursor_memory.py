@@ -307,7 +307,7 @@ def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -
     # Update timestamp
     updated_content = re.sub(
         r"\*Last Updated: \d{4}-\d{2}-\d{2}\*",
-        f'*Last Updated: {datetime.now().strftime("%Y-%m-%d")}*',
+        f"*Last Updated: {datetime.now().strftime('%Y-%m-%d')}*",
         updated_content,
     )
 

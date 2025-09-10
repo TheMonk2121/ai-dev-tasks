@@ -91,5 +91,6 @@ def fix_md037_emphasis_spacing():
     else:
         print("\nℹ️  No files needed fixing.")
 
+
 if __name__ == "__main__":
     fix_md037_emphasis_spacing()

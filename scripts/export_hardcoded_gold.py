@@ -3,6 +3,7 @@
 Extracts hardcoded GOLD sets and writes them into evals/gold/v1/gold_cases.jsonl
 Run once, then delete the hardcoded dicts.
 """
+
 import json
 import re
 from pathlib import Path

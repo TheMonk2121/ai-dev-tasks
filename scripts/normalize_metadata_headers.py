@@ -8,6 +8,7 @@ Normalize metadata headers across markdown files to the minimal schema:
 Usage:
   python3 scripts/normalize_metadata_headers.py --root .
 """
+
 import argparse
 import re
 from pathlib import Path
@@ -16,6 +17,7 @@ KEEP_CONTEXT = ""
 MODULE_PATTERN = re.compile(r"<!--\s*MODULE_REFERENCE:\s*([^>]+)\s*-->")
 CONTEXT_PATTERN = re.compile(r"<!--\s*CONTEXT_REFERENCE:\s*([^>]+)\s*-->")
 HTML_COMMENT_PATTERN = re.compile(r"<!--\s*([^:>]+):[^>]*-->")
+
 
 def is_deprecated_module(value: str) -> bool:
     v = value.strip()
@@ -44,6 +46,7 @@ def is_deprecated_module(value: str) -> bool:
     if "_lens_" in lowered:
         return True
     return False
+
 
 def rewrite_header(lines: list) -> list:
     module_values = []
@@ -101,14 +104,16 @@ def rewrite_header(lines: list) -> list:
 
     return new_header + body
 
+
 def process_file(path: Path):
     content = path.read_text(encoding="utf-8")
     lines = content.splitlines(True)
     new_lines = rewrite_header(lines)
     if new_lines != lines:
-        path.write_text(''.join(new_lines), encoding="utf-8")
+        path.write_text("".join(new_lines), encoding="utf-8")
         return True
     return False
+
 
 def main():
     ap = argparse.ArgumentParser(description="Normalize metadata headers in markdown files")
@@ -126,6 +131,6 @@ def main():
             continue
     print("Header normalization complete")
 
+
 if __name__ == "__main__":
     main()
-

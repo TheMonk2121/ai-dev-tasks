@@ -12,6 +12,7 @@ Usage:
   # Custom timeout (default: 60s)
   LITELLM_TIMEOUT=120 python3 scripts/run_bedrock_eval_direct.py
 """
+
 import os
 import subprocess
 import sys

@@ -162,7 +162,7 @@ def test_git_ltst_integration():
     if decisions:
         print(f"✅ Extracted {len(decisions)} decisions from commit messages")
         for i, decision in enumerate(decisions[:3]):  # Show first 3
-            print(f"   {i+1}. {decision.get('head', 'Unknown')} (confidence: {decision.get('confidence', 0)})")
+            print(f"   {i + 1}. {decision.get('head', 'Unknown')} (confidence: {decision.get('confidence', 0)})")
     else:
         print("⚠️ No decisions extracted from commit messages")
 

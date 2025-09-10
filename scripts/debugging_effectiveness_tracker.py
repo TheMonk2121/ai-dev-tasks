@@ -200,7 +200,7 @@ class DebuggingEffectivenessTracker:
 
         report += "## Overall Statistics\n\n"
         report += f"- **Total Sessions**: {total_sessions}\n"
-        report += f"- **Success Rate**: {successful_sessions/total_sessions*100:.1f}%\n"
+        report += f"- **Success Rate**: {successful_sessions / total_sessions * 100:.1f}%\n"
         report += f"- **Average Iterations**: {avg_iterations:.1f}\n\n"
 
         # Pattern effectiveness

@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 # Apply litellm compatibility shim before importing DSPy
 try:
     from litellm_compatibility_shim import patch_litellm_imports
+
     patch_litellm_imports()
 except ImportError:
     pass  # Shim not available, continue without it
@@ -231,10 +232,10 @@ def demonstrate_four_part_optimization_loop():
     cycles = [cycle]  # Include the first cycle
 
     for i in range(3):
-        print(f"  Cycle {i+2}: Running...")
+        print(f"  Cycle {i + 2}: Running...")
         cycle_result = loop.run_cycle(test_inputs)
         cycles.append(cycle_result)
-        print(f"  Cycle {i+2}: Completed ({cycle_result.duration:.3f}s)")
+        print(f"  Cycle {i + 2}: Completed ({cycle_result.duration:.3f}s)")
 
     print()
 

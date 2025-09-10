@@ -29,7 +29,6 @@ from typing import Any, Dict
 
 import yaml
 
-
 RETRIEVAL_YAML = Path("config/retrieval.yaml")
 BACKUP_DIR = Path("metrics/derived_configs/recall_boost_backups")
 STATE_FILE = Path("metrics/derived_configs/recall_boost_state.json")
@@ -150,4 +149,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

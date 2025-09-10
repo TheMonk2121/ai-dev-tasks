@@ -219,7 +219,7 @@ class GateAndPromoteSystem:
                 "value": snap_max,
                 "threshold": int(os.getenv("SNAPSHOT_MIN", "30")),
                 "passed": snap_max >= int(os.getenv("SNAPSHOT_MIN", "30")),
-                "message": f"Snapshot max {snap_max} {'≥' if snap_max >= int(os.getenv('SNAPSHOT_MIN','30')) else '<'} min {os.getenv('SNAPSHOT_MIN','30')}",
+                "message": f"Snapshot max {snap_max} {'≥' if snap_max >= int(os.getenv('SNAPSHOT_MIN', '30')) else '<'} min {os.getenv('SNAPSHOT_MIN', '30')}",
             }
 
             # Query coverage check
@@ -228,7 +228,7 @@ class GateAndPromoteSystem:
                 "value": cov,
                 "threshold": float(os.getenv("COVERAGE_MIN", "0.70")),
                 "passed": cov >= float(os.getenv("COVERAGE_MIN", "0.70")),
-                "message": f"Query coverage {cov:.2f} {'≥' if cov >= float(os.getenv('COVERAGE_MIN','0.70')) else '<'} min {os.getenv('COVERAGE_MIN','0.70')}",
+                "message": f"Query coverage {cov:.2f} {'≥' if cov >= float(os.getenv('COVERAGE_MIN', '0.70')) else '<'} min {os.getenv('COVERAGE_MIN', '0.70')}",
             }
 
             # Optional breadth checks (if metrics are computed)
@@ -238,7 +238,7 @@ class GateAndPromoteSystem:
                     "value": bm25_hits,
                     "threshold": int(os.getenv("BM25_MIN", "50")),
                     "passed": bm25_hits >= int(os.getenv("BM25_MIN", "50")),
-                    "message": f"BM25 breadth {bm25_hits} {'≥' if bm25_hits >= int(os.getenv('BM25_MIN','50')) else '<'} min {os.getenv('BM25_MIN','50')}",
+                    "message": f"BM25 breadth {bm25_hits} {'≥' if bm25_hits >= int(os.getenv('BM25_MIN', '50')) else '<'} min {os.getenv('BM25_MIN', '50')}",
                 }
 
             if vec_hits:
@@ -247,7 +247,7 @@ class GateAndPromoteSystem:
                     "value": vec_hits,
                     "threshold": int(os.getenv("VEC_MIN", "50")),
                     "passed": vec_hits >= int(os.getenv("VEC_MIN", "50")),
-                    "message": f"Vector breadth {vec_hits} {'≥' if vec_hits >= int(os.getenv('VEC_MIN','50')) else '<'} min {os.getenv('VEC_MIN','50')}",
+                    "message": f"Vector breadth {vec_hits} {'≥' if vec_hits >= int(os.getenv('VEC_MIN', '50')) else '<'} min {os.getenv('VEC_MIN', '50')}",
                 }
 
             if fused_max:
@@ -256,7 +256,7 @@ class GateAndPromoteSystem:
                     "value": fused_max,
                     "threshold": int(os.getenv("FUSED_MIN", "80")),
                     "passed": fused_max >= int(os.getenv("FUSED_MIN", "80")),
-                    "message": f"Fused pool max {fused_max} {'≥' if fused_max >= int(os.getenv('FUSED_MIN','80')) else '<'} min {os.getenv('FUSED_MIN','80')}",
+                    "message": f"Fused pool max {fused_max} {'≥' if fused_max >= int(os.getenv('FUSED_MIN', '80')) else '<'} min {os.getenv('FUSED_MIN', '80')}",
                 }
 
         # Overall gate result

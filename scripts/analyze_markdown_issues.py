@@ -48,7 +48,7 @@ def run_markdownlint():
         for i in range(0, len(markdown_files), batch_size):
             batch = markdown_files[i : i + batch_size]
             print(
-                f"Processing batch {i//batch_size + 1}/{(len(markdown_files) + batch_size - 1)//batch_size} ({len(batch)} files)"
+                f"Processing batch {i // batch_size + 1}/{(len(markdown_files) + batch_size - 1) // batch_size} ({len(batch)} files)"
             )
 
             # Run markdownlint on batch
@@ -64,7 +64,7 @@ def run_markdownlint():
                 batch_issues = json.loads(result.stderr)
                 all_issues.extend(batch_issues)
             except json.JSONDecodeError as e:
-                print(f"Error parsing markdownlint JSON output for batch {i//batch_size + 1}: {e}")
+                print(f"Error parsing markdownlint JSON output for batch {i // batch_size + 1}: {e}")
                 print(f"Output: {result.stderr[:200]}...")
                 continue
 
@@ -73,6 +73,7 @@ def run_markdownlint():
     except Exception as e:
         print(f"Error running markdownlint: {e}")
         return []
+
 
 def analyze_issues(issues):
     """Analyze and categorize issues."""
@@ -97,6 +98,7 @@ def analyze_issues(issues):
         )
 
     return issue_counts, file_issues, rule_descriptions
+
 
 def print_summary(issue_counts, rule_descriptions):
     """Print prioritized summary of issues."""
@@ -125,6 +127,7 @@ def print_summary(issue_counts, rule_descriptions):
 
     return sorted_issues
 
+
 def print_file_breakdown(file_issues, top_rules):
     """Print breakdown by file for top issues."""
     print("FILE BREAKDOWN FOR TOP ISSUES:")
@@ -151,6 +154,7 @@ def print_file_breakdown(file_issues, top_rules):
 
         if len(sorted_files) > 10:
             print(f"  ... and {len(sorted_files) - 10} more files")
+
 
 def print_fix_recommendations(top_rules, rule_descriptions):
     """Print fix recommendations for top issues."""
@@ -181,6 +185,7 @@ def print_fix_recommendations(top_rules, rule_descriptions):
         print(f"  Recommendation: {rec}")
         print(f"  Instances: {count}")
 
+
 def main():
     """Main analysis function."""
     print("Analyzing markdown linting issues...")
@@ -204,6 +209,7 @@ def main():
     print("3. Create a systematic plan to address each rule type")
     print("4. Update pre-commit hooks to prevent new issues")
     print("=" * 80)
+
 
 if __name__ == "__main__":
     main()

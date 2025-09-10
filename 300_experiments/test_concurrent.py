@@ -30,7 +30,7 @@ def test_concurrent_operations():
     [t.join() for t in threads]
     end = time.time()
 
-    print(f"Concurrent operations completed in {end-start:.3f}s:")
+    print(f"Concurrent operations completed in {end - start:.3f}s:")
     [print(f"  {r}") for r in results]
 
 

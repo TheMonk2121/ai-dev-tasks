@@ -110,7 +110,7 @@ class PrecisionPushFinalConfig:
         lines = []
         for k, v in self.merged_env().items():
             # Quote values conservatively
-            vq = str(v).replace("\\", "\\\\").replace("\"", "\\\"")
+            vq = str(v).replace("\\", "\\\\").replace('"', '\\"')
             lines.append(f'export {k}="{vq}"')
         return "\n".join(lines) + "\n"
 

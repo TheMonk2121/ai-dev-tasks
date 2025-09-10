@@ -22,10 +22,9 @@ from _bootstrap import ROOT, SRC  # noqa: F401
 
 sys.path.insert(0, str(SRC))
 
+from common.case_id import canonical_case_id
 from dspy_modules.reader.sentence_select import select_sentences
 from dspy_modules.retriever.query_rewrite import PHRASE_HINTS
-
-from common.case_id import canonical_case_id
 
 
 def get_db_connection():
@@ -244,12 +243,12 @@ def main():
     # Show sample cases
     print("\n📋 Sample dev cases:")
     for i, case in enumerate(dev_cases[:3]):
-        print(f"   {i+1}. {case['query']}")
+        print(f"   {i + 1}. {case['query']}")
         print(f"      Answer: {case['answers'][0][:100]}...")
 
     print("\n📋 Sample test cases:")
     for i, case in enumerate(test_cases[:2]):
-        print(f"   {i+1}. {case['query']}")
+        print(f"   {i + 1}. {case['query']}")
         print(f"      Answer: {case['answers'][0][:100]}...")
 
 

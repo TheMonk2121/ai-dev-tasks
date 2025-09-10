@@ -168,12 +168,12 @@ class READMEContextManager:
         """Generate full context for high-priority item."""
         latest_commit = data["commits"][0] if data["commits"] else "Unknown commit"
 
-        return f"""#### **{backlog_id}: High-Impact Implementation** ({datetime.now().strftime('%Y-%m-%d')})
+        return f"""#### **{backlog_id}: High-Impact Implementation** ({datetime.now().strftime("%Y-%m-%d")})
 **Commit**: `{latest_commit}`
 
 **Rich Context:**
-- **Impact Score**: {data['impact_score']}/10
-- **Complexity Score**: {data['complexity_score']}/10
+- **Impact Score**: {data["impact_score"]}/10
+- **Complexity Score**: {data["complexity_score"]}/10
 - **Implementation Details**: [Add specific technical decisions]
 - **Key Features**: [Add main features implemented]
 - **Performance Impact**: [Add performance metrics]
@@ -181,8 +181,8 @@ class READMEContextManager:
 
     def generate_consolidated_summary(self, medium_priority: List[Tuple[str, Dict]]) -> str:
         """Generate consolidated summary for medium-priority items."""
-        summary = f"""#### **Consolidated Medium-Impact Changes** ({datetime.now().strftime('%Y-%m-%d')})
-**Items**: {', '.join(item[0] for item in medium_priority[:10])}
+        summary = f"""#### **Consolidated Medium-Impact Changes** ({datetime.now().strftime("%Y-%m-%d")})
+**Items**: {", ".join(item[0] for item in medium_priority[:10])}
 
 **Summary**: {len(medium_priority)} medium-impact changes implemented with focus on:
 - **System Improvements**: Performance optimizations and bug fixes
@@ -261,13 +261,13 @@ class READMEContextManager:
         suggestions = self.suggest_consolidation()
 
         report = f"""# README Context Management Report
-Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## Current State
 - **Total Backlog Items**: {len(backlog_items)}
-- **Need Documentation**: {sum(1 for item in backlog_items.values() if item['documentation_needed'])}
-- **High Priority**: {sum(1 for item in backlog_items.values() if item.get('impact_score', 0) >= 6)}
-- **Medium Priority**: {sum(1 for item in backlog_items.values() if 4 <= item.get('impact_score', 0) < 6)}
+- **Need Documentation**: {sum(1 for item in backlog_items.values() if item["documentation_needed"])}
+- **High Priority**: {sum(1 for item in backlog_items.values() if item.get("impact_score", 0) >= 6)}
+- **Medium Priority**: {sum(1 for item in backlog_items.values() if 4 <= item.get("impact_score", 0) < 6)}
 
 ## Recommendations
 

@@ -34,7 +34,7 @@ class DuplicateFinder:
     def calculate_file_hash(self, file_path: Path) -> Optional[str]:
         """Calculate SHA-256 hash of file content."""
         try:
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 content = f.read()
                 return hashlib.sha256(content).hexdigest()
         except Exception as e:
@@ -63,38 +63,31 @@ class DuplicateFinder:
 
     def analyze_duplicates(self) -> Dict[str, List[Path]]:
         """Find files with identical content."""
-        duplicates = {hash_val: files for hash_val, files in self.hash_to_files.items()
-                     if len(files) > 1}
+        duplicates = {hash_val: files for hash_val, files in self.hash_to_files.items() if len(files) > 1}
         return duplicates
 
     def categorize_files(self, files: List[Path]) -> Dict[str, List[Path]]:
         """Categorize files by location (main, archives, etc.)."""
-        categories = {
-            'main': [],
-            'archives': [],
-            'backup': [],
-            'legacy': [],
-            'other': []
-        }
+        categories = {"main": [], "archives": [], "backup": [], "legacy": [], "other": []}
 
         for file_path in files:
-            if any(pattern in str(file_path) for pattern in ['archives', 'backup', 'legacy']):
-                if 'archives' in str(file_path):
-                    categories['archives'].append(file_path)
-                elif 'backup' in str(file_path):
-                    categories['backup'].append(file_path)
-                elif 'legacy' in str(file_path):
-                    categories['legacy'].append(file_path)
+            if any(pattern in str(file_path) for pattern in ["archives", "backup", "legacy"]):
+                if "archives" in str(file_path):
+                    categories["archives"].append(file_path)
+                elif "backup" in str(file_path):
+                    categories["backup"].append(file_path)
+                elif "legacy" in str(file_path):
+                    categories["legacy"].append(file_path)
                 else:
-                    categories['other'].append(file_path)
+                    categories["other"].append(file_path)
             else:
-                categories['main'].append(file_path)
+                categories["main"].append(file_path)
 
         return categories
 
     def format_size(self, size_bytes: int) -> str:
         """Format file size in human-readable format."""
-        for unit in ['B', 'KB', 'MB', 'GB']:
+        for unit in ["B", "KB", "MB", "GB"]:
             if size_bytes < 1024.0:
                 return f"{size_bytes:.1f} {unit}"
             size_bytes /= 1024.0
@@ -137,9 +130,11 @@ class DuplicateFinder:
                         print(f"     - {file_path} ({size})")
 
             # Suggest which files to keep/archive
-            if categories['main']:
-                keep_file = categories['main'][0]
-                archive_files = categories['main'][1:] + categories['archives'] + categories['backup'] + categories['legacy']
+            if categories["main"]:
+                keep_file = categories["main"][0]
+                archive_files = (
+                    categories["main"][1:] + categories["archives"] + categories["backup"] + categories["legacy"]
+                )
                 print(f"   💡 Suggestion: Keep {keep_file}")
                 if archive_files:
                     print(f"   📦 Archive: {len(archive_files)} files")
@@ -154,7 +149,9 @@ class DuplicateFinder:
         print(f"Potential space saved: {self.format_size(total_duplicate_size)}")
         print(f"Duplicate files: {sum(len(files) - 1 for files in duplicates.values())}")
 
-    def generate_cleanup_script(self, duplicates: Dict[str, List[Path]], output_file: str = "cleanup_duplicates.sh") -> None:
+    def generate_cleanup_script(
+        self, duplicates: Dict[str, List[Path]], output_file: str = "cleanup_duplicates.sh"
+    ) -> None:
         """Generate a shell script to clean up duplicates."""
         if not duplicates:
             return
@@ -164,9 +161,11 @@ class DuplicateFinder:
         for hash_val, files in duplicates.items():
             categories = self.categorize_files(files)
 
-            if categories['main']:
-                keep_file = categories['main'][0]
-                archive_files = categories['main'][1:] + categories['archives'] + categories['backup'] + categories['legacy']
+            if categories["main"]:
+                keep_file = categories["main"][0]
+                archive_files = (
+                    categories["main"][1:] + categories["archives"] + categories["backup"] + categories["legacy"]
+                )
             else:
                 keep_file = files[0]
                 archive_files = files[1:]
@@ -182,31 +181,30 @@ class DuplicateFinder:
 
             script_content.append("")
 
-        with open(output_file, 'w') as f:
-            f.write('\n'.join(script_content))
+        with open(output_file, "w") as f:
+            f.write("\n".join(script_content))
 
         print(f"\n📝 Generated cleanup script: {output_file}")
         print(f"   Run: chmod +x {output_file} && ./{output_file}")
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Find duplicate files using content hashes')
-    parser.add_argument('--path', default='.', help='Root path to scan')
-    parser.add_argument('--extensions', default='md,txt,py', help='File extensions to scan (comma-separated)')
-    parser.add_argument('--exclude', default='venv,node_modules,__pycache__,.git', help='Patterns to exclude (comma-separated)')
-    parser.add_argument('--generate-script', action='store_true', help='Generate cleanup script')
+    parser = argparse.ArgumentParser(description="Find duplicate files using content hashes")
+    parser.add_argument("--path", default=".", help="Root path to scan")
+    parser.add_argument("--extensions", default="md,txt,py", help="File extensions to scan (comma-separated)")
+    parser.add_argument(
+        "--exclude", default="venv,node_modules,__pycache__,.git", help="Patterns to exclude (comma-separated)"
+    )
+    parser.add_argument("--generate-script", action="store_true", help="Generate cleanup script")
 
     args = parser.parse_args()
 
     # Parse arguments
-    extensions = [ext.strip() for ext in args.extensions.split(',')]
-    exclude_patterns = [pattern.strip() for pattern in args.exclude.split(',')]
+    extensions = [ext.strip() for ext in args.extensions.split(",")]
+    exclude_patterns = [pattern.strip() for pattern in args.exclude.split(",")]
 
     # Initialize finder
-    finder = DuplicateFinder(
-        path=args.path,
-        extensions=extensions,
-        exclude_patterns=exclude_patterns
-    )
+    finder = DuplicateFinder(path=args.path, extensions=extensions, exclude_patterns=exclude_patterns)
 
     # Scan and analyze
     finder.scan_files()
@@ -222,6 +220,7 @@ def main():
 
     # Exit with appropriate code
     sys.exit(1 if duplicates else 0)
+
 
 if __name__ == "__main__":
     main()

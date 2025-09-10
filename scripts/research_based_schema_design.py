@@ -29,6 +29,7 @@ from typing import Any, Dict, List, Optional
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class ResearchFinding:
     """Represents a research finding with metadata."""
@@ -42,6 +43,7 @@ class ResearchFinding:
     confidence: float = 1.0
     last_updated: Optional[str] = None
 
+
 @dataclass
 class SchemaPattern:
     """Represents a schema pattern derived from research."""
@@ -53,6 +55,7 @@ class SchemaPattern:
     validation_criteria: List[str]
     performance_benchmarks: Dict[str, Any]
     content_types: List[str]
+
 
 @dataclass
 class ExtractionSchema:
@@ -66,6 +69,7 @@ class ExtractionSchema:
     research_coverage: float
     created_at: str
     version: str = "1.0"
+
 
 class ResearchBasedSchemaDesign:
     """Handles research-based schema design for extraction."""
@@ -537,6 +541,7 @@ class ResearchBasedSchemaDesign:
 
         return summary
 
+
 def main():
     """Main entry point for research-based schema design."""
     import argparse
@@ -612,6 +617,7 @@ def main():
         print("  python3 scripts/research_based_schema_design.py --analyze-research")
         print("  python3 scripts/research_based_schema_design.py --generate-schema --content-type documentation")
         print("  python3 scripts/research_based_schema_design.py --validate-schema --schema-id documentation_schema_v1")
+
 
 if __name__ == "__main__":
     main()

@@ -197,7 +197,7 @@ class PrecisionClimbV2Evaluator:
         # Fall back to risk-aware filtering with robust sentence splitting
         main_answer = answer.split("Sources:", 1)[0].strip()
         bullet_or_num = r"(?m)^\s*(?:[-*•–—]|\d+[\.)])\s+"
-        sents = re.split(fr"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
+        sents = re.split(rf"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
         sents = [s for s in sents if s and s.strip()]
         if len(sents) <= 1:
             sents = re.split(r"\s*[;—–•·]\s*", main_answer)
@@ -298,7 +298,9 @@ class PrecisionClimbV2Evaluator:
         if OfficialRAGCheckerEvaluator:
             base_evaluator = OfficialRAGCheckerEvaluator()
             results = base_evaluator.run_official_evaluation(
-                use_local_llm=True, local_api_base=None, use_bedrock=False  # Use local LLM for consistency
+                use_local_llm=True,
+                local_api_base=None,
+                use_bedrock=False,  # Use local LLM for consistency
             )
         else:
             # Fallback to basic evaluation

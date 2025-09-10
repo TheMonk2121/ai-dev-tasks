@@ -59,7 +59,7 @@ class Phase4Config:
 class Phase4RAGSystem:
     """
     Phase 4 RAG system with uncertainty quantification and feedback loops.
-    
+
     Features:
     - Confidence calibration with temperature scaling and isotonic regression
     - Evidence quality-based selective answering
@@ -119,11 +119,11 @@ class Phase4RAGSystem:
         answer: Optional[str] = None,
         sub_claims: Optional[List[str]] = None,
         user_id: Optional[str] = None,
-        session_id: Optional[str] = None
+        session_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Process a query with full uncertainty quantification and selective answering.
-        
+
         Args:
             query: User query
             evidence_chunks: Retrieved evidence chunks with scores
@@ -132,7 +132,7 @@ class Phase4RAGSystem:
             sub_claims: Sub-claims to check coverage
             user_id: User identifier for feedback
             session_id: Session identifier for feedback
-            
+
         Returns:
             Processed response with uncertainty quantification
         """
@@ -141,9 +141,7 @@ class Phase4RAGSystem:
         logger.info(f"Processing query with uncertainty quantification: {query[:50]}...")
 
         # Step 1: Apply confidence calibration if enabled
-        calibrated_confidence = self._apply_confidence_calibration(
-            raw_confidence_score, evidence_chunks
-        )
+        calibrated_confidence = self._apply_confidence_calibration(raw_confidence_score, evidence_chunks)
 
         # Step 2: Evaluate answer quality and make selective answering decision
         quality_evaluation = None
@@ -155,15 +153,13 @@ class Phase4RAGSystem:
                 answer=answer,
                 evidence_chunks=evidence_chunks,
                 confidence_score=calibrated_confidence,
-                sub_claims=sub_claims
+                sub_claims=sub_claims,
             )
             should_abstain = quality_evaluation["should_abstain"]
 
         # Step 3: Generate response
         if should_abstain:
-            response = self._generate_abstention_response(
-                query, quality_evaluation, evidence_chunks
-            )
+            response = self._generate_abstention_response(query, quality_evaluation, evidence_chunks)
         else:
             response = self._generate_standard_response(
                 query, answer, evidence_chunks, calibrated_confidence, quality_evaluation
@@ -172,31 +168,35 @@ class Phase4RAGSystem:
         # Step 4: Collect implicit feedback if enabled
         if self.feedback_collector:
             self._collect_implicit_feedback(
-                query, answer, calibrated_confidence, evidence_chunks,
+                query,
+                answer,
+                calibrated_confidence,
+                evidence_chunks,
                 response_time_ms=(time.time() - start_time) * 1000,
-                user_id=user_id, session_id=session_id
+                user_id=user_id,
+                session_id=session_id,
             )
 
         # Add metadata
-        response.update({
-            "phase4_metadata": {
-                "confidence_calibrated": self.config.enable_confidence_calibration,
-                "selective_answering_enabled": self.config.enable_selective_answering,
-                "feedback_loops_enabled": self.config.enable_feedback_loops,
-                "processing_time_ms": (time.time() - start_time) * 1000,
-                "timestamp": time.time()
+        response.update(
+            {
+                "phase4_metadata": {
+                    "confidence_calibrated": self.config.enable_confidence_calibration,
+                    "selective_answering_enabled": self.config.enable_selective_answering,
+                    "feedback_loops_enabled": self.config.enable_feedback_loops,
+                    "processing_time_ms": (time.time() - start_time) * 1000,
+                    "timestamp": time.time(),
+                }
             }
-        })
+        )
 
-        logger.info(f"Query processed with uncertainty quantification in {response['phase4_metadata']['processing_time_ms']:.2f}ms")
+        logger.info(
+            f"Query processed with uncertainty quantification in {response['phase4_metadata']['processing_time_ms']:.2f}ms"
+        )
 
         return response
 
-    def _apply_confidence_calibration(
-        self,
-        raw_confidence: float,
-        evidence_chunks: List[Dict[str, Any]]
-    ) -> float:
+    def _apply_confidence_calibration(self, raw_confidence: float, evidence_chunks: List[Dict[str, Any]]) -> float:
         """Apply confidence calibration if enabled."""
 
         if not self.calibrator or not self.calibrator.is_calibrated:
@@ -207,27 +207,20 @@ class Phase4RAGSystem:
         confidence_array = np.array([raw_confidence])
 
         # Apply calibration
-        calibrated_confidence = self.calibrator.apply_calibration(
-            confidence_array, method="temperature"
-        )[0]
+        calibrated_confidence = self.calibrator.apply_calibration(confidence_array, method="temperature")[0]
 
         logger.debug(f"Confidence calibrated: {raw_confidence:.3f} -> {calibrated_confidence:.3f}")
         return calibrated_confidence
 
     def _generate_abstention_response(
-        self,
-        query: str,
-        quality_evaluation: Dict[str, Any],
-        evidence_chunks: List[Dict[str, Any]]
+        self, query: str, quality_evaluation: Dict[str, Any], evidence_chunks: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """Generate response when abstaining from answering."""
 
         if not self.selective_answering:
             return {"error": "Selective answering not enabled"}
 
-        response = self.selective_answering.format_abstention_response(
-            query, quality_evaluation, evidence_chunks
-        )
+        response = self.selective_answering.format_abstention_response(query, quality_evaluation, evidence_chunks)
 
         # Add evidence quality metrics
         if "evidence_quality" in quality_evaluation:
@@ -237,7 +230,7 @@ class Phase4RAGSystem:
                 "dispersion_score": evidence_quality.dispersion_score,
                 "evidence_count": evidence_quality.evidence_count,
                 "max_evidence_score": evidence_quality.max_evidence_score,
-                "has_contradictions": evidence_quality.has_contradictions
+                "has_contradictions": evidence_quality.has_contradictions,
             }
 
         return response
@@ -248,7 +241,7 @@ class Phase4RAGSystem:
         answer: str,
         evidence_chunks: List[Dict[str, Any]],
         calibrated_confidence: float,
-        quality_evaluation: Optional[Dict[str, Any]] = None
+        quality_evaluation: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Generate standard response with uncertainty quantification."""
 
@@ -258,7 +251,7 @@ class Phase4RAGSystem:
             "abstained": False,
             "confidence_score": calibrated_confidence,
             "evidence_chunks": evidence_chunks[:5],  # Top 5 evidence pieces
-            "evidence_count": len(evidence_chunks)
+            "evidence_count": len(evidence_chunks),
         }
 
         # Add quality evaluation if available
@@ -267,7 +260,7 @@ class Phase4RAGSystem:
             response["evidence_quality"] = {
                 "coverage_score": quality_evaluation["evidence_quality"].coverage_score,
                 "dispersion_score": quality_evaluation["evidence_quality"].dispersion_score,
-                "consistency_score": quality_evaluation["consistency_score"]
+                "consistency_score": quality_evaluation["consistency_score"],
             }
 
         return response
@@ -280,7 +273,7 @@ class Phase4RAGSystem:
         evidence_chunks: List[Dict[str, Any]],
         response_time_ms: float,
         user_id: Optional[str] = None,
-        session_id: Optional[str] = None
+        session_id: Optional[str] = None,
     ):
         """Collect implicit feedback based on system behavior."""
 
@@ -300,21 +293,19 @@ class Phase4RAGSystem:
                 user_id=user_id,
                 session_id=session_id,
                 priority=FeedbackPriority.MEDIUM,
-                tags=["implicit", "slow_response"]
+                tags=["implicit", "slow_response"],
             )
 
     def calibrate_confidence_model(
-        self,
-        evaluation_results: List[Dict[str, Any]],
-        method: str = "temperature"
+        self, evaluation_results: List[Dict[str, Any]], method: str = "temperature"
     ) -> Dict[str, Any]:
         """
         Calibrate the confidence model using evaluation results.
-        
+
         Args:
             evaluation_results: List of evaluation results with confidence scores and labels
             method: Calibration method to use
-            
+
         Returns:
             Calibration results and metrics
         """
@@ -333,9 +324,7 @@ class Phase4RAGSystem:
             return {"error": "Insufficient data for calibration", "sample_count": len(scores)}
 
         # Perform calibration
-        calibration_results = self.calibrator.calibrate_confidence(
-            scores, labels, method
-        )
+        calibration_results = self.calibrator.calibrate_confidence(scores, labels, method)
 
         # Save calibrated model
         timestamp = int(time.time())
@@ -344,7 +333,7 @@ class Phase4RAGSystem:
 
         # Save calibration results
         results_path = f"{self.config.phase4_output_path}/calibration_results_{timestamp}.json"
-        with open(results_path, 'w') as f:
+        with open(results_path, "w") as f:
             json.dump(calibration_results, f, indent=2)
 
         logger.info(f"Confidence calibration complete. Model saved to {model_path}")
@@ -353,7 +342,7 @@ class Phase4RAGSystem:
             "calibration_results": calibration_results,
             "model_path": model_path,
             "results_path": results_path,
-            "sample_count": len(scores)
+            "sample_count": len(scores),
         }
 
     def load_calibrated_model(self, model_path: str) -> bool:
@@ -406,7 +395,7 @@ class Phase4RAGSystem:
         session_id: Optional[str] = None,
         feedback_text: Optional[str] = None,
         priority: FeedbackPriority = FeedbackPriority.MEDIUM,
-        tags: Optional[List[str]] = None
+        tags: Optional[List[str]] = None,
     ) -> str:
         """Collect explicit user feedback."""
 
@@ -426,7 +415,7 @@ class Phase4RAGSystem:
             session_id=session_id,
             feedback_text=feedback_text,
             priority=priority,
-            tags=tags
+            tags=tags,
         )
 
     def get_system_status(self) -> Dict[str, Any]:
@@ -438,22 +427,24 @@ class Phase4RAGSystem:
                 "confidence_calibration": {
                     "enabled": self.config.enable_confidence_calibration,
                     "calibrated": self.calibrator.is_calibrated if self.calibrator else False,
-                    "method": "temperature_scaling" if self.calibrator else None
+                    "method": "temperature_scaling" if self.calibrator else None,
                 },
                 "selective_answering": {
                     "enabled": self.config.enable_selective_answering,
-                    "abstain_threshold": self.config.selective_answering.abstain_threshold if self.config.enable_selective_answering else None
+                    "abstain_threshold": self.config.selective_answering.abstain_threshold
+                    if self.config.enable_selective_answering
+                    else None,
                 },
                 "feedback_loops": {
                     "enabled": self.config.enable_feedback_loops,
-                    "database_path": self.config.feedback.db_path if self.config.enable_feedback_loops else None
-                }
+                    "database_path": self.config.feedback.db_path if self.config.enable_feedback_loops else None,
+                },
             },
             "configuration": {
                 "auto_calibration": self.config.auto_calibration,
                 "calibration_interval_hours": self.config.calibration_interval_hours,
-                "feedback_processing_interval_minutes": self.config.feedback_processing_interval_minutes
-            }
+                "feedback_processing_interval_minutes": self.config.feedback_processing_interval_minutes,
+            },
         }
 
         # Add feedback statistics if available

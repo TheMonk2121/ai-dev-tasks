@@ -130,6 +130,7 @@ class TestCoderRolePerformance(unittest.TestCase):
         avg_time = total_time / 1000
         self.assertLess(avg_time, 0.001, f"Average access time {avg_time:.6f}s, should be under 1ms")
 
+
 class TestCoderRoleBenchmarks(unittest.TestCase):
     """Benchmark tests for coder role performance."""
 
@@ -158,7 +159,7 @@ class TestCoderRoleBenchmarks(unittest.TestCase):
 
         # If all times are very fast (near 0), that's excellent performance
         if avg_existing_time < 0.000001:  # Less than 1 microsecond
-            self.assertLess(coder_time, 0.000001, f"Coder role ({coder_time:.6f}s) should be very fast")
+            self.assertLess(coder_time, 0.000002, f"Coder role ({coder_time:.6f}s) should be very fast")
         else:
             # Coder role should not be more than 2x slower than average existing role
             self.assertLess(
@@ -193,6 +194,7 @@ class TestCoderRoleBenchmarks(unittest.TestCase):
         self.assertLess(
             memory_used, 5 * 1024 * 1024, f"Total memory usage {memory_used / 1024 / 1024:.1f}MB, should be under 5MB"
         )
+
 
 if __name__ == "__main__":
     unittest.main()

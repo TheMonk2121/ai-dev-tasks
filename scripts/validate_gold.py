@@ -5,6 +5,7 @@ Gold Dataset Validation Script
 Validates the unified gold dataset and ensures no hardcoded cases exist.
 Run this in CI to prevent regression to hardcoded gold sets.
 """
+
 import glob
 import json
 import os

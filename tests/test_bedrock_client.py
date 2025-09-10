@@ -13,7 +13,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from scripts.bedrock_client import BedrockClient, BedrockUsage
 
@@ -98,8 +98,11 @@ class TestBedrockClient(unittest.TestCase):
         runtime2 = self.client.bedrock_runtime
         self.assertEqual(runtime2, mock_client)
 
-        # Should only call boto3.client once
-        mock_boto_client.assert_called_once_with("bedrock-runtime", region_name="us-east-1")
+        # Should only call boto3.client once; allow extra kwargs like config
+        mock_boto_client.assert_called_once()
+        args, kwargs = mock_boto_client.call_args
+        assert args[0] == "bedrock-runtime"
+        assert kwargs.get("region_name") == "us-east-1"
 
     @patch("boto3.client")
     def test_bedrock_lazy_initialization(self, mock_boto_client):
@@ -115,8 +118,11 @@ class TestBedrockClient(unittest.TestCase):
         bedrock2 = self.client.bedrock
         self.assertEqual(bedrock2, mock_client)
 
-        # Should only call boto3.client once
-        mock_boto_client.assert_called_once_with("bedrock", region_name="us-east-1")
+        # Should only call boto3.client once; allow extra kwargs like config
+        mock_boto_client.assert_called_once()
+        args, kwargs = mock_boto_client.call_args
+        assert args[0] == "bedrock"
+        assert kwargs.get("region_name") == "us-east-1"
 
     @patch("boto3.client")
     def test_connection_test_success(self, mock_boto_client):

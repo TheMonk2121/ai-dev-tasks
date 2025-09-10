@@ -21,7 +21,7 @@ class ProductionRunbook:
     def execute_production_deployment(self) -> dict:
         """Execute complete production deployment workflow."""
         print("🚀 PRODUCTION DEPLOYMENT RUNBOOK")
-        print("="*60)
+        print("=" * 60)
         print(f"📋 Run ID: {self.run_id}")
         print(f"⏰ Timestamp: {self.timestamp}")
         print()
@@ -98,7 +98,7 @@ def main():
     """Main entry point for production runbook."""
     runbook = ProductionRunbook()
     result = runbook.execute_production_deployment()
-    
+
     if result["status"] == "completed":
         print("\n🎉 Production deployment completed successfully!")
         sys.exit(0)

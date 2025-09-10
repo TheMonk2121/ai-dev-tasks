@@ -78,7 +78,7 @@ class PRDParser:
             fr_matches = re.findall(pattern, self.content)
             for i, (title, description) in enumerate(fr_matches):
                 requirement = TaskRequirement(
-                    id=f"FR-{i+1}",
+                    id=f"FR-{i + 1}",
                     title=title.strip(),
                     description=description.strip(),
                     acceptance_criteria=self._extract_acceptance_criteria(title),
@@ -99,7 +99,7 @@ class PRDParser:
             nfr_matches = re.findall(pattern, self.content)
             for i, (title, description) in enumerate(nfr_matches):
                 requirement = TaskRequirement(
-                    id=f"NFR-{i+1}",
+                    id=f"NFR-{i + 1}",
                     title=title.strip(),
                     description=description.strip(),
                     acceptance_criteria=self._extract_acceptance_criteria(title),

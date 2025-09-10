@@ -20,9 +20,10 @@ from typing import Any, Dict
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
 
+from utils.query_pattern_knowledge_graph import create_query_pattern_knowledge_graph
+
 from utils.conversation_storage import ConversationMessage, ConversationSession
 from utils.logger import setup_logger
-from utils.query_pattern_knowledge_graph import create_query_pattern_knowledge_graph
 
 logger = setup_logger(__name__)
 
@@ -185,7 +186,7 @@ class QueryPatternKnowledgeGraphDemo:
         print(f"     🔄 Topic Evolutions: {len(topic_evolutions)}")
         for i, evolution in enumerate(topic_evolutions[:2]):  # Show first 2
             print(
-                f"       {i+1}. {evolution.get('evolution_type', 'unknown')} - "
+                f"       {i + 1}. {evolution.get('evolution_type', 'unknown')} - "
                 f"drift: {evolution.get('semantic_drift', 0):.3f}"
             )
 
@@ -194,8 +195,7 @@ class QueryPatternKnowledgeGraphDemo:
         print(f"     🔁 Recurring Themes: {len(recurring_themes)}")
         for i, theme in enumerate(recurring_themes[:2]):  # Show first 2
             print(
-                f"       {i+1}. \"{theme.get('theme_signature', 'unknown')}\" - "
-                f"frequency: {theme.get('frequency', 0)}"
+                f'       {i + 1}. "{theme.get("theme_signature", "unknown")}" - frequency: {theme.get("frequency", 0)}'
             )
 
         # Question sequences
@@ -203,7 +203,7 @@ class QueryPatternKnowledgeGraphDemo:
         print(f"     📝 Question Sequences: {len(sequences)}")
         for i, seq in enumerate(sequences[:2]):  # Show first 2
             print(
-                f"       {i+1}. {seq.get('sequence_type', 'unknown')} sequence - "
+                f"       {i + 1}. {seq.get('sequence_type', 'unknown')} sequence - "
                 f"strength: {seq.get('sequence_strength', 0):.3f}"
             )
 
@@ -222,7 +222,7 @@ class QueryPatternKnowledgeGraphDemo:
         print(f"  📊 Detected {len(clusters)} query clusters:")
 
         for i, cluster in enumerate(clusters[:3]):  # Show first 3 clusters
-            print(f"     Cluster {i+1}:")
+            print(f"     Cluster {i + 1}:")
             print(f"       Size: {cluster.get('size', 0)} queries")
             print(f"       Coherence: {cluster.get('coherence', 0):.3f}")
             print(f"       Time span: {cluster.get('time_span_days', 0)} days")
@@ -231,7 +231,7 @@ class QueryPatternKnowledgeGraphDemo:
             queries = cluster.get("queries", [])
             for j, query in enumerate(queries[:2]):  # Show first 2 queries
                 content = query.get("content", "")[:60]
-                print(f"         - \"{content}{'...' if len(query.get('content', '')) > 60 else ''}\"")
+                print(f'         - "{content}{"..." if len(query.get("content", "")) > 60 else ""}"')
 
         # Evolution analysis
         evolution_analysis = analysis.get("evolution_analysis", {})
@@ -265,7 +265,7 @@ class QueryPatternKnowledgeGraphDemo:
             topic = pred.get("predicted_topic", "")[:80]
             rationale = pred.get("rationale", "No rationale provided")
 
-            print(f"     {i+1}. \"{topic}{'...' if len(pred.get('predicted_topic', '')) > 80 else ''}\"")
+            print(f'     {i + 1}. "{topic}{"..." if len(pred.get("predicted_topic", "")) > 80 else ""}"')
             print(f"        Confidence: {confidence:.1%} | Method: {method}")
             print(f"        Rationale: {rationale}")
 
@@ -288,7 +288,7 @@ class QueryPatternKnowledgeGraphDemo:
             relevance = info.get("relevance", 0)
             pattern_strength = info.get("pattern_strength", 0)
 
-            print(f"     {i+1}. [{info_type}] \"{content}{'...' if len(info.get('content', '')) > 80 else ''}\"")
+            print(f'     {i + 1}. [{info_type}] "{content}{"..." if len(info.get("content", "")) > 80 else ""}"')
             print(f"        Relevance: {relevance:.1%} | Pattern strength: {pattern_strength:.1%}")
 
     def _demo_enhanced_memory(self) -> None:
@@ -375,7 +375,7 @@ class QueryPatternKnowledgeGraphDemo:
                         target = edge.get("target", "unknown")
                         attrs = edge.get("attributes", {})
                         weight = attrs.get("weight", 0)
-                        print(f"       {i+1}. {source} → {target} (similarity: {weight:.3f})")
+                        print(f"       {i + 1}. {source} → {target} (similarity: {weight:.3f})")
 
             except Exception as e:
                 print(f"     ⚠️ Could not parse export data: {e}")
@@ -483,7 +483,7 @@ class QueryPatternKnowledgeGraphDemo:
                 topic = pred.get("predicted_topic", "")[:60]
                 confidence = pred.get("confidence", 0)
                 method = pred.get("prediction_method", "unknown")
-                print(f"  {i+1}. \"{topic}{'...' if len(pred.get('predicted_topic', '')) > 60 else ''}\"")
+                print(f'  {i + 1}. "{topic}{"..." if len(pred.get("predicted_topic", "")) > 60 else ""}"')
                 print(f"     ({confidence:.1%} via {method})")
 
         # Show proactive info
@@ -493,7 +493,7 @@ class QueryPatternKnowledgeGraphDemo:
             for i, info in enumerate(proactive[:2]):  # Show top 2
                 content = info.get("content", "")[:60]
                 relevance = info.get("relevance", 0)
-                print(f"  {i+1}. \"{content}{'...' if len(info.get('content', '')) > 60 else ''}\"")
+                print(f'  {i + 1}. "{content}{"..." if len(info.get("content", "")) > 60 else ""}"')
                 print(f"     (relevance: {relevance:.1%})")
 
         # Show similar queries
@@ -503,7 +503,7 @@ class QueryPatternKnowledgeGraphDemo:
             for i, sim in enumerate(similar[:2]):  # Show top 2
                 content = sim.get("content", "")[:60]
                 similarity = sim.get("similarity", 0)
-                print(f"  {i+1}. \"{content}{'...' if len(sim.get('content', '')) > 60 else ''}\"")
+                print(f'  {i + 1}. "{content}{"..." if len(sim.get("content", "")) > 60 else ""}"')
                 print(f"     (similarity: {similarity:.1%})")
 
 

@@ -213,7 +213,7 @@ class GuideGenerator:
 - **Points**: 5 - Moderate complexity, high importance
 - **Dependencies**: 100_memory/100_cursor-memory-context.md, 000_core/000_backlog.md, 400_guides/400_system-overview.md
 - **Next Steps**: Maintain cross-reference accuracy and update as system evolves
-- **Last Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- **Last Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## 📋 Priority-Based Organization
 

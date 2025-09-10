@@ -127,7 +127,7 @@ class EnhancedRAGCheckerEvaluator:
         total_time = 0
 
         for i, test_case in enumerate(test_cases):
-            logger.info(f"Evaluating case {i+1}/{len(test_cases)}: {test_case.get('name', f'case_{i+1}')}")
+            logger.info(f"Evaluating case {i + 1}/{len(test_cases)}: {test_case.get('name', f'case_{i + 1}')}")
 
             query = test_case.get("query", "")
             query_type = test_case.get("type", "general")

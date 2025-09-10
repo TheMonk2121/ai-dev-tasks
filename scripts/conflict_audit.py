@@ -64,7 +64,10 @@ class OptimizedConflictAuditor:
         """Check Python dependencies."""
         try:
             result = subprocess.run(
-                ["python3", "-m", "pip", "check"], capture_output=True, text=True, timeout=30  # Add timeout
+                ["python3", "-m", "pip", "check"],
+                capture_output=True,
+                text=True,
+                timeout=30,  # Add timeout
             )
             if result.returncode != 0:
                 return {"status": "conflicts", "details": result.stdout}

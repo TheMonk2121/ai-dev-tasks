@@ -27,6 +27,7 @@ except ImportError:
     print("⚠️  psutil not available. Install with: pip install psutil>=5.9.0")
     print("   Resource monitoring will be limited to basic timing.\n")
 
+
 @dataclass
 class BenchmarkResult:
     script_name: str
@@ -36,6 +37,7 @@ class BenchmarkResult:
     success: bool
     error_message: Optional[str] = None
     timestamp: Optional[datetime] = None
+
 
 class ScriptBenchmarker:
     def __init__(self):
@@ -159,7 +161,7 @@ class ScriptBenchmarker:
         print(f"Benchmarking {script_name} ({iterations} iterations)...")
 
         for i in range(iterations):
-            print(f"  Iteration {i+1}/{iterations}...")
+            print(f"  Iteration {i + 1}/{iterations}...")
 
             # Start monitoring
             start_time = time.time()
@@ -301,6 +303,7 @@ class ScriptBenchmarker:
                 for failed in failed_runs:
                     print(f"   - {failed.error_message}")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Benchmark critical scripts performance")
     parser.add_argument("--script", help="Benchmark specific script only")
@@ -327,6 +330,7 @@ def main():
         benchmarker.save_results(results, args.save)
     else:
         benchmarker.save_results(results)
+
 
 if __name__ == "__main__":
     main()

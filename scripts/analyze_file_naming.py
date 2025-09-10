@@ -33,7 +33,7 @@ def analyze_file_naming():
             continue
 
         # Check if it follows the naming convention
-        if re.match(r'^\d{3}_[a-z0-9\-]+\.md$', filename):
+        if re.match(r"^\d{3}_[a-z0-9\-]+\.md$", filename):
             correctly_named.append(filename)
         else:
             needs_renaming.append((relative_path, filename))
@@ -85,14 +85,15 @@ def analyze_file_naming():
         "correctly_named": correctly_named,
         "needs_renaming": needs_renaming,
         "subdirectory_files": subdirectory_files,
-        "suggestions": suggestions
+        "suggestions": suggestions,
     }
+
 
 def analyze_file_category(file_path):
     """Analyze file content to determine appropriate category"""
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Check for memory context comments
@@ -118,6 +119,7 @@ def analyze_file_category(file_path):
     except Exception:
         return "400"  # Default to Documentation
 
+
 def suggest_new_name(filename, category, file_path):
     """Suggest a new name based on category and content"""
 
@@ -126,16 +128,17 @@ def suggest_new_name(filename, category, file_path):
         return None
 
     # Extract base name without extension
-    base_name = filename.replace('.md', '')
+    base_name = filename.replace(".md", "")
 
     # Convert to kebab-case
-    kebab_name = re.sub(r'[^a-zA-Z0-9]', '-', base_name).lower()
-    kebab_name = re.sub(r'-+', '-', kebab_name).strip('-')
+    kebab_name = re.sub(r"[^a-zA-Z0-9]", "-", base_name).lower()
+    kebab_name = re.sub(r"-+", "-", kebab_name).strip("-")
 
     # Generate new name
     new_name = f"{category}_{kebab_name}.md"
 
     return new_name
+
 
 if __name__ == "__main__":
     analyze_file_naming()

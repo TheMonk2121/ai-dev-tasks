@@ -153,7 +153,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         ]
 
         print(
-            f"[facets] total={len(facets)} kept={len(kept_facets)} yields={[round(f['yield_score'],2) for f in kept_facets]}"
+            f"[facets] total={len(facets)} kept={len(kept_facets)} yields={[round(f['yield_score'], 2) for f in kept_facets]}"
         )
         return kept_facets
 

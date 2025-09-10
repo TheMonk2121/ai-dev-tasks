@@ -22,6 +22,7 @@ class BrokenLink:
     line_number: int = 0
     context: str = ""
 
+
 class BrokenLinksFixer:
     def __init__(self, dry_run: bool = True):
         self.dry_run = dry_run
@@ -71,8 +72,8 @@ class BrokenLinksFixer:
             "@000_core/003_process-task-list.md": "400_guides/400_project-overview.md",
             "@MyFeature-PRD.md": "MyFeature-PRD.md",
             # Fix relative paths
-                "../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md": (
-        "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md"
+            "../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md": (
+                "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md"
             ),
             # Remove command references
             "markdownlint ./*.md": None,  # This is a command, not a file
@@ -222,6 +223,7 @@ class BrokenLinksFixer:
             if len(self.fixes_made) > 10:
                 print(f"  ... and {len(self.fixes_made) - 10} more")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Fix broken file references in documentation")
     parser.add_argument(
@@ -246,6 +248,7 @@ def main():
         print("\n💡 To apply fixes, run: python3 scripts/fix_broken_links.py --apply")
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

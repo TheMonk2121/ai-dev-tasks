@@ -608,7 +608,7 @@ model_adaptations:
 
         output = f"""# Memory Context System Architecture Benchmark Results
 
-Generated: {report['timestamp']}
+Generated: {report["timestamp"]}
 
 ## 📊 Summary
 
@@ -616,12 +616,12 @@ Generated: {report['timestamp']}
 
         for model, summary in report["summary"].items():
             output += f"""### {model.upper()}
-- **Accuracy Improvement**: {summary['accuracy_improvement']:.1f}%
-- **Token Reduction**: {summary['token_reduction']:.1f}%
-- **Structure A Accuracy**: {summary['structure_a_accuracy']:.3f}
-- **Structure B Accuracy**: {summary['structure_b_accuracy']:.3f}
-- **Structure A Tokens**: {summary['structure_a_tokens']}
-- **Structure B Tokens**: {summary['structure_b_tokens']}
+- **Accuracy Improvement**: {summary["accuracy_improvement"]:.1f}%
+- **Token Reduction**: {summary["token_reduction"]:.1f}%
+- **Structure A Accuracy**: {summary["structure_a_accuracy"]:.3f}
+- **Structure B Accuracy**: {summary["structure_b_accuracy"]:.3f}
+- **Structure A Tokens**: {summary["structure_a_tokens"]}
+- **Structure B Tokens**: {summary["structure_b_tokens"]}
 
 """
 

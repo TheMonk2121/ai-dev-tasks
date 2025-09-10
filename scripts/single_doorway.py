@@ -46,7 +46,7 @@ PY = _select_python()
 def _run(*args: str, capture: bool = False) -> str | None:
     env = os.environ.copy()
     cwd = os.getcwd()
-    env["PYTHONPATH"] = f"{cwd}:{env.get('PYTHONPATH','')}" if env.get("PYTHONPATH") else cwd
+    env["PYTHONPATH"] = f"{cwd}:{env.get('PYTHONPATH', '')}" if env.get("PYTHONPATH") else cwd
 
     # Try to use venv Python if available
     try:

@@ -25,6 +25,7 @@ def get_active_worklogs() -> List[str]:
     worklog_files = list(worklog_dir.glob("*.md"))
     return [f.stem for f in worklog_files]  # Return just the backlog IDs
 
+
 def get_existing_summaries() -> List[str]:
     """Get all existing summary files."""
     summaries_dir = Path("artifacts/summaries")
@@ -33,6 +34,7 @@ def get_existing_summaries() -> List[str]:
 
     summary_files = list(summaries_dir.glob("*-summary.md"))
     return [f.stem.replace("-summary", "") for f in summary_files]
+
 
 def needs_summary(backlog_id: str) -> bool:
     """Check if a worklog needs a summary generated."""
@@ -50,6 +52,7 @@ def needs_summary(backlog_id: str) -> bool:
         return worklog_mtime > summary_mtime
 
     return False
+
 
 def generate_summary(backlog_id: str, force: bool = False) -> Dict[str, Any]:
     """Generate summary for a specific backlog ID."""
@@ -73,6 +76,7 @@ def generate_summary(backlog_id: str, force: bool = False) -> Dict[str, Any]:
     except Exception as e:
         return {"status": "error", "backlog_id": backlog_id, "error": str(e)}
 
+
 def update_memory_rehydration_integration() -> Dict[str, Any]:
     """Ensure summaries are properly integrated into memory rehydration."""
     try:
@@ -91,6 +95,7 @@ def update_memory_rehydration_integration() -> Dict[str, Any]:
 
     except Exception as e:
         return {"status": "error", "error": str(e)}
+
 
 def generate_graph_integration_report() -> Dict[str, Any]:
     """Generate a report on graph integration status."""
@@ -124,6 +129,7 @@ def generate_graph_integration_report() -> Dict[str, Any]:
 
     except Exception as e:
         return {"status": "error", "error": str(e)}
+
 
 def main():
     parser = argparse.ArgumentParser(description="Generate summaries for all active worklogs")
@@ -219,6 +225,7 @@ def main():
             print("   - Role-based context assignment")
 
     return 0 if error_count == 0 else 1
+
 
 if __name__ == "__main__":
     import re

@@ -1,6 +1,7 @@
 from __future__ import annotations
-import os
+
 import json
+import os
 from pathlib import Path
 from typing import Dict, List
 
@@ -41,4 +42,3 @@ def effective_rerank_config() -> Dict[str, object]:
         "device": getattr(RENV, "TORCH_DEVICE", None),
         "cache": getattr(RENV, "RERANK_CACHE_BACKEND", None),
     }
-

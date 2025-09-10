@@ -3,6 +3,7 @@
 Gold–Context Span Audit: catch silent F1 leaks from coverage mismatches.
 Every gold answer must be an exact substring of the compact context for its case.
 """
+
 import json
 import os
 import re

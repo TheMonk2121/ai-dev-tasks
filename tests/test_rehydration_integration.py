@@ -43,5 +43,3 @@ def test_debounce_logic(tmp_path, monkeypatch):
     # If debounce window is set to 0, should allow immediately
     monkeypatch.setenv("REHYDRATE_MINUTES", "0")
     assert mod.should_trigger(backlog_id) is True
-
-

@@ -19,6 +19,7 @@ from typing import Any, Dict, List, Optional
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class CodeReviewMetrics:
     """Performance metrics for code review process."""
@@ -34,6 +35,7 @@ class CodeReviewMetrics:
     performance_score: float = 0.0
     quality_score: float = 0.0
 
+
 @dataclass
 class CodeReviewIssue:
     """Code review issue record."""
@@ -46,6 +48,7 @@ class CodeReviewIssue:
     description: str
     suggestion: str
     status: str = "open"  # open, resolved, ignored
+
 
 class CodeReviewCore:
     """Core code review process implementation."""
@@ -685,6 +688,7 @@ class CodeReviewCore:
             for i, rec in enumerate(recommendations, 1):
                 print(f"   {i}. {rec}")
 
+
 def main():
     """Main function for code review core."""
     import argparse
@@ -729,6 +733,7 @@ def main():
     except Exception as e:
         logger.error(f"Code review failed: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

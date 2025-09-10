@@ -1,5 +1,5 @@
 # 300_evals/ssot/registry_core.py
-from .schema import EvalSuite, EvalPass, PassConfig, MetricSpec, RunSpec
+from .schema import EvalPass, EvalSuite, MetricSpec, PassConfig, RunSpec
 
 SUITE = EvalSuite(
     id="300_core",
@@ -20,11 +20,7 @@ SUITE = EvalSuite(
                 MAX_WORKERS=3,
                 RATE_LIMIT_PROFILE="stable",
             ),
-            run=RunSpec(
-                kind="ragchecker",
-                script="scripts/_ragchecker_eval_impl.py",
-                args=[]
-            ),
+            run=RunSpec(kind="ragchecker", script="scripts/_ragchecker_eval_impl.py", args=[]),
             metrics=[
                 MetricSpec(key="f1", target=0.50, direction=">="),
                 MetricSpec(key="faithfulness", target=0.80, direction=">="),
@@ -46,11 +42,7 @@ SUITE = EvalSuite(
                 MAX_WORKERS=3,
                 RATE_LIMIT_PROFILE="stable",
             ),
-            run=RunSpec(
-                kind="ragchecker",
-                script="scripts/_ragchecker_eval_impl.py",
-                args=[]
-            ),
+            run=RunSpec(kind="ragchecker", script="scripts/_ragchecker_eval_impl.py", args=[]),
             metrics=[MetricSpec(key="f1", target=0.60, direction=">=")],
         ),
         EvalPass(
@@ -60,11 +52,7 @@ SUITE = EvalSuite(
             tags=["calibration"],
             config_layers=["base", "stable"],
             config=PassConfig(),
-            run=RunSpec(
-                kind="calibrate",
-                script="scripts/calibrate_answerable_threshold.py",
-                args=[]
-            ),
+            run=RunSpec(kind="calibrate", script="scripts/calibrate_answerable_threshold.py", args=[]),
             metrics=[],  # calibration produces artifacts; you can add gates if exposed
         ),
         EvalPass(
@@ -74,11 +62,7 @@ SUITE = EvalSuite(
             tags=["debug", "reader"],
             config_layers=["base", "stable"],
             config=PassConfig(),
-            run=RunSpec(
-                kind="reader_debug",
-                script="scripts/reader_debug_ab.py",
-                args=[]
-            ),
+            run=RunSpec(kind="reader_debug", script="scripts/reader_debug_ab.py", args=[]),
             metrics=[],  # typically not scored; leaves traces under metrics/reader_debug/
         ),
         EvalPass(
@@ -121,5 +105,5 @@ SUITE = EvalSuite(
                 MetricSpec(key="faithfulness", target=0.80, direction=">="),
             ],
         ),
-    ]
+    ],
 )

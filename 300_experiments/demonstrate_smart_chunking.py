@@ -60,7 +60,7 @@ def split_validation(data, split_ratio):
         is_complete = chunk.get("metadata", {}).get("is_complete_function", False)
         stitching_key = chunk.get("metadata", {}).get("stitching_key", "N/A")
 
-        print(f"Chunk {i+1}:")
+        print(f"Chunk {i + 1}:")
         print(f"  Type: {chunk_type}")
         print(f"  Function: {function_name}")
         print(f"  Complete: {is_complete}")

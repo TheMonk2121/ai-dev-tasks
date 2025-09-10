@@ -105,13 +105,13 @@ class GoldCase(BaseModel):
         for key in ("expected_files", "globs", "expected_decisions"):
             if key in values:
                 values[key] = _ensure_list(values[key])
-        
+
         # Infer mode if missing
         if "mode" not in values:
             has_reader = bool(values.get("gt_answer"))
             has_retr = bool(values.get("expected_files") or values.get("globs"))
             has_dec = bool(values.get("expected_decisions"))
-            
+
             if has_reader:
                 values["mode"] = "reader"
             elif has_retr:
@@ -121,7 +121,7 @@ class GoldCase(BaseModel):
             else:
                 # Default to retrieval for cases without clear indicators
                 values["mode"] = "retrieval"
-        
+
         return values
 
     @field_validator("tags")

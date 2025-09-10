@@ -118,7 +118,9 @@ def run(
     pass_id: str = typer.Option(..., "--pass", "-p", help="Evaluation pass id"),
     out: Optional[str] = typer.Option(None, "--out", help="Optional output directory for artifacts"),
     seed: Optional[int] = typer.Option(None, "--seed", help="Optional random seed to export as SEED/FEW_SHOT_SEED"),
-    concurrency: Optional[int] = typer.Option(None, "--concurrency", help="Optional max workers to export as MAX_WORKERS"),
+    concurrency: Optional[int] = typer.Option(
+        None, "--concurrency", help="Optional max workers to export as MAX_WORKERS"
+    ),
 ) -> None:
     # Currently we only support the single SSOT suite defined in registry_core
     if suite != SUITE.id:

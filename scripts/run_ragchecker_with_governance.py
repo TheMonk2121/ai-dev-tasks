@@ -123,7 +123,7 @@ def generate_pipeline_variants(
     # Evaluate each variant
     variant_results = []
     for i, variant in enumerate(variants):
-        logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({variant['type']})")
+        logger.info(f"🧪 Evaluating variant {i + 1}/{len(variants)} ({variant['type']})")
 
         # Get test queries
         test_queries = ["What is the current project status?", "How do I create a PRD?"]

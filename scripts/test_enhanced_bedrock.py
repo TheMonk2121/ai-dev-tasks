@@ -17,7 +17,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.enhanced_bedrock_client import create_enhanced_bedrock_client
 
 
-async def test_single_key_performance():
+async def demo_single_key_performance():
     """Test performance with single API key."""
     print("🔑 Testing Single Key Performance")
     print("=" * 50)
@@ -48,7 +48,7 @@ async def test_single_key_performance():
     print()
 
 
-async def test_multi_key_load_balancing():
+async def demo_multi_key_load_balancing():
     """Test multi-key load balancing capabilities."""
     print("⚖️ Testing Multi-Key Load Balancing")
     print("=" * 50)
@@ -125,7 +125,7 @@ async def test_multi_key_load_balancing():
         total_tokens = sum(r["tokens"] for r in successful_requests)
         print(f"   Average response time: {avg_response_time:.2f}s")
         print(f"   Total tokens processed: {total_tokens}")
-        print(f"   Throughput: {len(successful_requests)/total_time:.2f} requests/second")
+        print(f"   Throughput: {len(successful_requests) / total_time:.2f} requests/second")
 
     # Show individual results
     print("\n📋 Individual Request Results:")
@@ -146,7 +146,7 @@ async def test_multi_key_load_balancing():
     print()
 
 
-async def test_rate_limiting_and_resilience():
+async def demo_rate_limiting_and_resilience():
     """Test rate limiting and resilience features."""
     print("🛡️ Testing Rate Limiting and Resilience")
     print("=" * 50)
@@ -182,7 +182,7 @@ async def test_rate_limiting_and_resilience():
     print(f"   Total time: {total_time:.2f}s")
     print(f"   Successful: {len(successful)}")
     print(f"   Failed: {len(failed)}")
-    print(f"   Rate: {len(results)/total_time:.2f} requests/second")
+    print(f"   Rate: {len(results) / total_time:.2f} requests/second")
 
     if successful:
         avg_time = sum(r["response_time"] for r in successful) / len(successful)
@@ -203,7 +203,7 @@ async def test_rate_limiting_and_resilience():
     print()
 
 
-async def test_configuration_loading():
+async def demo_configuration_loading():
     """Test configuration loading and validation."""
     print("⚙️ Testing Configuration Loading")
     print("=" * 50)
@@ -261,10 +261,10 @@ async def main():
     print()
 
     # Run tests
-    await test_configuration_loading()
-    await test_single_key_performance()
-    await test_multi_key_load_balancing()
-    await test_rate_limiting_and_resilience()
+    await demo_configuration_loading()
+    await demo_single_key_performance()
+    await demo_multi_key_load_balancing()
+    await demo_rate_limiting_and_resilience()
 
     print("🎉 Test suite completed!")
     print("\n💡 Next Steps:")

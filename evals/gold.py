@@ -4,12 +4,12 @@ Gold standard evaluation utilities with JSON/JSONL loader and glob support.
 """
 
 import fnmatch
+import importlib.util
 import json
 import os
-from pathlib import PurePosixPath
-from typing import Any, Dict, List, Set, Optional
-import importlib.util
 import sys
+from pathlib import PurePosixPath
+from typing import Any, Dict, List, Optional, Set
 
 
 def _norm(p: str) -> str:
@@ -40,7 +40,7 @@ def load_gold_mapping(path: Optional[str] = None) -> Dict[str, Dict[str, Any]]:
                     for cid, rule in gold.items():
                         fps = {_norm(p) for p in (rule.get("paths") or [])}
                         globs: List[str] = []
-                        for fn in (rule.get("filenames") or []):
+                        for fn in rule.get("filenames") or []:
                             globs.append(f"*/{str(fn).strip().lower()}")
                         ns = rule.get("namespace")
                         if ns:

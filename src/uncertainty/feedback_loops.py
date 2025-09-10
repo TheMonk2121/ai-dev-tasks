@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class FeedbackType(Enum):
     """Types of user feedback."""
+
     CORRECT_ANSWER = "correct_answer"
     INCORRECT_ANSWER = "incorrect_answer"
     PARTIALLY_CORRECT = "partially_correct"
@@ -36,6 +37,7 @@ class FeedbackType(Enum):
 
 class FeedbackPriority(Enum):
     """Priority levels for feedback processing."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -149,27 +151,30 @@ class FeedbackDatabase:
         """Store user feedback in the database."""
         try:
             with sqlite3.connect(self.db_path) as conn:
-                conn.execute("""
+                conn.execute(
+                    """
                     INSERT OR REPLACE INTO feedback VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    feedback.feedback_id,
-                    feedback.query,
-                    feedback.answer,
-                    feedback.feedback_type.value,
-                    str(feedback.feedback_value),
-                    feedback.confidence_score,
-                    json.dumps(feedback.evidence_chunks),
-                    feedback.response_time_ms,
-                    feedback.timestamp.isoformat(),
-                    feedback.user_id,
-                    feedback.session_id,
-                    feedback.feedback_text,
-                    feedback.priority.value,
-                    json.dumps(feedback.tags or []),
-                    feedback.processed,
-                    feedback.processed_timestamp.isoformat() if feedback.processed_timestamp else None,
-                    feedback.processing_notes
-                ))
+                """,
+                    (
+                        feedback.feedback_id,
+                        feedback.query,
+                        feedback.answer,
+                        feedback.feedback_type.value,
+                        str(feedback.feedback_value),
+                        feedback.confidence_score,
+                        json.dumps(feedback.evidence_chunks),
+                        feedback.response_time_ms,
+                        feedback.timestamp.isoformat(),
+                        feedback.user_id,
+                        feedback.session_id,
+                        feedback.feedback_text,
+                        feedback.priority.value,
+                        json.dumps(feedback.tags or []),
+                        feedback.processed,
+                        feedback.processed_timestamp.isoformat() if feedback.processed_timestamp else None,
+                        feedback.processing_notes,
+                    ),
+                )
                 conn.commit()
                 return True
         except Exception as e:
@@ -177,9 +182,7 @@ class FeedbackDatabase:
             return False
 
     def get_unprocessed_feedback(
-        self,
-        limit: Optional[int] = None,
-        priority: Optional[FeedbackPriority] = None
+        self, limit: Optional[int] = None, priority: Optional[FeedbackPriority] = None
     ) -> List[UserFeedback]:
         """Retrieve unprocessed feedback from the database."""
         try:
@@ -205,23 +208,25 @@ class FeedbackDatabase:
                 feedback_list = []
                 for row in rows:
                     feedback = UserFeedback(
-                        feedback_id=row['feedback_id'],
-                        query=row['query'],
-                        answer=row['answer'],
-                        feedback_type=FeedbackType(row['feedback_type']),
-                        feedback_value=self._parse_feedback_value(row['feedback_value']),
-                        confidence_score=row['confidence_score'],
-                        evidence_chunks=json.loads(row['evidence_chunks']),
-                        response_time_ms=row['response_time_ms'],
-                        timestamp=datetime.fromisoformat(row['timestamp']),
-                        user_id=row['user_id'],
-                        session_id=row['session_id'],
-                        feedback_text=row['feedback_text'],
-                        priority=FeedbackPriority(row['priority']),
-                        tags=json.loads(row['tags']) if row['tags'] else None,
-                        processed=row['processed'],
-                        processed_timestamp=datetime.fromisoformat(row['processed_timestamp']) if row['processed_timestamp'] else None,
-                        processing_notes=row['processing_notes']
+                        feedback_id=row["feedback_id"],
+                        query=row["query"],
+                        answer=row["answer"],
+                        feedback_type=FeedbackType(row["feedback_type"]),
+                        feedback_value=self._parse_feedback_value(row["feedback_value"]),
+                        confidence_score=row["confidence_score"],
+                        evidence_chunks=json.loads(row["evidence_chunks"]),
+                        response_time_ms=row["response_time_ms"],
+                        timestamp=datetime.fromisoformat(row["timestamp"]),
+                        user_id=row["user_id"],
+                        session_id=row["session_id"],
+                        feedback_text=row["feedback_text"],
+                        priority=FeedbackPriority(row["priority"]),
+                        tags=json.loads(row["tags"]) if row["tags"] else None,
+                        processed=row["processed"],
+                        processed_timestamp=datetime.fromisoformat(row["processed_timestamp"])
+                        if row["processed_timestamp"]
+                        else None,
+                        processing_notes=row["processing_notes"],
                     )
                     feedback_list.append(feedback)
 
@@ -234,11 +239,11 @@ class FeedbackDatabase:
         """Parse feedback value from string representation."""
         try:
             # Try to parse as boolean
-            if value_str.lower() in ['true', 'false']:
-                return value_str.lower() == 'true'
+            if value_str.lower() in ["true", "false"]:
+                return value_str.lower() == "true"
 
             # Try to parse as float
-            if '.' in value_str:
+            if "." in value_str:
                 return float(value_str)
 
             # Try to parse as integer
@@ -247,25 +252,20 @@ class FeedbackDatabase:
             # Return as string if all else fails
             return value_str
 
-    def mark_feedback_processed(
-        self,
-        feedback_id: str,
-        notes: Optional[str] = None
-    ) -> bool:
+    def mark_feedback_processed(self, feedback_id: str, notes: Optional[str] = None) -> bool:
         """Mark feedback as processed."""
         try:
             with sqlite3.connect(self.db_path) as conn:
-                conn.execute("""
+                conn.execute(
+                    """
                     UPDATE feedback 
                     SET processed = TRUE, 
                         processed_timestamp = ?,
                         processing_notes = ?
                     WHERE feedback_id = ?
-                """, (
-                    datetime.now().isoformat(),
-                    notes,
-                    feedback_id
-                ))
+                """,
+                    (datetime.now().isoformat(), notes, feedback_id),
+                )
                 conn.commit()
                 return True
         except Exception as e:
@@ -280,11 +280,11 @@ class FeedbackDatabase:
 
                 # Total feedback count
                 cursor = conn.execute("SELECT COUNT(*) FROM feedback")
-                stats['total_feedback'] = cursor.fetchone()[0]
+                stats["total_feedback"] = cursor.fetchone()[0]
 
                 # Unprocessed feedback count
                 cursor = conn.execute("SELECT COUNT(*) FROM feedback WHERE processed = FALSE")
-                stats['unprocessed_feedback'] = cursor.fetchone()[0]
+                stats["unprocessed_feedback"] = cursor.fetchone()[0]
 
                 # Feedback by type
                 cursor = conn.execute("""
@@ -292,7 +292,7 @@ class FeedbackDatabase:
                     FROM feedback 
                     GROUP BY feedback_type
                 """)
-                stats['feedback_by_type'] = dict(cursor.fetchall())
+                stats["feedback_by_type"] = dict(cursor.fetchall())
 
                 # Feedback by priority
                 cursor = conn.execute("""
@@ -300,16 +300,19 @@ class FeedbackDatabase:
                     FROM feedback 
                     GROUP BY priority
                 """)
-                stats['feedback_by_priority'] = dict(cursor.fetchall())
+                stats["feedback_by_priority"] = dict(cursor.fetchall())
 
                 # Recent feedback (last 7 days)
                 week_ago = (datetime.now() - timedelta(days=7)).isoformat()
-                cursor = conn.execute("""
+                cursor = conn.execute(
+                    """
                     SELECT COUNT(*) 
                     FROM feedback 
                     WHERE timestamp > ?
-                """, (week_ago,))
-                stats['recent_feedback'] = cursor.fetchone()[0]
+                """,
+                    (week_ago,),
+                )
+                stats["recent_feedback"] = cursor.fetchone()[0]
 
                 return stats
         except Exception as e:
@@ -330,9 +333,7 @@ class FeedbackProcessor:
         logger.info("Processing feedback batch...")
 
         # Get unprocessed feedback
-        feedback_batch = self.db.get_unprocessed_feedback(
-            limit=self.config.batch_size
-        )
+        feedback_batch = self.db.get_unprocessed_feedback(limit=self.config.batch_size)
 
         if not feedback_batch:
             logger.info("No unprocessed feedback to process")
@@ -343,37 +344,28 @@ class FeedbackProcessor:
             "confidence_calibration": self._analyze_confidence_feedback(feedback_batch),
             "quality_improvements": self._analyze_quality_feedback(feedback_batch),
             "abstention_analysis": self._analyze_abstention_feedback(feedback_batch),
-            "performance_insights": self._analyze_performance_feedback(feedback_batch)
+            "performance_insights": self._analyze_performance_feedback(feedback_batch),
         }
 
         # Mark feedback as processed
         processed_count = 0
         for feedback in feedback_batch:
             if self.db.mark_feedback_processed(
-                feedback.feedback_id,
-                f"Processed in batch at {datetime.now().isoformat()}"
+                feedback.feedback_id, f"Processed in batch at {datetime.now().isoformat()}"
             ):
                 processed_count += 1
 
         logger.info(f"Processed {processed_count} feedback items")
 
-        return {
-            "processed_count": processed_count,
-            "insights": insights
-        }
+        return {"processed_count": processed_count, "insights": insights}
 
-    def _analyze_confidence_feedback(
-        self,
-        feedback_batch: List[UserFeedback]
-    ) -> Dict[str, Any]:
+    def _analyze_confidence_feedback(self, feedback_batch: List[UserFeedback]) -> Dict[str, Any]:
         """Analyze feedback related to confidence calibration."""
 
         confidence_feedback = [
-            f for f in feedback_batch
-            if f.feedback_type in [
-                FeedbackType.CONFIDENCE_TOO_HIGH,
-                FeedbackType.CONFIDENCE_TOO_LOW
-            ]
+            f
+            for f in feedback_batch
+            if f.feedback_type in [FeedbackType.CONFIDENCE_TOO_HIGH, FeedbackType.CONFIDENCE_TOO_LOW]
         ]
 
         if not confidence_feedback:
@@ -385,41 +377,44 @@ class FeedbackProcessor:
         for feedback in confidence_feedback:
             if feedback.feedback_type == FeedbackType.CONFIDENCE_TOO_HIGH:
                 # System was overconfident
-                insights.append({
-                    "type": "overconfidence",
-                    "confidence_score": feedback.confidence_score,
-                    "query": feedback.query[:100],
-                    "suggestion": "Consider lowering confidence threshold or improving calibration"
-                })
+                insights.append(
+                    {
+                        "type": "overconfidence",
+                        "confidence_score": feedback.confidence_score,
+                        "query": feedback.query[:100],
+                        "suggestion": "Consider lowering confidence threshold or improving calibration",
+                    }
+                )
             elif feedback.feedback_type == FeedbackType.CONFIDENCE_TOO_LOW:
                 # System was underconfident
-                insights.append({
-                    "type": "underconfidence",
-                    "confidence_score": feedback.confidence_score,
-                    "query": feedback.query[:100],
-                    "suggestion": "Consider raising confidence threshold or improving evidence quality"
-                })
+                insights.append(
+                    {
+                        "type": "underconfidence",
+                        "confidence_score": feedback.confidence_score,
+                        "query": feedback.query[:100],
+                        "suggestion": "Consider raising confidence threshold or improving evidence quality",
+                    }
+                )
 
         return {
             "count": len(confidence_feedback),
             "insights": insights,
-            "overconfidence_count": len([f for f in confidence_feedback if f.feedback_type == FeedbackType.CONFIDENCE_TOO_HIGH]),
-            "underconfidence_count": len([f for f in confidence_feedback if f.feedback_type == FeedbackType.CONFIDENCE_TOO_LOW])
+            "overconfidence_count": len(
+                [f for f in confidence_feedback if f.feedback_type == FeedbackType.CONFIDENCE_TOO_HIGH]
+            ),
+            "underconfidence_count": len(
+                [f for f in confidence_feedback if f.feedback_type == FeedbackType.CONFIDENCE_TOO_LOW]
+            ),
         }
 
-    def _analyze_quality_feedback(
-        self,
-        feedback_batch: List[UserFeedback]
-    ) -> Dict[str, Any]:
+    def _analyze_quality_feedback(self, feedback_batch: List[UserFeedback]) -> Dict[str, Any]:
         """Analyze feedback related to answer quality."""
 
         quality_feedback = [
-            f for f in feedback_batch
-            if f.feedback_type in [
-                FeedbackType.CORRECT_ANSWER,
-                FeedbackType.INCORRECT_ANSWER,
-                FeedbackType.PARTIALLY_CORRECT
-            ]
+            f
+            for f in feedback_batch
+            if f.feedback_type
+            in [FeedbackType.CORRECT_ANSWER, FeedbackType.INCORRECT_ANSWER, FeedbackType.PARTIALLY_CORRECT]
         ]
 
         if not quality_feedback:
@@ -437,27 +432,24 @@ class FeedbackProcessor:
         confidence_accuracy_data = []
         for feedback in quality_feedback:
             is_correct = feedback.feedback_type == FeedbackType.CORRECT_ANSWER
-            confidence_accuracy_data.append({
-                "confidence": feedback.confidence_score,
-                "correct": is_correct
-            })
+            confidence_accuracy_data.append({"confidence": feedback.confidence_score, "correct": is_correct})
 
         insights = []
         if confidence_accuracy_data:
             # Check if high confidence correlates with correctness
-            high_conf_correct = sum(1 for d in confidence_accuracy_data
-                                  if d["confidence"] > 0.8 and d["correct"])
-            high_conf_total = sum(1 for d in confidence_accuracy_data
-                                if d["confidence"] > 0.8)
+            high_conf_correct = sum(1 for d in confidence_accuracy_data if d["confidence"] > 0.8 and d["correct"])
+            high_conf_total = sum(1 for d in confidence_accuracy_data if d["confidence"] > 0.8)
 
             if high_conf_total > 0:
                 high_conf_accuracy = high_conf_correct / high_conf_total
                 if high_conf_accuracy < 0.9:
-                    insights.append({
-                        "type": "calibration_issue",
-                        "message": f"High confidence answers only {high_conf_accuracy:.1%} accurate",
-                        "suggestion": "Improve confidence calibration or evidence quality"
-                    })
+                    insights.append(
+                        {
+                            "type": "calibration_issue",
+                            "message": f"High confidence answers only {high_conf_accuracy:.1%} accurate",
+                            "suggestion": "Improve confidence calibration or evidence quality",
+                        }
+                    )
 
         return {
             "count": total_count,
@@ -465,58 +457,53 @@ class FeedbackProcessor:
             "correct_count": correct_count,
             "incorrect_count": incorrect_count,
             "partial_count": partial_count,
-            "insights": insights
+            "insights": insights,
         }
 
-    def _analyze_abstention_feedback(
-        self,
-        feedback_batch: List[UserFeedback]
-    ) -> Dict[str, Any]:
+    def _analyze_abstention_feedback(self, feedback_batch: List[UserFeedback]) -> Dict[str, Any]:
         """Analyze feedback related to abstention decisions."""
 
         abstention_feedback = [
-            f for f in feedback_batch
-            if f.feedback_type in [
-                FeedbackType.ABSTENTION_APPROPRIATE,
-                FeedbackType.ABSTENTION_INAPPROPRIATE
-            ]
+            f
+            for f in feedback_batch
+            if f.feedback_type in [FeedbackType.ABSTENTION_APPROPRIATE, FeedbackType.ABSTENTION_INAPPROPRIATE]
         ]
 
         if not abstention_feedback:
             return {"count": 0, "insights": []}
 
-        appropriate_count = len([f for f in abstention_feedback if f.feedback_type == FeedbackType.ABSTENTION_APPROPRIATE])
-        inappropriate_count = len([f for f in abstention_feedback if f.feedback_type == FeedbackType.ABSTENTION_INAPPROPRIATE])
+        appropriate_count = len(
+            [f for f in abstention_feedback if f.feedback_type == FeedbackType.ABSTENTION_APPROPRIATE]
+        )
+        inappropriate_count = len(
+            [f for f in abstention_feedback if f.feedback_type == FeedbackType.ABSTENTION_INAPPROPRIATE]
+        )
 
         total_count = len(abstention_feedback)
         appropriateness_rate = appropriate_count / total_count if total_count > 0 else 0.0
 
         insights = []
         if appropriateness_rate < 0.8:
-            insights.append({
-                "type": "abstention_threshold_issue",
-                "message": f"Only {appropriateness_rate:.1%} of abstentions were appropriate",
-                "suggestion": "Review and adjust abstention thresholds"
-            })
+            insights.append(
+                {
+                    "type": "abstention_threshold_issue",
+                    "message": f"Only {appropriateness_rate:.1%} of abstentions were appropriate",
+                    "suggestion": "Review and adjust abstention thresholds",
+                }
+            )
 
         return {
             "count": total_count,
             "appropriateness_rate": appropriateness_rate,
             "appropriate_count": appropriate_count,
             "inappropriate_count": inappropriate_count,
-            "insights": insights
+            "insights": insights,
         }
 
-    def _analyze_performance_feedback(
-        self,
-        feedback_batch: List[UserFeedback]
-    ) -> Dict[str, Any]:
+    def _analyze_performance_feedback(self, feedback_batch: List[UserFeedback]) -> Dict[str, Any]:
         """Analyze feedback related to system performance."""
 
-        performance_feedback = [
-            f for f in feedback_batch
-            if f.feedback_type == FeedbackType.RESPONSE_SPEED
-        ]
+        performance_feedback = [f for f in feedback_batch if f.feedback_type == FeedbackType.RESPONSE_SPEED]
 
         if not performance_feedback:
             return {"count": 0, "insights": []}
@@ -531,16 +518,18 @@ class FeedbackProcessor:
         if response_time_ratings:
             avg_rating = np.mean(response_time_ratings)
             if avg_rating < 3.0:  # Assuming 1-5 scale
-                insights.append({
-                    "type": "performance_issue",
-                    "message": f"Average response time rating: {avg_rating:.1f}",
-                    "suggestion": "Investigate response time bottlenecks"
-                })
+                insights.append(
+                    {
+                        "type": "performance_issue",
+                        "message": f"Average response time rating: {avg_rating:.1f}",
+                        "suggestion": "Investigate response time bottlenecks",
+                    }
+                )
 
         return {
             "count": len(performance_feedback),
             "avg_response_time_rating": np.mean(response_time_ratings) if response_time_ratings else 0.0,
-            "insights": insights
+            "insights": insights,
         }
 
     def generate_weekly_report(self) -> Dict[str, Any]:
@@ -562,17 +551,17 @@ class FeedbackProcessor:
             "confidence_calibration": self._analyze_confidence_feedback(recent_feedback),
             "quality_improvements": self._analyze_quality_feedback(recent_feedback),
             "abstention_analysis": self._analyze_abstention_feedback(recent_feedback),
-            "performance_insights": self._analyze_performance_feedback(recent_feedback)
+            "performance_insights": self._analyze_performance_feedback(recent_feedback),
         }
 
         report = {
             "period": f"{week_ago.date()} to {datetime.now().date()}",
-            "total_feedback": stats['total_feedback'],
-            "recent_feedback": stats['recent_feedback'],
-            "unprocessed_feedback": stats['unprocessed_feedback'],
+            "total_feedback": stats["total_feedback"],
+            "recent_feedback": stats["recent_feedback"],
+            "unprocessed_feedback": stats["unprocessed_feedback"],
             "insights": insights,
             "recommendations": self._generate_recommendations(insights),
-            "generated_at": datetime.now().isoformat()
+            "generated_at": datetime.now().isoformat(),
         }
 
         # Save report
@@ -619,7 +608,7 @@ class FeedbackProcessor:
 
         filepath.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(report, f, indent=2, default=str)
 
         logger.info(f"Saved {report_type} report to {filepath}")
@@ -646,7 +635,7 @@ class FeedbackCollector:
         session_id: Optional[str] = None,
         feedback_text: Optional[str] = None,
         priority: FeedbackPriority = FeedbackPriority.MEDIUM,
-        tags: Optional[List[str]] = None
+        tags: Optional[List[str]] = None,
     ) -> str:
         """Collect and store user feedback."""
 
@@ -666,7 +655,7 @@ class FeedbackCollector:
             session_id=session_id,
             feedback_text=feedback_text,
             priority=priority,
-            tags=tags or []
+            tags=tags or [],
         )
 
         if self.db.store_feedback(feedback):
@@ -683,7 +672,7 @@ class FeedbackCollector:
         confidence_score: float,
         evidence_chunks: List[Dict[str, Any]],
         response_time_ms: float,
-        user_actions: Dict[str, Any]
+        user_actions: Dict[str, Any],
     ) -> List[str]:
         """Collect implicit feedback from user actions."""
 
@@ -701,7 +690,7 @@ class FeedbackCollector:
                 evidence_chunks=evidence_chunks,
                 response_time_ms=response_time_ms,
                 priority=FeedbackPriority.LOW,
-                tags=["implicit", "click"]
+                tags=["implicit", "click"],
             )
             if feedback_id:
                 feedback_ids.append(feedback_id)
@@ -717,7 +706,7 @@ class FeedbackCollector:
                 evidence_chunks=evidence_chunks,
                 response_time_ms=response_time_ms,
                 priority=FeedbackPriority.MEDIUM,
-                tags=["implicit", "reformulation"]
+                tags=["implicit", "reformulation"],
             )
             if feedback_id:
                 feedback_ids.append(feedback_id)
@@ -733,7 +722,7 @@ class FeedbackCollector:
                 evidence_chunks=evidence_chunks,
                 response_time_ms=response_time_ms,
                 priority=FeedbackPriority.HIGH,
-                tags=["implicit", "performance"]
+                tags=["implicit", "performance"],
             )
             if feedback_id:
                 feedback_ids.append(feedback_id)

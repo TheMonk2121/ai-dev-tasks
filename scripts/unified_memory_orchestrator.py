@@ -85,7 +85,7 @@ class UnifiedMemoryOrchestrator:
                     if self.check_database_status():
                         self.database_started = True
                         return True
-                    print(f"   Waiting for database to be ready... ({i+1}/10)")
+                    print(f"   Waiting for database to be ready... ({i + 1}/10)")
 
                 print("⚠️  Database started but not responding yet")
                 return False

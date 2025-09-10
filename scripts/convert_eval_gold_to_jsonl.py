@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-import json, os, sys, pathlib
+import json
+import os
+import pathlib
+import sys
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SRC = ROOT / "dspy-rag-system" / "src"
 sys.path.insert(0, str(SRC))
-from eval_gold import GOLD, ADDITIONAL_GOLD
+from eval_gold import ADDITIONAL_GOLD, GOLD
 
 
 def expand_target(t):
@@ -39,4 +43,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

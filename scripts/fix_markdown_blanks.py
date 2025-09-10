@@ -9,6 +9,7 @@ Normalize markdown formatting for markdownlint basics:
 Usage:
   python3 scripts/fix_markdown_blanks.py 100_cursor-memory-context.md
 """
+
 import re
 import sys
 
@@ -30,6 +31,7 @@ def ensure_code_fence_language(lines):
         out.append(line)
     return out
 
+
 def normalize_markdown(content: str) -> str:
     lines = content.splitlines(True)
 
@@ -40,8 +42,10 @@ def normalize_markdown(content: str) -> str:
     result = []
     i = 0
     n = len(lines)
+
     def is_heading(l):
-        return l.lstrip().startswith('#')
+        return l.lstrip().startswith("#")
+
     def is_list(l):
         s = l.lstrip()
         return bool(re.match(r"(- |\* |\d+\. )", s))
@@ -49,7 +53,7 @@ def normalize_markdown(content: str) -> str:
     while i < n:
         line = lines[i]
         prev = result[-1] if result else "\n"
-        next_line = lines[i+1] if i+1 < n else "\n"
+        next_line = lines[i + 1] if i + 1 < n else "\n"
 
         # Ensure blank line before headings
         if is_heading(line):
@@ -80,24 +84,25 @@ def normalize_markdown(content: str) -> str:
         i += 1
 
     # Collapse 3+ blank lines to max 2 and then to 1 where needed
-    text = ''.join(result)
+    text = "".join(result)
     text = re.sub(r"\n{3,}", "\n\n", text)
     if not text.endswith("\n"):
         text += "\n"
     return text
+
 
 def main():
     if len(sys.argv) != 2:
         print("Usage: python3 scripts/fix_markdown_blanks.py <file.md>")
         sys.exit(1)
     path = sys.argv[1]
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, "r", encoding="utf-8") as f:
         original = f.read()
     fixed = normalize_markdown(original)
-    with open(path, 'w', encoding='utf-8') as f:
+    with open(path, "w", encoding="utf-8") as f:
         f.write(fixed)
     print(f"Formatted {path}")
 
+
 if __name__ == "__main__":
     main()
-

@@ -110,7 +110,7 @@ class DynamicFewShotInjector:
             enhanced_parts.append("\n\n## 🧠 Similar Successful Episodes:")
 
             for i, episode in enumerate(episodic["similar_episodes"][:2]):  # Limit to 2 examples
-                example = f"\n**Example {i+1}:** {episode['summary']}"
+                example = f"\n**Example {i + 1}:** {episode['summary']}"
                 if episode["what_worked"]:
                     example += f"\n✅ What worked: {', '.join(episode['what_worked'][:2])}"
                 if episode["what_to_avoid"]:

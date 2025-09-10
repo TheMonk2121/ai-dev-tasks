@@ -202,7 +202,7 @@ class GenerationCacheSchemaMigration:
                     # Build ALTER TABLE statement
                     alter_sql = f"""
                         ALTER TABLE episodic_logs
-                        ADD COLUMN {column_name} {column_spec['type']}
+                        ADD COLUMN {column_name} {column_spec["type"]}
                     """
 
                     # Add default value if specified

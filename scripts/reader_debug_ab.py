@@ -3,12 +3,14 @@
 Debug A/B test to ensure DSPy reader controls are wired the same way in every path.
 Compares uncompiled vs compiled DSPy reader on the same context.
 """
+
 import json
 import os
 import sys
 
 sys.path.insert(0, "src")
 import dspy
+
 from dspy_modules.dspy_reader_program import RAGAnswer, _lm
 from dspy_modules.reader.entrypoint import build_reader_context
 from dspy_modules.reader.span_picker import pick_span  # your rule-first

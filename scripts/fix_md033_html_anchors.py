@@ -22,10 +22,12 @@ def find_markdown_files():
 
     return markdown_files
 
+
 def has_html_anchors(content):
     """Check if content has HTML anchor tags."""
     # Look for <a id="..."> patterns
     return re.search(r'<a\s+id="[^"]+"\s*>', content) is not None
+
 
 def fix_html_anchors(content):
     """Convert HTML anchor tags to markdown-style anchors."""
@@ -39,6 +41,7 @@ def fix_html_anchors(content):
 
     fixed_content = re.sub(pattern, replace_anchor, content)
     return fixed_content
+
 
 def process_file(file_path):
     """Process a single file to fix HTML anchors."""
@@ -65,6 +68,7 @@ def process_file(file_path):
 
     except Exception as e:
         return False, f"Error: {e}"
+
 
 def main():
     """Main function to fix HTML anchors."""
@@ -103,6 +107,7 @@ def main():
         print("   Converted HTML anchor tags to markdown-style anchors")
     else:
         print("\n⚠️  No files needed fixing.")
+
 
 if __name__ == "__main__":
     main()

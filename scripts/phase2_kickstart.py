@@ -24,15 +24,11 @@ class Phase2KickstartSystem:
     def run_phase2_kickstart(self) -> Dict[str, Any]:
         """Run Phase-2 kickstart with safest path."""
         print("🚀 PHASE-2 KICKSTART")
-        print("="*50)
+        print("=" * 50)
         print("🧠 Safest path for DSPy compilation and deployment")
         print()
 
-        kickstart_result = {
-            "timestamp": datetime.now().isoformat(),
-            "phases": {},
-            "overall_status": "unknown"
-        }
+        kickstart_result = {"timestamp": datetime.now().isoformat(), "phases": {}, "overall_status": "unknown"}
 
         # Phase 1: Baseline run saved
         print("📊 Phase 1: Baseline run saved...")
@@ -50,13 +46,11 @@ class Phase2KickstartSystem:
         kickstart_result["phases"]["gate_promote"] = gate_result
 
         # Determine overall status
-        all_phases_passed = all(
-            phase["success"] for phase in kickstart_result["phases"].values()
-        )
+        all_phases_passed = all(phase["success"] for phase in kickstart_result["phases"].values())
         kickstart_result["overall_status"] = "completed" if all_phases_passed else "failed"
 
         # Print summary
-        print(f"\n📊 Phase-2 Kickstart Summary:")
+        print("\n📊 Phase-2 Kickstart Summary:")
         for phase_name, phase_result in kickstart_result["phases"].items():
             status_emoji = "✅" if phase_result["success"] else "❌"
             print(f"  {status_emoji} {phase_name}: {phase_result['message']}")
@@ -74,12 +68,12 @@ class Phase2KickstartSystem:
     def _save_baseline_run(self) -> Dict[str, Any]:
         """Save baseline run for retrieval-only and deterministic few-shot."""
         print("  📊 Saving baseline artifacts...")
-        
+
         baseline_result = {
             "phase_name": "baseline_saved",
             "timestamp": datetime.now().isoformat(),
             "steps": {},
-            "success": False
+            "success": False,
         }
 
         try:
@@ -99,12 +93,12 @@ class Phase2KickstartSystem:
             baseline_result["steps"]["baseline_manifest"] = manifest_result
 
             # Determine if baseline save was successful
-            all_steps_successful = all(
-                step["success"] for step in baseline_result["steps"].values()
-            )
+            all_steps_successful = all(step["success"] for step in baseline_result["steps"].values())
             baseline_result["success"] = all_steps_successful
 
-            baseline_result["message"] = f"Baseline saved: {'success' if all_steps_successful else 'failed'} - {len([s for s in baseline_result['steps'].values() if s['success']])}/{len(baseline_result['steps'])} steps successful"
+            baseline_result["message"] = (
+                f"Baseline saved: {'success' if all_steps_successful else 'failed'} - {len([s for s in baseline_result['steps'].values() if s['success']])}/{len(baseline_result['steps'])} steps successful"
+            )
 
         except Exception as e:
             baseline_result["error"] = str(e)
@@ -115,12 +109,12 @@ class Phase2KickstartSystem:
     def _compile_on_dev_set(self) -> Dict[str, Any]:
         """Compile on dev set only."""
         print("  🧠 Compiling DSPy program on dev set...")
-        
+
         compile_result = {
             "phase_name": "dev_compile",
             "timestamp": datetime.now().isoformat(),
             "steps": {},
-            "success": False
+            "success": False,
         }
 
         try:
@@ -140,12 +134,12 @@ class Phase2KickstartSystem:
             compile_result["steps"]["artifacts_save"] = artifacts_result
 
             # Determine if compilation was successful
-            all_steps_successful = all(
-                step["success"] for step in compile_result["steps"].values()
-            )
+            all_steps_successful = all(step["success"] for step in compile_result["steps"].values())
             compile_result["success"] = all_steps_successful
 
-            compile_result["message"] = f"Dev set compilation: {'success' if all_steps_successful else 'failed'} - {len([s for s in compile_result['steps'].values() if s['success']])}/{len(compile_result['steps'])} steps successful"
+            compile_result["message"] = (
+                f"Dev set compilation: {'success' if all_steps_successful else 'failed'} - {len([s for s in compile_result['steps'].values() if s['success']])}/{len(compile_result['steps'])} steps successful"
+            )
 
         except Exception as e:
             compile_result["error"] = str(e)
@@ -156,12 +150,12 @@ class Phase2KickstartSystem:
     def _gate_and_promote(self) -> Dict[str, Any]:
         """Gate and promote compiled artifacts."""
         print("  🚪 Gating and promoting compiled artifacts...")
-        
+
         gate_result = {
             "phase_name": "gate_promote",
             "timestamp": datetime.now().isoformat(),
             "steps": {},
-            "success": False
+            "success": False,
         }
 
         try:
@@ -203,16 +197,16 @@ class Phase2KickstartSystem:
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=1800  # 30 minute timeout
+                timeout=1800,  # 30 minute timeout
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -225,16 +219,16 @@ class Phase2KickstartSystem:
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=1800  # 30 minute timeout
+                timeout=1800,  # 30 minute timeout
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -247,16 +241,16 @@ class Phase2KickstartSystem:
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minute timeout
+                timeout=300,  # 5 minute timeout
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -267,11 +261,11 @@ class Phase2KickstartSystem:
             dev_set_file = Path("datasets/dev.jsonl")
             if not dev_set_file.exists():
                 return {"success": False, "error": "Dev set file not found"}
-            
+
             # Validate dev set format
             with open(dev_set_file, "r") as f:
                 lines = f.readlines()
-            
+
             valid_lines = 0
             for line in lines:
                 try:
@@ -279,14 +273,14 @@ class Phase2KickstartSystem:
                     valid_lines += 1
                 except json.JSONDecodeError:
                     continue
-            
+
             return {
                 "success": valid_lines > 0,
                 "total_lines": len(lines),
                 "valid_lines": valid_lines,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -299,16 +293,16 @@ class Phase2KickstartSystem:
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=3600  # 1 hour timeout
+                timeout=3600,  # 1 hour timeout
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -317,21 +311,21 @@ class Phase2KickstartSystem:
         try:
             config_hash = os.getenv("CONFIG_HASH", "default")
             compiled_artifacts_dir = Path("compiled_artifacts") / config_hash
-            
+
             if not compiled_artifacts_dir.exists():
                 return {"success": False, "error": "Compiled artifacts directory not found"}
-            
+
             # Check if artifacts exist
             artifacts = list(compiled_artifacts_dir.rglob("*"))
             artifact_files = [f for f in artifacts if f.is_file()]
-            
+
             return {
                 "success": len(artifact_files) > 0,
                 "artifact_count": len(artifact_files),
                 "artifacts_dir": str(compiled_artifacts_dir),
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -344,16 +338,16 @@ class Phase2KickstartSystem:
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=600  # 10 minute timeout
+                timeout=600,  # 10 minute timeout
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -366,16 +360,16 @@ class Phase2KickstartSystem:
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minute timeout
+                timeout=300,  # 5 minute timeout
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -388,27 +382,23 @@ class Phase2KickstartSystem:
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minute timeout
+                timeout=300,  # 5 minute timeout
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
     def _log_kickstart_results(self, kickstart_result: Dict[str, Any]):
         """Log kickstart results."""
-        log_entry = {
-            "timestamp": datetime.now().isoformat(),
-            "type": "phase2_kickstart",
-            "data": kickstart_result
-        }
-        
+        log_entry = {"timestamp": datetime.now().isoformat(), "type": "phase2_kickstart", "data": kickstart_result}
+
         with open(self.kickstart_log_file, "a") as f:
             f.write(json.dumps(log_entry) + "\n")
 
@@ -417,7 +407,7 @@ def main():
     """Main entry point for Phase-2 kickstart."""
     kickstart_system = Phase2KickstartSystem()
     result = kickstart_system.run_phase2_kickstart()
-    
+
     # Exit with appropriate code
     if result["overall_status"] == "completed":
         print("\n🎉 Phase-2 kickstart completed successfully!")

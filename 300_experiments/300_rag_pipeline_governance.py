@@ -182,7 +182,6 @@ class RAGPipelineGovernance:
                 PipelineStage.INGEST,
                 PipelineStage.VALIDATE,
             ]:
-
                 # Swap stage orders in metadata
                 graph.nodes[stage_nodes[i]]["metadata"]["stage_order"] = i + 1
                 graph.nodes[stage_nodes[i + 1]]["metadata"]["stage_order"] = i

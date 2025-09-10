@@ -3,7 +3,7 @@ Phase 2: Multi-Hop & Answer Planning with Data-Driven Gating
 
 Implements plan → retrieve per sub-question → merge → answer pipeline with:
 - Coverage: fraction of sub-claims with ≥1 high-score window supporting it
-- Concentration: low dispersion of top scores (evidence not scattered/noisy)  
+- Concentration: low dispersion of top scores (evidence not scattered/noisy)
 - Novelty: 2nd-hop only if sub-queries aren't near-duplicates of hop-1
 - Ceiling: hard cap of 2 hops + token budget (+512 input tokens max)
 - Mid-gen callbacks: trigger only for unresolved sub-spans
@@ -20,6 +20,7 @@ from typing import Any, Dict, List, Optional, Set
 try:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
+
     HAS_SKLEARN = True
 except ImportError:
     HAS_SKLEARN = False
@@ -88,35 +89,28 @@ class MultiHopPlanner:
 
         # Initialize TF-IDF for novelty checks
         if HAS_SKLEARN:
-            self.vectorizer = TfidfVectorizer(
-                max_features=200,
-                stop_words='english',
-                ngram_range=(1, 2)
-            )
+            self.vectorizer = TfidfVectorizer(max_features=200, stop_words="english", ngram_range=(1, 2))
         else:
             self.vectorizer = None
 
     async def plan_multihop_retrieval(
-        self,
-        query: str,
-        retrieval_fn,
-        sub_claims: Optional[List[str]] = None
+        self, query: str, retrieval_fn, sub_claims: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """
         Execute multi-hop planning with data-driven gating.
-        
+
         Args:
             query: Original user query
             retrieval_fn: Function that takes query and returns ranked documents
             sub_claims: Optional list of sub-claims to track coverage
-            
+
         Returns:
             Dict with final answer, evidence, metrics, and planning trace
         """
         # Initialize planning state
         state = PlanningState(
             original_query=query,
-            token_budget_used=len(query.split()) * 1.3  # Rough token estimate
+            token_budget_used=len(query.split()) * 1.3,  # Rough token estimate
         )
 
         # Decompose initial query into sub-questions
@@ -139,42 +133,40 @@ class MultiHopPlanner:
             continue_decision = self._should_continue_multihop(state, metrics)
 
             hop_result = {
-                'hop': state.current_hop,
-                'sub_questions': len([sq for sq in state.sub_questions if sq.hop_level == state.current_hop]),
-                'evidence_retrieved': len(hop_evidence),
-                'metrics': metrics,
-                'continue_decision': continue_decision,
-                'latency_ms': (time.time() - hop_start) * 1000
+                "hop": state.current_hop,
+                "sub_questions": len([sq for sq in state.sub_questions if sq.hop_level == state.current_hop]),
+                "evidence_retrieved": len(hop_evidence),
+                "metrics": metrics,
+                "continue_decision": continue_decision,
+                "latency_ms": (time.time() - hop_start) * 1000,
             }
             hop_results.append(hop_result)
 
             # Update state
             state.current_hop += 1
-            state.should_continue = continue_decision['should_continue']
-            state.stop_reason = continue_decision['reason']
+            state.should_continue = continue_decision["should_continue"]
+            state.stop_reason = continue_decision["reason"]
 
             # Generate follow-up sub-questions if continuing
             if state.should_continue and state.current_hop <= self.max_hops:
-                followup_subqs = self._generate_followup_questions(
-                    state, hop_evidence, metrics
-                )
+                followup_subqs = self._generate_followup_questions(state, hop_evidence, metrics)
                 state.sub_questions.extend(followup_subqs)
 
         # Synthesize final answer
         final_answer = self._synthesize_multihop_answer(state)
 
         return {
-            'answer': final_answer['text'],
-            'confidence': final_answer['confidence'],
-            'evidence': self._collect_all_evidence(state),
-            'planning_trace': {
-                'hops_executed': state.current_hop - 1,
-                'stop_reason': state.stop_reason,
-                'hop_results': hop_results,
-                'final_metrics': self._compute_gating_metrics(state, sub_claims)
+            "answer": final_answer["text"],
+            "confidence": final_answer["confidence"],
+            "evidence": self._collect_all_evidence(state),
+            "planning_trace": {
+                "hops_executed": state.current_hop - 1,
+                "stop_reason": state.stop_reason,
+                "hop_results": hop_results,
+                "final_metrics": self._compute_gating_metrics(state, sub_claims),
             },
-            'sub_questions': [sq.text for sq in state.sub_questions],
-            'token_budget_used': state.token_budget_used
+            "sub_questions": [sq.text for sq in state.sub_questions],
+            "token_budget_used": state.token_budget_used,
         }
 
     def _decompose_query(self, query: str, sub_claims: Optional[List[str]] = None) -> List[SubQuestion]:
@@ -182,24 +174,20 @@ class MultiHopPlanner:
         subquestions = []
 
         # Simple decomposition based on conjunctions and question complexity
-        if ' and ' in query.lower() or ' or ' in query.lower():
+        if " and " in query.lower() or " or " in query.lower():
             # Split on conjunctions
-            parts = re.split(r'\s+(and|or)\s+', query.lower(), flags=re.IGNORECASE)
+            parts = re.split(r"\s+(and|or)\s+", query.lower(), flags=re.IGNORECASE)
             for i, part in enumerate(parts):
-                if part.lower() not in ['and', 'or']:
+                if part.lower() not in ["and", "or"]:
                     subq = SubQuestion(
                         text=part.strip(),
                         hop_level=1,
-                        parent_claim=sub_claims[i] if sub_claims and i < len(sub_claims) else None
+                        parent_claim=sub_claims[i] if sub_claims and i < len(sub_claims) else None,
                     )
                     subquestions.append(subq)
         else:
             # Single question
-            subq = SubQuestion(
-                text=query,
-                hop_level=1,
-                parent_claim=sub_claims[0] if sub_claims else None
-            )
+            subq = SubQuestion(text=query, hop_level=1, parent_claim=sub_claims[0] if sub_claims else None)
             subquestions.append(subq)
 
         return subquestions
@@ -209,8 +197,7 @@ class MultiHopPlanner:
         hop_evidence = []
 
         current_hop_questions = [
-            sq for sq in state.sub_questions
-            if sq.hop_level == state.current_hop and not sq.resolved
+            sq for sq in state.sub_questions if sq.hop_level == state.current_hop and not sq.resolved
         ]
 
         for subq in current_hop_questions:
@@ -219,14 +206,11 @@ class MultiHopPlanner:
                 retrieved = await retrieval_fn(subq.text)
 
                 # Filter by minimum evidence score
-                high_score_spans = [
-                    span for span in retrieved
-                    if span.get('score', 0.0) >= self.min_evidence_score
-                ]
+                high_score_spans = [span for span in retrieved if span.get("score", 0.0) >= self.min_evidence_score]
 
                 # Update sub-question with evidence
                 subq.retrieved_spans = high_score_spans
-                subq.evidence_score = max([s.get('score', 0.0) for s in high_score_spans], default=0.0)
+                subq.evidence_score = max([s.get("score", 0.0) for s in high_score_spans], default=0.0)
 
                 # Mark as resolved if we have good evidence
                 if high_score_spans:
@@ -235,11 +219,11 @@ class MultiHopPlanner:
                         state.resolved_claims.add(subq.parent_claim)
 
                 hop_evidence.extend(high_score_spans)
-                state.evidence_scores.extend([s.get('score', 0.0) for s in high_score_spans])
+                state.evidence_scores.extend([s.get("score", 0.0) for s in high_score_spans])
 
                 # Update token budget
                 for span in high_score_spans:
-                    tokens = len(span.get('text', '').split()) * 1.3
+                    tokens = len(span.get("text", "").split()) * 1.3
                     state.token_budget_used += tokens
 
             except Exception as e:
@@ -248,17 +232,13 @@ class MultiHopPlanner:
 
         return hop_evidence
 
-    def _compute_gating_metrics(
-        self,
-        state: PlanningState,
-        sub_claims: Optional[List[str]] = None
-    ) -> CoverageMetrics:
+    def _compute_gating_metrics(self, state: PlanningState, sub_claims: Optional[List[str]] = None) -> CoverageMetrics:
         """Compute coverage, concentration, and novelty metrics for gating."""
 
         # Coverage: fraction of sub-claims with ≥1 high-score window
         total_claims = len(sub_claims) if sub_claims else len(state.sub_questions)
-        supported_claims = len(state.resolved_claims) if sub_claims else sum(
-            1 for sq in state.sub_questions if sq.resolved
+        supported_claims = (
+            len(state.resolved_claims) if sub_claims else sum(1 for sq in state.sub_questions if sq.resolved)
         )
         coverage = supported_claims / total_claims if total_claims > 0 else 1.0
 
@@ -282,7 +262,7 @@ class MultiHopPlanner:
             total_claims=total_claims,
             supported_claims=supported_claims,
             evidence_dispersion=1.0 - concentration,
-            duplicate_similarity=1.0 - novelty
+            duplicate_similarity=1.0 - novelty,
         )
 
     def _compute_novelty_score(self, state: PlanningState) -> float:
@@ -292,14 +272,8 @@ class MultiHopPlanner:
             return 1.0  # First hop is always novel
 
         # Get current and previous hop questions
-        current_questions = [
-            sq.text for sq in state.sub_questions
-            if sq.hop_level == state.current_hop
-        ]
-        previous_questions = [
-            sq.text for sq in state.sub_questions
-            if sq.hop_level < state.current_hop
-        ]
+        current_questions = [sq.text for sq in state.sub_questions if sq.hop_level == state.current_hop]
+        previous_questions = [sq.text for sq in state.sub_questions if sq.hop_level < state.current_hop]
 
         if not current_questions or not previous_questions:
             return 1.0
@@ -313,8 +287,8 @@ class MultiHopPlanner:
             all_questions = previous_questions + current_questions
             tfidf_matrix = self.vectorizer.fit_transform(all_questions)
 
-            prev_vectors = tfidf_matrix[:len(previous_questions)]
-            curr_vectors = tfidf_matrix[len(previous_questions):]
+            prev_vectors = tfidf_matrix[: len(previous_questions)]
+            curr_vectors = tfidf_matrix[len(previous_questions) :]
 
             # Compute max similarity between any current and previous question
             similarities = cosine_similarity(curr_vectors, prev_vectors)
@@ -346,11 +320,7 @@ class MultiHopPlanner:
 
         return max(0.0, 1.0 - max_overlap)
 
-    def _should_continue_multihop(
-        self,
-        state: PlanningState,
-        metrics: CoverageMetrics
-    ) -> Dict[str, Any]:
+    def _should_continue_multihop(self, state: PlanningState, metrics: CoverageMetrics) -> Dict[str, Any]:
         """Data-driven gating decision for whether to continue multi-hop."""
 
         reasons = []
@@ -381,21 +351,18 @@ class MultiHopPlanner:
             reasons = [f"Override: Very low coverage ({metrics.coverage:.3f}), continue searching"]
 
         return {
-            'should_continue': should_continue,
-            'reason': '; '.join(reasons) if reasons else 'No stopping criteria met',
-            'gating_scores': {
-                'coverage': metrics.coverage,
-                'concentration': metrics.concentration,
-                'novelty': metrics.novelty,
-                'token_budget': metrics.token_budget_remaining
-            }
+            "should_continue": should_continue,
+            "reason": "; ".join(reasons) if reasons else "No stopping criteria met",
+            "gating_scores": {
+                "coverage": metrics.coverage,
+                "concentration": metrics.concentration,
+                "novelty": metrics.novelty,
+                "token_budget": metrics.token_budget_remaining,
+            },
         }
 
     def _generate_followup_questions(
-        self,
-        state: PlanningState,
-        hop_evidence: List[Dict[str, Any]],
-        metrics: CoverageMetrics
+        self, state: PlanningState, hop_evidence: List[Dict[str, Any]], metrics: CoverageMetrics
     ) -> List[SubQuestion]:
         """Generate follow-up sub-questions based on unresolved spans."""
 
@@ -414,9 +381,7 @@ class MultiHopPlanner:
                 followup_text = f"What specific information about {subq.text.lower().replace('?', '')}?"
 
                 followup = SubQuestion(
-                    text=followup_text,
-                    parent_claim=subq.parent_claim,
-                    hop_level=state.current_hop + 1
+                    text=followup_text, parent_claim=subq.parent_claim, hop_level=state.current_hop + 1
                 )
                 followup_questions.append(followup)
 
@@ -432,13 +397,13 @@ class MultiHopPlanner:
                 all_evidence.extend(subq.retrieved_spans)
 
         # Sort by evidence score
-        all_evidence.sort(key=lambda x: x.get('score', 0.0), reverse=True)
+        all_evidence.sort(key=lambda x: x.get("score", 0.0), reverse=True)
 
         # Take top evidence spans
         top_evidence = all_evidence[:5]
 
         # Simple synthesis (would use LLM in production)
-        evidence_texts = [span.get('text', '') for span in top_evidence]
+        evidence_texts = [span.get("text", "") for span in top_evidence]
         answer_text = f"Based on multi-hop analysis: {' '.join(evidence_texts[:200])}..."
 
         # Compute confidence based on coverage and concentration
@@ -446,10 +411,10 @@ class MultiHopPlanner:
         confidence = (final_metrics.coverage + final_metrics.concentration) / 2.0
 
         return {
-            'text': answer_text,
-            'confidence': confidence,
-            'evidence_count': len(top_evidence),
-            'hops_used': state.current_hop - 1
+            "text": answer_text,
+            "confidence": confidence,
+            "evidence_count": len(top_evidence),
+            "hops_used": state.current_hop - 1,
         }
 
     def _collect_all_evidence(self, state: PlanningState) -> List[Dict[str, Any]]:
@@ -460,14 +425,14 @@ class MultiHopPlanner:
             for span in subq.retrieved_spans:
                 evidence_item = {
                     **span,
-                    'sub_question': subq.text,
-                    'hop_level': subq.hop_level,
-                    'resolved': subq.resolved
+                    "sub_question": subq.text,
+                    "hop_level": subq.hop_level,
+                    "resolved": subq.resolved,
                 }
                 all_evidence.append(evidence_item)
 
         # Sort by score descending
-        all_evidence.sort(key=lambda x: x.get('score', 0.0), reverse=True)
+        all_evidence.sort(key=lambda x: x.get("score", 0.0), reverse=True)
         return all_evidence
 
 
@@ -478,10 +443,10 @@ def create_multihop_planner(config: Optional[Dict[str, Any]] = None) -> MultiHop
         return MultiHopPlanner()
 
     return MultiHopPlanner(
-        max_hops=config.get('max_hops', 2),
-        token_budget=config.get('token_budget', 512),
-        coverage_threshold=config.get('coverage_threshold', 0.7),
-        concentration_threshold=config.get('concentration_threshold', 0.6),
-        novelty_threshold=config.get('novelty_threshold', 0.8),
-        min_evidence_score=config.get('min_evidence_score', 0.3)
+        max_hops=config.get("max_hops", 2),
+        token_budget=config.get("token_budget", 512),
+        coverage_threshold=config.get("coverage_threshold", 0.7),
+        concentration_threshold=config.get("concentration_threshold", 0.6),
+        novelty_threshold=config.get("novelty_threshold", 0.8),
+        min_evidence_score=config.get("min_evidence_score", 0.3),
     )

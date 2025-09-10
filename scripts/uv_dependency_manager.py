@@ -146,16 +146,16 @@ class UVDependencyManager:
                 "Consider using optional dependency groups to reduce installation time."
             )
         elif total < 50:
-            recommendations.append(f"✅ Lean dependency tree ({total} packages). " "Good dependency management.")
+            recommendations.append(f"✅ Lean dependency tree ({total} packages). Good dependency management.")
 
         # Check for outdated packages
         outdated_count = len(analysis["outdated_packages"])
         if outdated_count > 10:
             recommendations.append(
-                f"⚠️ Many outdated packages ({outdated_count}). " "Consider running 'uv lock' to update dependencies."
+                f"⚠️ Many outdated packages ({outdated_count}). Consider running 'uv lock' to update dependencies."
             )
         elif outdated_count > 0:
-            recommendations.append(f"📝 Some outdated packages ({outdated_count}). " "Review and update as needed.")
+            recommendations.append(f"📝 Some outdated packages ({outdated_count}). Review and update as needed.")
 
         # Check ML dependencies
         ml_packages = len(analysis["dependency_groups"].get("ml", []))
@@ -241,7 +241,7 @@ class UVDependencyManager:
             issue_count = len(bandit_results["results"])
             if issue_count > 0:
                 recommendations.append(
-                    f"⚠️ Bandit found {issue_count} security issues. " "Review and fix high/medium severity issues."
+                    f"⚠️ Bandit found {issue_count} security issues. Review and fix high/medium severity issues."
                 )
             else:
                 recommendations.append("✅ No security issues found by Bandit.")
@@ -250,8 +250,7 @@ class UVDependencyManager:
         safety_results = security_results.get("safety_results", {})
         if isinstance(safety_results, list) and safety_results:
             recommendations.append(
-                f"⚠️ Safety found {len(safety_results)} vulnerable packages. "
-                "Update vulnerable dependencies immediately."
+                f"⚠️ Safety found {len(safety_results)} vulnerable packages. Update vulnerable dependencies immediately."
             )
         elif isinstance(safety_results, dict) and not safety_results.get("error"):
             recommendations.append("✅ No vulnerable packages found by Safety.")
@@ -261,7 +260,7 @@ class UVDependencyManager:
         if "vulnerabilities" in pip_audit_results:
             vuln_count = len(pip_audit_results["vulnerabilities"])
             if vuln_count > 0:
-                recommendations.append(f"⚠️ Pip-audit found {vuln_count} vulnerabilities. " "Update affected packages.")
+                recommendations.append(f"⚠️ Pip-audit found {vuln_count} vulnerabilities. Update affected packages.")
             else:
                 recommendations.append("✅ No vulnerabilities found by Pip-audit.")
 
@@ -372,15 +371,14 @@ class UVDependencyManager:
         consolidation_count = len(optimization["consolidation_opportunities"])
         if consolidation_count > 0:
             recommendations.append(
-                f"🔄 {consolidation_count} consolidation opportunities found. "
-                "Review and consolidate similar packages."
+                f"🔄 {consolidation_count} consolidation opportunities found. Review and consolidate similar packages."
             )
 
         # Performance improvements
         performance_count = len(optimization["performance_improvements"])
         if performance_count > 0:
             recommendations.append(
-                f"⚡ {performance_count} performance improvements available. " "Implement suggested optimizations."
+                f"⚡ {performance_count} performance improvements available. Implement suggested optimizations."
             )
 
         return recommendations
@@ -389,13 +387,13 @@ class UVDependencyManager:
         """Generate a comprehensive dependency report."""
         report = f"""# 📊 UV Dependency Management Report
 
-**Generated**: {analysis['timestamp']}
+**Generated**: {analysis["timestamp"]}
 
 ## 📦 Dependency Analysis
 
-- **Total Dependencies**: {analysis['total_dependencies']}
-- **Outdated Packages**: {len(analysis['outdated_packages'])}
-- **Duplicate Dependencies**: {len(analysis['duplicate_dependencies'])}
+- **Total Dependencies**: {analysis["total_dependencies"]}
+- **Outdated Packages**: {len(analysis["outdated_packages"])}
+- **Duplicate Dependencies**: {len(analysis["duplicate_dependencies"])}
 
 ### Dependency Groups
 """

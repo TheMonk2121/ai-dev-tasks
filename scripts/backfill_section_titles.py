@@ -9,6 +9,7 @@ Steps:
 
 Requires POSTGRES_DSN in env.
 """
+
 import os
 import re
 import sys

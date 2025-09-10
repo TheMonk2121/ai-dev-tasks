@@ -16,7 +16,13 @@ def canonical_case_id(query: str, source_path: str, variant: str | None = None) 
     The ID is a slug of the query plus a short hash of the tuple
     (query.strip(), normalized_source_path, variant or '').
     """
+    # Normalize query: trim and collapse internal whitespace to ensure stability
+    q = (query or "").strip()
+    q = " ".join(q.split())  # collapse all whitespace runs to single spaces
+
+    # Normalize path consistently
     norm_path = os.path.normpath(source_path or "")
-    base = f"{(query or '').strip()}|{norm_path}|{variant or ''}"
+
+    base = f"{q}|{norm_path}|{variant or ''}"
     short = hashlib.sha1(base.encode("utf-8")).hexdigest()[:8]
     return f"{_slugify(query or '')}-{short}"

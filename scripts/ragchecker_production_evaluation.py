@@ -197,9 +197,10 @@ class ProductionRAGASEvaluator:
             return self.nli_enhanced_filter.filter_with_nli_gate(answer, contexts)
 
         # Check if cross-encoder is enabled and available (support both env names)
-        ce_enabled = os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1" or os.getenv(
-            "RAGCHECKER_CE_RERANK_ENABLE", "0"
-        ) == "1"
+        ce_enabled = (
+            os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1"
+            or os.getenv("RAGCHECKER_CE_RERANK_ENABLE", "0") == "1"
+        )
         if ce_enabled and self.enhanced_filter and self.cross_encoder:
             print("🔄 Using cross-encoder enhanced filtering")
             return self.enhanced_filter.filter_with_cross_encoder(answer, contexts, query)
@@ -207,7 +208,7 @@ class ProductionRAGASEvaluator:
         # Fall back to risk-aware filtering with robust sentence splitting
         main_answer = answer.split("Sources:", 1)[0].strip()
         bullet_or_num = r"(?m)^\s*(?:[-*•–—]|\d+[\.)])\s+"
-        sents = re.split(fr"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
+        sents = re.split(rf"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
         sents = [s for s in sents if s and s.strip()]
         if len(sents) <= 1:
             sents = re.split(r"\s*[;—–•·]\s*", main_answer)
@@ -283,7 +284,9 @@ class ProductionRAGASEvaluator:
                 try:
                     input_data = base_evaluator.prepare_official_input_data()
                     results = base_evaluator.create_fallback_evaluation(
-                        input_data["results"] if isinstance(input_data, dict) and "results" in input_data else input_data
+                        input_data["results"]
+                        if isinstance(input_data, dict) and "results" in input_data
+                        else input_data
                     )
                     results["evaluation_type"] = "production_fallback_simplified"
                 except Exception as e:

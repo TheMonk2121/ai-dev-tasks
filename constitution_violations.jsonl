@@ -81,3 +81,17 @@
 {"timestamp": "2025-08-24T14:27:18.919524", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-08-24T14:29:37.445046", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-09-03T17:48:48.603562", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T15:44:31.828396", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T15:54:13.525189", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:29:24.931239", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:30:47.697465", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:32:54.841477", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:34:01.537619", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:34:44.322765", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:37:23.814274", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:39:23.239095", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:39:50.118384", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:40:05.594317", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:40:50.521714", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:42:06.194004", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-09-10T16:43:22.565646", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}

@@ -81,7 +81,11 @@ class GameDayDrillsSystem:
             print("    📍 Step 1: Running rollback command...")
             rollback_cmd = "python3 scripts/on_call_ready_system.py --action rollback --reason 'drill'"
             result = subprocess.run(
-                rollback_cmd, shell=True, capture_output=True, text=True, timeout=300  # 5 minute timeout
+                rollback_cmd,
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=300,  # 5 minute timeout
             )
 
             drill_result["steps"]["rollback_command"] = {

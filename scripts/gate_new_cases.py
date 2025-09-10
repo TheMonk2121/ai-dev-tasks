@@ -3,6 +3,7 @@
 Gate new reader Q/A before adding to retrieval/reader sets.
 Decision = ACCEPT | QUARANTINE with reasons.
 """
+
 import json
 import os
 import sys

@@ -137,7 +137,7 @@ class BedrockBatchProcessor:
         print(f"✅ Batch completed in {total_time:.2f}s")
         print(
             f"📊 Success rate: {self.successful_requests}/{self.total_requests} "
-            f"({(self.successful_requests/self.total_requests*100):.1f}%)"
+            f"({(self.successful_requests / self.total_requests * 100):.1f}%)"
         )
 
         return responses
@@ -210,7 +210,7 @@ class BedrockBatchProcessor:
             prompt = self._build_ragchecker_prompt(case)
 
             request = BatchRequest(
-                request_id=f"ragchecker_{i+1}",
+                request_id=f"ragchecker_{i + 1}",
                 prompt=prompt,
                 max_tokens=1000,
                 temperature=0.1,

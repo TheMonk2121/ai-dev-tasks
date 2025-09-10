@@ -140,7 +140,7 @@ class RAGCheckerEpisodicIntegration:
         }
 
         for i, query in enumerate(queries):
-            print(f"🔍 Processing query {i+1}/{len(queries)}: {query[:50]}...")
+            print(f"🔍 Processing query {i + 1}/{len(queries)}: {query[:50]}...")
 
             # Get episodic context
             enhanced_query_data = self.enhance_query_with_episodic_context(query, agent)

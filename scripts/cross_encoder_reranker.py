@@ -28,9 +28,7 @@ class CrossEncoderReranker:
 
         # Configuration from environment (support both legacy and CE_* names)
         top_n_str = os.getenv("RAGCHECKER_CROSS_ENCODER_TOP_N") or os.getenv("RAGCHECKER_CE_RERANK_TOPN") or "50"
-        weight_str = (
-            os.getenv("RAGCHECKER_CROSS_ENCODER_WEIGHT") or os.getenv("RAGCHECKER_CE_WEIGHT") or "0.15"
-        )
+        weight_str = os.getenv("RAGCHECKER_CROSS_ENCODER_WEIGHT") or os.getenv("RAGCHECKER_CE_WEIGHT") or "0.15"
         self.top_n = int(top_n_str)
         self.weight = float(weight_str)
         self.cache_enabled = os.getenv("RAGCHECKER_CROSS_ENCODER_CACHE", "1") == "1"

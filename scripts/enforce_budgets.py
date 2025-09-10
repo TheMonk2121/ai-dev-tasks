@@ -4,6 +4,7 @@ Enforce test suite budgets to prevent bloat.
 
 Fails if PR exceeds test count limits or adds too many new tests.
 """
+
 import pathlib
 import subprocess
 import sys

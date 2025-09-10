@@ -22,56 +22,36 @@ class NightlySmokeEvaluator:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
+
         # Smoke test categories
         self.smoke_tests = {
             "ops_health": {
                 "description": "Operations and health checks",
                 "tests": [
                     "database_connectivity",
-                    "model_availability", 
+                    "model_availability",
                     "configuration_validation",
-                    "resource_availability"
-                ]
+                    "resource_availability",
+                ],
             },
             "db_workflows": {
                 "description": "Database workflow validation",
-                "tests": [
-                    "document_ingestion",
-                    "chunk_processing",
-                    "vector_indexing",
-                    "metadata_consistency"
-                ]
+                "tests": ["document_ingestion", "chunk_processing", "vector_indexing", "metadata_consistency"],
             },
             "rag_qa": {
                 "description": "RAG system quality assurance",
-                "tests": [
-                    "retrieval_quality",
-                    "fusion_performance",
-                    "reranking_accuracy",
-                    "context_assembly"
-                ]
+                "tests": ["retrieval_quality", "fusion_performance", "reranking_accuracy", "context_assembly"],
             },
             "meta_ops": {
                 "description": "Meta-operations validation",
-                "tests": [
-                    "evaluation_pipeline",
-                    "metrics_collection",
-                    "logging_systems",
-                    "audit_trails"
-                ]
+                "tests": ["evaluation_pipeline", "metrics_collection", "logging_systems", "audit_trails"],
             },
             "negatives": {
                 "description": "Negative test cases",
-                "tests": [
-                    "error_handling",
-                    "edge_cases",
-                    "failure_recovery",
-                    "graceful_degradation"
-                ]
-            }
+                "tests": ["error_handling", "edge_cases", "failure_recovery", "graceful_degradation"],
+            },
         }
-        
+
         self.results = {}
         self.deltas = {}
         self.regressions = []
@@ -79,19 +59,19 @@ class NightlySmokeEvaluator:
     def run_nightly_smoke_evaluation(self) -> Dict[str, Any]:
         """Run comprehensive nightly smoke evaluation."""
         print("🌙 Starting Nightly Smoke Evaluation")
-        print("="*50)
-        
+        print("=" * 50)
+
         start_time = time.time()
-        
+
         # Run all smoke test categories
         for category, config in self.smoke_tests.items():
             print(f"\n🧪 Running {category} tests: {config['description']}")
             self.results[category] = self._run_category_tests(category, config["tests"])
-        
+
         # Calculate deltas and regressions
         self._calculate_deltas()
         self._identify_regressions()
-        
+
         # Generate comprehensive report
         evaluation_summary = {
             "timestamp": self.timestamp,
@@ -102,38 +82,32 @@ class NightlySmokeEvaluator:
             "deltas": self.deltas,
             "regressions": self.regressions,
             "overall_status": self._determine_overall_status(),
-            "recommendations": self._generate_recommendations()
+            "recommendations": self._generate_recommendations(),
         }
-        
+
         # Save results
         self._save_results(evaluation_summary)
-        
+
         # Print summary
         self._print_evaluation_summary(evaluation_summary)
-        
+
         return evaluation_summary
 
     def _run_category_tests(self, category: str, tests: List[str]) -> Dict[str, Any]:
         """Run tests for a specific category."""
-        category_results = {
-            "category": category,
-            "tests": {},
-            "status": "pass",
-            "errors": [],
-            "warnings": []
-        }
-        
+        category_results = {"category": category, "tests": {}, "status": "pass", "errors": [], "warnings": []}
+
         for test in tests:
             print(f"  🔍 Running {test}...")
             test_result = self._run_single_test(category, test)
             category_results["tests"][test] = test_result
-            
+
             if test_result["status"] == "fail":
                 category_results["status"] = "fail"
                 category_results["errors"].append(f"{test}: {test_result['error']}")
             elif test_result["status"] == "warn":
                 category_results["warnings"].append(f"{test}: {test_result['warning']}")
-        
+
         return category_results
 
     def _run_single_test(self, category: str, test: str) -> Dict[str, Any]:
@@ -224,6 +198,7 @@ class NightlySmokeEvaluator:
         """Test database connectivity."""
         try:
             from dspy_rag_system.src.utils.database_resilience import get_database_manager
+
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
                 with conn.cursor() as cur:
@@ -241,30 +216,29 @@ class NightlySmokeEvaluator:
         try:
             # Test embedding model
             from sentence_transformers import SentenceTransformer
+
             embedding_model = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
             model = SentenceTransformer(embedding_model)
             test_embedding = model.encode(["test"])
-            
+
             # Test rerank model if enabled
             if os.getenv("RERANK_ENABLE", "1") == "1":
                 from sentence_transformers import CrossEncoder
+
                 rerank_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
                 reranker = CrossEncoder(rerank_model)
                 test_score = reranker.predict([("query", "document")])
-            
+
             return {"status": "pass", "message": "All models available and responsive"}
         except Exception as e:
             return {"status": "fail", "error": f"Model availability failed: {e}"}
 
     def _test_configuration_validation(self) -> Dict[str, Any]:
         """Test configuration validation."""
-        required_configs = [
-            "DSPY_RAG_PATH", "EVAL_DRIVER", "RETR_TOPK_VEC", 
-            "RETR_TOPK_BM25", "RERANK_ENABLE"
-        ]
-        
+        required_configs = ["DSPY_RAG_PATH", "EVAL_DRIVER", "RETR_TOPK_VEC", "RETR_TOPK_BM25", "RERANK_ENABLE"]
+
         missing_configs = [config for config in required_configs if not os.getenv(config)]
-        
+
         if missing_configs:
             return {"status": "fail", "error": f"Missing configurations: {missing_configs}"}
         else:
@@ -274,9 +248,10 @@ class NightlySmokeEvaluator:
         """Test resource availability."""
         try:
             import shutil
+
             total, used, free = shutil.disk_usage("/")
             free_gb = free // (1024**3)
-            
+
             if free_gb < 2:
                 return {"status": "warn", "warning": f"Low disk space: {free_gb}GB available"}
             else:
@@ -288,12 +263,13 @@ class NightlySmokeEvaluator:
         """Test document ingestion workflow."""
         try:
             from dspy_rag_system.src.utils.database_resilience import get_database_manager
+
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute("SELECT COUNT(*) FROM documents")
                     doc_count = cur.fetchone()[0]
-                    
+
                     if doc_count > 0:
                         return {"status": "pass", "message": f"Document ingestion working: {doc_count} documents"}
                     else:
@@ -305,12 +281,13 @@ class NightlySmokeEvaluator:
         """Test chunk processing workflow."""
         try:
             from dspy_rag_system.src.utils.database_resilience import get_database_manager
+
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute("SELECT COUNT(*) FROM document_chunks")
                     chunk_count = cur.fetchone()[0]
-                    
+
                     if chunk_count > 0:
                         return {"status": "pass", "message": f"Chunk processing working: {chunk_count} chunks"}
                     else:
@@ -322,12 +299,13 @@ class NightlySmokeEvaluator:
         """Test vector indexing."""
         try:
             from dspy_rag_system.src.utils.database_resilience import get_database_manager
+
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute("SELECT COUNT(*) FROM document_chunks WHERE embedding IS NOT NULL")
                     indexed_count = cur.fetchone()[0]
-                    
+
                     if indexed_count > 0:
                         return {"status": "pass", "message": f"Vector indexing working: {indexed_count} indexed chunks"}
                     else:
@@ -339,6 +317,7 @@ class NightlySmokeEvaluator:
         """Test metadata consistency."""
         try:
             from dspy_rag_system.src.utils.database_resilience import get_database_manager
+
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
                 with conn.cursor() as cur:
@@ -349,7 +328,7 @@ class NightlySmokeEvaluator:
                         WHERE d.id IS NULL
                     """)
                     orphaned_chunks = cur.fetchone()[0]
-                    
+
                     if orphaned_chunks == 0:
                         return {"status": "pass", "message": "Metadata consistency verified"}
                     else:
@@ -468,7 +447,7 @@ class NightlySmokeEvaluator:
             "new_failures": 0,
             "resolved_failures": 0,
             "performance_changes": {},
-            "configuration_changes": []
+            "configuration_changes": [],
         }
 
     def _identify_regressions(self):
@@ -479,7 +458,7 @@ class NightlySmokeEvaluator:
                 "category": "example",
                 "test": "example_test",
                 "severity": "high",
-                "description": "Example regression description"
+                "description": "Example regression description",
             }
         ]
 
@@ -493,16 +472,16 @@ class NightlySmokeEvaluator:
     def _generate_recommendations(self) -> List[str]:
         """Generate recommendations based on results."""
         recommendations = []
-        
+
         for category, result in self.results.items():
             if result["status"] == "fail":
                 recommendations.append(f"Fix {category} failures: {', '.join(result['errors'])}")
             elif result["warnings"]:
                 recommendations.append(f"Address {category} warnings: {', '.join(result['warnings'])}")
-        
+
         if not recommendations:
             recommendations.append("All smoke tests passed - system healthy")
-        
+
         return recommendations
 
     def _save_results(self, evaluation_summary: Dict[str, Any]):
@@ -510,69 +489,69 @@ class NightlySmokeEvaluator:
         output_file = self.output_dir / f"nightly_smoke_{self.timestamp}.json"
         with open(output_file, "w") as f:
             json.dump(evaluation_summary, f, indent=2)
-        
+
         print(f"📝 Results saved to: {output_file}")
 
     def _print_evaluation_summary(self, evaluation_summary: Dict[str, Any]):
         """Print comprehensive evaluation summary."""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("🌙 NIGHTLY SMOKE EVALUATION SUMMARY")
-        print("="*60)
-        
+        print("=" * 60)
+
         # Overall status
         status = evaluation_summary["overall_status"]
         status_emoji = "✅" if status == "pass" else "❌"
         print(f"{status_emoji} Overall Status: {status.upper()}")
         print(f"⏱️ Duration: {evaluation_summary['duration_seconds']:.1f} seconds")
-        
+
         # Category results
-        print(f"\n📊 Category Results:")
+        print("\n📊 Category Results:")
         for category, result in evaluation_summary["categories"].items():
             status_emoji = "✅" if result["status"] == "pass" else "❌"
             print(f"  {status_emoji} {category}: {result['status'].upper()}")
-            
+
             if result["errors"]:
                 for error in result["errors"]:
                     print(f"    🔴 {error}")
-            
+
             if result["warnings"]:
                 for warning in result["warnings"]:
                     print(f"    ⚠️ {warning}")
-        
+
         # Deltas
         if evaluation_summary["deltas"]:
-            print(f"\n📈 Deltas:")
+            print("\n📈 Deltas:")
             deltas = evaluation_summary["deltas"]
             print(f"  • New failures: {deltas['new_failures']}")
             print(f"  • Resolved failures: {deltas['resolved_failures']}")
-        
+
         # Regressions
         if evaluation_summary["regressions"]:
-            print(f"\n📉 Top Regressions:")
+            print("\n📉 Top Regressions:")
             for regression in evaluation_summary["regressions"]:
                 severity_emoji = "🔴" if regression["severity"] == "high" else "🟡"
                 print(f"  {severity_emoji} {regression['category']}.{regression['test']}: {regression['description']}")
-        
+
         # Recommendations
-        print(f"\n💡 Recommendations:")
+        print("\n💡 Recommendations:")
         for recommendation in evaluation_summary["recommendations"]:
             print(f"  • {recommendation}")
-        
-        print("="*60)
+
+        print("=" * 60)
 
 
 def main():
     """Main entry point for nightly smoke evaluation."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Nightly smoke evaluation system")
     parser.add_argument("--output-dir", default="metrics/nightly_smoke", help="Output directory for results")
     parser.add_argument("--category", help="Run specific category only")
-    
+
     args = parser.parse_args()
-    
+
     evaluator = NightlySmokeEvaluator(args.output_dir)
-    
+
     if args.category:
         # Run specific category only
         if args.category in evaluator.smoke_tests:

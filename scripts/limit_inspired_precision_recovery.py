@@ -250,7 +250,6 @@ def apply_limit_inspired_config() -> LimitInspiredPrecisionRecovery:
 
 
 if __name__ == "__main__":
-
     config = apply_limit_inspired_config()
 
     print("\n🎯 LIMIT-Inspired Precision Recovery Configuration Applied")

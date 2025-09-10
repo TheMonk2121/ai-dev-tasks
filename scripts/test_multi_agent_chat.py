@@ -11,7 +11,7 @@ from pathlib import Path
 import websockets
 
 
-async def test_agent_connection(agent_name: str, chat_url: str = "ws://localhost:8004"):
+async def demo_agent_connection(agent_name: str, chat_url: str = "ws://localhost:8004"):
     """Test connecting an agent to the chat system"""
     try:
         websocket_url = f"{chat_url}/ws/{agent_name}"
@@ -45,7 +45,7 @@ async def test_agent_connection(agent_name: str, chat_url: str = "ws://localhost
         return False
 
 
-async def test_chat_system():
+async def demo_chat_system():
     """Test the multi-agent chat system"""
     print("🧪 Testing Multi-Agent Chat System")
     print("=" * 50)
@@ -57,7 +57,7 @@ async def test_chat_system():
 
     for agent in test_agents:
         print(f"\n🔌 Testing {agent}...")
-        success = await test_agent_connection(agent)
+        success = await demo_agent_connection(agent)
         results[agent] = success
         await asyncio.sleep(1)  # Small delay between tests
 
@@ -78,7 +78,7 @@ async def test_chat_system():
         print("⚠️  Some tests failed. Check the chat bridge server.")
 
 
-async def test_http_endpoints():
+async def demo_http_endpoints():
     """Test HTTP endpoints"""
     import aiohttp
 
@@ -130,8 +130,8 @@ def main():
         return
 
     # Run tests
-    asyncio.run(test_chat_system())
-    asyncio.run(test_http_endpoints())
+    asyncio.run(demo_chat_system())
+    asyncio.run(demo_http_endpoints())
 
 
 if __name__ == "__main__":

@@ -24,15 +24,19 @@ from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+
 class ErrorSeverity(Enum):
     """Error severity levels."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
 
+
 class ErrorCategory(Enum):
     """Error categories for classification."""
+
     NETWORK = "network"
     FILE_SYSTEM = "file_system"
     DATABASE = "database"
@@ -42,9 +46,11 @@ class ErrorCategory(Enum):
     EXECUTION = "execution"
     UNKNOWN = "unknown"
 
+
 @dataclass
 class ErrorInfo:
     """Error information data structure."""
+
     error_type: str
     error_message: str
     severity: ErrorSeverity
@@ -56,15 +62,18 @@ class ErrorInfo:
     recovery_action: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
+
 @dataclass
 class RecoveryAction:
     """Recovery action data structure."""
+
     name: str
     description: str
     action_type: str
     parameters: Dict[str, Any]
     success_criteria: str
     estimated_time: float
+
 
 class ErrorHandler:
     """Comprehensive error handling and recovery system."""
@@ -89,7 +98,7 @@ class ErrorHandler:
             "enable_recovery": True,
             "enable_metrics": True,
             "error_threshold": 10,
-            "timeout": 300
+            "timeout": 300,
         }
 
     def _init_recovery_actions(self) -> Dict[str, RecoveryAction]:
@@ -103,7 +112,7 @@ class ErrorHandler:
             action_type="retry",
             parameters={"max_retries": 3, "base_delay": 2.0},
             success_criteria="Network operation succeeds",
-            estimated_time=30.0
+            estimated_time=30.0,
         )
 
         # File system error recovery
@@ -113,7 +122,7 @@ class ErrorHandler:
             action_type="cleanup",
             parameters={"temp_patterns": ["*.tmp", "*.temp"]},
             success_criteria="File operation succeeds",
-            estimated_time=10.0
+            estimated_time=10.0,
         )
 
         # Database error recovery
@@ -123,7 +132,7 @@ class ErrorHandler:
             action_type="reconnect",
             parameters={"max_attempts": 3, "delay": 5.0},
             success_criteria="Database connection restored",
-            estimated_time=15.0
+            estimated_time=15.0,
         )
 
         # Permission error recovery
@@ -133,7 +142,7 @@ class ErrorHandler:
             action_type="permission",
             parameters={"chmod": "755", "chown": None},
             success_criteria="File permissions allow operation",
-            estimated_time=5.0
+            estimated_time=5.0,
         )
 
         # Timeout error recovery
@@ -143,7 +152,7 @@ class ErrorHandler:
             action_type="timeout",
             parameters={"multiplier": 2.0, "max_timeout": 600},
             success_criteria="Operation completes within extended timeout",
-            estimated_time=60.0
+            estimated_time=60.0,
         )
 
         return actions
@@ -158,7 +167,7 @@ class ErrorHandler:
             "base_delay": 2.0,
             "backoff_multiplier": 2.0,
             "max_delay": 60.0,
-            "jitter": True
+            "jitter": True,
         }
 
         # File system errors
@@ -167,7 +176,7 @@ class ErrorHandler:
             "base_delay": 1.0,
             "backoff_multiplier": 1.5,
             "max_delay": 30.0,
-            "jitter": False
+            "jitter": False,
         }
 
         # Database errors
@@ -176,7 +185,7 @@ class ErrorHandler:
             "base_delay": 5.0,
             "backoff_multiplier": 2.0,
             "max_delay": 120.0,
-            "jitter": True
+            "jitter": True,
         }
 
         # Permission errors
@@ -185,7 +194,7 @@ class ErrorHandler:
             "base_delay": 1.0,
             "backoff_multiplier": 1.0,
             "max_delay": 10.0,
-            "jitter": False
+            "jitter": False,
         }
 
         # Timeout errors
@@ -194,7 +203,7 @@ class ErrorHandler:
             "base_delay": 5.0,
             "backoff_multiplier": 2.0,
             "max_delay": 60.0,
-            "jitter": True
+            "jitter": True,
         }
 
         # Validation errors
@@ -203,7 +212,7 @@ class ErrorHandler:
             "base_delay": 0.0,
             "backoff_multiplier": 1.0,
             "max_delay": 0.0,
-            "jitter": False
+            "jitter": False,
         }
 
         # Execution errors
@@ -212,7 +221,7 @@ class ErrorHandler:
             "base_delay": 2.0,
             "backoff_multiplier": 1.5,
             "max_delay": 30.0,
-            "jitter": True
+            "jitter": True,
         }
 
         return strategies
@@ -223,38 +232,36 @@ class ErrorHandler:
         error_message = str(error).lower()
 
         # Network errors
-        if any(network_error in error_type.lower() for network_error in
-               ['connection', 'timeout', 'socket', 'http', 'urllib']):
+        if any(
+            network_error in error_type.lower()
+            for network_error in ["connection", "timeout", "socket", "http", "urllib"]
+        ):
             return ErrorCategory.NETWORK
 
         # File system errors
-        if any(fs_error in error_type.lower() for fs_error in
-               ['file', 'io', 'oserror', 'permission']):
+        if any(fs_error in error_type.lower() for fs_error in ["file", "io", "oserror", "permission"]):
             return ErrorCategory.FILE_SYSTEM
 
         # Database errors
-        if any(db_error in error_type.lower() for db_error in
-               ['sqlite', 'database', 'db', 'connection']):
+        if any(db_error in error_type.lower() for db_error in ["sqlite", "database", "db", "connection"]):
             return ErrorCategory.DATABASE
 
         # Permission errors
-        if any(perm_error in error_message for perm_error in
-               ['permission', 'access', 'denied', 'forbidden']):
+        if any(perm_error in error_message for perm_error in ["permission", "access", "denied", "forbidden"]):
             return ErrorCategory.PERMISSION
 
         # Timeout errors
-        if any(timeout_error in error_message for timeout_error in
-               ['timeout', 'timed out', 'deadline']):
+        if any(timeout_error in error_message for timeout_error in ["timeout", "timed out", "deadline"]):
             return ErrorCategory.TIMEOUT
 
         # Validation errors
-        if any(validation_error in error_type.lower() for validation_error in
-               ['value', 'type', 'validation', 'argument']):
+        if any(
+            validation_error in error_type.lower() for validation_error in ["value", "type", "validation", "argument"]
+        ):
             return ErrorCategory.VALIDATION
 
         # Execution errors
-        if any(exec_error in error_type.lower() for exec_error in
-               ['runtime', 'execution', 'subprocess']):
+        if any(exec_error in error_type.lower() for exec_error in ["runtime", "execution", "subprocess"]):
             return ErrorCategory.EXECUTION
 
         return ErrorCategory.UNKNOWN
@@ -265,25 +272,21 @@ class ErrorHandler:
         error_message = str(error).lower()
 
         # Critical errors
-        if any(critical_error in error_message for critical_error in
-               ['fatal', 'critical', 'system', 'kernel']):
+        if any(critical_error in error_message for critical_error in ["fatal", "critical", "system", "kernel"]):
             return ErrorSeverity.CRITICAL
 
         # High severity errors
-        if any(high_error in error_type.lower() for high_error in
-               ['database', 'connection', 'file']):
+        if any(high_error in error_type.lower() for high_error in ["database", "connection", "file"]):
             return ErrorSeverity.HIGH
 
         # Medium severity errors
-        if any(medium_error in error_type.lower() for medium_error in
-               ['timeout', 'validation', 'permission']):
+        if any(medium_error in error_type.lower() for medium_error in ["timeout", "validation", "permission"]):
             return ErrorSeverity.MEDIUM
 
         # Low severity errors (default)
         return ErrorSeverity.LOW
 
-    def handle_error(self, error: Exception, context: str,
-                    retry_count: int = 0) -> ErrorInfo:
+    def handle_error(self, error: Exception, context: str, retry_count: int = 0) -> ErrorInfo:
         """Handle an error and return error information."""
         error_info = ErrorInfo(
             error_type=type(error).__name__,
@@ -296,12 +299,8 @@ class ErrorHandler:
             max_retries=self.config["max_retries"],
             metadata={
                 "traceback": traceback.format_exc(),
-                "sys_info": {
-                    "platform": sys.platform,
-                    "python_version": sys.version,
-                    "cwd": os.getcwd()
-                }
-            }
+                "sys_info": {"platform": sys.platform, "python_version": sys.version, "cwd": os.getcwd()},
+            },
         )
 
         # Log the error
@@ -358,8 +357,7 @@ class ErrorHandler:
 
         return None
 
-    def _execute_recovery_action(self, action: RecoveryAction,
-                               error_info: ErrorInfo) -> bool:
+    def _execute_recovery_action(self, action: RecoveryAction, error_info: ErrorInfo) -> bool:
         """Execute a recovery action."""
         try:
             if action.action_type == "retry":
@@ -380,8 +378,7 @@ class ErrorHandler:
             logger.error(f"Failed to execute recovery action '{action.name}': {e}")
             return False
 
-    def _execute_retry_action(self, action: RecoveryAction,
-                            error_info: ErrorInfo) -> bool:
+    def _execute_retry_action(self, action: RecoveryAction, error_info: ErrorInfo) -> bool:
         """Execute a retry recovery action."""
         max_retries = action.parameters.get("max_retries", 3)
         base_delay = action.parameters.get("base_delay", 1.0)
@@ -390,14 +387,13 @@ class ErrorHandler:
             logger.warning(f"Max retries ({max_retries}) exceeded for {error_info.context}")
             return False
 
-        delay = base_delay * (2 ** error_info.retry_count)
+        delay = base_delay * (2**error_info.retry_count)
         logger.info(f"Retrying {error_info.context} in {delay:.1f} seconds (attempt {error_info.retry_count + 1})")
 
         time.sleep(delay)
         return True
 
-    def _execute_cleanup_action(self, action: RecoveryAction,
-                              error_info: ErrorInfo) -> bool:
+    def _execute_cleanup_action(self, action: RecoveryAction, error_info: ErrorInfo) -> bool:
         """Execute a cleanup recovery action."""
         temp_patterns = action.parameters.get("temp_patterns", ["*.tmp", "*.temp"])
 
@@ -418,8 +414,7 @@ class ErrorHandler:
             logger.error(f"Cleanup action failed: {e}")
             return False
 
-    def _execute_reconnect_action(self, action: RecoveryAction,
-                                error_info: ErrorInfo) -> bool:
+    def _execute_reconnect_action(self, action: RecoveryAction, error_info: ErrorInfo) -> bool:
         """Execute a reconnect recovery action."""
         max_attempts = action.parameters.get("max_attempts", 3)
         delay = action.parameters.get("delay", 5.0)
@@ -439,8 +434,7 @@ class ErrorHandler:
 
         return False
 
-    def _execute_permission_action(self, action: RecoveryAction,
-                                 error_info: ErrorInfo) -> bool:
+    def _execute_permission_action(self, action: RecoveryAction, error_info: ErrorInfo) -> bool:
         """Execute a permission fix recovery action."""
         action.parameters.get("chmod", "755")
 
@@ -459,8 +453,7 @@ class ErrorHandler:
             logger.error(f"Permission fix action failed: {e}")
             return False
 
-    def _execute_timeout_action(self, action: RecoveryAction,
-                              error_info: ErrorInfo) -> bool:
+    def _execute_timeout_action(self, action: RecoveryAction, error_info: ErrorInfo) -> bool:
         """Execute a timeout extension recovery action."""
         multiplier = action.parameters.get("multiplier", 2.0)
         max_timeout = action.parameters.get("max_timeout", 600)
@@ -499,13 +492,14 @@ class ErrorHandler:
         jitter = strategy.get("jitter", True)
 
         # Calculate delay with exponential backoff
-        delay = base_delay * (backoff_multiplier ** error_info.retry_count)
+        delay = base_delay * (backoff_multiplier**error_info.retry_count)
         delay = min(delay, max_delay)
 
         # Add jitter if enabled
         if jitter:
             import random
-            delay *= (0.5 + random.random() * 0.5)
+
+            delay *= 0.5 + random.random() * 0.5
 
         return delay
 
@@ -521,7 +515,7 @@ class ErrorHandler:
             "by_context": {},
             "recovery_success_rate": 0.0,
             "avg_retry_count": 0.0,
-            "recent_errors": []
+            "recent_errors": [],
         }
 
         # Count by severity
@@ -541,8 +535,7 @@ class ErrorHandler:
 
         # Calculate recovery success rate
         recovery_attempts = sum(1 for e in self.error_history if e.recovery_action)
-        recovery_successes = sum(1 for e in self.error_history
-                               if e.recovery_action and e.retry_count < e.max_retries)
+        recovery_successes = sum(1 for e in self.error_history if e.recovery_action and e.retry_count < e.max_retries)
         if recovery_attempts > 0:
             stats["recovery_success_rate"] = recovery_successes / recovery_attempts
 
@@ -558,7 +551,7 @@ class ErrorHandler:
                 "context": e.context,
                 "error_type": e.error_type,
                 "severity": e.severity.value,
-                "category": e.category.value
+                "category": e.category.value,
             }
             for e in recent_errors
         ]
@@ -578,13 +571,10 @@ class ErrorHandler:
                 "statistics": self.get_error_statistics(),
                 "error_history": [asdict(error) for error in self.error_history],
                 "recovery_actions": {name: asdict(action) for name, action in self.recovery_actions.items()},
-                "retry_strategies": {
-                    category.value: strategy
-                    for category, strategy in self.retry_strategies.items()
-                }
+                "retry_strategies": {category.value: strategy for category, strategy in self.retry_strategies.items()},
             }
 
-            with open(output_file, 'w', encoding='utf-8') as f:
+            with open(output_file, "w", encoding="utf-8") as f:
                 json.dump(report, f, indent=2, ensure_ascii=False)
 
             logger.info(f"Error report exported to {output_file}")
@@ -594,11 +584,18 @@ class ErrorHandler:
             logger.error(f"Failed to export error report: {e}")
             return False
 
-def retry_with_backoff(func: Callable, max_retries: int = 3,
-                      base_delay: float = 1.0, max_delay: float = 60.0,
-                      backoff_multiplier: float = 2.0, jitter: bool = True,
-                      error_handler: Optional[ErrorHandler] = None) -> Callable:
+
+def retry_with_backoff(
+    func: Callable,
+    max_retries: int = 3,
+    base_delay: float = 1.0,
+    max_delay: float = 60.0,
+    backoff_multiplier: float = 2.0,
+    jitter: bool = True,
+    error_handler: Optional[ErrorHandler] = None,
+) -> Callable:
     """Decorator for retrying functions with exponential backoff."""
+
     def wrapper(*args, **kwargs):
         last_exception = None
 
@@ -615,17 +612,19 @@ def retry_with_backoff(func: Callable, max_retries: int = 3,
                     raise e
 
                 # Calculate delay
-                delay = base_delay * (backoff_multiplier ** attempt)
+                delay = base_delay * (backoff_multiplier**attempt)
                 delay = min(delay, max_delay)
 
                 # Add jitter if enabled
                 if jitter:
                     import random
-                    delay *= (0.5 + random.random() * 0.5)
+
+                    delay *= 0.5 + random.random() * 0.5
 
                 # Log retry attempt
-                logger.warning(f"Attempt {attempt + 1} failed for {func.__name__}, "
-                             f"retrying in {delay:.1f} seconds: {e}")
+                logger.warning(
+                    f"Attempt {attempt + 1} failed for {func.__name__}, retrying in {delay:.1f} seconds: {e}"
+                )
 
                 time.sleep(delay)
 
@@ -634,15 +633,19 @@ def retry_with_backoff(func: Callable, max_retries: int = 3,
 
     return wrapper
 
+
 def main():
     """Test the error handler."""
     import argparse
 
     parser = argparse.ArgumentParser(description="Error Handler Test")
-    parser.add_argument('--test-error', choices=['network', 'file', 'database', 'permission', 'timeout'],
-                       help='Test specific error type')
-    parser.add_argument('--export-report', help='Export error report to file')
-    parser.add_argument('--show-stats', action='store_true', help='Show error statistics')
+    parser.add_argument(
+        "--test-error",
+        choices=["network", "file", "database", "permission", "timeout"],
+        help="Test specific error type",
+    )
+    parser.add_argument("--export-report", help="Export error report to file")
+    parser.add_argument("--show-stats", action="store_true", help="Show error statistics")
 
     args = parser.parse_args()
 
@@ -650,35 +653,35 @@ def main():
 
     if args.test_error:
         # Test specific error type
-        if args.test_error == 'network':
+        if args.test_error == "network":
             try:
                 raise ConnectionError("Connection refused")
             except Exception as e:
                 error_info = error_handler.handle_error(e, "test_network_operation")
                 print(f"Handled network error: {error_info}")
 
-        elif args.test_error == 'file':
+        elif args.test_error == "file":
             try:
                 raise FileNotFoundError("No such file or directory")
             except Exception as e:
                 error_info = error_handler.handle_error(e, "test_file_operation")
                 print(f"Handled file error: {error_info}")
 
-        elif args.test_error == 'database':
+        elif args.test_error == "database":
             try:
                 raise sqlite3.OperationalError("database is locked")
             except Exception as e:
                 error_info = error_handler.handle_error(e, "test_database_operation")
                 print(f"Handled database error: {error_info}")
 
-        elif args.test_error == 'permission':
+        elif args.test_error == "permission":
             try:
                 raise PermissionError("Permission denied")
             except Exception as e:
                 error_info = error_handler.handle_error(e, "test_permission_operation")
                 print(f"Handled permission error: {error_info}")
 
-        elif args.test_error == 'timeout':
+        elif args.test_error == "timeout":
             try:
                 raise TimeoutError("Operation timed out")
             except Exception as e:
@@ -696,6 +699,7 @@ def main():
             print(f"Error report exported to {args.export_report}")
         else:
             print("Failed to export error report")
+
 
 if __name__ == "__main__":
     main()

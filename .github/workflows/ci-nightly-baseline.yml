@@ -26,20 +26,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with: 
-          python-version: "3.12"
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
       
-      - name: Install dependencies
+      - name: Install dependencies (uv)
         run: |
-          pip install -r requirements.txt
+          uv sync --all-extras --dev
       
       - name: Configure AWS credentials (OIDC)
+        if: ${{ vars.AWS_ROLE_TO_ASSUME != '' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
+
+      - name: Export service port (PGPORT)
+        run: echo "PGPORT=${{ job.services.postgres.ports[5432] }}" >> $GITHUB_ENV
 
       - name: Validate profile configuration
         run: |
@@ -47,16 +51,19 @@ jobs:
           echo "✅ Real profile configuration validated"
       
       - name: Setup environment
-        env:
-          PGPORT: ${{ job.services.postgres.ports[5432] }}
-          OPENAI: ${{ secrets.OPENAI_API_KEY }}
         run: |
           # Compute DSN from service container published port
           echo "POSTGRES_DSN=postgresql://postgres:postgres@localhost:${PGPORT}/ai_agency" >> $GITHUB_ENV
-          # Other app secrets
-          echo "OPENAI_API_KEY=${OPENAI}" >> $GITHUB_ENV
           # Region used by Bedrock client libraries
           echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
+
+      - name: Export OpenAI key (if available)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -n "${OPENAI_API_KEY}" ]; then
+            echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> $GITHUB_ENV
+          fi
 
       - name: Install PostgreSQL client
         run: |
@@ -64,37 +71,22 @@ jobs:
           sudo apt-get install -y postgresql-client
 
       - name: Initialize database schema
-        env:
-          PGPORT: ${{ job.services.postgres.ports[5432] }}
         run: |
-          export PGPASSWORD=postgres
-          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" || true
-          # 'vector' extension may not be available in default image; ignore errors
-          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;" || true
-          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 <<'SQL'
-          CREATE TABLE IF NOT EXISTS episodic_logs (
-            id SERIAL PRIMARY KEY,
-            user_id TEXT,
-            model_type TEXT,
-            prompt TEXT,
-            response TEXT,
-            tokens_used INTEGER,
-            cache_hit BOOLEAN DEFAULT FALSE,
-            similarity_score DOUBLE PRECISION DEFAULT 0.0,
-            last_verified TIMESTAMPTZ,
-            created_at TIMESTAMPTZ DEFAULT NOW(),
-            updated_at TIMESTAMPTZ DEFAULT NOW()
-          );
-          SQL
+          PGHOST=localhost PGPORT=$PGPORT PGUSER=postgres PGPASSWORD=postgres PGDATABASE=ai_agency \
+            bash scripts/ci_init_db.sh
 
       - name: Eval (real, higher concurrency)
+        env:
+          MAX_WORKERS: "12"
         run: |
-          ./scripts/eval_real.sh --concurrency 12
+          make pipeline
       
       - name: Upload baseline results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: baseline-results
-          path: metrics/runs/
+          path: |
+            metrics/baseline_evaluations/**
+            metrics/history/**
           retention-days: 30

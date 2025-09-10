@@ -2,6 +2,7 @@
 """
 Manually index the retriever files that the documentation_indexer can't handle.
 """
+
 import hashlib
 import os
 import sys

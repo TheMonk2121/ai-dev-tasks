@@ -372,8 +372,8 @@ if __name__ == "__main__":
         """Create a summary report of the dispersal process"""
         return f"""# 📊 Research Dispersal Summary
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Status**: {'✅ Success' if results['success'] else '❌ Errors occurred'}
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+**Status**: {"✅ Success" if results["success"] else "❌ Errors occurred"}
 
 ## 📚 **Research Storage Strategy**
 - **Complete Research**: `docs/research/papers/documentation-context-management-papers.md`
@@ -381,22 +381,22 @@ if __name__ == "__main__":
 - **Cross-References**: Maintained between whole research and extracted sections
 
 ## 📋 **Updated 500_ Research Files**
-{chr(10).join(f"- {file}" for file in results['updated_500_files'])}
+{chr(10).join(f"- {file}" for file in results["updated_500_files"])}
 
 ## 🔧 **Updated Anchor Files**
-{chr(10).join(f"- {file}" for file in results['updated_anchor_files'])}
+{chr(10).join(f"- {file}" for file in results["updated_anchor_files"])}
 
 ## 📝 **Created Files**
-{chr(10).join(f"- {file}" for file in results['created_files'])}
+{chr(10).join(f"- {file}" for file in results["created_files"])}
 
 ## 🎯 **New Backlog Items**
-{chr(10).join(f"- {item['id']}: {item['title']} ({item['points']} points)" for item in results['backlog_items'])}
+{chr(10).join(f"- {item['id']}: {item['title']} ({item['points']} points)" for item in results["backlog_items"])}
 
 ## 📊 **Research Sections Processed**
 {chr(10).join(f"- {section}: {len(content)} characters" for section, content in sections.items())}
 
 ## ❌ **Errors**
-{chr(10).join(f"- {error}" for error in results['errors'])}
+{chr(10).join(f"- {error}" for error in results["errors"])}
 
 ## 🚀 **Next Steps**
 1. Review updated files for accuracy

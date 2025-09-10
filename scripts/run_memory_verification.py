@@ -42,6 +42,7 @@ def run_healthcheck() -> bool:
 
 def generate_session_id(user_id: str) -> str:
     import hashlib
+
     ts = str(time.time())
     return hashlib.sha256(f"{user_id}:{ts}".encode()).hexdigest()[:16]
 
@@ -69,9 +70,15 @@ def seed_demo(conversation_storage, session_id: str, user_id: str) -> bool:
 
         # Seed a couple of messages
         msgs = [
-            ConversationMessage(session_id=session_id, role="human", content="Please use Python 3.12", message_type="message"),
-            ConversationMessage(session_id=session_id, role="ai", content="Sure, I will use Python 3.12.", message_type="message"),
-            ConversationMessage(session_id=session_id, role="human", content="Enable detailed explanations", message_type="message"),
+            ConversationMessage(
+                session_id=session_id, role="human", content="Please use Python 3.12", message_type="message"
+            ),
+            ConversationMessage(
+                session_id=session_id, role="ai", content="Sure, I will use Python 3.12.", message_type="message"
+            ),
+            ConversationMessage(
+                session_id=session_id, role="human", content="Enable detailed explanations", message_type="message"
+            ),
         ]
         for m in msgs:
             if not conversation_storage.store_message(m):
@@ -176,4 +183,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

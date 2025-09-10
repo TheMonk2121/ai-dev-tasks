@@ -55,9 +55,10 @@ jobs:
           uv pip install pytest psutil
 
       - name: Configure AWS credentials (OIDC)
+        if: ${{ vars.AWS_ROLE_TO_ASSUME != '' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
 
       - name: Setup environment
@@ -67,28 +68,28 @@ jobs:
       - name: Run RAGChecker Tests
         run: |
           echo "🧪 Running RAGChecker Test Suite..."
-          uv run python -m pytest tests/test_ragchecker_evaluation.py -v --tb=short
+          make test-ragchecker
 
       - name: Run RAGChecker Performance Tests
         run: |
           echo "⚡ Running RAGChecker Performance Tests..."
-          uv run python -m pytest tests/test_ragchecker_performance.py -v --tb=short
+          make test-ragchecker-performance
 
       - name: Run Official RAGChecker Evaluation
         run: |
           echo "🔍 Running Official RAGChecker Evaluation..."
-          uv run python3 scripts/run_eval.py
+          make eval-ragchecker
 
       - name: Validate ABP and Baseline Freshness (soft warnings)
         run: |
           echo "🧾 Validating ABP & Baseline Manifest freshness..."
-          uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --ci-mode || true
+          make gate-ragchecker || true
 
       - name: Release Branch ABP Validation (Hard Gate)
         if: startsWith(github.ref, 'refs/heads/release/')
         run: |
           echo "🔒 Release branch hard gate: ABP & Baseline freshness must pass"
-          uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --strict
+          make gate-ragchecker-strict
 
       - name: Validate Evaluation Results
         run: |

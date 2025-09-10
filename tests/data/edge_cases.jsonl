@@ -1,0 +1,6 @@
+{"raw": "\u00df", "expected": "ss", "test": "test_normalize_case_invariant", "timestamp": "2025-09-10T17:19:42.521007", "type": "unicode_case_issue"}
+{"raw": "ı", "expected": "i", "test": "test_normalize_case_invariant", "timestamp": "2025-09-10T17:20:00.000000", "type": "unicode_case_issue"}
+{"raw": "ß", "expected": "ss", "test": "test_normalize_case_invariant", "timestamp": "2025-09-10T17:22:00.000000", "type": "unicode_case_issue"}
+{"raw": "İ", "expected": "i", "test": "test_normalize_case_invariant", "timestamp": "2025-09-10T17:22:00.000000", "type": "unicode_case_issue"}
+{"raw": "{\"key_with_quotes\": \"value with 'quotes'\"}", "expected": "sql_safe", "test": "test_sql_placeholder_parity", "timestamp": "2025-09-10T17:22:00.000000", "type": "sql_injection"}
+{"raw": "[1.0, 5.960464477539063e-08]", "expected": "precision_handled", "test": "test_normalize_preserves_direction", "timestamp": "2025-09-10T17:22:00.000000", "type": "vector_precision"}

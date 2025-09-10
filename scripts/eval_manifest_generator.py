@@ -34,31 +34,22 @@ class EvalManifestGenerator:
             "timestamp": self.timestamp,
             "run_type": "production_evaluation",
             "version": "1.0",
-            
             # Model Configuration
             "models": self._capture_model_config(),
-            
             # System Configuration
             "system_config": self._capture_system_config(config_overrides),
-            
             # Data Configuration
             "data_config": self._capture_data_config(),
-            
             # Evaluation Configuration
             "eval_config": self._capture_eval_config(config_overrides),
-            
             # Infrastructure Configuration
             "infrastructure": self._capture_infrastructure_config(),
-            
             # Quality Gates
             "quality_gates": self._capture_quality_gates(),
-            
             # Deterministic Settings
             "deterministic_settings": self._capture_deterministic_settings(),
-            
             # Health Checks
             "health_checks": self._capture_health_checks(),
-            
             # Audit Trail
             "audit_trail": self._capture_audit_trail(),
         }
@@ -76,7 +67,7 @@ class EvalManifestGenerator:
             "model_versions": {
                 "embedding": self._get_model_version(os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")),
                 "rerank": self._get_model_version(os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")),
-            }
+            },
         }
 
     def _capture_system_config(self, overrides: Dict[str, Any]) -> Dict[str, Any]:
@@ -90,7 +81,6 @@ class EvalManifestGenerator:
                 "fusion_method": os.getenv("FUSION_METHOD", "RRF"),
                 "rrf_k": int(os.getenv("RRF_K", "60")),
             },
-            
             # Reranking Configuration
             "reranking": {
                 "enabled": os.getenv("RERANK_ENABLE", "1") == "1",
@@ -98,31 +88,29 @@ class EvalManifestGenerator:
                 "pool_size": int(os.getenv("RERANK_POOL", "60")),
                 "topn": int(os.getenv("RERANK_TOPN", "18")),
             },
-            
             # Context Configuration
             "context": {
                 "max_docs": int(os.getenv("CONTEXT_DOCS_MAX", "12")),
                 "max_chars": int(os.getenv("CONTEXT_MAX_CHARS", "1600")),
                 "tail_keep": int(os.getenv("FUSE_TAIL_KEEP", "0")),
             },
-            
             # Performance Configuration
             "performance": {
                 "workers": int(os.getenv("PIPELINE_WORKERS", "2")),
                 "max_in_flight": int(os.getenv("BEDROCK_MAX_IN_FLIGHT", "1")),
                 "max_rps": float(os.getenv("BEDROCK_MAX_RPS", "0.12")),
                 "timeout_sec": int(os.getenv("BEDROCK_CALL_TIMEOUT_SEC", "35")),
-            }
+            },
         }
-        
+
         # Apply overrides
         config.update(overrides)
-        
+
         # Generate configuration hash
         config_str = json.dumps(config, sort_keys=True)
         config_hash = hashlib.sha256(config_str.encode()).hexdigest()[:16]
         config["config_hash"] = config_hash
-        
+
         return config
 
     def _capture_data_config(self) -> Dict[str, Any]:
@@ -229,6 +217,7 @@ class EvalManifestGenerator:
         """Get current git commit hash."""
         try:
             import subprocess
+
             result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
             return result.stdout.strip()[:8] if result.returncode == 0 else "unknown"
         except Exception:
@@ -238,6 +227,7 @@ class EvalManifestGenerator:
         """Get current git branch."""
         try:
             import subprocess
+
             result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
             return result.stdout.strip() if result.returncode == 0 else "unknown"
         except Exception:
@@ -246,9 +236,15 @@ class EvalManifestGenerator:
     def _get_relevant_env_vars(self) -> Dict[str, str]:
         """Get relevant environment variables for audit trail."""
         relevant_vars = [
-            "DSPY_RAG_PATH", "EVAL_DRIVER", "RAGCHECKER_USE_REAL_RAG",
-            "RETR_TOPK_VEC", "RETR_TOPK_BM25", "RERANK_ENABLE",
-            "BEDROCK_MAX_RPS", "AWS_REGION", "ENVIRONMENT"
+            "DSPY_RAG_PATH",
+            "EVAL_DRIVER",
+            "RAGCHECKER_USE_REAL_RAG",
+            "RETR_TOPK_VEC",
+            "RETR_TOPK_BM25",
+            "RERANK_ENABLE",
+            "BEDROCK_MAX_RPS",
+            "AWS_REGION",
+            "ENVIRONMENT",
         ]
         return {var: os.getenv(var, "not_set") for var in relevant_vars}
 
@@ -291,14 +287,14 @@ class EvalManifestGenerator:
 def main():
     """Main entry point for manifest generation."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Generate evaluation manifest")
     parser.add_argument("--output-dir", default="metrics/manifests", help="Output directory for manifests")
     parser.add_argument("--format", choices=["yaml", "json"], default="yaml", help="Output format")
     parser.add_argument("--config-file", help="Configuration file to load overrides from")
-    
+
     args = parser.parse_args()
-    
+
     # Load configuration overrides if provided
     config_overrides = {}
     if args.config_file:
@@ -307,19 +303,19 @@ def main():
                 config_overrides = yaml.safe_load(f)
             elif args.config_file.endswith(".json"):
                 config_overrides = json.load(f)
-    
+
     # Generate manifest
     generator = EvalManifestGenerator(args.output_dir)
     manifest = generator.generate_manifest(config_overrides)
-    
+
     # Save manifest
     filepath = generator.save_manifest(manifest, args.format)
-    
+
     print(f"✅ Evaluation manifest generated: {filepath}")
     print(f"📋 Manifest ID: {manifest['manifest_id']}")
     print(f"🔧 Config Hash: {manifest['system_config']['config_hash']}")
     print(f"📊 Data Checksum: {manifest['data_config']['data_checksum']}")
-    
+
     return filepath
 
 

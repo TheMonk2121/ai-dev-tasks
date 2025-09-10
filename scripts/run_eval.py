@@ -2,6 +2,7 @@
 """
 Run official RAGChecker evaluation in Bedrock-only, cache-off mode, and export artifacts
 """
+
 from __future__ import annotations
 
 import argparse

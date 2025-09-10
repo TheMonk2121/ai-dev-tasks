@@ -396,12 +396,12 @@ class CoderRoleValidator:
 ================================================================================
 🧠 CODER ROLE IMPLEMENTATION VALIDATION REPORT
 ================================================================================
-Timestamp: {self.results['timestamp']}
-Overall Status: {self.results['overall_status']}
+Timestamp: {self.results["timestamp"]}
+Overall Status: {self.results["overall_status"]}
 
 📊 SUMMARY
-- Integration Tests: {self.results['tests_passed']}/{self.results['total_tests']} passed
-- Validation Categories: {len(self.results['validation_results'])} checked
+- Integration Tests: {self.results["tests_passed"]}/{self.results["total_tests"]} passed
+- Validation Categories: {len(self.results["validation_results"])} checked
 
 🔍 DETAILED RESULTS
 """
@@ -473,6 +473,7 @@ Overall Status: {self.results['overall_status']}
 
         return report
 
+
 def main():
     """Main entry point for the validation script."""
     project_root = Path(__file__).parent.parent
@@ -487,6 +488,7 @@ def main():
         sys.exit(0)
     else:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

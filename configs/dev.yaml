@@ -1,0 +1,43 @@
+# Development environment configuration
+# Inherits from base.yaml and overrides for development
+
+env: dev
+
+# Development-specific database settings
+db:
+  dsn: "postgresql://danieljacobs@localhost:5432/ai_agency_dev?sslmode=disable"
+  pool_size: 4 # Smaller pool for dev
+
+# Development RAG settings
+rag:
+  fast_path_enabled: true
+  prefetch_workers: 2 # Fewer workers for dev
+  chunk_size: 300 # Smaller chunks for faster dev iteration
+
+# Development evaluation settings
+eval:
+  use_bedrock: false # Use local models in dev
+  bypass_cli: true
+  lessons_mode: "advisory"
+
+# Development observability
+obs:
+  log_level: "DEBUG"
+  metrics_enabled: false # Disable metrics in dev
+
+# Development performance settings
+performance:
+  max_memory_usage_mb: 4096 # Lower memory limit for dev
+  max_concurrent_requests: 5
+
+# Development memory settings
+memory:
+  ltst_ttl_hours: 12 # Shorter TTL for dev
+  ltst_max_items: 1000 # Fewer items for dev
+
+# Development settings
+dev:
+  debug_mode: true
+  hot_reload: true
+  enable_debugging: true
+  watch_files: true

@@ -6,7 +6,7 @@ Lessons Extractor - Post-run analysis to extract lessons from evaluation artifac
 import json
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from lessons_model import Lesson, append_lesson, new_lesson
 
@@ -89,7 +89,7 @@ def analyze_case_patterns(cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     patterns = []
 
     # Count different failure types with safe defaults
-    no_answer_found = sum(1 for case in cases if case.get("answer_found", True) == False)
+    no_answer_found = sum(1 for case in cases if not case.get("answer_found", True))
     low_evidence_score = sum(1 for case in cases if case.get("evidence_score", 1.0) < 0.3)
     high_retrieval_count = sum(1 for case in cases if case.get("retrieval_count", 0) > 20)
 
@@ -118,9 +118,7 @@ def analyze_case_patterns(cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return patterns
 
 
-def generate_lessons(
-    failure_modes: List[Dict[str, Any]], run_metrics: Dict[str, Any]
-) -> List[Lesson]:
+def generate_lessons(failure_modes: List[Dict[str, Any]], run_metrics: Dict[str, Any]) -> List[Lesson]:
     """Generate lessons from failure mode analysis"""
     lessons = []
 
@@ -220,7 +218,7 @@ def generate_lessons(
 
 
 def main(
-    run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "metrics/lessons/lessons.jsonl"
+    run_json_path: str, progress_jsonl_path: Optional[str] = None, out_jsonl: str = "metrics/lessons/lessons.jsonl"
 ) -> None:
     """Main extraction function"""
     print(f"🧠 Extracting lessons from {run_json_path}")
@@ -349,13 +347,14 @@ def main(
         # Simple pattern cards: summarize recent lessons' changes → predicted effects
         cards: List[Dict[str, Any]] = []
         for l in lessons:
-            changes = ", ".join(
-                f"{c.get('key')} {c.get('op')} {c.get('value')}" for c in l.recommendation.get("changes", [])
-            ) or "(no param changes)"
+            changes = (
+                ", ".join(f"{c.get('key')} {c.get('op')} {c.get('value')}" for c in l.recommendation.get("changes", []))
+                or "(no param changes)"
+            )
             effects = l.recommendation.get("predicted_effect", {}) or {}
-            scope = l.scope.level if hasattr(l.scope, "level") else (l.scope.get("level") if isinstance(l.scope, dict) else "")
+            scope = l.scope.get("level", "")
             summary = (
-                f"Pattern {l.finding.get('pattern','?')} → {changes}; predicted: {effects}; "
+                f"Pattern {l.finding.get('pattern', '?')} → {changes}; predicted: {effects}; "
                 f"scope={scope}; conf={l.confidence:.2f}"
             )
             cards.append({"lesson_id": l.id, "summary": summary})
