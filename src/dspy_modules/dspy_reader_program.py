@@ -19,95 +19,104 @@ from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 from src.rag import reranker_env as RENV
 
 
-def _apply_cross_encoder_rerank(query: str, rows: list[dict[str, Any]], input_topk: int, keep: int) -> tuple[list[dict[str, Any]], str]:
-    """Apply cross-encoder reranking if enabled and available.
-    
+def _apply_cross_encoder_rerank(
+    query: str, rows: list[dict[str, Any]], input_topk: int, keep: int
+) -> tuple[list[dict[str, Any]], str]:
+    """Apply cross-encoder reranking following best practices.
+
+    Best practices implemented:
+    - Two-stage retrieval: broad candidates → precise reranking
+    - Hybrid scoring: combine BM25 + neural scores
+    - Efficiency: apply only to top-k candidates
+    - Fallback strategy: cross-encoder → heuristic → original
+
     Returns:
         tuple: (reranked_rows, method_used)
     """
     if not RENV.RERANK_ENABLE:
         return rows, "disabled"
-    
-    # Try to use cross-encoder reranking
+
+    # Prepare candidates for reranking (only top input_topk)
+    candidates = rows[:input_topk]
+    if not candidates:
+        return rows, "no_candidates"
+
+    # Try cross-encoder reranking with sentence-transformers
     try:
-        from src.retrieval.cross_encoder_client import CrossEncoderClient
-        
-        # Initialize cross-encoder client
-        client = CrossEncoderClient(
-            model_name=RENV.RERANKER_MODEL,
-            device=RENV.TORCH_DEVICE,
-            max_timeout_ms=5000,  # 5 second timeout
-            micro_batch_size=RENV.RERANK_BATCH
-        )
-        
-        # Prepare candidates for reranking
-        candidates = []
-        for row in rows[:input_topk]:  # Only rerank top input_topk
+        from sentence_transformers import CrossEncoder
+
+        # Initialize cross-encoder model
+        model = CrossEncoder(RENV.RERANKER_MODEL)
+
+        # Prepare query-document pairs for reranking
+        pairs = []
+        for row in candidates:
             text = row.get("text_for_reader", row.get("embedding_text", ""))
-            candidates.append({
-                "chunk_id": row.get("chunk_id", ""),
-                "text": text
-            })
-        
-        if not candidates:
-            return rows, "no_candidates"
-        
-        # Apply cross-encoder reranking
-        scores = client.rerank(query, candidates, text_field="text")
-        
-        # Update scores and reorder
-        for i, (row, score) in enumerate(zip(rows[:input_topk], scores)):
-            row["rerank_score"] = score
-            row["final_score"] = score  # Use rerank score as final score
-        
-        # Sort by rerank score and keep top results
-        reranked = sorted(rows[:input_topk], key=lambda x: x.get("rerank_score", 0.0), reverse=True)[:keep]
-        
+            pairs.append([query, text])
+
+        # Get cross-encoder scores
+        cross_scores = model.predict(pairs)
+
+        # Hybrid scoring: combine original BM25/fused scores with cross-encoder scores
+        # Best practice: inject first-stage scores into reranker
+        for i, (row, cross_score) in enumerate(zip(candidates, cross_scores)):
+            original_score = row.get("score", 0.0)
+            # Weighted combination: 70% cross-encoder, 30% original score
+            hybrid_score = 0.7 * float(cross_score) + 0.3 * original_score
+            row["rerank_score"] = hybrid_score
+            row["cross_score"] = float(cross_score)
+            row["final_score"] = hybrid_score
+
+        # Sort by hybrid score and keep top results
+        reranked = sorted(candidates, key=lambda x: x.get("rerank_score", 0.0), reverse=True)[:keep]
+
         # Add remaining rows (beyond input_topk) with original scores
         remaining = rows[input_topk:]
         for row in remaining:
             row["rerank_score"] = 0.0
+            row["cross_score"] = 0.0
             row["final_score"] = row.get("score", 0.0)
-        
+
         final_rows = reranked + remaining
-        
-        return final_rows, "cross_encoder"
-        
+
+        return final_rows, "cross_encoder_hybrid"
+
     except Exception as e:
         # Fallback to heuristic reranking
         try:
             from src.retrieval.reranker import heuristic_rerank
-            
+
             # Prepare candidates for heuristic reranking
-            candidates = [(row.get("chunk_id", ""), row.get("score", 0.0)) for row in rows[:input_topk]]
-            documents = {row.get("chunk_id", ""): row.get("text_for_reader", row.get("embedding_text", "")) 
-                        for row in rows[:input_topk]}
-            
+            heuristic_candidates = [(row.get("chunk_id", ""), row.get("score", 0.0)) for row in candidates]
+            documents = {
+                row.get("chunk_id", ""): row.get("text_for_reader", row.get("embedding_text", "")) for row in candidates
+            }
+
             # Apply heuristic reranking
-            reranked_candidates = heuristic_rerank(query, candidates, documents, top_m=keep)
-            
+            reranked_candidates = heuristic_rerank(query, heuristic_candidates, documents, top_m=keep)
+
             # Create new rows with reranked order
             reranked_rows = []
             reranked_ids = {doc_id for doc_id, _ in reranked_candidates}
-            
+
             # Add reranked rows
             for doc_id, score in reranked_candidates:
-                for row in rows:
+                for row in candidates:
                     if row.get("chunk_id") == doc_id:
                         row["rerank_score"] = score
                         row["final_score"] = score
                         reranked_rows.append(row)
                         break
-            
+
             # Add remaining rows (beyond input_topk)
             for row in rows[input_topk:]:
                 if row.get("chunk_id") not in reranked_ids:
                     row["rerank_score"] = 0.0
                     row["final_score"] = row.get("score", 0.0)
                     reranked_rows.append(row)
-            
+
             return reranked_rows, "heuristic"
-            
+
         except Exception as e2:
             # If both fail, return original rows
             return rows, f"fallback_error: {str(e2)}"
@@ -197,15 +206,15 @@ class RAGAnswer(dspy.Module):
                 seen.add(key)
                 merged.append(r)
             rows = merged
-        
+
         # Apply cross-encoder reranking if enabled
         rerank_keep = RENV.RERANK_KEEP if RENV.RERANK_ENABLE else limits["shortlist"]
         rows, rerank_method = _apply_cross_encoder_rerank(question, rows, input_topk, rerank_keep)
-        
+
         # Log reranker method for debugging
         if RENV.RERANK_ENABLE:
             print(f"[reranker] method={rerank_method} input_topk={input_topk} keep={rerank_keep}")
-        
+
         # Apply MMR reranking only if cross-encoder reranking is disabled
         if not RENV.RERANK_ENABLE:
             rows = mmr_rerank(
