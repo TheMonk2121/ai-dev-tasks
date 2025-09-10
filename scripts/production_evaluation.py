@@ -18,7 +18,11 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(dspy_rag_path))
 
 # Import environment guard first
-import config.env_guard
+try:
+    import config.env_guard
+except ImportError:
+    # Fallback if config.env_guard is not available
+    print("⚠️ Warning: config.env_guard not available, skipping environment validation")
 
 
 def run_evaluation_pass(pass_name: str, config: dict[str, Any], output_file: str) -> dict[str, Any]:
