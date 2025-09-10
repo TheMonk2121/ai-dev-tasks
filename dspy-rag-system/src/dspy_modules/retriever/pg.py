@@ -5,7 +5,7 @@ Implements the surgical patch SQL query.
 """
 
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor

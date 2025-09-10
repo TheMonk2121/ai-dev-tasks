@@ -129,8 +129,9 @@ def eval_reader(cases, gold):
         if not g:
             missing += 1
             continue  # conservatively skip; handle after loop
-        lim = load_limits(case.tag)
-        qs = build_channel_queries(case.query, case.tag)
+        tag = case.tags[0] if case.tags else "general"
+        lim = load_limits(tag)
+        qs = build_channel_queries(case.query, tag)
 
         # Generate query vector if empty
         qvec = case.qvec
@@ -139,17 +140,17 @@ def eval_reader(cases, gold):
 
         # shortlist → MMR → cap → topk
         rows = run_fused_query(
-            qs["short"], qs["title"], qs["bm25"], qvec, tag=case.tag, k=lim["shortlist"], return_components=True
+            qs["short"], qs["title"], qs["bm25"], qvec, tag=tag, k=lim["shortlist"], return_components=True
         )
         rows = mmr_rerank(rows, alpha=ALPHA, per_file_penalty=0.10, k=lim["shortlist"])
         rows = per_file_cap(rows, cap=PER_FILE_CAP)[: lim["topk"]]
         context, _meta = build_reader_context(
-            rows, case.query, case.tag, compact=bool(int(os.getenv("READER_COMPACT", "1")))
+            rows, case.query, tag, compact=bool(int(os.getenv("READER_COMPACT", "1")))
         )
-        pred = run_reader_cmd(case.query, context, case.tag, case.id)
+        pred = run_reader_cmd(case.query, context, tag, case.id)
         f1 = f1_score(pred, g["answers"])
-        tag_f1_sum[case.tag] += f1
-        tag_cnt[case.tag] += 1
+        tag_f1_sum[tag] += f1
+        tag_cnt[tag] += 1
         f1_sum += f1
     total = sum(tag_cnt.values()) or 1
     micro = f1_sum / total

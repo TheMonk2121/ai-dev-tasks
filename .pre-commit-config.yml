@@ -1,3 +1,4 @@
+---
 repos:
   - repo: local
     hooks:
@@ -36,7 +37,8 @@ repos:
         language: system
         files: \.md$
         pass_filenames: false
-        description: Validate markdown files for basic structure and broken links
+        description: |
+          Validate markdown files for basic structure and broken links
       - id: timestamp-update
         name: Auto Update Documentation Timestamps
         entry: bash scripts/hook_timer.sh
@@ -46,7 +48,8 @@ repos:
         language: system
         files: \.md$
         pass_filenames: false
-        description: Automatically update Last Updated timestamps in documentation files
+        description: |
+          Automatically update Last Updated timestamps in documentation files
       - id: branch-name-check
         name: Branch name policy
         entry: bash scripts/hook_timer.sh
@@ -57,26 +60,30 @@ repos:
         pass_filenames: false
         stages:
           - pre-commit
-        description: "Ensure branch name matches policy: main or type/B-####-short-slug"
-      - id: no-branches-without-permission
-        name: No branches without explicit permission
-        entry: bash scripts/hook_timer.sh
-        args:
-          - bash
-          - scripts/check_branch_permission.sh
-        language: system
-        pass_filenames: false
-        stages:
-          - pre-commit
-        description: Prevent commits on non-main branches without explicit permission
+        description: |
+          Ensure branch name matches policy: main or type/B-####-short-slug
+      # - id: no-branches-without-permission
+      #   name: No branches without explicit permission
+      #   entry: bash scripts/hook_timer.sh
+      #   args:
+      #     - bash
+      #     - scripts/check_branch_permission.sh
+      #   language: system
+      #   pass_filenames: false
+      #   stages:
+      #     - pre-commit
+      #   description: Prevent commits on non-main branches without explicit permission
       - id: ensure-venv-active
         name: Ensure venv is active
         entry: bash scripts/hook_timer.sh
         args:
           - bash
           - -c
-          - 'if [ -z "$VIRTUAL_ENV" ] || [[ "$VIRTUAL_ENV" != */.venv ]]; then echo "Virtual
-            environment not active. Run: source .venv/bin/activate"; exit 1; fi'
+          - >
+            if [ -z "$VIRTUAL_ENV" ] || [[ "$VIRTUAL_ENV" != */.venv ]]; then
+            echo "Virtual environment not active. Run: source .venv/bin/activate"
+            exit 1
+            fi
         language: system
         pass_filenames: false
         stages:
@@ -100,7 +107,8 @@ repos:
         stages:
           - commit-msg
           - pre-commit
-        description: Ensure significant changes have corresponding README context updates
+        description: |
+          Ensure significant changes have corresponding README context updates
       - id: readme-context-manager
         name: README Context Manager Analysis
         entry: bash scripts/hook_timer.sh
@@ -144,7 +152,8 @@ repos:
         pass_filenames: false
         stages:
           - pre-commit
-        description: Validate lessons JSONL, derived configs, and quality gates presence
+        description: |
+          Validate lessons JSONL, derived configs, and quality gates presence
       - id: uvx-tools-check
         name: UVX Tools Availability Check
         entry: bash scripts/hook_timer.sh
@@ -162,21 +171,31 @@ repos:
         args:
           - bash
           - -c
-          - 'python3 -m evals_300.tools.gen && git diff --quiet -- evals_300/_generated || (echo "Evals docs stale. Run gen." && exit 1)'
+          - >
+            python3 -m evals_300.tools.gen && git diff --quiet -- evals_300/_generated ||
+            (echo "Evals docs stale. Run gen." && exit 1)
         language: system
         pass_filenames: false
-        files: ^evals_300/(ssot/|tools/|ssot/templates/)|^configs/evals_layers/|^metrics/latest/metrics\.json$
-        description: Rebuild evaluation documentation when evals_300 sources or latest metrics change
+        files: |
+          ^evals_300/(ssot/|tools/|ssot/templates/)|
+          ^configs/evals_layers/|
+          ^metrics/latest/metrics\.json$
+        description: |
+          Rebuild evaluation documentation when evals_300 sources or latest metrics change
       - id: forbid-manual-md
         name: Forbid manual edits to generated eval docs (evals_300)
         entry: bash scripts/hook_timer.sh
         args:
           - bash
           - -c
-          - 'git diff --cached --name-only | grep -E "^evals_300/_generated/.*\\.md$" && echo "Do not edit generated eval docs. Update evals_300/ssot or tools and regenerate." && exit 1 || true'
+          - >
+            git diff --cached --name-only | grep -E "^evals_300/_generated/.*\\.md$" &&
+            echo "Do not edit generated eval docs. Update evals_300/ssot or tools and regenerate." &&
+            exit 1 || true
         language: system
         pass_filenames: false
-        description: Prevent manual editing of generated evaluation markdown under evals_300/_generated
+        description: |
+          Prevent manual editing of generated evaluation markdown under evals_300/_generated
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:

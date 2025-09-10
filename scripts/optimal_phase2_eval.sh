@@ -9,8 +9,10 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Activate virtualenv if present
 if [ -f "$REPO_ROOT/.venv/bin/activate" ]; then
+  # shellcheck source=/dev/null
   . "$REPO_ROOT/.venv/bin/activate"
 elif [ -f "$REPO_ROOT/venv/bin/activate" ]; then
+  # shellcheck source=/dev/null
   . "$REPO_ROOT/venv/bin/activate"
 fi
 

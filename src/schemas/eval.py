@@ -56,7 +56,7 @@ class CaseResult(BaseModel):
 
 
 class EvaluationRun(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config = ConfigDict(strict=True, extra="forbid", computed_fields_exclude=True)
     run_id: UUID = Field(default_factory=uuid4)
     started_at: datetime
     finished_at: datetime | None = None
@@ -77,6 +77,16 @@ class EvaluationRun(BaseModel):
     @property
     def n_cases(self) -> int:
         return len(self.cases)
+
+    def model_dump(self, **kwargs):
+        """Override to exclude computed fields from serialization."""
+        kwargs.setdefault("exclude", set()).add("n_cases")
+        return super().model_dump(**kwargs)
+
+    def model_dump_json(self, **kwargs):
+        """Override to exclude computed fields from JSON serialization."""
+        kwargs.setdefault("exclude", set()).add("n_cases")
+        return super().model_dump_json(**kwargs)
 
 
 from enum import Enum

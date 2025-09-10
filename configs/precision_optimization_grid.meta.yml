@@ -1,8 +1,8 @@
 ---
-name: Precision Elevated
-description: Configuration for precision_elevated
+name: Precision Optimization Grid
+description: Configuration for precision_optimization_grid
 version: 1.0.0
-config: precision_elevated
+config: precision_optimization_grid
 created_at: '2025-01-09T00:00:00Z'
 derived_from: base_config
 objective_bias: balanced
