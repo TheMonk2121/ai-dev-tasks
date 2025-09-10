@@ -41,7 +41,7 @@ echo
 
 # Run smoke test evaluation
 echo "🚀 Starting smoke test evaluation..."
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
 
 echo "✅ Smoke test completed"
-echo "💡 For full evaluation, run: source throttle_free_eval.sh && python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable"
+echo "💡 For full evaluation, run: source throttle_free_eval.sh && bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable"

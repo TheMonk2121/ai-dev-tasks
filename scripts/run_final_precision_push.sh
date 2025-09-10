@@ -11,7 +11,7 @@ echo "=================================="
 export AWS_REGION=us-east-1
 
 echo "📋 Applying final precision push configuration..."
-python3 scripts/final_precision_push_config.py
+bin/py scripts/final_precision_push_config.py
 
 echo ""
 echo "🚀 Running final precision push evaluation..."
@@ -26,7 +26,7 @@ if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
   FAST_FLAG="--fast-mode"
 fi
 
-python3 scripts/ragchecker_final_precision_push_evaluation.py \
+bin/py scripts/ragchecker_final_precision_push_evaluation.py \
     ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/final_precision_push_evaluation_$(date +%s).json"
 

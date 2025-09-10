@@ -68,11 +68,11 @@ echo "🧩 Backoff: base=${BEDROCK_BASE_BACKOFF} (RETRY_BASE=${BEDROCK_RETRY_BAS
 echo "🧠 Model: ${BEDROCK_MODEL_ID}"
 echo "🔒 Env lock file: ${RAGCHECKER_ENV_FILE}"
 echo "🎯 Target: Zero throttling, stable evaluation"
-echo "🚀 Ready for: python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli"
+echo "🚀 Ready for: bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli"
 
 # Convenience aliases (non-invasive): apply/revert recall boost safely
-alias recall_boost_apply='python3 scripts/toggle_recall_boost.py apply && ./scripts/run_ragchecker_smoke_test.sh'
-alias recall_boost_revert='python3 scripts/toggle_recall_boost.py revert && ./scripts/run_ragchecker_smoke_test.sh'
+alias recall_boost_apply='bin/py scripts/toggle_recall_boost.py apply && ./scripts/run_ragchecker_smoke_test.sh'
+alias recall_boost_revert='bin/py scripts/toggle_recall_boost.py revert && ./scripts/run_ragchecker_smoke_test.sh'
 
 echo "💡 Tip: Use 'recall_boost_apply' to apply recall tuning, then run the full eval."
 echo "          Revert anytime with 'recall_boost_revert'."

@@ -5,12 +5,15 @@ Unit tests for the unified gold dataset system
 import sys
 from pathlib import Path
 
+import pytest
+
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.utils.gold_loader import filter_cases, load_gold_cases, load_manifest, stratified_sample
 
 
+@pytest.mark.critical
 def test_gold_loads_and_has_modes():
     """Test that gold dataset loads and has all required modes."""
     cases = load_gold_cases("evals/gold/v1/gold_cases.jsonl")

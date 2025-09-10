@@ -75,4 +75,4 @@ echo "🧪 Eval JSON: PROMPTS=$RAGCHECKER_JSON_PROMPTS, MAX_TOKENS=$RAGCHECKER_J
 echo "🔄 Starting evaluation..."
 
 # Run RAGChecker with queue system
-python3 "$REPO_ROOT/scripts/ragchecker_official_evaluation.py" --use-bedrock --bypass-cli
+bin/py "$REPO_ROOT/scripts/ragchecker_official_evaluation.py" --use-bedrock --bypass-cli

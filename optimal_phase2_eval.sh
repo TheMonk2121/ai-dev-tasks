@@ -30,4 +30,4 @@ export RAGCHECKER_JSON_PROMPTS=1               # Line 350: if os.getenv("RAGCHEC
 echo "✅ Phase-2 Configuration Loaded"
 echo "🎯 Target: Stable evaluation without throttling"
 echo "📊 Settings: Conservative Bedrock caps + proven evidence thresholds"
-echo "🚀 Ready for: python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli"
+echo "🚀 Ready for: bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli"

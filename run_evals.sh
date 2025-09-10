@@ -35,7 +35,7 @@ fi
 if command -v uv >/dev/null 2>&1; then
   PY="uv run python"
 else
-  PY="python3"
+  PY="bin/py"
 fi
 
 # Run evaluation

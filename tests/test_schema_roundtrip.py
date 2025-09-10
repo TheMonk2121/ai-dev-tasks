@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import pytest
+
 from src.schemas.eval import CaseResult, ContextChunk, EvaluationRun, RerankerConfig, RetrievalCandidate
 
 
+@pytest.mark.critical
 def test_roundtrip_case_result():
     chunk = ContextChunk(id="doc_1:0", source="/path/file.md", text="hello world", score=0.9, metadata={})
     rc = RetrievalCandidate(query="q", chunk=chunk, rank=1, score=0.9, route="hybrid")
