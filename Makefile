@@ -15,7 +15,7 @@ export POSTGRES_DSN=mock://test
 # Quick gate tests in host venv (macOS)
 test-fast:
 	@echo "Running quick gate tests in host venv..."
-	uv run pytest -q tests/test_schema_roundtrip.py tests/test_doc_coherence_validator.py tests/test_coder_role.py
+	uv run pytest -q tests/test_schema_roundtrip.py tests/test_doc_coherence_validator.py
 
 # Full test suite in container venv (Linux)
 test-full:

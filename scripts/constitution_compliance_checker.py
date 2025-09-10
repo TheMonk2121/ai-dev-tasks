@@ -10,10 +10,10 @@ this checker ensures persistent rule enforcement across all AI operations.
 """
 
 import json
-from dataclasses import dataclass
 from collections.abc import Callable
-from typing import Any
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 
 @dataclass

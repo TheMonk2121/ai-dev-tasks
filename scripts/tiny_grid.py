@@ -23,10 +23,10 @@ sys.path.insert(0, repo_root)
 sys.path.insert(0, src_dir)
 
 from _bootstrap import ROOT, SRC
+
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
 from dspy_modules.retriever.weights import load_weights
-
 from evals.gold import gold_hit
 from scripts.migrate_to_pydantic_evals import load_eval_cases
 

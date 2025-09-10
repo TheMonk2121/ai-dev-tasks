@@ -9,6 +9,7 @@ import sys
 
 # sys.path.insert(0, "dspy-rag-system/src")  # REMOVED: DSPy venv consolidated into main project
 import dspy
+
 from dspy_modules.dspy_reader_program import RAGAnswer, _lm
 from dspy_modules.reader.entrypoint import build_reader_context
 from dspy_modules.reader.span_picker import pick_span  # your rule-first

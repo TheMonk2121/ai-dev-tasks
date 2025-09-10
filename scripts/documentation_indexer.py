@@ -22,7 +22,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system",
 
 try:
     from dspy_modules.vector_store import HybridVectorStore
-
     from utils.database_resilience import get_database_manager
 except Exception as _e:
     HybridVectorStore = None  # type: ignore

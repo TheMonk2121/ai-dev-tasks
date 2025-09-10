@@ -13,6 +13,7 @@ Last Updated: 2024-08-07
 import json
 import logging
 import os
+import sqlite3
 import sys
 import time
 import traceback
@@ -22,7 +23,6 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
-import sqlite3
 
 logger = logging.getLogger(__name__)
 

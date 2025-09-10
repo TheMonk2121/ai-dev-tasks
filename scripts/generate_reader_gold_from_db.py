@@ -22,10 +22,9 @@ from _bootstrap import ROOT, SRC  # noqa: F401
 
 sys.path.insert(0, str(SRC))
 
+from common.case_id import canonical_case_id
 from dspy_modules.reader.sentence_select import select_sentences
 from dspy_modules.retriever.query_rewrite import PHRASE_HINTS
-
-from common.case_id import canonical_case_id
 
 
 def get_db_connection():

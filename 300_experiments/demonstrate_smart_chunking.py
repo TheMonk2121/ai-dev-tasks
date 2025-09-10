@@ -8,7 +8,6 @@ from pathlib import Path
 
 # Add the dspy-rag-system src to path
 # sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
-
 from utils.smart_chunker import create_smart_chunker
 
 

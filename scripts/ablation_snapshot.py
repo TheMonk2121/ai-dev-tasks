@@ -12,9 +12,9 @@ from typing import Any
 # bootstrap
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
+
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
-
 from evals.gold import gold_hit
 from scripts.migrate_to_pydantic_evals import load_eval_cases
 

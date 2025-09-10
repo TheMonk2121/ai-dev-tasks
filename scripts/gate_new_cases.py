@@ -9,7 +9,6 @@ import sys
 
 # Add the src directory to the path
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
-
 from dspy_modules.reader.sentence_select import select_sentences
 from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import run_fused_query

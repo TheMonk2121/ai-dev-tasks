@@ -15,13 +15,13 @@ sys.path.insert(0, repo_root)
 sys.path.insert(0, src_dir)
 
 from _bootstrap import ROOT, SRC  # noqa: F401
+from sentence_transformers import SentenceTransformer
+
 from dspy_modules.reader.entrypoint import build_reader_context
 from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import PHRASE_HINTS, build_channel_queries
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
-from sentence_transformers import SentenceTransformer
-
 from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 READER_GOLD = os.getenv("READER_GOLD_FILE", "evals/reader_gold.jsonl")

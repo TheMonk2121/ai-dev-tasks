@@ -13,7 +13,6 @@ from pathlib import Path
 
 # Add src to path for imports
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
-
 from utils.database_resilience import execute_query
 from utils.logger import setup_logger
 

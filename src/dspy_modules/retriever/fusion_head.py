@@ -168,7 +168,6 @@ def load_head(checkpoint_path: str, in_dim: int, hidden: int = 0, device: str = 
     """
     try:
         import torch
-
         from train.fusion_head import FusionHead
     except ImportError as e:
         logger.error(f"PyTorch not available for fusion head: {e}")

@@ -4,8 +4,8 @@ Relaxed Documentation Coherence Validator
 Ignores line length violations but enforces critical structural issues.
 """
 
-import sys
 import re
+import sys
 from pathlib import Path
 
 # Add the scripts directory to the path so we can import the main validator
