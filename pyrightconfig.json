@@ -11,19 +11,18 @@
     "reportMissingImports": "none",
     "reportAssignmentType": "none",
     "reportPossiblyUnboundVariable": "none",
-    "extraPaths": [
-        "./dspy-rag-system/src",
-        "./dspy-rag-system"
-    ],
+    "extraPaths": [],
     "ignore": [
         "**/600_archives/**",
-        "**/scripts/eval/**"
+        "**/scripts/eval/**",
+        "dspy-rag-system/**"
     ],
     "exclude": [
         "**/node_modules/**",
         "**/__pycache__/**",
         ".pytest_cache/**",
         "**/venv/**",
-        "**/.venv/**"
+        "**/.venv/**",
+        "dspy-rag-system/**"
     ]
 }
