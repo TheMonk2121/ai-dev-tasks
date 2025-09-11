@@ -77,7 +77,7 @@ class SystemMonitor:
 
             start_time = time.time()
 
-            with psycopg2.connect("postgresql://danieljacobs@localhost:5432/dspy_rag") as conn:
+            with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
                 with conn.cursor() as cursor:
                     # Get basic counts
                     cursor.execute("SELECT COUNT(*) FROM documents")

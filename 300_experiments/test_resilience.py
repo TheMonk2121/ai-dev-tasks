@@ -9,7 +9,7 @@ def test_connection_resilience():
 
     # Test valid connection
     try:
-        conn = psycopg2.connect("postgresql://danieljacobs@localhost:5432/dspy_rag")
+        conn = psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency")
         cursor = conn.cursor()
         cursor.execute("SELECT 1")
         result = cursor.fetchone()
@@ -29,7 +29,7 @@ def test_connection_resilience():
 def test_database_health():
     print("✅ Testing database health...")
     try:
-        conn = psycopg2.connect("postgresql://danieljacobs@localhost:5432/dspy_rag")
+        conn = psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency")
         cursor = conn.cursor()
 
         # Test basic operations

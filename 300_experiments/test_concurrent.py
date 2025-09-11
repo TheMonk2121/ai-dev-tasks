@@ -8,7 +8,7 @@ import psycopg2
 
 def test_query():
     try:
-        conn = psycopg2.connect("postgresql://danieljacobs@localhost:5432/dspy_rag")
+        conn = psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency")
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM documents")
         result = cursor.fetchone()[0]

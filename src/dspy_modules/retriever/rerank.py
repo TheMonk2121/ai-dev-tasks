@@ -55,6 +55,11 @@ def mmr_rerank(
             mmr -= file_pen
             if mmr > best:
                 best, best_row = mmr, r
+
+        # Guard clause: if no valid candidate found, break
+        if best_row is None:
+            break
+
         selected.append(best_row)
         out.append(best_row)
         key = best_row.get("file_path") or best_row.get("filename")

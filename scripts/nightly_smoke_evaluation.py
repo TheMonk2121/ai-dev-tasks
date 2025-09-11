@@ -199,6 +199,7 @@ class NightlySmokeEvaluator:
         try:
             try:
                 from src.common.db_dsn import resolve_dsn
+
                 dsn = resolve_dsn(strict=False)
                 if not dsn:
                     return {"status": "fail", "error": "Database DSN not configured"}
@@ -263,6 +264,7 @@ class NightlySmokeEvaluator:
         try:
             try:
                 from src.common.db_dsn import resolve_dsn
+
                 dsn = resolve_dsn(strict=False)
                 if not dsn:
                     return {"status": "fail", "error": "Database DSN not configured"}
@@ -279,6 +281,7 @@ class NightlySmokeEvaluator:
         try:
             try:
                 from src.common.db_dsn import resolve_dsn
+
                 dsn = resolve_dsn(strict=False)
                 if not dsn:
                     return {"status": "fail", "error": "Database DSN not configured"}
@@ -295,6 +298,7 @@ class NightlySmokeEvaluator:
         try:
             try:
                 from src.common.db_dsn import resolve_dsn
+
                 dsn = resolve_dsn(strict=False)
                 if not dsn:
                     return {"status": "fail", "error": "Database DSN not configured"}
@@ -311,6 +315,7 @@ class NightlySmokeEvaluator:
         try:
             try:
                 from src.common.db_dsn import resolve_dsn
+
                 dsn = resolve_dsn(strict=False)
                 if not dsn:
                     return {"status": "fail", "error": "Database DSN not configured"}

@@ -121,6 +121,7 @@ class HealthGatedEvaluator:
         try:
             try:
                 from src.common.db_dsn import resolve_dsn
+
                 dsn = resolve_dsn(strict=False)
                 if not dsn:
                     self.failed_checks.append("Database DSN not configured")
@@ -176,6 +177,7 @@ class HealthGatedEvaluator:
         try:
             try:
                 from src.common.db_dsn import resolve_dsn
+
                 dsn = resolve_dsn(strict=False)
                 if not dsn:
                     self.failed_checks.append("Database DSN not configured")

@@ -1,5 +1,8 @@
-import os, re, json
+import json
+import os
+import re
 from pathlib import Path
+
 root = Path('.')
 missing = []
 for md in root.rglob('*.md'):

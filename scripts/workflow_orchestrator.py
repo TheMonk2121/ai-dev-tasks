@@ -103,7 +103,9 @@ def create_execution_plan(backlog_id: str, context: dict[str, Any], prd_path: st
         "priority": priority,
         "commands": {
             "context": f"uv run python scripts/handoff_context.py {backlog_id}",
-            "prd": f"uv run python scripts/template_integrator.py {backlog_id} --generate-prd" if not prd_path else None,
+            "prd": (
+                f"uv run python scripts/template_integrator.py {backlog_id} --generate-prd" if not prd_path else None
+            ),
             "pickup": f"uv run python scripts/unified_workflow.py {backlog_id} --context-only",
         },
     }

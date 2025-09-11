@@ -20,7 +20,7 @@ def test_ux_ltst_integration():
     print("=" * 50)
 
     # Database connection
-    db_connection_string = "postgresql://localhost:5432/dspy_rag_system"
+    db_connection_string = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
     try:
         # Initialize integration

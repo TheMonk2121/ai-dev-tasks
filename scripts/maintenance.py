@@ -29,7 +29,7 @@ def run_database_maintenance():
     try:
         import psycopg2
 
-        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/dspy_rag") as conn:
+        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
             with conn.cursor() as cursor:
                 cursor.execute("ANALYZE documents")
                 cursor.execute("ANALYZE document_chunks")

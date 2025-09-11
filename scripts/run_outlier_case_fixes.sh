@@ -18,8 +18,9 @@ export AWS_REGION=us-east-1
 export POSTGRES_DSN="mock://test"
 
 # Load base configuration
-# shellcheck source=throttle_free_eval.sh
-source "$(dirname "$0")/../throttle_free_eval.sh"
+SCRIPT_DIR="$(dirname "$0")"
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/../throttle_free_eval.sh"
 
 echo "🔧 Applying outlier case optimizations..."
 

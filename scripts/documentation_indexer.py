@@ -522,7 +522,7 @@ def main():
         db_url = args.db_url
     else:
         # Try to get from environment or use default
-        db_url = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+        db_url = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
 
     # Initialize indexer
     indexer = DocumentationIndexer(db_url)

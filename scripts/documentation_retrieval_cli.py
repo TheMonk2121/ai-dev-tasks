@@ -30,7 +30,7 @@ except Exception:
     get_relevant_context = None  # type: ignore
     search_documentation = None  # type: ignore
     get_task_context = None  # type: ignore
-from documentation_indexer import DocumentationIndexer
+from scripts.documentation_indexer import DocumentationIndexer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -42,7 +42,7 @@ class DocumentationRetrievalCLI:
 
     def __init__(self, db_connection_string: str | None = None):
         if db_connection_string is None:
-            db_connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+            db_connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
 
         self.db_conn_str = db_connection_string
         self.service = (
@@ -311,7 +311,7 @@ Examples:
         return
 
     # Initialize CLI
-    db_url = args.db_url or os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+    db_url = args.db_url or os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
     cli = DocumentationRetrievalCLI(db_url)
 
     try:

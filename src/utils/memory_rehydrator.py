@@ -177,7 +177,7 @@ class MemoryRehydrator:
         source = None
         for p in candidates:
             try:
-                with open(p, "r", encoding="utf-8", errors="ignore") as f:
+                with open(p, encoding="utf-8", errors="ignore") as f:
                     content = f.read(4000)
                     source = p
                     break
