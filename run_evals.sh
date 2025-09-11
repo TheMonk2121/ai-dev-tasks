@@ -3,6 +3,8 @@
 # - Loads the stable config
 # - Prefers Bedrock when credentials are valid
 # - Falls back to local LLM evaluation if Bedrock is unavailable
+#
+# Note: For shellcheck validation, run: shellcheck run_evals.sh throttle_free_eval.sh
 
 set -euo pipefail
 
@@ -16,7 +18,7 @@ if [ ! -f "throttle_free_eval.sh" ] || [ ! -d "scripts" ]; then
 fi
 
 # Load stable configuration (prints lock banner)
-# shellcheck source=throttle_free_eval.sh
+# shellcheck disable=SC1091
 source throttle_free_eval.sh
 
 # Detect Bedrock credentials via AWS CLI if available
