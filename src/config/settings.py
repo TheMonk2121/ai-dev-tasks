@@ -61,6 +61,21 @@ class Settings(BaseSettings):
     env: str = Field(default="dev", description="Environment: dev, test, or prod")
     root_dir: Path = Field(default_factory=Path.cwd, description="Project root directory")
 
+    # ---- Feature Flags / Execution Guards ----
+    use_pydantic_agent: bool = Field(
+        default=False,
+        description="Toggle Pydantic AI agent boundary fronting DSPy pipeline",
+    )
+    use_memory_graph: bool = Field(
+        default=False,
+        description="Toggle Pydantic Graph for memory consolidation (off hot path)",
+    )
+    strict_provenance: bool = Field(
+        default=True,
+        description="Reject rows lacking ingest_run_id/chunk_variant at boundaries",
+    )
+    limit_concurrency: int = Field(ge=1, le=64, default=3, description="Global concurrency cap while stabilizing")
+
     # ---- Domain-Specific Configuration ----
     db: Database = Field(default_factory=lambda: Database(), description="Database configuration")
     rag: RAG = Field(default_factory=lambda: RAG(), description="RAG system configuration")

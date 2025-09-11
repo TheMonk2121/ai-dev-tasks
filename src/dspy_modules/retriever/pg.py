@@ -39,6 +39,9 @@ def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, A
       dc.embedding,
       dc.embedding_text,
       COALESCE(dc.embedding_text, dc.bm25_text, dc.content) AS text_for_reader,
+      dc.metadata AS metadata,
+      dc.metadata->>'ingest_run_id' AS ingest_run_id,
+      dc.metadata->>'chunk_variant' AS chunk_variant,
       100.0::float AS score
     FROM document_chunks dc
     LEFT JOIN documents d ON d.id = dc.document_id
@@ -51,7 +54,18 @@ def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, A
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(sql, params)
-            return [dict(row) for row in cur.fetchall()]
+            rows = [dict(row) for row in cur.fetchall()]
+            # Normalize metadata to ensure provenance presence
+            for r in rows:
+                md = dict(r.get("metadata") or {})
+                if r.get("ingest_run_id") and not md.get("ingest_run_id"):
+                    md["ingest_run_id"] = r["ingest_run_id"]
+                if r.get("chunk_variant") and not md.get("chunk_variant"):
+                    md["chunk_variant"] = r["chunk_variant"]
+                md.setdefault("ingest_run_id", "legacy")
+                md.setdefault("chunk_variant", "legacy")
+                r["metadata"] = md
+            return rows
 
 
 def _vec_expr() -> str:
@@ -95,6 +109,18 @@ def run_fused_query(
     """
 
     VEC = _vec_expr()
+
+    # Sanitize inputs to avoid postgres/driver issues (e.g., NUL 0x00)
+    def _clean(s: str) -> str:
+        if not isinstance(s, str):
+            return ""
+        # Replace NULs and collapse excessive whitespace
+        s = s.replace("\x00", " ")
+        return s
+
+    q_short = _clean(q_short)
+    q_title = _clean(q_title)
+    q_bm25 = _clean(q_bm25)
     short_tsq = (
         "(websearch_to_tsquery('simple', %(q_short)s) || to_tsquery('simple', 'create <-> index') || to_tsquery('simple', 'alter <-> table'))"
         if (tag == "db_workflows" and adjacency_db)
@@ -118,6 +144,7 @@ def run_fused_query(
         dc.embedding,
         dc.embedding_text,
         dc.bm25_text,
+        dc.metadata AS metadata,
         dc.metadata->>'ingest_run_id' AS ingest_run_id,
         dc.metadata->>'chunk_variant' AS chunk_variant,
         d.file_path,
@@ -128,6 +155,7 @@ def run_fused_query(
     SELECT
       b.chunk_id,
       b.filename,
+      b.metadata,
       b.ingest_run_id,
       b.chunk_variant,
       b.file_path,

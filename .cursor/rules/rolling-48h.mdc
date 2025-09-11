@@ -1,0 +1,11 @@
+---
+description: Rolling 48h working set (summary + pointers)
+alwaysApply: true
+---
+# Rolling 48h Context (auto-updated)
+- Decisions (UTC): <recent-decisions>
+- Files/PRs touched: <recent-files>
+- Open TODOs (owners): <todos>
+
+Need details? Call MCP: memory.get_hot_context(hours=48)
+

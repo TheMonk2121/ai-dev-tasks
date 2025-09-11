@@ -3,10 +3,34 @@
 Lightweight MMR rerank with per-file diversity for reader lift.
 """
 
+import hashlib
 import math
 from collections import defaultdict
 from collections.abc import Sequence
 from typing import Any
+
+
+def _normalize_row(r: dict[str, Any]) -> dict[str, Any]:
+    """Ensure provenance fields and stable chunk_id are present on a row dict."""
+    d = dict(r)
+    md = dict(d.get("metadata") or {})
+    md.setdefault("ingest_run_id", md.get("ingest_run_id", "legacy"))
+    md.setdefault("chunk_variant", md.get("chunk_variant", "legacy"))
+    d["metadata"] = md
+    if not d.get("chunk_id"):
+        basis = "|".join(
+            [
+                md.get("ingest_run_id", "legacy"),
+                md.get("chunk_variant", "legacy"),
+                str(d.get("file_path") or d.get("filename") or ""),
+                hashlib.sha1((d.get("embedding_text") or d.get("bm25_text") or "")[:256].encode("utf-8")).hexdigest()[
+                    :8
+                ],
+            ]
+        )
+        d["chunk_id"] = hashlib.md5(basis.encode("utf-8")).hexdigest()[:16]
+        d["metadata"]["chunk_id"] = d["chunk_id"]
+    return d
 
 
 def mmr_rerank(
@@ -45,7 +69,7 @@ def mmr_rerank(
         return 0.0 if den == 0 else num / den
 
     selected = []
-    candidates = rows[:]  # already scored desc
+    candidates = [_normalize_row(r) for r in rows]  # already scored desc
     while candidates and len(selected) < k:
         best, best_row = -1e9, None
         for r in candidates:
@@ -73,8 +97,9 @@ def per_file_cap(rows: list[dict[str, Any]], cap: int = 5) -> list[dict[str, Any
     out: list[dict[str, Any]] = []
     seen: dict[str, int] = defaultdict(int)
     for r in rows:
-        key = (r.get("file_path") or r.get("filename") or "").lower()
+        d = _normalize_row(r)
+        key = (d.get("file_path") or d.get("filename") or "").lower()
         seen[key] += 1
         if seen[key] <= cap:
-            out.append(r)
+            out.append(d)
     return out

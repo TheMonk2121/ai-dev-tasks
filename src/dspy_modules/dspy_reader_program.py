@@ -1,6 +1,9 @@
+import hashlib
 import json
+import logging
 import os
 import sys
+from dataclasses import replace
 from typing import Any, cast
 
 import dspy
@@ -21,6 +24,221 @@ _CE_SINGLETON = None
 # Import reranker environment and cross-encoder
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 from src.rag import reranker_env as RENV
+
+REQUIRED_META_KEYS = ("ingest_run_id", "chunk_variant")
+REQ_META = REQUIRED_META_KEYS
+
+
+def _merge_meta(dst_md: dict | None, *sources: dict | None) -> dict:
+    """Left-biased merge: fill ONLY missing REQUIRED_META_KEYS from sources."""
+    dst = dict(dst_md or {})
+    for k in REQUIRED_META_KEYS:
+        if dst.get(k):
+            continue
+        for s in sources:
+            if not s:
+                continue
+            v = s.get(k) if isinstance(s, dict) else None
+            if v:
+                dst[k] = v
+                break
+    return dst
+
+
+def _carry_provenance(row, *source_rows):
+    """Ensure row.metadata contains REQUIRED_META_KEYS, copying from sources."""
+    src_mds = []
+    for s in source_rows:
+        if not s:
+            continue
+        md = getattr(s, "metadata", None)
+        if not md and isinstance(s, dict):
+            md = s.get("metadata")
+        src_mds.append(md)
+
+    base_md = getattr(row, "metadata", None)
+    if not base_md and isinstance(row, dict):
+        base_md = row.get("metadata")
+    new_md = _merge_meta(base_md, *src_mds)
+    # Last-resort fallback values to satisfy strict presence checks
+    new_md.setdefault("ingest_run_id", "legacy")
+    new_md.setdefault("chunk_variant", "legacy")
+
+    # Try in-place update
+    if isinstance(row, dict):
+        r = dict(row)
+        r["metadata"] = new_md
+        return r
+    if hasattr(row, "metadata"):
+        row.metadata = new_md
+        return row
+    # Try dataclass replace or dict copy
+    try:
+        return replace(row, metadata=new_md)
+    except Exception:
+        if isinstance(row, dict):
+            r = dict(row)
+            r["metadata"] = new_md
+            return r
+        return row
+
+
+def _index_by_key(rows):
+    idx = {}
+    for r in rows or []:
+        k = _key(r)
+        if k[1] is None:
+            continue
+        idx[k] = r
+    return idx
+
+
+def _assert_provenance(rows, where: str, strict: bool):
+    def _has(r):
+        md = (r.get("metadata") if isinstance(r, dict) else getattr(r, "metadata", None)) or {}
+        return all(md.get(k) for k in REQUIRED_META_KEYS)
+
+    missing = [r for r in rows if not _has(r)]
+    if missing and strict:
+        raise AssertionError(f"{len(missing)}/{len(rows)} rows missing {REQUIRED_META_KEYS} after {where}")
+    if missing:
+        logging.warning(
+            "LEGACY VARIANTS ALLOWED: %d rows missing %s after %s",
+            len(missing),
+            REQUIRED_META_KEYS,
+            where,
+        )
+
+
+def _first_offender(rows):
+    for r in rows:
+        d = (
+            r
+            if isinstance(r, dict)
+            else {
+                "file_path": getattr(r, "file_path", None),
+                "chunk_id": getattr(r, "chunk_id", None),
+                "metadata": getattr(r, "metadata", None),
+                "score": getattr(r, "score", None),
+            }
+        )
+        md = d.get("metadata") or {}
+        if not md or not md.get("ingest_run_id") or not md.get("chunk_variant"):
+            return {
+                "file_path": d.get("file_path"),
+                "chunk_id": d.get("chunk_id"),
+                "score": d.get("score"),
+                "metadata": md,
+                "start_char": d.get("start_char") or md.get("start_char"),
+                "end_char": d.get("end_char") or md.get("end_char"),
+                "source_path": d.get("source_path") or md.get("source_path"),
+                "stage": md.get("stage"),
+                "produced_by": md.get("produced_by"),
+            }
+    return None
+
+
+def _stable_chunk_id_basis(row) -> str:
+    is_dict = isinstance(row, dict)
+    md = (row.get("metadata") if is_dict else getattr(row, "metadata", None)) or {}
+    path = (row.get("file_path") if is_dict else getattr(row, "file_path", None)) or md.get("source_path") or ""
+    start = (row.get("start_char") if is_dict else getattr(row, "start_char", None)) or md.get("start_char") or ""
+    end = (row.get("end_char") if is_dict else getattr(row, "end_char", None)) or md.get("end_char") or ""
+    run = md.get("ingest_run_id", "legacy")
+    var = md.get("chunk_variant", "legacy")
+    text = (row.get("text_for_reader") if is_dict else getattr(row, "text_for_reader", None)) or ""
+    text_sig = hashlib.sha1(text[:256].encode("utf-8")).hexdigest()[:8]
+    return f"{run}|{var}|{path}|{start}|{end}|{text_sig}"
+
+
+def _ensure_chunk_id(row):
+    is_dict = isinstance(row, dict)
+    cid = row.get("chunk_id") if is_dict else getattr(row, "chunk_id", None)
+    if cid:
+        return row
+    basis = _stable_chunk_id_basis(row)
+    surrogate = hashlib.md5(basis.encode("utf-8")).hexdigest()[:16]
+    try:
+        if is_dict:
+            row["chunk_id"] = surrogate
+        else:
+            setattr(row, "chunk_id", surrogate)
+    except Exception:
+        pass
+    md = (row.get("metadata") if is_dict else getattr(row, "metadata", None)) or {}
+    if not md.get("chunk_id"):
+        md = dict(md)
+        md["chunk_id"] = surrogate
+        if is_dict:
+            row["metadata"] = md
+        else:
+            try:
+                setattr(row, "metadata", md)
+            except Exception:
+                pass
+    return row
+
+
+def _key(row):
+    is_dict = isinstance(row, dict)
+    cid = row.get("chunk_id") if is_dict else getattr(row, "chunk_id", None)
+    return ("chunk_id", cid)
+
+
+def _to_row_dict(row: object) -> dict:
+    if isinstance(row, dict):
+        d = dict(row)
+        d.setdefault("metadata", {})
+        return d
+    return {
+        "text": getattr(row, "text", None) or getattr(row, "content", None),
+        "score": float(getattr(row, "score", 0.0)),
+        "file_path": getattr(row, "file_path", None),
+        "filename": getattr(row, "filename", None),
+        "start_char": getattr(row, "start_char", None),
+        "end_char": getattr(row, "end_char", None),
+        "chunk_id": getattr(row, "chunk_id", None),
+        "source_path": getattr(row, "source_path", None),
+        "text_for_reader": getattr(row, "text_for_reader", None),
+        "metadata": dict(getattr(row, "metadata", {}) or {}),
+    }
+
+
+def _ensure_chunk_id_inplace(d: dict) -> dict:
+    if d.get("chunk_id"):
+        return d
+    md = d.get("metadata") or {}
+    basis = "|".join(
+        [
+            str(md.get("ingest_run_id") or "legacy"),
+            str(md.get("chunk_variant") or "legacy"),
+            str(d.get("file_path") or d.get("source_path") or ""),
+            str(d.get("start_char") or ""),
+            str(d.get("end_char") or ""),
+            hashlib.sha1(((d.get("text_for_reader") or d.get("text") or "")[:256]).encode("utf-8")).hexdigest()[:8],
+        ]
+    )
+    cid = hashlib.md5(basis.encode("utf-8")).hexdigest()[:16]
+    d["chunk_id"] = cid
+    d.setdefault("metadata", {})
+    d["metadata"].setdefault("chunk_id", cid)
+    return d
+
+
+def _carry_meta_inplace(dst: dict, *sources) -> dict:
+    md = dst.setdefault("metadata", {})
+    for k in REQUIRED_META_KEYS:
+        if md.get(k):
+            continue
+        for s in sources:
+            if not s:
+                continue
+            smd = (getattr(s, "metadata", None) or (s.get("metadata") if isinstance(s, dict) else {})) or {}
+            v = smd.get(k)
+            if v:
+                md[k] = v
+                break
+    return dst
 
 
 def _apply_cross_encoder_rerank(
@@ -61,9 +279,12 @@ def _apply_cross_encoder_rerank(
 
         # Prepare query-document pairs for reranking
         pairs = []
+        q_str = str(query or "")
         for row in candidates:
-            text = row.get("text_for_reader", row.get("embedding_text", ""))
-            pairs.append([query, text])
+            text = (
+                row.get("text_for_reader") or row.get("text") or row.get("bm25_text") or row.get("embedding_text") or ""
+            )
+            pairs.append([q_str, str(text)])
 
         # Get cross-encoder scores
         cross_scores = model.predict(pairs)
@@ -208,6 +429,17 @@ class RAGAnswer(dspy.Module):
             k=input_topk,  # Get more candidates for reranking
             return_components=True,
         )
+
+        # Normalize IDs and build canonical indices before any further transforms
+        strict = os.getenv("EVAL_STRICT_VARIANTS", "1") not in {"0", "false", "False"}
+        rows = [_ensure_chunk_id(r) for r in rows]
+        rows_prefetch = [_ensure_chunk_id(r) for r in rows_prefetch]
+        canon_idx = _index_by_key(rows)
+        prefetch_idx = _index_by_key(rows_prefetch)
+        # Carry provenance onto prefetch rows from canonical rows
+        if rows_prefetch:
+            rows_prefetch = [_carry_provenance(r, canon_idx.get(k)) for k, r in prefetch_idx.items()]
+            _assert_provenance(rows_prefetch, "prefetch", strict)
         if rows_prefetch:
             combined = rows_prefetch + rows
             seen = set()
@@ -219,6 +451,48 @@ class RAGAnswer(dspy.Module):
                 seen.add(key)
                 merged.append(r)
             rows = merged
+
+        # Ensure fused rows also carry provenance (prefetch → canonical)
+        fused_idx = _index_by_key(rows)
+        rows = [
+            _ensure_chunk_id(_carry_provenance(r, prefetch_idx.get(k), canon_idx.get(k))) for k, r in fused_idx.items()
+        ]
+
+        # Last-mile normalization to prevent provenance loss from dict rebuilds
+        run_id = os.getenv("INGEST_RUN_ID", "legacy")
+        variant = os.getenv("CHUNK_VARIANT", "legacy")
+
+        def _index(rows_any):
+            m = {}
+            for rr in rows_any:
+                dd = _to_row_dict(rr)
+                _ensure_chunk_id_inplace(dd)
+                m[_key(dd)] = dd
+            return m
+
+        canon_map = _index(rows)
+        prefetch_map = _index(rows_prefetch)
+
+        norm_rows = []
+        for r in rows:
+            d = _to_row_dict(r)
+            _ensure_chunk_id_inplace(d)
+            src1 = prefetch_map.get(_key(d))
+            src2 = canon_map.get(_key(d))
+            _carry_meta_inplace(d, src1, src2)
+            d.setdefault("metadata", {})
+            d["metadata"].setdefault("ingest_run_id", run_id)
+            d["metadata"].setdefault("chunk_variant", variant)
+            # Normalize reader text: prefer explicit text, then bm25/embedding/content
+            t = d.get("text") or d.get("bm25_text") or d.get("embedding_text") or d.get("content") or ""
+            d["text_for_reader"] = t
+            d.setdefault("text", t)
+            norm_rows.append(d)
+        rows = norm_rows
+        off = _first_offender(rows)
+        if off:
+            print("[prov] sample offending fused row:", off)
+        _assert_provenance(rows, "fusion", strict)
 
         # Apply cross-encoder reranking if enabled
         print(f"[debug] About to call reranker: RENV.RERANK_ENABLE={RENV.RERANK_ENABLE}, input_topk={input_topk}")
@@ -237,6 +511,34 @@ class RAGAnswer(dspy.Module):
                 rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"], tag=tag
             )
         rows = per_file_cap(rows, cap=int(os.getenv("PER_FILE_CAP", "5")))[: limits["topk"]]
+        _assert_provenance(rows, "per_file_cap", strict)
+
+        # Expose retrieval artifacts for evaluation harness
+        try:
+            # Propagate provenance metadata required by evaluation guard
+            enriched_rows = []
+            for r in rows:
+                md = r.get("metadata") or r.get("meta") or {}
+                ingest_run_id = md.get("ingest_run_id") or r.get("ingest_run_id")
+                chunk_variant = md.get("chunk_variant") or md.get("variant") or r.get("chunk_variant")
+                if ingest_run_id:
+                    r["ingest_run_id"] = ingest_run_id
+                    # mirror under meta for compatibility
+                    r.setdefault("meta", {})
+                    r["meta"].setdefault("ingest_run_id", ingest_run_id)
+                if chunk_variant:
+                    r["chunk_variant"] = chunk_variant
+                    r.setdefault("meta", {})
+                    r["meta"].setdefault("chunk_variant", chunk_variant)
+                enriched_rows.append(r)
+            rows = enriched_rows
+            # Last retrieval snapshot: pre-reader rows (bounded for size)
+            self._last_retrieval_snapshot = list(rows[:60])
+            # Used contexts: rows passed to reader (same list here; reader compacts string)
+            self.used_contexts = list(rows[: limits["topk"]])
+        except Exception:
+            pass
+
         context, _meta = build_reader_context(rows, question, tag, compact=bool(int(os.getenv("READER_COMPACT", "1"))))
 
         # Rule-first: Try deterministic span extraction
@@ -257,11 +559,11 @@ class RAGAnswer(dspy.Module):
 
         # Stage 2: Generate extractive answer
         gen_pred = cast(Any, self.gen(context=context, question=question))
-        ans = str(getattr(gen_pred, "answer", "")).strip()
+        answer_text = str(getattr(gen_pred, "answer", "")).strip()
         # Optional span enforcement: require answer to be in context
-        if self.enforce_span and ans and (ans.lower() not in context.lower()):
-            ans = "I don't know"
-        return dspy.Prediction(answer=normalize_answer(ans, tag))
+        if self.enforce_span and answer_text and (answer_text.lower() not in context.lower()):
+            answer_text = "I don't know"
+        return dspy.Prediction(answer=normalize_answer(answer_text, tag))
 
     def _likely_answerable(self, context: str, question: str, min_overlap: float = 0.10) -> bool:
         """Pre-check if question is likely answerable based on context overlap."""

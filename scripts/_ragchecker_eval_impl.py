@@ -10,6 +10,7 @@ This is a clean implementation that:
 """
 
 import argparse
+import decimal
 import importlib
 import json
 import os
@@ -156,8 +157,8 @@ class DspyRagDriver:
         try:
             import dspy
 
-            rp = importlib.import_module("dspy_modules.rag_pipeline")
-            from dspy_modules.vector_store import HybridVectorStore
+            # Use the current DSPy reader program, which encapsulates retrieval and reranking
+            from dspy_modules.dspy_reader_program import RAGAnswer  # type: ignore
 
             # Configure DSPy with language model and a stable completion adapter
             model_name = os.getenv("DSPY_MODEL", "anthropic.claude-3-haiku-20240307-v1:0")
@@ -169,11 +170,8 @@ class DspyRagDriver:
                 # Fallback: configure without explicit adapter (keeps previous behavior)
                 dspy.configure(lm=dspy.LM(model_name))
 
-            # Initialize with proper retriever and database connection
-            # Respect POSTGRES_DSN if provided; fall back to a local default for dev
-            db_connection = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-            retriever = HybridVectorStore(db_connection)
-            self.module = rp.RAGModule(retriever=retriever)
+            # Initialize RAG program (handles retrieval internally via src/dspy_modules/retriever/*)
+            self.module = RAGAnswer()
         except Exception as e:
             print(f"Failed to import DSPy RAG module: {e}")
             raise
@@ -181,11 +179,35 @@ class DspyRagDriver:
     def answer(self, question: str) -> dict:
         """Get answer from real DSPy RAG system."""
         t0 = time.time()
-        out = self.module(question)  # Returns dict[str, Any]
-        ans_text = out.get("answer", "") if isinstance(out, dict) else str(out)
-        citations = out.get("citations", []) if isinstance(out, dict) else []
+        try:
+            out = self.module(question=question, tag=os.getenv("DEFAULT_RAG_TAG", "rag_qa_single"))
+        except TypeError:
+            # Older signature without tag
+            out = self.module(question=question)
+        ans_text = getattr(out, "answer", None)
+        if ans_text is None:
+            ans_text = out.get("answer", "") if isinstance(out, dict) else str(out)
+        citations = []
         snapshot = getattr(self.module, "_last_retrieval_snapshot", []) or []
         used_ctx = getattr(self.module, "used_contexts", []) or []
+
+        # Emit effective settings for diagnosis
+        try:
+            eff = {
+                "READER_DOCS_BUDGET": os.getenv("READER_DOCS_BUDGET"),
+                "CONTEXT_BUDGET_TOKENS": os.getenv("CONTEXT_BUDGET_TOKENS"),
+                "SENTENCE_MAX_PER_DOC": os.getenv("SENTENCE_MAX_PER_DOC"),
+                "MIN_RERANK_SCORE": os.getenv("MIN_RERANK_SCORE"),
+                "PATH_ALLOWLIST": os.getenv("PATH_ALLOWLIST"),
+                "RERANK_ENABLE": os.getenv("RERANK_ENABLE"),
+            }
+            print(f"[settings] {eff}")
+        except Exception:
+            pass
+
+        # Fail fast if contexts are empty when real RAG is requested
+        if (os.getenv("RAGCHECKER_USE_REAL_RAG") == "1") and not used_ctx:
+            raise RuntimeError("Context assembly produced 0 contexts. Check thresholds/budgets/path filters.")
 
         # Tripwire: log counts to catch truncation
         print(f"[DSPy] used_ctx={len(used_ctx)} snapshot={len(snapshot)}")
@@ -195,6 +217,8 @@ class DspyRagDriver:
         # Assert variant consistency for evaluations
         self._assert_variant(used_ctx)
 
+        # Stamp variant policy for run records
+        strict_flag = os.getenv("EVAL_STRICT_VARIANTS", "1") not in {"0", "false", "False"}
         max_cands = int(os.getenv("SAVE_CANDIDATES_MAX", "60"))
         return {
             "answer": ans_text,
@@ -202,34 +226,54 @@ class DspyRagDriver:
             "retrieval_candidates": snapshot[:max_cands],
             "retrieved_context": used_ctx,
             "latency_sec": round(time.time() - t0, 3),
+            "variant_policy": "strict" if strict_flag else "legacy_allowed",
         }
 
     def _assert_variant(self, used_ctx):
-        """Assert that retrieved contexts have proper variant identification."""
-        # Allow disabling during evaluations via env flag
+        """Assert that retrieved contexts have proper variant identification, with guarded local bypass."""
+        import datetime
+        import hashlib
+        import logging
         import os
 
-        if os.getenv("EVAL_DISABLE_VARIANT_ASSERT", "0") == "1":
-            return
         if not used_ctx:
             return
 
-        # Check for missing variant identification
-        bad = [
+        # Strict by default; local/dev can opt out with EVAL_STRICT_VARIANTS=0
+        strict = os.getenv("EVAL_STRICT_VARIANTS", "1") not in {"0", "false", "False"}
+
+        def _get(md: dict, key: str):
+            return md.get(key) or md.get("meta", {}).get(key) or md.get("fp", {}).get(key)
+
+        missing = [
             c
             for c in used_ctx
-            if not (c.get("meta", {}).get("ingest_run_id") or c.get("ingest_run_id") or c.get("fp", {}).get("run"))
+            if not (_get(c, "ingest_run_id") and (_get(c, "chunk_variant") or _get(c, "variant") or _get(c, "cv")))
         ]
-        if bad:
-            raise RuntimeError("Retrieved contexts lack ingest_run_id/chunk_variant; likely old data source.")
 
-        # Optional: enforce expected run
-        want = os.getenv("INGEST_RUN_ID")
+        if missing and strict:
+            raise AssertionError(f"{len(missing)}/{len(used_ctx)} chunks missing ingest_run_id/chunk_variant")
+
+        if missing and not strict:
+            logging.warning("LEGACY VARIANTS ALLOWED: %d chunks missing metadata; filling fallbacks", len(missing))
+            today = datetime.date.today().isoformat()
+            for c in missing:
+                # normalize metadata dict
+                if "meta" in c and isinstance(c["meta"], dict):
+                    md = c["meta"]
+                else:
+                    md = c.setdefault("meta", {})
+                md.setdefault("ingest_run_id", f"legacy-{today}")
+                basis = f"{c.get('path','')}|{len(c.get('text',''))}"
+                md.setdefault("chunk_variant", f"legacy:{hashlib.md5(basis.encode()).hexdigest()[:8]}")
+
+        # Optional: enforce expected run (eval-only pin)
+        want = os.getenv("EVAL_EXPECT_RUN_ID")
         if want:
             for c in used_ctx[:12]:
-                run_id = c.get("ingest_run_id") or c.get("meta", {}).get("ingest_run_id") or c.get("fp", {}).get("run")
+                run_id = _get(c, "ingest_run_id") or _get(c, "run")
                 if run_id != want:
-                    raise RuntimeError(f"Mismatch: contexts not from run {want}, got {run_id}")
+                    raise RuntimeError(f"Mismatch: contexts not from expected run {want}, got {run_id}")
 
 
 def _make_eval_driver():
@@ -504,8 +548,16 @@ class CleanRAGCheckerEvaluator:
             pass
 
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
+
+        def _json_default(o):
+            if isinstance(o, decimal.Decimal):
+                return float(o)
+            if isinstance(o, Path):
+                return str(o)
+            return str(o)
+
         with open(out_path, "w", encoding="utf-8") as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
+            json.dump(results, f, ensure_ascii=False, indent=2, default=_json_default)
 
     def _calculate_precision(self, response: str, gt_answer: str, query: str) -> float:
         """Calculate precision with word overlap."""

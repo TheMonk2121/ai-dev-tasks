@@ -34,6 +34,11 @@ def create_extensions(cur):
             print(f"   ✅ {ext} extension created/enabled")
         except Exception as e:
             print(f"   ⚠️  {ext} extension: {e}")
+            # Ensure connection is usable after extension failure
+            try:
+                cur.connection.rollback()
+            except Exception:
+                pass
 
 
 def create_documents_table(cur):
@@ -300,6 +305,25 @@ def create_memory_system_tables(cur):
     """
     )
 
+    # Make conv_chunks a hypertable if TimescaleDB is available (for 48h hot-pool retention)
+    try:
+        cur.execute(
+            """
+            SELECT create_hypertable('conv_chunks', 'created_at', if_not_exists => true)
+            """
+        )
+        # Apply a default 48-hour retention policy for the hot pool
+        # Note: This is a coarse policy and does not consider is_pinned. Pinning logic,
+        # if required, should be handled by application-level promotion before expiry.
+        cur.execute(
+            """
+            SELECT add_retention_policy('conv_chunks', INTERVAL '48 hours')
+            """
+        )
+        print("   ✅ conv_chunks hypertable with 48h retention policy")
+    except Exception as e:
+        print(f"   ⚠️  TimescaleDB conv_chunks retention: {e}")
+
     # Rolling summaries
     cur.execute(
         """
@@ -369,12 +393,17 @@ def create_memory_system_tables(cur):
     )
 
     # Create indexes for memory system
-    cur.execute(
+    # ANN index for long-term store is HNSW; for the hot pool, exact scan is acceptable.
+    # Keep HNSW here to preserve existing behavior; consider gating by env if needed.
+    try:
+        cur.execute(
+            """
+            CREATE INDEX IF NOT EXISTS conv_chunks_embedding_idx 
+            ON conv_chunks USING hnsw (embedding vector_cosine_ops)
         """
-        CREATE INDEX IF NOT EXISTS conv_chunks_embedding_idx 
-        ON conv_chunks USING hnsw (embedding vector_cosine_ops)
-    """
-    )
+        )
+    except Exception as e:
+        print(f"   ⚠️  conv_chunks HNSW index: {e}")
 
     cur.execute(
         """
@@ -470,6 +499,8 @@ def main():
 
     try:
         with psycopg2.connect(dsn) as conn:
+            # Avoid transaction aborts if optional extensions fail
+            conn.autocommit = True
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 # Create extensions
                 create_extensions(cur)
