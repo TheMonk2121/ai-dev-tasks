@@ -31,7 +31,7 @@
 
 - **Priority**: 🔧 Medium - Research for potential P2 implementation
 
-- **Points**: 3 - Research and evaluation effort
+- **Points**: 3 - Research and evaluation effor
 
 - **Dependencies**: 400_guides/400_system-overview.md, scripts/cursor_ai_integration_framework.py
 
@@ -66,9 +66,9 @@
 ### Current System Integration Points
 
 - **Cursor AI Integration Framework**: `scripts/cursor_ai_integration_framework.py`
-- **DSPy RAG System**: `dspy-rag-system/src/dspy_modules/`
-- **Document Processor**: `dspy-rag-system/src/dspy_modules/document_processor.py`
-- **Memory Rehydration**: `dspy-rag-system/src/utils/memory_rehydrator.py`
+- **DSPy RAG System**: `src/dspy_modules/`
+- **Document Processor**: `src/dspy_modules/document_processor.py`
+- **Memory Rehydration**: `src/utils/memory_rehydrator.py`
 
 ### Potential Integration Architecture
 
@@ -81,13 +81,13 @@ class VoiceEnhancedCursorIntegration(CursorAIIntegrationFramework):
         self.voice_agent = VoiceAgent()
 
     async def process_voice_request(self, audio_input):
-        # 1. SuperWhisper transcribes audio to text
+        # 1. SuperWhisper transcribes audio to tex
         transcribed_text = await self.superwhisper_client.transcribe(audio_input)
 
         # 2. Route through existing DSPy RAG system
         rag_response = await self.dspy_rag.process_query(transcribed_text)
 
-        # 3. Return to Cursor chat as text
+        # 3. Return to Cursor chat as tex
         return rag_response
 ```
 

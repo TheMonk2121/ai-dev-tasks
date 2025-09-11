@@ -33,10 +33,10 @@ ai-dev-tasks/
 
 ### Development Patterns
 - **Add database table**: `dspy-rag-system/config/database/` → add DDL → add migration script
-- **Add DSPy module**: `dspy-rag-system/src/dspy_modules/` → add module → add tests
-- **Add utility function**: `dspy-rag-system/src/utils/` → add function → add tests
+- **Add DSPy module**: `src/dspy_modules/` → add module → add tests
+- **Add utility function**: `src/utils/` → add function → add tests
 - **Add SQL function**: `dspy-rag-system/config/database/` → add function → add tests
-- **Update memory system**: `dspy-rag-system/src/utils/` → modify memory_rehydrator.py → update tests
+- **Update memory system**: `src/utils/` → modify memory_rehydrator.py → update tests
 
 ### Local Development
 ```bash
@@ -69,7 +69,7 @@ poetry run pytest --cov=src   # Test coverage
 ## 1. Problem Statement
 
 ### What's broken?
-Our current LTST memory system uses a simple ranking formula (`priority_score = (relevance_score * 0.7) + (recency_score * 0.3)`) that doesn't leverage the full potential of modern retrieval techniques. The system lacks:
+Our current LTST memory system uses a simple ranking formula (`priority_score = (relevance_score * 0.7) + (recency_score * 0.3)`) that doesn'tt leverage the full potential of modern retrieval techniques. The system lacks:
 - **Sophisticated ranking**: No BM25 lexical search or hybrid ranking
 - **Intelligent pruning**: No audit trails or usage-based eviction
 - **Entity management**: No versioning or contradiction handling for facts

@@ -89,7 +89,7 @@ Execute the LTST Memory System implementation with 8 tasks across 4 phases. This
 **🛑 Pause After:** no
 
 **Do:**
-1. Create `ConversationStorage` class in `dspy-rag-system/src/utils/`
+1. Create `ConversationStorage` class in `src/utils/`
 2. Implement conversation storage with metadata
 3. Add efficient retrieval based on relevance and recency
 4. Integrate with existing pgvector for semantic search

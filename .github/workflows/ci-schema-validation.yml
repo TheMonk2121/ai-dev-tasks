@@ -1,3 +1,5 @@
+---
+# yamllint disable rule:line-length rule:trailing-spaces rule:brackets rule:indentation
 name: Schema Validation CI
 
 on:
@@ -12,47 +14,47 @@ on:
 jobs:
   schema-validation:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-    
+
     - name: Install UV
       uses: astral-sh/setup-uv@v4
       with:
         version: latest
-    
+
     - name: Install dependencies
       run: |
         uv sync --all-extras --dev
-    
+
     - name: Set strict array validation
       run: |
         echo "EVAL_STRICT_ARRAYS=1" >> $GITHUB_ENV
         echo "PYTHONPATH=dspy-rag-system/src:dspy-rag-system/train" >> $GITHUB_ENV
-    
+
     - name: Run array validation tests
       run: |
         uv run pytest -q tests/test_ndarray_validation.py -v
-    
+
     - name: Run performance benchmarks
       run: |
         uv run pytest -q tests/bench/test_ndarray_pydantic_bench.py -v
-    
+
     - name: Validate feature artifacts schema
       run: |
         uv run pytest -q tests/test_feature_artifacts_schema.py -v
-    
+
     - name: Test feature schema integration
       run: |
         uv run python -c "
         from dspy_modules.retriever.fusion_head import build_fusion_features_from_row
         from train.feature_io import write_feature
-        
+
         # Test integration with sample data
         sample_row = {
             's_bm25': 0.3, 's_vec': 0.5, 's_title': 0.1, 's_short': 0.2,
@@ -60,19 +62,19 @@ jobs:
             'is_code': True, 'tag_bias_hint': 0.0,
             'q_vec': [0.1] * 384, 'd_vec': [0.2] * 384
         }
-        
+
         feature = build_fusion_features_from_row(sample_row)
         json_line = write_feature(feature)
         print('✅ Feature schema integration test passed')
         "
-    
+
     - name: Test training feature persistence
       run: |
         uv run python -c "
         from train.persist_training_features import persist_features_to_jsonl, load_features_from_jsonl
         import tempfile
         import os
-        
+
         # Test data
         features = [
             {
@@ -82,24 +84,24 @@ jobs:
                 'q_vec': [0.1] * 384, 'd_vec': [0.2] * 384
             }
         ]
-        
+
         # Test persistence
         with tempfile.NamedTemporaryFile(mode='w', suffix='.jsonl', delete=False) as f:
             temp_path = f.name
-        
+
         try:
             count = persist_features_to_jsonl(features, temp_path, validate=True)
             assert count == 1, f'Expected 1 feature written, got {count}'
-            
+
             # Test loading
             loaded_features = load_features_from_jsonl(temp_path)
             assert len(loaded_features) == 1, f'Expected 1 feature loaded, got {len(loaded_features)}'
-            
+
             print('✅ Training feature persistence test passed')
         finally:
             os.unlink(temp_path)
         "
-    
+
     - name: Test JSON serialization round-trip
       run: |
         uv run python -c "
@@ -107,7 +109,7 @@ jobs:
         sys.path.insert(0, 'dspy-rag-system/src')
         from dspy_modules.retriever.feature_schema import FusionFeatures
         import json
-        
+
         # Test with 384-dimensional vectors (your actual embedding size)
         ff = FusionFeatures(
             s_bm25=0.3, s_vec=0.5, s_title=0.1, s_short=0.2,
@@ -119,14 +121,14 @@ jobs:
         assert isinstance(obj['q_vec'], list) and len(obj['q_vec']) == 384
         print('✅ JSON serialization validation passed')
         "
-    
+
     - name: Test strict mode enforcement
       run: |
         uv run python -c "
         import sys
         sys.path.insert(0, 'dspy-rag-system/src')
         from dspy_modules.retriever.feature_schema import FusionFeatures
-        
+
         try:
             # This should fail in strict mode
             ff = FusionFeatures(
@@ -139,9 +141,9 @@ jobs:
         except Exception:
             print('✅ Strict mode working - correctly rejected NaN')
         "
-    
+
     - name: Check for linting errors
       run: |
-        uv run python -m ruff check dspy-rag-system/src/utils/pyd_ndarray.py
-        uv run python -m ruff check dspy-rag-system/src/dspy_modules/retriever/feature_schema.py
+        uv run python -m ruff check src/utils/pyd_ndarray.py
+        uv run python -m ruff check src/dspy_modules/retriever/feature_schema.py
         uv run python -m ruff check dspy-rag-system/train/feature_io.py

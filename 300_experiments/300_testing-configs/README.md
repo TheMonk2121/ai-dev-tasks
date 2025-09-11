@@ -50,7 +50,7 @@ python3 ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 ## 🔧 **Configuration Management**
 
 **Environment Variables**: All test configurations use environment variables for easy switching
-**Version Control**: Configurations are versioned and tracked in git
+**Version Control**: Configurations are versioned and tracked in gi
 **CI Integration**: Automated testing uses these configurations for consistent test environments
 
 ## 📊 **Baseline Configuration Details**

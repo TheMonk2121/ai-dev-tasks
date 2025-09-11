@@ -28,7 +28,7 @@
 **What are we building?** A simple migration from DSPy 2.6.27 to DSPy 3.0.
 
 **How does it work?**
-1. **Upgrade DSPy**: Pin DSPy 3.0.1 in requirements.txt
+1. **Upgrade DSPy**: Pin DSPy 3.0.1 in requirements.tx
 2. **Test Compatibility**: Run existing tests to ensure nothing breaks
 3. **Replace Custom Assertions**: Use native `dspy.Assert` where possible
 4. **Validate**: Ensure system works as expected
@@ -48,7 +48,7 @@
 
 **What does success look like?**
 - System successfully uses DSPy 3.0
-- No functionality lost
+- No functionality los
 - Code is cleaner where native assertions replace custom ones
 
 **What are the quality gates?**

@@ -13,7 +13,7 @@
 - **Memory Systems**: Unified Memory Orchestrator, LTST, Cursor, Go CLI, Prime
 - **Quality Gates**: Automated evaluation in CI/CD, development workflow integration
 - **Documentation**: 00-12 guide system, comprehensive usage guides, status tracking
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
@@ -39,10 +39,10 @@ ai-dev-tasks/
 ### Development Patterns
 - **Hybrid Evaluation**: Bedrock for production/CI, local LLM for development/backup
 - **Environment Detection**: Automatic fallback to local when Bedrock unavailable
-- **Cost Monitoring**: Track usage and costs for budget management
+- **Cost Monitoring**: Track usage and costs for budget managemen
 - **Performance Metrics**: Compare speed and reliability between local and cloud
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify current RAGChecker setup
 python3 scripts/ragchecker_official_evaluation.py --use-local-llm
@@ -55,7 +55,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock
 python3 scripts/ragchecker_ab_testing.py --compare-backends
 
 # Check cost monitoring
-python3 scripts/bedrock_cost_monitor.py --usage-report
+python3 scripts/bedrock_cost_monitor.py --usage-repor
 ```
 
 ### Common Tasks
@@ -69,7 +69,7 @@ python3 scripts/bedrock_cost_monitor.py --usage-report
 ### What's broken?
 Local LLM evaluation takes 15-25 minutes for comprehensive RAGChecker testing, causing significant development bottlenecks. The current system experiences:
 - **Slow Feedback Loops**: 15-25 minutes per evaluation cycle
-- **Unreliable Timeouts**: Local LLM calls frequently hang or timeout
+- **Unreliable Timeouts**: Local LLM calls frequently hang or timeou
 - **Development Friction**: Long waits discourage frequent testing
 - **CI/CD Bottlenecks**: Automated testing is too slow for practical use
 
@@ -130,7 +130,7 @@ A hybrid RAGChecker evaluation system that leverages AWS Bedrock Claude 3.5 Sonn
 **Performance Metrics**:
 - **Speed**: 15-25 minutes → 3-5 minutes (5x improvement)
 - **Reliability**: 99%+ success rate vs local timeouts
-- **Cost**: ~$0.36 per evaluation, ~$60/month for development
+- **Cost**: ~$0.36 per evaluation, ~$60/month for developmen
 - **Accuracy**: Equivalent or better evaluation quality
 
 **Operational Success**:
@@ -202,7 +202,7 @@ A hybrid RAGChecker evaluation system that leverages AWS Bedrock Claude 3.5 Sonn
 - **Mitigation 1**: Automatic fallback to local LLM with seamless switching
 - **Mitigation 2**: Real-time cost monitoring with budget alerts and limits
 - **Mitigation 3**: Version pinning and evaluation quality validation
-- **Mitigation 4**: Graceful degradation to local LLM for offline development
+- **Mitigation 4**: Graceful degradation to local LLM for offline developmen
 - **Mitigation 5**: Environment-based credential management and IAM best practices
 
 ### What are the unknowns?
@@ -236,7 +236,7 @@ A hybrid RAGChecker evaluation system that leverages AWS Bedrock Claude 3.5 Sonn
 
 ### How do we test it?
 **Testing Framework**:
-- **Unit Testing**: Individual component testing with pytest
+- **Unit Testing**: Individual component testing with pytes
 - **Integration Testing**: End-to-end evaluation workflow with both backends
 - **Performance Testing**: A/B comparison of speed and accuracy
 - **Cost Testing**: Token usage and cost calculation validation
@@ -275,7 +275,7 @@ A hybrid RAGChecker evaluation system that leverages AWS Bedrock Claude 3.5 Sonn
 **External Dependencies**:
 - **AWS Bedrock Service**: Regional availability and model access
 - **Network Connectivity**: Reliable internet for cloud API calls
-- **AWS Credentials**: Proper IAM permissions and credential management
+- **AWS Credentials**: Proper IAM permissions and credential managemen
 - **Cost Budget**: Approved budget for cloud LLM usage
 
 ### What's the timeline?

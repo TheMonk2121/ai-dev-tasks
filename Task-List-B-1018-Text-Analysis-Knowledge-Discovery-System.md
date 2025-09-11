@@ -58,7 +58,7 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
   - Overall RAGChecker score
   - Context utilization metrics
   - Response quality metrics
-- [ ] **1.1.3**: Create baseline evaluation report
+- [ ] **1.1.3**: Create baseline evaluation repor
   - Save results to `metrics/baseline_evaluations/B-1018_baseline.json`
   - Document current performance state
 
@@ -72,15 +72,15 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
 **Priority**: 🔥 Critical
 
 #### Subtasks:
-- [ ] **1.2.1**: Create `dspy-rag-system/src/utils/text_cooc_adapter.py`
+- [ ] **1.2.1**: Create `src/utils/text_cooc_adapter.py`
   ```python
   class TextCoOccurrenceAdapter:
       def build_graph(self, text: str, window=4, min_freq=2) -> GraphData:
           # Tokenization with nltk.word_tokenize
           # Co-occurrence analysis with sliding window
           # Node metadata: frequency, centrality, community
-          # Edge metadata: weight, co_occurrence_count
-          # Return V1 contract compatible format
+          # Edge metadata: weight, co_occurrence_coun
+          # Return V1 contract compatible forma
   ```
 - [ ] **1.2.2**: Implement tokenization and preprocessing
   - NLTK word tokenization
@@ -102,13 +102,13 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
 **Priority**: 🔥 Critical
 
 #### Subtasks:
-- [ ] **1.3.1**: Create `dspy-rag-system/src/utils/graph_metrics.py`
+- [ ] **1.3.1**: Create `src/utils/graph_metrics.py`
   ```python
   def betweenness_centrality(nodes, edges) -> Dict[str, float]
   def community_labels(nodes, edges) -> Dict[str, int]  # Louvain algorithm
   def influence_ranking(nodes, edges) -> List[str]
   ```
-- [ ] **1.3.2**: Integrate with existing UMAP layout
+- [ ] **1.3.2**: Integrate with existing UMAP layou
 - [ ] **1.3.3**: Performance optimization for large graphs
 
 #### Acceptance Criteria:
@@ -125,7 +125,7 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
 **Priority**: 🔥 Critical
 
 #### Subtasks:
-- [ ] **2.1.1**: Create `dspy-rag-system/src/utils/gap_detector.py`
+- [ ] **2.1.1**: Create `src/utils/gap_detector.py`
   ```python
   def find_structural_gaps(nodes, edges, communities) -> List[GapCandidate]:
       # Gap scoring: few edges between clusters, high centrality near boundary
@@ -148,7 +148,7 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
 **Priority**: 🔥 Critical
 
 #### Subtasks:
-- [ ] **2.2.1**: Add `/graph-gaps?source=text_cooc` endpoint
+- [ ] **2.2.1**: Add `/graph-gaps?source=text_cooc` endpoin
 - [ ] **2.2.2**: Top N gaps exposure
 - [ ] **2.2.3**: Integration with existing Flask infrastructure
 
@@ -166,7 +166,7 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
 **Priority**: 🔥 Critical
 
 #### Subtasks:
-- [ ] **3.1.1**: Create `dspy-rag-system/src/dspy_modules/bridge_generator.py`
+- [ ] **3.1.1**: Create `src/dspy_modules/bridge_generator.py`
   ```python
   class BridgeQuestionGenerator(dspy.Module):
       def forward(self, gap_candidate: GapCandidate) -> str
@@ -206,7 +206,7 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
 **Priority**: 🔥 Critical
 
 #### Subtasks:
-- [ ] **4.1.1**: Create `dspy-rag-system/src/utils/market_study.py`
+- [ ] **4.1.1**: Create `src/utils/market_study.py`
   ```python
   def related_queries(focus_term: str, locale: str = "en-US") -> List[str]
   def search_results(focus_term: str, locale: str = "en-US", k: int = 40) -> List[Dict]
@@ -319,10 +319,10 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
 #### Acceptance Criteria:
 - [ ] All unit tests passing (90% coverage)
 - [ ] Integration tests passing
-- [ ] Performance benchmarks met
+- [ ] Performance benchmarks me
 - [ ] Quality metrics achieved
 
-### Task 6.2: Final Evaluation & Improvement Measurement
+### Task 6.2: Final Evaluation & Improvement Measuremen
 **Duration**: 1 hour
 **Priority**: 🔥 Critical
 
@@ -337,7 +337,7 @@ Comprehensive text analysis and knowledge discovery system using existing graph 
   - Validate gap detection performance
 - [ ] **6.2.3**: Document final evaluation results
   - Save to `metrics/baseline_evaluations/B-1018_final.json`
-  - Create improvement summary report
+  - Create improvement summary repor
 
 #### Acceptance Criteria:
 - [ ] Final evaluation completed successfully

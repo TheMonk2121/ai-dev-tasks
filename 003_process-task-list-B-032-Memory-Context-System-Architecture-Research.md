@@ -4,7 +4,7 @@
 <!-- ANCHOR_PRIORITY: 25 -->
 <!-- ROLE_PINS: ["implementer", "researcher"] -->
 <!-- BACKLOG_ID: B-032 -->
-<!-- MEMORY_REHYDRATOR_PINS: ["500_research/500_memory-arch-research.md", "400_guides/400_memory-context-guide.md", "dspy-rag-system/src/utils/memory_rehydrator.py"] -->
+<!-- MEMORY_REHYDRATOR_PINS: ["500_research/500_memory-arch-research.md", "400_guides/400_memory-context-guide.md", "src/utils/memory_rehydrator.py"] -->
 
 ## 🔎 TL;DR
 

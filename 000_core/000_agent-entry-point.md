@@ -26,8 +26,8 @@ source uv_aliases.sh   # uvd, uvt, uvs, etc.
 ./scripts/memory_up.sh
 
 # Pull core context for this session
-python3 scripts/unified_memory_orchestrator.py \
-  --systems ltst cursor go_cli prime \
+python3 scripts/unified_memory_orchestrator.py
+  --systems ltst cursor go_cli prime
   --role planner "current project status and core documentation"
 ```
 - Memory quick start: `400_guides/400_01_memory-system-architecture.md`
@@ -77,7 +77,7 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --ro
 - AI frameworks: `400_guides/400_09_ai-frameworks-dspy.md`
 - Integrations & models: `400_guides/400_10_integrations-models.md`
 
-### 4) Iterate & Persist
+### 4) Iterate & Persis
 - Results: `metrics/baseline_evaluations/`
 - Baselines: `metrics/baseline_evaluations/BASELINE_LOCKED_20250901.md`, `metrics/baseline_evaluations/TUNED_BASELINE_20250902.md`
 - Versioning: `scripts/baseline_version_manager.py`

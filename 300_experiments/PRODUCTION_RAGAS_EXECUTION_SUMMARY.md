@@ -98,7 +98,7 @@ Production RAGAS System
 1. **Apply Additional Precision Knobs**: REDUNDANCY_TRIGRAM_MAX, TARGET_K_STRONG
 2. **Monitor Telemetry**: risky_pass_rate, ce_used%, nli_used%, unsupported%
 3. **Fine-Tune**: Apply recall knobs if needed
-4. **Two-Run Rule**: Repeat once when targets met
+4. **Two-Run Rule**: Repeat once when targets me
 
 ## 🚀 **Strategic Impact**
 
@@ -157,7 +157,7 @@ We successfully executed the **Production RAGAS Rollout**:
 1. **Apply Additional Precision Knobs**: REDUNDANCY_TRIGRAM_MAX, TARGET_K_STRONG
 2. **Monitor Telemetry**: risky_pass_rate, ce_used%, nli_used%, unsupported%
 3. **Fine-Tune**: Apply recall knobs if needed
-4. **Two-Run Rule**: Repeat once when targets met
+4. **Two-Run Rule**: Repeat once when targets me
 5. **Lock Floors**: When precision ≥ 0.20 and recall ≥ 0.60
 
 **Status**: Production system ready for RAGAS leadership! 🚀

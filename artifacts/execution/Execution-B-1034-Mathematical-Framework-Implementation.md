@@ -50,7 +50,7 @@ python3 scripts/solo_workflow.py ship
 
 **Execution Steps**:
 1. Add NetworkX and Hypothesis dependencies to project requirements
-2. Create math package structure in `dspy-rag-system/src/dspy_modules/math/`
+2. Create math package structure in `src/dspy_modules/math/`
 3. Add comprehensive learning comments and inline documentation
 4. Set up interactive example infrastructure using existing NiceGUI system
 5. Establish learning scaffolding framework for progressive complexity
@@ -618,7 +618,7 @@ python3 scripts/solo_workflow.py ship
     "dependencies": [],
     "decisions": ["Use category theory for artifacts", "Use coalgebras for agents"],
     "prd_section_0": {
-      "repository_layout": "dspy-rag-system/src/dspy_modules/ for core implementation",
+      "repository_layout": "src/dspy_modules/ for core implementation",
       "development_patterns": "Extend existing modules with mathematical properties",
       "local_development": "Use existing venv and quality gates"
     }

@@ -27,7 +27,7 @@
 - **Full evaluation workflow** with governance validation
 - **Pipeline variant generation** for training data
 - **Configuration management** with JSON config files
-- **Comprehensive reporting** and result export
+- **Comprehensive reporting** and result expor
 
 ### **4. Configuration System** (`config/rag_pipeline_governance.json`)
 - **Validation thresholds** for pipeline parameters
@@ -77,8 +77,8 @@ RAGChecker Evaluation System
 │   └── Performance Monitoring
 └── Command-Line Interface
     ├── run_ragchecker_with_governance.py
-    ├── Configuration Management
-    └── Result Export
+    ├── Configuration Managemen
+    └── Result Expor
 ```
 
 ---
@@ -187,7 +187,7 @@ The RAG Pipeline Governance system is now **fully operational** and integrated w
 
 - ✅ **Immediate value** through pipeline validation and optimization
 - ✅ **Training data augmentation** for better model performance
-- ✅ **Governance and guardrails** for RAG pipeline management
+- ✅ **Governance and guardrails** for RAG pipeline managemen
 - ✅ **Integration with existing systems** without disruption
 - ✅ **Foundation for future enhancements** with GNN and advanced features
 

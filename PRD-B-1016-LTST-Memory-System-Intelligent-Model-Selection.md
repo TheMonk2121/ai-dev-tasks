@@ -31,7 +31,7 @@ An intelligent model selection system that integrates with the existing LTST Mem
 ### What are the key features?
 - **Automatic Model Selection**: No manual specification required
 - **Role-Based Routing**: Different models for planner, coder, implementer, researcher roles
-- **Task-Type Awareness**: Code implementation vs planning vs research vs light chat
+- **Task-Type Awareness**: Code implementation vs planning vs research vs light cha
 - **LTST Memory Integration**: Uses historical context for better decisions
 - **Local-First Architecture**: All models remain local and offline
 - **Simple Fallbacks**: Clear, predictable fallback patterns
@@ -62,7 +62,7 @@ An intelligent model selection system that integrates with the existing LTST Mem
 
 ### What technology?
 - **Database**: PostgreSQL with new `model_registry` table
-- **Router**: Enhanced `dspy-rag-system/src/dspy_modules/cursor_model_router.py`
+- **Router**: Enhanced `src/dspy_modules/cursor_model_router.py`
 - **Memory**: Integration with existing LTST Memory System
 - **Logging**: Existing structured tracer for selection decisions
 
@@ -84,7 +84,7 @@ An intelligent model selection system that integrates with the existing LTST Mem
 - **Model Selection Errors**: Wrong model chosen for task type
 - **Performance Degradation**: Model selection adds latency
 - **Complexity Creep**: System becomes too complex to maintain
-- **Fallback Failures**: System doesn't gracefully handle model unavailability
+- **Fallback Failures**: System doesn'tt gracefully handle model unavailability
 
 ### How do we handle it?
 - **Simple Rules**: Use deterministic rules instead of complex algorithms

@@ -14,7 +14,7 @@ import sys
 import yaml
 
 # Add src to path for imports
-sys.path.append("dspy-rag-system/src")
+sys.path.append("src")
 
 from eval.contracts import DatasetConfig, RunMetrics
 from eval.ragchecker_adapter import RAGCheckerAdapter

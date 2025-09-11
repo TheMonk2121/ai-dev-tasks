@@ -128,7 +128,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Handle missing dependencies gracefully
 - [ ] **Edge Case Tests** - Test with corrupted module files
 
-**Implementation Notes**: Examine `dspy-rag-system/src/utils/memory_rehydrator.py` to understand the module structure and identify what the `build_hydration_bundle` function should do based on usage patterns.
+**Implementation Notes**: Examine `src/utils/memory_rehydrator.py` to understand the module structure and identify what the `build_hydration_bundle` function should do based on usage patterns.
 
 **Quality Gates**:
 - [ ] **Code Review** - Analysis results reviewed
@@ -325,7 +325,7 @@ python3 scripts/solo_workflow.py ship
 **Testing Requirements**:
 - [ ] **Unit Tests** - Test error handling logic
 - [ ] **Integration Tests** - Test with actual error conditions
-- [ ] **Performance Tests** - Error handling doesn't impact startup time
+- [ ] **Performance Tests** - Error handling doesn'tt impact startup time
 - [ ] **Security Tests** - No security issues in error handling
 - [ ] **Resilience Tests** - Handle various error conditions gracefully
 - [ ] **Edge Case Tests** - Test with severe error conditions

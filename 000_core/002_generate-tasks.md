@@ -37,7 +37,7 @@ python3 scripts/task_generation_automation.py --prd <prd_file> --embed --preview
 # Generate tasks from backlog item (embedded in PRD)
 python3 scripts/task_generation_automation.py --backlog-id <backlog_id> --embed --preview
 
-# Generate complete embedded task list
+# Generate complete embedded task lis
 python3 scripts/task_generation_automation.py --prd <prd_file> --embed --output-file prd_with_tasks.md
 ```
 
@@ -202,7 +202,7 @@ def test_component_functionality():
 
     # Setup - Prepare test data and mocks
 
-    # Execute - Call the function under test
+    # Execute - Call the function under tes
 
     # Assert - Verify expected outcomes
 
@@ -255,7 +255,7 @@ def test_component_functionality():
 - [ ] **Test Documentation Updated** - Test procedures documented
 - [ ] **CI/CD Integration** - Tests run automatically
 
-## Enhanced Output Format
+## Enhanced Output Forma
 
 Generate tasks embedded directly in the PRD with the following structure:
 
@@ -309,7 +309,7 @@ Generate tasks embedded directly in the PRD with the following structure:
 6. **Define quality gates** for each major milestone
 7. **Include monitoring and observability** requirements
 8. **Specify error handling** and recovery procedures
-9. **Align with backlog priorities** when planning task dependencies and effort
+9. **Align with backlog priorities** when planning task dependencies and effor
 10. **Consider impact estimates** from backlog to ensure appropriate task scope
 11. **Parse backlog table format** when provided with backlog ID
 12. **Use points-based estimation** for task effort planning

@@ -23,7 +23,7 @@ Conservative DSPy 3.0 migration that achieves parity with current system before 
 **Testing Requirements:**
 - [ ] **Unit Tests** - Validate baseline capture script functionality
 - [ ] **Integration Tests** - Ensure all metrics are captured correctly
-- [ ] **Performance Tests** - Verify baseline capture doesn't impact system performance
+- [ ] **Performance Tests** - Verify baseline capture doesn'tt impact system performance
 - [ ] **Resilience Tests** - Test baseline capture under various system states
 
 **Implementation Notes:** Use existing monitoring infrastructure to capture metrics without introducing new dependencies
@@ -166,7 +166,7 @@ Conservative DSPy 3.0 migration that achieves parity with current system before 
 - [ ] **Resilience Tests** - Test rollback under failure conditions
 - [ ] **Performance Tests** - Validate performance after rollback
 
-**Implementation Notes:** Test rollback in isolated environment
+**Implementation Notes:** Test rollback in isolated environmen
 **Quality Gates:**
 - [ ] **Code Review** - Rollback test results reviewed
 - [ ] **Tests Passing** - All tests pass after rollback

@@ -62,7 +62,7 @@ retrieval_table = shadow_manager.get_retrieval_table(use_shadow=True)
 - Configuration validation
 - Retrieval health checks
 - Prefix leakage detection
-- Token budget enforcement
+- Token budget enforcemen
 
 **Usage**:
 ```python
@@ -87,12 +87,12 @@ health = guardrails.check_retrieval_health(retrieval_results)
 
 ```bash
 # Lock the validated configuration
-python scripts/lock_production_config.py \
-  --chunk-size 450 \
-  --overlap-ratio 0.10 \
-  --jaccard-threshold 0.8 \
-  --prefix-policy A \
-  --embedder "BAAI/bge-large-en-v1.5" \
+python scripts/lock_production_config.py
+  --chunk-size 450
+  --overlap-ratio 0.10
+  --jaccard-threshold 0.8
+  --prefix-policy A
+  --embedder "BAAI/bge-large-en-v1.5"
   --generate-runbook
 ```
 
@@ -125,22 +125,22 @@ python scripts/lock_production_config.py --promote
 @dataclass
 class LockedConfig:
     # Core configuration
-    chunk_size: int
-    overlap_ratio: float
-    jaccard_threshold: float
+    chunk_size: in
+    overlap_ratio: floa
+    jaccard_threshold: floa
     prefix_policy: str  # "A" or "B"
-    
+
     # Versioning
     chunk_version: str
     embedder_name: str
     tokenizer_name: str
     tokenizer_hash: str
-    
+
     # Metadata
     created_at: str
     created_by: str
     baseline_metrics: Dict[str, Any]
-    
+
     # Production flags
     is_locked: bool = True
     is_production: bool = False
@@ -209,7 +209,7 @@ def get_retrieval_table(use_shadow: bool = False) -> str:
     return primary_table
 ```
 
-### Ingest Run ID Format
+### Ingest Run ID Forma
 
 ```
 {chunk_version}-{config_hash[:8]}
@@ -225,7 +225,7 @@ Example: `2025-09-07-143022-v1-a1b2c3d4`
 - **Filter Hit Rate**: Target ≥0.20
 - **Reader Gold Usage**: Target ≥baseline
 - **Retrieval Snapshot Size**: Target 30-60 chunks
-- **CE Score Distribution**: Monitor for drift
+- **CE Score Distribution**: Monitor for drif
 - **Ingest Throughput**: Monitor performance
 - **Deduplication Rate**: Target 10-35%
 
@@ -306,7 +306,7 @@ The configuration locking system integrates with the enhanced chunking module:
 ```python
 # Environment variables automatically override config
 config = ChunkingConfig(embedder_name="BAAI/bge-large-en-v1.5")
-# Will use CHUNK_SIZE, OVERLAP_RATIO, etc. from environment
+# Will use CHUNK_SIZE, OVERLAP_RATIO, etc. from environmen
 ```
 
 ### RAGChecker Integration
@@ -315,10 +315,10 @@ The system works with existing RAGChecker evaluation:
 
 ```bash
 # Standard RAGChecker evaluation with locked config
-python scripts/ragchecker_official_evaluation.py \
-  --cases eval/test_cases.json \
-  --outdir metrics/baseline_evaluations \
-  --use-bedrock \
+python scripts/ragchecker_official_evaluation.py
+  --cases eval/test_cases.json
+  --outdir metrics/baseline_evaluations
+  --use-bedrock
   --bypass-cli
 ```
 
@@ -344,7 +344,7 @@ CREATE TABLE document_chunks_2025_09_07_143022_v1 (
 
 ## Best Practices
 
-### Configuration Management
+### Configuration Managemen
 
 1. **Always lock configurations** before production use
 2. **Use shadow indexing** for safe rollouts

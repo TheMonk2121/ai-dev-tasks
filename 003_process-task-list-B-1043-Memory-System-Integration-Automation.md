@@ -774,7 +774,7 @@ LTST semantic search already provides effective retrieval. Focus on actual user 
     "dependencies": ["B-1012: LTST Memory System"],
     "decisions": ["Use MCP for Cursor integration", "MoSCoW prioritization", "Performance SLOs"],
     "prd_section_0": {
-      "repository_layout": "dspy-rag-system/src/utils/ for memory components",
+      "repository_layout": "src/utils/ for memory components",
       "development_patterns": "Memory components in utils/, DSPy modules in dspy_modules/",
       "local_development": "Poetry install, pytest, docker-compose for database"
     }

@@ -29,7 +29,7 @@ The current LTST (Long-Term Short-Term) memory system lacks several critical cap
 - **Environment drift**: New environments require running Python first to get proper schema
 - **Scalability limits**: No path to multi-tenant support without breaking changes
 - **Performance degradation**: System slows down as conversation history grows
-- **Governance violation**: Current approach doesn't align with "local-first, simple" principles
+- **Governance violation**: Current approach doesn'tt align with "local-first, simple" principles
 
 ### What's the opportunity?
 Implement governance-aligned improvements that enhance semantic search capabilities, ensure environment reproducibility, future-proof for multi-tenant support, and provide manual cleanup options while maintaining the project's "local-first, simple" philosophy.
@@ -47,7 +47,7 @@ A comprehensive database optimization for the LTST memory system that enhances s
 
 ### What are the key features?
 - **Semantic conversation recall**: HNSW index enables finding relevant past conversations
-- **Reproducible environments**: Fresh clone + `psql -f schema.sql` is sufficient
+- **Reproducible environments**: Fresh clone + `psql -f schema.sql` is sufficien
 - **Future-proof architecture**: User_id column ready for multi-tenant scenarios
 - **Governance-aligned retention**: Manual cleanup function, no automated jobs
 
@@ -66,13 +66,13 @@ A comprehensive database optimization for the LTST memory system that enhances s
 - **Environment reproducibility**: New environments work with just `psql -f schema.sql`
 - **Future readiness**: User_id column available for multi-tenant scenarios
 - **Governance compliance**: Manual cleanup available, no automated jobs
-- **Performance**: HNSW provides better recall/latency than IVFFlat
+- **Performance**: HNSW provides better recall/latency than IVFFla
 
 ### What are the quality gates?
 - [ ] All SQL migrations are idempotent (use `IF NOT EXISTS`)
 - [ ] No breaking changes to existing conversation_memory data
 - [ ] Manual cleanup function works without side effects
-- [ ] Lazy embedding backfill doesn't impact performance
+- [ ] Lazy embedding backfill doesn'tt impact performance
 - [ ] All changes align with local-first, simple governance principles
 
 ## 4. Technical Approach
@@ -99,7 +99,7 @@ A comprehensive database optimization for the LTST memory system that enhances s
 
 ### What could go wrong?
 - **pgvector version mismatch**: HNSW requires pgvector ≥0.5
-  - **Mitigation**: Check version in setup and provide fallback to IVFFlat
+  - **Mitigation**: Check version in setup and provide fallback to IVFFla
 - **Performance regression**: HNSW construction might be slower
   - **Mitigation**: Use conservative parameters (m=16, ef_construction=64)
 - **Data migration issues**: Adding columns to existing table
@@ -147,7 +147,7 @@ A comprehensive database optimization for the LTST memory system that enhances s
 1. **Phase 1**: Schema preparation and validation (2 hours)
    - Validate pgvector version compatibility
    - Prepare all DDL statements with idempotent patterns
-   - Test schema application in isolated environment
+   - Test schema application in isolated environmen
 
 2. **Phase 2**: Core schema implementation (3 hours)
    - Add embedding column to conversation_memory
@@ -179,7 +179,7 @@ A comprehensive database optimization for the LTST memory system that enhances s
 - **Phase 4**: Day 2 (1 hour)
 - **Risk buffer**: 2 hours for unexpected issues
 
-## 8. Governance Alignment
+## 8. Governance Alignmen
 
 ### Local-First Principles
 - **Manual cleanup**: No automated jobs, user controls when to clean
@@ -197,4 +197,4 @@ A comprehensive database optimization for the LTST memory system that enhances s
 - **Semantic search capability**: Can find relevant past conversations
 - **Environment reproducibility**: Fresh clone works with just schema.sql
 - **Governance compliance**: All changes align with local-first, simple principles
-- **Performance improvement**: HNSW provides better recall/latency than IVFFlat
+- **Performance improvement**: HNSW provides better recall/latency than IVFFla

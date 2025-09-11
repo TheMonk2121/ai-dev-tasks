@@ -18,9 +18,13 @@ def check_and_enable():
         with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT COUNT(*) FROM pg_stat_statements LIMIT 1;")
-                count = cur.fetchone()[0]
-                print(f"✅ pg_stat_statements is already working! Found {count} statements")
-                return True
+                result = cur.fetchone()
+                if result is not None:
+                    count = result[0]
+                    print(f"✅ pg_stat_statements is already working! Found {count} statements")
+                    return True
+                else:
+                    print("❌ No results from pg_stat_statements query")
     except Exception as e:
         print(f"❌ pg_stat_statements not working: {e}")
 
@@ -35,9 +39,13 @@ def check_and_enable():
 
                 # Test again
                 cur.execute("SELECT COUNT(*) FROM pg_stat_statements LIMIT 1;")
-                count = cur.fetchone()[0]
-                print(f"✅ pg_stat_statements is now working! Found {count} statements")
-                return True
+                result = cur.fetchone()
+                if result is not None:
+                    count = result[0]
+                    print(f"✅ pg_stat_statements is now working! Found {count} statements")
+                    return True
+                else:
+                    print("❌ No results from pg_stat_statements query after creation")
     except Exception as e:
         print(f"❌ Error creating extension: {e}")
 

@@ -85,7 +85,7 @@ Implement industry-grade RAG retrieval tuning protocol with systematic precision
 **Objective**: Complete documentation and governance integration
 - **H1**: Write comprehensive tuning guides
 - **H2**: Integrate with memory system
-- **H3**: Update Cursor rules for enforcement
+- **H3**: Update Cursor rules for enforcemen
 
 ---
 
@@ -256,7 +256,7 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
 - **Description**: Update CI to call the official Bedrock path; allow fallback only for local dev, not gates.
 - **Acceptance Criteria**:
   - [ ] CI job uses Bedrock path
-  - [ ] Pipeline fails if Bedrock path fails or gates unmet
+  - [ ] Pipeline fails if Bedrock path fails or gates unme
   - [ ] Artifacts uploaded (JSON/CSV + HTML summary)
 - **Testing Requirements**:
   - [ ] Integration: CI run in a test branch
@@ -412,7 +412,7 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
 - **Priority**: High • MoSCoW: 🎯 Should • Estimated Time: 3h • Dependencies: C1–D3
 - **Description**: Lightweight regex/keyword router for lookup/config, how-to/troubleshoot, multi-hop.
 - **Acceptance Criteria**:
-  - [ ] Router accuracy ≥ 80% on labeled eval set
+  - [ ] Router accuracy ≥ 80% on labeled eval se
   - [ ] Per-intent knobs applied
 - **Testing Requirements**:
   - [ ] Unit: rule coverage tests
@@ -464,10 +464,10 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
 - **Description**: Encode initial gates (Prec≥0.12, Rec≥0.15, Faith≥0.60) and ratchet sequence.
 - **Acceptance Criteria**:
   - [ ] CI reads gates from YAML
-  - [ ] Two consecutive greens required to ratchet
+  - [ ] Two consecutive greens required to ratche
 - **Testing Requirements**:
   - [ ] Unit: parser tests
-  - [ ] Integration: simulated runs trigger ratchet
+  - [ ] Integration: simulated runs trigger ratche
 - **Quality Gates**: Review/tests
 - **Solo Workflow**: Auto-Advance: yes • Context: yes • One-Command: yes • Smart Pause: no
 
@@ -501,7 +501,7 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
 - **Priority**: High • MoSCoW: 🎯 Should • Estimated Time: 2h • Dependencies: E1
 - **Description**: Label intents; ensure multi-hop tasks span ≥2 files.
 - **Acceptance Criteria**:
-  - [ ] R@50 measured on multi-hop subset
+  - [ ] R@50 measured on multi-hop subse
   - [ ] No hallucinated edges in answers
 - **Testing Requirements**:
   - [ ] Integration: chain correctness checks
@@ -530,7 +530,7 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
   - [ ] Matches YAML gates
   - [ ] Includes "two-green" rule
 - **Testing Requirements**:
-  - [ ] Docs lint
+  - [ ] Docs lin
 - **Quality Gates**: Review/docs
 - **Solo Workflow**: Auto-Advance: yes • Context: yes • One-Command: yes • Smart Pause: no
 
@@ -552,7 +552,7 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
   - [ ] Verified by a clean-room run
   - [ ] All env vars and permissions documented
 - **Testing Requirements**:
-  - [ ] Docs lint
+  - [ ] Docs lin
 - **Quality Gates**: Review/docs
 - **Solo Workflow**: Auto-Advance: yes • Context: yes • One-Command: yes • Smart Pause: no
 
@@ -619,7 +619,7 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
 This complete task list provides everything needed to implement B-1059:
 
 - **29 detailed tasks** across 9 phases with clear dependencies
-- **MoSCoW prioritization** ensuring critical path is addressed first
+- **MoSCoW prioritization** ensuring critical path is addressed firs
 - **Solo workflow integration** with auto-advance and context preservation
 - **Quality gates and testing requirements** for each task
 - **Risk mitigation strategies** and performance targets
@@ -650,7 +650,7 @@ MoSCoW Prioritization Summary
 
 ⏸️ Won’t Have: 0 tasks — everything here supports baseline → industry targets
 
-Solo Developer Quick Start
+Solo Developer Quick Star
 # Start a focused session for B-1059
 python3 scripts/solo_workflow.py start "B-1059 Retrieval Tuning + Bedrock canonical eval"
 
@@ -696,7 +696,7 @@ Acceptance Criteria:
 
  CI job uses Bedrock path
 
- Pipeline fails if Bedrock path fails or gates unmet
+ Pipeline fails if Bedrock path fails or gates unme
 
  Artifacts uploaded (JSON/CSV + HTML summary)
 Testing Requirements:
@@ -896,7 +896,7 @@ Priority: High • MoSCoW: 🎯 Should • Estimated Time: 3h • Dependencies: 
 Description: Lightweight regex/keyword router for lookup/config, how-to/troubleshoot, multi-hop.
 Acceptance Criteria:
 
- Router accuracy ≥ 80% on labeled eval set
+ Router accuracy ≥ 80% on labeled eval se
 
  Per-intent knobs applied
 Testing Requirements:
@@ -965,12 +965,12 @@ Acceptance Criteria:
 
  CI reads gates from YAML
 
- Two consecutive greens required to ratchet
+ Two consecutive greens required to ratche
 Testing Requirements:
 
  Unit: parser tests
 
- Integration: simulated runs trigger ratchet
+ Integration: simulated runs trigger ratche
 Quality Gates: Review/tests
 Solo Workflow: Auto-Advance: yes • Context: yes • One-Command: yes • Smart Pause: no
 
@@ -1011,7 +1011,7 @@ Priority: High • MoSCoW: 🎯 Should • Estimated Time: 2h • Dependencies: 
 Description: Label intents; ensure multi-hop tasks span ≥2 files.
 Acceptance Criteria:
 
- R@50 measured on multi-hop subset
+ R@50 measured on multi-hop subse
 
  No hallucinated edges in answers
 Testing Requirements:
@@ -1047,7 +1047,7 @@ Acceptance Criteria:
  Includes “two-green” rule
 Testing Requirements:
 
- Docs lint
+ Docs lin
 Quality Gates: Review/docs
 Solo Workflow: Auto-Advance: yes • Context: yes • One-Command: yes • Smart Pause: no
 
@@ -1077,7 +1077,7 @@ Acceptance Criteria:
  All env vars and permissions documented
 Testing Requirements:
 
- Docs lint
+ Docs lin
 Quality Gates: Review/docs
 Solo Workflow: Auto-Advance: yes • Context: yes • One-Command: yes • Smart Pause: no
 

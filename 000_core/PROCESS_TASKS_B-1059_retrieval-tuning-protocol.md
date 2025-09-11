@@ -54,7 +54,7 @@
 - **Dependencies**: A1
 - **Acceptance Criteria**:
   - [ ] CI job uses Bedrock path
-  - [ ] Pipeline fails if Bedrock path fails or gates unmet
+  - [ ] Pipeline fails if Bedrock path fails or gates unme
   - [ ] Artifacts uploaded (JSON/CSV + HTML summary)
 - **Implementation Steps**:
   1. Update CI configuration to use Bedrock path
@@ -242,7 +242,7 @@
 - **Implementation Steps**:
   1. Implement evidence-first rendering logic
   2. Always present top snippet(s) + file path before summary
-  3. Avoid filler content and unnecessary text
+  3. Avoid filler content and unnecessary tex
   4. Add unit tests for renderer formatting
 - **Quality Gates**: Unit tests, Integration tests, Documentation
 - **Solo Workflow**: Auto-Advance: yes, Context preservation: yes
@@ -260,7 +260,7 @@
 - **Estimated Time**: 3h
 - **Dependencies**: C1-D3
 - **Acceptance Criteria**:
-  - [ ] Router accuracy ≥ 80% on labeled eval set
+  - [ ] Router accuracy ≥ 80% on labeled eval se
   - [ ] Per-intent knobs applied
 - **Implementation Steps**:
   1. Implement lightweight regex/keyword router
@@ -320,7 +320,7 @@
 - **Implementation Steps**:
   1. Implement grid sweeps over key parameters
   2. Support BM25_topk, Vec_topk, λ_lex/λ_sem, cosine_min, α, top_n
-  3. Emit CSV + best settings per intent
+  3. Emit CSV + best settings per inten
   4. Add CLI with --summary and --apply options
 - **Quality Gates**: Unit tests, Performance validation
 - **Solo Workflow**: Auto-Advance: yes, Context preservation: yes
@@ -332,12 +332,12 @@
 - **Dependencies**: A2
 - **Acceptance Criteria**:
   - [ ] CI reads gates from YAML
-  - [ ] Two consecutive greens required to ratchet
+  - [ ] Two consecutive greens required to ratche
 - **Implementation Steps**:
   1. Encode initial gates (Prec≥0.12, Rec≥0.15, Faith≥0.60)
   2. Implement ratchet sequence logic
   3. Add unit tests for parser
-  4. Test simulated runs trigger ratchet
+  4. Test simulated runs trigger ratche
 - **Quality Gates**: Unit tests, Integration tests
 - **Solo Workflow**: Auto-Advance: yes, Context preservation: yes
 
@@ -351,7 +351,7 @@
   - [ ] Dashboard displays per-intent trend charts
 - **Implementation Steps**:
   1. Surface delta vs. last run in CI
-  2. Update dashboard trend lines per intent
+  2. Update dashboard trend lines per inten
   3. Implement artifact parsing and rendering
   4. Add visual smoke tests
 - **Quality Gates**: Integration tests, Documentation
@@ -386,12 +386,12 @@
 - **Estimated Time**: 2h
 - **Dependencies**: E1
 - **Acceptance Criteria**:
-  - [ ] R@50 measured on multi-hop subset
+  - [ ] R@50 measured on multi-hop subse
   - [ ] No hallucinated edges in answers
 - **Implementation Steps**:
   1. Label intents for multi-hop tasks
   2. Ensure tasks span ≥2 files
-  3. Measure R@50 on multi-hop subset
+  3. Measure R@50 on multi-hop subse
   4. Validate chain correctness
 - **Quality Gates**: Integration tests
 - **Solo Workflow**: Auto-Advance: yes, Context preservation: yes
@@ -486,7 +486,7 @@
   1. Persist metrics/last_eval_summary.json
   2. Generate CSVs for trends
   3. Ensure stable schema
-  4. Document data format
+  4. Document data forma
 - **Quality Gates**: Unit tests, Integration tests
 - **Solo Workflow**: Auto-Advance: yes, Context preservation: yes
 
@@ -500,7 +500,7 @@
   - [ ] Clear Δ vs. previous run
 - **Implementation Steps**:
   1. Create charts for Precision/Recall/F1/Faithfulness
-  2. Add P@5/NDCG@10 by intent
+  2. Add P@5/NDCG@10 by inten
   3. Load latest artifacts
   4. Show clear delta vs. previous run
 - **Quality Gates**: Integration tests, Visual validation
@@ -581,9 +581,9 @@
 
 - **AWS Credentials**: Ensure proper access to Bedrock services
 - **Database**: Verify PostgreSQL connectivity and pgvector extensions
-- **Testing Environment**: Set up isolated testing to avoid production impact
+- **Testing Environment**: Set up isolated testing to avoid production impac
 - **Documentation**: Keep all guides updated as implementation progresses
-- **Quality Gates**: Enforce strict validation before phase advancement
+- **Quality Gates**: Enforce strict validation before phase advancemen
 
 ---
 
@@ -745,7 +745,7 @@ bash scripts/run_eval_bedrock.sh
 
 **Tasks**
 - E1 Heuristic router: lookup/config, how-to, multi-hop
-- E2 Lookup backstop: BM25 top-3 if no exact match; require snippet
+- E2 Lookup backstop: BM25 top-3 if no exact match; require snippe
 - E3 Cursor rules enforce evidence-first + context cap + "admit uncertainty"
 
 **Smart pause when**:
@@ -916,8 +916,8 @@ Process Task List: B-1059 — Retrieval Tuning Protocol & Evaluation Framework
 Guided by your process task list template, adapted for solo execution and direct mapping from the B-1059 PRD → WBS.
 
 🔎 TL;DR
-what this file is	read when	do next
-Execution playbook to run B-1059 from PRD → working system with auto-advance + smart pausing	You’re ready to execute the PRD task list	Run the Quick Start command, then follow phase gates below
+what this file is    read when    do nex
+Execution playbook to run B-1059 from PRD → working system with auto-advance + smart pausing    You’re ready to execute the PRD task list    Run the Quick Start command, then follow phase gates below
 🎯 Current Status
 
 Backlog ID: B-1059
@@ -948,7 +948,7 @@ Source of truth: B-1059 PRD WBS (Epics A–I).
 
 Cross-refs: 000_backlog.md and your evaluation artifacts.
 
-🚀 Solo Developer Quick Start
+🚀 Solo Developer Quick Star
 # 0) Start an execution session for B-1059
 python3 scripts/solo_workflow.py start "B-1059 Retrieval Tuning + Bedrock canonical eval"
 
@@ -1083,7 +1083,7 @@ Tasks
 
 E1 Heuristic router: lookup/config, how-to, multi-hop
 
-E2 Lookup backstop: BM25 top-3 if no exact match; require snippet
+E2 Lookup backstop: BM25 top-3 if no exact match; require snippe
 
 E3 Cursor rules enforce evidence-first + context cap + “admit uncertainty”
 
@@ -1194,13 +1194,13 @@ One-command run covers sweep → eval → dashboard; deltas visible.
  Gates Met (two-green rule before ratchet)
 
 🧩 PRD → Execution Mapping
-PRD Section	Execution Use
-§0 Context	Seeds LTST context & decisions; drives defaults
-§1–2 Problem/Solution	Validates scope; prevents gold-plating
-§4 Technical Approach	Implements hybrid→fusion→rerank→packing
-§6 Evaluation	Bedrock canonical runs; per-intent metrics
-§7 Implementation Plan	This phase plan & gates
-§8 WBS	Concrete tasks A–I above
+PRD Section    Execution Use
+§0 Context    Seeds LTST context & decisions; drives defaults
+§1–2 Problem/Solution    Validates scope; prevents gold-plating
+§4 Technical Approach    Implements hybrid→fusion→rerank→packing
+§6 Evaluation    Bedrock canonical runs; per-intent metrics
+§7 Implementation Plan    This phase plan & gates
+§8 WBS    Concrete tasks A–I above
 📦 State & Error Handling
 
 State file: .ai_state.json — tracks current phase/task, artifacts, deltas, last good knobs.

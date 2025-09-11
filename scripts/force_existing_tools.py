@@ -16,10 +16,10 @@ def find_existing_tools(keyword: str) -> list[str]:
     search_paths = [
         "scripts/",
         "dspy-rag-system/scripts/",
-        "dspy-rag-system/src/",
-        "dspy-rag-system/src/utils/",
-        "dspy-rag-system/src/monitoring/",
-        "dspy-rag-system/src/n8n_workflows/",
+        "src/",
+        "src/utils/",
+        "src/monitoring/",
+        "src/n8n_workflows/",
     ]
 
     existing_tools = []
@@ -58,8 +58,8 @@ def get_tool_mapping() -> dict[str, list[str]]:
         ],
         "monitoring": [
             "scripts/system_health_check.py",
-            "dspy-rag-system/src/monitoring/production_monitor.py",
-            "dspy-rag-system/src/monitoring/health_endpoints.py",
+            "src/monitoring/production_monitor.py",
+            "src/monitoring/health_endpoints.py",
         ],
         "validation": [
             "scripts/doc_coherence_validator.py",
@@ -69,7 +69,7 @@ def get_tool_mapping() -> dict[str, list[str]]:
         "memory": [
             "scripts/memory_up.sh",
             "scripts/update_cursor_memory.py",
-            "dspy-rag-system/src/utils/memory_rehydrator.py",
+            "src/utils/memory_rehydrator.py",
         ],
         "workflow": ["scripts/single_doorway.py", "scripts/process_tasks.py", "scripts/executor.py"],
         "backlog": ["scripts/backlog_intake.py", "scripts/backlog_parser.py", "scripts/backlog_status_tracking.py"],

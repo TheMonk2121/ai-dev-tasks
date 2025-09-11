@@ -35,12 +35,12 @@
 
 #### **✅ CORRECTLY CONFIGURED:**
 ```
-dspy-rag-system/src/utils/unified_data_pipeline.py
+src/utils/unified_data_pipeline.py
 ├── ✅ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ✅ Status: COMPATIBLE
 └── ✅ Example usage shows correct connection
 
-dspy-rag-system/src/utils/unified_retrieval_api.py
+src/utils/unified_retrieval_api.py
 ├── ✅ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ✅ Status: COMPATIBLE
 └── ✅ Default connection string is correct
@@ -53,13 +53,13 @@ dspy-rag-system/scripts/database_utils.py
 
 #### **❌ INCORRECTLY CONFIGURED:**
 ```
-dspy-rag-system/src/dspy_modules/vector_store.py
+src/dspy_modules/vector_store.py
 ├── ❌ Uses: ai_user:ai_password@localhost:5432/ai_agency (MAIN)
 ├── ❌ Uses: ai_user:ai_password@localhost:5432/ai_agency (EXAMPLE)
 ├── ❌ Expected: danieljacobs (no password)
 └── ❌ Status: AUTHENTICATION FAILURE
 
-dspy-rag-system/src/dspy_modules/rag_pipeline.py
+src/dspy_modules/rag_pipeline.py
 ├── ❌ Inherits from HybridVectorStore
 ├── ❌ HybridVectorStore uses ai_user:ai_password
 ├── ❌ Expected: danieljacobs (no password)
@@ -68,13 +68,13 @@ dspy-rag-system/src/dspy_modules/rag_pipeline.py
 
 #### **⚠️ CONDITIONALLY CONFIGURED:**
 ```
-dspy-rag-system/src/dspy_modules/model_switcher.py
+src/dspy_modules/model_switcher.py
 ├── ⚠️ Uses: os.getenv("DATABASE_URL") (ENVIRONMENT DEPENDENT)
 ├── ⚠️ Falls back to None if not set
 ├── ⚠️ RAG pipeline may not initialize
 └── ⚠️ Status: CONDITIONAL FAILURE
 
-dspy-rag-system/src/utils/database_resilience.py
+src/utils/database_resilience.py
 ├── ⚠️ Uses: Centralized config from 200_setup/201_database-config.py
 ├── ⚠️ Config path: ../../../200_setup/201_database-config.py
 ├── ⚠️ Depends on relative path resolution
@@ -85,7 +85,7 @@ dspy-rag-system/src/utils/database_resilience.py
 
 #### **1. RAG PIPELINE**
 ```
-dspy-rag-system/src/dspy_modules/rag_pipeline.py
+src/dspy_modules/rag_pipeline.py
 ├── **Database Connection**: Inherits from HybridVectorStore
 ├── **Connection Source**: HybridVectorStore constructor parameter
 ├── **Default Value**: None (must be passed in)
@@ -95,7 +95,7 @@ dspy-rag-system/src/dspy_modules/rag_pipeline.py
 
 #### **2. STANDARDIZED INGESTION PIPELINE**
 ```
-dspy-rag-system/src/dspy_modules/standardized_pipeline.py
+src/dspy_modules/standardized_pipeline.py
 ├── **Database Connection**: No direct database connection
 ├── **Connection Source**: Vector store parameter
 ├── **Default Value**: None (must be passed in)
@@ -105,7 +105,7 @@ dspy-rag-system/src/dspy_modules/standardized_pipeline.py
 
 #### **3. VECTOR STORE PIPELINE**
 ```
-dspy-rag-system/src/dspy_modules/vector_store.py
+src/dspy_modules/vector_store.py
 ├── **Database Connection**: Constructor parameter
 ├── **Connection Source**: db_connection_string parameter
 ├── **Default Value**: None (must be passed in)
@@ -115,7 +115,7 @@ dspy-rag-system/src/dspy_modules/vector_store.py
 
 #### **4. MCP DOCUMENT INGESTION PIPELINE**
 ```
-dspy-rag-system/src/dspy_modules/mcp_document_processor.py
+src/dspy_modules/mcp_document_processor.py
 ├── **Database Connection**: No direct database connection
 ├── **Connection Source**: Vector store parameter
 ├── **Default Value**: None (must be passed in)
@@ -125,7 +125,7 @@ dspy-rag-system/src/dspy_modules/mcp_document_processor.py
 
 #### **5. DOCUMENT INGESTION PIPELINE**
 ```
-dspy-rag-system/src/dspy_modules/document_processor.py
+src/dspy_modules/document_processor.py
 ├── **Database Connection**: No direct database connection
 ├── **Connection Source**: Vector store parameter
 ├── **Default Value**: None (must be passed in)
@@ -135,7 +135,7 @@ dspy-rag-system/src/dspy_modules/document_processor.py
 
 #### **6. UNIFIED DATA PIPELINE**
 ```
-dspy-rag-system/src/utils/unified_data_pipeline.py
+src/utils/unified_data_pipeline.py
 ├── **Database Connection**: Constructor parameter
 ├── **Connection Source**: db_connection_string parameter
 ├── **Default Value**: None (must be passed in)
@@ -146,7 +146,7 @@ dspy-rag-system/src/utils/unified_data_pipeline.py
 
 #### **7. MODEL SWITCHER PIPELINE**
 ```
-dspy-rag-system/src/dspy_modules/model_switcher.py
+src/dspy_modules/model_switcher.py
 ├── **Database Connection**: Environment variable
 ├── **Connection Source**: os.getenv("DATABASE_URL")
 ├── **Default Value**: None (falls back to None)
@@ -159,7 +159,7 @@ dspy-rag-system/src/dspy_modules/model_switcher.py
 
 #### **✅ CENTRALIZED CONFIGURATION:**
 ```
-dspy-rag-system/src/utils/database_resilience.py
+src/utils/database_resilience.py
 ├── **Config Source**: 200_setup/201_database-config.py
 ├── **Config Path**: ../../../200_setup/201_database-config.py
 ├── **Connection String**: get_database_url()
@@ -170,7 +170,7 @@ dspy-rag-system/src/utils/database_resilience.py
 
 #### **⚠️ PATH RESOLUTION RISKS:**
 ```
-dspy-rag-system/src/utils/database_resilience.py
+src/utils/database_resilience.py
 ├── **Relative Path**: ../../../200_setup/201_database-config.py
 ├── **Path Resolution**: Depends on current working directory
 ├── **Import Method**: importlib.util.spec_from_file_location
@@ -218,7 +218,7 @@ export DATABASE_URL="postgresql://danieljacobs@localhost:5432/ai_agency"
 
 ### **2. FIX VECTOR STORE CREDENTIALS (HIGH - TODAY):**
 ```python
-# dspy-rag-system/src/dspy_modules/vector_store.py
+# src/dspy_modules/vector_store.py
 # Change from:
 db_connection = "postgresql://ai_user:ai_password@localhost:5432/ai_agency"
 
@@ -228,8 +228,8 @@ db_connection = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
 ### **3. FIX HYBRID VECTOR STORE CREDENTIALS (HIGH - TODAY):**
 ```python
-# dspy-rag-system/src/dspy_modules/enhanced_rag_system.py
-# dspy-rag-system/src/dspy_modules/rag_system.py
+# src/dspy_modules/enhanced_rag_system.py
+# src/dspy_modules/rag_system.py
 # Change from:
 db_url = os.getenv("POSTGRES_DSN", "postgresql://ai_user:ai_password@localhost:5432/ai_agency")
 
@@ -239,7 +239,7 @@ db_url = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_
 
 ### **4. IMPROVE PATH RESOLUTION (MEDIUM - THIS WEEK):**
 ```python
-# dspy-rag-system/src/utils/database_resilience.py
+# src/utils/database_resilience.py
 # Consider using absolute paths or environment variables for config location
 ```
 

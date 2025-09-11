@@ -32,7 +32,7 @@ ai-dev-tasks/
 
 ### Development Patterns
 - **Add workflow template**: `000_core/` → create template → update dependencies
-- **Add DSPy module**: `dspy-rag-system/src/dspy_modules/` → add module → add tests
+- **Add DSPy module**: `src/dspy_modules/` → add module → add tests
 - **Add automation script**: `scripts/` → add script → add CLI interface → add tests
 - **Add artifact**: `artifacts/` → create in appropriate subdirectory → update cross-references
 
@@ -196,7 +196,7 @@ The solution integrates performance metrics collection into the existing 001_cre
 - **Task 2.1**: Integrate performance collection into 001_create-prd workflow
 - **Task 2.2**: Add performance hooks at key workflow points
 - **Task 2.3**: Implement performance data aggregation and analysis
-- **Task 2.4**: Validate integration doesn't break existing functionality
+- **Task 2.4**: Validate integration doesn'tt break existing functionality
 
 ### Phase 3: Testing Suite Development
 - **Task 3.1**: Create comprehensive test suite for performance collection

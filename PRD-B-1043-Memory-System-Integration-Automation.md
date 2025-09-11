@@ -8,9 +8,9 @@
 ### Current Tech Stack
 - **Backend**: Python 3.12, DSPy 3.0, PostgreSQL with pgvector, FastAPI
 - **Memory System**: LTST Memory System with conversation storage, decision intelligence, context merging
-- **Frontend**: NiceGUI for dashboards, Cursor AI for development
+- **Frontend**: NiceGUI for dashboards, Cursor AI for developmen
 - **Infrastructure**: Local-first development, Docker for database, Redis for caching
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
@@ -29,12 +29,12 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **Memory Components**: `dspy-rag-system/src/utils/` - Memory rehydrator, conversation storage, decision evaluator
-- **DSPy Modules**: `dspy-rag-system/src/dspy_modules/` - RAG pipeline, optimizers, agents
-- **Monitoring**: `dspy-rag-system/src/monitoring/` - Performance collection, metrics, dashboards
+- **Memory Components**: `src/utils/` - Memory rehydrator, conversation storage, decision evaluator
+- **DSPy Modules**: `src/dspy_modules/` - RAG pipeline, optimizers, agents
+- **Monitoring**: `src/monitoring/` - Performance collection, metrics, dashboards
 - **Scripts**: `scripts/` - Memory rehydration, workflow automation
 
-### Local Development
+### Local Developmen
 ```bash
 # Setup
 cd dspy-rag-system
@@ -42,7 +42,7 @@ poetry install
 poetry run pre-commit install
 
 # Run tests
-poetry run pytest
+poetry run pytes
 
 # Start database
 docker-compose up -d postgres
@@ -52,9 +52,9 @@ docker-compose up -d postgres
 ```
 
 ### Common Tasks
-- **Add memory component**: Create in `dspy-rag-system/src/utils/`, add to memory rehydrator
-- **Add DSPy module**: Create in `dspy-rag-system/src/dspy_modules/`, integrate with RAG pipeline
-- **Add monitoring**: Create in `dspy-rag-system/src/monitoring/`, add performance hooks
+- **Add memory component**: Create in `src/utils/`, add to memory rehydrator
+- **Add DSPy module**: Create in `src/dspy_modules/`, integrate with RAG pipeline
+- **Add monitoring**: Create in `src/monitoring/`, add performance hooks
 - **Update memory context**: Modify files in `100_memory/`, run memory rehydration
 
 ## 1. Problem Statement
@@ -92,7 +92,7 @@ A comprehensive integration layer that connects DSPy agents to the LTST memory s
 5. **Performance Optimization**: Monitor and optimize memory retrieval performance
 
 ### What are the key features?
-- **Automatic conversation capture** from Cursor chat
+- **Automatic conversation capture** from Cursor cha
 - **Real-time decision extraction** and intelligence processing
 - **DSPy agent memory integration** with LTST system
 - **Session continuity** and user preference learning
@@ -108,7 +108,7 @@ A comprehensive integration layer that connects DSPy agents to the LTST memory s
 - [ ] Session continuity is maintained across multiple development sessions
 - [ ] User preferences are learned and applied in subsequent sessions
 - [ ] RAGAS evaluation shows improvement in recall and precision metrics
-- [ ] Performance monitoring shows acceptable latency and throughput
+- [ ] Performance monitoring shows acceptable latency and throughpu
 
 ### What does success look like?
 - **RAGAS Metrics**: Recall@10 ≥ 0.7, Failure@20 ≤ 0.2, Precision@10 ≥ 0.8
@@ -142,7 +142,7 @@ A comprehensive integration layer that connects DSPy agents to the LTST memory s
 - **Backward Compatibility**: Must maintain existing static file functionality
 - **Performance**: Memory operations must not impact Cursor responsiveness
 - **Data Privacy**: Conversation data must be handled securely
-- **Local-First**: Must work in local development environment
+- **Local-First**: Must work in local development environmen
 - **Cursor Limitations**: Limited API access to Cursor internals
 
 ## 5. Risks and Mitigation
@@ -156,7 +156,7 @@ A comprehensive integration layer that connects DSPy agents to the LTST memory s
 
 ### How do we handle it?
 - **Mitigation 1**: Implement fallback to manual conversation capture if API fails
-- **Mitigation 2**: Use async processing and caching to minimize performance impact
+- **Mitigation 2**: Use async processing and caching to minimize performance impac
 - **Mitigation 3**: Gradual rollout with feature flags and rollback capability
 - **Mitigation 4**: Implement data encryption and user consent mechanisms
 - **Mitigation 5**: Extensive testing and monitoring with automated rollback
@@ -178,7 +178,7 @@ A comprehensive integration layer that connects DSPy agents to the LTST memory s
 - **Backward Compatibility**: Existing workflows continue to function
 
 ### How do we test it?
-- **Unit Tests**: Individual component testing with pytest
+- **Unit Tests**: Individual component testing with pytes
 - **Integration Tests**: End-to-end workflow testing
 - **Performance Tests**: Load testing with realistic conversation volumes
 - **User Acceptance Tests**: Real development session testing

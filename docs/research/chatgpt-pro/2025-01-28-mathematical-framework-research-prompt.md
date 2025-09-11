@@ -161,7 +161,7 @@ We are implementing a mathematical framework that formalizes our AI development 
 
 ### Target Architecture
 ```
-dspy-rag-system/src/dspy_modules/math/
+src/dspy_modules/math/
 ├── __init__.py
 ├── category_theory/
 │   ├── objects.py          # Artifact objects (PRD, Task, Code, Test, Build, Deploy)

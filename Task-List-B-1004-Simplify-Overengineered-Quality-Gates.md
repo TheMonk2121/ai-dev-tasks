@@ -28,7 +28,7 @@ Streamline the quality gate system by removing overengineered components, elimin
   - [ ] **Tests Passing** - Pre-commit hooks work
   - [ ] **Performance Validated** - Execution time improved
 
-#### T-2 Simplify Conflict Detection Script
+#### T-2 Simplify Conflict Detection Scrip
 - **Priority:** Critical
 - **Estimated Time:** 1 hour
 - **Dependencies:** T-1
@@ -64,7 +64,7 @@ Streamline the quality gate system by removing overengineered components, elimin
   - [ ] **Unit Tests** - Test type checking with known type errors
   - [ ] **Integration Tests** - Verify in pre-commit workflow
   - [ ] **Performance Tests** - Confirm <2 second execution
-- **Implementation Notes:** Use existing pyproject.toml configuration for Pyright
+- **Implementation Notes:** Use existing pyproject.toml configuration for Pyrigh
 - **Quality Gates:**
   - [ ] **Code Review** - Type checking integration approved
   - [ ] **Tests Passing** - Type errors detected correctly

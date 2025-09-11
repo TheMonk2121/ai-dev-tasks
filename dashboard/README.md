@@ -205,7 +205,7 @@ dashboard/
 The dashboard integrates seamlessly with your existing DSPy RAG system:
 
 - **Database Integration**: Reads from your existing `documents` and `document_chunks` tables in `dspy-rag-system/config/database/schema.sql`
-- **Metadata Enhancement**: Automatically enhances existing documents with new metadata using `dspy-rag-system/src/utils/metadata_extractor.py` patterns
+- **Metadata Enhancement**: Automatically enhances existing documents with new metadata using `src/utils/metadata_extractor.py` patterns
 - **AI Integration**: Cursor Native AI integration for intelligent metadata extraction
 - **Real-time Updates**: Reflects changes from your watch folder and processing pipeline
 

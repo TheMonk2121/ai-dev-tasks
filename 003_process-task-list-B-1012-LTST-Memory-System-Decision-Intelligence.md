@@ -454,7 +454,7 @@ python3 scripts/solo_workflow.py ship
     "dependencies": ["B-1006-A DSPy 3.0 Core Parity Migration"],
     "decisions": ["MVP-first approach", "Optional complexity only if needed"],
     "prd_section_0": {
-      "repository_layout": "dspy-rag-system/src/utils/ for core components",
+      "repository_layout": "src/utils/ for core components",
       "development_patterns": "Extend existing classes, maintain backward compatibility",
       "local_development": "PostgreSQL with pgvector, pytest for testing"
     }

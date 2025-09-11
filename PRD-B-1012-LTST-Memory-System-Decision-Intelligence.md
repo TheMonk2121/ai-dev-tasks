@@ -39,7 +39,7 @@ dspy-rag-system/
 - **Memory Management**: SessionManager for session lifecycle, ContextMerger for context operations
 - **Integration**: MemoryRehydrator as the main interface for AI agents
 
-### Local Development
+### Local Developmen
 ```bash
 # Setup database
 psql -d dspy_rag -f dspy-rag-system/config/database/ltst_memory_schema.sql
@@ -93,7 +93,7 @@ A decision intelligence extension to the existing LTST Memory System that adds d
 2. **Decision Operations**: Extend ConversationStorage, ContextMerger, and MemoryRehydrator
 3. **Supersedence Logic**: Automatically detect and mark superseded decisions
 4. **Simple Scoring**: Status-based scoring with optional complexity only if needed
-5. **Evaluation Framework**: 15-20 test cases with Failure@20 ≤ 0.20 target
+5. **Evaluation Framework**: 15-20 test cases with Failure@20 ≤ 0.20 targe
 
 ### What are the key features?
 - **Decision Tracking**: Store decision_head, decision_status, superseded_by, entities, files
@@ -191,7 +191,7 @@ A decision intelligence extension to the existing LTST Memory System that adds d
 - **Integration Tests**: End-to-end decision workflow testing
 - **Performance Tests**: Benchmark decision operations against existing performance
 - **Evaluation Tests**: Automated evaluation framework with Failure@20 metrics
-- **Regression Tests**: Ensure existing LTST functionality remains intact
+- **Regression Tests**: Ensure existing LTST functionality remains intac
 
 ### What's the coverage target?
 - **Code Coverage**: ≥ 90% for new decision intelligence features
@@ -219,7 +219,7 @@ A decision intelligence extension to the existing LTST Memory System that adds d
    - Performance testing and optimization
 
 ### What are the dependencies?
-- **B-1006-A DSPy 3.0 Core Parity Migration**: Must be completed first
+- **B-1006-A DSPy 3.0 Core Parity Migration**: Must be completed firs
 - **Existing LTST System**: Current system must be stable and tested
 - **Database Access**: PostgreSQL with pgvector extension must be available
 - **Test Environment**: Isolated test database for evaluation

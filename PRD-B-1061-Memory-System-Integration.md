@@ -1,4 +1,4 @@
-# Product Requirements Document: Memory System Integration - Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancement
+# Product Requirements Document: Memory System Integration - Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancemen
 
 > ⚠️**Auto-Skip Note**: This PRD builds naturally on B-1060's academic citation quality gates foundation.
 > Use this template for memory system optimization and knowledge graph enhancement projects.
@@ -11,7 +11,7 @@
 - **Memory Systems**: Unified Memory Orchestrator, LTST, Cursor, Go CLI, Prime
 - **Heuristic Extractor**: Existing Bedrock texting extraction system
 - **Multi-Signal Guard**: Proven precision controls and quality validation
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
@@ -44,7 +44,7 @@ ai-dev-tasks/
 - **Documentation**: `400_guides/` - Comprehensive usage guides and integration
 - **Natural Integration**: Builds on B-1060's quality gates without complex hooks
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify memory overflow detection
 python3 -c "from src.memory.overflow_detector import MemoryOverflowDetector; print('✅ Memory overflow detection ready!')"
@@ -121,7 +121,7 @@ Memory overflow detection triggers heuristic extraction, multi-signal guard vali
 ## 4. Technical Approach
 
 ### What technology?
-- **Python 3.12**: Runtime environment with dependency management
+- **Python 3.12**: Runtime environment with dependency managemen
 - **Heuristic Extractor**: Existing Bedrock texting extraction system
 - **Multi-Signal Guard**: Proven precision controls and quality validation
 - **Knowledge Graph**: Enhanced triple schema with academic provenance
@@ -177,7 +177,7 @@ Memory overflow detection triggers heuristic extraction, multi-signal guard vali
 - **Baseline Protection**: RAGChecker metrics maintenance
 
 ### How do we test it?
-- **Unit Testing**: Individual component testing with pytest
+- **Unit Testing**: Individual component testing with pytes
 - **Integration Testing**: End-to-end memory system workflow testing
 - **Performance Testing**: Overflow compaction and memory rehydration performance
 - **Quality Testing**: Fact extraction quality and multi-signal validation

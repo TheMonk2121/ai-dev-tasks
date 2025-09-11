@@ -75,7 +75,7 @@
 
 ### **Pattern 2: Quick Reference & Summaries Up Front**
 
-- *Effectiveness**: Medium-High. Summaries ensure key points are available even if AI doesn't read everything.
+- *Effectiveness**: Medium-High. Summaries ensure key points are available even if AI doesn'tt read everything.
 - *Recommendation**: Continue and enhance this pattern. Create an "AI Handbook" one-pager.
 
 ### **Pattern 3: Retrieval-Augmented Context (Search instead of Preload)**

@@ -16,7 +16,7 @@
 - Integration
   - Hook in `scripts/session_registry.py` on `register_session` using lazy import to avoid path issues.
 - Observability
-  - Metrics in `dspy-rag-system/src/monitoring/metrics.py`:
+  - Metrics in `src/monitoring/metrics.py`:
     - `rehydrate_attempts_total`
     - `rehydrate_duration_seconds_{sum,count}`
 - Docs

@@ -2,6 +2,14 @@
 repos:
   - repo: local
     hooks:
+      - id: json-syntax-check
+        name: JSON Syntax Check
+        entry: python -m json.tool
+        language: system
+        files: \\.json$
+        pass_filenames: true
+        stages:
+          - pre-commit
       - id: conflict-check
         name: Conflict Check
         entry: bash scripts/hook_timer.sh
@@ -104,38 +112,7 @@ repos:
         description:
           Enforce GitHub commit message line length limits (50 chars subject,
           72 chars body)
-      - id: readme-context-pattern
-        name: README Context Pattern Check
-        entry: bash scripts/check_readme_context.sh
-        language: system
-        pass_filenames: true
-        stages:
-          - commit-msg
-          - pre-commit
-        description: |
-          Ensure significant changes have corresponding README context updates
-      - id: readme-context-manager
-        name: README Context Manager Analysis
-        entry: bash scripts/hook_timer.sh
-        args:
-          - uv
-          - run
-          - python
-          - scripts/readme_context_manager.py
-          - --analyze
-        language: system
-        pass_filenames: false
-        stages:
-          - pre-commit
-        description: Analyze README context needs and provide smart suggestions
-      - id: commit-staging-pattern
-        name: Commit Staging Pattern Check
-        entry: bash scripts/check_commit_staging.sh
-        language: system
-        pass_filenames: true
-        stages:
-          - commit-msg
-        description: Validate commit staging patterns and scope consistency
+
       - id: baseline-check
         name: Baseline Metrics Check
         entry: bash scripts/hook_timer.sh
@@ -237,13 +214,7 @@ repos:
     hooks:
       - id: yamllint
         files: \.(yaml|yml)$
-  - repo: https://github.com/sirosen/check-jsonschema
-    rev: 0.28.4
-    hooks:
-      - id: check-jsonschema
-        name: check-jsonschema (generic)
-        files: \.json$
-        exclude: ^\.vscode/settings\.json$
+
   - repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:

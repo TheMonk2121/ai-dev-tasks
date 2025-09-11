@@ -11,7 +11,7 @@
 ### Current Tech Stack
 - **Vector Store**: Existing vector database for memory and context storage
 - **Memory Systems**: Unified Memory Orchestrator, LTST, Cursor, Go CLI, Prime
-- **Development Tools**: Python 3.12, Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development Tools**: Python 3.12, Poetry, pytest, pre-commit, Ruff, Pyrigh
 - **Documentation**: 00-12 guide system, comprehensive usage guides
 - **Evaluation Systems**: RAGChecker, AWS Bedrock integration (B-1046)
 
@@ -44,7 +44,7 @@ ai-dev-tasks/
 - **Documentation**: `400_guides/` - Comprehensive usage guides
 - **Metrics**: `metrics/` - System outputs and evaluation results
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify vector store access
 python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "test query"
@@ -53,7 +53,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "
 python3 -c "import ast; print('✅ AST parsing available for dependency analysis')"
 
 # Test memory system integration
-python3 scripts/memory_rehydrate.py --test
+python3 scripts/memory_rehydrate.py --tes
 
 # Verify documentation structure
 ls -la 400_guides/ | grep "400_"
@@ -62,7 +62,7 @@ ls -la 400_guides/ | grep "400_"
 ### Common Tasks
 - **Add new component**: Update dependency mapping when adding scripts or systems
 - **Update relationships**: Modify dependency graph when changing integrations
-- **Analyze impact**: Query system map for change impact assessment
+- **Analyze impact**: Query system map for change impact assessmen
 - **Optimize workflows**: Use dependency analysis for workflow optimization
 
 ## 1. Problem Statement
@@ -113,7 +113,7 @@ The solution analyzes the codebase to extract dependencies, encodes components a
 - [ ] **Performance**: Query response time under 2 seconds for typical queries
 
 ### What does success look like?
-- **Dependency Visibility**: Clear understanding of what depends on what
+- **Dependency Visibility**: Clear understanding of what depends on wha
 - **Impact Prediction**: Accurate predictions of what might break from changes
 - **Workflow Optimization**: Identification of critical paths and bottlenecks
 - **Coder Enhancement**: Improved development suggestions with system context
@@ -184,7 +184,7 @@ The solution analyzes the codebase to extract dependencies, encodes components a
 - **Performance**: Query response times and system resource usage
 
 ### How do we test it?
-- **Unit Testing**: Individual component testing with pytest
+- **Unit Testing**: Individual component testing with pytes
 - **Integration Testing**: End-to-end system testing
 - **Performance Testing**: Query response time and resource usage testing
 - **Accuracy Testing**: Validation of impact predictions against actual changes

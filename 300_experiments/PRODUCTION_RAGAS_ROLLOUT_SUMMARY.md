@@ -9,7 +9,7 @@ We successfully implemented your focused plan to convert the three moves into pr
 ### **Complete Production System** ✅
 
 #### **Step 0: Wire-Through & Go-Live Checklist** ✅
-- **Configuration Validator**: Prints effective values at case start
+- **Configuration Validator**: Prints effective values at case star
 - **30 Parameters Applied**: All configuration sections validated
 - **No Environment Drift**: Every parameter echoes with expected value
 - **Production Ready**: All components operational and validated
@@ -17,7 +17,7 @@ We successfully implemented your focused plan to convert the three moves into pr
 #### **Step 1: Precision Climb - Turn the Screws (Risky Only)** ✅
 - **Risk-Aware 3-of-3**: Risky sentences require all three signals
 - **2-of-3 for Non-Risky**: Maintains recall while tightening precision
-- **Multi-Evidence**: Enhanced support for numeric and entity content
+- **Multi-Evidence**: Enhanced support for numeric and entity contain
 - **Tightened Thresholds**: EVIDENCE_JACCARD=0.07, ROUGE_FLOOR=0.20, COS_FLOOR=0.58
 
 #### **Step 2: Retain Recall While Tightening Precision** ✅
@@ -73,14 +73,14 @@ We successfully implemented your focused plan to convert the three moves into pr
 ### **Production System Components**
 ```
 Production RAGAS System
-├── Wire-Through Checklist
+├── Wire-Through Checklis
 │   ├── Configuration Validator
 │   ├── Parameter Echo System
 │   └── Environment Drift Prevention
 ├── Precision Climb Engine
 │   ├── Risk-Aware Sentence Detection
 │   ├── 3-of-3 Signal Validation
-│   └── Multi-Evidence Support
+│   └── Multi-Evidence Suppor
 ├── Recall Retention System
 │   ├── Anchor-Biased Fusion
 │   ├── Selective Facet Yield
@@ -91,7 +91,7 @@ Production RAGAS System
 │   └── Length Floor Control
 ├── Cross-Encoder & NLI
 │   ├── Decisive Reranking
-│   ├── Borderline Entailment
+│   ├── Borderline Entailmen
 │   └── Aggressive Caching
 └── Telemetry & Monitoring
     ├── Comprehensive Metrics
@@ -111,7 +111,7 @@ Production RAGAS System
 1. **Apply Precision Knob**: CE_WEIGHT 0.14 → 0.16
 2. **Monitor Telemetry**: risky_pass_rate, ce_used%, nli_used%
 3. **Fine-Tune**: Apply additional knobs if needed
-4. **Two-Run Rule**: Repeat once when targets met
+4. **Two-Run Rule**: Repeat once when targets me
 
 ## 🚀 **Strategic Impact**
 
@@ -134,7 +134,7 @@ Production RAGAS System
 ## 📋 **Files Created & Operational**
 
 ### **Core Production System**
-- `scripts/production_ragas_config.py` - Production configuration management
+- `scripts/production_ragas_config.py` - Production configuration managemen
 - `scripts/ragchecker_production_evaluation.py` - Production evaluation pipeline
 - `scripts/run_production_ragas.sh` - Production execution script
 

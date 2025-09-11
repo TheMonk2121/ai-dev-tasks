@@ -1,7 +1,7 @@
 # Product Requirements Document: B-1013 Advanced RAG Optimization with Late Chunking and HIRAG Integration
 
 <!-- BACKLOG_ID: B-1013 -->
-<!-- MEMORY_REHYDRATOR_PINS: ["dspy-rag-system/src/utils/memory_rehydrator.py", "400_guides/400_dspy-v2-technical-implementation-guide.md", "400_guides/400_rag-system-research.md"] -->
+<!-- MEMORY_REHYDRATOR_PINS: ["src/utils/memory_rehydrator.py", "400_guides/400_dspy-v2-technical-implementation-guide.md", "400_guides/400_rag-system-research.md"] -->
 
 > ⚠️**Auto-Skip Note**: This PRD was generated because either `points≥5` or `score_total<3.0`.
 > Remove this banner if you manually forced PRD creation.
@@ -25,7 +25,7 @@
 
 **What are the key features?**
 - Full document context preservation during embedding
-- Hierarchical reasoning with multi-level chain-of-thought
+- Hierarchical reasoning with multi-level chain-of-though
 - AsyncIO integration for performance optimization
 - Seamless integration with existing DSPy optimization pipeline
 - Entity expansion for enhanced semantic relationships
@@ -136,7 +136,7 @@
 
 ## Memory Rehydrator Integration
 
-This PRD integrates with the memory rehydrator system (`dspy-rag-system/src/utils/memory_rehydrator.py`) to ensure optimal context retrieval and processing. The implementation will leverage:
+This PRD integrates with the memory rehydrator system (`src/utils/memory_rehydrator.py`) to ensure optimal context retrieval and processing. The implementation will leverage:
 
 - **Entity Expansion**: Enhanced semantic relationship preservation
 - **AsyncIO Integration**: Parallel processing for performance optimization

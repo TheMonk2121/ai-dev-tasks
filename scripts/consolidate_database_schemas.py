@@ -26,7 +26,7 @@ class SchemaConsolidator:
         self.changes_made = []
         self.errors = []
 
-    def get_table_schema(self, table_name: str, source_dsn: str) -> dict:
+    def get_table_schema(self, table_name: str, source_dsn: str) -> dict | None:
         """Get table schema from source database."""
         try:
             with psycopg2.connect(source_dsn) as conn:
@@ -98,7 +98,8 @@ class SchemaConsolidator:
                     """,
                         (table_name,),
                     )
-                    return cur.fetchone()[0]
+                    result = cur.fetchone()
+                    return result[0] if result else False
         except Exception as e:
             self.errors.append(f"Error checking if table {table_name} exists: {e}")
             return False
@@ -117,7 +118,8 @@ class SchemaConsolidator:
                     """,
                         (table_name, column_name),
                     )
-                    return cur.fetchone()[0]
+                    result = cur.fetchone()
+                    return result[0] if result else False
         except Exception as e:
             self.errors.append(f"Error checking if column {column_name} exists in {table_name}: {e}")
             return False
@@ -275,7 +277,8 @@ class SchemaConsolidator:
                         WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
                     """
                     )
-                    table_count = cur.fetchone()[0]
+                    result = cur.fetchone()
+                    table_count = result[0] if result else 0
 
                     # Get column count
                     cur.execute(
@@ -285,7 +288,8 @@ class SchemaConsolidator:
                         WHERE table_schema = 'public'
                     """
                     )
-                    column_count = cur.fetchone()[0]
+                    result = cur.fetchone()
+                    column_count = result[0] if result else 0
 
                     print(f"  📊 Tables in ai_agency: {table_count}")
                     print(f"  📊 Columns in ai_agency: {column_count}")

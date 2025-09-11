@@ -185,7 +185,7 @@ async def run_integrated_evaluation():
         for i, case in enumerate(dataset.cases):
             # Mock case result (in real implementation, this would come from actual evaluation)
             case_result = CaseResult(
-                case_id=case.name,
+                case_id=case.name or f"case_{i}",  # Provide fallback when case.name is None
                 mode="rag",
                 query=case.inputs.query,  # Now inputs is a Pydantic model, not a dict
                 predicted_answer=f"Mock answer for case {i}",
@@ -200,10 +200,12 @@ async def run_integrated_evaluation():
         # Create EvaluationRun for compatibility with existing system
         from datetime import datetime, timezone
 
+        from src.schemas.eval import RerankerConfig
+        
         evaluation_run = EvaluationRun(
             profile="pydantic_evals_integration",
             pass_id="integration_test",
-            reranker={"enable": True, "model": "test-model"},
+            reranker=RerankerConfig(enable=True, model="test-model"),
             cases=case_results,
             started_at=datetime.now(UTC),
         )
@@ -224,9 +226,16 @@ async def run_integrated_evaluation():
         # Print averages
         print("\nEvaluation Averages:")
         averages = report.averages()
-        if averages and hasattr(averages, "items"):
-            for key, value in averages.items():
-                print(f"  {key}: {value}")
+        if averages:
+            # Try different ways to access the averages data
+            if hasattr(averages, "__dict__"):
+                # If it's a Pydantic model, access its attributes
+                for key, value in averages.__dict__.items():
+                    if not key.startswith("_"):  # Skip private attributes
+                        print(f"  {key}: {value}")
+            else:
+                # Fallback: just print the averages object
+                print(f"  {averages}")
         else:
             print("  Averages displayed in the report table above")
 
@@ -284,7 +293,7 @@ def demonstrate_legacy_compatibility():
     if cases:
         sample_case = cases[0]
         case_result = CaseResult(
-            case_id=sample_case.id,
+            case_id=sample_case.id or "sample_case",  # Safety check for non-empty string
             mode="rag",
             query=sample_case.query,
             predicted_answer="Sample answer",

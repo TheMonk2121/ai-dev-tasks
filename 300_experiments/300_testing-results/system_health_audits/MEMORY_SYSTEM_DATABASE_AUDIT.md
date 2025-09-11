@@ -56,19 +56,19 @@ scripts/cache_invalidation_system.py
 
 #### **❌ INCORRECTLY CONFIGURED:**
 ```
-dspy-rag-system/src/utils/ltst_memory_system.py
+src/utils/ltst_memory_system.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency (DEFAULT)
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: WILL FAIL
 
-dspy-rag-system/src/utils/conversation_storage.py
+src/utils/conversation_storage.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency (DEFAULT)
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: WILL FAIL
 
-dspy-rag-system/src/utils/memory_rehydrator.py
+src/utils/memory_rehydrator.py
 ├── ❌ Inherits from ConversationStorage
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: WILL FAIL
 ```
 
@@ -76,27 +76,27 @@ dspy-rag-system/src/utils/memory_rehydrator.py
 
 #### **❌ CREDENTIAL MISMATCHES:**
 ```
-dspy-rag-system/src/dashboard.py
+src/dashboard.py
 ├── ❌ Uses: ai_user:ai_password@localhost:5432/ai_agency
 ├── ❌ Expected: danieljacobs (no password)
 └── ❌ Status: AUTHENTICATION FAILURE
 
-dspy-rag-system/src/utils/secrets_manager.py
+src/utils/secrets_manager.py
 ├── ❌ Uses: ai_user:ai_password@localhost:5432/ai_agency
 ├── ❌ Expected: danieljacobs (no password)
 └── ❌ Status: AUTHENTICATION FAILURE
 
-dspy-rag-system/src/dspy_modules/enhanced_rag_system.py
+src/dspy_modules/enhanced_rag_system.py
 ├── ❌ Uses: ai_user:ai_password@localhost:5432/ai_agency
 ├── ❌ Expected: danieljacobs (no password)
 └── ❌ Status: AUTHENTICATION FAILURE
 
-dspy-rag-system/src/dspy_modules/rag_system.py
+src/dspy_modules/rag_system.py
 ├── ❌ Uses: ai_user:ai_password@localhost:5432/ai_agency
 ├── ❌ Expected: danieljacobs (no password)
 └── ❌ Status: AUTHENTICATION FAILURE
 
-dspy-rag-system/src/dspy_modules/vector_store.py
+src/dspy_modules/vector_store.py
 ├── ❌ Uses: ai_user:ai_password@localhost:5432/ai_agency
 ├── ❌ Expected: danieljacobs (no password)
 └── ❌ Status: AUTHENTICATION FAILURE
@@ -104,9 +104,9 @@ dspy-rag-system/src/dspy_modules/vector_store.py
 
 #### **❌ NON-EXISTENT DATABASES:**
 ```
-dspy-rag-system/src/monitoring/health_endpoints.py
+src/monitoring/health_endpoints.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 dspy-rag-system/scripts/setup.sh
@@ -121,32 +121,32 @@ dspy-rag-system/scripts/setup.sh
 ```
 test_quality_ltst_integration.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
-├── ❌ Database: dspy_rag_system (doesn't exist)
+├── ❌ Database: dspy_rag_system (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_ux_ltst_integration.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
-├── ❌ Database: dspy_rag_system (doesn't exist)
+├── ❌ Database: dspy_rag_system (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_n8n_ltst_integration.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
-├── ❌ Database: dspy_rag_system (doesn't exist)
+├── ❌ Database: dspy_rag_system (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_predictive_intelligence.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
-├── ❌ Database: dspy_rag_system (doesn't exist)
+├── ❌ Database: dspy_rag_system (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_resilience.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_concurrent.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 ```
 
@@ -175,17 +175,17 @@ test_unified_data_pipeline.py
 ```
 scripts/system_monitor.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 scripts/monitoring_dashboard.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 
 scripts/maintenance.py
 ├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
-├── ❌ Database: dspy_rag (doesn't exist)
+├── ❌ Database: dspy_rag (doesn'tt exist)
 └── ❌ Status: CONNECTION FAILURE
 ```
 
@@ -199,9 +199,9 @@ export DATABASE_URL="postgresql://danieljacobs@localhost:5432/ai_agency"
 
 ### **2. FIX CORE MEMORY SYSTEM (CRITICAL)**
 ```python
-# dspy-rag-system/src/utils/ltst_memory_system.py
-# dspy-rag-system/src/utils/conversation_storage.py
-# dspy-rag-system/src/utils/memory_rehydrator.py
+# src/utils/ltst_memory_system.py
+# src/utils/conversation_storage.py
+# src/utils/memory_rehydrator.py
 
 # Change DEFAULT from:
 connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
@@ -214,11 +214,11 @@ connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localho
 ```python
 # All files using ai_user:ai_password need to be updated to danieljacobs
 # Files affected:
-# - dspy-rag-system/src/dashboard.py
-# - dspy-rag-system/src/utils/secrets_manager.py
-# - dspy-rag-system/src/dspy_modules/enhanced_rag_system.py
-# - dspy-rag-system/src/dspy_modules/rag_system.py
-# - dspy-rag-system/src/dspy_modules/vector_store.py
+# - src/dashboard.py
+# - src/utils/secrets_manager.py
+# - src/dspy_modules/enhanced_rag_system.py
+# - src/dspy_modules/rag_system.py
+# - src/dspy_modules/vector_store.py
 ```
 
 ### **4. FIX TEST FILES (MEDIUM)**

@@ -20,7 +20,7 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 **Description:** Verify pgvector extension version supports HNSW indexing (≥0.5) and prepare fallback strategy
 **Acceptance Criteria:**
 - [ ] pgvector version check script created and tested
-- [ ] HNSW support validated in current environment
+- [ ] HNSW support validated in current environmen
 - [ ] Fallback to IVFFlat strategy documented if HNSW unavailable
 - [ ] Version requirements documented in setup guide
 
@@ -62,11 +62,11 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 - [ ] **Tests Passing**: All idempotency tests pass
 - [ ] **Documentation Updated**: Schema migration procedures documented
 
-#### Task 1.3: Test Schema Application in Isolated Environment
+#### Task 1.3: Test Schema Application in Isolated Environmen
 **Priority:** High
 **Estimated Time:** 0.5 hours
 **Dependencies:** Task 1.2
-**Description:** Validate complete schema application in isolated test environment
+**Description:** Validate complete schema application in isolated test environmen
 **Acceptance Criteria:**
 - [ ] Fresh database created for testing
 - [ ] All DDL statements applied successfully
@@ -103,7 +103,7 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 **Testing Requirements:**
 - [ ] **Unit Tests**: Column creation and data integrity
 - [ ] **Integration Tests**: Existing conversation data preserved
-- [ ] **Performance Tests**: Column addition doesn't impact existing queries
+- [ ] **Performance Tests**: Column addition doesn'tt impact existing queries
 - [ ] **Data Integrity Tests**: Verify no data corruption during migration
 
 **Implementation Notes:** Use `ADD COLUMN IF NOT EXISTS embedding VECTOR(384)` to safely add the column.
@@ -163,7 +163,7 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 - [ ] **Tests Passing**: All DSPy integration tests pass
 - [ ] **Documentation Updated**: Schema.sql updated with new tables
 
-#### Task 2.4: Add user_id Column for Future Multi-tenant Support
+#### Task 2.4: Add user_id Column for Future Multi-tenant Suppor
 **Priority:** Medium
 **Estimated Time:** 0.5 hours
 **Dependencies:** Task 2.3
@@ -256,7 +256,7 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 - [ ] Rollback procedures documented for all operations
 
 **Testing Requirements:**
-- [ ] **Unit Tests**: Error handling for each component
+- [ ] **Unit Tests**: Error handling for each componen
 - [ ] **Integration Tests**: Error propagation between components
 - [ ] **Resilience Tests**: System behavior under various failure conditions
 - [ ] **Recovery Tests**: Rollback and recovery procedures validated
@@ -285,7 +285,7 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 **Testing Requirements:**
 - [ ] **Test Execution**: Automated test suite runs successfully
 - [ ] **Coverage Analysis**: Code coverage meets targets
-- [ ] **Performance Validation**: All benchmarks met
+- [ ] **Performance Validation**: All benchmarks me
 - [ ] **Security Validation**: No security issues identified
 - [ ] **Documentation**: Test results documented
 
@@ -293,7 +293,7 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 
 **Quality Gates:**
 - [ ] **Tests Passing**: All tests pass with required coverage
-- [ ] **Performance Validated**: All performance benchmarks met
+- [ ] **Performance Validated**: All performance benchmarks me
 - [ ] **Security Reviewed**: No security issues identified
 
 #### Task 4.2: Verify Backward Compatibility
@@ -342,14 +342,14 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 **Implementation Notes:** Use realistic data volumes and document all performance metrics for future optimization.
 
 **Quality Gates:**
-- [ ] **Performance Validated**: All performance targets met
+- [ ] **Performance Validated**: All performance targets me
 - [ ] **Documentation Updated**: Performance benchmarks documented
 - [ ] **Results Analyzed**: Performance improvements quantified
 
 ## Quality Metrics
 
 - **Test Coverage Target**: 100% for new code
-- **Performance Benchmarks**: HNSW provides better recall/latency than IVFFlat
+- **Performance Benchmarks**: HNSW provides better recall/latency than IVFFla
 - **Security Requirements**: No SQL injection, proper input validation
 - **Reliability Targets**: Zero data loss, 100% backward compatibility
 
@@ -382,6 +382,6 @@ Implement governance-aligned improvements to the LTST (Long-Term Short-Term) mem
 - **Semantic search capability**: Can find relevant past conversations using vector similarity
 - **Environment reproducibility**: Fresh clone works with just `psql -f schema.sql`
 - **Governance compliance**: All changes align with local-first, simple principles
-- **Performance improvement**: HNSW provides better recall/latency than IVFFlat
+- **Performance improvement**: HNSW provides better recall/latency than IVFFla
 - **Future readiness**: User_id column available for multi-tenant scenarios
 - **Manual cleanup**: Governance-aligned retention policy implemented

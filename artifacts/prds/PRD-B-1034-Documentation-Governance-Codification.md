@@ -256,7 +256,7 @@ jobs:
 [
   {
     "module": "dspy_rag_system.src.core",
-    "file": "dspy-rag-system/src/core/__init__.py",
+    "file": "src/core/__init__.py",
     "package": "dspy_rag_system.src",
     "kind": "core",
     "owner": "owner:default",

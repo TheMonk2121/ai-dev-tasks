@@ -12,7 +12,7 @@ This document outlines the specific AI model configuration for the AI Dev Tasks 
 This model configuration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 **Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
+- **Planning Layer**: PRD Creation, Task Generation, Process Managemen
 - **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
@@ -28,7 +28,7 @@ This model configuration is part of a comprehensive AI-powered development ecosy
 ```python
 ENABLED_AGENTS = ["IntentRouter", "RetrievalAgent", "CodeAgent"]
 MODELS = {
-    "mistral-7b-instruct": "warm",  # Always resident
+    "mistral-7b-instruct": "warm",  # Always residen
     "yi-coder-9b-chat-q6_k": "lazy"  # Load on demand
 }
 FEATURE_FLAGS = {
@@ -43,7 +43,7 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 - **Platform**: Cursor IDE
 - **Model Name**: Built-in AI models
 - **Status**: **Always Available** (native integration)
-- **Configuration**: 
+- **Configuration**:
   - Integrated with Cursor IDE
   - Automatic context awareness
   - File and project understanding
@@ -79,7 +79,7 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 
 2. **Pull the Model**:
    ```bash
-   ollama pull mistral:7b-instruct
+   ollama pull mistral:7b-instruc
    ```
 
 3. **Start Ollama**:
@@ -89,7 +89,7 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 
 4. **Verify Installation**:
    ```bash
-   ollama list
+   ollama lis
    ```
 
 ### **Yi-Coder-9B-Chat-Q6_K Setup**
@@ -117,9 +117,9 @@ mkdir -p ~/lmstudio/models/yi-coder
 cd ~/lmstudio/models/yi-coder
 
 # pull only the Q6_K file
-huggingface-cli download \
-  TheBloke/Yi-Coder-9B-Chat-GGUF \
-  Yi-Coder-9B-Chat-Q6_K.gguf \
+huggingface-cli download
+  TheBloke/Yi-Coder-9B-Chat-GGUF
+  Yi-Coder-9B-Chat-Q6_K.gguf
   --local-dir . --resume-download
 ```
 
@@ -158,7 +158,7 @@ After manual download, click Models → Add local model in LM Studio and point t
 {% endfor %}
 
 {# --- assistant preamble --- #}
-<|im_start|>assistant
+<|im_start|>assistan
 ```
 
 2. Additional Stop Strings:
@@ -209,7 +209,7 @@ def is_fast_path(query: str) -> bool:
     return len(query) < 50 and "code" not in query.lower()
 
 # Two flows:
-# Fast path → RetrievalAgent
+# Fast path → RetrievalAgen
 # Full path → Clarifier → Intent → Plan → loop
 ```
 
@@ -256,8 +256,8 @@ OpenAI-compatible server listening on http://localhost:1234
 
 3. Quick test:
 ```bash
-curl http://localhost:1234/v1/chat/completions \
-  -H "Content-Type: application/json" \
+curl http://localhost:1234/v1/chat/completions
+  -H "Content-Type: application/json"
   -d '{
         "model": "Yi-Coder-9B-Chat-Q6_K",
         "messages": [{"role":"user","content":"print(2+2)"}],
@@ -312,12 +312,12 @@ You should get a deterministic, runnable test without `<think>` artifacts.
 brew install --cask lm-studio
 
 # 2. download Yi-Coder Q6_K (CLI option)
-huggingface-cli download TheBloke/Yi-Coder-9B-Chat-GGUF \
+huggingface-cli download TheBloke/Yi-Coder-9B-Chat-GGUF
     Yi-Coder-9B-Chat-Q6_K.gguf --local-dir ~/lmstudio/models/yi-coder
 
 # 3. launch LM Studio GUI → add local model
 # 4. paste template, set sliders, start API server (port 1234)
-# 5. curl test
+# 5. curl tes
 # 6. add local model entry in ~/.cursor/config.json
 ```
 
@@ -339,7 +339,7 @@ The models work together in the AI Dev Tasks workflow:
 ```bash
 # Ollama Configuration
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=mistral:7b-instruct
+OLLAMA_MODEL=mistral:7b-instruc
 
 # LM Studio Configuration (for Yi-Coder integration)
 LM_STUDIO_URL=http://localhost:1234
@@ -347,7 +347,7 @@ YI_CODER_MODEL=Yi-Coder-9B-Chat-Q6_K
 ```
 
 #### **DSPy RAG System Configuration**
-- **File**: `dspy-rag-system/src/dspy_modules/rag_system.py`
+- **File**: `src/dspy_modules/rag_system.py`
 - **Model**: `mistral:7b-instruct`
 - **Base URL**: `http://localhost:11434`
 
@@ -370,9 +370,9 @@ YI_CODER_MODEL=Yi-Coder-9B-Chat-Q6_K
 
 ### **For Different Tasks**
 
-- **Planning Tasks**: Use Mistral 7B Instruct
+- **Planning Tasks**: Use Mistral 7B Instruc
 - **Code Tasks**: Use Yi-Coder-9B-Chat-Q6_K
-- **Analysis Tasks**: Use Mistral 7B Instruct
+- **Analysis Tasks**: Use Mistral 7B Instruc
 - **Implementation Tasks**: Use Yi-Coder-9B-Chat-Q6_K
 
 ### **Fallback Strategy**
@@ -411,4 +411,4 @@ If one model is unavailable:
 
 ---
 
-*This configuration ensures optimal performance for the AI Dev Tasks workflow with your specific model choices.* 
+*This configuration ensures optimal performance for the AI Dev Tasks workflow with your specific model choices.*

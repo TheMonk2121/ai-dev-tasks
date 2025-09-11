@@ -26,7 +26,7 @@
 ### Repository Layout
 ```
 ai-dev-tasks/
-├── dspy-rag-system/src/dspy_modules/  # Core DSPy implementation
+├── src/dspy_modules/  # Core DSPy implementation
 ├── 000_core/                          # Backlog and workflow templates
 ├── 100_memory/                        # Memory and context systems
 ├── 400_guides/                        # Documentation and guides
@@ -36,7 +36,7 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **DSPy Modules**: `dspy-rag-system/src/dspy_modules/` - Core AI framework components
+- **DSPy Modules**: `src/dspy_modules/` - Core AI framework components
 - **Context Models**: Role-based context models with Pydantic validation
 - **Memory System**: LTST Memory System with vector storage and session tracking
 - **Governance**: Constitution validation and quality gates
@@ -59,7 +59,7 @@ python3 scripts/single_doorway.py generate "B-1034"
 ```
 
 ### Common Tasks
-- **Add DSPy module**: Create file in `dspy-rag-system/src/dspy_modules/`, add to `__init__.py`
+- **Add DSPy module**: Create file in `src/dspy_modules/`, add to `__init__.py`
 - **Add context model**: Extend `context_models.py` with new role or validation rules
 - **Add governance rule**: Update constitution validation in `constitution_validation.py`
 - **Add memory component**: Extend LTST Memory System with new persistence or retrieval methods
@@ -216,7 +216,7 @@ A mathematical framework foundation with learning scaffolding that establishes t
 ### What are the phases?
 1. **Phase 1 - Learning Foundation** (3 hours)
    - Add NetworkX and Hypothesis dependencies to project requirements
-   - Create math package structure in `dspy-rag-system/src/dspy_modules/math/`
+   - Create math package structure in `src/dspy_modules/math/`
    - Add comprehensive learning comments and inline documentation
    - Set up interactive example infrastructure using existing NiceGUI system
 

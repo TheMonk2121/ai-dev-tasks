@@ -10,7 +10,7 @@
 - **Memory Systems**: Unified Memory Orchestrator, LTST, Cursor, Go CLI, Prime
 - **Quality Gates**: Automated evaluation in CI/CD, development workflow integration
 - **Documentation**: 00-12 guide system, comprehensive usage guides, status tracking
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
@@ -36,7 +36,7 @@ ai-dev-tasks/
 - **Status Tracking**: `metrics/baseline_evaluations/` - Evaluation results and status
 - **Quality Gates**: Integration with development workflow and CI/CD
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify RAGChecker installation
 python3 -c "import ragchecker; print('✅ RAGChecker installed successfully!')"
@@ -118,7 +118,7 @@ cat metrics/baseline_evaluations/EVALUATION_STATUS.md
 [Stack and key components]
 - **RAGChecker 0.1.9**: Industry-standard RAG evaluation framework
 - **spaCy en_core_web_sm**: NLP model for text processing
-- **Python 3.12**: Runtime environment with dependency management
+- **Python 3.12**: Runtime environment with dependency managemen
 - **Unified Memory Orchestrator**: Memory system integration
 - **Quality Gates**: Automated evaluation in development workflow
 - **Documentation System**: 00-12 guide system integration
@@ -175,7 +175,7 @@ cat metrics/baseline_evaluations/EVALUATION_STATUS.md
 
 ### How do we test it?
 [Testing approach and tools]
-- **Unit Testing**: Individual component testing with pytest
+- **Unit Testing**: Individual component testing with pytes
 - **Integration Testing**: End-to-end evaluation workflow testing
 - **Documentation Testing**: Link validation and content verification
 - **Performance Testing**: Evaluation execution time and resource usage

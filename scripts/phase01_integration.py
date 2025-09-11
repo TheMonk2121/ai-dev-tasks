@@ -24,7 +24,7 @@ from typing import Any
 
 # Add project paths
 sys.path.insert(0, str(Path(__file__).parent.parent))
-# sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system/src"))  # REMOVED: DSPy venv consolidated into main project
+# sys.path.insert(0, str(Path(__file__).parent.parent / "src"))  # DSPy modules now in main src directory
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import yaml
@@ -140,7 +140,7 @@ class Phase01Pipeline:
         if self.cross_encoder_client:
             self.cross_encoder_client.close()
 
-    async def process_query(self, query: str, expected_result: QueryResult = None) -> QueryResult:
+    async def process_query(self, query: str, expected_result: QueryResult | None = None) -> QueryResult:
         """
         Process a single query through the complete Phase 0/1 pipeline.
 

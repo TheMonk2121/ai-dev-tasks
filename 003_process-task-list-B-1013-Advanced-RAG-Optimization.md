@@ -1,7 +1,7 @@
 # Process Task List: B-1013 Advanced RAG Optimization with Late Chunking and HIRAG Integration
 
 <!-- BACKLOG_ID: B-1013 -->
-<!-- MEMORY_REHYDRATOR_PINS: ["dspy-rag-system/src/utils/memory_rehydrator.py", "400_guides/400_dspy-v2-technical-implementation-guide.md", "400_guides/400_rag-system-research.md"] -->
+<!-- MEMORY_REHYDRATOR_PINS: ["src/utils/memory_rehydrator.py", "400_guides/400_dspy-v2-technical-implementation-guide.md", "400_guides/400_rag-system-research.md"] -->
 
 ## Overview
 
@@ -39,7 +39,7 @@ Execute the implementation of advanced RAG optimization system with late chunkin
 **🛑 Pause After:** no
 
 **Do:**
-1. Analyze existing memory rehydrator system (`dspy-rag-system/src/utils/memory_rehydrator.py`)
+1. Analyze existing memory rehydrator system (`src/utils/memory_rehydrator.py`)
 2. Implement late chunking function that processes full documents before chunking
 3. Integrate with existing memory rehydrator system
 4. Add performance monitoring and benchmarking
@@ -234,7 +234,7 @@ Execute the implementation of advanced RAG optimization system with late chunkin
 
 ## Memory Rehydrator Integration
 
-This process task list integrates with the memory rehydrator system (`dspy-rag-system/src/utils/memory_rehydrator.py`) to ensure optimal context retrieval and processing. The implementation will leverage:
+This process task list integrates with the memory rehydrator system (`src/utils/memory_rehydrator.py`) to ensure optimal context retrieval and processing. The implementation will leverage:
 
 - **Entity Expansion**: Enhanced semantic relationship preservation
 - **AsyncIO Integration**: Parallel processing for performance optimization

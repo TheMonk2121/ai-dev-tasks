@@ -40,12 +40,12 @@ ai-dev-tasks/
 - **Documentation**: `400_guides/` - Comprehensive guides with optimal patterns
 - **Integration**: Memory system integration with DSPy and RAG components
 
-### Local Development
+### Local Developmen
 ```bash
-# Setup research environment
+# Setup research environmen
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.tx
 
 # Run benchmark tests
 python3 scripts/memory_benchmark.py
@@ -67,7 +67,7 @@ pre-commit run --all-files
 ## 1. Problem Statement
 
 ### What's broken?
-The current memory context system uses a flat hierarchy with HTML comments for metadata, which doesn't optimize for different AI model capabilities (7B vs 70B vs 128k context models). The system lacks model-specific adaptations, efficient token usage patterns, and resilience to file structure changes, leading to suboptimal retrieval performance and context utilization.
+The current memory context system uses a flat hierarchy with HTML comments for metadata, which doesn'tt optimize for different AI model capabilities (7B vs 70B vs 128k context models). The system lacks model-specific adaptations, efficient token usage patterns, and resilience to file structure changes, leading to suboptimal retrieval performance and context utilization.
 
 ### Why does it matter?
 The memory system is the foundation of the AI development ecosystem, providing context for all AI agents and decision-making processes. Poor memory architecture reduces retrieval accuracy, increases token costs, and limits the system's ability to scale across different model capabilities. This impacts the entire development workflow and AI agent performance.
@@ -148,7 +148,7 @@ The solution combines cognitive science research with AI retrieval optimization 
 ## 5. Risks and Mitigation
 
 ### What could go wrong?
-- **Risk 1**: Literature review doesn't provide actionable insights for implementation
+- **Risk 1**: Literature review doesn'tt provide actionable insights for implementation
 - **Risk 2**: Benchmark framework fails to accurately measure performance improvements
 - **Risk 3**: YAML front-matter implementation breaks existing documentation system
 - **Risk 4**: Model-specific adaptations don't scale across different AI capabilities

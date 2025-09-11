@@ -42,7 +42,7 @@ the config method will set that language model as the default that you're using 
 abstract a way from prompting in general so a lot of what you're about to see is likely going to be counterintuitive if
 you're used to working with Frameworks like Lang chain or llama index that very specifically rely on you having created
 prompts but as such dspi aims to create the programs rather than the prompts so
-the hope is that if you have a well optimized program it doesn't necessarily matter what language model you're using
+the hope is that if you have a well optimized program it doesn'tt necessarily matter what language model you're using
 and you can be able to effectively switch in and out the current language model that you're using but for these
 examples I'm going to be using GPT 40 mini the main reason behind this is because I found that with regular
 prompting 40 mini tends to perform a lot worse than some of the larger models like 40 or Claude 3.5 Sonet so I was
@@ -104,7 +104,7 @@ different style metrics and if you do have an unclear metric you can pass in
 the input or output field a description as well which says scores for formality
 complex complexity and emotiveness for our style metrics so then what we do is
 creating our dspi do predict program passing in the class we now have our style transfer program running this
-coffee shop makes the best lates ever Etc through it with our text and the source style of casual into poetic we
+coffee shop makes the best latest ever Etc through it with our text and the source style of casual into poetic we
 can see that our transform text is going to be this lovely poem that starts with an a quaint coffe coffee shop where
 dreams brew and swirl we get our style metrics and our preserved keywords but
 at its core using signatures and clearly defining the inputs and outputs is going to be the extent to which you are

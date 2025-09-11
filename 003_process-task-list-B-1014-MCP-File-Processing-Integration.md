@@ -405,7 +405,7 @@
 **Quality Gates:**
 - [ ] Error handling code reviewed
 - [ ] All error scenarios covered
-- [ ] Error handling doesn't impact performance
+- [ ] Error handling doesn'tt impact performance
 - [ ] Error security validated
 - [ ] Error handling documentation complete
 
@@ -536,7 +536,7 @@
 **Quality Gates:**
 - [ ] Security code reviewed
 - [ ] All security tests pass
-- [ ] Security doesn't impact performance
+- [ ] Security doesn'tt impact performance
 - [ ] Security audit completed
 - [ ] Security documentation complete
 

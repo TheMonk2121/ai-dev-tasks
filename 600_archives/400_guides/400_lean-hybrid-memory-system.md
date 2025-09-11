@@ -113,7 +113,7 @@ The system now includes **entity-aware context expansion** that enhances semanti
 - **Features**: Core features only
 
 #### **Current Status:**
-- ⚠️ **Database Schema Issue**: Requires `start_char` column that doesn't exist
+- ⚠️ **Database Schema Issue**: Requires `start_char` column that doesn'tt exist
 - 🔧 **Needs Fix**: Database schema compatibility issue
 
 ### **When to Use Which:**

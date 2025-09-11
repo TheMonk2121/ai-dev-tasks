@@ -87,7 +87,7 @@ RESEARCH_INDEX -->
 
 ## Implementation References
 
-- Cross-link to code when applicable (e.g., `dspy-rag-system/src/...`)
+- Cross-link to code when applicable (e.g., `src/...`)
 
 <!-- ANCHOR: citations -->
 {#citations}
@@ -98,5 +98,5 @@ RESEARCH_INDEX -->
 
 - --
 
-- Last Updated: 2025-08-08*
+- Last Updated: 2025-09-11*
 - Next Review: Monthly*

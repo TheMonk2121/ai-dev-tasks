@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Industry-Grade Observability System** - Stanford/Berkeley/Anthropic-grade structured tracing and verification
-  - New module: `dspy-rag-system/src/utils/structured_tracer.py`
-  - New module: `dspy-rag-system/src/utils/self_critique.py`
+  - New module: `src/utils/structured_tracer.py`
+  - New module: `src/utils/self_critique.py`
   - Structured tracing with cryptographic hashes and multi-layer spans
   - Echo verification for bundle integrity with hash validation
   - Self-critique with Anthropic-style reflection checkpoints
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive documentation and testing
 
 ### Changed
-- Enhanced `dspy-rag-system/src/utils/memory_rehydrator.py` with observability integration
+- Enhanced `src/utils/memory_rehydrator.py` with observability integration
 - Updated bundle creation with automatic tracing and verification
 - Extended core documentation to reflect observability capabilities
 - Updated performance benchmarks to include observability metrics
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Integration**: Zero-breaking-changes integration with existing pipeline
 
 - **Entity Expansion for Memory Rehydration** - Entity-aware context expansion with pattern-based extraction
-  - New module: `dspy-rag-system/src/utils/entity_overlay.py`
+  - New module: `src/utils/entity_overlay.py`
   - Pattern-based entity extraction (CamelCase, snake_case, file paths, URLs, emails)
   - Adaptive k_related calculation: `min(8, base_k + entity_count * 2)`
   - Entity-adjacent chunk retrieval with semantic similarity
@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 100% entity detection success rate in testing
 
 ### Changed
-- Enhanced `dspy-rag-system/src/utils/memory_rehydrator.py` with entity expansion integration
+- Enhanced `src/utils/memory_rehydrator.py` with entity expansion integration
 - Updated `scripts/memory_up.sh` with unified memory rehydration system
 - Extended episodic logging with expansion metrics (entities_found, chunks_added, expansion_latency_ms)
 - Updated system documentation to reflect entity expansion capabilities
@@ -69,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Production-ready deployment with rollback capability
 
 ### Files Added
-- `dspy-rag-system/src/utils/entity_overlay.py`
+- `src/utils/entity_overlay.py`
 - `dspy-rag-system/tests/test_entity_expansion.py`
 - `dspy-rag-system/tests/queries/QUERY_SET_1.jsonl`
 - `dspy-rag-system/tests/queries/QUERY_SET_2.jsonl`
@@ -81,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ENTITY_EXPANSION_NEXT_STEPS.md`
 
 ### Files Modified
-- `dspy-rag-system/src/utils/memory_rehydrator.py`
+- `src/utils/memory_rehydrator.py`
 - `scripts/memory_up.sh`
 - `000_core/000_backlog.md`
 - `400_guides/400_system-overview.md`
@@ -120,7 +120,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 When adding new features or making significant changes, please update this changelog with:
 - Clear description of what was added/changed/removed
-- Technical details and performance impact
+- Technical details and performance impac
 - Files added/modified
 - Breaking changes (if any)
 - Migration notes (if needed)

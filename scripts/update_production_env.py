@@ -55,7 +55,7 @@ def update_environment_for_production():
         f.write("RETR_TOPK_VEC=50\n")
         f.write("RETR_TOPK_BM25=50\n")
         f.write("RERANK_ENABLE=0\n")
-        f.write("DSPY_RAG_PATH=dspy-rag-system/src\n")
+        f.write("DSPY_RAG_PATH=src\n")
 
     print(f"   📝 Production environment saved to: {env_file}")
 

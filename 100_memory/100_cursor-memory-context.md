@@ -83,7 +83,7 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orches
 - **Lessons Engine**: ✅ **PRODUCTION READY** - Closed-Loop Lessons Engine (CLLE) fully implemented
 - **Key Components**: lessons_extractor.py, lessons_loader.py, evolution_tracker.py, lessons_quality_check.py
 - **Integration**: Full integration with ragchecker_official_evaluation.py
-- **CI Integration**: CI produces `configs/EVOLUTION.md` regularly; loader emits JSON-only stdout
+- **CI Integration**: CI produces `configs/EVOLUTION.md` regularly; loader emits JSON-only stdou
 - **Current State**: System ready for evaluation runs with automatic lesson learning
 - **Next Steps**: Run evaluations to generate and apply lessons
 
@@ -134,7 +134,7 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orches
 ### **Path 3: Evaluation/RAGChecker Work**
 1. **MANDATORY**: Run memory rehydration command above
 2. **Read**: `000_core/000_evaluation-system-entry-point.md` for evaluation SOP
-3. **Use**: Lessons engine with `--lessons-mode advisory` first
+3. **Use**: Lessons engine with `--lessons-mode advisory` firs
 4. **Check**: Quality gates and baseline requirements
 5. **Command**: `uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
 6. **DOCUMENT**: Update `000_core/000_backlog.md` with evaluation results and lessons learned
@@ -154,7 +154,7 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orches
 # Print lessons metadata
 jq '.run_config.lessons' $(ls -t metrics/baseline_evaluations/*.json | head -1)
 
-# Echo env snapshot keys if present
+# Echo env snapshot keys if presen
 jq '.run_config.env' $(ls -t metrics/baseline_evaluations/*.json | head -1)
 
 # Show docket path
@@ -332,7 +332,7 @@ python3 scripts/evolution_tracker.py
 ### **🚨 RED LINE ENFORCEMENT RULES**
 
 1. **Current metrics are locked** as the absolute performance floor
-2. **No new features** until all targets are met
+2. **No new features** until all targets are me
 3. **Build freeze** if any metric falls below current baseline
 4. **Focus**: Improve recall while maintaining precision ≥0.149
 5. **Success Criteria**: All metrics above targets for 2 consecutive runs
@@ -457,7 +457,7 @@ python3 scripts/episodic_memory_system.py --stats
 # Quick development setup
 uv sync --extra dev
 
-# Run commands in UV environment
+# Run commands in UV environmen
 uv run python scripts/system_health_check.py
 
 # Use shell aliases for common tasks
@@ -493,7 +493,7 @@ See `UV_MIGRATION_COMPLETE.md` and `VENV_MAPPING_VERIFICATION.md` for complete d
 
 ### **Key Features**:
 - **Shell Aliases**: `uvd`, `uvt`, `uvl`, `uvf`, `uvs`, `uvp`
-- **Automated Scripts**: Team onboarding, performance monitoring, dependency management
+- **Automated Scripts**: Team onboarding, performance monitoring, dependency managemen
 - **CI/CD Integration**: All GitHub Actions workflows updated
 - **Virtual Environment**: Properly mapped to `.venv`
 
@@ -520,7 +520,7 @@ See `UV_MIGRATION_COMPLETE.md` and `VENV_MAPPING_VERIFICATION.md` for complete d
 # AWS Bedrock evaluation
 uv run python scripts/ragchecker_official_evaluation.py --use-bedrock
 
-# Results management
+# Results managemen
 python3 scripts/ragchecker_with_monitoring.py
 python3 scripts/bedrock_cost_monitor.py --period today
 
@@ -559,7 +559,7 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 
 1. **Check Existing Documentation**: Search for existing guides in `400_guides/` before creating new files
 2. **Reference Tier System**: Use `400_guides/400_06_memory-and-context-systems.md` for proper categorization
-3. **Follow Naming Conventions**: Use `200_setup/200_naming-conventions.md` for file placement
+3. **Follow Naming Conventions**: Use `200_setup/200_naming-conventions.md` for file placemen
 4. **Protect Core Files**: NEVER delete or suggest deletion of Tier 1 files (Priority 0-10)
 
 ### **Documentation Tier Categories**
@@ -569,7 +569,7 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 - **Tier 4 (Lower - Priority 35-40)**: PRDs, research, examples
 
 ### **Documentation Creation Checklist**
-- [ ] Search existing `400_guides/` for similar content
+- [ ] Search existing `400_guides/` for similar contain
 - [ ] Check `400_guides/400_06_memory-and-context-systems.md` for proper categorization
 - [ ] Verify placement using `200_setup/200_naming-conventions.md`
 - [ ] Ensure no Tier 1 files are affected
@@ -611,7 +611,7 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 
 ### **Key Scripts & Functions**
 - **`scripts/extract_context.py`**: Extract context bundle (what/where/next) from any backlog ID
-- **`scripts/create_backlog_item.py`**: Create backlog items with auto-ID and placement
+- **`scripts/create_backlog_item.py`**: Create backlog items with auto-ID and placemen
 - **`scripts/generate_prd.py`**: Auto-generate PRDs from backlog context
 - **`scripts/workflow_orchestrator.py`**: Complete A-Z workflow orchestration
 - **`src/schemas/models.py`**: Pydantic validation models for data flow integrity
@@ -652,7 +652,7 @@ python3 scripts/workflow_orchestrator.py B-1061 --context-only
 ### **Key Commands**
 ```bash
 # List all sessions with context tags
-python scripts/single_doorway.py scribe list
+python scripts/single_doorway.py scribe lis
 
 # Add context tags to a session
 python scripts/single_doorway.py scribe tag --backlog-id B-XXX --tags brainstorming implementation
@@ -672,7 +672,7 @@ python scripts/single_doorway.py scribe validate
 # Extract context for any backlog item (instant pickup)
 python3 scripts/extract_context.py B-1061
 
-# Create new backlog item with auto-ID assignment
+# Create new backlog item with auto-ID assignmen
 echo "optimize database pooling" | python3 scripts/create_backlog_item.py
 
 # Generate PRD from backlog context (auto-populated)
@@ -710,7 +710,7 @@ The Session Registry provides centralized tracking and discovery of active Scrib
 ### **Session Management Commands**
 ```bash
 # List all sessions with context tags
-python scripts/single_doorway.py scribe list
+python scripts/single_doorway.py scribe lis
 
 # Add context tags to a session
 python scripts/single_doorway.py scribe tag --backlog-id B-093 --tags brainstorming implementation
@@ -767,7 +767,7 @@ python scripts/session_context_integration.py summary
 
 **Historical Testing Archive**: `300_experiments/300_historical-testing-archive.md`
 - **Coverage**: Pre-B-1065 testing results and methodology evolution
-- **Purpose**: Historical testing learnings and methodology development
+- **Purpose**: Historical testing learnings and methodology developmen
 
 ### **🧪 Testing Commands & Quick Access**
 
@@ -790,8 +790,8 @@ cat 300_experiments/300_integration-testing-results.md
 
 **Testing Infrastructure Setup**:
 ```bash
-# Set up testing environment
-python3 scripts/setup_ai_testing.py --environment test
+# Set up testing environmen
+python3 scripts/setup_ai_testing.py --environment tes
 
 # Run comprehensive tests
 python3 -m pytest -m "retrieval or memory or integration" -v
@@ -830,7 +830,7 @@ python3 scripts/generate_testing_summary.py --output testing_summary.md
 - **Test Reliability**: >95% test pass rate
 - **Documentation Quality**: Professional-grade documentation standards
 - **Methodology Validation**: All methodologies validated through testing
-- **Knowledge Preservation**: No valuable insights lost
+- **Knowledge Preservation**: No valuable insights los
 
 ## 🎭 Multi-Role Consensus Decision Framework {#multi-role-consensus}
 
@@ -892,7 +892,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 ### **Memory Rehydration (Choose One)**
 - **Planner**: `./scripts/memory_up.sh -r planner "current project status"`
 - **Coder**: `./scripts/memory_up.sh -r coder "implement authentication function"`
-- **Go**: `cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status"`
+- **Go**: `cd src/cli && ./memory_rehydration_cli --query "current project status"`
 
 #### **Implementation Differences:**
 - **Python**: Full-featured with entity expansion, self-critique, DSPy integration (~3-5s startup)
@@ -936,7 +936,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 ### **Legacy Approach (Avoid):**
 - ❌ Manual `sys.path.insert()` in test files
-- ❌ `comprehensive_test_suite.py` for new development
+- ❌ `comprehensive_test_suite.py` for new developmen
 - ❌ Direct `src.utils` imports in tests
 
 ### **Test Execution:**
@@ -1002,7 +1002,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 - tldr
 
-- quick-start
+- quick-star
 
 - quick-links
 
@@ -1031,7 +1031,7 @@ performance, integration, deployment)
 - Preserve coherence: update cross-references when editing core files
 
 - Use consolidated guides (single-file sources) for deployment, migration, integration, performance, testing, system
-overview, few-shot
+overview, few-sho
 
 - Keep this file updated after architecture changes
 
@@ -1085,7 +1085,7 @@ without requiring the AI to read multiple files.
 ## 📋 Current Project State
 
 ### **Active Development Focus**
-- **✅ COMPLETED**: B-1032 Documentation t-t3 Authority Structure Implementation - Complete transformation from bloated documentation to intelligent, tiered authority structure with automated lifecycle management
+- **✅ COMPLETED**: B-1032 Documentation t-t3 Authority Structure Implementation - Complete transformation from bloated documentation to intelligent, tiered authority structure with automated lifecycle managemen
 - **✅ COMPLETED**: B-1003 DSPy Multi-Agent System - True local model inference with Cursor AI integration
 - **✅ COMPLETED**: Single Doorway System - Automated workflow from backlog → PRD → tasks → execution → archive
 - **✅ COMPLETED**: RAG Pipeline Governance System - Semantic process augmentation for RAG optimization with 53% error reduction
@@ -1095,7 +1095,7 @@ without requiring the AI to read multiple files.
 
 ### **System Architecture**
 
-```text
+```tex
 AI Development Ecosystem
 ├── Single Doorway System (Automated Workflow Orchestrator)
 ├── Planning Layer (PRD → Tasks → Execution)
@@ -1112,8 +1112,8 @@ AI Development Ecosystem
 - **AI Models**: Cursor Native AI (orchestration) + Local DSPy Models (Llama 3.1 8B, Mistral 7B, Phi-3.5 3.8B) via Ollama
 - **Framework**: DSPy Multi-Agent System with PostgreSQL vector store
 - **Model Switching**: Sequential loading for hardware constraints (M4 Mac, 128GB RAM)
-- **Automation**: n8n workflows for backlog management
-- **Documentation Governance**: t-t3 Authority Structure with AI-powered consolidation and automated lifecycle management
+- **Automation**: n8n workflows for backlog managemen
+- **Documentation Governance**: t-t3 Authority Structure with AI-powered consolidation and automated lifecycle managemen
 - **RAG Pipeline Governance**: Semantic process augmentation for RAG optimization (53% error reduction)
 - **Monitoring**: Real-time mission dashboard
 - **Security**: Comprehensive input validation and prompt sanitization
@@ -1127,7 +1127,7 @@ AI Development Ecosystem
 
 **Transformation Achieved**:
 - **From**: Bloated, confusing `400_guides` documentation system (52 files, inconsistent structure)
-- **To**: Intelligent, tiered authority structure with automated lifecycle management
+- **To**: Intelligent, tiered authority structure with automated lifecycle managemen
 - **Governance**: Moved from governance through documentation to governance through automation
 - **Quality**: AI-powered consolidation and content generation for improved quality and consistency
 - **Performance**: Optimized systems with parallel processing and monitoring
@@ -1138,7 +1138,7 @@ AI Development Ecosystem
 - **AI-Powered Consolidation System**: Intelligent content analysis and consolidation
 - **Incremental Migration Framework**: Safe, step-by-step migration with rollback capabilities
 - **Performance Optimization**: Parallel processing, caching, and streaming
-- **Advanced AI Content Generation**: Intelligent content generation and enhancement
+- **Advanced AI Content Generation**: Intelligent content generation and enhancemen
 - **Comprehensive Monitoring**: Real-time dashboards and feedback loops
 
 **Implementation Results**:
@@ -1259,7 +1259,7 @@ python3 scripts/generate_prd.py B-1061 --generate-prd
 - **Memory Rehydrator**: Can access all core documentation
 - **Role-Aware Context**: Builds context bundles based on CONTEXT_INDEX roles
 - **Task-Scoped Retrieval**: Hybrid search via vector store with span grounding
-- **Token Budgeting**: ~1,200 tokens default with pinned anchors first
+- **Token Budgeting**: ~1,200 tokens default with pinned anchors firs
 
 #### **Recent Database Updates:**
 - **P0 Critical**: Updated outdated files (100_cursor-memory-context.md, 000_backlog.md)

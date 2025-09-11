@@ -11,7 +11,7 @@
 {"id": "Give the high-level getting started index.", "query": "Give the high-level getting started index.", "tags": "rag_qa_single", "qvec": []}
 {"id": "Show me the setup docs under 200_setup.", "query": "Show me the setup docs under 200_setup.", "tags": "rag_qa_single", "qvec": []}
 {"id": "Point me to memory-related guides under 100_memory.", "query": "Point me to memory-related guides under 100_memory.", "tags": "rag_qa_single", "qvec": []}
-{"id": "doc_demote", "query": "Why do we demote docs/design subtrees slightly?", "tags": "meta_ops", "qvec": [], "file_paths": ["dspy-rag-system/src/dspy_modules/retriever/pg.py"], "globs": ["dspy-rag-system/src/dspy_modules/retriever/pg.py"]}
-{"id": "ops_bias_subtrees", "query": "Why do we bias ops/shell/setup subtrees for ops_health?", "tags": "ops_health", "qvec": [], "file_paths": ["dspy-rag-system/src/dspy_modules/retriever/rerank.py"], "globs": ["dspy-rag-system/src/dspy_modules/retriever/rerank.py"]}
-{"id": "ops_phrase_hints", "query": "Why do ops_health phrase hints include health check and shell init?", "tags": "ops_health", "qvec": [], "file_paths": ["dspy-rag-system/src/dspy_modules/retriever/query_rewrite.py"], "globs": ["*/retriever/*query*.py"]}
+{"id": "doc_demote", "query": "Why do we demote docs/design subtrees slightly?", "tags": "meta_ops", "qvec": [], "file_paths": ["src/dspy_modules/retriever/pg.py"], "globs": ["src/dspy_modules/retriever/pg.py"]}
+{"id": "ops_bias_subtrees", "query": "Why do we bias ops/shell/setup subtrees for ops_health?", "tags": "ops_health", "qvec": [], "file_paths": ["src/dspy_modules/retriever/rerank.py"], "globs": ["src/dspy_modules/retriever/rerank.py"]}
+{"id": "ops_phrase_hints", "query": "Why do ops_health phrase hints include health check and shell init?", "tags": "ops_health", "qvec": [], "file_paths": ["src/dspy_modules/retriever/query_rewrite.py"], "globs": ["*/retriever/*query*.py"]}
 {"id": "setup_steps_overview", "query": "What are the core steps emphasized under 200_setup?", "tags": "rag_qa_single", "qvec": [], "file_paths": ["200_setup/200_naming-conventions.md", "CURSOR_MCP_SETUP.md"], "globs": ["200_setup/*.md"]}

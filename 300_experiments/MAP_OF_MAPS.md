@@ -16,10 +16,10 @@ Map of Maps: Codebase Navigation and Blast Radius
   - src/retrieval/reranker.py: Ranking logic
   - src/retrieval/fusion.py: Result blending
   - src/retrieval/quality_gates.py and src/retrieval/robustness_checks.py: Safety and quality gates
-  - dspy-rag-system/src/dspy_modules/rag_system.py and enhanced_rag_system.py: End-to-end orchestration
+  - src/dspy_modules/rag_system.py and enhanced_rag_system.py: End-to-end orchestration
 
 - Evaluation & Monitoring
-  - dspy-rag-system/src/monitoring/: Performance schema, storage, collector, dashboard
+  - src/monitoring/: Performance schema, storage, collector, dashboard
   - scripts/eval/: Retrieval and faithfulness eval scripts
   - metrics/baseline_evaluations/: Baselines, red lines, progress summaries
   - scripts/ragchecker_official_evaluation.py and tests/test_ragchecker_*: RAGChecker integration
@@ -47,9 +47,9 @@ Map of Maps: Codebase Navigation and Blast Radius
   - Filter impacted tests: Script output includes test files
 
 - Suggested Entry Points
-  - dspy-rag-system/src/dspy_modules/rag_pipeline.py: DSPy pipeline
-  - dspy-rag-system/src/dspy_modules/context_models.py: Context and data models
-  - dspy-rag-system/src/utils/: Cross-cutting utilities (privacy, session, monitoring)
+  - src/dspy_modules/rag_pipeline.py: DSPy pipeline
+  - src/dspy_modules/context_models.py: Context and data models
+  - src/utils/: Cross-cutting utilities (privacy, session, monitoring)
   - src/retrieval/test_hardening.py and scripts/test_retrieval_system.py: Retrieval tests/examples
 
 Notes

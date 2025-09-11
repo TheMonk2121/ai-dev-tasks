@@ -204,7 +204,7 @@ python3 scripts/solo_workflow.py ship
 2. **Add Pydantic validation logs**: Log validation context for evaluation runs
 3. **Add performance metrics**: Log validation overhead metrics
 4. **Add error context**: Log error context with taxonomy information
-5. **Test logging integration**: Ensure logging doesn't impact performance
+5. **Test logging integration**: Ensure logging doesn'tt impact performance
 
 **Quality Gates**:
 - [ ] **Code Review** - Debug logging follows existing patterns
@@ -284,7 +284,7 @@ python3 scripts/solo_workflow.py ship
 2. **Add performance alerts**: Alert when performance degrades
 3. **Add trend analysis**: Track performance trends
 4. **Add reporting dashboard**: Performance reporting interface
-5. **Test monitoring**: Ensure monitoring doesn't add overhead
+5. **Test monitoring**: Ensure monitoring doesn'tt add overhead
 
 **Quality Gates**:
 - [ ] **Code Review** - Monitoring implementation is robust
@@ -422,7 +422,7 @@ python3 scripts/solo_workflow.py ship
     "dependencies": ["B-1045 RAGChecker System", "B-1007 Pydantic Infrastructure"],
     "decisions": ["Use Pydantic v2 for validation", "Maintain backward compatibility"],
     "prd_section_0": {
-      "repository_layout": "scripts/, dspy-rag-system/src/dspy_modules/, metrics/baseline_evaluations/",
+      "repository_layout": "scripts/, src/dspy_modules/, metrics/baseline_evaluations/",
       "development_patterns": "Pydantic models with constitution-aware validation",
       "local_development": "Virtual environment with boto3, RAGChecker evaluation scripts"
     }

@@ -80,14 +80,14 @@
 **Context Preservation**: yes
 
 **Execution Steps**:
-1. Create `dspy-rag-system/src/api/` directory structure
+1. Create `src/api/` directory structure
 2. Implement FastAPI application with authentication middleware
 3. Add basic health check endpoint
 4. Configure API documentation (OpenAPI/Swagger)
 5. Implement error handling middleware
 
 **Success Criteria**:
-- [ ] FastAPI application created in `dspy-rag-system/src/api/`
+- [ ] FastAPI application created in `src/api/`
 - [ ] Authentication middleware implemented
 - [ ] Basic health check endpoint working
 - [ ] API documentation (OpenAPI/Swagger) accessible
@@ -252,7 +252,7 @@ python3 scripts/solo_workflow.py ship
 
 - **PRD Section 0**: Use Project Context & Implementation Guide for technical patterns
 - **Tech Stack**: Python 3.12, FastAPI, PostgreSQL + PGVector, DSPy 3.0
-- **Repository Layout**: Follow existing patterns in `dspy-rag-system/src/`
+- **Repository Layout**: Follow existing patterns in `src/`
 - **Development Patterns**: Use existing API, DSPy, and monitoring patterns
 - **Local Development**: Follow established setup and testing procedures
 

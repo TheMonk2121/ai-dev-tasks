@@ -61,7 +61,7 @@
 
 **How does it integrate?**
 - Simple pre-commit hooks
-- No complex caching or state management
+- No complex caching or state managemen
 - Direct integration with existing tools
 
 **What are the constraints?**
@@ -117,5 +117,5 @@
 - Can be done incrementally
 
 **What's the timeline?**
-- 6 hours total effort
+- 6 hours total effor
 - Can be completed in one session

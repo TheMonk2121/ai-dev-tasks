@@ -46,12 +46,12 @@ This artifact has **T1 Critical** authority as the foundation for governance sys
 ### **1. Single Source of Truth = CI**
 - **Principle**: Docs explain; CI enforces
 - **Application**: All governance rules must be automated in CI/CD pipelines
-- **Avoid**: Manual checklists or documentation-only enforcement
+- **Avoid**: Manual checklists or documentation-only enforcemen
 
 ### **2. Small, Composable Tests > Giant End-to-End**
-- **Principle**: If a check flakes, quarantine it fast
+- **Principle**: If a check flakes, quarantine it fas
 - **Application**: Build small, focused CI jobs that can be individually disabled
-- **Avoid**: Monolithic validation systems that fail as a unit
+- **Avoid**: Monolithic validation systems that fail as a uni
 
 ### **3. Budgets, Not Vibes**
 - **Principle**: Every gate ties to a budget (latency p95, recall@k, token cost)
@@ -61,7 +61,7 @@ This artifact has **T1 Critical** authority as the foundation for governance sys
 ### **4. Progressive Hardening**
 - **Principle**: Start permissive, move to required after 3–7 green runs
 - **Application**: Begin with warn-only gates, flip to fail after proven stability
-- **Avoid**: Starting with strict enforcement that blocks development
+- **Avoid**: Starting with strict enforcement that blocks developmen
 
 ## 🧠 **Memory System Evolution Insights**
 
@@ -73,7 +73,7 @@ This artifact has **T1 Critical** authority as the foundation for governance sys
 ### **2. RAG/CAG as Source of Truth**
 - **Insight**: Vector DB provides facts, docs provide routing
 - **Application**: Build ≤200-token hydration pins from RAG/CAG
-- **Benefit**: Always current, always relevant
+- **Benefit**: Always current, always relevan
 
 ### **3. Map-of-Maps for Structural Routing**
 - **Insight**: Help Cursor AI navigate codebase efficiently
@@ -105,7 +105,7 @@ This artifact has **T1 Critical** authority as the foundation for governance sys
 ### **4. Transactive Memory Systems (Harvard, MIT)**
 - **Practice**: Know who owns what domain, not just that knowledge exists
 - **Application**: Map module ownership and blast radius
-- **Benefit**: Efficient knowledge routing and risk assessment
+- **Benefit**: Efficient knowledge routing and risk assessmen
 
 ## 🔧 **Technical Implementation Patterns**
 
@@ -142,12 +142,12 @@ def enforce_budget(metric, threshold, action="fail"):
 ## 🚦 **Risk Mitigation Strategies**
 
 ### **Flaky Tests**
-- **Risk**: CI gates become unreliable and block development
+- **Risk**: CI gates become unreliable and block developmen
 - **Mitigation**: Start soft-fail, flip to hard after 5 consecutive green runs
 - **Monitoring**: Quarantine flaky checks nightly, don't block merges
 
 ### **Over-gating Velocity**
-- **Risk**: Too many gates slow down development
+- **Risk**: Too many gates slow down developmen
 - **Mitigation**: Limit to one budget per PR, focus on high-impact gates
 - **Monitoring**: Track PR merge times and adjust gate sensitivity
 

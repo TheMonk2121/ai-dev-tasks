@@ -752,7 +752,7 @@ def test_prompt_injection():
         for prompt in injection_prompts:
             response = model.generate(prompt)
 
-            # Check that response doesn't contain injection indicators
+            # Check that response doesn'tt contain injection indicators
 
             content = response["data"]["content"].lower()
             self.assertNotIn("hacked", content)
@@ -1225,6 +1225,6 @@ if __name__ == "__main__":
 
 - --
 
-- Last Updated: 2025-08-25*
+- Last Updated: 2025-09-11*
 - Next Review: Monthly*
 - Testing Level: Comprehensive*

@@ -65,12 +65,13 @@ class OllamaAgent:
                 # Use PydanticAI agent with Ollama
                 result = await self.agent.run(question)
 
+                # Access the result data through the output attribute
                 return OllamaAnswer(
-                    answer=result.content.answer,
-                    confidence=result.content.confidence or 0.8,
+                    answer=result.output.answer,
+                    confidence=result.output.confidence or 0.8,
                     model_used=self.model_name,
                     response_time_ms=1000,  # Mock timing
-                    tokens_generated=len(result.content.answer.split()) * 1.3,  # Rough estimate
+                    tokens_generated=int(len(result.output.answer.split()) * 1.3),  # Rough estimate
                 )
 
             except Exception as e:
@@ -229,9 +230,16 @@ async def evaluate_ollama_models():
         # Print averages
         print("\nEvaluation Averages:")
         averages = report.averages()
-        if averages and hasattr(averages, "items"):
-            for key, value in averages.items():
-                print(f"  {key}: {value}")
+        if averages:
+            # Try different ways to access the averages data
+            if hasattr(averages, "__dict__"):
+                # If it's a Pydantic model, access its attributes
+                for key, value in averages.__dict__.items():
+                    if not key.startswith("_"):  # Skip private attributes
+                        print(f"  {key}: {value}")
+            else:
+                # Fallback: just print the averages object
+                print(f"  {averages}")
         else:
             print("  Averages displayed in the report table above")
 

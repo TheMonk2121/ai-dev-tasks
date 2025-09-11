@@ -9,7 +9,7 @@ echo "🔧 Setting up evaluation environment variables..."
 # =============================================================================
 
 # DSPy RAG System Path
-export DSPY_RAG_PATH="dspy-rag-system/src"
+export DSPY_RAG_PATH="src"
 
 # Evaluation Driver (synthetic for testing, dspy_rag for real evaluations)
 export EVAL_DRIVER="synthetic"

@@ -8,7 +8,7 @@
 <!-- Version: 1.0 -->
 <!-- Date: 2025-01-23 -->
 
-# Product Requirements Document: B-1009 - AsyncIO Scribe Enhancement
+# Product Requirements Document: B-1009 - AsyncIO Scribe Enhancemen
 
 > ⚠️**Auto-Skip Note**: This PRD was generated because `points≥5` (6 points) and `score_total≥3.0` (6.5).
 > Remove this banner if you manually forced PRD creation.
@@ -19,8 +19,8 @@
 The current Scribe system uses synchronous polling architecture with significant performance bottlenecks:
 - **File Monitoring**: 10-60 second polling intervals with `time.sleep()` blocking
 - **Context Fetching**: Sequential subprocess calls (2-5 seconds each) for Git operations, file reading, and session registry access
-- **Session Registry**: Blocking file I/O operations that prevent concurrent session management
-- **Multi-Session Management**: Limited to 3 concurrent sessions with manual instance management
+- **Session Registry**: Blocking file I/O operations that prevent concurrent session managemen
+- **Multi-Session Management**: Limited to 3 concurrent sessions with manual instance managemen
 - **Real-time Capabilities**: No event-driven notifications or live updates
 
 ### Why does it matter?
@@ -168,7 +168,7 @@ A surgical AsyncIO enhancement to the existing Scribe system that maintains back
    - Add background processing for worklog summarization
 
 4. **Phase 4: Enhanced Multi-Session** (2 hours)
-   - Implement concurrent session management
+   - Implement concurrent session managemen
    - Add resource limits and monitoring
    - Implement graceful session termination
 

@@ -74,8 +74,8 @@ ls -la baseline_results/
 - **Quality Gates**: Comprehensive testing quality assurance
 
 ### **Testing Methodologies**
-- **Dev Slice Testing**: 8-case stratified testing for development
-- **Full Validation**: 15-case testing with two-run requirement
+- **Dev Slice Testing**: 8-case stratified testing for developmen
+- **Full Validation**: 15-case testing with two-run requiremen
 - **Baseline Optimization**: Systematic precision/recall improvement testing
 - **Integration Validation**: Cross-component compatibility testing
 
@@ -99,7 +99,7 @@ ls -la baseline_results/
 ## 📚 **Related Documentation**
 
 - **[400_guides/](../400_guides/)** - Core system documentation and guides
-- **[000_core/](../000_core/)** - Core workflows and backlog management
+- **[000_core/](../000_core/)** - Core workflows and backlog managemen
 - **[scripts/](../scripts/)** - General utility scripts and tools
 
 ## 🔍 **Testing Discovery**

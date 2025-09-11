@@ -10,18 +10,18 @@
 - **Memory Systems**: Unified Memory Orchestrator, LTST, Cursor, Go CLI, Prime
 - **DSPy Integration**: DSPy modules for bridge generation and concept analysis
 - **Documentation**: 00-12 guide system, comprehensive usage guides, status tracking
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
 ai-dev-tasks/
-├── dspy-rag-system/src/utils/
+├── src/utils/
 │   ├── graph_data_provider.py      # Existing graph infrastructure
 │   ├── entity_overlay.py           # Existing entity extraction
 │   └── text_cooc_adapter.py        # New: Text-to-co-occurrence adapter
-├── dspy-rag-system/src/dspy_modules/
+├── src/dspy_modules/
 │   └── bridge_generator.py         # New: DSPy bridge generation
-├── dspy-rag-system/src/utils/
+├── src/utils/
 │   ├── graph_metrics.py            # New: Graph metrics computation
 │   ├── gap_detector.py             # New: Gap detection system
 │   └── market_study.py             # New: Market study features
@@ -34,13 +34,13 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **Text Analysis Scripts**: `dspy-rag-system/src/utils/` - Core text analysis implementations
-- **DSPy Modules**: `dspy-rag-system/src/dspy_modules/` - AI-powered bridge generation
+- **Text Analysis Scripts**: `src/utils/` - Core text analysis implementations
+- **DSPy Modules**: `src/dspy_modules/` - AI-powered bridge generation
 - **Documentation**: `400_guides/` - Comprehensive usage guides and integration
 - **Status Tracking**: `artifacts/text_analysis/` - Analysis results and status
 - **Quality Gates**: Integration with existing GraphDataProvider and visualization
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify GraphDataProvider functionality
 python3 -c "from dspy_rag_system.src.utils.graph_data_provider import GraphDataProvider; print('✅ GraphDataProvider available!')"
@@ -56,7 +56,7 @@ ls artifacts/text_analysis/
 ```
 
 ### Common Tasks
-- **Add new text analysis**: Create in `dspy-rag-system/src/utils/` with GraphDataProvider integration
+- **Add new text analysis**: Create in `src/utils/` with GraphDataProvider integration
 - **Update bridge generation**: Modify DSPy modules for enhanced concept bridging
 - **Add quality gates**: Integrate with existing GraphDataProvider and visualization
 - **Update documentation**: Maintain 00-12 guide system integration
@@ -93,7 +93,7 @@ Text documents are processed through co-occurrence analysis to identify concept 
 ## 3. Acceptance Criteria
 
 ### How do we know it's done?
-- [ ] **Text-to-Co-occurrence Adapter**: `text_cooc_adapter.py` implemented with V1 API contract
+- [ ] **Text-to-Co-occurrence Adapter**: `text_cooc_adapter.py` implemented with V1 API contrac
 - [ ] **Graph Metrics Computation**: `graph_metrics.py` with centrality and community detection
 - [ ] **Gap Detection System**: `gap_detector.py` with structural gap identification
 - [ ] **Bridge Generation**: `bridge_generator.py` DSPy module for AI-powered insights
@@ -105,7 +105,7 @@ Text documents are processed through co-occurrence analysis to identify concept 
 - [ ] **Documentation**: Complete usage guide and 00-12 integration
 
 ### What does success look like?
-- **Text Analysis Success**: Co-occurrence analysis working with entity enhancement
+- **Text Analysis Success**: Co-occurrence analysis working with entity enhancemen
 - **Gap Detection Success**: Structural gaps identified and visualized
 - **Bridge Generation Success**: AI-powered insights connecting concept clusters
 - **Market Study Success**: Supply/demand analysis for research topics
@@ -128,7 +128,7 @@ Text documents are processed through co-occurrence analysis to identify concept 
 - **Graph Metrics**: NetworkX for centrality and community detection
 - **DSPy Integration**: Bridge generation with AI-powered insights
 - **Market Study**: Configurable API integration for supply/demand analysis
-- **GraphDataProvider**: Extension of existing V1 API contract
+- **GraphDataProvider**: Extension of existing V1 API contrac
 - **NiceGUI**: Enhanced visualization with text analysis tab
 
 ### How does it integrate?
@@ -152,7 +152,7 @@ Text documents are processed through co-occurrence analysis to identify concept 
 - **Risk 1**: Co-occurrence analysis performance degrades with large documents
 - **Risk 2**: Entity extraction fails to enhance concept mapping
 - **Risk 3**: Gap detection produces too many false positives
-- **Risk 4**: Bridge generation quality is insufficient
+- **Risk 4**: Bridge generation quality is insufficien
 - **Risk 5**: Market study API integration fails
 
 ### How do we handle it?
@@ -180,7 +180,7 @@ Text documents are processed through co-occurrence analysis to identify concept 
 - **Performance Testing**: Analysis speed and resource usage
 
 ### How do we test it?
-- **Unit Testing**: Individual component testing with pytest
+- **Unit Testing**: Individual component testing with pytes
 - **Integration Testing**: End-to-end text analysis workflow testing
 - **Performance Testing**: Analysis execution time and resource usage
 - **Quality Testing**: Bridge generation quality evaluation
@@ -206,7 +206,7 @@ Text documents are processed through co-occurrence analysis to identify concept 
 - **GraphDataProvider**: Must be operational and extensible
 - **Entity Overlay System**: Must be available for entity extraction
 - **DSPy Framework**: Must be available for bridge generation
-- **NiceGUI**: Must be available for visualization enhancement
+- **NiceGUI**: Must be available for visualization enhancemen
 - **Documentation System**: 00-12 guide system must be accessible
 
 ### What's the timeline?

@@ -19,7 +19,7 @@
 - **Backend**: Python 3.12, FastAPI, PostgreSQL, SQLite
 - **AI/ML**: Cursor Native AI, DSPy Multi-Agent System, PyTorch 2.8.0 (MPS enabled)
 - **Infrastructure**: Docker, Redis, n8n workflows
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 - **Monitoring**: NiceGUI dashboard, Scribe context capture, Mission dashboard
 
 ### Repository Layout
@@ -43,13 +43,13 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **Add DSPy module**: `dspy-rag-system/src/dspy_modules/` → add module → add tests
-- **Add RL component**: `dspy-rag-system/src/rl/` → add agent → add environment → add tests
-- **Update model switcher**: `dspy-rag-system/src/dspy_modules/model_switcher.py` → enhance with RL
-- **Add monitoring**: `dspy-rag-system/src/monitoring/` → add metrics → add dashboard
+- **Add DSPy module**: `src/dspy_modules/` → add module → add tests
+- **Add RL component**: `src/rl/` → add agent → add environment → add tests
+- **Update model switcher**: `src/dspy_modules/model_switcher.py` → enhance with RL
+- **Add monitoring**: `src/monitoring/` → add metrics → add dashboard
 - **Update memory**: `scripts/update_cursor_memory.py` → maintain context
 
-### Local Development
+### Local Developmen
 ```bash
 # Setup
 poetry install
@@ -68,7 +68,7 @@ python -m pytest tests/        # Run DSPy tests
 python scripts/run_tests.sh    # Run comprehensive tests
 ```
 
-### Common Tasks Cheat Sheet
+### Common Tasks Cheat Shee
 - **Add RL agent**: RL module → Environment → Agent → Tests → Integration
 - **Enhance model selection**: Model switcher → RL integration → Performance tracking → Optimization
 - **Add monitoring**: Metrics collection → Dashboard → Alerts → Analysis
@@ -76,7 +76,7 @@ python scripts/run_tests.sh    # Run comprehensive tests
 
 ## 1. Problem Statement
 
-**What's broken?** The current DSPy model selection system uses static rules and manual configuration, which limits performance optimization and doesn't learn from experience. The system can't adapt to different task types, user preferences, or performance patterns. Model selection is based on fixed criteria rather than actual outcomes, leading to suboptimal performance and missed opportunities for improvement.
+**What's broken?** The current DSPy model selection system uses static rules and manual configuration, which limits performance optimization and doesn'tt learn from experience. The system can't adapt to different task types, user preferences, or performance patterns. Model selection is based on fixed criteria rather than actual outcomes, leading to suboptimal performance and missed opportunities for improvement.
 
 **Why does it matter?** Model selection directly impacts the quality and efficiency of AI interactions in the development ecosystem. Poor model selection leads to slower responses, lower quality outputs, and wasted computational resources. As a solo developer, I need optimal AI performance to maximize productivity and maintain focus on high-impact work.
 
@@ -132,21 +132,21 @@ python scripts/run_tests.sh    # Run comprehensive tests
 - All existing DSPy tests pass with RL integration
 - RL agent training converges and shows improvement
 - Performance monitoring provides actionable insights
-- Integration doesn't break existing functionality
+- Integration doesn'tt break existing functionality
 - Documentation is complete and accurate
 
 ## 4. Technical Approach
 
 **What technology?**
 - **RL Framework**: PyTorch with custom RL implementation
-- **Model Selection**: Enhanced existing model switcher with RL agent
+- **Model Selection**: Enhanced existing model switcher with RL agen
 - **Environment**: Custom RL environment for model selection decisions
 - **Policy Network**: Simple neural network for action selection
 - **Reward Function**: Performance-based reward calculation
 - **Monitoring**: Enhanced metrics collection and visualization
 
 **How does it integrate?**
-- **Model Switcher**: Enhance existing `model_switcher.py` with RL agent
+- **Model Switcher**: Enhance existing `model_switcher.py` with RL agen
 - **DSPy System**: Integrate RL agent into existing DSPy workflow
 - **Monitoring**: Add RL-specific metrics to existing monitoring system
 - **Dashboard**: Enhance NiceGUI dashboard with RL performance visualization
@@ -210,9 +210,9 @@ python scripts/run_tests.sh    # Run comprehensive tests
 **What are the phases?**
 
 **Phase 1: Foundation (Week 1)**
-- Set up RL framework and basic environment
+- Set up RL framework and basic environmen
 - Create simple reward function
-- Implement basic RL agent
+- Implement basic RL agen
 - Add performance monitoring
 
 **Phase 2: Integration (Week 2)**
@@ -228,7 +228,7 @@ python scripts/run_tests.sh    # Run comprehensive tests
 - Performance benchmarking and tuning
 
 **Phase 4: Deployment (Week 4)**
-- Deploy to production environment
+- Deploy to production environmen
 - Monitor performance and stability
 - Gather feedback and iterate
 - Final documentation and handoff
@@ -306,8 +306,8 @@ def calculate_reward(model_performance, user_feedback, response_time):
 # Enhanced model switcher with RL integration
 class RLEnhancedModelSwitcher:
     def __init__(self, rl_agent, environment):
-        self.rl_agent = rl_agent
-        self.environment = environment
+        self.rl_agent = rl_agen
+        self.environment = environmen
         self.fallback_selector = StaticModelSelector()  # Existing logic
 
     def select_model(self, task_context):

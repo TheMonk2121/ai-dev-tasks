@@ -250,7 +250,7 @@ Must be compatible with our existing error handling middleware. [Constraint]
 **Strategy**:
 
 - **Focus Areas**: Explicitly state what you want the AI to address
-- **Assumptions**: List what the AI can assume or doesn't need to worry about
+- **Assumptions**: List what the AI can assume or doesn'tt need to worry about
 - **Scope**: Define the boundaries of the task
 
 **Example**:

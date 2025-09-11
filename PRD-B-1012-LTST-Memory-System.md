@@ -5,7 +5,7 @@
 
 ## 1. Problem Statement
 
-**What's broken?** - Current AI conversations lack persistent memory across sessions, requiring users to re-explain context, preferences, and previous work. The existing memory rehydration system provides good context but doesn't maintain conversation continuity like ChatGPT's LTST memory.
+**What's broken?** - Current AI conversations lack persistent memory across sessions, requiring users to re-explain context, preferences, and previous work. The existing memory rehydration system provides good context but doesn'tt maintain conversation continuity like ChatGPT's LTST memory.
 
 **Why does it matter?** - Users lose productivity when AI agents can't remember previous conversations, project context, or user preferences. This creates friction in the development workflow and reduces the effectiveness of the AI development ecosystem.
 

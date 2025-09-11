@@ -154,7 +154,7 @@ Solidify a reusable tuning framework ("industry recipe") that:
 - **Evidence-first answer**: 1–2 top snippets with paths, then constrained summary
 
 ### **5.6 Intent-Aware Routing (Lightweight)**
-- **Lookup/Config**: if no exact key/path match found, backstop with BM25 top-3 regardless of cosine; strict snippet requirement
+- **Lookup/Config**: if no exact key/path match found, backstop with BM25 top-3 regardless of cosine; strict snippet requiremen
 - **How-to/Troubleshoot**: allow 2–3 diverse chunks; looser thresholds to preserve coverage
 - **Multi-hop**: allow more candidates pre-rerank; require cross-file coherence checks
 
@@ -187,7 +187,7 @@ Solidify a reusable tuning framework ("industry recipe") that:
 
 ### **6.2.1 Trend Guardrails (New)**
 - Fail on statistically significant regressions vs previous green baseline
-- Track Δ per-intent metrics; require non-negative movement unless explicitly ratcheting another target
+- Track Δ per-intent metrics; require non-negative movement unless explicitly ratcheting another targe
 
 ### **6.3 Gates & Ratcheting**
 - **Two-green rule**: increase thresholds only after two consecutive green runs
@@ -217,7 +217,7 @@ Solidify a reusable tuning framework ("industry recipe") that:
 ### **7.1 Config & Code**
 - **config/retrieval.yaml** (new): defaults for top-k, RRF weights, pre-filter, rerank α, packing caps, MMR λ, intent routing
 - **config/eval_gates.yaml** (new): current gates + ratchet schedule
-- **scripts/run_eval_bedrock.sh** (updated): official eval, result export
+- **scripts/run_eval_bedrock.sh** (updated): official eval, result expor
 - **scripts/run_eval.py** (new): one-command Python runner (Bedrock-only eval mode, cache-off, artifact export)
 - **scripts/tuning_sweeps.py** (new): coordinate ascent sweeps with summary CSV/JSON
 - **src/retrieval/fusion.py** (new or updated): weighted-RRF
@@ -264,7 +264,7 @@ Solidify a reusable tuning framework ("industry recipe") that:
   - Precision ≥ 0.12, Recall ≥ 0.15, Faithfulness ≥ 0.60 (initial)
   - Then Recall ≥ 0.35 while keeping Precision ≥ 0.12
 - **Docs complete** and placed into correct memory layers; Cursor rules updated
-- **Test set expanded** with hard negatives for weak domains; per-intent labeling present
+- **Test set expanded** with hard negatives for weak domains; per-intent labeling presen
 - **Artifacts produced** (configs, scripts, charts) and linked from the docs index
 
 ---
@@ -298,7 +298,7 @@ Solidify a reusable tuning framework ("industry recipe") that:
 
 ### **Epic F — Tuning & Gates**
 - **F1**: Build scripts/tuning_sweeps.py (coordinate ascent)
-- **F2**: Add config/eval_gates.yaml with two-green ratchet
+- **F2**: Add config/eval_gates.yaml with two-green ratche
 - **F3**: Integrate gate parsing in CI and NiceGUI
 
 ### **Epic G — Test Set Hardening**
@@ -428,4 +428,4 @@ gates:
 *Status: Complete - Ready for Implementation*
 *Backlog Item: B-1059*
 *Priority: 🔥 HIGHEST*
-*Last Updated: 2025-09-01 (America/Chicago)*
+*Last Updated: 2025-09-11 (America/Chicago)*

@@ -11,7 +11,7 @@ generate_prd: |
   Skip PRD generation for items with points<5 AND score_total>=3.0
   Generate PRD for items with points>=5 OR score_total<3.0
 
-```text
+```tex
 
 ## Update Status
 
@@ -34,7 +34,7 @@ update_status: |
   Mark backlog item as done
   Update effort estimates based on actual time
 
-```text
+```tex
 
 ### Batch Operations
 
@@ -43,25 +43,25 @@ batch_operations: |
   Update multiple items at once
   Recalculate priorities based on dependencies
 
-```text
+```tex
 
 ### Dependency Check
 
 ```yaml
 dependency_check: |
-  Verify all dependencies are met
+  Verify all dependencies are me
   Block items with unmet dependencies
 
-```text
+```tex
 
 ### Points Calculation
 
 ```yaml
 points_calculation: |
-  Calculate total effort for sprint
+  Calculate total effort for sprin
   Ensure points fit within capacity
 
-```text
+```tex
 
 ### Default Executor
 
@@ -70,7 +70,7 @@ default_executor: |
   If present, the specified file is auto-loaded before task execution.
   Example: <!-- default_executor: 000_core/003_process-task-list.md -->
 
-```text
+```tex
 
 ## Integration with Workflow Files
 
@@ -116,7 +116,7 @@ default_executor: |
 
 Use @000_core/001_create-prd.md with backlog_id=B-001
 
-```text
+```tex
 
 ## Updating Progress
 
@@ -126,7 +126,7 @@ Use @000_core/001_create-prd.md with backlog_id=B-001
 
 Update backlog item B-001 status to "done"
 
-```text
+```tex
 
 ## Sprint Planning
 
@@ -136,7 +136,7 @@ Update backlog item B-001 status to "done"
 
 Parse backlog for top 3 todo items by priority
 
-```text
+```tex
 
 ## Status Tracking
 
@@ -228,8 +228,8 @@ The n8n backlog scrubber automatically calculates and updates scoring metadata i
 
 ### Implementation Status ✅**COMPLETED**
 
-- *Location**: `dspy-rag-system/src/n8n_workflows/backlog_scrubber.py`
-- *Webhook Server**: `dspy-rag-system/src/n8n_workflows/backlog_webhook.py`
+- *Location**: `src/n8n_workflows/backlog_scrubber.py`
+- *Webhook Server**: `src/n8n_workflows/backlog_webhook.py`
 - *Documentation**: `400_guides/400_n8n-backlog-scrubber-guide.md`
 - *Tests**: `dspy-rag-system/tests/test_backlog_scrubber.py`
 
@@ -285,7 +285,7 @@ python3 src/n8n_workflows/backlog_scrubber.py --backlog-path /path/to/backlog.md
 
 python3 src/n8n_workflows/backlog_scrubber.py --dry-run
 
-```text
+```tex
 
 ## Webhook Server
 
@@ -299,7 +299,7 @@ python3 src/n8n_workflows/backlog_webhook.py
 
 python3 src/n8n_workflows/backlog_webhook.py --host 0.0.0.0 --port 5001 --debug
 
-```text
+```tex
 
 ## n8n Workflow Integration
 

@@ -23,7 +23,7 @@
 
 Backlog link: B-005
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with contain
 
 - **Priority**: 🔧 Medium - Research for implementation
 

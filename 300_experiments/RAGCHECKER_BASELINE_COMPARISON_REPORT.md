@@ -1,4 +1,4 @@
-# 📊 RAGChecker Baseline Comparison Report
+# 📊 RAGChecker Baseline Comparison Repor
 
 **Date**: September 3, 2025
 **Evaluation Run**: `ragchecker_official_evaluation_20250903_172157.json`
@@ -125,7 +125,7 @@ export RAGCHECKER_DROP_UNSUPPORTED=0
 
 ### **System State Verification**
 
-1. **Environment Variables**: Confirm all baseline configurations are set
+1. **Environment Variables**: Confirm all baseline configurations are se
 2. **Code Integrity**: Verify no recent changes to RAGChecker core
 3. **Dependencies**: Check for package version changes
 4. **API Access**: Verify Bedrock credentials and rate limits

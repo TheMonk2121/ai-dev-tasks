@@ -1118,7 +1118,7 @@ Brief description
 Content here
 
 ---
-*Last Updated: 2025-08-30*
+*Last Updated: 2025-09-11*
 ```
 
 **Expected Output**:
@@ -1300,7 +1300,7 @@ def calculate_user_performance_metrics(user_id: str, date_range: tuple) -> dict:
 
     Raises:
         ValueError: If date_range is invalid
-        UserNotFoundError: If user_id doesn't exist
+        UserNotFoundError: If user_id doesn'tt exist
     """
     try:
         # Implementation here

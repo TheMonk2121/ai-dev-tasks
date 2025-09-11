@@ -30,7 +30,7 @@ Define the end-to-end development workflow (from idea to deployment) and the sta
 - Starting a new feature or refactor
 - Planning or reviewing implementation steps
 - Aligning on commit, review, and testing standards
-- Preparing changes for deployment
+- Preparing changes for deploymen
 
 ## ✅ Expected Outcomes
 
@@ -107,7 +107,7 @@ Define the end-to-end development workflow (from idea to deployment) and the sta
 
 #### **Constitution Hooks in Prompts**
 ```python
-# Example constitution-compliant prompt
+# Example constitution-compliant promp
 constitution_prompt = f"""
 {base_prompt}
 
@@ -156,7 +156,7 @@ python3 scripts/ai_safety_check.py --operation "your_operation"
 # Validate context integrity
 python3 scripts/validate_context.py --full-check
 
-# Constitution compliance report
+# Constitution compliance repor
 python3 scripts/constitution_report.py --output compliance_report.md
 ```
 
@@ -179,12 +179,12 @@ python3 scripts/constitution_report.py --output compliance_report.md
 #### **1. Single Source of Truth = CI**
 - **Principle**: Docs explain; CI enforces
 - **Application**: All governance rules must be automated in CI/CD pipelines
-- **Avoid**: Manual checklists or documentation-only enforcement
+- **Avoid**: Manual checklists or documentation-only enforcemen
 
 #### **2. Small, Composable Tests > Giant End-to-End**
-- **Principle**: If a check flakes, quarantine it fast
+- **Principle**: If a check flakes, quarantine it fas
 - **Application**: Build small, focused CI jobs that can be individually disabled
-- **Avoid**: Monolithic validation systems that fail as a unit
+- **Avoid**: Monolithic validation systems that fail as a uni
 
 #### **3. Budgets, Not Vibes**
 - **Principle**: Every gate ties to a budget (latency p95, recall@k, token cost)
@@ -194,7 +194,7 @@ python3 scripts/constitution_report.py --output compliance_report.md
 #### **4. Progressive Hardening**
 - **Principle**: Start permissive, move to required after 3–7 green runs
 - **Application**: Begin with warn-only gates, flip to fail after proven stability
-- **Avoid**: Starting with strict enforcement that blocks development
+- **Avoid**: Starting with strict enforcement that blocks developmen
 
 ### **Memory System Evolution Insights**
 
@@ -206,7 +206,7 @@ python3 scripts/constitution_report.py --output compliance_report.md
 #### **2. RAG/CAG as Source of Truth**
 - **Insight**: Vector DB provides facts, docs provide routing
 - **Application**: Build ≤200-token hydration pins from RAG/CAG
-- **Benefit**: Always current, always relevant
+- **Benefit**: Always current, always relevan
 
 #### **3. Map-of-Maps for Structural Routing**
 - **Insight**: Help Cursor AI navigate codebase efficiently
@@ -248,7 +248,7 @@ python3 scripts/test_governance_rules.py --rule ethical_ai --test-scenario fairn
 # Monitor governance health
 python3 scripts/monitor_governance_health.py --real-time --output governance_report.md
 
-# Generate governance report
+# Generate governance repor
 python3 scripts/generate_governance_report.py --policy all --output governance_report.md
 ```
 
@@ -298,7 +298,7 @@ python3 scripts/monitor_governance_pipeline.py --pipeline main --real-time
 
 **Example**:
 ```
-🚨 **The Problem is Real**: 51 files, 28,707 lines of documentation bloat
+🚨 **The Problem is Real**: 51 files, 28,707 lines of documentation bloa
 💡 **Proposed Strategy**: Apply README context management principles
 🎯 **Expected Benefits**: Reduced cognitive load, improved quality
 ❓ **Questions for You**: What's your tolerance for automated changes?
@@ -320,7 +320,7 @@ python3 scripts/monitor_governance_pipeline.py --pipeline main --real-time
 
 #### **4. Memory System Integration**
 **Pattern**: Leverage memory context for personalization
-- **Solo developer** in local-first environment
+- **Solo developer** in local-first environmen
 - **Simpler, streamlined approaches** preferred
 - **Avoid overfitting or over-complication**
 - **Plain, straightforward language**
@@ -352,7 +352,7 @@ python3 scripts/monitor_governance_pipeline.py --pipeline main --real-time
 ```
 ## 🚨 **The Problem is Real**
 - **Specific metrics** (files, lines, performance)
-- **Clear pain points** and impact
+- **Clear pain points** and impac
 
 ## 💡 **The Opportunity**
 - **Leverage existing successes** (like README context system)
@@ -376,7 +376,7 @@ python3 scripts/apply_communication_pattern.py --pattern strategic_discussion --
 # Validate communication effectiveness
 python3 scripts/validate_communication_effectiveness.py --pattern strategic_discussion --user-feedback feedback.json
 
-# Generate communication report
+# Generate communication repor
 python3 scripts/generate_communication_report.py --pattern all --output communication_report.md
 ```
 
@@ -386,9 +386,9 @@ python3 scripts/generate_communication_report.py --pattern all --output communic
 python3 scripts/test_communication_pattern.py --pattern strategic_discussion --test-scenario planning
 
 # Measure pattern effectiveness
-python3 scripts/measure_communication_effectiveness.py --pattern strategic_discussion --metrics clarity engagement
+python3 scripts/measure_communication_effectiveness.py --pattern strategic_discussion --metrics clarity engagemen
 
-# Generate pattern report
+# Generate pattern repor
 python3 scripts/generate_communication_pattern_report.py --pattern strategic_discussion --output pattern_report.md
 
 # Monitor communication quality
@@ -446,7 +446,7 @@ python3 scripts/monitor_communication_quality.py --real-time --output quality_re
 
 #### **Step 1: File Analysis Checklist**
 ```bash
-# Run the analysis checklist
+# Run the analysis checklis
 python3 scripts/file_analysis_checklist.py <target_file>
 
 # Check for conflicts and dependencies
@@ -473,7 +473,7 @@ python3 scripts/conflict_audit.py --full
 - **Cross-Reference Updates**: Update all related documentation
 
 #### **Step 5: Implementation Planning**
-- **Migration Strategy**: How to safely move/archive content
+- **Migration Strategy**: How to safely move/archive contain
 - **Rollback Plan**: How to undo if problems arise
 - **Testing Plan**: How to validate the change
 - **Communication Plan**: How to notify affected users
@@ -509,10 +509,10 @@ python3 scripts/conflict_audit.py --full
 # Quick conflict check
 python3 scripts/quick_conflict_check.py
 
-# Comprehensive conflict audit
+# Comprehensive conflict audi
 python3 scripts/conflict_audit.py --full
 
-# File analysis checklist
+# File analysis checklis
 python3 scripts/file_analysis_checklist.py <target_file>
 
 # Documentation coherence validation
@@ -553,7 +553,7 @@ python3 scripts/check_broken_links.py
 - Code review checklist (function length, typing, errors, docs)
 - CI dry-run validates lint, types, tests on PRs
 
-### Stage 6: Deployment
+### Stage 6: Deploymen
 - Pre-deploy checklist (tests/quality/perf/security) then rollout via 11
 
 ## 🧩 Standards
@@ -615,7 +615,7 @@ pytest tests/ -q
 
 #### **Step 1: Prepare Environment**
 
-- Ensure Python deps: psycopg2-binary, pytest
+- Ensure Python deps: psycopg2-binary, pytes
 - Configure DATABASE_URL
 - Recommended Postgres extensions:
   - vector (required for pgvector)
@@ -686,7 +686,7 @@ Reapply known-good schema (if needed) and disable flags to revert to conservativ
 - [ ] Database connection and permissions verified
 - [ ] Required PostgreSQL extensions available
 - [ ] Python dependencies installed
-- [ ] Configuration environment variables set
+- [ ] Configuration environment variables se
 - [ ] Backup of current system state created
 
 ##### **Deployment**
@@ -752,7 +752,7 @@ Reapply known-good schema (if needed) and disable flags to revert to conservativ
 ```python
 def memory_rehydration_pattern(query: str, role: str) -> Dict[str, Any]:
     """Standard pattern for memory rehydration."""
-    # Set environment
+    # Set environmen
     os.environ["POSTGRES_DSN"] = "mock://test"
 
     # Execute memory orchestration
@@ -783,7 +783,7 @@ def context_integration_pattern(base_context: Dict[str, Any],
             else:
                 integrated_context[key] = value
 
-    return integrated_context
+    return integrated_contex
 ```
 
 #### **2. DSPy Integration Patterns**
@@ -811,7 +811,7 @@ class StandardDSPyModule(Module):
         # Validate output
         validated_output = self.validate_output(output)
 
-        return validated_output
+        return validated_outpu
 
     def process_input(self, input_data):
         """Process input data."""
@@ -905,7 +905,7 @@ python3 scripts/test_pattern_implementation.py --pattern memory_rehydration --ta
 # Measure pattern effectiveness
 python3 scripts/measure_pattern_effectiveness.py --pattern memory_rehydration --target-file target.py
 
-# Generate pattern report
+# Generate pattern repor
 python3 scripts/generate_pattern_report.py --pattern memory_rehydration --output pattern_report.md
 ```
 
@@ -1021,7 +1021,7 @@ class QualityAssuranceFramework:
                 dimension, quality_metrics.get(dimension, {})
             )
 
-        # Overall quality assessment
+        # Overall quality assessmen
         overall_quality = self._assess_overall_quality(gate_results)
 
         return {
@@ -1059,7 +1059,7 @@ python3 scripts/plan_testing.py --project-scope project_scope.yaml --output test
 # Execute test suite
 python3 scripts/execute_tests.py --test-type all --output test_results.json
 
-# Generate test coverage report
+# Generate test coverage repor
 python3 scripts/generate_coverage_report.py --output coverage_report.md
 
 # Validate test quality
@@ -1069,9 +1069,9 @@ python3 scripts/validate_test_quality.py --test-results test_results.json
 #### **Quality Assurance Commands**
 ```bash
 # Validate quality gates
-python3 scripts/validate_quality_gates.py --metrics quality_metrics.yaml --strict
+python3 scripts/validate_quality_gates.py --metrics quality_metrics.yaml --stric
 
-# Generate quality report
+# Generate quality repor
 python3 scripts/generate_quality_report.py --output quality_report.md
 
 # Monitor quality trends
@@ -1090,7 +1090,7 @@ python3 scripts/generate_quality_recommendations.py --gate-results gate_results.
 - **Execution Time**: Tests must complete within acceptable time limits
 
 #### **Quality Requirements**
-- **Functionality**: All functional requirements must be met
+- **Functionality**: All functional requirements must be me
 - **Reliability**: System must be stable and reliable
 - **Performance**: System must meet performance requirements
 - **Security**: All security requirements must be satisfied
@@ -1141,16 +1141,16 @@ python3 scripts/generate_quality_recommendations.py --gate-results gate_results.
 
 **1. Clone Repository**
 ```bash
-git clone https://github.com/yourusername/ai-dev-tasks.git
+git clone https://github.com/yourusername/ai-dev-tasks.gi
 cd ai-dev-tasks
 ```
 
 **2. Create Virtual Environment**
 ```bash
-# Create virtual environment
+# Create virtual environmen
 python3.12 -m venv venv
 
-# Activate virtual environment
+# Activate virtual environmen
 # On macOS/Linux:
 source .venv/bin/activate
 # On Windows:
@@ -1163,10 +1163,10 @@ venv\Scripts\activate
 pip install --upgrade pip
 
 # Install project dependencies
-pip install -r requirements.txt
+pip install -r requirements.tx
 
 # Install development dependencies
-pip install -r requirements-dev.txt
+pip install -r requirements-dev.tx
 ```
 
 **4. Database Setup**
@@ -1236,7 +1236,7 @@ cp .env.example .env
 ```bash
 # Database Configuration
 POSTGRES_DSN=postgresql://username:password@localhost:5432/ai_agency
-POSTGRES_HOST=localhost
+POSTGRES_HOST=localhos
 POSTGRES_PORT=5432
 POSTGRES_DB=ai_agency
 POSTGRES_USER=username
@@ -1249,7 +1249,7 @@ AWS_SECRET_ACCESS_KEY=your_secret_key
 
 # Testing Configuration
 TESTING_MODE=true
-TEST_DATABASE_URL=postgresql://username:password@localhost:5432/ai_agency_test
+TEST_DATABASE_URL=postgresql://username:password@localhost:5432/ai_agency_tes
 LOG_LEVEL=DEBUG
 ```
 
@@ -1286,7 +1286,7 @@ extend-select = ["RUF001", "RUF002", "RUF003", "PLE2502"]
 **Basic Testing**
 ```bash
 # Run all tests
-pytest
+pytes
 
 # Run tests with coverage
 pytest --cov=src --cov-report=html
@@ -1375,12 +1375,12 @@ dropdb ai_agency && createdb ai_agency
 # Check Python version
 python --version
 
-# Verify virtual environment
+# Verify virtual environmen
 which python
 
 # Reinstall dependencies
 pip uninstall -r requirements.txt -y
-pip install -r requirements.txt
+pip install -r requirements.tx
 
 # Check for conflicts
 pip check
@@ -1435,7 +1435,7 @@ python -m memory_profiler script.py
 **Real-time Monitoring**
 ```bash
 # Run tests with live output
-pytest -v --tb=short
+pytest -v --tb=shor
 
 # Monitor test progress
 pytest --durations=10
@@ -1446,13 +1446,13 @@ pytest --durations=0
 
 **Test Results Reporting**
 ```bash
-# Generate HTML coverage report
+# Generate HTML coverage repor
 pytest --cov=src --cov-report=html
 
-# Generate XML coverage report
+# Generate XML coverage repor
 pytest --cov=src --cov-report=xml
 
-# Generate performance report
+# Generate performance repor
 pytest --benchmark-only --benchmark-json=benchmark_results.json
 ```
 
@@ -1460,7 +1460,7 @@ pytest --benchmark-only --benchmark-json=benchmark_results.json
 - **Test Execution Time**: Total time for test suite execution
 - **Memory Usage**: Peak memory consumption during testing
 - **CPU Utilization**: CPU usage during test execution
-- **Database Performance**: Query execution times and throughput
+- **Database Performance**: Query execution times and throughpu
 
 ### **🔄 Continuous Integration**
 
@@ -1488,8 +1488,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
+        pip install -r requirements.tx
+        pip install -r requirements-dev.tx
 
     - name: Run tests
       run: |
@@ -1510,7 +1510,7 @@ repos:
       - id: black
         language_version: python3.12
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
+  - repo: https://github.com/astral-sh/ruff-pre-commi
     rev: v0.0.270
     hooks:
       - id: ruff
@@ -1539,7 +1539,7 @@ pytest -n 4 --dist=worksteal
 
 #### **Custom Test Markers**
 ```python
-import pytest
+import pytes
 
 @pytest.mark.slow
 def test_slow_operation():
@@ -1576,7 +1576,7 @@ def test_performance_metric():
 
 **Example**:
 ```
-🚨 **The Problem is Real**: 51 files, 28,707 lines of documentation bloat
+🚨 **The Problem is Real**: 51 files, 28,707 lines of documentation bloa
 💡 **Proposed Strategy**: Apply README context management principles
 🎯 **Expected Benefits**: Reduced cognitive load, improved quality
 ❓ **Questions for You**: What's your tolerance for automated changes?
@@ -1598,7 +1598,7 @@ def test_performance_metric():
 
 ##### **4. Memory System Integration**
 **Pattern**: Leverage memory context for personalization
-- **Solo developer** in local-first environment
+- **Solo developer** in local-first environmen
 - **Simpler, streamlined approaches** preferred
 - **Avoid overfitting or over-complication**
 - **Plain, straightforward language**
@@ -1630,7 +1630,7 @@ def test_performance_metric():
 ```
 ## 🚨 **The Problem is Real**
 - **Specific metrics** (files, lines, performance)
-- **Clear pain points** and impact
+- **Clear pain points** and impac
 
 ## 💡 **The Opportunity**
 - **Leverage existing successes** (like README context system)
@@ -1687,6 +1687,195 @@ def test_performance_metric():
 - **User feedback** on communication style
 - **Memory system** integration effectiveness
 
+## 🧹 **Project Maintenance & Cleanup System**
+
+### **🚨 CRITICAL: Automated Maintenance is Essential**
+
+**Why This Matters**: Automated maintenance keeps the project clean, performant, and provides valuable insights about development patterns. Without proper maintenance, cache files accumulate, disk space is wasted, and development performance degrades.
+
+### **Maintenance System Overview**
+
+The maintenance system provides automated cleanup and analysis of Python cache files, temporary files, logs, and other artifacts. It's designed to keep the project clean while capturing valuable insights about development patterns and build artifacts.
+
+#### **Key Features**
+- **Intelligent Cache Analysis**: Captures detailed information about Python cache files before deletion
+- **Module Activity Tracking**: Identifies which modules are compiled most frequently
+- **Lessons Learned Capture**: Saves detailed analysis to JSON files for trend analysis
+- **Comprehensive Cleanup**: Handles Python cache, temp files, logs, test artifacts, and monitoring data
+- **Automated Scheduling**: Daily, weekly, monthly, and quarterly maintenance schedules
+
+### **Maintenance Scripts**
+
+#### **1. `scripts/maintenance_cleanup.py`**
+Main maintenance script with comprehensive cleanup capabilities.
+
+**Usage:**
+```bash
+# Run specific cleanup tasks
+uv run python scripts/maintenance_cleanup.py --python-cache --verbose
+uv run python scripts/maintenance_cleanup.py --temp-files --logs
+uv run python scripts/maintenance_cleanup.py --full --dry-run
+
+# Clean with custom age thresholds
+uv run python scripts/maintenance_cleanup.py --logs --days 14
+uv run python scripts/maintenance_cleanup.py --monitoring --days 30
+```
+
+**Options:**
+- `--python-cache`: Clean Python cache files and directories
+- `--temp-files`: Clean temporary files and directories
+- `--logs`: Clean old log files (default: 7 days)
+- `--test-artifacts`: Clean test artifacts and cache
+- `--monitoring`: Clean old monitoring data (default: 30 days)
+- `--hypothesis`: Clean Hypothesis cache
+- `--database`: Run database maintenance
+- `--dry-run`: Show what would be cleaned without actually cleaning
+- `--verbose`: Show detailed output
+- `--days N`: Set age threshold for log files
+
+#### **2. `scripts/schedule_maintenance.py`**
+Schedules and manages automated maintenance tasks.
+
+**Usage:**
+```bash
+# Install automated maintenance schedule
+uv run python scripts/schedule_maintenance.py --install
+
+# Run manual maintenance
+uv run python scripts/schedule_maintenance.py --run daily
+uv run python scripts/schedule_maintenance.py --run weekly
+
+# Show current schedule
+uv run python scripts/schedule_maintenance.py --show
+
+# Create standalone maintenance script
+uv run python scripts/schedule_maintenance.py --create-script
+```
+
+**Schedule:**
+- **Daily** (2 AM): Python cache + temp files
+- **Weekly** (Sunday 3 AM): Logs + test artifacts + Hypothesis cache
+- **Monthly** (1st 4 AM): Monitoring data + database maintenance
+- **Quarterly** (1st 5 AM): Full cleanup
+
+#### **3. `scripts/analyze_cache_trends.py`**
+Analyzes cache patterns and trends across multiple cleanup sessions.
+
+**Usage:**
+```bash
+# Analyze trends
+uv run python scripts/analyze_cache_trends.py
+
+# Save trend repor
+uv run python scripts/analyze_cache_trends.py --save-repor
+
+# Custom logs directory
+uv run python scripts/analyze_cache_trends.py --logs-dir custom_logs
+```
+
+### **Cache Analysis Features**
+
+#### **What Gets Analyzed**
+- **Cache directories**: Count, size, and location of `__pycache__` directories
+- **Python cache files**: Count and distribution of `.pyc`, `.pyo`, `.pyd` files
+- **Module activity**: Which modules are compiled most frequently
+- **Temporal patterns**: When cache files were created and modified
+- **Size patterns**: Largest cache directories and files
+- **Development patterns**: Frequency of compilation and cleanup
+
+#### **Analysis Output**
+Each cleanup generates a detailed JSON report in `logs/cache_analysis_YYYYMMDD_HHMMSS.json` with:
+- **Summary statistics**: Total cache directories, files, and activity
+- **Module activity**: Most frequently compiled modules
+- **Cache timeline**: Recent cache activity and patterns
+- **Lessons learned**: Insights and recommendations
+- **Pattern analysis**: Development workflow patterns
+
+#### **Trend Analysis**
+The trend analyzer provides insights across multiple cleanup sessions:
+- **Cache growth patterns**: How cache usage changes over time
+- **Module activity trends**: Which modules are most frequently compiled
+- **Cleanup frequency analysis**: How often maintenance runs
+- **Development pattern insights**: Understanding of development workflow
+- **Optimization recommendations**: Actionable suggestions for improvement
+
+### **Maintenance Benefits**
+
+#### **Performance Benefits**
+- **Faster git operations**: Cleaner repository with fewer files
+- **Reduced disk usage**: Automatic cleanup of temporary files
+- **Better development experience**: Less clutter in project directory
+- **Optimized build times**: Clean cache prevents stale compilation issues
+
+#### **Learning Benefits**
+- **Development pattern insights**: Understand which modules are most active
+- **Build artifact analysis**: Learn about compilation patterns
+- **Optimization opportunities**: Identify areas for improvement
+- **Historical tracking**: Maintain long-term development data
+
+#### **Maintenance Benefits**
+- **Automated cleanup**: No manual intervention required
+- **Configurable schedules**: Flexible maintenance timing
+- **Safe operation**: Dry-run mode for testing
+- **Comprehensive reporting**: Detailed logs and analysis
+
+### **Best Practices**
+
+#### **Recommended Usage**
+1. **Start with dry-run**: Always test with `--dry-run` firs
+2. **Regular cleanup**: Set up automated daily/weekly schedules
+3. **Monitor trends**: Review cache analysis reports periodically
+4. **Customize thresholds**: Adjust age thresholds based on project needs
+5. **Archive reports**: Keep analysis files for long-term trend analysis
+
+#### **Important Notes**
+- **Virtual environment exclusion**: Cache in `.venv` directories is never touched
+- **Safe deletion**: Only removes cache files, never source code
+- **Backup analysis**: All analysis data is saved before deletion
+- **Configurable**: All thresholds and patterns can be customized
+
+### **Integration with Development Workflow**
+
+#### **Pre-commit Integration**
+```bash
+# Add maintenance check to pre-commit hooks
+python3 scripts/maintenance_cleanup.py --python-cache --dry-run
+```
+
+#### **CI/CD Integration**
+```yaml
+# Add to GitHub Actions workflow
+- name: Run maintenance cleanup
+  run: |
+    uv run python scripts/maintenance_cleanup.py --python-cache --temp-files
+```
+
+#### **Development Commands**
+```bash
+# Quick cleanup before developmen
+uv run python scripts/maintenance_cleanup.py --python-cache --verbose
+
+# Full cleanup after major changes
+uv run python scripts/maintenance_cleanup.py --full --verbose
+
+# Analyze development patterns
+uv run python scripts/analyze_cache_trends.py --save-repor
+```
+
+### **Troubleshooting**
+
+#### **Common Issues**
+- **Permission errors**: Ensure script has write access to logs directory
+- **Missing dependencies**: Install required packages with `uv add`
+- **Large cache files**: Use `--verbose` to see what's being cleaned
+- **Analysis file errors**: Check JSON format of analysis files
+
+#### **Debugging**
+- **Use dry-run mode**: Test changes without affecting files
+- **Check logs**: Review maintenance logs for errors
+- **Verify paths**: Ensure all file paths are correct
+- **Test incrementally**: Run specific cleanup tasks individually
+
 ## 🔗 Related
 
 - Getting Started: `400_00_getting-started-and-index.md`
@@ -1694,3 +1883,4 @@ def test_performance_metric():
 
 ## 📋 Changelog
 - 2025-08-28: Restored consolidated development workflow and standards guide.
+- 2025-09-10: Added comprehensive project maintenance and cleanup system documentation.

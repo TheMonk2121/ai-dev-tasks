@@ -24,7 +24,7 @@
 
 Backlog link: B-045, B-077
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with comprehensive content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with comprehensive contain
 
 - **Priority**: 🔥 High - Critical for RAG implementation
 
@@ -45,7 +45,7 @@ docs/research/papers/rag-papers.md; docs/research/articles/rag-articles.md)
 - Span-level grounding (character offsets) increases trust and enables automatic faithfulness checks
 (docs/research/articles/rag-articles.md)
 
-- Multi-stage retrieval (decomposition, PRF) helps complex queries at modest latency cost
+- Multi-stage retrieval (decomposition, PRF) helps complex queries at modest latency cos
 (docs/research/papers/rag-papers.md; docs/research/tutorials/rag-tutorials.md)
 
 - Knowledge-augmented variants (GraphRAG/KAG) benefit multi-hop, but can be phased in later
@@ -101,7 +101,7 @@ docs/research/papers/rag-papers.md; docs/research/articles/rag-articles.md)
 
 - Enable precise source attribution
 
-- Add validation against original text
+- Add validation against original tex
 
 ### **5. Advanced RAG Architectures**
 
@@ -167,7 +167,7 @@ implementation
 
 - **Hybrid Search Implementation**: Combining dense and sparse retrieval
 
-- **Multi-stage Retrieval**: Query decomposition and iterative refinement
+- **Multi-stage Retrieval**: Query decomposition and iterative refinemen
 
 - **Span-level Grounding**: Character offset tracking and citation
 
@@ -178,7 +178,7 @@ implementation
 
 - [ ] **Weighting Strategy**: Implement configurable weighting for different search types
 
-- [ ] **Performance Optimization**: Ensure hybrid search doesn't impact latency
+- [ ] **Performance Optimization**: Ensure hybrid search doesn'tt impact latency
 
 ### **2. Enhance Chunking Strategy**- [ ]**Semantic Chunking**: Use prefix boundaries as chunk units
 
@@ -192,7 +192,7 @@ implementation
 
 - [ ] **Citation System**: Implement precise source attribution
 
-- [ ] **Validation Layer**: Add checks against original text
+- [ ] **Validation Layer**: Add checks against original tex
 
 - [ ] **Citation Format**: Standardize citation format for answers
 
@@ -214,7 +214,7 @@ Implement complex query breakdown
 - [ ] **Multi-hop Queries**: Enable queries requiring multiple steps
 
 ### **Long-term Strategy (Next 3-6 months)**####**6. Advanced Features**- [ ]**Multi-modal RAG**: Handle images,
-diagrams, and rich content
+diagrams, and rich contain
 
 - [ ] **Real-time Updates**: Enable live document updates and re-indexing
 
@@ -231,7 +231,7 @@ class HybridRetriever:
     def __init__(self, vector_store, text_search):
         self.vector_store = vector_store  # PGVector
 
-        self.text_search = text_search    # PostgreSQL full-text
+        self.text_search = text_search    # PostgreSQL full-tex
 
     def search(self, query, top_k=10):
 
@@ -258,15 +258,15 @@ class HybridRetriever:
 
         pass
 
-```text
+```tex
 
 ### **Span-Level Grounding**```python
 class SpanTrackedChunk:
     def __init__(self, text, doc_id, start_offset, end_offset):
-        self.text = text
+        self.text = tex
         self.doc_id = doc_id
-        self.start_offset = start_offset
-        self.end_offset = end_offset
+        self.start_offset = start_offse
+        self.end_offset = end_offse
 
     def get_citation(self):
         return f"Doc {self.doc_id}, lines {self.start_offset}-{self.end_offset}"
@@ -276,7 +276,7 @@ class RAGWithSpans:
         chunks = self.retriever.search(query)
         return [SpanTrackedChunk(c.text, c.doc_id, c.start, c.end) for c in chunks]
 
-```text
+```tex
 
 ### **Multi-Stage Retrieval**```python
 class MultiStageRetriever:
@@ -351,6 +351,6 @@ class MultiStageRetriever:
 
 - --
 
-- *Last Updated**: 2024-08-07
+- *Last Updated**: 2025-09-11
 - *Related Documentation**: `500_research-analysis-summary.md`, `400_guides/400_system-overview.md`
 - *Status**: Research findings ready for implementation

@@ -27,7 +27,7 @@ ai-dev-tasks/
 
 ### Development Patterns
 - **MCP Servers**: `scripts/` - MCP protocol implementations
-- **Memory Systems**: `dspy-rag-system/src/utils/` - Memory rehydration and context management
+- **Memory Systems**: `src/utils/` - Memory rehydration and context management
 - **Automation**: `scripts/` - Shell scripts and Python automation
 - **Configuration**: `Library/LaunchAgents/` - macOS service configuration
 
@@ -59,7 +59,7 @@ launchctl list | grep mcp
 The MCP memory server is completely non-functional due to multiple critical issues:
 
 1. **Port Conflict**: `OSError: [Errno 48] Address already in use` - The MCP server cannot start because port 8080 (or configured port) is already occupied
-2. **Missing Function**: `build_hydration_bundle` function doesn't exist in the memory rehydrator module
+2. **Missing Function**: `build_hydration_bundle` function doesn'tt exist in the memory rehydrator module
 3. **Python Version Mismatch**: LaunchAgent is using Python 3.9 instead of the project's Python 3.12
 4. **LaunchAgent Loop**: The system keeps trying to restart a broken server, creating a restart loop
 

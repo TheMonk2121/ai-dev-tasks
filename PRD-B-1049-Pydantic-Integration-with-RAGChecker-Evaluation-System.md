@@ -10,7 +10,7 @@
 - **Memory Systems**: Unified Memory Orchestrator, LTST, Cursor, Go CLI, Prime
 - **Quality Gates**: Automated evaluation in CI/CD, development workflow integration
 - **Documentation**: 00-12 guide system, comprehensive usage guides, status tracking
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
@@ -19,7 +19,7 @@ ai-dev-tasks/
 │   ├── ragchecker_official_evaluation.py
 │   ├── ragchecker_evaluation.py
 │   └── b1049_pydantic_ragchecker_integration.py
-├── dspy-rag-system/src/dspy_modules/  # Pydantic infrastructure
+├── src/dspy_modules/  # Pydantic infrastructure
 │   ├── context_models.py
 │   ├── constitution_validation.py
 │   ├── error_taxonomy.py
@@ -38,12 +38,12 @@ ai-dev-tasks/
 
 ### Development Patterns
 - **Evaluation Scripts**: `scripts/` - RAG evaluation implementations with Pydantic models
-- **Pydantic Infrastructure**: `dspy-rag-system/src/dspy_modules/` - Existing Pydantic models and validation
+- **Pydantic Infrastructure**: `src/dspy_modules/` - Existing Pydantic models and validation
 - **Documentation**: `400_guides/` - Comprehensive usage guides and integration
 - **Status Tracking**: `metrics/baseline_evaluations/` - Evaluation results and status
 - **Quality Gates**: Integration with development workflow and CI/CD
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify RAGChecker installation
 python3 -c "import ragchecker; print('✅ RAGChecker installed successfully!')"
@@ -59,7 +59,7 @@ cat metrics/baseline_evaluations/EVALUATION_STATUS.md
 ```
 
 ### Common Tasks
-- **Add new Pydantic models**: Create in `dspy-rag-system/src/dspy_modules/` with constitution-aware validation
+- **Add new Pydantic models**: Create in `src/dspy_modules/` with constitution-aware validation
 - **Update evaluation scripts**: Modify to use Pydantic models instead of dataclasses
 - **Add quality gates**: Integrate with development workflow and CI/CD
 - **Update documentation**: Maintain 00-12 guide system integration
@@ -125,7 +125,7 @@ Convert RAGChecker dataclasses to Pydantic models with validation, integrate wit
 - **Pydantic v2**: Data validation and serialization
 - **RAGChecker 0.1.9**: Industry-standard RAG evaluation framework
 - **B-1007 Infrastructure**: Existing constitution-aware validation and error taxonomy
-- **Python 3.12**: Runtime environment with dependency management
+- **Python 3.12**: Runtime environment with dependency managemen
 - **Unified Memory Orchestrator**: Memory system integration
 - **Quality Gates**: Automated evaluation in development workflow
 
@@ -151,7 +151,7 @@ Convert RAGChecker dataclasses to Pydantic models with validation, integrate wit
 - **Risk 2**: Performance degradation due to validation overhead
 - **Risk 3**: Integration conflicts with existing Pydantic infrastructure
 - **Risk 4**: Validation errors prevent evaluation execution
-- **Risk 5**: Documentation becomes outdated or inconsistent
+- **Risk 5**: Documentation becomes outdated or inconsisten
 
 ### How do we handle it?
 - **Mitigation 1**: Comprehensive testing to ensure backward compatibility
@@ -177,7 +177,7 @@ Convert RAGChecker dataclasses to Pydantic models with validation, integrate wit
 - **Documentation Testing**: 00-12 guide system integration
 
 ### How do we test it?
-- **Unit Testing**: Individual Pydantic model testing with pytest
+- **Unit Testing**: Individual Pydantic model testing with pytes
 - **Integration Testing**: End-to-end evaluation workflow testing
 - **Performance Testing**: Benchmarking evaluation execution time
 - **Compatibility Testing**: Ensuring all existing tests pass

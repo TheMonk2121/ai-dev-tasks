@@ -21,7 +21,7 @@
 
 **What's the opportunity?** By implementing constitution-aware Pydantic models, role-based context systems, structured error taxonomy, typed debug logs, and async Pydantic validation, we can:
 - Achieve 95%+ role output validation against context schema
-- Reduce runtime errors by 50% through type validation and constitution enforcement
+- Reduce runtime errors by 50% through type validation and constitution enforcemen
 - Decrease debugging time by 30% with rich context information and typed logs
 - Enforce constitution invariants via type system
 - Improve user experience with personalized, context-aware responses
@@ -37,14 +37,14 @@
 1. **Context Models**: Add PlannerContext, CoderContext as Pydantic classes with backlog → PRD → tasks flow validation
 2. **Error Taxonomy**: Introduce PydanticError model for ValidationError, CoherenceError, DependencyError with constitution failure mode mapping
 3. **Dynamic Prompts + Preferences**: Store user preferences in local JSON file and inject into optimizer scoring
-4. **Debugging & Observability**: Typed debug logs via Pydantic with context schema enrichment
+4. **Debugging & Observability**: Typed debug logs via Pydantic with context schema enrichmen
 5. **Integration**: Explicit function calls (no decorators) integrated with existing memory rehydrator
 
 **What are the key features?**
 - Role-based context models (PlannerContext, CoderContext) with Pydantic validation
 - Structured error taxonomy (ValidationError, CoherenceError, DependencyError) with constitution mapping
 - Type-safe user preferences stored in local JSON file with optimizer scoring integration
-- Typed debug logs with context schema enrichment
+- Typed debug logs with context schema enrichmen
 - Explicit function calls (no decorators) for clarity and debugging
 - Integration with existing memory rehydrator and DSPy infrastructure
 - 95%+ role output validation against context schema
@@ -66,7 +66,7 @@
 
 **What does success look like?**
 - 95%+ role output validation against context schema achieved
-- 50% reduction in runtime errors through type validation and constitution enforcement
+- 50% reduction in runtime errors through type validation and constitution enforcemen
 - 30% faster debugging with rich context information and typed logs
 - Constitution invariants enforced via type system
 - Constitution-aware validation integrated with existing Pydantic infrastructure
@@ -97,7 +97,7 @@
 - Structured error taxonomy with constitution mapping
 - Role-based context models (PlannerContext, CoderContext)
 - Type-safe user preferences stored in local JSON file
-- Typed debug logs with context schema enrichment
+- Typed debug logs with context schema enrichmen
 - Explicit function calls (no decorators) for clarity
 - Integration with existing memory rehydrator and DSPy infrastructure
 - Local JSON files for user preferences (no database dependencies)

@@ -10,19 +10,19 @@
 - **Database**: PostgreSQL with decision storage and supersedence tracking
 - **DSPy Integration**: DSPy modules for decision analysis and reasoning
 - **Documentation**: 00-12 guide system, comprehensive usage guides, status tracking
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
 ai-dev-tasks/
-├── dspy-rag-system/src/utils/
+├── src/utils/
 │   ├── decision_extractor.py        # Existing decision extraction
 │   ├── supersedence_retrieval.py    # Existing supersedence logic
 │   ├── conversation_storage.py      # Existing decision storage
 │   ├── decision_graph_builder.py    # New: Decision graph construction
 │   ├── decision_knowledge_graph.py  # New: Knowledge graph from decisions
 │   └── decision_analyzer.py         # New: Decision analysis and reasoning
-├── dspy-rag-system/src/dspy_modules/
+├── src/dspy_modules/
 │   └── decision_reasoner.py         # New: DSPy decision reasoning
 ├── artifacts/
 │   └── decision_analysis/           # New: Decision analysis results
@@ -33,13 +33,13 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **Decision Scripts**: `dspy-rag-system/src/utils/` - Core decision analysis and graph construction
-- **DSPy Modules**: `dspy-rag-system/src/dspy_modules/` - AI-powered decision reasoning
+- **Decision Scripts**: `src/utils/` - Core decision analysis and graph construction
+- **DSPy Modules**: `src/dspy_modules/` - AI-powered decision reasoning
 - **Documentation**: `400_guides/` - Comprehensive usage guides and integration
 - **Status Tracking**: `artifacts/decision_analysis/` - Analysis results and status
 - **Quality Gates**: Integration with existing decision intelligence and memory systems
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify decision intelligence availability
 python3 -c "from dspy_rag_system.src.utils.decision_extractor import DecisionExtractor; print('✅ Decision intelligence available!')"
@@ -166,7 +166,7 @@ Decisions are tracked and analyzed for evolution patterns, impact assessment is 
 ### What are the unknowns?
 - **Performance Scaling**: How analysis performs with very large decision sets
 - **Knowledge Graph Accuracy**: Effectiveness of decision relationship mapping
-- **Decision Analysis Quality**: Quality of pattern identification and impact assessment
+- **Decision Analysis Quality**: Quality of pattern identification and impact assessmen
 - **AI Reasoning Quality**: Quality of AI-powered decision analysis
 
 ## 6. Testing Strategy
@@ -184,7 +184,7 @@ Decisions are tracked and analyzed for evolution patterns, impact assessment is 
 - **Multi-Hop Reasoning Testing**: Verification of decision chain analysis capabilities
 
 ### How do we test it?
-- **Unit Testing**: Individual component testing with pytest
+- **Unit Testing**: Individual component testing with pytes
 - **Integration Testing**: End-to-end decision analysis workflow testing
 - **Performance Testing**: Analysis execution time and resource usage
 - **Quality Testing**: Decision analysis and knowledge graph construction effectiveness
@@ -196,7 +196,7 @@ Decisions are tracked and analyzed for evolution patterns, impact assessment is 
 - **Decision Analysis Coverage**: 100% - All decision analysis features tested
 - **AI Reasoning Coverage**: 100% - All AI-powered analysis features tested
 - **Integration Coverage**: 100% - All integration points tested
-- **Baseline Evaluation Coverage**: 100% - Before/after evaluation measurement
+- **Baseline Evaluation Coverage**: 100% - Before/after evaluation measuremen
 - **Entity Relationship Coverage**: 100% - Decision relationship accuracy improvements
 - **Multi-Hop Reasoning Coverage**: 100% - Decision chain analysis verification
 
@@ -204,10 +204,10 @@ Decisions are tracked and analyzed for evolution patterns, impact assessment is 
 
 ### What are the phases?
 1. **Phase 1 - Baseline Evaluation & Core Decision Graph** (6 hours): Establish baseline evaluation, decision graph construction, knowledge graph mapping
-2. **Phase 2 - Decision Analysis** (6 hours): Decision analysis, pattern identification, impact assessment
+2. **Phase 2 - Decision Analysis** (6 hours): Decision analysis, pattern identification, impact assessmen
 3. **Phase 3 - AI-Powered Reasoning** (4 hours): DSPy decision reasoning, intelligent analysis
 4. **Phase 4 - Integration & Performance** (4 hours): System integration, performance optimization
-5. **Phase 5 - Documentation & Testing** (2 hours): Complete documentation, comprehensive testing, final evaluation and improvement measurement
+5. **Phase 5 - Documentation & Testing** (2 hours): Complete documentation, comprehensive testing, final evaluation and improvement measuremen
 
 ### What are the dependencies?
 - **Decision Intelligence**: Existing decision tracking and supersedence logic must be operational
@@ -231,14 +231,14 @@ Decisions are tracked and analyzed for evolution patterns, impact assessment is 
 > 📊 **Decision Intelligence Performance Targets**
 > - **Decision Graph Construction**: <300ms for typical decision queries
 > - **Knowledge Graph Construction**: <500ms for decision relationship mapping
-> - **Decision Analysis**: <1s for pattern analysis and impact assessment
+> - **Decision Analysis**: <1s for pattern analysis and impact assessmen
 > - **AI Reasoning**: <2s for AI-powered decision analysis
 > - **Real-time Updates**: <100ms for incremental decision updates
 
 > 🔍 **Quality Gates Status**
 > - **Decision Graph**: ⏳ Decision graph construction implementation
 > - **Knowledge Graph**: ⏳ Knowledge graph construction
-> - **Decision Analysis**: ⏳ Pattern analysis and impact assessment
+> - **Decision Analysis**: ⏳ Pattern analysis and impact assessmen
 > - **AI Reasoning**: ⏳ AI-powered decision analysis
 > - **Integration**: ⏳ Decision intelligence and memory system integration
 > - **Baseline Evaluation**: ⏳ Before/after evaluation with measurable improvements

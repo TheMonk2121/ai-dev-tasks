@@ -2,138 +2,217 @@
 """
 Monitoring Dashboard for AI Development Tasks
 
-Provides a simple dashboard showing:
+Provides a real-time monitoring dashboard with:
 - System health status
-- Database metrics
-- Memory system status
-- Performance indicators
+- Performance metrics
+- Alert management
+- Resource utilization
 """
 
+import json
 import os
-import subprocess
+import sys
 import time
 from datetime import datetime
+from typing import Any
+
+# Add src directory to Python path for monitoring modules
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+
+try:
+    from monitoring.health_endpoints import HealthEndpointManager
+    from monitoring.metrics import get_metrics, get_performance_summary
+    from monitoring.production_monitor import ProductionMonitor
+except ImportError as e:
+    print(f"❌ Monitoring modules not available: {e}")
+    sys.exit(1)
 
 
-def get_system_health():
-    """Get system health status"""
-    try:
-        result = subprocess.run(["./scripts/system_monitor.py"], capture_output=True, text=True, timeout=30)
-        return result.returncode == 0, result.stdout
-    except:
-        return False, "Error running system monitor"
+class MonitoringDashboard:
+    """Real-time monitoring dashboard"""
 
+    def __init__(self):
+        self.health_manager = HealthEndpointManager()
+        self.production_monitor = ProductionMonitor()
+        self.start_time = datetime.now()
 
-def get_database_stats():
-    """Get database statistics"""
-    try:
-        import psycopg2
+    def display_header(self):
+        """Display dashboard header"""
+        print("=" * 80)
+        print("🚀 AI Development Tasks - Monitoring Dashboard")
+        print("=" * 80)
+        print(f"Started: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Uptime: {datetime.now() - self.start_time}")
+        print("=" * 80)
 
-        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
-            with conn.cursor() as cursor:
-                cursor.execute("SELECT COUNT(*) FROM documents")
-                doc_count = cursor.fetchone()[0]
+    def display_system_health(self):
+        """Display system health status"""
+        print("\n📊 SYSTEM HEALTH STATUS")
+        print("-" * 40)
 
-                cursor.execute("SELECT COUNT(*) FROM document_chunks")
-                chunk_count = cursor.fetchone()[0]
+        try:
+            health_status = self.health_manager.get_health_status()
 
-                cursor.execute("SELECT COUNT(*) FROM conversation_memory")
-                memory_count = cursor.fetchone()[0]
+            # Overall status
+            status_emoji = {"healthy": "✅", "degraded": "⚠️", "unhealthy": "❌"}
+            print(
+                f"Overall Status: {status_emoji.get(health_status['status'], '❓')} {health_status['status'].upper()}"
+            )
 
-                return {
-                    "documents": doc_count,
-                    "chunks": chunk_count,
-                    "memory_entries": memory_count,
-                    "status": "healthy",
-                }
-    except Exception as e:
-        return {"documents": 0, "chunks": 0, "memory_entries": 0, "status": "error", "error": str(e)}
+            # Dependencies
+            print(f"Unhealthy: {health_status['unhealthy_dependencies']}")
+            print(f"Degraded: {health_status['degraded_dependencies']}")
 
+            # Individual components
+            for dep in health_status["dependencies"]:
+                dep_emoji = {"healthy": "✅", "degraded": "⚠️", "unhealthy": "❌"}
+                print(f"  {dep['name']}: {dep_emoji.get(dep['status'], '❓')} {dep['status']}")
+                if "details" in dep:
+                    print(f"    {dep['details']}")
 
-def get_memory_system_status():
-    """Get memory system status"""
-    try:
-        result = subprocess.run(
-            ["./scripts/memory_up.sh", "-r", "planner", "-q", "status"], capture_output=True, text=True, timeout=10
-        )
-        return {
-            "status": "healthy" if result.returncode == 0 else "unhealthy",
-            "return_code": result.returncode,
-            "output_size": len(result.stdout),
-        }
-    except Exception as e:
-        return {"status": "error", "error": str(e)}
+        except Exception as e:
+            print(f"❌ Error getting health status: {e}")
 
+    def display_performance_metrics(self):
+        """Display performance metrics"""
+        print("\n⚡ PERFORMANCE METRICS")
+        print("-" * 40)
 
-def display_dashboard():
-    """Display the monitoring dashboard"""
-    os.system("clear" if os.name == "posix" else "cls")
+        try:
+            metrics = get_metrics()
 
-    print("=" * 70)
-    print("🤖 AI DEVELOPMENT TASKS - MONITORING DASHBOARD")
-    print("=" * 70)
-    print(f"Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print()
+            # System resources
+            if "error" not in metrics["system_metrics"]:
+                sys_metrics = metrics["system_metrics"]
+                print(f"Memory Usage: {sys_metrics['memory']['percent_used']:.1f}%")
+                print(f"Disk Usage: {sys_metrics['disk']['percent_used']:.1f}%")
+                print(f"CPU Usage: {sys_metrics['cpu']['percent_used']:.1f}%")
 
-    # System Health
-    print("📊 SYSTEM HEALTH")
-    print("-" * 15)
-    health_ok, health_output = get_system_health()
-    status_icon = "✅" if health_ok else "❌"
-    print(f"{status_icon} Overall Status: {'HEALTHY' if health_ok else 'ISSUES DETECTED'}")
-    print()
+            # Database metrics
+            if "error" not in metrics["database_metrics"]:
+                db_metrics = metrics["database_metrics"]
+                print(f"Database Size: {db_metrics.get('database_size', 'unknown')}")
+                print(f"Top Tables: {len(db_metrics.get('top_tables', []))}")
 
-    # Database Status
-    print("🗄️ DATABASE STATUS")
-    print("-" * 17)
-    db_stats = get_database_stats()
-    db_icon = "✅" if db_stats["status"] == "healthy" else "❌"
-    print(f"{db_icon} Status: {db_stats['status'].upper()}")
-    print(f"   Documents: {db_stats['documents']}")
-    print(f"   Chunks: {db_stats['chunks']}")
-    print(f"   Memory Entries: {db_stats['memory_entries']}")
-    if "error" in db_stats:
-        print(f"   Error: {db_stats['error']}")
-    print()
+            # RAG metrics
+            if "error" not in metrics["rag_metrics"]:
+                rag_metrics = metrics["rag_metrics"]
+                edge_cases = rag_metrics.get("edge_cases_count", 0)
+                hypothesis_examples = rag_metrics.get("hypothesis_examples_count", 0)
+                print(f"Edge Cases: {edge_cases}")
+                print(f"Hypothesis Examples: {hypothesis_examples}")
 
-    # Memory System
-    print("🧠 MEMORY SYSTEM")
-    print("-" * 15)
-    mem_status = get_memory_system_status()
-    mem_icon = "✅" if mem_status["status"] == "healthy" else "❌"
-    print(f"{mem_icon} Status: {mem_status['status'].upper()}")
-    if "return_code" in mem_status:
-        print(f"   Return Code: {mem_status['return_code']}")
-        print(f"   Output Size: {mem_status['output_size']:,} chars")
-    if "error" in mem_status:
-        print(f"   Error: {mem_status['error']}")
-    print()
+        except Exception as e:
+            print(f"❌ Error getting performance metrics: {e}")
 
-    # Quick Actions
-    print("⚡ QUICK ACTIONS")
-    print("-" * 14)
-    print("1. Run full maintenance: python3 scripts/maintenance.py")
-    print("2. Check system health: python3 scripts/system_monitor.py")
-    print("3. Memory rehydration: ./scripts/memory_up.sh -r planner")
-    print("4. Database sync check: python3 scripts/database_sync_check.py")
-    print()
+    def display_alerts(self):
+        """Display current alerts"""
+        print("\n🚨 ALERTS & NOTIFICATIONS")
+        print("-" * 40)
 
-    print("=" * 70)
-    print("Press Ctrl+C to exit | Auto-refresh every 30 seconds")
+        try:
+            # Check for new alerts
+            new_alerts = self.production_monitor.check_alerts()
+            alert_summary = self.production_monitor.get_alert_summary()
+
+            if alert_summary["total_alerts"] == 0:
+                print("✅ No active alerts")
+            else:
+                print(f"Total Alerts: {alert_summary['total_alerts']}")
+                print(f"Recent Alerts: {alert_summary['recent_alerts']}")
+                print(f"Critical: {alert_summary['critical_alerts']}")
+                print(f"Warnings: {alert_summary['warning_alerts']}")
+
+                # Show latest alerts
+                for alert in alert_summary["latest_alerts"]:
+                    severity_emoji = {"critical": "🔴", "warning": "🟡", "info": "🔵"}
+                    print(f"  {severity_emoji.get(alert['severity'], '⚪')} {alert['message']}")
+
+        except Exception as e:
+            print(f"❌ Error getting alerts: {e}")
+
+    def display_quick_stats(self):
+        """Display quick statistics"""
+        print("\n📈 QUICK STATS")
+        print("-" * 40)
+
+        try:
+            # Get some quick stats
+            health_status = self.health_manager.get_health_status()
+            performance_summary = get_performance_summary()
+
+            print(f"System Status: {health_status['status'].upper()}")
+            print(f"Uptime: {datetime.now() - self.start_time}")
+
+            if "key_metrics" in performance_summary:
+                for key, value in performance_summary["key_metrics"].items():
+                    print(f"{key.replace('_', ' ').title()}: {value}")
+
+        except Exception as e:
+            print(f"❌ Error getting quick stats: {e}")
+
+    def run_dashboard(self, watch_mode: bool = False, interval: int = 30):
+        """Run the monitoring dashboard"""
+        if watch_mode:
+            print("🔄 Starting watch mode... Press Ctrl+C to stop")
+            try:
+                while True:
+                    self.display_header()
+                    self.display_system_health()
+                    self.display_performance_metrics()
+                    self.display_alerts()
+                    self.display_quick_stats()
+
+                    print(f"\n⏰ Next update in {interval} seconds...")
+                    time.sleep(interval)
+
+            except KeyboardInterrupt:
+                print("\n\n👋 Dashboard stopped by user")
+        else:
+            # Single run
+            self.display_header()
+            self.display_system_health()
+            self.display_performance_metrics()
+            self.display_alerts()
+            self.display_quick_stats()
+
+    def save_dashboard_report(self, filename: str | None = None):
+        """Save dashboard report to file"""
+        if filename is None:
+            filename = f"dashboard_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+
+        try:
+            dashboard_data = self.production_monitor.get_monitoring_dashboard_data()
+
+            with open(filename, "w") as f:
+                json.dump(dashboard_data, f, indent=2, default=str)
+
+            print(f"📊 Dashboard report saved: {filename}")
+            return filename
+
+        except Exception as e:
+            print(f"❌ Error saving dashboard report: {e}")
+            return None
 
 
 def main():
-    """Main dashboard function"""
-    print("🚀 Starting monitoring dashboard...")
-    print("Press Ctrl+C to stop")
-    print()
+    """Main function"""
+    import argparse
 
-    try:
-        while True:
-            display_dashboard()
-            time.sleep(30)  # Refresh every 30 seconds
-    except KeyboardInterrupt:
-        print("\n👋 Dashboard stopped")
+    parser = argparse.ArgumentParser(description="AI Development Tasks Monitoring Dashboard")
+    parser.add_argument("--watch", action="store_true", help="Watch mode - continuously monitor")
+    parser.add_argument("--interval", type=int, default=30, help="Watch interval in seconds")
+    parser.add_argument("--save-report", action="store_true", help="Save dashboard report to file")
+    parser.add_argument("--report-file", type=str, help="Custom report filename")
+
+    args = parser.parse_args()
+
+    dashboard = MonitoringDashboard()
+
+    if args.save_report:
+        dashboard.save_dashboard_report(args.report_file)
+
+    dashboard.run_dashboard(watch_mode=args.watch, interval=args.interval)
 
 
 if __name__ == "__main__":

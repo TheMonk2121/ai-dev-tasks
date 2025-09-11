@@ -97,11 +97,11 @@ This is a **manual process** that should be:
 - **Handled directly** when user mentions cSpell or missing definitions
 - **Executed with coder role** for proper context
 - **Simple and controlled** - no automation complexity
-- **User-controlled** - maintains full control over word list
+- **User-controlled** - maintains full control over word lis
 
 ### **Related Patterns**
 
-- VS Code configuration management
+- VS Code configuration managemen
 - Development environment setup
 - Manual tool configuration
 - User-controlled customization

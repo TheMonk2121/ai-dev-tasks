@@ -6,7 +6,7 @@ Database Performance Monitor - Comprehensive monitoring for the consolidated ai_
 import json
 import time
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -46,7 +46,10 @@ class DatabasePerformanceMonitor:
                     )
                     size_stats = cur.fetchone()
 
-                    return {"connections": dict(conn_stats), "database_size": dict(size_stats)}
+                    return {
+                        "connections": dict(conn_stats) if conn_stats else {},
+                        "database_size": dict(size_stats) if size_stats else {},
+                    }
         except Exception as e:
             return {"error": f"Connection stats error: {e}"}
 
@@ -156,7 +159,8 @@ class DatabasePerformanceMonitor:
                         )
                     """
                     )
-                    has_pg_stat_statements = cur.fetchone()["exists"]
+                    result = cur.fetchone()
+                    has_pg_stat_statements = result["exists"] if result else False
 
                     if not has_pg_stat_statements:
                         return {"message": "pg_stat_statements extension not available"}
@@ -300,7 +304,8 @@ class DatabasePerformanceMonitor:
 
                     # Test 1: Simple count query
                     cur.execute("SELECT COUNT(*) FROM conversation_context")
-                    count_result = cur.fetchone()[0]
+                    result = cur.fetchone()
+                    count_result = result[0] if result else 0
                     count_time = time.time() - start_time
 
                     # Test 2: Complex query with joins
@@ -329,7 +334,8 @@ class DatabasePerformanceMonitor:
                         WHERE entities ? 'python'
                     """
                     )
-                    jsonb_result = cur.fetchone()[0]
+                    result = cur.fetchone()
+                    jsonb_result = result[0] if result else 0
                     jsonb_time = time.time() - start_time
 
                     return {
@@ -412,7 +418,7 @@ class DatabasePerformanceMonitor:
                 else:
                     print(f"❌ Cache Hit Ratio: {ratio}% (needs improvement)")
 
-    def save_report(self, report: dict[str, Any], filename: str = None):
+    def save_report(self, report: dict[str, Any], filename: str | None = None):
         """Save report to JSON file."""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

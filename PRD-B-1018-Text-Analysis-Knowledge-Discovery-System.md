@@ -11,20 +11,20 @@
 - **Entity Extraction**: Existing entity overlay system with pattern-based extraction
 - **DSPy Integration**: DSPy 3.0 modules for bridge generation and concept analysis
 - **Documentation**: 00-12 guide system, comprehensive usage guides, status tracking
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 
 ### Repository Layout
 ```
 ai-dev-tasks/
-├── dspy-rag-system/src/utils/     # Core text analysis modules
+├── src/utils/     # Core text analysis modules
 │   ├── text_cooc_adapter.py       # Text-to-co-occurrence graph adapter
 │   ├── graph_metrics.py           # Graph metrics computation
 │   ├── gap_detector.py            # Gap detection system
 │   ├── graph_data_provider.py     # Enhanced GraphDataProvider
 │   └── market_study.py            # Market study features
-├── dspy-rag-system/src/dspy_modules/  # DSPy integration
+├── src/dspy_modules/  # DSPy integration
 │   └── bridge_generator.py        # Bridge generation with DSPy
-├── dspy-rag-system/src/nicegui_graph_view.py  # Visualization
+├── src/nicegui_graph_view.py  # Visualization
 ├── scripts/                       # CLI tools
 │   └── scribe_text_analysis.py    # Batch text analysis
 ├── artifacts/text_analysis/       # Analysis results cache
@@ -38,13 +38,13 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **Text Analysis Modules**: `dspy-rag-system/src/utils/` - Core analysis implementations
-- **DSPy Integration**: `dspy-rag-system/src/dspy_modules/` - Bridge generation and concept analysis
-- **Visualization**: `dspy-rag-system/src/nicegui_graph_view.py` - Enhanced graph visualization
+- **Text Analysis Modules**: `src/utils/` - Core analysis implementations
+- **DSPy Integration**: `src/dspy_modules/` - Bridge generation and concept analysis
+- **Visualization**: `src/nicegui_graph_view.py` - Enhanced graph visualization
 - **CLI Tools**: `scripts/` - Batch processing and automation
 - **Caching**: `artifacts/` - Performance optimization and result storage
 
-### Local Development
+### Local Developmen
 ```bash
 # Verify text analysis dependencies
 python3 -c "import nltk, networkx, umap; print('✅ Text analysis dependencies installed!')"
@@ -56,7 +56,7 @@ python3 scripts/scribe_text_analysis.py --input documents/sample.md
 ls artifacts/text_analysis/
 
 # View graph visualization
-python3 dspy-rag-system/src/nicegui_graph_view.py
+python3 src/nicegui_graph_view.py
 ```
 
 ### Common Tasks
@@ -191,7 +191,7 @@ Text documents are processed through co-occurrence analysis to create concept gr
 - **Gap Detection Validation**: Verification of meaningful gap identification in test documents
 
 ### How do we test it?
-- **Unit Testing**: Individual component testing with pytest
+- **Unit Testing**: Individual component testing with pytes
 - **Integration Testing**: End-to-end text analysis workflow testing
 - **Performance Testing**: Analysis execution time and resource usage
 - **Quality Testing**: Gap detection accuracy and bridge generation quality
@@ -203,7 +203,7 @@ Text documents are processed through co-occurrence analysis to create concept gr
 - **Bridge Generation Coverage**: 80% - DSPy module functionality
 - **Integration Coverage**: 95% - System integration points
 - **Performance Coverage**: 100% - Performance target validation
-- **Baseline Evaluation Coverage**: 100% - Before/after evaluation measurement
+- **Baseline Evaluation Coverage**: 100% - Before/after evaluation measuremen
 - **Context Utilization Coverage**: 100% - Context relevance and usage improvements
 - **Gap Detection Validation Coverage**: 100% - Meaningful gap identification verification
 
@@ -214,10 +214,10 @@ Text documents are processed through co-occurrence analysis to create concept gr
 2. **Phase 2 - Gap Detection System** (3 hours): Structural gap identification, scoring algorithms
 3. **Phase 3 - Bridge Generation** (3 hours): DSPy modules for bridge questions/ideas
 4. **Phase 4 - Market Study Features** (2 hours): Supply/demand analysis capabilities
-5. **Phase 5 - Integration & Optimization** (4 hours): Entity integration, performance optimization, visualization enhancements, final evaluation and improvement measurement
+5. **Phase 5 - Integration & Optimization** (4 hours): Entity integration, performance optimization, visualization enhancements, final evaluation and improvement measuremen
 
 ### What are the dependencies?
-- **B-1017 Schema Visualization Integration**: Must be completed first
+- **B-1017 Schema Visualization Integration**: Must be completed firs
 - **B-1015 LTST Memory System Database Optimization**: Required for memory integration
 - **DSPy 3.0**: Must be operational for bridge generation
 - **Entity Extraction System**: Must be available for integration

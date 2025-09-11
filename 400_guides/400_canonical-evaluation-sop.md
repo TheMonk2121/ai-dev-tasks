@@ -104,7 +104,7 @@ ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_
 
 **Created by version manager:**
 - `NEW_BASELINE_MILESTONE_YYYYMMDD.md` - New target baseline
-- `BASELINE_LOCKED_YYYYMMDD.md` - Locked configuration audit
+- `BASELINE_LOCKED_YYYYMMDD.md` - Locked configuration audi
 - `stable_bedrock_YYYYMMDD.env` - Versioned configuration
 
 ## 🚨 **Red Line Enforcement**
@@ -119,7 +119,7 @@ ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_
 ### **✅ Build Resume Conditions**
 
 **ALL baseline metrics must be restored above targets before:**
-- New feature development
+- New feature developmen
 - Major system changes
 - Performance-impacting updates
 
@@ -205,11 +205,11 @@ When under RED LINE enforcement and recall needs improvement while guarding prec
 
 ```bash
 # Apply recall tuning, run smoke test, then evaluate
-source throttle_free_eval.sh && recall_boost_apply && \
+source throttle_free_eval.sh && recall_boost_apply &&
 python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory
 
 # Revert tuning and re-check quickly
-source throttle_free_eval.sh && recall_boost_revert
+source throttle_free_eval.sh && recall_boost_rever
 ```
 
 Details:

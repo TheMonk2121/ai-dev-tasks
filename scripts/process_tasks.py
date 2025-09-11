@@ -34,7 +34,7 @@ sys.path.insert(0, str(project_root))
 # Import existing utilities
 try:
     # Add the correct path to sys.path
-    sys.path.append("dspy-rag-system/src")
+    sys.path.append("src")
     from utils.logger import setup_logger
     from utils.prompt_sanitizer import sanitize_prompt
     from utils.retry_wrapper import retry

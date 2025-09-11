@@ -16,7 +16,7 @@
 - **Depends on**: None
 
 **Do**:
-1. Open `dspy-rag-system/src/utils/memory_rehydrator.py`
+1. Open `src/utils/memory_rehydrator.py`
 2. Locate the `ROLE_FILES` dictionary (around line 70)
 3. Add coder role configuration:
    ```python
@@ -69,7 +69,7 @@
 **Do**:
 1. Test coder role via command line:
    ```bash
-   cd dspy-rag-system/src/utils
+   cd src/utils
    python3 -m dspy-rag-system.src.utils.memory_rehydrator --role coder --task "implement authentication function"
    ```
 2. Verify output includes coding-focused documentation
@@ -101,7 +101,7 @@
    ```bash
    # Add to existing examples
    python3 scripts/cursor_memory_rehydrate.py coder "implement authentication system"
-   cd dspy-rag-system/src/utils && ./memory_rehydration_cli --role coder --query "implement authentication system"
+   cd src/utils && ./memory_rehydration_cli --role coder --query "implement authentication system"
    ```
 4. Update role descriptions to include coder role capabilities
 
@@ -228,7 +228,7 @@
 
 ## Files Modified
 
-- `dspy-rag-system/src/utils/memory_rehydrator.py` - Add coder role configuration
+- `src/utils/memory_rehydrator.py` - Add coder role configuration
 - `100_memory/100_cursor-memory-context.md` - Document coder role usage
 - `100_memory/104_dspy-development-context.md` - Document CodeAgent integration
 - `dspy-rag-system/tests/test_coder_role.py` - New test file

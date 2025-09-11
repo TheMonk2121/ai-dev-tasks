@@ -94,7 +94,7 @@
 
 ### **🚨 RED LINE ENFORCEMENT**
 - **Current metrics are locked** as the absolute performance floor
-- **No new features** until all targets are met
+- **No new features** until all targets are me
 - **Build freeze** if any metric falls below current baseline
 - **Focus**: Improve recall while maintaining precision ≥0.149
 
@@ -218,7 +218,7 @@ Where:
 # Keep top 50 by fused score
 candidates = fused_results[:50]
 
-# Only drop if BOTH conditions are met
+# Only drop if BOTH conditions are me
 for candidate in candidates:
     if (cosine_similarity < 0.15 AND
         candidate not in bm25_top_20):
@@ -281,7 +281,7 @@ packed_context = pack_with_token_limit(selected, max_tokens=1600)
 ### **Evidence-First Answer Format**
 
 ```python
-# Show highest-scoring snippet first
+# Show highest-scoring snippet firs
 answer = f"""🔍 **Evidence from {file_path}**
 ```{file_extension}
 {snippet}
@@ -291,7 +291,7 @@ answer = f"""🔍 **Evidence from {file_path}**
 ```
 
 **Benefits**:
-- **Faithfulness**: Shows actual evidence first
+- **Faithfulness**: Shows actual evidence firs
 - **Transparency**: Users can verify sources
 - **Debugging**: Easy to see what the system found
 

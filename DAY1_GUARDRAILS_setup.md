@@ -1,7 +1,7 @@
 # 🛡️ Day-1 Guardrails Setup - retrieval-13of13-stable
 
-**Tag**: `retrieval-13of13-stable`  
-**Commit SHA**: `f2bea2500c709e80e4b24fc4aeb11e6e0ac6d8a8`  
+**Tag**: `retrieval-13of13-stable`
+**Commit SHA**: `f2bea2500c709e80e4b24fc4aeb11e6e0ac6d8a8`
 **Purpose**: Lightweight, deterministic monitoring and optimization
 
 ## 📊 **Runtime Watch (Daily Cron)**
@@ -48,8 +48,8 @@ CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py | grep -A 5 
 ### **Component Score Analysis**
 ```bash
 # Extract top-5 misses with scores
-CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py | \
-grep -A 10 "MISS" | \
+CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py |
+grep -A 10 "MISS" |
 head -50
 ```
 
@@ -60,33 +60,33 @@ head -50
 #!/bin/bash
 # ablation_snapshot.sh
 
-echo "=== Ablation Snapshot - $(date) ===" > ablation_log.txt
+echo "=== Ablation Snapshot - $(date) ===" > ablation_log.tx
 
 # Base performance
-echo "Base (no enhancements):" >> ablation_log.txt
-CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py >> ablation_log.txt
+echo "Base (no enhancements):" >> ablation_log.tx
+CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py >> ablation_log.tx
 
-# +path_tsv enhancement
-echo "Base + path_tsv:" >> ablation_log.txt
+# +path_tsv enhancemen
+echo "Base + path_tsv:" >> ablation_log.tx
 # (path_tsv already applied in DDL)
 
-# +phrases enhancement
-echo "Base + path_tsv + phrases:" >> ablation_log.txt
+# +phrases enhancemen
+echo "Base + path_tsv + phrases:" >> ablation_log.tx
 # (phrases already applied in query_rewrite.py)
 
-# +MMR/cap enhancement
-echo "Base + path_tsv + phrases + MMR/cap:" >> ablation_log.txt
+# +MMR/cap enhancemen
+echo "Base + path_tsv + phrases + MMR/cap:" >> ablation_log.tx
 # (MMR/cap already applied in retriever)
 
-# +adjacency enhancement
-echo "Base + path_tsv + phrases + MMR/cap + adjacency:" >> ablation_log.txt
+# +adjacency enhancemen
+echo "Base + path_tsv + phrases + MMR/cap + adjacency:" >> ablation_log.tx
 # (adjacency_db=0 in current config)
 
-# +fname_prior enhancement
-echo "Base + path_tsv + phrases + MMR/cap + adjacency + fname_prior:" >> ablation_log.txt
+# +fname_prior enhancemen
+echo "Base + path_tsv + phrases + MMR/cap + adjacency + fname_prior:" >> ablation_log.tx
 # (fname_regex already applied in query_rewrite.py)
 
-echo "=== End Ablation Snapshot ===" >> ablation_log.txt
+echo "=== End Ablation Snapshot ===" >> ablation_log.tx
 ```
 
 ## 🚀 **Reader/F1 Push (Low Risk, High Yield)**
@@ -114,7 +114,7 @@ CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py | grep -o "s
 # If F1 is brittle on a tag:
 
 # Option 1: Add quoted phrase
-# Edit dspy-rag-system/src/dspy_modules/retriever/query_rewrite.py
+# Edit src/dspy_modules/retriever/query_rewrite.py
 # Add to PHRASE_HINTS["tag_name"]: '"constraint"', '"generated always as"'
 
 # Option 2: Bump w_vec by +0.1
@@ -177,6 +177,6 @@ CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py | grep -o "s
 
 ---
 
-**Setup Date**: September 7, 2025  
-**Tag**: `retrieval-13of13-stable`  
+**Setup Date**: September 7, 2025
+**Tag**: `retrieval-13of13-stable`
 **Status**: ✅ **READY FOR IMPLEMENTATION**

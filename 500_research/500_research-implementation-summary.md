@@ -21,7 +21,7 @@ class AnswerSynthesizer(Module):
         dspy.Assert(self.contains_citations(result.answer), "Answer must include source citations")
         dspy.Assert(len(result.answer) > 50, "Answer must be comprehensive")
         dspy.Assert(self.has_span_references(result.answer), "Answer must reference specific spans")
-        
+
         # Validate confidence score
         dspy.Assert(0 <= confidence <= 1, "Confidence must be between 0 and 1")
 ```
@@ -45,10 +45,10 @@ class HybridVectorStore(Module):
         # Research-based hybrid search: PGVector (dense) + PostgreSQL full-text (sparse)
         dense_results = self._vector_search(query, limit)
         sparse_results = self._text_search(query, limit)
-        
+
         # Merge and rank results (research-based approach)
         merged_results = self._merge_hybrid_results(dense_results, sparse_results, limit)
-        
+
         # Add span information for grounding
         results_with_spans = self._add_span_information(merged_results)
 ```
@@ -114,7 +114,7 @@ DSPY_CACHE_ENABLED = True  # Enable DSPy caching for performance
 1. **Enhanced AnswerSynthesizer**: Research-based validation with citations
 2. **HybridVectorStore**: Dense + sparse search with intelligent merging
 3. **LangExtractSystem**: Structured extraction with span-level grounding
-4. **Specialized Agents**: PlanAgent, CodeAgent, ResearchAgent
+4. **Specialized Agents**: PlanAgent, CodeAgent, ResearchAgen
 5. **Quality Evaluation**: Research-based metrics for validation
 
 ### **Cross-Reference Integration**

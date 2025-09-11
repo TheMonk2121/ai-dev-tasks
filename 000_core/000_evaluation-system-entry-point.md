@@ -1,4 +1,4 @@
-# 🎯 Evaluation System Entry Point
+# 🎯 Evaluation System Entry Poin
 <!-- keywords: evals, run the evals, evaluations, ragchecker, benchmark -->
 
 ## 🔎 TL;DR
@@ -17,7 +17,7 @@ python3 scripts/pydantic_evals_integration.py
 # Run retrieval evaluation with Pydantic Evals
 python3 300_evals/retrieval_eval.py
 
-# Run legacy compatibility test
+# Run legacy compatibility tes
 python3 -c "from scripts.migrate_to_pydantic_evals import load_eval_cases; print(f'Loaded {len(load_eval_cases(\"gold\"))} cases')"
 ```
 
@@ -30,7 +30,7 @@ python -m evals_300.tools.gen
 
 # Run specific evaluation passes
 python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
-python -m evals_300.tools.run --suite 300_core --pass deterministic_few_shot
+python -m evals_300.tools.run --suite 300_core --pass deterministic_few_sho
 
 # View generated documentation
 cat evals_300/_generated/300_core.md
@@ -103,7 +103,7 @@ Use this 3‑step flow for any official evaluation run. Step 2 supports Bedrock/
 # 1. Run with lessons in advisory mode (recommended)
 python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
-# 2. Review decision docket
+# 2. Review decision docke
 cat metrics/derived_configs/*_decision_docket.md
 
 # 3. Apply lessons if approved
@@ -134,7 +134,7 @@ jq '.run_config.lessons' "$LATEST_RESULTS"
 
 # If docket present, open and follow next steps
 # If apply_blocked == true, review gates and fix before applying
-# Attach docket link to backlog comment
+# Attach docket link to backlog commen
 # Run quality checks and evolution tracking
 python3 scripts/lessons_quality_check.py
 python3 scripts/evolution_tracker.py
@@ -152,7 +152,7 @@ jq '.run_config.lessons' $(ls -t metrics/baseline_evaluations/*.json | head -1)
 
 Reference: `metrics/baseline_evaluations/TUNED_BASELINE_20250902.md` and `metrics/baseline_evaluations/RED_LINE_ENFORCEMENT_RULES.md`.
 
-### 🛠 When Metrics Are Below Target
+### 🛠 When Metrics Are Below Targe
 - Run with lessons advisory: `python3 scripts/ragchecker_official_evaluation.py --bypass-cli --lessons-mode advisory`
 - Review decision docket in `metrics/derived_configs/` and apply if gates allow: `--lessons-mode apply`
 - Re‑run smoke test for quick iteration: `./scripts/run_ragchecker_smoke_test.sh`
@@ -184,7 +184,7 @@ Tip: capture each change as a lesson note in the docket or commit message for pr
 - **`throttle_free_eval.sh`** - Loads stable configuration
 - **`scripts/ragchecker_official_evaluation.py`** - Main evaluation script
 - **`scripts/setup_evaluation_env.sh`** - Environment variables setup for evaluation system
-- **`dspy-rag-system/src/`** - DSPy RAG system components for evaluation
+- **`src/`** - DSPy RAG system components for evaluation
 
 ### **📊 Results & Documentation**
 - **`metrics/baseline_evaluations/`** - All evaluation results
@@ -196,14 +196,14 @@ Tip: capture each change as a lesson note in the docket or commit message for pr
 - **`scripts/run_ragchecker_smoke_test.sh`** - Fast smoke testing
 - **`scripts/ragchecker_official_evaluation.py`** - Full evaluation
 - **`scripts/setup_evaluation_env.sh`** - Environment setup
-- **`dspy-rag-system/src/rag_system.py`** - DSPy RAG system interface
+- **`src/rag_system.py`** - DSPy RAG system interface
 
 ### **🤖 DSPy RAG System Components**
-- **`dspy-rag-system/src/rag_system.py`** - Main RAG system interface
-- **`dspy-rag-system/src/dspy_modules/`** - DSPy-specific modules and programs
-- **`dspy-rag-system/src/rag/`** - RAG pipeline components
-- **`dspy-rag-system/src/schemas/`** - Pydantic data models
-- **`dspy-rag-system/src/common/`** - Common utilities and database connections
+- **`src/rag_system.py`** - Main RAG system interface
+- **`src/dspy_modules/`** - DSPy-specific modules and programs
+- **`src/rag/`** - RAG pipeline components
+- **`src/schemas/`** - Pydantic data models
+- **`src/common/`** - Common utilities and database connections
 
 ## 🎯 **Agent Workflow**
 
@@ -275,7 +275,7 @@ python3 scripts/bedrock_connection_test.py  # Test connection
 ## 📚 **Further Reading**
 
 - **`400_guides/400_canonical-evaluation-sop.md`** - Complete SOP
-- **`scripts/baseline_version_manager.py --help`** - Version management
+- **`scripts/baseline_version_manager.py --help`** - Version managemen
 - **`scripts/ragchecker_official_evaluation.py --help`** - All options
 
 ## 🎯 **Agent Memory Integration**

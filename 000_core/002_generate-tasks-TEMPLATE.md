@@ -45,7 +45,7 @@ python3 scripts/task_generation_automation.py --prd <prd_file> --output-file tas
 - **Input**: Backlog item ID (e.g., B-1007, B-1009) or PRD file
 - **Output**: Task list with MoSCoW prioritization and solo optimizations
 - **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
-- **MoSCoW Support**: Must/Should/Could/Won't prioritization throughout
+- **MoSCoW Support**: Must/Should/Could/Won't prioritization throughou
 - **Solo Optimization**: Auto-advance, context preservation, one-command workflows
 - **PRD Integration**: Parse Section 0 (Project Context & Implementation Guide) for task context
 
@@ -187,7 +187,7 @@ def test_component_functionality():
 
     # Setup - Prepare test data and mocks
 
-    # Execute - Call the function under test
+    # Execute - Call the function under tes
 
     # Assert - Verify expected outcomes
 
@@ -216,7 +216,7 @@ def test_component_functionality():
 - **⏸️ Won't**: Tasks deferred to future iterations
 
 ### **Task Selection Logic:**
-1. **Must tasks** are always executed first
+1. **Must tasks** are always executed firs
 2. **Should tasks** are executed when Must tasks are complete
 3. **Could tasks** are executed if time permits
 4. **Won't tasks** are documented but not executed
@@ -316,7 +316,7 @@ Generate a comprehensive task list with the following structure:
 - **⚡ Could Have**: [X] tasks - Nice-to-have improvements
 - **⏸️ Won't Have**: [X] tasks - Deferred to future iterations
 
-## Solo Developer Quick Start
+## Solo Developer Quick Star
 ```bash
 # Start everything with enhanced workflow
 python3 scripts/solo_workflow.py start "description"
@@ -342,7 +342,7 @@ python3 scripts/solo_workflow.py ship
 ### Phase 4: Performance & Security
 [Tasks for optimization and hardening with quality gates]
 
-### Phase 5: Documentation & Deployment
+### Phase 5: Documentation & Deploymen
 [Tasks for final preparation and launch with solo workflow integration]
 
 ## Quality Metrics
@@ -372,7 +372,7 @@ python3 scripts/solo_workflow.py ship
 8. **Define quality gates** for each major milestone
 9. **Include monitoring and observability** requirements
 10. **Specify error handling** and recovery procedures
-11. **Align with backlog priorities** when planning task dependencies and effort
+11. **Align with backlog priorities** when planning task dependencies and effor
 12. **Consider impact estimates** from backlog to ensure appropriate task scope
 13. **Parse backlog table format** when provided with backlog ID
 14. **Use points-based estimation** for task effort planning

@@ -13,7 +13,7 @@
 
 - **Priority**: 🔧 Medium - Research for future implementation
 
-- **Points**: 2 - Research and planning effort
+- **Points**: 2 - Research and planning effor
 
 - **Dependencies**: 400_guides/400_context-priority-guide.md
 

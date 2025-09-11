@@ -1,4 +1,4 @@
-# 🚀 Comprehensive RAGChecker Evaluation Report
+# 🚀 Comprehensive RAGChecker Evaluation Repor
 
 **Generated**: August 30, 2025 at 16:29:01
 **Last Updated**: September 1, 2025 at 17:07:17
@@ -81,7 +81,7 @@
 ### **🎯 Optimization Recommendations**
 
 #### **Immediate Actions**
-1. **Response Filtering**: Implement post-processing to remove irrelevant content
+1. **Response Filtering**: Implement post-processing to remove irrelevant contain
 2. **Context Refinement**: Improve context selection to increase precision
 3. **Length Optimization**: Balance comprehensiveness with relevance
 
@@ -195,7 +195,7 @@ The comprehensive RAGChecker evaluation demonstrates a **robust local evaluation
 
 **Industry Standards Alignment:**
 - **Precision@K and Recall@K**: RAGChecker's Context Precision and Claim Recall
-- **Mean Reciprocal Rank (MRR)**: RAGChecker's ranking quality assessment
+- **Mean Reciprocal Rank (MRR)**: RAGChecker's ranking quality assessmen
 - **Normalized Discounted Cumulative Gain (nDCG)**: Position-aware relevance scoring
 - **Faithfulness**: RAGChecker's hallucination detection and context utilization
 - **BLEU/ROUGE**: Text quality and content coverage metrics
@@ -210,23 +210,23 @@ The comprehensive RAGChecker evaluation demonstrates a **robust local evaluation
 **✅ Implemented Components:**
 
 1. **Strict Type Safety** (`pyrightconfig.json`)
-   - Type checking mode: strict
+   - Type checking mode: stric
    - Protocol-based interfaces
    - No magical dicts
 
-2. **Strongly Typed Contracts** (`dspy-rag-system/src/eval/contracts.py`)
+2. **Strongly Typed Contracts** (`src/eval/contracts.py`)
    - `DatasetConfig`, `RunMetrics`, `QualityTargets`
    - `RAGChecker` protocol with typed interfaces
    - `MetricName` literal types for compile-time safety
 
-3. **RAGChecker Adapter** (`dspy-rag-system/src/eval/ragchecker_adapter.py`)
+3. **RAGChecker Adapter** (`src/eval/ragchecker_adapter.py`)
    - Maps existing RAGChecker outputs to typed `RunMetrics`
    - Eliminates raw dicts throughout the pipeline
    - Quality gate enforcement with clear failure reporting
 
 4. **Config-Driven Evaluation** (`configs/eval/*.yaml`)
    - YAML configurations for different evaluation tasks
-   - Manifested slices for local development
+   - Manifested slices for local developmen
    - Reproducible evaluation setups
 
 5. **Production Runners** (`scripts/eval/*.py`)
@@ -239,20 +239,20 @@ The comprehensive RAGChecker evaluation demonstrates a **robust local evaluation
    - Pyright type checking on every PR
    - Smoke tests for quick feedback
    - Nightly full evaluation suite
-   - Quality gate enforcement
+   - Quality gate enforcemen
 
 ### **Usage Examples**
 
 **Local Development:**
 ```bash
 # Run retrieval evaluation
-python scripts/eval/eval_retrieval.py \
-  --dataset_config configs/eval/retrieval_quality.yaml \
+python scripts/eval/eval_retrieval.py
+  --dataset_config configs/eval/retrieval_quality.yaml
   --out_dir artifacts/local/retrieval
 
 # Run faithfulness evaluation
-python scripts/eval/eval_faithfulness.py \
-  --dataset_config configs/eval/faithfulness_quality.yaml \
+python scripts/eval/eval_faithfulness.py
+  --dataset_config configs/eval/faithfulness_quality.yaml
   --out_dir artifacts/local/faithfulness
 ```
 

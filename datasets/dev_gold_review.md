@@ -1,4 +1,4 @@
-# Repo-Gold Dataset Review Sheet
+# Repo-Gold Dataset Review Shee
 
 Review each record and accept/revise as needed.
 
@@ -86,13 +86,13 @@ Review each record and accept/revise as needed.
 
 **Query:** How do I work with dspy?
 
-**Ground Truth:** Sample content from dspy-rag-system/src/dspy_modules/rag_pipeline
+**Ground Truth:** Sample content from src/dspy_modules/rag_pipeline
 
-**Expected Files:** dspy-rag-system/src/dspy_modules/rag_pipeline.py
+**Expected Files:** src/dspy_modules/rag_pipeline.py
 
 **Tags:** rag_qa_single
 
-**Source:** dspy-rag-system/src/dspy_modules/rag_pipeline.py
+**Source:** src/dspy_modules/rag_pipeline.py
 
 **Review:** [ ] Accept [ ] Revise
 
@@ -104,9 +104,9 @@ Review each record and accept/revise as needed.
 
 **Ground Truth:** Not in context.
 
-**Expected Files:** 
+**Expected Files:**
 
-**Tags:** negative, quantum, entanglement
+**Tags:** negative, quantum, entanglemen
 
 **Source:** N/A
 
@@ -120,7 +120,7 @@ Review each record and accept/revise as needed.
 
 **Ground Truth:** Not in context.
 
-**Expected Files:** 
+**Expected Files:**
 
 **Tags:** negative, mars, api-key
 
@@ -136,7 +136,7 @@ Review each record and accept/revise as needed.
 
 **Ground Truth:** Not in context.
 
-**Expected Files:** 
+**Expected Files:**
 
 **Tags:** negative, time-travel, dependencies
 

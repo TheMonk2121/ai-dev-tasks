@@ -19,7 +19,7 @@
 - **Backend**: Python 3.12, FastAPI, PostgreSQL, SQLite
 - **AI/ML**: Cursor Native AI, DSPy Multi-Agent System, LTST Memory System
 - **Infrastructure**: Docker, Redis, n8n workflows
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyrigh
 - **Monitoring**: NiceGUI dashboard, Scribe context capture, Mission dashboard
 
 ### Repository Layout
@@ -43,7 +43,7 @@ ai-dev-tasks/
 - **Execute workflow**: `scripts/single_doorway.py` → automated 001-003 flow
 - **Update memory**: `scripts/update_cursor_memory.py` → maintain context
 
-### Local Development
+### Local Developmen
 ```bash
 # Setup
 poetry install
@@ -61,7 +61,7 @@ python3 scripts/backlog_cli.py update B-XXX       # Update item
 python3 scripts/backlog_cli.py close B-XXX        # Close item
 ```
 
-### Common Tasks Cheat Sheet
+### Common Tasks Cheat Shee
 - **Add new feature**: Backlog intake → PRD → Tasks → Execute → Archive
 - **Fix bug**: Identify → Backlog item → Quick PRD → Execute → Close
 - **Refactor system**: Analysis → Backlog item → Comprehensive PRD → Phased execution
@@ -167,7 +167,7 @@ python3 scripts/backlog_cli.py close B-XXX        # Close item
 **How do we handle it?**
 - **Phased Implementation**: Start with core features, add enhancements incrementally
 - **Performance Monitoring**: Implement caching and pagination for large datasets
-- **Backward Compatibility**: Maintain existing workflow compatibility throughout
+- **Backward Compatibility**: Maintain existing workflow compatibility throughou
 - **Progressive Enhancement**: Provide fallback to text-based interface
 
 **What are the unknowns?**
@@ -218,7 +218,7 @@ python3 scripts/backlog_cli.py close B-XXX        # Close item
 - One-command workflow CLI implementation
 - Auto-advance and context preservation features
 - Integration with LTST memory system
-- User acceptance testing and refinement
+- User acceptance testing and refinemen
 
 ### Phase 4: AI Enhancement (Week 4)
 - Dynamic reprioritization algorithm implementation
@@ -234,7 +234,7 @@ python3 scripts/backlog_cli.py close B-XXX        # Close item
 
 **What's the timeline?**
 - **Week 1**: Core structured data implementation
-- **Week 2**: Visual interface development
+- **Week 2**: Visual interface developmen
 - **Week 3**: Solo optimization features
 - **Week 4**: AI enhancement and comprehensive testing
 - **Total**: 4 weeks, 8 points, high priority

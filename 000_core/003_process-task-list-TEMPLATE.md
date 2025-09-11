@@ -2,7 +2,7 @@
 <!-- ANCHOR_PRIORITY: 25 -->
 <!-- ROLE_PINS: ["implementer", "planner"] -->
 
-# Process Task List
+# Process Task Lis
 
 ## 🔎 TL;DR {#tldr}
 
@@ -77,7 +77,7 @@ python3 scripts/solo_workflow.py execute --prd <prd_file> --context-preserve
 
 ### 📝 **Manual Process (Fallback)**
 
-- Parse PRD Section 8: Task Breakdown for task list
+- Parse PRD Section 8: Task Breakdown for task lis
 - Use PRD Section 0 (Project Context & Implementation Guide) for execution context
 - Execute tasks manually with state tracking and PRD context integration
 - Update progress in `.ai_state.json` with PRD metadata
@@ -95,7 +95,7 @@ python3 scripts/solo_workflow.py execute --prd <prd_file> --context-preserve
 - **Context Preservation**: LTST memory integration
 - **Smart Pausing**: Automatic detection of blocking conditions
 
-## State Management
+## State Managemen
 - **State File**: `.ai_state.json` (auto-generated, gitignored)
 - **Progress Tracking**: Task completion status
 - **Session Continuity**: LTST memory for context preservation
@@ -248,7 +248,7 @@ Generate execution configuration with the following structure:
 - **Context Preservation**: [LTST memory integration details]
 - **Smart Pausing**: [Automatic detection rules]
 
-## State Management
+## State Managemen
 - **State File**: `.ai_state.json` (auto-generated)
 - **Progress Tracking**: [Task completion status]
 - **Session Continuity**: [LTST memory for context preservation]
@@ -283,7 +283,7 @@ python3 scripts/solo_workflow.py ship
 4. **Implement smart pausing** - Pause only for critical decisions
 5. **Generate HotFix tasks** - Automatic error recovery and retry
 6. **Track progress** - Maintain state in `.ai_state.json`
-7. **Validate quality gates** - Ensure all requirements are met
+7. **Validate quality gates** - Ensure all requirements are me
 8. **Handle errors gracefully** - Provide clear error messages and recovery steps
 9. **Integrate with LTST memory** - Preserve context across sessions
 10. **Use Scribe integration** - Automated worklog generation

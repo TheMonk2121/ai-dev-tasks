@@ -73,7 +73,7 @@
 **Description**: Create FastAPI application structure with authentication and basic routing framework.
 
 **Acceptance Criteria**:
-- [ ] FastAPI application created in `dspy-rag-system/src/api/`
+- [ ] FastAPI application created in `src/api/`
 - [ ] Authentication middleware implemented
 - [ ] Basic health check endpoint working
 - [ ] API documentation (OpenAPI/Swagger) accessible
@@ -85,7 +85,7 @@
 - [ ] **Documentation Test** - Confirm OpenAPI docs are accessible
 
 **Implementation Notes**:
-- Create `dspy-rag-system/src/api/` directory structure
+- Create `src/api/` directory structure
 - Implement API key authentication using FastAPI dependencies
 - Add comprehensive error handling and logging
 
@@ -139,7 +139,7 @@
 - [ ] **Documentation Test** - Verify API docs match actual implementation
 
 **Implementation Notes**:
-- Integrate with existing `dspy-rag-system/src/dashboard.py`
+- Integrate with existing `src/dashboard.py`
 - Add API status monitoring to existing dashboard
 - Update documentation with API usage examples
 

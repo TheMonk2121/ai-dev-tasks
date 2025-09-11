@@ -7,7 +7,7 @@ Successfully implemented entity expansion functionality for the memory rehydrati
 ## ✅ Completed Tasks
 
 ### Task 1: Create Entity Overlay Utility Module ✅
-- **File**: `dspy-rag-system/src/utils/entity_overlay.py`
+- **File**: `src/utils/entity_overlay.py`
 - **Status**: ✅ COMPLETED
 - **Key Features**:
   - Entity extraction using pattern matching (CamelCase, snake_case, file paths, URLs, emails)
@@ -21,10 +21,10 @@ Successfully implemented entity expansion functionality for the memory rehydrati
 - **Status**: ✅ COMPLETED
 - **Implementation**: Integrated with existing `vector_search` function from `memory_rehydrator.py`
 - **Function**: `fetch_entity_adjacent_chunks()` - retrieves semantically related chunks for entities
-- **Features**: Parameterized queries, similarity filtering, entity metadata enrichment
+- **Features**: Parameterized queries, similarity filtering, entity metadata enrichmen
 
 ### Task 3: Integrate Entity Expansion into Memory Rehydrator ✅
-- **File**: `dspy-rag-system/src/utils/memory_rehydrator.py`
+- **File**: `src/utils/memory_rehydrator.py`
 - **Status**: ✅ COMPLETED
 - **Key Changes**:
   - Added `semantic_evidence_with_entity_expansion()` function
@@ -57,7 +57,7 @@ Successfully implemented entity expansion functionality for the memory rehydrati
   - PR-ready Markdown table generation
   - Percentage change calculations
   - Success criteria validation
-  - Overall pass/fail assessment
+  - Overall pass/fail assessmen
 
 ### Task 7: Update Documentation ✅
 - **Status**: ✅ COMPLETED
@@ -159,10 +159,10 @@ python3 src/utils/memory_rehydrator.py --role planner --task "How to use HybridV
 
 ### A/B Testing
 ```bash
-# Run baseline test
+# Run baseline tes
 ./scripts/memory_up.sh -r researcher "test entity expansion"
 
-# Run variant test
+# Run variant tes
 ./scripts/memory_up.sh -r researcher "test entity expansion"
 
 # Generate comparison

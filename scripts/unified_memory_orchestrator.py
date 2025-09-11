@@ -30,10 +30,10 @@ except ImportError:
 
 # Import LTST memory rehydrator with error handling
 try:
-    # Add dspy-rag-system to path for imports
-    dspy_rag_path = project_root / "dspy-rag-system"
-    if str(dspy_rag_path) not in sys.path:
-        sys.path.insert(0, str(dspy_rag_path))
+    # Add main src to path for imports (not dspy-rag-system)
+    src_path = project_root / "src"
+    if str(src_path) not in sys.path:
+        sys.path.insert(0, str(src_path))
 
     from src.utils.memory_rehydrator import MemoryRehydrator, RehydrationRequest
 
@@ -210,7 +210,7 @@ class UnifiedMemoryOrchestrator:
 
     def get_go_cli_memory(self, query: str) -> dict:
         """Get memory from Go CLI."""
-        go_cli_path = self.project_root / "dspy-rag-system" / "src" / "cli" / "memory_rehydration_cli"
+        go_cli_path = self.project_root / "src" / "cli" / "memory_rehydration_cli"
 
         if not go_cli_path.exists():
             return {

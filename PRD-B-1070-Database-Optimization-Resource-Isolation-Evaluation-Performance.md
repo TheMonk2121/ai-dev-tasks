@@ -37,7 +37,7 @@ ai-dev-tasks/
 - **Observability**: pg_stat_statements, query timing, resource monitoring
 - **Safety**: Incremental tuning with rollback gates, baseline protection
 
-### Local Development
+### Local Developmen
 ```bash
 # Environment setup
 export DATABASE_URL="postgresql://danieljacobs@localhost:5432/ai_agency"
@@ -45,7 +45,7 @@ export DATABASE_URL="postgresql://danieljacobs@localhost:5432/ai_agency"
 # Database health check
 python3 scripts/healthcheck_db.py
 
-# Take system snapshot
+# Take system snapsho
 python3 scripts/pg_settings_snapshot.py
 python3 scripts/vector_index_inventory.py
 
@@ -135,7 +135,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 - **Memory Utilization**: PostgreSQL using 20-30% of 128GB RAM effectively
 - **Vector Performance**: HNSW queries <200ms p95 at K=16 with proper ef_search scaling
 - **Workload Isolation**: Zero LTST interference during evaluations (measured via pg_stat_activity)
-- **Baseline Compliance**: precision ≥ 0.159, recall ≥ 0.166, F1 ≥ 0.159 maintained throughout
+- **Baseline Compliance**: precision ≥ 0.159, recall ≥ 0.166, F1 ≥ 0.159 maintained throughou
 - **Resource Monitoring**: pg_stat_statements providing actionable query performance insights
 
 ### What are the quality gates?
@@ -152,7 +152,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 **Stack and Core Components**:
 - **PostgreSQL 14.18**: Core database with memory/WAL optimization for 128GB RAM
 - **pgvector 0.8.0**: Vector similarity with HNSW optimization + iterative_scan
-- **Python 3.12**: Application layer with asyncpg connection management
+- **Python 3.12**: Application layer with asyncpg connection managemen
 - **pg_stat_statements**: Query performance monitoring and optimization guidance
 - **DSN Resolver**: Unified connection string management across all components
 - **Per-Role GUCs**: Workload isolation via ALTER ROLE settings (work_mem, timeouts)
@@ -189,7 +189,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 - **Mitigation 2**: Baseline validation after every change; automatic revert on regression
 - **Mitigation 3**: Phased DSN adoption starting with scripts; maintain fallback during transition
 - **Mitigation 4**: Monitor pg_stat_activity for backend pressure; add PgBouncer if needed
-- **Mitigation 5**: Measure pg_stat_statements overhead; disable if >2% performance impact
+- **Mitigation 5**: Measure pg_stat_statements overhead; disable if >2% performance impac
 
 ### What are the unknowns?
 **Areas of Uncertainty**:
@@ -212,12 +212,12 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 ### How do we test it?
 **Testing Methodology**:
-- **Unit Testing**: DSN resolver, health check script, snapshot utilities with pytest
+- **Unit Testing**: DSN resolver, health check script, snapshot utilities with pytes
 - **Integration Testing**: End-to-end evaluation runs with concurrent LTST operations
 - **Performance Testing**: EXPLAIN ANALYZE on vector queries; pg_stat_statements analysis
 - **Baseline Testing**: Automated precision/recall/F1 validation after each change
 - **Load Testing**: Concurrent LTST memory operations during RAGChecker evaluation
-- **Rollback Testing**: Verify postgresql.conf.bak restoration + service restart
+- **Rollback Testing**: Verify postgresql.conf.bak restoration + service restar
 
 ### What's the coverage target?
 **Testing Coverage Requirements**:
@@ -231,7 +231,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 ## 7. Implementation Plan
 
 ### What are the phases?
-1. **Phase 1 - Discovery & Assessment** (4 hours): DSN audit, pg_settings snapshot, workload profiling, performance baseline measurement
+1. **Phase 1 - Discovery & Assessment** (4 hours): DSN audit, pg_settings snapshot, workload profiling, performance baseline measuremen
 2. **Phase 2 - Connection Standardization** (3 hours): DSN resolver implementation, startup health check, connection unification
 3. **Phase 3 - PostgreSQL Optimization** (6 hours): Incremental memory/WAL tuning (Stage A→B→C), pgvector query controls
 4. **Phase 4 - Workload Isolation** (4 hours): Per-role GUCs, cache separation, resource scheduling

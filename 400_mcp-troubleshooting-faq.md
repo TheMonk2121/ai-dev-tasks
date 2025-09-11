@@ -1,6 +1,6 @@
 # Troubleshooting and FAQ Guide
 
-> DEPRECATED: Content integrated into core guides — see `400_guides/400_08_integrations-editor-and-models.md` (integration troubleshooting), `400_guides/400_09_automation-and-pipelines.md` (CI failures, dependency/install issues), `400_guides/400_11_deployments-ops-and-observability.md` (monitoring/logging/health, performance issues), `400_guides/400_10_security-compliance-and-access.md` (auth/permissions/security errors), and `400_guides/400_00_getting-started-and-index.md` (index). Implementation references live under `dspy-rag-system/src/utils/mcp_integration/`.
+> DEPRECATED: Content integrated into core guides — see `400_guides/400_08_integrations-editor-and-models.md` (integration troubleshooting), `400_guides/400_09_automation-and-pipelines.md` (CI failures, dependency/install issues), `400_guides/400_11_deployments-ops-and-observability.md` (monitoring/logging/health, performance issues), `400_guides/400_10_security-compliance-and-access.md` (auth/permissions/security errors), and `400_guides/400_00_getting-started-and-index.md` (index). Implementation references live under `src/utils/mcp_integration/`.
 
 ## Table of Contents
 
@@ -117,11 +117,11 @@ python --version
 
 ### 2. Virtual Environment Issues
 
-**Problem**: Packages not found in virtual environment
+**Problem**: Packages not found in virtual environmen
 
 **Solution**: Activate your virtual environment:
 ```bash
-# Create virtual environment
+# Create virtual environmen
 python -m venv venv
 
 # Activate on macOS/Linux
@@ -131,7 +131,7 @@ source .venv/bin/activate
 venv\Scripts\activate
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -r requirements.tx
 ```
 
 ### 3. Permission Issues
@@ -277,7 +277,7 @@ async with httpx.AsyncClient() as client:
 
 #### 1. `MCPError: Unsupported document type`
 
-**Cause**: The server doesn't support the file format
+**Cause**: The server doesn'tt support the file forma
 
 **Solution**: Check supported formats and convert if needed:
 ```python
@@ -640,7 +640,7 @@ for package in required_packages:
         print(f"❌ {package} is missing")
 ```
 
-### 5. Common Debugging Checklist
+### 5. Common Debugging Checklis
 
 - [ ] Check Python version (3.8+)
 - [ ] Verify all dependencies are installed
@@ -648,7 +648,7 @@ for package in required_packages:
 - [ ] Check file permissions and paths
 - [ ] Verify network connectivity
 - [ ] Review error logs
-- [ ] Test with simple examples first
+- [ ] Test with simple examples firs
 - [ ] Monitor system resources
 
 ### 6. Reporting Issues

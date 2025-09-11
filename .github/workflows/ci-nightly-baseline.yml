@@ -1,6 +1,8 @@
+---
+# yamllint disable rule:line-length rule:trailing-spaces rule:brackets rule:indentation
 name: Nightly Baseline
 on:
-  schedule: 
+  schedule:
     - cron: "0 6 * * *"  # 06:00 UTC daily
   workflow_dispatch: {}
 jobs:
@@ -8,21 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
-        with: 
+        with:
           python-version: "3.12"
-      
+
       - name: Install UV
         uses: astral-sh/setup-uv@v4
         with:
           version: latest
-      
+
       - name: Install dependencies
         run: |
           uv sync --all-extras --dev
-  
+
   pytest-full:
     runs-on: ubuntu-latest
     steps:
@@ -40,16 +42,19 @@ jobs:
         run: |
           uv run python scripts/lib/config_loader.py --profile real --help || true
           echo "✅ Real profile configuration validated"
-      
+
       - name: Eval (real, higher concurrency)
         env:
-          POSTGRES_DSN: ${{ secrets.POSTGRES_DSN || 'mock://test' }}
-          AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
+          POSTGRES_DSN: ${{ secrets.POSTGRES_DSN }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
+          # Set fallback values if secrets are not available
+          export POSTGRES_DSN=${POSTGRES_DSN:-mock://test}
+          export AWS_REGION=${AWS_REGION:-us-east-1}
           ./scripts/eval_real.sh --concurrency 12
-      
+
       - name: Upload baseline results
         uses: actions/upload-artifact@v4
         if: always()

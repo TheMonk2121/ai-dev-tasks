@@ -27,7 +27,7 @@ This research paper presents LiveMCPBench, a comprehensive benchmark for evaluat
 
 ---
 
-## 📄 Research Paper Content
+## 📄 Research Paper Conten
 
 **Title:** LiveMCPBench: Can Agents Navigate an Ocean of MCP Tools?
 
@@ -48,7 +48,7 @@ This research paper presents LiveMCPBench, a comprehensive benchmark for evaluat
 
 **Contact:** {moguozhao2024,zhongwenliang2024,chenjiawei2024,xuanang2020,luyaojie,hongyu,xianpei,sunle}@iscas.ac.cn, benhe@ucas.ac.cn
 
-## 📝 Abstract
+## 📝 Abstrac
 
 With the rapid development of Model Context Protocol (MCP), the number of MCP servers has surpassed 10,000. However, existing MCP benchmarks are limited to single-server settings with only a few tools, hindering effective evaluation of agent capabilities in large-scale, real-world scenarios.
 
@@ -122,7 +122,7 @@ O = Evaluator(T, P, A, D)
 
 Therefore, we use the success rate as the primary metric.
 
-### MCP Copilot Agent
+### MCP Copilot Agen
 
 Due to the dynamic nature of daily tasks and the inherent uncertainty in retrieval systems, a fixed pipeline cannot be effectively employed for tool retrieval and invocation in LiveMCPTool. Instead, we require agents to dynamically adapt to environmental changes.
 
@@ -147,7 +147,7 @@ We evaluate 10 frontier models:
 - Gemini-2.5-Pro
 - Deepseek-V3 and Deepseek-R1
 - Qwen3-235B-A22B and Qwen3-32B
-- Qwen2.5-72B-Instruct
+- Qwen2.5-72B-Instruc
 
 For assessment, we employ Deepseek-V3 as our primary evaluation model.
 
@@ -270,7 +270,7 @@ For consistent retrieval performance, we established a standardized framework us
 
 ## 📝 Prompts
 
-### MCP Copilot Agent Prompt
+### MCP Copilot Agent Promp
 
 **Prompt for MCP Copilot Agent:**
 
@@ -296,7 +296,7 @@ Query (string, required): The input query must contain a `<tool_assistant>` tag 
 ```
 <tool_assistant>
 server: ... # Platform/permission domain
-tool: ... # Operation type + target
+tool: ... # Operation type + targe
 </tool_assistant>
 ```
 
@@ -316,7 +316,7 @@ Parameters explained:
 - tool_name: string, required. The name of the target tool to be executed.
 - params: dictionary or None, optional. A dictionary containing all parameters that need to be passed to the target tool. This can be omitted if the target tool does not require parameters.
 
-### LiveMCPEval Prompt
+### LiveMCPEval Promp
 
 **Prompt for evaluation:**
 

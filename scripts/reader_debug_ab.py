@@ -6,8 +6,9 @@ Compares uncompiled vs compiled DSPy reader on the same context.
 import json
 import os
 import sys
+from typing import Any, cast
 
-# sys.path.insert(0, "dspy-rag-system/src")  # REMOVED: DSPy venv consolidated into main project
+# sys.path.insert(0, "src")  # DSPy modules now in main src directory
 import dspy
 
 from dspy_modules.dspy_reader_program import RAGAnswer, _lm
@@ -38,22 +39,25 @@ def run_uncompiled(q, tag, ctx):
     span = pick_span(ctx, q, tag)
     if span:
         return span
-    out = prog.gen(context=ctx, question=q).answer
+    result_obj = prog.gen(context=ctx, question=q)
+    out = cast(Any, result_obj).answer
     return out
 
 
 def run_compiled(q, tag, ctx):
     dspy.settings.configure(lm=_lm())
     try:
-        prog = dspy.load("artifacts/dspy/rag_answer_compiled.json")
+        prog = dspy.load("artifacts/dspy/rag_answer_compiled.json")  # type: ignore[reportUnknownMemberType]
     except Exception:
         prog = RAGAnswer()
     # same forcing: use ctx directly if your compiled graph allows
     try:
-        out = prog.gen(context=ctx, question=q).answer  # depends on how teleprompt compiled; adjust if needed
+        result_obj = prog.gen(context=ctx, question=q)  # depends on how teleprompt compiled; adjust if needed
+        out = cast(Any, result_obj).answer
     except:
         # fallback: call prog(question, tag) and trust compiled retrieval (should match if limits equal)
-        out = prog(question=q, tag=tag).answer
+        call_result = prog(question=q, tag=tag)
+        out = cast(Any, call_result).answer
     return out
 
 

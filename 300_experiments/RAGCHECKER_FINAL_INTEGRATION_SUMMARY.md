@@ -50,7 +50,7 @@ The RAGChecker evaluation system has been successfully implemented as a comprehe
 
 5. **Pre-commit Integration** (`scripts/pre_commit_ragchecker.py`)
    - Automatic validation on RAGChecker changes
-   - Quality gates enforcement
+   - Quality gates enforcemen
    - Fast feedback loop for developers
 
 ---
@@ -120,11 +120,11 @@ The RAGChecker evaluation system has been successfully implemented as a comprehe
 ### **Pre-commit Hooks**
 - **Detection**: Automatic RAGChecker file change detection
 - **Validation**: Tests + evaluation + quality gates
-- **Timeout**: 60-second evaluation timeout
+- **Timeout**: 60-second evaluation timeou
 - **Feedback**: Immediate pass/fail status
 
 ### **Quality Gates Configuration**
-- **Stages**: Pre-commit, Pull Request, Deployment
+- **Stages**: Pre-commit, Pull Request, Deploymen
 - **Thresholds**: Configurable per stage and metric
 - **Fallback**: Adjusted thresholds for offline evaluation
 - **Reporting**: Comprehensive validation reports
@@ -179,12 +179,12 @@ The RAGChecker evaluation system has been successfully implemented as a comprehe
 3. **Performance Validation**
    - Response time testing
    - Memory usage monitoring
-   - Throughput measurement
+   - Throughput measuremen
    - Scalability testing
 
 4. **Quality Gates**
    - Configuration validation
-   - Threshold enforcement
+   - Threshold enforcemen
    - CI/CD stage validation
 
 ---

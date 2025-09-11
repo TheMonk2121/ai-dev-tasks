@@ -104,10 +104,10 @@
     "tags": "meta_ops",
     "qvec": [],
     "file_paths": [
-      "dspy-rag-system/src/dspy_modules/retriever/pg.py"
+      "src/dspy_modules/retriever/pg.py"
     ],
     "globs": [
-      "dspy-rag-system/src/dspy_modules/retriever/pg.py"
+      "src/dspy_modules/retriever/pg.py"
     ]
   },
   {
@@ -116,10 +116,10 @@
     "tags": "ops_health",
     "qvec": [],
     "file_paths": [
-      "dspy-rag-system/src/dspy_modules/retriever/rerank.py"
+      "src/dspy_modules/retriever/rerank.py"
     ],
     "globs": [
-      "dspy-rag-system/src/dspy_modules/retriever/rerank.py"
+      "src/dspy_modules/retriever/rerank.py"
     ]
   },
   {
@@ -128,7 +128,7 @@
     "tags": "ops_health",
     "qvec": [],
     "file_paths": [
-      "dspy-rag-system/src/dspy_modules/retriever/query_rewrite.py"
+      "src/dspy_modules/retriever/query_rewrite.py"
     ],
     "globs": [
       "*/retriever/*query*.py"

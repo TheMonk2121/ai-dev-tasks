@@ -71,7 +71,7 @@
 - **Auto-Advance**: yes
 
 **Implementation Steps**:
-1. Update `dspy-rag-system/src/dspy_modules/context_models.py`
+1. Update `src/dspy_modules/context_models.py`
 2. Add vector context fields to each role context model
 3. Create role-specific component recommendation schemas
 4. Implement context validation for vector-based fields

@@ -93,9 +93,9 @@ The benchmark processed 16 actual documentation files from the `100_memory/` dir
 
 ## Baseline Validation
 
-### Success Criteria Met
+### Success Criteria Me
 - ✅ **F1 Score Baseline**: All models meet or exceed 0.75 baseline
-- ✅ **Token Usage Baseline**: 7B models close to 7,500 token target
+- ✅ **Token Usage Baseline**: 7B models close to 7,500 token targe
 - ✅ **Latency Performance**: All tests complete in < 1ms average
 - ✅ **File Processing**: All 16 files processed successfully
 - ✅ **Metadata Extraction**: HTML comments extracted correctly
@@ -127,7 +127,7 @@ The benchmark processed 16 actual documentation files from the `100_memory/` dir
 ## Technical Implementation Validation
 
 ### Benchmark Script Performance
-- **Execution Time**: < 1ms per test
+- **Execution Time**: < 1ms per tes
 - **Memory Usage**: Efficient processing of 16 files
 - **Error Handling**: Robust error handling and logging
 - **Data Export**: JSON export working correctly

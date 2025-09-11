@@ -26,7 +26,7 @@
 - **Success Criteria**: ✅ Lessons extracted from runs, ✅ Applied to future configs, ✅ Quality gates enforced, ✅ Evolution tracked
 
 ### **B-1061: Memory System Integration: Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancement** 🆕 **NEW**
-- **Priority**: 🔥 **HIGH** - Essential for memory system optimization and knowledge graph enhancement
+- **Priority**: 🔥 **HIGH** - Essential for memory system optimization and knowledge graph enhancemen
 - **Points**: 5 - High complexity, strategic importance, system optimization
 - **Status**: 🆕 **NEW** - Ready for PRD creation and implementation planning
 - **Description**: Integrate heuristic extractor + multi-signal guard for LTST memory overflow compaction, knowledge graph fact normalization, and unified quality gates with academic provenance, preventing context budget explosions while maintaining RAGChecker baseline
@@ -60,7 +60,7 @@
 - **Key Components**:
   - **TaskEnvelope**: Pydantic contracts (kind, context_refs, input, expected) for agent uniformity
   - **Enhanced Agent Bus**: Event-driven communication with Postgres LISTEN/NOTIFY, hybrid async architecture (asyncio + Trio for structured concurrency, ProcessPoolExecutor for CPU-bound DSPy operations), task queuing with FastAPI coordination interface, polling fallback
-  - **ContextService**: Unified hydration across SQL, pgvector, KG by (gid, version, content_hash) with ChatGPT-style sliding window memory management
+  - **ContextService**: Unified hydration across SQL, pgvector, KG by (gid, version, content_hash) with ChatGPT-style sliding window memory managemen
   - **Background Scribe Agent**: Real-time conversation tracking, dynamic note-taking, automatic backlog item linking, thematic pattern detection
   - **ArtifactService**: Immutable agent outputs with metadata + provenance, content-hash deduplication
   - **EvalService**: RAGChecker integration, metrics logging, automatic repair triggers
@@ -140,7 +140,7 @@
 - **Integration Approach**: Builds on existing systems - enhances Scribe, improves AWS Bedrock integration, extends current retry config, adds simple monitoring to existing health checks
 - **Risk Mitigation**: Minimal changes to existing systems, focused scope, no architectural disruption, simple rollback procedures
 - **Avoids Over-Engineering**: No multi-tenant sharding, no CRDTs, no event sourcing, no circuit breakers, no enterprise complexity - focuses on actual solo developer needs
-- **Rationale**: Address real reliability problems (Scribe retries, hardware limits, AWS failures, monitoring gaps) with simple, practical solutions. Avoid enterprise distributed systems complexity that doesn't match solo developer workflow and local-first architecture.
+- **Rationale**: Address real reliability problems (Scribe retries, hardware limits, AWS failures, monitoring gaps) with simple, practical solutions. Avoid enterprise distributed systems complexity that doesn'tt match solo developer workflow and local-first architecture.
 
 ### **B-1064: Atlas Memory Architecture - Self-Healing Map of Maps** 🆕 **NEW**
 - **Priority**: 🔥 **HIGH** - Revolutionary memory system architecture with self-healing navigation
@@ -192,7 +192,7 @@
 - **Description**: Implement academic-grade quality gates and citation standards into research-implementation pipeline based on ReportBench transcript insights, ensuring all backlog items meet rigorous academic citation requirements before moving to implementation
 - **Scope**: Focused implementation for academic citation quality:
   - **Phase 1**: Citation standards framework and academic source validation
-  - **Phase 2**: RAGChecker gating integration and quality enforcement
+  - **Phase 2**: RAGChecker gating integration and quality enforcemen
   - **Phase 3**: Research pipeline enhancement with question-first approach
   - **Phase 4**: Documentation optimization and source quality tracking
 - **Key Components**:
@@ -207,7 +207,7 @@
 
 ### **B-1059: Retrieval Tuning Protocol & Evaluation Framework (Industry Recipe)** ✅ **COMPLETE**
 - **Priority**: ✅ **COMPLETED** - Production-ready RAG system with comprehensive tuning protocol
-- **Points**: 8 - High complexity, strategic importance, system-wide impact
+- **Points**: 8 - High complexity, strategic importance, system-wide impac
 - **Status**: ✅ **COMPLETE** - All phases implemented and tested
 - **Description**: ✅ **IMPLEMENTED** - Complete industry-grade RAG retrieval tuning protocol with systematic optimization, intent-aware routing, hybrid retrieval, quality gates, comprehensive testing, governance automation, and operational runbooks
 - **Scope**: ✅ **DELIVERED** - Full implementation including:
@@ -253,7 +253,7 @@
 
   - **Backend Enhancements (effective vs. current)**:
     - Identity: accept `user_id`, optional `token`, and `room` on WS query; echo in message envelope; maintain per-connection maps.
-    - Persistence: append messages to durable store (reuse `dspy-rag-system/src/utils/conversation_storage.py` or a lightweight SQLite). Add `/messages?since=cursor&agent=…&room=…`.
+    - Persistence: append messages to durable store (reuse `src/utils/conversation_storage.py` or a lightweight SQLite). Add `/messages?since=cursor&agent=…&room=…`.
     - LTST wiring: on inbound user messages, write-through to LTST; on agent send, fetch recent context via `src/retrieval/memory_integration.py` and attach to agent prompts/metadata.
     - Routing/controls: keep broadcast default; support explicit `target_agents` and `@mentions`; add simple per-connection rate limit and denylist for noisy types.
     - Health and tests: add pytest smoke for `/health`, `/send-message` ➜ `/messages`, and WS echo; basic load test for 100 msgs.
@@ -431,7 +431,7 @@ and normalize spacing across long-form guides.
 2. **Phase 2 - Role System Alignment**: ✅ **COMPLETED** - Create seamless integration between Cursor roles and memory infrastructure
 3. **Phase 3 - Implementation Pattern Library**: ✅ **COMPLETED** - Build comprehensive library of technical implementation patterns
 4. **Phase 4 - Evidence-Based Optimization**: ✅ **COMPLETED** - Use research methodologies for continuous improvement
-5. **Phase 5 - Stable Baseline Evaluations**: ✅ **COMPLETED** - Create fixed baseline evaluation framework for reliable progress measurement
+5. **Phase 5 - Stable Baseline Evaluations**: ✅ **COMPLETED** - Create fixed baseline evaluation framework for reliable progress measuremen
 
 **Success Metrics**:
 - RAGChecker Score: Achieve 90+ RAGChecker with technical integration
@@ -441,7 +441,7 @@ and normalize spacing across long-form guides.
 
 - **B-1058: End-to-End System Audit & Industry Standards Compliance** (score 9.5) 🔥 **CRITICAL**
   - **Priority**: 🔥 **HIGHEST** - Essential for system reliability and industry compliance
-  - **Points**: 9 - Maximum complexity, strategic importance, system-wide impact
+  - **Points**: 9 - Maximum complexity, strategic importance, system-wide impac
   - **Status**: 🔴 **CRITICAL - IMMEDIATE ACTION REQUIRED**
   - **Description**: Conduct comprehensive end-to-end audit of entire memory system, pipelines, and infrastructure to ensure industry standards compliance and identify all database connection, configuration, and architectural issues
   - **Scope**: Complete system audit including memory system, pipelines, database connections, configuration management, testing infrastructure, monitoring, and documentation
@@ -617,7 +617,7 @@ and normalize spacing across long-form guides.
 - Add API key authentication for security
 - Create iOS Shortcuts or Telegram bot for mobile interface
 - Integrate with existing DSPy agents and memory rehydration system
-- Maintain local-first architecture with remote access as enhancement
+- Maintain local-first architecture with remote access as enhancemen
 
 **Success Metrics**:
 - Secure remote access to laptop agents from phone
@@ -751,7 +751,7 @@ and normalize spacing across long-form guides.
 <!-- est_hours: 8 -->
 <!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
 <!-- lessons_applied: ["400_guides/400_development-workflow.md#performance-optimization", "400_guides/400_development-workflow.md#quality-standards"] -->
-<!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
+<!-- reference_cards: ["scripts/performance_optimization.py", "src/monitoring/metrics.py"] -->
 <!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
 <!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
 <!-- outcome: Canonical code review process with integrated performance monitoring and automated testing suite -->
@@ -766,7 +766,7 @@ and normalize spacing across long-form guides.
 <!-- est_hours: 8 -->
 <!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
 <!-- lessons_applied: ["400_guides/400_development-workflow.md#performance-optimization", "400_guides/400_development-workflow.md#quality-standards"] -->
-<!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
+<!-- reference_cards: ["scripts/performance_optimization.py", "src/monitoring/metrics.py"] -->
 <!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
 <!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
 <!-- outcome: Canonical code review process with integrated performance monitoring and automated testing suite -->
@@ -817,7 +817,7 @@ PHASE 2 — Workflow Integration (2 hours)
 PHASE 3 — Virtual Environment Automation (1.5 hours)
 1) Configure UV to create virtual environments in project directory
 2) Test automatic virtual environment creation
-3) Update development workflow to use UV venv management
+3) Update development workflow to use UV venv managemen
 4) Test virtual environment automation
 
 PHASE 4 — Backward Compatibility & Documentation (1 hour)
@@ -1186,7 +1186,7 @@ Security: VM‑safe mode available (no host control required); approval gate doc
     - Speaker Adaptation: < 200ms identification + adaptation
     - VibeVoice TTS: ≤ 600ms for 200‑400 chars (alternative option)
     - Moderator collect: ≤ 2200ms deadline; ≤ 2 speakers returned; cancel stragglers
-    - CPU/memory steady within local M‑series budget; no GPU hard requirement
+    - CPU/memory steady within local M‑series budget; no GPU hard requiremen
 
   - Security & privacy
     - Default VM‑only; host actions disabled
@@ -1268,14 +1268,14 @@ Security: VM‑safe mode available (no host control required); approval gate doc
 <!-- problem: README context documentation was manual, inconsistent, and prone to bloat without systematic management or automation -->
 <!-- outcome: Production-ready automated README context management system with smart documentation, bloat prevention, tiered strategy, and comprehensive automation through hooks and maintenance scripts -->
 
-- B‑1032 — Documentation t-t3 Authority Structure Implementation: Tiered Documentation Governance with Automated Lifecycle Management
+- B‑1032 — Documentation t-t3 Authority Structure Implementation: Tiered Documentation Governance with Automated Lifecycle Managemen
 
 **Status**: ✅ COMPLETED
 **Priority**: 🔥 Must Have
 **Type**: System Architecture
 **Created**: 2024-12-19
 **Completed**: 2024-12-19
-**Assigned**: AI Agent
+**Assigned**: AI Agen
 **Dependencies**: None
 **Estimated Effort**: 2-3 weeks
 **Actual Effort**: 2 weeks
@@ -1287,7 +1287,7 @@ Transform the bloated `400_guides` documentation into an intelligent, tiered aut
 **Key Features**:
 - **t-t3 Structure**: Tier 1 (Critical), Tier 2 (High), Tier 3 (Supporting) documentation classification
 - **Authority Mapping**: 5-level authority system with role-based access control
-- **Lifecycle Management**: Automated rules, triggers, and workflow management
+- **Lifecycle Management**: Automated rules, triggers, and workflow managemen
 - **AI-Powered Consolidation**: Intelligent content analysis and consolidation
 - **Incremental Migration**: Safe, step-by-step migration with rollback capabilities
 - **Performance Optimization**: Parallel processing, caching, and streaming
@@ -1296,7 +1296,7 @@ Transform the bloated `400_guides` documentation into an intelligent, tiered aut
 
 **Implementation Phases**:
 1. **Analysis & Validation** (3 tasks) ✅ - Usage analysis, validation system, baseline metrics
-2. **Authority Structure** (3 tasks) ✅ - t-t3 design, authority definition, lifecycle management
+2. **Authority Structure** (3 tasks) ✅ - t-t3 design, authority definition, lifecycle managemen
 3. **Consolidation & Quality** (3 tasks) ✅ - AI consolidation, workflow engine, quality assurance
 4. **Migration & Integration** (3 tasks) ✅ - Incremental migration, workflow integration, performance optimization
 5. **Deployment & Monitoring** (4 tasks) ✅ - Deployment strategy, monitoring, reporting, training
@@ -1308,7 +1308,7 @@ Transform the bloated `400_guides` documentation into an intelligent, tiered aut
 **Files Created**:
 - `scripts/documentation_usage_analyzer.py` - Usage analysis system
 - `scripts/implement_validation_system.py` - Validation system implementation
-- `scripts/establish_baseline_metrics.py` - Baseline metrics establishment
+- `scripts/establish_baseline_metrics.py` - Baseline metrics establishmen
 - `scripts/t_t3_structure_design.py` - t-t3 structure design and implementation
 - `scripts/authority_definition_role_pinning.py` - Authority definition and role pinning
 - `scripts/lifecycle_management_rules_triggers.py` - Lifecycle management rules and triggers
@@ -1460,7 +1460,7 @@ PHASE 0 — Flags & Contracts (0.5h)
 1) Add FEATURE_PREFERENCE_LOOP env flag (default: off). Document JSON contracts for assumptions, corrections, distances.
 
 PHASE 1 — Module Scaffold (1.5h)
-2) Create dspy-rag-system/src/learning_loop/ with: assumptions.py, feedback.py, bandit.py, profile.py, logger.py, facade.py.
+2) Create src/learning_loop/ with: assumptions.py, feedback.py, bandit.py, profile.py, logger.py, facade.py.
 3) Facade API:
    class LearningLoop(user_id: str)
    - propose(user_text: str, context: dict) -> {answer, assumptions, confidences, evidence, questions, policy_id}
@@ -1598,9 +1598,9 @@ PHASE 6 — AI-Driven Intelligence & Optimization (3-4 days)
 24) Enable continuous learning and self-optimization
 
 PHASE 7 — AI Optimization Validation & Final Performance (1-2 days)
-25) Validate 75-90% total performance improvement target
+25) Validate 75-90% total performance improvement targe
 26) Test all AI optimization features effectiveness
-27) Generate comprehensive performance report
+27) Generate comprehensive performance repor
 28) Document AI-driven improvements and optimization strategies
 
 PHASE 8 — Reflective Memory System Evolution (2-3 days)
@@ -1622,9 +1622,9 @@ PHASE 10 — Inference-Time Memory Optimization (2-3 days)
 40) Integrate continuous learning from every interaction
 
 PHASE 11 — Final Self-Evolving System Validation (1-2 days)
-41) Validate 90-95% total performance improvement target
+41) Validate 90-95% total performance improvement targe
 42) Test all self-evolving features effectiveness
-43) Generate comprehensive self-evolution report
+43) Generate comprehensive self-evolution repor
 44) Document revolutionary self-evolving memory system capabilities
 
 ROLLBACK
@@ -1944,7 +1944,7 @@ MVP-first: Optional complexity (co-sign, entity-overlap) only if Failure@20 > 0.
 <!-- implementation_plan:
 1. JSON SCHEMA DEFINITION (schemas/backlog_schema.json):
    - Define comprehensive JSON schema with MoSCoW prioritization fields
-   - Required fields: id, title, status, moscow_priority, score, deps, tags, created_at, updated_at
+   - Required fields: id, title, status, moscow_priority, score, deps, tags, created_at, updated_a
    - MoSCoW fields: must, should, could, won't with visual indicators (🔥, 🎯, ⚡, ⏸️)
    - Metadata fields: lessons_applied, reference_cards, tech_footprint, problem, outcome
    - Validation rules: score_total calculation, dependency validation, status transitions
@@ -2019,7 +2019,7 @@ MVP-first: Optional complexity (co-sign, entity-overlap) only if Failure@20 > 0.
    - Branch naming: feature/B-<id>-<slug> (e.g., feature/B-1025-lean-hybrid-memory)
    - Commit message (conventional): type(scope): short summary B-<id>
    - Example: feat(backlog): add HybridRetriever + reranker scaffolding B-1025
-   - Grouping rule: one logical change per commit mapped to a single backlog ID; do not mix IDs in the same commit
+   - Grouping rule: one logical change per commit mapped to a single backlog ID; do not mix IDs in the same commi
    - PR title: B-<id>: concise title; PR body links to backlog item and PRD path; include acceptance gates and flags touched
    - Traceability: maintain links both ways (backlog ↔ PR ↔ PRD); record final acceptance in backlog implementation_notes
    - Rollback: each PR must specify flags toggled and a one-line revert plan
@@ -2029,7 +2029,7 @@ MVP-first: Optional complexity (co-sign, entity-overlap) only if Failure@20 > 0.
 
 TECHNICAL CONSTRAINTS:
 - Zero breaking changes to existing workflow (001-003 chain)
-- Maintain backward compatibility with current markdown format
+- Maintain backward compatibility with current markdown forma
 - Use existing infrastructure: NiceGUI, Scribe, LTST memory
 - Local-first approach with no external dependencies
 - Governance-friendly: version-controlled JSON, human-readable markdown
@@ -2126,21 +2126,21 @@ QUALITY GATES:
 <!-- problem: Current NiceGUI dashboard lacks database schema visualization capabilities, requiring external tools for schema understanding, and missing integration with existing GraphDataProvider patterns and role-based context system -->
 <!-- outcome: Integrated schema visualization within existing NiceGUI dashboard using unified GraphDataProvider API, on-demand Mermaid ERD generation via Scribe, and role-based context integration for enhanced development workflow -->
 <!-- implementation_plan:
-1. GRAPHDATAPROVIDER EXTENSION (dspy-rag-system/src/utils/graph_data_provider.py):
+1. GRAPHDATAPROVIDER EXTENSION (src/utils/graph_data_provider.py):
    - Add get_schema_graph_data(max_nodes=None) method returning V1 contract: {"nodes": [...], "edges": [...], "elapsed_ms": int, "v": 1, "truncated": bool}
    - Add _fetch_schema_metadata() method using DatabaseResilienceManager for PostgreSQL introspection
    - SQL queries: information_schema.tables for table names, information_schema.table_constraints + key_column_usage + constraint_column_usage for foreign keys
    - Error handling: graceful degradation with empty results on database errors
    - Return format: nodes=[{"id": table, "label": table, "category": "table"}], edges=[{"source": src, "target": tgt, "type": "fk", "weight": 1.0}]
 
-2. FLASK ENDPOINT EXTENSION (dspy-rag-system/src/dashboard.py):
+2. FLASK ENDPOINT EXTENSION (src/dashboard.py):
    - Extend /graph-data endpoint with graph=schema parameter
    - Add SCHEMA_VIZ_ENABLED environment flag (default: true)
    - Route logic: if graph_mode == "schema": return gdp.get_schema_graph_data(max_nodes)
    - Maintain existing chunk/entity behavior for backward compatibility
    - Error handling: return 403 if schema visualization disabled
 
-3. NICEGUI DASHBOARD INTEGRATION (dspy-rag-system/src/nicegui_graph_view.py):
+3. NICEGUI DASHBOARD INTEGRATION (src/nicegui_graph_view.py):
    - Add toggle: ui.toggle(['RAG Graph', 'Schema Graph'], value='RAG Graph')
    - Add max_nodes input: ui.input(label='Max nodes', value='1000').props('type=number dense')
    - Add load button: ui.button('Load', on_click=lambda: ui.run_async(load_graph()))
@@ -2204,7 +2204,7 @@ PERFORMANCE TARGETS:
 <!-- problem: Current system lacks text analysis and knowledge discovery capabilities, missing ability to analyze documents for concept relationships, detect structural gaps, generate bridge insights, and perform market study analysis for research enhancement -->
 <!-- outcome: Comprehensive text analysis and knowledge discovery system that enhances cognitive scaffolding through co-occurrence analysis, gap detection, bridge generation, and market study features, integrated with existing visualization and AI infrastructure, optimized for performance and future system integration, with measurable improvements in baseline RAGChecker evaluation metrics -->
 <!-- implementation_plan:
-1. TEXT-TO-CO-OCCURRENCE GRAPH ADAPTER (dspy-rag-system/src/utils/text_cooc_adapter.py):
+1. TEXT-TO-CO-OCCURRENCE GRAPH ADAPTER (src/utils/text_cooc_adapter.py):
    - build_graph(text: str, window=4, min_freq=2) -> GraphData method
    - Tokenization: nltk.word_tokenize with stopword removal and optional lemmatization
    - Co-occurrence analysis: sliding window (3-5 words) with edge weight calculation
@@ -2212,35 +2212,35 @@ PERFORMANCE TARGETS:
    - Edge metadata: {"weight": float, "co_occurrence_count": int}
    - Return format: same V1 contract as existing GraphDataProvider (nodes, edges, elapsed_ms, v, truncated)
 
-2. GRAPH METRICS COMPUTATION (dspy-rag-system/src/utils/graph_metrics.py):
+2. GRAPH METRICS COMPUTATION (src/utils/graph_metrics.py):
    - betweenness_centrality(nodes, edges) -> {node_id: {"bc": float}}
    - community_labels(nodes, edges) -> {node_id: {"community": int}} using Louvain algorithm
    - influence_ranking(nodes, edges) -> sorted list of high-influence nodes
    - Integration with existing UMAP layout for 2D coordinates
    - Performance: <2s for 10k word documents
 
-3. GAP DETECTION SYSTEM (dspy-rag-system/src/utils/gap_detector.py):
-   - find_structural_gaps(nodes, edges, communities) -> gap_candidates list
+3. GAP DETECTION SYSTEM (src/utils/gap_detector.py):
+   - find_structural_gaps(nodes, edges, communities) -> gap_candidates lis
    - Gap scoring: (few edges between clusters, high centrality near boundary)
    - Return format: [(cluster_a, cluster_b, score, exemplar_terms, suggested_bridge)]
    - Integration with entity-aware memory rehydration for context
-   - Top N gaps exposed via /graph-gaps?source=text_cooc endpoint
+   - Top N gaps exposed via /graph-gaps?source=text_cooc endpoin
 
-4. BRIDGE GENERATION WITH DSPy (dspy-rag-system/src/dspy_modules/bridge_generator.py):
+4. BRIDGE GENERATION WITH DSPy (src/dspy_modules/bridge_generator.py):
    - BridgeQuestionGenerator: DSPy module for gap-to-question conversion
    - BridgeIdeaGenerator: DSPy module for gap-to-idea conversion
    - Integration with existing Reasoning Task pattern
    - Entity-aware prompts using LTST memory context
    - Output: structured questions/ideas saved to notes system
 
-5. GRAPHDATAPROVIDER EXTENSION (dspy-rag-system/src/utils/graph_data_provider.py):
+5. GRAPHDATAPROVIDER EXTENSION (src/utils/graph_data_provider.py):
    - Add get_text_cooc_graph_data(text_id: str, max_nodes: int = None) method
    - Add get_market_study_graph_data(term: str, study_type: "demand"|"supply") method
    - Maintain V1 API contract compatibility
    - Cache text analysis results in artifacts/text_analysis/
    - Error handling: graceful degradation for text processing failures
 
-6. NICEGUI VISUALIZATION ENHANCEMENTS (dspy-rag-system/src/nicegui_graph_view.py):
+6. NICEGUI VISUALIZATION ENHANCEMENTS (src/nicegui_graph_view.py):
    - Add "Text Analysis" tab alongside existing RAG/Schema tabs
    - Multi-select node hiding: ui.checkbox_group for node selection + "Hide Selected" button
    - "Show Latent Topics" button: auto-hide top N frequency nodes and recompute metrics
@@ -2248,9 +2248,9 @@ PERFORMANCE TARGETS:
    - Bridge suggestions: side panel showing AI-generated bridge questions/ideas
    - Cytoscape integration: node[category="stop"] gets different styling for easy hiding
 
-7. MARKET STUDY FEATURES (dspy-rag-system/src/utils/market_study.py):
-   - related_queries(focus_term: str, locale: str = "en-US") -> query_list
-   - search_results(focus_term: str, locale: str = "en-US", k: int = 40) -> result_list
+7. MARKET STUDY FEATURES (src/utils/market_study.py):
+   - related_queries(focus_term: str, locale: str = "en-US") -> query_lis
+   - search_results(focus_term: str, locale: str = "en-US", k: int = 40) -> result_lis
    - Configurable API keys for local-first approach
    - Cache results in artifacts/market_study/ with TTL
    - Supply vs. Demand comparison: highlight terms present in demand but missing in supply
@@ -2496,7 +2496,7 @@ This backlog is the **executable roadmap** for the AI development ecosystem. Eac
 ### **Key Lessons Learned**
 1. **Security First**: All AI systems need comprehensive security validation
 2. **Modular Design**: Smaller, focused files improve AI comprehension
-3. **Automation Reduces Friction**: Automated workflows enable systematic development
+3. **Automation Reduces Friction**: Automated workflows enable systematic developmen
 4. **Real-time Monitoring**: Essential for AI development ecosystem visibility
 5. **Constitutional Approach**: Prevents context loss and ensures safety
 
@@ -2599,10 +2599,10 @@ relevant context on-demand | PGVector + DSPy + retrieval | B-031 Vector Database
 testing, and integration guide-->
 <!--completion_date: 2024-08-07-->
 <!--implementation_notes: Implemented scripts/documentation_indexer.py for automatic documentation scanning and
-indexing, dspy-rag-system/src/dspy_modules/documentation_retrieval.py for RAG-based context provision,
+indexing, src/dspy_modules/documentation_retrieval.py for RAG-based context provision,
 scripts/documentation_retrieval_cli.py for easy command-line access, tests/test_documentation_retrieval.py for
 comprehensive testing, and 400_guides/400_documentation-retrieval-guide.md for complete usage guide. System provides
-relevant
+relevan
 context on-demand to solve context overload, with confidence scoring, category filtering, and multi-source synthesis.-->
 | B‑073 | Giant Guide File Splitting | 📈 | 8 | ✅ done | Split 1,400+ line guide files into focused 200-300 line modules
 | File organization + content analysis | B-071 Memory Context File Splitting |
@@ -2847,7 +2847,7 @@ project and development standards | Code Standards + Contribution Process + Revi
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:1, deps:["B-070"]}-->
 <!--score_total: 6.0-->
 <!--progress: Complete implementation with comprehensive development standards, code guidelines, contribution process,
-review guidelines, documentation standards, testing standards, security standards, performance standards, deployment
+review guidelines, documentation standards, testing standards, security standards, performance standards, deploymen
 standards, and quality assurance-->
 | B‑072 | Migration & Upgrade Procedures Guide | 🔧 | 1 | ✅ done | Create documentation on system migrations and upgrades
 | Upgrade Procedures + Migration Strategies + Rollback Procedures | B-071 Contributing Guidelines |
@@ -2862,7 +2862,7 @@ System |
 <!--score: {bv:5, tc:3, rr:4, le:4, effort:1, deps:["B-060"]}-->
 <!--score_total: 6.7-->
 <!--progress: Complete implementation with comprehensive few-shot examples for documentation coherence, backlog
-analysis, memory context, code generation, error recovery, integration patterns, testing strategies, deployment
+analysis, memory context, code generation, error recovery, integration patterns, testing strategies, deploymen
 examples, and best practices-->
 
 | B‑074 | Few-Shot Integration with Documentation Tools | 🔧 | 0.5 | ✅ done | Integrate few-shot examples into doc-lint and
@@ -2918,7 +2918,7 @@ documentation | Schema Design + Validation Rules + Span Tracking | B-078 LangExt
 <!-- PRD: PRD-B-1016-RL-Enhanced-DSPy-Model-Selection.md -->
 <!-- implementation_context:
 Current Tech Stack: Python 3.12, PyTorch 2.8.0 (MPS enabled), DSPy Multi-Agent System
-Repository Layout: dspy-rag-system/src/dspy_modules/model_switcher.py (enhance existing)
+Repository Layout: src/dspy_modules/model_switcher.py (enhance existing)
 Development Patterns: Add RL module → Environment → Agent → Tests → Integration
 Local Development: poetry install, pytest, black, ruff, mypy
 Quality Gates: All existing DSPy tests pass, RL agent training converges, performance monitoring provides insights
@@ -2977,7 +2977,7 @@ Evaluation Strategy: Before implementation baseline evaluation, after implementa
 <!-- PRD: PRD-B-1022-Graph-Neural-Networks-Adaptive-Memory-Graphs.md -->
 <!-- implementation_context:
 Current Tech Stack: Python 3.12, PyTorch 2.8.0, NetworkX, Entity Extraction, Dependency Analysis, Graph Visualization
-Repository Layout: dspy-rag-system/src/utils/ (enhance existing graph infrastructure)
+Repository Layout: src/utils/ (enhance existing graph infrastructure)
 Development Patterns: Add GNN module → Graph learning → Adaptive structures → Multi-hop reasoning → Integration
 Local Development: poetry install, pytest, black, ruff, mypy
 Quality Gates: All existing graph tests pass, GNN training converges, adaptive learning provides insights
@@ -3077,7 +3077,7 @@ Documentation review + reference updates | File naming convention migration |
 ### **Advanced Agent Specialization (Q1 2025)**
 - **B-034**: Deep Research Agent Integration
 - **B-035**: Coder Agent Specialization ✅ PRD Complete
-- **B-036**: General Query Agent Enhancement
+- **B-036**: General Query Agent Enhancemen
 
 ### **System Integration & Optimization (Q2 2025)**
 - **B-037**: External Model Integration (Future)
@@ -3085,9 +3085,9 @@ Documentation review + reference updates | File naming convention migration |
 
 ### **Performance & Scaling (Q3 2025)**
 - **B-039**: Performance Optimization Suite
-- **B-040**: Advanced Caching & Memory Management
+- **B-040**: Advanced Caching & Memory Managemen
 
-## 📚 Research & Development
+## 📚 Research & Developmen
 
 ### **Current Research Focus**
 - **DSPy Integration**: Advanced reasoning and validation
@@ -3241,7 +3241,7 @@ CREATE TABLE IF NOT EXISTS conv_prune_log (
 **Risk Mitigation:**
 - Start with simple research tasks and gradually increase complexity
 - Maintain fallback to Cursor AI for critical research tasks
-- Extensive testing of local model integration before full deployment
+- Extensive testing of local model integration before full deploymen
 - Performance monitoring and alerting for research agent operations
 - Gradual rollout with feature flags and rollback capabilities
 

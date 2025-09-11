@@ -14,7 +14,7 @@ Simple migration from DSPy 2.6.27 to DSPy 3.0.1. Replace custom assertion framew
 **Do:**
 1. Update `requirements.txt` to pin DSPy 3.0.1
 2. Update `requirements-constraints.txt` if needed
-3. Test installation in virtual environment
+3. Test installation in virtual environmen
 
 **Done when:**
 - [ ] DSPy 3.0.1 successfully installed
@@ -44,7 +44,7 @@ Simple migration from DSPy 2.6.27 to DSPy 3.0.1. Replace custom assertion framew
 
 **Do:**
 1. Identify where native `dspy.Assert` can replace custom assertions
-2. Replace simple cases first
+2. Replace simple cases firs
 3. Test to ensure functionality preserved
 4. Keep custom framework for complex cases
 

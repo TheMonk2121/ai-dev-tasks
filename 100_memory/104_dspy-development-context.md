@@ -11,7 +11,7 @@
 |---|---|---|
 | Technical implementation guide for DSPy development | When implementing DSPy modules, debugging AI agents, or extending the system | Review implementation patterns, check current capabilities, then implement |
 
-- **Purpose**: Technical implementation guide for DSPy development
+- **Purpose**: Technical implementation guide for DSPy developmen
 - **Read after**: `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` →
 `400_guides/400_system-overview.md`
 - **Key**: modules, implementation patterns, integration, optimization, development workflows
@@ -23,10 +23,10 @@
 <!-- ANCHOR: quick-start -->
 {#quick-start}
 
-## ⚡ Quick Start
+## ⚡ Quick Star
 
-- Run dashboard: `python3 dspy-rag-system/src/dashboard.py`
-- Ask questions: Use the web dashboard or run `python3 dspy-rag-system/src/dashboard.py`
+- Run dashboard: `python3 src/dashboard.py`
+- Ask questions: Use the web dashboard or run `python3 src/dashboard.py`
 - Run tests: `./dspy-rag-system/run_tests.sh`
 
 ### AI Development Ecosystem Context
@@ -37,7 +37,7 @@ task processing, and intelligent error recovery to make AI-assisted development 
 
 **Key Components:**
 
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
+- **Planning Layer**: PRD Creation, Task Generation, Process Managemen
 - **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
@@ -122,7 +122,7 @@ High-level summary of DSPy's role in the ecosystem and current capabilities.
 
 ```python
 # In any script that imports DSPy modules
-from scripts.venv_manager import ensure_venv_for_script
+from scripts.venv_manager import ensure_venv_for_scrip
 
 # Ensure venv is active before any DSPy imports
 if not ensure_venv_for_script():
@@ -145,7 +145,7 @@ from dspy_modules.model_switcher import ModelSwitcher
 # Check venv status
 python3 scripts/venv_manager.py --check
 
-# Run DSPy workflows with automatic venv management
+# Run DSPy workflows with automatic venv managemen
 python3 scripts/run_workflow.py generate "DSPy optimization feature"
 ```
 
@@ -224,7 +224,7 @@ class MyOptimizedModule(Module):
 ```python
 from dspy_modules.role_refinement import RoleRefinementSystem, RoleType, RoleDefinition
 
-# Initialize role refinement
+# Initialize role refinemen
 role_refinement = RoleRefinementSystem()
 
 # Refine a role for solo developer context
@@ -387,7 +387,7 @@ except Exception as e:
 # Use cached results when possible
 cached_result = get_cached_optimization(program_hash)
 if cached_result:
-    return cached_result
+    return cached_resul
 ```
 
 ## 📚 Quick Reference
@@ -458,7 +458,7 @@ if cached_result:
 
 3. **Community and Ecosystem**
    - Open source contributions
-   - Plugin ecosystem development
+   - Plugin ecosystem developmen
    - Documentation and tutorials
 
 ## 🔗 **Related Documentation**
@@ -471,13 +471,13 @@ if cached_result:
 ## 🔗 **Implementation Files**
 
 ### **Core DSPy Modules**
-- `dspy-rag-system/src/dspy_modules/model_switcher.py` - Model switching and optimization
-- `dspy-rag-system/src/dspy_modules/optimizers.py` - LabeledFewShot optimizer
-- `dspy-rag-system/src/dspy_modules/assertions.py` - Assertion framework
-- `dspy-rag-system/src/dspy_modules/optimization_loop.py` - Four-part loop
-- `dspy-rag-system/src/dspy_modules/metrics_dashboard.py` - Metrics dashboard
-- `dspy-rag-system/src/dspy_modules/system_integration.py` - System integration
-- `dspy-rag-system/src/dspy_modules/role_refinement.py` - Role refinement
+- `src/dspy_modules/model_switcher.py` - Model switching and optimization
+- `src/dspy_modules/optimizers.py` - LabeledFewShot optimizer
+- `src/dspy_modules/assertions.py` - Assertion framework
+- `src/dspy_modules/optimization_loop.py` - Four-part loop
+- `src/dspy_modules/metrics_dashboard.py` - Metrics dashboard
+- `src/dspy_modules/system_integration.py` - System integration
+- `src/dspy_modules/role_refinement.py` - Role refinemen
 
 ### **Test Suite**
 - `dspy-rag-system/tests/test_*.py` - Comprehensive test coverage

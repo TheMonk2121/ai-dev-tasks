@@ -25,7 +25,7 @@ We need flags, hooks, instrumentation, and an eval seed to enable hybrid retriev
 - No heavy schema; no regressions with flags off
 
 ## 4. Technical Approach
-- Update `dspy-rag-system/src/utils/memory_rehydrator.py` to add hook call sites
+- Update `src/utils/memory_rehydrator.py` to add hook call sites
 - Add flags via env and read in rehydrator/model_switcher
 - Create eval seed file and simple harness shell
 - Ensure indexing remains exact vector + FTS only

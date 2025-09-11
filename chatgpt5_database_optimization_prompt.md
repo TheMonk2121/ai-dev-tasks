@@ -130,8 +130,8 @@ class OfficialRAGCheckerEvaluator:
 postgresql://danieljacobs@localhost:5432/ai_agency
 
 # WHAT'S BROKEN ❌ (Found in 15+ files)
-postgresql://localhost/dspy_rag              # Database doesn't exist
-postgresql://localhost/dspy_rag_system       # Database doesn't exist
+postgresql://localhost/dspy_rag              # Database doesn'tt exist
+postgresql://localhost/dspy_rag_system       # Database doesn'tt exist
 ai_user:ai_password@localhost:5432/ai_agency # Wrong credentials
 ```
 

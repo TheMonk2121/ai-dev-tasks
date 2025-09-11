@@ -94,7 +94,7 @@
 - `--model`: Test specific model type
 - `--structure`: Test specific structure
 - `--cross-validation`: Run cross-model validation
-- `--model-report`: Generate detailed model report
+- `--model-report`: Generate detailed model repor
 - `--full-benchmark`: Complete benchmark across all models
 - `--output`: Specify output filename
 
@@ -158,16 +158,16 @@ class BenchmarkResult:
 @dataclass
 class ModelSpecificMetrics:
     model_type: str
-    context_window: int
-    avg_accuracy: float
-    avg_input_tokens: int
-    avg_latency: float
-    context_efficiency: float
+    context_window: in
+    avg_accuracy: floa
+    avg_input_tokens: in
+    avg_latency: floa
+    context_efficiency: floa
     token_breakdown: Dict[str, int]
     context_utilization: Dict[str, float]
-    performance_consistency: float
-    model_availability_rate: float
-    test_count: int
+    performance_consistency: floa
+    model_availability_rate: floa
+    test_count: in
 ```
 
 ### Key Methods Implementation

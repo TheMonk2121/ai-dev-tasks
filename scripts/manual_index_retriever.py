@@ -6,6 +6,7 @@ import hashlib
 import os
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -80,13 +81,28 @@ def index_file(file_path, dsn):
                     (filename, file_path_str, file_type, file_size, len(chunks), "indexed", content_sha),
                 )
 
-                result = cur.fetchone()
-                if result:
-                    document_id = result["id"]
+                result_raw = cur.fetchone()
+                document_id: int
+                if result_raw is not None:
+                    row_dict = cast(dict[str, Any], result_raw)
+                    if "id" in row_dict:
+                        document_id = int(row_dict["id"])  # RealDictCursor returns a dict-like row
+                    else:
+                        # Get existing document ID
+                        cur.execute("SELECT id FROM documents WHERE content_sha = %s", (content_sha,))
+                        row2_raw = cur.fetchone()
+                        if row2_raw is None:
+                            raise RuntimeError("Failed to retrieve document id after insert/select")
+                        row2 = cast(dict[str, Any], row2_raw)
+                        document_id = int(row2["id"])  # type: ignore[reportUnknownArgumentType]
                 else:
                     # Get existing document ID
                     cur.execute("SELECT id FROM documents WHERE content_sha = %s", (content_sha,))
-                    document_id = cur.fetchone()["id"]
+                    row3_raw = cur.fetchone()
+                    if row3_raw is None:
+                        raise RuntimeError("Failed to retrieve document id after insert/select")
+                    row3 = cast(dict[str, Any], row3_raw)
+                    document_id = int(row3["id"])  # type: ignore[reportUnknownArgumentType]
 
                 # Insert chunks
                 for i, chunk in enumerate(chunks):
@@ -126,7 +142,7 @@ def index_file(file_path, dsn):
 
 def main():
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-    retriever_dir = Path("dspy-rag-system/src/dspy_modules/retriever")
+    retriever_dir = Path("src/dspy_modules/retriever")
 
     if not retriever_dir.exists():
         print(f"❌ Directory {retriever_dir} does not exist")

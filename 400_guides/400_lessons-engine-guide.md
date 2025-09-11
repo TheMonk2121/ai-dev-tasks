@@ -59,7 +59,7 @@ python3 scripts/lessons_loader.py <base_env> <lessons_jsonl> [--mode advisory|ap
 ```
 
 **Modes**:
-- `advisory`: Generate candidate config and decision docket
+- `advisory`: Generate candidate config and decision docke
 - `apply`: Apply lessons directly (with quality gate enforcement)
 
 ### 3. Evolution Tracker (`scripts/evolution_tracker.py`)
@@ -78,14 +78,14 @@ python3 scripts/evolution_tracker.py
 
 **Outputs**:
 - `configs/EVOLUTION.json`: Structured evolution data
-- `configs/EVOLUTION.md`: Human-readable evolution report
+- `configs/EVOLUTION.md`: Human-readable evolution repor
 
 ### 4. Quality Checker (`scripts/lessons_quality_check.py`)
 
 **Purpose**: Validates system integrity and completeness
 
 **Key Functions**:
-- `check_lessons_file()`: Validates lessons JSONL format
+- `check_lessons_file()`: Validates lessons JSONL forma
 - `check_config_metadata()`: Ensures metadata completeness
 - `check_derived_configs()`: Validates generated configurations
 - `check_quality_gates()`: Verifies quality gate configuration
@@ -102,9 +102,9 @@ python3 scripts/lessons_quality_check.py
 The lessons engine is integrated into `ragchecker_official_evaluation.py` with new arguments:
 
 ```bash
-python3 scripts/ragchecker_official_evaluation.py \
-  --lessons-mode {off,advisory,apply} \
-  --lessons-scope {auto,dataset,profile,global} \
+python3 scripts/ragchecker_official_evaluation.py
+  --lessons-mode {off,advisory,apply}
+  --lessons-scope {auto,dataset,profile,global}
   --lessons-window N
 ```
 
@@ -120,7 +120,7 @@ Before evaluation:
 
 After evaluation:
 1. Extracts lessons from results
-2. Stores lessons in JSONL format
+2. Stores lessons in JSONL forma
 3. Updates evolution tracking
 4. Persists metadata in results
 
@@ -179,7 +179,7 @@ configs/
 ├── *.env                      # Base configurations
 ├── *.meta.yml                 # Configuration metadata
 ├── EVOLUTION.json             # Evolution tracking data
-├── EVOLUTION.md               # Evolution report
+├── EVOLUTION.md               # Evolution repor
 └── ragchecker_quality_gates.json  # Quality thresholds
 ```
 
@@ -303,9 +303,9 @@ jq '.run_config.lessons' "$LATEST_RESULTS"
 
 ```bash
 # Run evaluation with lessons engine in advisory mode
-python3 scripts/ragchecker_official_evaluation.py \
-  --lessons-mode advisory \
-  --lessons-scope profile \
+python3 scripts/ragchecker_official_evaluation.py
+  --lessons-mode advisory
+  --lessons-scope profile
   --lessons-window 5
 ```
 
@@ -313,9 +313,9 @@ python3 scripts/ragchecker_official_evaluation.py \
 
 ```bash
 # Run evaluation with lessons engine in apply mode
-python3 scripts/ragchecker_official_evaluation.py \
-  --lessons-mode apply \
-  --lessons-scope profile \
+python3 scripts/ragchecker_official_evaluation.py
+  --lessons-mode apply
+  --lessons-scope profile
   --lessons-window 3
 ```
 
@@ -333,7 +333,7 @@ python3 scripts/evolution_tracker.py
 
 ### Common Issues
 
-1. **JSON Parsing Errors**: Ensure logs go to stderr, JSON to stdout
+1. **JSON Parsing Errors**: Ensure logs go to stderr, JSON to stdou
 2. **Quality Gate Violations**: Check predicted effects against gates
 3. **Missing Lessons**: Verify lessons.jsonl exists and is valid
 4. **Scope Mismatches**: Ensure lesson scopes match filter criteria
@@ -362,7 +362,7 @@ cat configs/EVOLUTION.md
 ## Future Enhancements
 
 ### **Completed ✅**
-- ✅ **Pre-commit hooks**: Lessons quality check runs automatically on commit
+- ✅ **Pre-commit hooks**: Lessons quality check runs automatically on commi
 - ✅ **CI/CD integration**: Evolution tracking runs in CI workflows and produces `configs/EVOLUTION.md` regularly
 - ✅ **Quality gate enforcement**: Conservative blocking logic implemented
 - ✅ **JSON-only output**: Loader outputs machine-readable JSON to stdout, logs to stderr

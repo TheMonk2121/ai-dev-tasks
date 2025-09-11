@@ -74,7 +74,7 @@ When an agent uses these patterns, it indicates:
 - **Capture the full debugging sequence**: From problem identification to resolution
 - **Document the iterative process**: Show how the agent approaches complex issues
 - **Preserve technical decisions**: Why certain approaches were chosen
-- **Record performance insights**: What worked and what didn't
+- **Record performance insights**: What worked and what didn'
 
 ### **Application in Memory System**
 - **Query Patterns**: "Show me debugging sessions for `[technology]`"

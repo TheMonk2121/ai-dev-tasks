@@ -9,11 +9,11 @@ Optimize PostgreSQL for a 128 GB local macOS system and isolate workloads so RAG
 - **⚡ Could Have**: 4 tasks – Optional PgBouncer feasibility check, RAM-disk cache experiment, archive split plan, minimal EXPLAIN harness
 - **⏸️ Won't Have**: 2 tasks – Full PgBouncer deployment, cache UNLOGGED/LZ4 conversions (until metrics justify)
 
-## Solo Developer Quick Start
+## Solo Developer Quick Star
 ```bash
 # Run healthcheck and discovery snapshots
-python3 scripts/healthcheck_db.py && \
-python3 scripts/pg_settings_snapshot.py && \
+python3 scripts/healthcheck_db.py &&
+python3 scripts/pg_settings_snapshot.py &&
 python3 scripts/vector_index_inventory.py
 
 # Run Phase-2 eval (red-line gates enforced in review)
@@ -22,11 +22,11 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 ## Implementation Phases
 
-### Phase 1: Discovery & Assessment
+### Phase 1: Discovery & Assessmen
 
 #### DSN repository audit and canonicalization plan
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5h
 **Dependencies**: PRD Section 0, repo access
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -50,7 +50,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Snapshot current pg_settings and vector indexes (pre-change)
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5h
 **Dependencies**: DB reachable
 
@@ -70,7 +70,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Add lightweight DB healthcheck
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5h
 **Dependencies**: DSN resolver
 
@@ -93,9 +93,9 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Implement DSN resolver helper and adopt in scripts path
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1h
-**Dependencies**: DSN audit
+**Dependencies**: DSN audi
 
 **Description**: Create `src/common/db_dsn.py` resolver (DATABASE_URL canonical with POSTGRES_DSN fallback, mismatch warning, write `dsn_audit.json`). Adopt in evaluation scripts first.
 
@@ -115,7 +115,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Enable pg_stat_statements (observability first)
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5h
 **Dependencies**: Healthcheck
 
@@ -137,7 +137,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Stage A tuning (conservative)
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1h
 **Dependencies**: Observability enabled
 
@@ -165,7 +165,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 **Description**: Step up memory: `shared_buffers=16GB`, `effective_cache_size=96GB`, `work_mem=64MB`, `maintenance_work_mem=4GB`, `max_wal_size=16GB`, adopt `wal_compression=lz4` if supported.
 
 **Acceptance Criteria**:
-- [ ] Snapshot pre/post
+- [ ] Snapshot pre/pos
 - [ ] Eval passes red-line gates
 
 **Testing Requirements**:
@@ -182,7 +182,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 **Description**: `shared_buffers=24GB`. Proceed only if metrics justify.
 
 **Acceptance Criteria**:
-- [ ] Snapshot pre/post
+- [ ] Snapshot pre/pos
 - [ ] Eval passes red-line gates
 
 **Testing Requirements**:
@@ -194,7 +194,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Per-role GUCs for ltst_app and eval_app
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1h
 **Dependencies**: Resolver adopted, DB stable
 
@@ -214,7 +214,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Enforce cache separation and LTST concurrency guard
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5h
 **Dependencies**: Roles configured
 
@@ -233,7 +233,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### pgvector query-time policy
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5h
 **Dependencies**: Resolver adopted
 
@@ -250,7 +250,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 #### Create lightweight monitoring views
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5h
 **Dependencies**: pg_stat_statements enabled
 
@@ -304,7 +304,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 **Description**: Temporarily mount RAM disk for `.ragcache_eval` and compare eval timings.
 
 **Acceptance Criteria**:
-- [ ] Timing deltas recorded; revert immediately after test
+- [ ] Timing deltas recorded; revert immediately after tes
 
 ---
 

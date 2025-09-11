@@ -17,7 +17,8 @@ import time
 from datetime import datetime
 from typing import Any
 
-# DSPy RAG system modules moved to main src directory
+# Add src directory to Python path for monitoring modules
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 try:
     from monitoring.health_endpoints import HealthEndpointManager

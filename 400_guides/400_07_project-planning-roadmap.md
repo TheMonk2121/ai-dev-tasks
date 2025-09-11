@@ -60,7 +60,7 @@ This guide covers comprehensive project planning and roadmap management includin
 - **Iterative**: Regular review and adjustment of plans
 - **Integrated**: Planning integrated with backlog and development workflows
 
-### Sprint Management
+### Sprint Managemen
 - **Goal-oriented**: Each sprint has clear, measurable goals
 - **Capacity-aware**: Planning considers available time and resources
 - **Dependency-aware**: Dependencies identified and managed
@@ -77,7 +77,7 @@ This guide covers comprehensive project planning and roadmap management includin
 ### **Current Sprint Status**
 
 #### **Active Sprint: Documentation Restructuring & System Enhancement (January 2025)**
-**Current Focus**: Complete documentation restructuring and system enhancement
+**Current Focus**: Complete documentation restructuring and system enhancemen
 
 #### **Completed This Sprint**
 - ✅ **Phase 1**: Memory System Foundation (00-02) - Complete
@@ -131,9 +131,9 @@ class SprintPlan:
     """Sprint planning framework."""
 
     sprint_id: str
-    duration_weeks: int
+    duration_weeks: in
     goals: List[str]
-    capacity_hours: int
+    capacity_hours: in
     backlog_items: List[str]
     dependencies: List[str]
     acceptance_criteria: Dict[str, str]
@@ -184,7 +184,7 @@ class SprintTracker:
 
     def update_progress(self, item_id: str, progress_percent: int):
         """Update progress for a specific item."""
-        self.progress[item_id] = progress_percent
+        self.progress[item_id] = progress_percen
 
     def add_blocker(self, blocker: str):
         """Add a blocking issue."""
@@ -228,7 +228,7 @@ class StrategicDecision:
             for criterion, weight in self.weights.items():
                 # Get score for this option on this criterion
                 criterion_score = self._get_criterion_score(option, criterion)
-                option_score += criterion_score * weight
+                option_score += criterion_score * weigh
             scores[option] = option_score
 
         return scores
@@ -317,9 +317,9 @@ class MilestoneTracker:
 class CapacityPlan:
     """Capacity planning framework."""
 
-    available_hours: int
-    committed_hours: int
-    buffer_percent: float
+    available_hours: in
+    committed_hours: in
+    buffer_percent: floa
     skills_required: List[str]
     skills_available: List[str]
 
@@ -363,13 +363,13 @@ python3 scripts/sprint_planning.py --track-progress --sprint-id SPRINT-001
 
 #### **Development Workflow Integration**
 ```bash
-# Start sprint
+# Start sprin
 python3 scripts/sprint_planning.py --start-sprint --sprint-id SPRINT-001
 
 # Update sprint progress
 python3 scripts/sprint_planning.py --update-progress --sprint-id SPRINT-001 --item B-XXXX --progress 75
 
-# Complete sprint
+# Complete sprin
 python3 scripts/sprint_planning.py --complete-sprint --sprint-id SPRINT-001
 ```
 
@@ -420,7 +420,7 @@ python3 scripts/strategic_planning.py --track-progress --goal-id GOAL-001
 - **Sprint Planning**: Sprint planning and execution tracking
 - **Strategic Planning**: Long-term strategic planning and decision making
 - **Goal Setting**: SMART goal framework and milestone tracking
-- **Capacity Planning**: Resource allocation and capacity management
+- **Capacity Planning**: Resource allocation and capacity managemen
 
 ### **Development Integration**
 - **Backlog Integration**: Integration with backlog management system
@@ -496,7 +496,7 @@ python3 scripts/strategic_planning.py --track-progress --goal-id GOAL-001
 **Skills Required**:
 - Documentation restructuring
 - System architecture understanding
-- Cross-reference management
+- Cross-reference managemen
 
 **Skills Available**:
 - Documentation restructuring ✅
@@ -657,7 +657,7 @@ python3 scripts/optimize_resources.py --project-id PROJECT-001 --constraints con
 # Monitor resource usage
 python3 scripts/monitor_resource_usage.py --project-id PROJECT-001
 
-# Generate resource report
+# Generate resource repor
 python3 scripts/generate_resource_report.py --project-id PROJECT-001 --output resource_report.md
 
 # Validate resource optimization
@@ -793,7 +793,7 @@ class StrategicInsightsFramework:
                 insight_result = self._generate_insight_type(
                     insight_type, analytics_data, insight_config
                 )
-                insights[insight_type] = insight_result
+                insights[insight_type] = insight_resul
 
         # Prioritize insights
         prioritized_insights = self._prioritize_insights(insights)
@@ -856,7 +856,7 @@ python3 scripts/monitor_project_health.py --real-time --output health_report.md
 
 #### **Analytics Standards**
 - **Data Quality**: All project data must be accurate and complete
-- **Metric Relevance**: Analytics metrics must be relevant to project management
+- **Metric Relevance**: Analytics metrics must be relevant to project managemen
 - **Insight Quality**: Generated insights must be meaningful and actionable
 - **Recommendation Relevance**: Strategic recommendations must be relevant and implementable
 

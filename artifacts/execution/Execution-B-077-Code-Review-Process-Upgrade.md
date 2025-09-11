@@ -33,7 +33,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Section 0 (Project Context & Implementation Guide) → Execution Context
 - **Tech Stack**: Python 3.12, DSPy 3.0.1, PostgreSQL with pgvector for performance data storage
-- **Repository Layout**: Performance collection modules in dspy-rag-system/src/monitoring/, tests in dspy-rag-system/tests/
+- **Repository Layout**: Performance collection modules in src/monitoring/, tests in dspy-rag-system/tests/
 - **Development Patterns**: Follow existing monitoring patterns, use async for non-blocking collection
 - **Local Development**: Poetry environment, pytest for testing, pre-commit hooks for quality gates
 
@@ -51,14 +51,14 @@ python3 scripts/solo_workflow.py ship
 ### Phase 1: Performance Metrics Infrastructure 🔥
 
 #### Task 1.1: Design Performance Metrics Schema and Collection Points
-**Execution Context**: Use existing monitoring patterns from dspy-rag-system/src/monitoring/
+**Execution Context**: Use existing monitoring patterns from src/monitoring/
 **Technical Patterns**: Follow Python 3.12 typing standards, integrate with existing pytest fixtures
 **Quality Gates**: Schema overhead <1ms, comprehensive validation rules
 **Auto-Advance**: yes - Design task can proceed automatically
 **Smart Pause**: Pause for schema review and validation rule approval
 
 #### Task 1.2: Implement Lightweight Performance Collection Module
-**Execution Context**: Place in dspy-rag-system/src/monitoring/performance_collector.py
+**Execution Context**: Place in src/monitoring/performance_collector.py
 **Technical Patterns**: Use async patterns for non-blocking collection, integrate with LTST memory
 **Quality Gates**: <5% overhead, 90% test coverage, robust error handling
 **Auto-Advance**: yes - Implementation can proceed with automated testing
@@ -72,7 +72,7 @@ python3 scripts/solo_workflow.py ship
 **Smart Pause**: Pause for database schema review and migration validation
 
 #### Task 1.4: Add Performance Validation and Error Handling
-**Execution Context**: Use existing error handling patterns from dspy-rag-system/src/utils/
+**Execution Context**: Use existing error handling patterns from src/utils/
 **Technical Patterns**: Implement logging for debugging, graceful degradation
 **Quality Gates**: Error handling overhead minimal, data quality monitoring
 **Auto-Advance**: yes - Error handling can proceed automatically
@@ -141,7 +141,7 @@ python3 scripts/solo_workflow.py ship
 ### Phase 4: Dashboard Integration 🎯
 
 #### Task 4.1: Design Performance Dashboard Layout and Components
-**Execution Context**: Use existing NiceGUI patterns from dspy-rag-system/src/nicegui_graph_view.py
+**Execution Context**: Use existing NiceGUI patterns from src/nicegui_graph_view.py
 **Technical Patterns**: Design for solo developer workflow optimization
 **Quality Gates**: Clear visualization, user experience, component hierarchy
 **Auto-Advance**: yes - Dashboard design can proceed automatically

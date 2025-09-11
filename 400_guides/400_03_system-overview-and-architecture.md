@@ -207,7 +207,7 @@ The retrieval system implements a comprehensive tuning protocol with production-
 - **Pre-filter System** (`src/retrieval/prefilter.py`): Recall-friendly filtering with diversity preservation
 - **Reranking Engine** (`src/retrieval/reranker.py`): Heuristic-based reranking with configurable weights
 - **Context Packer** (`src/retrieval/packer.py`): MMR-based context selection with token limits
-- **Intent Router** (`src/retrieval/intent_router.py`): Query-aware parameter adjustment
+- **Intent Router** (`src/retrieval/intent_router.py`): Query-aware parameter adjustmen
 - **Quality Gates** (`src/retrieval/quality_gates.py`): Configurable evaluation thresholds
 
 ### System Flow
@@ -220,7 +220,7 @@ Intent Router → Fusion Config → Filter → Reranker → Packer → LLM
 Policy Config → Weights → Thresholds → Alpha → MMR → Response
 ```
 
-### Configuration Management
+### Configuration Managemen
 
 - **Single Source of Truth**: `config/retrieval.yaml` for all parameters
 - **Intent-Based Routing**: Dynamic parameter adjustment based on query type
@@ -231,7 +231,7 @@ Policy Config → Weights → Thresholds → Alpha → MMR → Response
 
 - **Comprehensive Test Suite**: Edge cases, robustness, failure modes
 - **Health Monitoring**: Real-time component status and performance metrics
-- **CI/CD Integration**: Quality gates in GitHub Actions with soft enforcement
+- **CI/CD Integration**: Quality gates in GitHub Actions with soft enforcemen
 - **Performance Tuning**: Hyperparameter optimization via `scripts/tune_retrieval.py`
 
 ### Operational Features
@@ -245,14 +245,14 @@ See: `config/retrieval.yaml` for configuration, `scripts/test_retrieval_system.p
 
 **Command**: `python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "query"`
 
-See: `400_06_memory-and-context-systems.md` and `dspy-rag-system/src/utils/memory_rehydrator.py`.
+See: `400_06_memory-and-context-systems.md` and `src/utils/memory_rehydrator.py`.
 
 ## AI Execution Layer (summary)
 
 - Router: IntentRouter → RetrievalAgent → CodeAgent (fast‑path bypass for trivial asks)
 - Timeouts and backoff; model janitor; score‑aware prioritization
 - State file: `.ai_state.json` for continuity
-- **RAGChecker Evaluation**: Industry-standard RAG evaluation framework for quality assessment
+- **RAGChecker Evaluation**: Industry-standard RAG evaluation framework for quality assessmen
 - **RAGChecker + Pydantic Integration**: Enhanced data validation, type safety, and performance optimization
 
 See: `400_07_ai-frameworks-dspy.md` and `400_05_coding-and-prompting-standards.md`.
@@ -268,7 +268,7 @@ See: `400_11_deployments-ops-and-observability.md` and `400_observability-system
 
 ## Security & Compliance (summary)
 
-- Input validation; access control; secrets management
+- Input validation; access control; secrets managemen
 - Defense‑in‑depth; environment isolation; monitoring
 
 See: `400_10_security-compliance-and-access.md`.
@@ -327,7 +327,7 @@ scripts/memory_rehydrate.py                     # Memory rehydration utilities
 
 # AWS Bedrock Integration (B-1046)
 scripts/bedrock_client.py                       # AWS Bedrock client implementation
-scripts/bedrock_cost_monitor.py                 # Cost monitoring and budget management
+scripts/bedrock_cost_monitor.py                 # Cost monitoring and budget managemen
 scripts/bedrock_batch_processor.py              # Batch processing for evaluations
 scripts/ragchecker_official_evaluation.py       # Official RAGChecker with Bedrock support
 scripts/ragchecker_with_monitoring.py           # RAGChecker with cost monitoring
@@ -341,8 +341,8 @@ scripts/mcp_orchestrator.py                     # MCP orchestration system
 scripts/mcp_security_config.py                  # MCP security configuration
 scripts/mcp_advanced_orchestration.py           # Advanced MCP orchestration
 
-# Development Environment
-scripts/venv_manager.py                         # Virtual environment management
+# Development Environmen
+scripts/venv_manager.py                         # Virtual environment managemen
 scripts/system_monitor.py                       # System monitoring and health checks
 scripts/update_cursor_memory.py                 # Cursor memory updates
 scripts/validate_config.py                      # Configuration validation
@@ -350,18 +350,18 @@ scripts/validate_config.py                      # Configuration validation
 
 **Development Workflow Scripts**
 ```bash
-# Task Management
+# Task Managemen
 scripts/task_generation_automation.py           # Automated task generation
 scripts/task_generator.py                       # Task generation utilities
-scripts/task_status_updater.py                  # Task status management
+scripts/task_status_updater.py                  # Task status managemen
 
 # Quality Assurance
 scripts/validate_dependencies.py                # Dependency validation
 scripts/validate_regen_guide.py                 # Guide regeneration validation
 scripts/performance_optimization.py             # Performance optimization utilities
 
-# Documentation Management
-scripts/add_tldr_sections.py                    # TL;DR section management
+# Documentation Managemen
+scripts/add_tldr_sections.py                    # TL;DR section managemen
 scripts/fix_duplicate_tldr.py                   # Duplicate TL;DR cleanup
 scripts/documentation_usage_analyzer.py         # Documentation usage analysis
 ```
@@ -371,26 +371,26 @@ scripts/documentation_usage_analyzer.py         # Documentation usage analysis
 **Core System Files**
 ```bash
 # Main System
-dspy-rag-system/src/dashboard.py                # Main dashboard interface
-dspy-rag-system/src/watch_folder.py             # File watching and processing
+src/dashboard.py                # Main dashboard interface
+src/watch_folder.py             # File watching and processing
 dspy-rag-system/README.md                       # System documentation
 
 # CLI Components
-dspy-rag-system/src/cli/                        # Command-line interface components
-dspy-rag-system/src/utils/                      # Utility functions and helpers
+src/cli/                        # Command-line interface components
+src/utils/                      # Utility functions and helpers
 
 # DSPy Modules
-dspy-rag-system/src/dspy_modules/               # DSPy framework modules
-dspy-rag-system/src/workflows/                  # Workflow implementations
-dspy-rag-system/src/monitoring/                 # Monitoring and observability
+src/dspy_modules/               # DSPy framework modules
+src/workflows/                  # Workflow implementations
+src/monitoring/                 # Monitoring and observability
 ```
 
 **Go Implementation**
 ```bash
 # Go Memory Rehydration
-dspy-rag-system/src/utils/memory_rehydration.go     # Core Go implementation
-dspy-rag-system/src/utils/memory_rehydration_cli.go # Go CLI interface
-dspy-rag-system/src/utils/README_GO.md              # Go implementation documentation
+src/utils/memory_rehydration.go     # Core Go implementation
+src/utils/memory_rehydration_cli.go # Go CLI interface
+src/utils/README_GO.md              # Go implementation documentation
 ```
 
 ##### **3. Dashboard & Monitoring Components**
@@ -398,9 +398,9 @@ dspy-rag-system/src/utils/README_GO.md              # Go implementation document
 **Mission Dashboard**
 ```bash
 # Dashboard Components
-dspy-rag-system/src/mission_dashboard/          # Mission dashboard implementation
-dspy-rag-system/src/nicegui_graph_view.py       # NiceGUI graph visualization
-dspy-rag-system/src/monitoring/                 # Monitoring components
+src/mission_dashboard/          # Mission dashboard implementation
+src/nicegui_graph_view.py       # NiceGUI graph visualization
+src/monitoring/                 # Monitoring components
 ```
 
 **Monitoring & Health Checks**
@@ -424,8 +424,8 @@ pyproject.toml                                   # Python project configuration
 
 **Environment Management**
 ```bash
-# Virtual Environment
-scripts/venv_manager.py                         # Virtual environment management
+# Virtual Environmen
+scripts/venv_manager.py                         # Virtual environment managemen
 scripts/setup_ai_models.py                      # AI model setup
 scripts/validate_config.py                      # Configuration validation
 ```
@@ -640,7 +640,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "te
 python3 scripts/list_cursor_roles.py --system cursor
 
 # Configure role alignment
-python3 scripts/configure_role_alignment.py --role planner --memory-system ltst
+python3 scripts/configure_role_alignment.py --role planner --memory-system lts
 
 # Validate role integration
 python3 scripts/validate_role_integration.py --role planner --full-check
@@ -657,7 +657,7 @@ python3 scripts/measure_role_performance.py --role planner --metrics response_ti
 # Optimize role configuration
 python3 scripts/optimize_role_configuration.py --role planner --target-metrics performance
 
-# Generate role report
+# Generate role repor
 python3 scripts/generate_role_report.py --role planner --output role_report.md
 
 # Monitor role health
@@ -708,8 +708,8 @@ psql -d postgres -c "SELECT version();"
 #### **2. Database Schema Issues**
 **Pattern**: Missing required columns or tables
 **Symptoms**:
-- `Database schema issue: Requires 'start_char' column that doesn't exist`
-- `Table doesn't exist yet`
+- `Database schema issue: Requires 'start_char' column that doesn'tt exist`
+- `Table doesn'tt exist yet`
 
 **Recovery Steps**:
 ```bash
@@ -822,12 +822,12 @@ psql -d postgres -c "SELECT '[1,2,3]'::vector;"
 
 #### **Service Standards**
 - **Service Health**: PostgreSQL service must be running and healthy
-- **Connection Reliability**: Database connections must be stable and fast
+- **Connection Reliability**: Database connections must be stable and fas
 - **Error Handling**: Database errors must be properly logged and handled
 - **Recovery Time**: Database issues must be resolved within established timeframes
 
 #### **Schema Requirements**
-- **Schema Completeness**: All required tables and columns must exist
+- **Schema Completeness**: All required tables and columns must exis
 - **Data Integrity**: Database constraints must be properly enforced
 - **Extension Availability**: Required extensions must be properly installed
 - **Performance Optimization**: Database queries must meet performance benchmarks
@@ -923,20 +923,20 @@ class DeploymentManagementFramework:
         if not self._validate_deployment_config(deployment_config):
             raise ValueError("Invalid deployment configuration")
 
-        # Prepare deployment
+        # Prepare deploymen
         deployment_prep = self._prepare_deployment(environment, deployment_config)
 
-        # Execute deployment
+        # Execute deploymen
         deployment_result = self._execute_deployment(deployment_prep)
 
-        # Validate deployment
+        # Validate deploymen
         validation_result = self._validate_deployment(deployment_result)
 
         return {
             "deployed": True,
             "environment": environment,
             "deployment_result": deployment_result,
-            "validation_result": validation_result
+            "validation_result": validation_resul
         }
 
     def _validate_deployment_config(self, deployment_config: dict) -> bool:
@@ -964,22 +964,22 @@ python3 scripts/validate_integration.py --integration-id INT-001 --full-check
 # Test component communication
 python3 scripts/test_component_communication.py --components all --output communication_test.md
 
-# Generate integration report
+# Generate integration repor
 python3 scripts/generate_integration_report.py --output integration_report.md
 ```
 
 #### **Deployment Management Commands**
 ```bash
-# Deploy to environment
+# Deploy to environmen
 python3 scripts/deploy_system.py --environment staging --config deployment_config.yaml
 
-# Validate deployment
+# Validate deploymen
 python3 scripts/validate_deployment.py --environment staging --full-check
 
-# Rollback deployment
+# Rollback deploymen
 python3 scripts/rollback_deployment.py --environment staging --version previous
 
-# Generate deployment report
+# Generate deployment repor
 python3 scripts/generate_deployment_report.py --environment all --output deployment_report.md
 ```
 
@@ -988,7 +988,7 @@ python3 scripts/generate_deployment_report.py --environment all --output deploym
 #### **Integration Standards**
 - **Component Compatibility**: All components must be compatible and interoperable
 - **Interface Consistency**: Component interfaces must be consistent and well-defined
-- **Communication Reliability**: Component communication must be reliable and efficient
+- **Communication Reliability**: Component communication must be reliable and efficien
 - **Error Handling**: Proper error handling and recovery mechanisms must be in place
 
 #### **Deployment Requirements**

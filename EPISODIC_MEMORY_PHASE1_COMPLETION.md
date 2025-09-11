@@ -7,7 +7,7 @@ We have successfully implemented the **Episodic Reflection Store** - the core co
 ## ✅ **What We Built**
 
 ### **1. Core Episodic Reflection Store**
-- **File**: `dspy-rag-system/src/utils/episodic_reflection_store.py`
+- **File**: `src/utils/episodic_reflection_store.py`
 - **Database Schema**: `dspy-rag-system/config/database/episodic_reflections_migration.sql`
 - **Features**:
   - Store reflections on completed tasks
@@ -53,7 +53,7 @@ python3 scripts/episodic_memory_mock.py
 
 ### **Workflow Integration Tests**
 ```bash
-python3 scripts/episodic_workflow_integration.py test
+python3 scripts/episodic_workflow_integration.py tes
 ```
 ✅ **All tests passed**:
 - Task completion hooks: Working
@@ -62,7 +62,7 @@ python3 scripts/episodic_workflow_integration.py test
 
 ### **RAGChecker Integration Tests**
 ```bash
-python3 scripts/ragchecker_episodic_integration.py test
+python3 scripts/ragchecker_episodic_integration.py tes
 ```
 ✅ **All tests passed**:
 - Query enhancement: Working
@@ -108,25 +108,25 @@ Avoid these patterns from similar tasks:
 
 ### **1. Store Task Completion**
 ```bash
-python3 scripts/episodic_workflow_integration.py complete \
-  --task-description "implemented database connection pooling" \
-  --input-text "original requirements" \
-  --output-text "final implementation" \
-  --agent cursor_ai \
+python3 scripts/episodic_workflow_integration.py complete
+  --task-description "implemented database connection pooling"
+  --input-text "original requirements"
+  --output-text "final implementation"
+  --agent cursor_ai
   --task-type coding
 ```
 
 ### **2. Get Context for New Task**
 ```bash
-python3 scripts/episodic_workflow_integration.py context \
-  --task-description "implement error handling for database connections" \
+python3 scripts/episodic_workflow_integration.py context
+  --task-description "implement error handling for database connections"
   --agent cursor_ai
 ```
 
 ### **3. Enhance RAGChecker Queries**
 ```bash
-python3 scripts/ragchecker_episodic_integration.py enhance \
-  --query "implement feature with error handling" \
+python3 scripts/ragchecker_episodic_integration.py enhance
+  --query "implement feature with error handling"
   --agent cursor_ai
 ```
 

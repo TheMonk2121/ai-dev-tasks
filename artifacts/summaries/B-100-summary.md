@@ -20,7 +20,7 @@
 # B-100 Session Summary
 
 **Generated**: 2025-08-21 07:21:38
-**Last Updated**: 2025-08-21 07:21:38
+**Last Updated**: 2025-09-11 07:21:38
 
 **Sessions**: 1
 **Branch**: feat/B-093-Doorway-Scribe-Auto-Rehydrate
@@ -59,7 +59,7 @@
 - `artifacts/summaries/`
 - `artifacts/worklogs/B-093.md`
 - `artifacts/worklogs/B-101.md`
-- `dspy-rag-system/src/utils/memory_rehydrator.py`
+- `src/utils/memory_rehydrator.py`
 - `scripts/generate_all_summaries.py`
 - `scripts/pr_signoff.py`
 - `scripts/pr_signoff_v2.py`

@@ -277,7 +277,7 @@ async with httpx.AsyncClient() as client:
 
 #### 1. `MCPError: Unsupported document type`
 
-**Cause**: The server doesn't support the file format
+**Cause**: The server doesn'tt support the file format
 
 **Solution**: Check supported formats and convert if needed:
 ```python

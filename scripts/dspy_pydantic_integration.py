@@ -193,9 +193,16 @@ async def evaluate_dspy_rag_system():
         # Print averages
         print("\nEvaluation Averages:")
         averages = report.averages()
-        if averages and hasattr(averages, "items"):
-            for key, value in averages.items():
-                print(f"  {key}: {value}")
+        if averages:
+            # Try different ways to access the averages data
+            if hasattr(averages, "__dict__"):
+                # If it's a Pydantic model, access its attributes
+                for key, value in averages.__dict__.items():
+                    if not key.startswith("_"):  # Skip private attributes
+                        print(f"  {key}: {value}")
+            else:
+                # Fallback: just print the averages object
+                print(f"  {averages}")
         else:
             print("  Averages displayed in the report table above")
 
@@ -222,7 +229,7 @@ import sys
 from pathlib import Path
 
 # Add DSPy RAG system to path
-dspy_rag_path = Path("dspy-rag-system/src")
+dspy_rag_path = Path("src")
 sys.path.insert(0, str(dspy_rag_path))
 
 # Import DSPy RAG system

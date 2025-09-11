@@ -91,6 +91,9 @@ dependencies = [
     "opentelemetry-instrumentation-psycopg2>=0.57b0",
     "opentelemetry-instrumentation-sqlite3>=0.57b0",
     "opentelemetry-instrumentation-urllib>=0.57b0",
+    "hypothesis>=6.135.24,<6.140.0",
+    "pytest>=8.4.2",
+    "asyncpg>=0.30.0",
 ]
 
 [project.optional-dependencies]
@@ -243,3 +246,5 @@ allowed_types = [
     "merge",
 ]
 message_template = "{type}{scope}: {subject}\n\n{body}\n\n{footer}"
+[tool.codespell]
+skip = "600_archives/**,.hypothesis/**,artifacts/**,000_core/**,100_memory/**,200_setup/**,300_experiments/**,400_guides/**,500_research/**,PRD-* ,Task-List-* ,datasets/**,docs/**,dashboard/**"

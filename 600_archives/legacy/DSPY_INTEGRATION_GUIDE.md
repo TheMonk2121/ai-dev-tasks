@@ -13,51 +13,51 @@
 - **Interactive Query Interface**- Ask questions via `ask_question.py`
 - **Full Pipeline**- Complete DSPy → RAG → Mistral flow
 
-## **🔧 Your Tech Stack: How It All Works Together**###**1. Cursor - Your AI-Powered Code Editor**-**What it is**: A code editor that has AI built right into it
+## **🔧 Your Tech Stack: How It All Works Together**###**1. Cursor - Your AI-Powered Code Editor**-**What it is**: A code editor that has AI built right into i
 - **What you're doing**: Using it to write and manage your AI system
 - **Why it's cool**: You can ask it to help you write code, just like you're doing right now!
 
 ### **2. Mistral-7B - Your AI Brain**-**What it is**: A large language model (think of it as a very smart AI that can understand and generate text)
 - **How you're running it**: Through Ollama (a tool that lets you run AI models on your own computer)
-- **Model**: Mistral 7B Instruct
+- **Model**: Mistral 7B Instruc
 - **What it does**: Takes your questions and generates intelligent answers
 
 ### **3. DSPy - Your AI's Programming Framework**-**What DSPy is**: A framework that helps you program AI models more systematically
-- **What it does for you**: 
+- **What it does for you**:
   - **Structures your AI interactions**- Instead of just chatting, it creates organized workflows
   - **Improves prompt engineering**- Makes your AI prompts more effective and reliable
   - **Enables memory and learning**- Your AI can remember past interactions and learn from them
   - **Creates reusable components**- Build AI modules you can use over and over
 
 ### **4. RAG System - Your AI's Memory**-**What RAG means**: "Retrieval Augmented Generation" (fancy way of saying "find relevant info, then generate an answer")
-- **How it works**: 
+- **How it works**:
   1. You ask a question
   2. The system searches through your documents to find relevant information
   3. It gives that information to Mistral-7B
   4. Mistral-7B generates an answer based on your documents
 
 ### **5. Vector Database (PostgreSQL) - Your AI's Filing Cabinet**-**What it is**: A special database that stores your documents in a way that makes them easy to search
-- **How it works**: 
+- **How it works**:
   - Breaks your documents into small pieces (chunks)
   - Converts each piece into numbers (vectors) that represent meaning
   - When you ask a question, it finds the most similar pieces
 - **Why it's smart**: It can find relevant information even if you don't use the exact same words
 
-## **🚀 How DSPy Makes This Different from ChatGPT**###**ChatGPT (Standard LLM):**```text
+## **🚀 How DSPy Makes This Different from ChatGPT**###**ChatGPT (Standard LLM):**```tex
 You: "What's in my documents?"
 ChatGPT: "I don't have access to your documents. I can only help with general knowledge."
 ```
 
-### **Your DSPy RAG System:**```text
+### **Your DSPy RAG System:**```tex
 You: "What's in my documents?"
-DSPy RAG: 
+DSPy RAG:
 1. Searches your actual documents
 2. Finds relevant information
 3. Uses Mistral-7B to generate an answer
 4. Gives you: "Based on your documents, here's what I found..."
 ```
 
-## **🔍 How DSPy Works with Your Tools**###**The DSPy Pipeline:**```text
+## **🔍 How DSPy Works with Your Tools**###**The DSPy Pipeline:**```tex
 Your Question → DSPy RAGSystem → Vector Search → Mistral-7B → Answer
 ```
 
@@ -71,7 +71,7 @@ Your Question → DSPy RAGSystem → Vector Search → Mistral-7B → Answer
 3.**Mistral-7B**receives:
   - Your original question
   - Relevant document chunks
-  - DSPy's structured prompt
+  - DSPy's structured promp
 
 4.**Mistral-7B generates**an answer based on your actual data
 
@@ -94,7 +94,7 @@ Your Question → DSPy RAGSystem → Vector Search → Mistral-7B → Answer
 
 ## ** Real-World Example**
 
-- *You have a CSV file with employee data:**```text
+- *You have a CSV file with employee data:**```tex
 Name, Age, City, Occupation, Salary
 John Smith, 32, New York, Software Engineer, 85000
 Sarah Johnson, 28, San Francisco, Data Scientist, 95000
@@ -116,21 +116,21 @@ Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 - **Extensible system**- easy to add new capabilities
 - **Memory persistence**- AI remembers past interactions
 
-## **📊 What You've Accomplished**✅**65+ document chunks**stored and searchable  
-✅**Multiple file types**supported (.txt, .md, .pdf, .csv)  
-✅**Automatic processing**- just drop files in the watch folder  
-✅**Smart search**- finds relevant information quickly  
-✅**Local AI**- everything runs on your computer  
-✅**Interactive interface**- ask questions naturally  
-✅**DSPy integration**- programmable AI workflows  
-✅**Better than ChatGPT**- actually uses your documents!  
+## **📊 What You've Accomplished**✅**65+ document chunks**stored and searchable
+✅**Multiple file types**supported (.txt, .md, .pdf, .csv)
+✅**Automatic processing**- just drop files in the watch folder
+✅**Smart search**- finds relevant information quickly
+✅**Local AI**- everything runs on your computer
+✅**Interactive interface**- ask questions naturally
+✅**DSPy integration**- programmable AI workflows
+✅**Better than ChatGPT**- actually uses your documents!
 
 ## **🎉 The Bottom Line**You've built a**programmable AI research assistant**that can:
-- **Remember everything**you've shown it
+- **Remember everything**you've shown i
 - **Find relevant information**quickly
 - **Answer questions**intelligently
 - **Learn from your documents**automatically
-- **Work better than ChatGPT**for your specific data**It's like having a super-smart assistant who's read all your files, can answer any question about them, and gets smarter over time!**🚀**The key difference: ChatGPT is a general AI that doesn't know your data. Your DSPy RAG system is a specialized AI that knows everything in your documents and can answer questions about them intelligently.**##**🏗️ System Architecture**###**Core Components:**```text
+- **Work better than ChatGPT**for your specific data**It's like having a super-smart assistant who's read all your files, can answer any question about them, and gets smarter over time!**🚀**The key difference: ChatGPT is a general AI that doesn'tt know your data. Your DSPy RAG system is a specialized AI that knows everything in your documents and can answer questions about them intelligently.**##**🏗️ System Architecture**###**Core Components:**```tex
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Your Files    │    │   DSPy RAG      │    │   PostgreSQL    │
 │   (watch_folder)│───▶│   System        │───▶│   Vector DB     │
@@ -146,29 +146,29 @@ Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 
 ### **DSPy Modules:**1.**RAGSystem**- Main orchestrator
 2.**MistralLLM**- DSPy module for Mistral
-3.**RAGSignature**- Structured input/output
+3.**RAGSignature**- Structured input/outpu
 4.**VectorStore**- DSPy-compatible vector storage
 
 ## **🚀 Usage Guide**###**1. Start the System**```bash
-# Activate virtual environment
+# Activate virtual environmen
 source .venv/bin/activate
 
 # Start interactive question interface
 python3 ask_question.py
-```text
+```tex
 
 ### **2. Ask Questions**```bash
 # Interactive mode
 ❓ Your question: "What are the key points in my documents?"
 ❓ Your question: "Who has the highest salary in my CSV data?"
 ❓ Your question: "Summarize the main topics discussed"
-```text
+```tex
 
 ### **3. Add Documents**```bash
 # Drop files into watch_folder/ (automatic)
 # Or add manually:
-python3 add_document.py path/to/file.txt
-```text
+python3 add_document.py path/to/file.tx
+```tex
 
 ### **4. Check System Status**```bash
 # Check database stats
@@ -193,7 +193,7 @@ print(f'Total chunks: {stats.get(\"total_chunks\", 0)}')
 
 3.**RAGSignature**(`src/dspy_modules/rag_system.py`)
   - DSPy signature defining input/output structure
-  - Ensures consistent question/answer format
+  - Ensures consistent question/answer forma
   - Enables structured AI programming
 
 4.**VectorStore Integration**(`src/dspy_modules/vector_store.py`)
@@ -211,7 +211,7 @@ MISTRAL_MODEL = "mistral"
 
 # DSPy configuration
 dspy.configure(lm=MistralLLM(MISTRAL_URL, MISTRAL_MODEL))
-```text
+```tex
 
 ## **📊 Performance Metrics**###**Current Stats:**-**Total Chunks**: 65+ stored
 - **Documents Processed**: Multiple including CSV
@@ -228,15 +228,15 @@ dspy.configure(lm=MistralLLM(MISTRAL_URL, MISTRAL_MODEL))
 ## **🔍 Troubleshooting**###**Common Issues:**1.**Mistral Connection Failed**```bash
    # Check if Ollama is running
    curl <http://localhost:11434/api/tags>
-   
+
    # Start Ollama if needed
    ollama serve
-   ```text
+   ```tex
 
 2.**Database Connection Failed**```bash
    # Check PostgreSQL
    psql -h localhost -U danieljacobs -d ai_agency
-   
+
    # Check pgvector extension
    \dx
    ```python
@@ -244,10 +244,10 @@ dspy.configure(lm=MistralLLM(MISTRAL_URL, MISTRAL_MODEL))
 3.**DSPy Module Import Error**```bash
    # Ensure virtual environment is activated
    source .venv/bin/activate
-   
+
    # Check DSPy installation
    python3 -c "import dspy; print(dspy.__version__)"
-   ```text
+   ```tex
 
 ### **Debug Commands:**```bash
 # Test DSPy RAG system
@@ -296,4 +296,4 @@ python3 test_simple_search.py
 - ✅**CSV file support**working
 - ✅**Automatic file processing**working
 - ✅**Vector search**working
-- ✅**Local processing**working**You now have a system that's better than ChatGPT for your specific data - it actually reads your documents and answers questions about them intelligently!** 🚀 
+- ✅**Local processing**working**You now have a system that's better than ChatGPT for your specific data - it actually reads your documents and answers questions about them intelligently!** 🚀

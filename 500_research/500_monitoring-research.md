@@ -23,7 +23,7 @@
 
 Backlog link: B-080 (also B-022, B-027)
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with contain
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -59,9 +59,9 @@ Backlog link: B-080 (also B-022, B-027)
 
 - 400_guides/400_deployment-environment-guide.md (setup Jaeger/Prom/Grafana)
 
-- dspy-rag-system/src/monitoring/metrics.py, production_monitor.py (extend with OTel)
+- src/monitoring/metrics.py, production_monitor.py (extend with OTel)
 
-- dspy-rag-system/src/mission_dashboard/ (surface KPIs and trace links)
+- src/mission_dashboard/ (surface KPIs and trace links)
 
 ## Citations
 

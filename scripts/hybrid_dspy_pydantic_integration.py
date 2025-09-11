@@ -89,8 +89,8 @@ class LocalOllamaAgent:
                 response_time_ms = int((end_time - start_time) * 1000)
 
                 return HybridRAGAnswer(
-                    answer=result.content.answer,
-                    confidence=result.content.confidence or 0.8,
+                    answer=result.output.answer,
+                    confidence=result.output.confidence or 0.8,
                     sources=["local_ollama"],
                     model_used="ollama:llama3.1:8b",
                     environment="local",
@@ -118,7 +118,7 @@ class DockerDSPyAgent:
     def __init__(self):
         # Try to import DSPy system
         try:
-# sys.path.insert(0, str(project_root / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
+            # sys.path.insert(0, str(project_root / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
             from dspy_modules.model_switcher import LocalModel, ModelSwitcher
 
             self.model_switcher = ModelSwitcher()
@@ -217,10 +217,14 @@ class HybridRAGAgent:
     async def query(self, inputs: HybridRAGInput) -> HybridRAGAnswer:
         """Query using the appropriate handler for the environment."""
 
-        if self.environment == "local":
+        # Use isinstance checks so the type checker can narrow correctly
+        if isinstance(self.agent, LocalOllamaAgent):
             return await self.agent.query_local_model(inputs)
-        else:
+        elif isinstance(self.agent, DockerDSPyAgent):
             return await self.agent.query_dspy_system(inputs)
+        else:
+            # Fallback should never happen
+            raise RuntimeError("Unsupported agent type")
 
 
 # Evaluators for both environments
@@ -309,9 +313,16 @@ async def run_hybrid_integration():
         # Print averages
         print("\nEvaluation Averages:")
         averages = report.averages()
-        if averages and hasattr(averages, "items"):
-            for key, value in averages.items():
-                print(f"  {key}: {value}")
+        if averages:
+            # Try different ways to access the averages data
+            if hasattr(averages, "__dict__"):
+                # If it's a Pydantic model, access its attributes
+                for key, value in averages.__dict__.items():
+                    if not key.startswith("_"):  # Skip private attributes
+                        print(f"  {key}: {value}")
+            else:
+                # Fallback: just print the averages object
+                print(f"  {averages}")
         else:
             print("  Averages displayed in the report table above")
 

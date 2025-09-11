@@ -9,7 +9,7 @@ Extend the existing LTST Memory System with decision intelligence capabilities t
 - **⚡ Could Have**: 2 tasks - Nice-to-have improvements for advanced features
 - **⏸️ Won't Have**: 2 tasks - Deferred to future iterations (optional complexity)
 
-## Solo Developer Quick Start
+## Solo Developer Quick Star
 ```bash
 # Start everything with enhanced workflow
 python3 scripts/solo_workflow.py start "B-1012 Decision Intelligence Implementation"
@@ -52,7 +52,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 1: Extend Database Schema for Decision Intelligence
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1 hour
 **Dependencies**: None
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -82,7 +82,7 @@ python3 scripts/solo_workflow.py ship
 **Quality Gates**:
 - [ ] **Code Review** - Migration script reviewed for safety
 - [ ] **Tests Passing** - All schema tests pass
-- [ ] **Performance Validated** - Migration completes within time limit
+- [ ] **Performance Validated** - Migration completes within time limi
 - [ ] **Security Reviewed** - No SQL injection vulnerabilities
 - [ ] **Documentation Updated** - Schema documentation updated
 
@@ -94,7 +94,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 2: Update Dataclasses for Decision Intelligence
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 0.5 hours
 **Dependencies**: Task 1
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -117,7 +117,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error handling for invalid data
 - [ ] **Edge Case Tests** - Large JSONB objects, special characters
 
-**Implementation Notes**: Extend existing dataclasses in `dspy-rag-system/src/utils/conversation_storage.py`, maintain existing functionality.
+**Implementation Notes**: Extend existing dataclasses in `src/utils/conversation_storage.py`, maintain existing functionality.
 
 **Quality Gates**:
 - [ ] **Code Review** - Dataclass changes reviewed
@@ -134,7 +134,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 3: Extend ConversationStorage with Decision Operations
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1 hour
 **Dependencies**: Task 2
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -158,7 +158,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error handling for database failures
 - [ ] **Edge Case Tests** - Large decision sets, concurrent operations
 
-**Implementation Notes**: Extend `ConversationStorage` class in `dspy-rag-system/src/utils/conversation_storage.py`, use existing database connection patterns.
+**Implementation Notes**: Extend `ConversationStorage` class in `src/utils/conversation_storage.py`, use existing database connection patterns.
 
 **Quality Gates**:
 - [ ] **Code Review** - Decision operations reviewed
@@ -175,7 +175,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 4: Implement Decision-Aware Context Merging
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1 hour
 **Dependencies**: Task 3
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -199,7 +199,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error handling for malformed entities
 - [ ] **Edge Case Tests** - Large entity sets, conflicting decisions
 
-**Implementation Notes**: Extend `ContextMerger` class in `dspy-rag-system/src/utils/context_merger.py`, use existing caching and scoring patterns.
+**Implementation Notes**: Extend `ContextMerger` class in `src/utils/context_merger.py`, use existing caching and scoring patterns.
 
 **Quality Gates**:
 - [ ] **Code Review** - Decision merging logic reviewed
@@ -216,7 +216,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 5: Integrate Decision Intelligence into MemoryRehydrator
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1 hour
 **Dependencies**: Task 4
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -240,7 +240,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error handling for decision retrieval failures
 - [ ] **Edge Case Tests** - Large decision sets, session transitions
 
-**Implementation Notes**: Extend `MemoryRehydrator` class in `dspy-rag-system/src/utils/memory_rehydrator.py`, maintain existing performance characteristics.
+**Implementation Notes**: Extend `MemoryRehydrator` class in `src/utils/memory_rehydrator.py`, maintain existing performance characteristics.
 
 **Quality Gates**:
 - [ ] **Code Review** - Decision rehydration logic reviewed
@@ -257,7 +257,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 6: Implement Supersedence Logic
 **Priority**: Critical
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1 hour
 **Dependencies**: Task 5
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -281,7 +281,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error handling for supersedence failures
 - [ ] **Edge Case Tests** - Complex supersedence chains, circular references
 
-**Implementation Notes**: Create new supersedence module in `dspy-rag-system/src/utils/`, integrate with existing ConversationStorage.
+**Implementation Notes**: Create new supersedence module in `src/utils/`, integrate with existing ConversationStorage.
 
 **Quality Gates**:
 - [ ] **Code Review** - Supersedence logic reviewed
@@ -298,7 +298,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 7: Create Decision Retrieval Test Cases
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1 hour
 **Dependencies**: Task 6
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -339,7 +339,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 8: Implement Failure@20 Evaluation Framework
 **Priority**: High
-**MoSCoW**: 🔥 Must
+**MoSCoW**: 🔥 Mus
 **Estimated Time**: 1 hour
 **Dependencies**: Task 7
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
@@ -349,7 +349,7 @@ python3 scripts/solo_workflow.py ship
 **Acceptance Criteria**:
 - [ ] Implement Failure@20 calculation for decision retrieval
 - [ ] Create evaluation runner for test cases
-- [ ] Add latency breakdown (p50/p95/p99) measurement
+- [ ] Add latency breakdown (p50/p95/p99) measuremen
 - [ ] Implement supersedence leakage detection
 - [ ] Add evaluation result reporting and analysis
 - [ ] Create evaluation configuration for different scenarios
@@ -363,7 +363,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error handling for evaluation failures
 - [ ] **Edge Case Tests** - Evaluation with edge case scenarios
 
-**Implementation Notes**: Create evaluation module in `dspy-rag-system/src/evaluation/`, integrate with existing test infrastructure.
+**Implementation Notes**: Create evaluation module in `src/evaluation/`, integrate with existing test infrastructure.
 
 **Quality Gates**:
 - [ ] **Code Review** - Evaluation framework reviewed
@@ -399,7 +399,7 @@ python3 scripts/solo_workflow.py ship
 **Testing Requirements**:
 - [ ] **Unit Tests** - Performance optimization components
 - [ ] **Integration Tests** - End-to-end performance testing
-- [ ] **Performance Tests** - All performance targets met
+- [ ] **Performance Tests** - All performance targets me
 - [ ] **Security Tests** - Performance monitoring security
 - [ ] **Resilience Tests** - Performance under load conditions
 - [ ] **Edge Case Tests** - Performance with extreme data volumes
@@ -409,7 +409,7 @@ python3 scripts/solo_workflow.py ship
 **Quality Gates**:
 - [ ] **Code Review** - Performance optimizations reviewed
 - [ ] **Tests Passing** - All performance tests pass
-- [ ] **Performance Validated** - All targets met
+- [ ] **Performance Validated** - All targets me
 - [ ] **Security Reviewed** - Performance monitoring secure
 - [ ] **Documentation Updated** - Performance documentation updated
 
@@ -491,7 +491,7 @@ python3 scripts/solo_workflow.py ship
 **Quality Gates**:
 - [ ] **Code Review** - Documentation reviewed for accuracy
 - [ ] **Tests Passing** - Documentation examples work
-- [ ] **Performance Validated** - Documentation generation efficient
+- [ ] **Performance Validated** - Documentation generation efficien
 - [ ] **Security Reviewed** - Documentation security verified
 - [ ] **Documentation Updated** - All relevant docs updated
 
@@ -522,7 +522,7 @@ python3 scripts/solo_workflow.py ship
 **Testing Requirements**:
 - [ ] **Unit Tests** - Co-sign rule logic
 - [ ] **Integration Tests** - Co-sign rule integration
-- [ ] **Performance Tests** - Co-sign rule performance impact
+- [ ] **Performance Tests** - Co-sign rule performance impac
 - [ ] **Security Tests** - Co-sign rule security validation
 - [ ] **Resilience Tests** - Co-sign rule error handling
 - [ ] **Edge Case Tests** - Co-sign rule edge cases
@@ -549,7 +549,7 @@ python3 scripts/solo_workflow.py ship
 **Dependencies**: Task 12, Failure@20 > 0.15
 **Solo Optimization**: Auto-advance: no, Context preservation: yes
 
-**Description**: Implement static entity overlap detection if co-sign rule alone doesn't achieve Failure@20 target.
+**Description**: Implement static entity overlap detection if co-sign rule alone doesn'tt achieve Failure@20 target.
 
 **Acceptance Criteria**:
 - [ ] Create static entity allowlist configuration
@@ -563,7 +563,7 @@ python3 scripts/solo_workflow.py ship
 **Testing Requirements**:
 - [ ] **Unit Tests** - Entity overlap logic
 - [ ] **Integration Tests** - Entity overlap integration
-- [ ] **Performance Tests** - Entity overlap performance impact
+- [ ] **Performance Tests** - Entity overlap performance impac
 - [ ] **Security Tests** - Entity overlap security validation
 - [ ] **Resilience Tests** - Entity overlap error handling
 - [ ] **Edge Case Tests** - Entity overlap edge cases
@@ -585,7 +585,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 14: Advanced Entity Relationship Tracking
 **Priority**: Low
-**MoSCoW**: ⏸️ Won't
+**MoSCoW**: ⏸️ Won'
 **Estimated Time**: 2 hours
 **Dependencies**: Task 13
 **Solo Optimization**: Auto-advance: no, Context preservation: yes
@@ -626,7 +626,7 @@ python3 scripts/solo_workflow.py ship
 
 ### Task 15: Multi-Hop Knowledge Graph
 **Priority**: Low
-**MoSCoW**: ⏸️ Won't
+**MoSCoW**: ⏸️ Won'
 **Estimated Time**: 3 hours
 **Dependencies**: Task 14
 **Solo Optimization**: Auto-advance: no, Context preservation: yes

@@ -59,7 +59,7 @@ Based on the research paper "Augmentation of Semantic Processes for Deep Learnin
 
 ### Phase 1: Immediate Integration (Recommended - Path A)
 
-**Focus**: Cat-2 + small Cat-1, triplet pretrain → light supervised adapt
+**Focus**: Cat-2 + small Cat-1, triplet pretrain → light supervised adap
 
 **Steps**:
 1. **Integrate Enhanced Query Pattern Graph** with your existing system
@@ -109,7 +109,7 @@ Based on the research paper's **53% error reduction** results:
 ### Query Pattern Knowledge Graph
 - **More accurate next-query predictions**
 - **Better pattern recognition** with less training data
-- **Enhanced semantic understanding** of user intent
+- **Enhanced semantic understanding** of user inten
 
 ### SOP Engine
 - **Better SOP matching/retrieval** (fewer brittle rules)
@@ -147,7 +147,7 @@ Based on the research paper's **53% error reduction** results:
 1. **Graph-based representation** is crucial for proper semantic understanding
 2. **Cat-2 + small Cat-1** provides the best balance of augmentation and correctness
 3. **Triplet training** with GNNs enables better similarity learning
-4. **Guardrails and validation** prevent over-augmentation and distribution drift
+4. **Guardrails and validation** prevent over-augmentation and distribution drif
 5. **Concurrency discipline** (2-3 workers) maintains stable performance
 
 ## 📈 Success Metrics

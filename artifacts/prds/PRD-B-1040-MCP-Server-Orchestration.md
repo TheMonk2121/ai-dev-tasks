@@ -30,10 +30,10 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **MCP Servers**: `dspy-rag-system/src/utils/mcp_integration/` - Specialized MCP server implementations
-- **Agent Modules**: `dspy-rag-system/src/dspy_modules/` - DSPy agent roles and capabilities
-- **Memory System**: `dspy-rag-system/src/utils/` - Memory rehydration and context management
-- **Monitoring**: `dspy-rag-system/src/monitoring/` - Performance tracking and metrics
+- **MCP Servers**: `src/utils/mcp_integration/` - Specialized MCP server implementations
+- **Agent Modules**: `src/dspy_modules/` - DSPy agent roles and capabilities
+- **Memory System**: `src/utils/` - Memory rehydration and context management
+- **Monitoring**: `src/monitoring/` - Performance tracking and metrics
 
 ### Local Development
 ```bash
@@ -55,9 +55,9 @@ poetry run pre-commit install
 ```
 
 ### Common Tasks
-- **Add new MCP server**: Create implementation in `dspy-rag-system/src/utils/mcp_integration/`
+- **Add new MCP server**: Create implementation in `src/utils/mcp_integration/`
 - **Add new agent tool**: Extend `scripts/mcp_memory_server.py` with new tool definition
-- **Add new role context**: Update `dspy-rag-system/src/dspy_modules/context_models.py`
+- **Add new role context**: Update `src/dspy_modules/context_models.py`
 - **Monitor performance**: Check `http://localhost:3000/metrics` for server metrics
 
 ## 1. Problem Statement

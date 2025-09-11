@@ -8,7 +8,7 @@
 - Backend chat bridges: `scripts/multi_agent_chat.py` (primary), `scripts/chat_bridge.py` (legacy two‑agent)
 - Web UI: `scripts/simple_chat_web.py` (dev UI), optional terminal client `scripts/terminal_chat_client.py`
 - DSPy agent connector: `scripts/dspy_agent_connector.py`
-- Memory: LTST + conversation storage (`dspy-rag-system/src/utils/conversation_storage.py`), retrieval hooks (`src/retrieval/memory_integration.py`)
+- Memory: LTST + conversation storage (`src/utils/conversation_storage.py`), retrieval hooks (`src/retrieval/memory_integration.py`)
 - Tooling: FastAPI + WebSockets, Python 3.12, pytest, pre‑commit, Ruff, Pyright
 
 ### Repository layout (chat scope)

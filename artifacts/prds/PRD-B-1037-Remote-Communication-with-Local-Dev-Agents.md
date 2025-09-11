@@ -30,10 +30,10 @@ ai-dev-tasks/
 ```
 
 ### Development Patterns
-- **API Endpoints**: `dspy-rag-system/src/api/` - FastAPI routes and handlers
-- **DSPy Modules**: `dspy-rag-system/src/dspy_modules/` - AI agents and signatures
-- **Memory System**: `dspy-rag-system/src/utils/memory_rehydrator.py` - Context management
-- **Monitoring**: `dspy-rag-system/src/monitoring/` - Performance and health checks
+- **API Endpoints**: `src/api/` - FastAPI routes and handlers
+- **DSPy Modules**: `src/dspy_modules/` - AI agents and signatures
+- **Memory System**: `src/utils/memory_rehydrator.py` - Context management
+- **Monitoring**: `src/monitoring/` - Performance and health checks
 - **Configuration**: `dspy-rag-system/config/` - Database schemas and settings
 
 ### Local Development

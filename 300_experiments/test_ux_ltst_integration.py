@@ -8,7 +8,7 @@ Tests the integration of user interaction patterns and behavior analytics with L
 import os
 import sys
 
-# Add dspy-rag-system/src to path
+# Add src to path
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 from utils.ux_ltst_integration import UXLTSTIntegration
 

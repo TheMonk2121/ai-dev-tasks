@@ -171,6 +171,59 @@ def create_evaluation_metrics_table(cur):
     print("   ✅ evaluation_metrics table created with indexes")
 
 
+def create_maintenance_metrics_table(cur):
+    """Create maintenance_metrics table for storing maintenance analysis data."""
+    print("🧹 Creating maintenance_metrics table...")
+
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS maintenance_metrics (
+            ts TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            session_id UUID NOT NULL,
+            maintenance_type VARCHAR(100) NOT NULL,
+            status VARCHAR(50) NOT NULL,
+            files_removed INTEGER DEFAULT 0,
+            directories_removed INTEGER DEFAULT 0,
+            bytes_freed BIGINT DEFAULT 0,
+            duration_seconds REAL,
+            error_count INTEGER DEFAULT 0,
+            analysis_data JSONB,
+            metadata JSONB,
+            git_sha VARCHAR(40),
+            PRIMARY KEY (ts, session_id)
+        )
+        """
+    )
+
+    # Create indexes
+    cur.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_maintenance_metrics_type_ts 
+        ON maintenance_metrics (maintenance_type, ts)
+        """
+    )
+
+    cur.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_maintenance_metrics_session_id 
+        ON maintenance_metrics (session_id)
+        """
+    )
+
+    # Try to create hypertable if TimescaleDB is available
+    try:
+        cur.execute(
+            """
+            SELECT create_hypertable('maintenance_metrics', 'ts', if_not_exists => true)
+            """
+        )
+        print("   ✅ maintenance_metrics hypertable created")
+    except Exception as e:
+        print(f"   ⚠️  TimescaleDB hypertable: {e}")
+
+    print("   ✅ maintenance_metrics table created with indexes")
+
+
 def create_conversation_tables(cur):
     """Create conversation-related tables for memory system."""
     print("💬 Creating conversation tables...")
@@ -355,6 +408,7 @@ def verify_schema(cur):
         "documents",
         "document_chunks",
         "evaluation_metrics",
+        "maintenance_metrics",
         "conversation_sessions",
         "conversation_context",
         "conv_chunks",
@@ -424,6 +478,7 @@ def main():
                 create_documents_table(cur)
                 create_document_chunks_table(cur)
                 create_evaluation_metrics_table(cur)
+                create_maintenance_metrics_table(cur)
                 create_conversation_tables(cur)
                 create_memory_system_tables(cur)
 

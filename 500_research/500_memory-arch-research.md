@@ -4,13 +4,13 @@
 
 ## 🎯 Research Sprint Overview
 
-**Duration**: 4 development days  
-**Branch**: `exp/memory-arch`  
+**Duration**: 4 development days
+**Branch**: `exp/memory-arch`
 **Focus**: Optimize memory hierarchy for different AI model capabilities (7B vs 70B)
 
 ## 📋 Research Questions
 
-### 1. Hierarchy Depth vs. Token Budget
+### 1. Hierarchy Depth vs. Token Budge
 - What is the optimal folder/priority granularity for 7B (8k ctx) vs 70B (32k ctx) models?
 - How can we bootstrap in ≤1k tokens for 7B while allowing 70B to exploit richer links?
 
@@ -44,12 +44,12 @@
 - **Structure A**: Flat list + HTML comments (current)
 - **Structure B**: Three-tier hierarchy + YAML front-matter (proposed)
 
-### Models to Test
+### Models to Tes
 - Mistral 7B Instruct (8k context)
-- Mixtral 8×7B (32k context)  
+- Mixtral 8×7B (32k context)
 - GPT-4o (128k context)
 
-### Metrics to Collect
+### Metrics to Collec
 - **Accuracy**: Retrieval F1 score
 - **Latency**: Response time in seconds
 - **Token Usage**: Input/output token counts
@@ -123,4 +123,4 @@ vs baseline performance at 8k tokens.
 
 <!-- CONTEXT_REFERENCE: 400_memory-context-guide.md -->
 <!-- SYSTEM_FILES: 400_system-overview.md -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md --> 
+<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->

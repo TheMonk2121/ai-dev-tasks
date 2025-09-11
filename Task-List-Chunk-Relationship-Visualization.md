@@ -25,7 +25,7 @@ Implement a shared API and dual UI system for visualizing relationships between 
 - [ ] `get_cluster_data()` method computes UMAP 2D coordinates
 - [ ] UMAP cache keyed by corpus snapshot (`MAX(documents.updated_at)`)
 - [ ] Cache invalidation triggers on document changes
-- [ ] Feature flag protection for `/graph-data` endpoint
+- [ ] Feature flag protection for `/graph-data` endpoin
 - [ ] Max nodes limit enforced with `truncated: true` flag
 - [ ] Performance: p50 ≤ 200ms, p95 ≤ 500ms
 
@@ -34,8 +34,8 @@ Implement a shared API and dual UI system for visualizing relationships between 
   - [ ] Test `get_graph_data()` with various query parameters
   - [ ] Test `get_cluster_data()` with UMAP computation
   - [ ] Test cache invalidation on document changes
-  - [ ] Test max_nodes limit enforcement
-  - [ ] Test feature flag enablement/disablement
+  - [ ] Test max_nodes limit enforcemen
+  - [ ] Test feature flag enablement/disablemen
   - [ ] Test error handling for invalid inputs
   - [ ] Test empty result handling
   - [ ] Test cache miss scenarios
@@ -55,7 +55,7 @@ Implement a shared API and dual UI system for visualizing relationships between 
 - [ ] **Security Tests**
   - [ ] Verify no embedding data in API responses
   - [ ] Test input validation for query parameters
-  - [ ] Test max_nodes enforcement
+  - [ ] Test max_nodes enforcemen
   - [ ] Test feature flag protection
 
 - [ ] **Resilience Tests**
@@ -103,7 +103,7 @@ Implement a shared API and dual UI system for visualizing relationships between 
 - [ ] **Unit Tests**
   - [ ] Test endpoint with valid query parameters
   - [ ] Test endpoint with invalid parameters
-  - [ ] Test feature flag enablement/disablement
+  - [ ] Test feature flag enablement/disablemen
   - [ ] Test error response formats
 
 - [ ] **Integration Tests**
@@ -257,7 +257,7 @@ Implement a shared API and dual UI system for visualizing relationships between 
 - [ ] **Integration Tests**
   - [ ] Test complete workflow from API to visualization
   - [ ] Test both Flask and NiceGUI UIs
-  - [ ] Test feature flag enablement/disablement
+  - [ ] Test feature flag enablement/disablemen
 
 - [ ] **Documentation Tests**
   - [ ] Verify all links and cross-references work

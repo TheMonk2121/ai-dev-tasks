@@ -16,7 +16,7 @@
 - **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
 
 **Auto-Advance**: yes (Simple tasks can auto-advance)
-**🛑 Pause After**: no (Simple migration doesn't need checkpoints)
+**🛑 Pause After**: no (Simple migration doesn'tt need checkpoints)
 
 ## 📋 **Task Execution List**
 

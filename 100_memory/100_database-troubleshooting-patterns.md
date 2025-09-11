@@ -46,8 +46,8 @@ psql -d postgres -c "SELECT version();"
 ### **2. Database Schema Issues**
 **Pattern**: Missing required columns or tables
 **Symptoms**:
-- `Database schema issue: Requires 'start_char' column that doesn't exist`
-- `Table doesn't exist yet`
+- `Database schema issue: Requires 'start_char' column that doesn'tt exist`
+- `Table doesn'tt exist yet`
 
 **Recovery Steps**:
 ```bash
@@ -157,7 +157,7 @@ psql -d postgres -c "SELECT COUNT(*) FROM document_chunks;"
 
 ### **Recovery Effectiveness**
 - **Service Status**: PostgreSQL running without errors
-- **Schema Compliance**: All required tables and columns exist
+- **Schema Compliance**: All required tables and columns exis
 - **Extension Status**: Vector extension properly installed
 - **Connection Success**: Database queries execute without errors
 - **Data Availability**: Document chunks populated in database
@@ -222,10 +222,10 @@ cp dspy-rag-system/config/database/clean_slate_schema.sql backup/
 
 ### **Common Commands**
 ```bash
-# Service management
+# Service managemen
 brew services restart postgresql@14
 
-# Schema management
+# Schema managemen
 psql -d postgres -f dspy-rag-system/config/database/clean_slate_schema.sql
 
 # Environment setup
@@ -240,7 +240,7 @@ psql -d postgres -c "SELECT COUNT(*) FROM document_chunks;"
 - `pq: invalid input syntax for type vector` → Vector extension issue
 - `Database connection error: 0` → Connection configuration issue
 - `No module named 'dspy_rag_system'` → Python path issue
-- `Table doesn't exist yet` → Schema issue
+- `Table doesn'tt exist yet` → Schema issue
 
 ---
 

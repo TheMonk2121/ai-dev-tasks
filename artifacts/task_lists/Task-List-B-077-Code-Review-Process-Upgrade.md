@@ -48,7 +48,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error handling for invalid metrics
 - [ ] **Edge Case Tests** - Boundary conditions and malformed data
 
-**Implementation Notes**: Use existing monitoring infrastructure patterns from dspy-rag-system/src/monitoring/. Follow Python 3.12 typing standards and integrate with existing pytest fixtures.
+**Implementation Notes**: Use existing monitoring infrastructure patterns from src/monitoring/. Follow Python 3.12 typing standards and integrate with existing pytest fixtures.
 
 **Quality Gates**:
 - [ ] **Code Review** - Schema design reviewed and approved
@@ -86,7 +86,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Error scenarios handled gracefully
 - [ ] **Edge Case Tests** - Boundary conditions and stress testing
 
-**Implementation Notes**: Place in dspy-rag-system/src/monitoring/performance_collector.py. Use async patterns for non-blocking collection. Integrate with existing LTST memory system for context preservation.
+**Implementation Notes**: Place in src/monitoring/performance_collector.py. Use async patterns for non-blocking collection. Integrate with existing LTST memory system for context preservation.
 
 **Quality Gates**:
 - [ ] **Code Review** - Module implementation reviewed
@@ -162,7 +162,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - System behavior under failure conditions
 - [ ] **Edge Case Tests** - Malformed data and edge cases handled
 
-**Implementation Notes**: Use existing error handling patterns from dspy-rag-system/src/utils/. Implement logging for debugging and monitoring.
+**Implementation Notes**: Use existing error handling patterns from src/utils/. Implement logging for debugging and monitoring.
 
 **Quality Gates**:
 - [ ] **Code Review** - Error handling implementation reviewed
@@ -300,7 +300,7 @@ python3 scripts/solo_workflow.py ship
 **Dependencies**: Task 2.3
 **Solo Optimization**: Auto-advance: yes, Context preservation: yes
 
-**Description**: Comprehensive validation to ensure performance integration doesn't break existing workflow functionality or introduce regressions.
+**Description**: Comprehensive validation to ensure performance integration doesn'tt break existing workflow functionality or introduce regressions.
 
 **Acceptance Criteria**:
 - [ ] All existing workflow functionality preserved
@@ -510,7 +510,7 @@ python3 scripts/solo_workflow.py ship
 - [ ] **Resilience Tests** - Dashboard behavior under failures
 - [ ] **Edge Case Tests** - Dashboard edge case handling
 
-**Implementation Notes**: Use existing NiceGUI patterns from dspy-rag-system/src/nicegui_graph_view.py. Design for solo developer workflow optimization.
+**Implementation Notes**: Use existing NiceGUI patterns from src/nicegui_graph_view.py. Design for solo developer workflow optimization.
 
 **Quality Gates**:
 - [ ] **Code Review** - Dashboard design reviewed

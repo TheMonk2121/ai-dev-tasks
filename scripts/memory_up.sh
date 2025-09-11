@@ -177,7 +177,7 @@ MEMORY_CONTEXT+="$(get_file_summary "100_memory/100_evidence-based-optimization-
 # Add actual DSPy system files
 MEMORY_CONTEXT+="### **DSPy System Files**\n\n"
 MEMORY_CONTEXT+="$(get_file_summary "dspy-rag-system/README.md" 60)\n\n"
-MEMORY_CONTEXT+="$(get_file_summary "dspy-rag-system/src/utils/README_GO.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "src/utils/README_GO.md" 40)\n\n"
 
 # Add DSPy-specific context for all roles
 MEMORY_CONTEXT+="## 🤖 **DSPy Framework Context**\n\n"
@@ -254,8 +254,8 @@ MEMORY_CONTEXT+="$(git log --oneline -5 2>/dev/null || echo "Git history not ava
 # Add system status
 MEMORY_CONTEXT+="## 🟢 **System Status**\n\n"
 MEMORY_CONTEXT+="- **Database Sync**: ✅ N/A (intentionally removed as part of B-1004 quality gate simplification)\n"
-MEMORY_CONTEXT+="- **LTST Memory**: $(if [ -f "dspy-rag-system/src/utils/memory_rehydrator.py" ]; then echo "✅ Available"; else echo "❌ Not Found"; fi)\n"
-MEMORY_CONTEXT+="- **Go CLI**: $(if [ -f "dspy-rag-system/src/cli/memory_rehydration_cli" ]; then echo "✅ Available"; else echo "❌ Not Found"; fi)\n\n"
+MEMORY_CONTEXT+="- **LTST Memory**: $(if [ -f "src/utils/memory_rehydrator.py" ]; then echo "✅ Available"; else echo "❌ Not Found"; fi)\n"
+MEMORY_CONTEXT+="- **Go CLI**: $(if [ -f "src/cli/memory_rehydration_cli" ]; then echo "✅ Available"; else echo "❌ Not Found"; fi)\n\n"
 
 # Add usage tips
 MEMORY_CONTEXT+="## 💡 **Usage Tips**\n\n"

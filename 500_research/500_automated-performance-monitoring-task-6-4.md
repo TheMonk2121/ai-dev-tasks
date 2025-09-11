@@ -213,11 +213,11 @@ class PerformanceDashboard:
 @dataclass
 class PerformanceMetric:
     """Individual performance metric"""
-    timestamp: float
+    timestamp: floa
     metric_type: MetricType
-    value: float
+    value: floa
     model: str
-    context_size: int
+    context_size: in
     metadata: Dict[str, Any] = field(default_factory=dict)
 ```
 
@@ -226,14 +226,14 @@ class PerformanceMetric:
 @dataclass
 class Alert:
     """Performance alert"""
-    timestamp: float
+    timestamp: floa
     level: AlertLevel
     message: str
     metric_type: MetricType
-    current_value: float
-    threshold: float
+    current_value: floa
+    threshold: floa
     model: str
-    context_size: int
+    context_size: in
     metadata: Dict[str, Any] = field(default_factory=dict)
 ```
 
@@ -242,16 +242,16 @@ class Alert:
 @dataclass
 class PerformanceSnapshot:
     """Performance snapshot at a point in time"""
-    timestamp: float
+    timestamp: floa
     model: str
-    context_size: int
-    f1_score: float
-    latency: float
-    token_usage: int
-    memory_usage: float
-    context_utilization: float
-    adaptation_success_rate: float
-    overflow_frequency: float
+    context_size: in
+    f1_score: floa
+    latency: floa
+    token_usage: in
+    memory_usage: floa
+    context_utilization: floa
+    adaptation_success_rate: floa
+    overflow_frequency: floa
     metadata: Dict[str, Any] = field(default_factory=dict)
 ```
 
@@ -489,7 +489,7 @@ CREATE TABLE performance_snapshots (
 - **Minimal Overhead**: Low-impact monitoring with configurable intervals
 - **Efficient Buffering**: In-memory buffering for optimal performance
 - **Asynchronous Processing**: Non-blocking alert and snapshot generation
-- **Resource Management**: Proper thread cleanup and resource management
+- **Resource Management**: Proper thread cleanup and resource managemen
 
 ### **Configuration Management**
 
@@ -497,10 +497,10 @@ CREATE TABLE performance_snapshots (
 - **Threshold Tuning**: Easily adjustable alert thresholds
 - **Interval Configuration**: Configurable monitoring and snapshot intervals
 - **Database Settings**: Flexible database path and retention policies
-- **Integration Options**: Configurable integration enablement
+- **Integration Options**: Configurable integration enablemen
 
 #### **Runtime Configuration**
-- **Dynamic Updates**: Configuration changes without system restart
+- **Dynamic Updates**: Configuration changes without system restar
 - **Threshold Adjustment**: Runtime threshold modification
 - **Integration Control**: Enable/disable specific integrations
 - **Performance Tuning**: Runtime performance optimization

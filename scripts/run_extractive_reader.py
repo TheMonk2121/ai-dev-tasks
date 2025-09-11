@@ -14,7 +14,7 @@ import os
 import sys
 
 # Ensure module imports work when called from repo root
-sys.path.insert(0, "dspy-rag-system/src")
+sys.path.insert(0, "src")
 
 import dspy  # type: ignore
 

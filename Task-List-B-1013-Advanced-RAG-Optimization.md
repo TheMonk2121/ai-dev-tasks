@@ -1,7 +1,7 @@
 # Task List: B-1013 Advanced RAG Optimization with Late Chunking and HIRAG Integration
 
 <!-- BACKLOG_ID: B-1013 -->
-<!-- MEMORY_REHYDRATOR_PINS: ["dspy-rag-system/src/utils/memory_rehydrator.py", "400_guides/400_dspy-v2-technical-implementation-guide.md", "400_guides/400_rag-system-research.md"] -->
+<!-- MEMORY_REHYDRATOR_PINS: ["src/utils/memory_rehydrator.py", "400_guides/400_dspy-v2-technical-implementation-guide.md", "400_guides/400_rag-system-research.md"] -->
 
 ## Overview
 
@@ -33,7 +33,7 @@ Implement advanced RAG optimization system with late chunking for context preser
   - [ ] Test compatibility with existing RAG pipeline
 - [ ] **Performance Tests**
   - [ ] Benchmark against current chunking method
-  - [ ] Measure memory usage impact
+  - [ ] Measure memory usage impac
 - [ ] **Security Tests**
   - [ ] Validate input sanitization
   - [ ] Test with malformed documents
@@ -47,7 +47,7 @@ Implement advanced RAG optimization system with late chunking for context preser
 - [ ] **Security Reviewed** - Security implications considered
 - [ ] **Documentation Updated** - Relevant docs updated
 
-#### T-1.2: Document Processing Enhancement
+#### T-1.2: Document Processing Enhancemen
 **Priority:** High
 **Estimated Time:** 2 hours
 **Dependencies:** T-1.1
@@ -258,10 +258,10 @@ Implement advanced RAG optimization system with late chunking for context preser
 **Description:** Perform final validation and quality assurance to ensure the system meets all requirements and quality standards.
 
 **Acceptance Criteria:**
-- [ ] All acceptance criteria met
+- [ ] All acceptance criteria me
 - [ ] Quality standards achieved
 - [ ] Documentation complete and accurate
-- [ ] System ready for production deployment
+- [ ] System ready for production deploymen
 
 **Testing Requirements:**
 - [ ] **Quality Assurance Tests**
@@ -302,7 +302,7 @@ Implement advanced RAG optimization system with late chunking for context preser
   - [ ] Memory usage verification
 - [ ] **Benchmark Tests**
   - [ ] Comparison with baseline system
-  - [ ] Performance improvement measurement
+  - [ ] Performance improvement measuremen
 
 **Implementation Notes:** Document all performance improvements and ensure they meet or exceed the 15%+ target.
 
@@ -328,7 +328,7 @@ Implement advanced RAG optimization system with late chunking for context preser
 
 ## Memory Rehydrator Integration
 
-This task list integrates with the memory rehydrator system (`dspy-rag-system/src/utils/memory_rehydrator.py`) to ensure optimal context retrieval and processing. The implementation will leverage:
+This task list integrates with the memory rehydrator system (`src/utils/memory_rehydrator.py`) to ensure optimal context retrieval and processing. The implementation will leverage:
 
 - **Entity Expansion**: Enhanced semantic relationship preservation
 - **AsyncIO Integration**: Parallel processing for performance optimization

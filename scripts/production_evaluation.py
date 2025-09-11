@@ -17,12 +17,16 @@ dspy_rag_path = project_root / "dspy-rag-system"
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(dspy_rag_path))
 
-# Import environment guard first
+# Import settings to validate configuration
+from src.config import get_settings
+
+# Validate configuration on import
 try:
-    import config.env_guard
-except ImportError:
-    # Fallback if config.env_guard is not available
-    print("⚠️ Warning: config.env_guard not available, skipping environment validation")
+    settings = get_settings()
+    print(f"✅ Configuration loaded successfully for environment: {settings.env}")
+except Exception as e:
+    print(f"❌ Configuration validation failed: {e}")
+    sys.exit(1)
 
 
 def run_evaluation_pass(pass_name: str, config: dict[str, Any], output_file: str) -> dict[str, Any]:

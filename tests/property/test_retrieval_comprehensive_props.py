@@ -16,10 +16,10 @@ from src.dspy_modules.retriever.rerank import mmr_rerank
 def create_retrieval_candidate(
     content: str,
     score: float,
-    doc_id: str = None,
-    title: str = None,
-    url: str = None,
-    metadata: dict = None,
+    doc_id: str | None = None,
+    title: str | None = None,
+    url: str | None = None,
+    metadata: dict | None = None,
 ) -> dict:
     """Create a retrieval candidate for testing."""
     if doc_id is None:
@@ -42,7 +42,7 @@ def create_weights(
     semantic: float = 0.5,
     lexical: float = 0.3,
     freshness: float = 0.2,
-    custom: dict = None,
+    custom: dict | None = None,
 ) -> dict:
     """Create a weights dict for testing."""
     if custom is None:
@@ -242,11 +242,22 @@ class TestMMRRerankingProperties:
             content = row["content"]
             score = row["score"]
             doc_id = row.get("doc_id", "")
-            original_meta = original_metadata.get((content, score, doc_id), {})
-            # Check that metadata is preserved (allowing for empty metadata)
-            if original_meta:  # Only check if original had metadata
+
+            # Find the original row that matches this content, score, and doc_id
+            original_row = None
+            for orig_row in rows:
+                if (
+                    orig_row["content"] == content
+                    and orig_row["score"] == score
+                    and orig_row.get("doc_id", "") == doc_id
+                ):
+                    original_row = orig_row
+                    break
+
+            if original_row and original_row["metadata"]:
+                # Check that metadata is preserved (allowing for empty metadata)
                 assert (
-                    row["metadata"] == original_meta
+                    row["metadata"] == original_row["metadata"]
                 ), f"Metadata not preserved for content: {content}, score: {score}, doc_id: {doc_id}"
 
     @pytest.mark.prop
@@ -429,7 +440,7 @@ class TestRetrievalEdgeCases:
                 assert candidate["doc_id"] == text
             except Exception as e:
                 # Should be a specific validation error, not a crash
-                assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for short string: {type(e)}"
+                assert isinstance(e, ValueError | TypeError), f"Unexpected exception for short string: {type(e)}"
 
     @pytest.mark.prop
     @given(st.text(min_size=1000, max_size=5000))
@@ -441,7 +452,7 @@ class TestRetrievalEdgeCases:
             assert len(candidate["content"]) <= len(text)
         except Exception as e:
             # Should be a specific validation error, not a crash
-            assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for long string: {type(e)}"
+            assert isinstance(e, ValueError | TypeError), f"Unexpected exception for long string: {type(e)}"
 
     @pytest.mark.prop
     @given(st.text(min_size=1, max_size=1000))
@@ -456,4 +467,4 @@ class TestRetrievalEdgeCases:
             assert candidate["content"] == special_text
         except Exception as e:
             # Should be a specific validation error, not a crash
-            assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for special characters: {type(e)}"
+            assert isinstance(e, ValueError | TypeError), f"Unexpected exception for special characters: {type(e)}"

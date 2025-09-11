@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 # Add DSPy RAG system to path
-dspy_rag_path = os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src")
+dspy_rag_path = os.getenv("DSPY_RAG_PATH", "src")
 if dspy_rag_path and dspy_rag_path not in sys.path:
     sys.path.insert(0, dspy_rag_path)
 

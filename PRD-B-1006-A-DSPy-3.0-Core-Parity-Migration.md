@@ -132,7 +132,7 @@
 - Median latency per role (Planner, Coder)
 - Token count per run (avg ± variance)
 - Doc coherence score
-- Lint violations count
+- Lint violations coun
 
 **Acceptable Thresholds:**
 - Test pass rate: ≥90% (no more than 10% regression)

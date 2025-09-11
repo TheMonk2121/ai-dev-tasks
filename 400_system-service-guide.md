@@ -1,6 +1,6 @@
 # System Service Guide
 
-> DEPRECATED: Content integrated into core guides — see `400_guides/400_11_deployments-ops-and-observability.md` (services, health/readiness, monitoring), `400_guides/400_09_automation-and-pipelines.md` (scripts/CI wiring), `400_guides/400_08_integrations-editor-and-models.md` (dashboards/integration touchpoints), and `400_guides/400_00_getting-started-and-index.md` (index). Implementation lives under `dspy-rag-system/src/` and `dashboard/`.
+> DEPRECATED: Content integrated into core guides — see `400_guides/400_11_deployments-ops-and-observability.md` (services, health/readiness, monitoring), `400_guides/400_09_automation-and-pipelines.md` (scripts/CI wiring), `400_guides/400_08_integrations-editor-and-models.md` (dashboards/integration touchpoints), and `400_guides/400_00_getting-started-and-index.md` (index). Implementation lives under `src/` and `dashboard/`.
 
 ## 🔎 TL;DR {#tldr}
 

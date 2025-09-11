@@ -46,7 +46,7 @@ python3 scripts/solo_workflow.py ship
 
 **Acceptance Criteria**:
 - [ ] NetworkX and Hypothesis dependencies added to project requirements
-- [ ] Math package structure created in `dspy-rag-system/src/dspy_modules/math/`
+- [ ] Math package structure created in `src/dspy_modules/math/`
 - [ ] Comprehensive learning comments and inline documentation added
 - [ ] Interactive example infrastructure set up using existing NiceGUI system
 - [ ] Learning scaffolding framework established for progressive complexity

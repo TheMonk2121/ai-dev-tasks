@@ -18,7 +18,7 @@ Backlog link: B-066 (also B-003)
 |---|---|---|
 |  |  |  |
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with contain
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -61,11 +61,11 @@ Backlog link: B-066 (also B-003)
 
 - 400_guides/400_security-best-practices-guide.md (controls matrix, runbooks)
 
-- dspy-rag-system/src/utils/prompt_sanitizer.py (expand rules)
+- src/utils/prompt_sanitizer.py (expand rules)
 
 - dspy-rag-system/scripts/security_scan.py (automated checks)
 
-- dspy-rag-system/src/utils/logger.py (redaction)
+- src/utils/logger.py (redaction)
 
 <!-- ANCHOR: citations -->
 {#citations}

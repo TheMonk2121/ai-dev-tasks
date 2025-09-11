@@ -171,7 +171,7 @@ You've built a **programmable AI research assistant** that can:
 
 **It's like having a super-smart assistant who's read all your files, can answer any question about them, and gets smarter over time!** 🚀
 
-**The key difference: ChatGPT is a general AI that doesn't know your data. Your DSPy RAG system is a specialized AI that knows everything in your documents and can answer questions about them intelligently.**
+**The key difference: ChatGPT is a general AI that doesn'tt know your data. Your DSPy RAG system is a specialized AI that knows everything in your documents and can answer questions about them intelligently.**
 
 ## **🏗️ System Architecture**
 
