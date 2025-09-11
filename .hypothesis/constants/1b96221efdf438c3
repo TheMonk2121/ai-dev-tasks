@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/bedrock_batch_processor.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.1, 1.0, 60.0, 100, 200, 1000, '--concurrent', '--export', '--optimize', '--test-batch', '...', '__main__', 'avg_cost_per_request', 'batch_size', 'batch_summary', 'configuration', 'error', 'failed_requests', 'gt_answer', 'inf', 'input_tokens', 'max_concurrent', 'output_tokens', 'performance_metrics', 'processing_time', 'projected_time', 'query', 'rate_limit_delay', 'request_count', 'request_id', 'response_text', 'responses', 'retrieved_context', 'store_true', 'success', 'success_rate', 'successful_requests', 'throughput', 'total_cost', 'total_requests', 'total_usage', 'usage', 'w', '✅', '❌']

@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/dependency_monitor.py
+# hypothesis_version: 6.138.15
+
+['%Y-%m-%d %H:%M:%S', '--dry-run', '--force', '--here', '--ignore', '--json', '--output-dir', '-j', '=', 'ERROR', 'INFO', 'WARNING', '__main__', 'a', 'changes', 'changes_detected', 'conflict_audit.py', 'conflicts', 'dependencies', 'dependency_tree', 'details', 'error', 'exit_code', 'failed', 'hash', 'import_conflicts', 'metrics', 'modified', 'new', 'output', 'pipdeptree', 'pycycle', 'status', 'store_true', 'timestamp', 'tool', 'total_packages', 'w']

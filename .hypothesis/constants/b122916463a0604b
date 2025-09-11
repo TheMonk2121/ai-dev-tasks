@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/schemas/validation.py
+# hypothesis_version: 6.138.15
+
+['Known/valid tags', 'Validation errors', 'Validation warnings', 'after', 'case_id', 'decision', 'file_path', 'file_type', 'id', 'mode', 'query', 'reader', 'retrieval', 'tags']

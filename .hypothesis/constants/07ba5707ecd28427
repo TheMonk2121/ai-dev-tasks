@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/doc_coherence_validator.py
+# hypothesis_version: 6.138.15
+
+['*.md', '--stdin', '--version', '.', '.git/', '.md', '000_', '000_backlog.md', '100_', '200_', '300_', '400_', '500_', '600_', 'Backlog references', 'README.md', 'Validation report', '\\bB-\\d{3}\\b', '__main__', '__pycache__/', 'category', 'cursor', 'description', 'docs/legacy/', 'dspy', 'error', 'errors', 'issue', 'issues', 'lint', 'memory_context', 'metrics/latest', 'node_modules/', 'results', 'type', 'unknown', 'utf-8', 'venv/', 'w', 'warning', 'warnings', '{}']

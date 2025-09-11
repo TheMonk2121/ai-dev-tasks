@@ -1,0 +1,76 @@
+---
+name: CI Nightly Property Tests
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight UTC
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  property-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15  # Overall job timeout
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install uv
+          uv sync --dev
+
+      - name: Run Property Tests
+        id: run_prop_tests
+        continue-on-error: true  # Allow subsequent steps to run
+        run: |
+          echo "Running Hypothesis property tests..."
+          start_time=$(date +%s)
+          uv run python -m pytest -m prop --maxfail=1 -q tests/property/ \
+            > property_test_output.txt 2>&1
+          exit_code=$?
+          end_time=$(date +%s)
+          duration=$((end_time - start_time))
+          echo "Property tests completed in ${duration} seconds."
+          echo "duration=${duration}" >> $GITHUB_OUTPUT
+          echo "exit_code=${exit_code}" >> $GITHUB_OUTPUT
+          cat property_test_output.txt
+
+      - name: Check Property Test Duration
+        if: steps.run_prop_tests.outputs.duration > 600  # 10 minutes
+        run: |
+          echo "Property tests exceeded budget of 10 minutes. Failing job."
+          exit 1
+
+      - name: Upload Hypothesis Examples
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hypothesis-examples
+          path: .hypothesis/examples/
+
+      - name: Upload Edge Cases JSONL
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: edge-cases-jsonl
+          path: tests/data/edge_cases.jsonl
+
+      - name: Run KPI Tracking Script
+        id: kpi_tracking
+        if: always()
+        run: |
+          uv run python scripts/track_hypothesis_kpi.py
+        continue-on-error: true  # Allow job to complete
+
+      - name: Fail if Property Tests Failed
+        if: steps.run_prop_tests.outputs.exit_code != 0
+        run: |
+          echo "Property tests failed. See logs for details."
+          exit 1

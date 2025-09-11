@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/ragchecker_official_evaluation.py
+# hypothesis_version: 6.138.15
+
+['%Y%m%d_%H%M%S', '-', '--help', '--outdir', '-h', '300_core', '=', 'EVAL_CONCURRENCY', 'EVAL_PASS', 'EVAL_SUITE', 'Profiles:', 'RAGCheckerInput', '__main__', 'ai-dev-tasks', 'results', 'scripts/lib', 'utf-8']

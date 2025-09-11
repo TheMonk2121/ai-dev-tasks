@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/config/models.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.1, 0.2, 0.22, 0.45, 0.5, 0.6, 0.8, 1.0, 100, 120, 128, 168, 256, 300, 450, 600, 1024, 1800, 2000, 3600, 4096, 5000, 8080, 8192, 10000, 32768, 60000, 65535, 100000, 'A', 'B', 'C', 'CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'WARNING', 'advisory', 'dev', 'disabled', 'dspy_rag', 'enforcement', 'json', 'prod', 'ragchecker', 'synthetic', 'test', 'text', 'us-east-1']

@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/repo_maintenance.py
+# hypothesis_version: 6.138.15
+
+[3.0, '*.md', '*.py', '--apply', '--auto-commit', '--dry-run', '--porcelain', '--show-current', '--skip-git-check', '-m', '.', '.git/', '003 optional', '=', 'Changes made:', 'Duplicate group:', 'ERROR', 'Errors encountered:', 'INFO', 'MAINTENANCE SUMMARY', 'No changes to commit', 'T-6: Commit changes', '\\b\\(optional\\)\\b', '__main__', '__pycache__/', 'add', 'archives', 'backup', 'branch', 'commit', 'docs/legacy', 'docs/legacy/', 'git', 'legacy', 'main', 'node_modules/', 'pts.*5.*score.*3\\.0', 'rb', 'status', 'store_true', 'utf-8', 'venv/', 'w', 'yi-coder.*default']

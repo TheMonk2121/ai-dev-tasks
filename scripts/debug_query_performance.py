@@ -19,7 +19,9 @@ def debug_query_performance():
                     )
                 """
                 )
-                has_pg_stat_statements = cur.fetchone()[0]
+                result = cur.fetchone()
+                print(f"   Query result: {result}")
+                has_pg_stat_statements = result["exists"] if result else False
                 print(f"   pg_stat_statements available: {has_pg_stat_statements}")
 
                 if not has_pg_stat_statements:

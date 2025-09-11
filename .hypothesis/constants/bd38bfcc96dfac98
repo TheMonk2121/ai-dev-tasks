@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/session_registry.py
+# hypothesis_version: 6.138.15
+
+[1800, 3600, '+', '+00:00', '--backlog-id', '--no-context', '--pid', '--priority', '--session-type', '--status', '--status-filter', '--tags', '--worklog-path', '=', 'Context tags', 'No sessions found.', 'Path to worklog file', 'Session priority', 'Session status', 'Type of session', 'Z', '__main__', 'active', 'active_sessions', 'backlog_id', 'brainstorming', 'cleanup', 'command', 'completed', 'context', 'debug', 'description', 'high', 'idle_timeout', 'implementation', 'info', 'last_activity', 'last_updated', 'list', 'low', 'medium', 'orphaned', 'paused', 'pid', 'planning', 'priority', 'register', 'related_sessions', 'session_type', 'sessions', 'start_time', 'status', 'store_true', 'tag', 'tags', 'total_sessions', 'untag', 'update', 'validate', 'w', 'worklog_path']

@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -55,7 +55,24 @@ class EvaluationSettings(BaseSettings):
             "context",
         ],
         description="List of known/valid tags",
+        json_schema_extra={"type": "array", "items": {"type": "string"}},
     )
+
+    @field_validator("known_tags", mode="before")
+    @classmethod
+    def parse_known_tags(cls, v):
+        """Parse known_tags from string or list."""
+        if isinstance(v, str):
+            if v == "[]":
+                return []
+            # Try to parse as JSON array
+            import json
+            try:
+                return json.loads(v)
+            except json.JSONDecodeError:
+                # If not JSON, split by comma
+                return [tag.strip() for tag in v.split(",") if tag.strip()]
+        return v
 
     class Config:
         env_file = ".env"

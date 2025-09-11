@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, SecretStr, computed_field
 from pydantic.functional_validators import AfterValidator
 
 # Reusable constraints
-NonEmptyStr = Annotated[str, AfterValidator(lambda s: s.strip() or (_ for _ in ()).throw(ValueError("empty")))]
+NonEmptyStr = Annotated[str, AfterValidator(lambda s: s if s.strip() else (_ for _ in ()).throw(ValueError("empty")))]
 
 
 class RerankerConfig(BaseModel):
@@ -163,7 +163,7 @@ class GoldCase(BaseModel):
     # We accept extra and remap in a root validator.
     class Config:
         validate_by_name = True
-        str_strip_whitespace = True
+        str_strip_whitespace = False  # Don't strip whitespace to preserve carriage returns
         validate_assignment = True
         extra = "allow"  # tolerate legacy keys; we'll normalize below
 
@@ -208,7 +208,7 @@ class GoldCase(BaseModel):
             if t not in seen:
                 out.append(t)
                 seen.add(t)
-        return out or ["rag_qa_single"]
+        return out  # Don't add default tags - preserve empty list if provided
 
     @model_validator(mode="after")
     def _mode_requirements(self) -> GoldCase:

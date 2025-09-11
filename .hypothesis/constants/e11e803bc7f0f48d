@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/bedrock_client.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.1, 0.4, 0.8, 3.0, 15.0, 100, 150, 300, 1000, 1000000, '1.6', '14', '6', 'BEDROCK_RETRY_BASE', 'Code', 'Error', 'ThrottlingException', 'Unknown', 'ValidationException', '__main__', 'anthropic_version', 'application/json', 'bedrock', 'bedrock-2023-05-31', 'bedrock-runtime', 'body', 'content', 'input_tokens', 'max_tokens', 'messages', 'modelId', 'modelSummaries', 'output_tokens', 'request_count', 'role', 'temperature', 'text', 'timestamp', 'total_cost', 'us-east-1', 'usage', 'user', 'w']
