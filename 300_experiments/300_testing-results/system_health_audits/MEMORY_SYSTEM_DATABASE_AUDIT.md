@@ -57,12 +57,12 @@ scripts/cache_invalidation_system.py
 #### **❌ INCORRECTLY CONFIGURED:**
 ```
 dspy-rag-system/src/utils/ltst_memory_system.py
-├── ❌ Uses: postgresql://localhost/dspy_rag (DEFAULT)
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency (DEFAULT)
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: WILL FAIL
 
 dspy-rag-system/src/utils/conversation_storage.py
-├── ❌ Uses: postgresql://localhost/dspy_rag (DEFAULT)
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency (DEFAULT)
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: WILL FAIL
 
@@ -105,7 +105,7 @@ dspy-rag-system/src/dspy_modules/vector_store.py
 #### **❌ NON-EXISTENT DATABASES:**
 ```
 dspy-rag-system/src/monitoring/health_endpoints.py
-├── ❌ Uses: postgresql://danieljacobs@localhost:5432/dspy_rag
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
@@ -120,32 +120,32 @@ dspy-rag-system/scripts/setup.sh
 #### **❌ INCONSISTENT SCHEMAS:**
 ```
 test_quality_ltst_integration.py
-├── ❌ Uses: postgresql://localhost:5432/dspy_rag_system
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
 ├── ❌ Database: dspy_rag_system (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_ux_ltst_integration.py
-├── ❌ Uses: postgresql://localhost:5432/dspy_rag_system
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
 ├── ❌ Database: dspy_rag_system (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_n8n_ltst_integration.py
-├── ❌ Uses: postgresql://localhost:5432/dspy_rag_system
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
 ├── ❌ Database: dspy_rag_system (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_predictive_intelligence.py
-├── ❌ Uses: postgresql://localhost:5432/dspy_rag_system
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency_system
 ├── ❌ Database: dspy_rag_system (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_resilience.py
-├── ❌ Uses: postgresql://danieljacobs@localhost:5432/dspy_rag
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
 test_concurrent.py
-├── ❌ Uses: postgresql://danieljacobs@localhost:5432/dspy_rag
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 ```
@@ -174,17 +174,17 @@ test_unified_data_pipeline.py
 #### **❌ INCORRECT CONFIGURATIONS:**
 ```
 scripts/system_monitor.py
-├── ❌ Uses: postgresql://danieljacobs@localhost:5432/dspy_rag
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
 scripts/monitoring_dashboard.py
-├── ❌ Uses: postgresql://danieljacobs@localhost:5432/dspy_rag
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 
 scripts/maintenance.py
-├── ❌ Uses: postgresql://danieljacobs@localhost:5432/dspy_rag
+├── ❌ Uses: postgresql://danieljacobs@localhost:5432/ai_agency
 ├── ❌ Database: dspy_rag (doesn't exist)
 └── ❌ Status: CONNECTION FAILURE
 ```
@@ -204,7 +204,7 @@ export DATABASE_URL="postgresql://danieljacobs@localhost:5432/ai_agency"
 # dspy-rag-system/src/utils/memory_rehydrator.py
 
 # Change DEFAULT from:
-connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
 
 # To:
 connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")

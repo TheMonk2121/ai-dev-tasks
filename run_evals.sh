@@ -16,6 +16,7 @@ if [ ! -f "throttle_free_eval.sh" ] || [ ! -d "scripts" ]; then
 fi
 
 # Load stable configuration (prints lock banner)
+# shellcheck source=throttle_free_eval.sh
 source throttle_free_eval.sh
 
 # Detect Bedrock credentials via AWS CLI if available

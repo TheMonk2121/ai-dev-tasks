@@ -19,6 +19,7 @@ except ImportError:
     pass
 
 import dspy
+
 from dspy_modules.rag_pipeline import HybridVectorStore, _retrieve_with_fusion
 
 

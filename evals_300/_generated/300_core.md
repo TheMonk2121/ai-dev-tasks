@@ -1,7 +1,7 @@
 
 # Core Evaluation Suite
 
-> SSOT: `300_core` • Generated 2025-09-09T07:51:27.179295+00:00 • Commit: f8d03ee7f2e5cfc334e4f9a7b7b08055d900484d (test-signal-implementation)
+> SSOT: `300_core` • Generated 2025-09-11T00:02:22.874226+00:00 • Commit: 6a21056ced7f3a6ef389ae5de3cf2d3a1dc91644 (main)
 >
 > Suite created: 2025-09-08T19:57:59-05:00 • updated: 2025-09-08T19:57:59-05:00
 
@@ -241,7 +241,7 @@ Retrieval with reranker disabled to establish baseline for uplift.
 **Timestamps**
 - **Created**: 2025-09-08T23:41:23.566608+00:00
 - **Updated**: 2025-09-09T00:55:48.552085+00:00
-- **Last run**: 2025-09-08T23:14:49
+- **Last run**: 2025-09-10T19:02:20
 
 
 **Gates**
@@ -260,7 +260,7 @@ python -m evals_300.tools.run --suite 300_core --pass reranker_ablation_off
 
 **Latest Results**
 ```json
-{'precision': 0.09648873348208598, 'recall': 0.0627661633300274, 'f1': 0.06312759563341493, 'faithfulness': 0.22948172101814165, 'artifact_path': 'metrics/history/reranker_ablation_off_1757391287/ragchecker_clean_evaluation_20250908_231448.json', 'timestamp': '2025-09-08T23:14:49'}
+{'precision': 0.09648873348208598, 'recall': 0.0627661633300274, 'f1': 0.06312759563341493, 'faithfulness': 0.22948172101814165, 'artifact_path': 'metrics/history/reranker_ablation_off_1757548938/ragchecker_clean_evaluation_20250910_190219.json', 'timestamp': '2025-09-10T19:02:20'}
 ```
 
 
@@ -296,7 +296,7 @@ Retrieval with cross-encoder reranker enabled to measure uplift.
 **Timestamps**
 - **Created**: 2025-09-08T23:41:23.566632+00:00
 - **Updated**: 2025-09-09T00:55:48.552102+00:00
-- **Last run**: 2025-09-08T23:14:51
+- **Last run**: 2025-09-10T19:02:22
 
 
 **Gates**
@@ -315,6 +315,6 @@ python -m evals_300.tools.run --suite 300_core --pass reranker_ablation_on
 
 **Latest Results**
 ```json
-{'precision': 0.09648873348208598, 'recall': 0.0627661633300274, 'f1': 0.06312759563341493, 'faithfulness': 0.22948172101814165, 'artifact_path': 'metrics/history/reranker_ablation_on_1757391289/ragchecker_clean_evaluation_20250908_231450.json', 'timestamp': '2025-09-08T23:14:51'}
+{'precision': 0.09648873348208598, 'recall': 0.0627661633300274, 'f1': 0.06312759563341493, 'faithfulness': 0.22948172101814165, 'artifact_path': 'metrics/history/reranker_ablation_on_1757548940/ragchecker_clean_evaluation_20250910_190222.json', 'timestamp': '2025-09-10T19:02:22'}
 ```
 
