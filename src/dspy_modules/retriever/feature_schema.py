@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Union
 import numpy as np
 from pydantic import BaseModel, ConfigDict, field_serializer
 
@@ -31,13 +33,13 @@ class FusionFeatures(BaseModel):
 
     # optional dense vectors (if you persist them in features)
     # enforce known dims when you know them, else use ArrayF32
-    q_vec: Vector384 | None = None  # type: ignore
-    d_vec: Vector384 | None = None  # type: ignore
+    q_vec: Union[Vector384, None] = None  # type: ignore
+    d_vec: Union[Vector384, None] = None  # type: ignore
 
     @field_serializer("q_vec", when_used="json")
-    def _ser_q_vec(self, v: np.ndarray | None) -> list[float] | None:
+    def _ser_q_vec(self, v: Union[np.ndarray, None]) -> Union[list[float], None]:
         return v.tolist() if v is not None else None
 
     @field_serializer("d_vec", when_used="json")
-    def _ser_d_vec(self, v: np.ndarray | None) -> list[float] | None:
+    def _ser_d_vec(self, v: Union[np.ndarray, None]) -> Union[list[float], None]:
         return v.tolist() if v is not None else None
