@@ -1,3 +1,13 @@
+from __future__ import annotations
+import json
+import tempfile
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+import pytest
+from scripts.session_registry import SessionRegistry
+        from scripts.session_context_integration import SessionContextIntegrator
+        from scripts.session_context_integration import integrate_with_memory_rehydrator
+import sys
 #!/usr/bin/env python3
 """
 Test suite for Session Registry System.
@@ -10,16 +20,7 @@ Tests the comprehensive session registry implementation including:
 - Error handling and validation
 """
 
-import json
-import tempfile
-from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
-
 # Import the session registry system
-from scripts.session_registry import SessionRegistry
-
 
 class TestSessionRegistry:
     """Test suite for SessionRegistry class."""
@@ -290,7 +291,6 @@ class TestSessionRegistry:
         assert session.context.priority == sample_session_data["priority"]
         assert set(sample_session_data["tags"]).issubset(session.context.tags)
 
-
 class TestSessionContextIntegrator:
     """Test suite for session context integration with memory rehydration."""
 
@@ -349,7 +349,6 @@ class TestSessionContextIntegrator:
     @pytest.fixture
     def integrator(self, temp_registry_path):
         """Create a SessionContextIntegrator instance for testing."""
-        from scripts.session_context_integration import SessionContextIntegrator
 
         return SessionContextIntegrator(registry_path=temp_registry_path)
 
@@ -400,7 +399,6 @@ class TestSessionContextIntegrator:
 
     def test_integrate_with_memory_rehydrator(self, temp_registry_path):
         """Test integration with memory rehydrator."""
-        from scripts.session_context_integration import integrate_with_memory_rehydrator
 
         # Mock the integrator to use our test registry
         with patch("scripts.session_context_integration.SessionContextIntegrator") as mock_integrator_class:
@@ -417,7 +415,6 @@ class TestSessionContextIntegrator:
             assert "session_registry" in integration_data
             assert "session_summary" in integration_data
             assert "integration_timestamp" in integration_data
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

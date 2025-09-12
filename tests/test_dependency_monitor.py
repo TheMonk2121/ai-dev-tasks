@@ -1,3 +1,13 @@
+from __future__ import annotations
+import json
+import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+import pytest
+from scripts.dependency_monitor import DependencyMonitor
+import sys
 #!/usr/bin/env python3
 """
 Test Suite for Dependency Monitor - Automated Dependency Analysis
@@ -9,18 +19,6 @@ Tests the dependency monitoring system including:
 - Change detection
 - File output and logging
 """
-
-import json
-import shutil
-import subprocess
-import tempfile
-from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
-
-from scripts.dependency_monitor import DependencyMonitor
-
 
 class TestDependencyMonitor:
     """Test cases for DependencyMonitor class."""
@@ -212,7 +210,6 @@ class TestDependencyMonitor:
             saved_state = json.load(f)
             assert saved_state == state
 
-
 class TestDependencyMonitorIntegration:
     """Integration tests for DependencyMonitor."""
 
@@ -248,7 +245,6 @@ class TestDependencyMonitorIntegration:
         assert not (Path(temp_dir) / "circular_dependencies.json").exists()  # Not created when skipped
         assert (Path(temp_dir) / "import_conflicts.json").exists()
         assert (Path(temp_dir) / "dependency_changes.log").exists()
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

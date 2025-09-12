@@ -1,17 +1,16 @@
+from __future__ import annotations
+import sys
+from pathlib import Path
+import pytest
+from src.utils.gold_loader import filter_cases, load_gold_cases, load_manifest, stratified_sample
+import json
 #!/usr/bin/env python3
 """
 Unit tests for the unified gold dataset system
 """
-import sys
-from pathlib import Path
-
-import pytest
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from src.utils.gold_loader import filter_cases, load_gold_cases, load_manifest, stratified_sample
-
 
 @pytest.mark.critical
 def test_gold_loads_and_has_modes():
@@ -27,7 +26,6 @@ def test_gold_loads_and_has_modes():
     assert "retrieval" in modes, "Must have retrieval cases"
     assert "reader" in modes, "Must have reader cases"
     assert "decision" in modes, "Must have decision cases"
-
 
 def test_manifest_loading():
     """Test that manifest loads and has required views."""
@@ -47,7 +45,6 @@ def test_manifest_loading():
         strata_sum = sum(view_config["strata"].values())
         assert abs(strata_sum - 1.0) < 0.01, f"View {view_name} strata sum is {strata_sum}, should be 1.0"
 
-
 def test_stratified_sampling():
     """Test that stratified sampling works correctly."""
     cases = load_gold_cases("evals/gold/v1/gold_cases.jsonl")
@@ -58,7 +55,6 @@ def test_stratified_sampling():
 
     assert len(sampled) == view["size"], f"Expected {view['size']} cases, got {len(sampled)}"
     assert all(c.mode in {"retrieval", "reader", "decision"} for c in sampled), "All sampled cases must have valid mode"
-
 
 def test_filter_cases():
     """Test that case filtering works correctly."""
@@ -75,7 +71,6 @@ def test_filter_cases():
     # Test size limiting
     limited = filter_cases(cases, size=5)
     assert len(limited) <= 5, "Size limit must be respected"
-
 
 if __name__ == "__main__":
     print("🧪 Running gold dataset tests...")

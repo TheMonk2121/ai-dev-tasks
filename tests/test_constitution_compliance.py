@@ -1,3 +1,11 @@
+from __future__ import annotations
+import json
+import os
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+from constitution_compliance_checker import ConstitutionComplianceChecker, ConstitutionRule
 #!/usr/bin/env python3
 """
 Tests for AI Constitution Compliance Checker
@@ -6,19 +14,9 @@ Validates that the constitution compliance checker properly enforces
 AI Constitution rules for safety, context preservation, and error prevention.
 """
 
-import json
-import os
-
 # Add the scripts directory to the path
-import sys
-import tempfile
-import unittest
-from unittest.mock import patch
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "scripts"))
-
-from constitution_compliance_checker import ConstitutionComplianceChecker, ConstitutionRule
-
 
 class TestConstitutionComplianceChecker(unittest.TestCase):
     """Test cases for the ConstitutionComplianceChecker class."""
@@ -300,7 +298,6 @@ class TestConstitutionComplianceChecker(unittest.TestCase):
         violation = result["violations"][0]
         self.assertIn("Validation error", violation["message"])
 
-
 class TestConstitutionIntegration(unittest.TestCase):
     """Test integration of constitution compliance with real operations."""
 
@@ -360,7 +357,6 @@ class TestConstitutionIntegration(unittest.TestCase):
 
         self.assertGreater(len(critical_violations), 0)
         self.assertGreaterEqual(len(warnings), 0)
-
 
 if __name__ == "__main__":
     unittest.main()

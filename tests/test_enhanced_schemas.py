@@ -1,17 +1,19 @@
-#!/usr/bin/env python3
-"""Test enhanced schema system with Pydantic Settings and configurable validation."""
-
+from __future__ import annotations
 import sys
 from pathlib import Path
-
-sys.path.append(".")
 from src.schemas.eval import GoldCase, Mode
 from src.schemas.settings import EvaluationSettings, settings
 from src.schemas.validation import ValidationConfig, ValidationResult
+        import traceback
+import json
+#!/usr/bin/env python3
+"""Test enhanced schema system with Pydantic Settings and configurable validation."""
 
+sys.path.append(".")
 
 def test_settings_loading():
     """Test that settings load correctly."""
+
     print("Testing settings loading...")
 
     # Test basic settings (some may be overridden by environment variables)
@@ -21,7 +23,6 @@ def test_settings_loading():
     assert len(settings.known_tags) > 0
 
     print("✅ Settings loading works")
-
 
 def test_validation_config():
     """Test validation configuration."""
@@ -39,7 +40,6 @@ def test_validation_config():
     assert custom_config.unknown_tag_warning is False
 
     print("✅ Validation config works")
-
 
 def test_case_validation():
     """Test individual case validation."""
@@ -70,7 +70,6 @@ def test_case_validation():
 
     print("✅ Case validation works")
 
-
 def test_legacy_compatibility():
     """Test legacy field compatibility."""
     print("Testing legacy compatibility...")
@@ -91,7 +90,6 @@ def test_legacy_compatibility():
     assert case.gt_answer == "Legacy answer"
 
     print("✅ Legacy compatibility works")
-
 
 def test_validation_result():
     """Test validation result functionality."""
@@ -118,7 +116,6 @@ def test_validation_result():
 
     print("✅ Validation result works")
 
-
 def test_environment_override():
     """Test environment variable overrides."""
     print("Testing environment overrides...")
@@ -129,7 +126,6 @@ def test_environment_override():
     assert hasattr(settings, "validation_strict")
 
     print("✅ Environment override support works")
-
 
 def main():
     """Run all tests."""
@@ -149,11 +145,9 @@ def main():
 
     except Exception as e:
         print(f"\n❌ Test failed: {e}")
-        import traceback
 
         traceback.print_exc()
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,3 +1,15 @@
+from __future__ import annotations
+import json
+import time
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any
+import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
+import sys
+import os
+from typing import Any, Dict, List, Optional, Union
 """
 Working property-based tests for LTST Memory System.
 
@@ -5,15 +17,7 @@ This version avoids the Hypothesis bug by using simpler strategies and
 not importing the problematic LTST modules directly.
 """
 
-import json
-import time
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Any
 
-import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 
 @pytest.mark.prop

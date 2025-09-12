@@ -1,13 +1,16 @@
+from __future__ import annotations
+from typing import Any
+import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
+from ._regression_capture import record_case
+from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Property-based tests for SQL query building invariants.
 """
 
-from typing import Any
 
-import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 
 def build_where_clause(filters: dict[str, Any]) -> tuple[str, list[Any]]:
@@ -86,9 +89,20 @@ class TestSQLProperties:
         placeholder_count = where_clause.count("%s")
         param_count = len(params)
 
-        assert (
-            placeholder_count == param_count
-        ), f"Placeholder/parameter mismatch: {placeholder_count} placeholders, {param_count} params"
+        if placeholder_count != param_count:
+            record_case(
+                "test_sql_placeholder_parity_mismatch",
+                {
+                    "filters": filters,
+                    "where": where_clause,
+                    "params": params,
+                    "placeholders": placeholder_count,
+                    "param_count": param_count,
+                },
+            )
+        assert placeholder_count == param_count, (
+            f"Placeholder/parameter mismatch: {placeholder_count} placeholders, {param_count} params"
+        )
 
     @pytest.mark.prop
     @given(st.dictionaries(st.text(min_size=1, max_size=20), st.text(max_size=100), min_size=0, max_size=10))
@@ -108,6 +122,11 @@ class TestSQLProperties:
 
         # The SQL structure itself should not contain quotes
         # (values are passed as parameters, not embedded in SQL)
+        if sql_quotes != 0:
+            record_case(
+                "test_sql_unbalanced_quotes_in_structure",
+                {"filters": filters, "where": where_clause, "quote_count": sql_quotes},
+            )
         assert sql_quotes == 0, f"SQL contains quotes: {where_clause}"
 
     @pytest.mark.prop
@@ -125,6 +144,11 @@ class TestSQLProperties:
             # Check for dangerous patterns
             dangerous_patterns = [";", "--", "/*", "*/", "DROP", "DELETE", "INSERT", "UPDATE"]
             for pattern in dangerous_patterns:
+                if pattern.upper() in query.upper():
+                    record_case(
+                        "test_sql_identifier_safety_dangerous_pattern",
+                        {"table": safe_table, "columns": safe_columns, "query": query, "pattern": pattern},
+                    )
                 assert pattern.upper() not in query.upper(), f"Dangerous pattern found: {pattern}"
 
         except ValueError:
@@ -143,8 +167,17 @@ class TestSQLProperties:
             query, params = build_select_query(safe_table, safe_columns, {})
 
             # Basic structure checks
+            if not query.upper().startswith("SELECT"):
+                record_case("test_sql_select_query_no_select", {"query": query})
             assert query.upper().startswith("SELECT"), f"Query doesn't start with SELECT: {query}"
+            if f"FROM {safe_table}".upper() not in query.upper():
+                record_case(
+                    "test_sql_select_query_missing_from",
+                    {"table": safe_table, "columns": safe_columns, "query": query},
+                )
             assert f"FROM {safe_table}".upper() in query.upper(), f"Missing FROM clause: {query}"
+            if len(params) != 0:
+                record_case("test_sql_select_query_unexpected_params", {"query": query, "params": params})
             assert len(params) == 0, f"Unexpected parameters for empty filters: {params}"
 
         except ValueError:
@@ -159,10 +192,23 @@ class TestSQLProperties:
         where_clause, params = build_where_clause(filters)
 
         if not filters:
+            if where_clause != "":
+                record_case(
+                    "test_sql_empty_filters_nonempty_clause",
+                    {"filters": filters, "where": where_clause},
+                )
             assert where_clause == "", f"Empty filters should produce empty clause: {where_clause}"
+            if params != []:
+                record_case(
+                    "test_sql_empty_filters_nonempty_params", {"filters": filters, "params": params}
+                )
             assert params == [], f"Empty filters should produce empty params: {params}"
         else:
+            if not where_clause:
+                record_case("test_sql_nonempty_filters_empty_clause", {"filters": filters})
             assert where_clause, f"Non-empty filters should produce clause: {filters}"
+            if not params:
+                record_case("test_sql_nonempty_filters_empty_params", {"filters": filters})
             assert params, f"Non-empty filters should produce params: {filters}"
 
     @pytest.mark.prop
@@ -180,13 +226,28 @@ class TestSQLProperties:
         where_clause, params = build_where_clause(filters)
 
         # All parameters should be in the params list
+        if len(params) != len(filters):
+            record_case(
+                "test_sql_param_types_count_mismatch",
+                {"filters": filters, "where": where_clause, "params": params},
+            )
         assert len(params) == len(filters), f"Parameter count mismatch: {len(params)} vs {len(filters)}"
 
         # Parameters should match filter values
         for i, (key, value) in enumerate(filters.items()):
             if isinstance(value, list):
                 # For lists, check that all values are in params
+                if not all(v in params for v in value):
+                    record_case(
+                        "test_sql_param_types_list_values_missing",
+                        {"key": key, "value": value, "params": params, "where": where_clause},
+                    )
                 assert all(v in params for v in value), f"List values not in params: {value}"
             else:
                 # For single values, check that value is in params
+                if value not in params:
+                    record_case(
+                        "test_sql_param_types_single_value_missing",
+                        {"key": key, "value": value, "params": params, "where": where_clause},
+                    )
                 assert value in params, f"Value not in params: {value}"

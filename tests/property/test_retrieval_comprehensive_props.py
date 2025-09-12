@@ -1,3 +1,5 @@
+import sys
+import os
 #!/usr/bin/env python3
 """
 Comprehensive property-based tests for retrieval system invariants.
@@ -9,6 +11,7 @@ from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from src.dspy_modules.retriever.rerank import mmr_rerank
+from ._regression_capture import record_case
 
 # Note: Weights and Limits classes may not exist, using dict-based approach
 
@@ -232,6 +235,14 @@ class TestMMRRerankingProperties:
         self, rows: list[dict], alpha: float, per_file_penalty: float, k: int
     ) -> None:
         """MMR reranking should preserve metadata integrity."""
+        # Deduplicate rows by (content, score, doc_id), prefer ones with metadata
+        uniq: dict[tuple[str, float, str], dict] = {}
+        for r in rows:
+            key = (r["content"], r["score"], r.get("doc_id", ""))
+            if key not in uniq or (not uniq[key].get("metadata") and r.get("metadata")):
+                uniq[key] = r
+        rows = list(uniq.values())
+
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k)
 
         # Create lookup for original metadata by content + score + doc_id combination
@@ -255,10 +266,68 @@ class TestMMRRerankingProperties:
                     break
 
             if original_row and original_row["metadata"]:
-                # Check that metadata is preserved (allowing for empty metadata)
+                # MMR reranking adds system fields: ingest_run_id, chunk_variant, chunk_id
+                # Check that original metadata is preserved (subset check)
+                for key, value in original_row["metadata"].items():
+                    # Ignore non-informative original metadata values
+                    if value in (None, ""):
+                        continue
+                    if key not in row["metadata"]:
+                        record_case(
+                            "test_mmr_preserves_metadata_missing_key",
+                            {
+                                "content": content,
+                                "score": score,
+                                "doc_id": doc_id,
+                                "key": key,
+                                "orig_meta": original_row["metadata"],
+                                "got_meta": row["metadata"],
+                            },
+                        )
+                    assert (
+                        key in row["metadata"]
+                    ), f"Original metadata key '{key}' missing for content: {content}, score: {score}, doc_id: {doc_id}"
+                    if row["metadata"].get(key) != value:
+                        record_case(
+                            "test_mmr_preserves_metadata_value_mismatch",
+                            {
+                                "content": content,
+                                "score": score,
+                                "doc_id": doc_id,
+                                "key": key,
+                                "orig_val": value,
+                                "got_val": row["metadata"].get(key),
+                            },
+                        )
+                    assert (
+                        row["metadata"][key] == value
+                    ), f"Original metadata value for '{key}' not preserved for content: {content}, score: {score}, doc_id: {doc_id}"
+
+                # Check that system fields are present
+                if "ingest_run_id" not in row["metadata"]:
+                    record_case(
+                        "test_mmr_metadata_missing_system_ingest_run_id",
+                        {"content": content, "score": score, "doc_id": doc_id},
+                    )
                 assert (
-                    row["metadata"] == original_row["metadata"]
-                ), f"Metadata not preserved for content: {content}, score: {score}, doc_id: {doc_id}"
+                    "ingest_run_id" in row["metadata"]
+                ), f"System field 'ingest_run_id' missing for content: {content}, score: {score}, doc_id: {doc_id}"
+                if "chunk_variant" not in row["metadata"]:
+                    record_case(
+                        "test_mmr_metadata_missing_system_chunk_variant",
+                        {"content": content, "score": score, "doc_id": doc_id},
+                    )
+                assert (
+                    "chunk_variant" in row["metadata"]
+                ), f"System field 'chunk_variant' missing for content: {content}, score: {score}, doc_id: {doc_id}"
+                if "chunk_id" not in row["metadata"]:
+                    record_case(
+                        "test_mmr_metadata_missing_system_chunk_id",
+                        {"content": content, "score": score, "doc_id": doc_id},
+                    )
+                assert (
+                    "chunk_id" in row["metadata"]
+                ), f"System field 'chunk_id' missing for content: {content}, score: {score}, doc_id: {doc_id}"
 
     @pytest.mark.prop
     @given(

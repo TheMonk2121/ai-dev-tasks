@@ -1,22 +1,21 @@
+from __future__ import annotations
+import json
+import os
+import sys
+import tempfile
+import unittest
+from unittest.mock import Mock, patch
+from scripts.bedrock_client import BedrockClient, BedrockUsage
+        from botocore.exceptions import ClientError
 #!/usr/bin/env python3
 """
 Unit tests for BedrockClient
 Tests client initialization, retry logic, token tracking, and error handling
 """
 
-import json
-import os
-
 # Add scripts directory to path for imports
-import sys
-import tempfile
-import unittest
-from unittest.mock import Mock, patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
-
-from scripts.bedrock_client import BedrockClient, BedrockUsage
-
 
 class TestBedrockUsage(unittest.TestCase):
     """Test BedrockUsage dataclass."""
@@ -45,7 +44,6 @@ class TestBedrockUsage(unittest.TestCase):
         }
 
         self.assertEqual(usage.to_dict(), expected)
-
 
 class TestBedrockClient(unittest.TestCase):
     """Test BedrockClient functionality."""
@@ -276,7 +274,6 @@ class TestBedrockClient(unittest.TestCase):
     @patch("time.sleep")  # Mock sleep to speed up tests
     def test_invoke_model_retry_on_throttling(self, mock_sleep, mock_boto_client):
         """Test retry logic on throttling exception."""
-        from botocore.exceptions import ClientError
 
         # Mock bedrock runtime client
         mock_runtime = Mock()
@@ -317,7 +314,6 @@ class TestBedrockClient(unittest.TestCase):
             self.assertIsNotNone(kwargs["system_prompt"])
             self.assertIn("JSON", kwargs["system_prompt"])
 
-
 class TestBedrockClientIntegration(unittest.TestCase):
     """Integration tests for BedrockClient (require AWS credentials)."""
 
@@ -334,7 +330,6 @@ class TestBedrockClientIntegration(unittest.TestCase):
         result = self.client.test_connection()
         # This will pass or fail based on actual AWS setup
         self.assertIsInstance(result, bool)
-
 
 if __name__ == "__main__":
     # Run tests

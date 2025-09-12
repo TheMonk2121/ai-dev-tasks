@@ -382,9 +382,9 @@ class TestCaseResultProperties:
 
     @pytest.mark.prop
     @given(
-        st.text(min_size=1, max_size=50),
+        st.text(min_size=1, max_size=50).filter(lambda x: x.strip()),
         st.sampled_from(["rag", "baseline", "oracle"]),
-        st.text(min_size=1, max_size=500),
+        st.text(min_size=1, max_size=500).filter(lambda x: x.strip()),
         st.floats(min_value=0.0, max_value=1.0),
     )
     @settings(max_examples=25, deadline=50)

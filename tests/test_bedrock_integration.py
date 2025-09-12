@@ -1,23 +1,26 @@
-#!/usr/bin/env python3
-"""
-Comprehensive integration tests for AWS Bedrock RAGChecker integration
-Tests all components of B-1046 implementation
-"""
-
+from __future__ import annotations
 import json
 import os
 import sys
 import tempfile
 import unittest
 from unittest.mock import patch
-
-# Add scripts directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
-
 from scripts.bedrock_batch_processor import BatchRequest, BedrockBatchProcessor
 from scripts.bedrock_client import BedrockClient, BedrockUsage
 from scripts.bedrock_cost_monitor import BedrockCostMonitor
+        import shutil
+        from datetime import datetime
+            from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+            from scripts.ragchecker_batch_evaluation import BatchRAGCheckerEvaluator
+    import sys
+#!/usr/bin/env python3
+"""
+Comprehensive integration tests for AWS Bedrock RAGChecker integration
+Tests all components of B-1046 implementation
+"""
 
+# Add scripts directory to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 class TestBedrockIntegration(unittest.TestCase):
     """Integration tests for Bedrock components."""
@@ -30,7 +33,6 @@ class TestBedrockIntegration(unittest.TestCase):
 
     def tearDown(self):
         """Clean up test environment."""
-        import shutil
 
         shutil.rmtree(self.temp_dir)
 
@@ -117,7 +119,6 @@ class TestBedrockIntegration(unittest.TestCase):
             json.dump(test_config, f)
 
         # Create usage that exceeds budget (use today's date)
-        from datetime import datetime
 
         today = datetime.now().isoformat()
 
@@ -321,14 +322,12 @@ class TestBedrockIntegration(unittest.TestCase):
         # Note: Session usage is only updated when _update_usage is called
         # which happens in the actual invoke_model method, not our mock
 
-
 class TestRAGCheckerIntegration(unittest.TestCase):
     """Test RAGChecker integration with Bedrock."""
 
     def test_ragchecker_imports(self):
         """Test that RAGChecker integration imports work."""
         try:
-            from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 
             evaluator = OfficialRAGCheckerEvaluator()
             self.assertIsNotNone(evaluator)
@@ -338,13 +337,11 @@ class TestRAGCheckerIntegration(unittest.TestCase):
     def test_batch_evaluation_imports(self):
         """Test that batch evaluation imports work."""
         try:
-            from scripts.ragchecker_batch_evaluation import BatchRAGCheckerEvaluator
 
             evaluator = BatchRAGCheckerEvaluator()
             self.assertIsNotNone(evaluator)
         except ImportError as e:
             self.skipTest(f"Batch evaluation not available: {e}")
-
 
 def run_validation_suite():
     """Run the complete validation suite."""
@@ -376,8 +373,6 @@ def run_validation_suite():
         print("❌ Some tests failed. Check the output above for details.")
         return 1
 
-
 if __name__ == "__main__":
-    import sys
 
     sys.exit(run_validation_suite())

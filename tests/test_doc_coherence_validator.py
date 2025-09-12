@@ -1,3 +1,14 @@
+from __future__ import annotations
+import os
+import shutil
+import sys
+import tempfile
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+import pytest
+from scripts.doc_coherence_validator import DocCoherenceValidator
+            from scripts.doc_coherence_validator import DocCoherenceValidator
+            from scripts.doc_coherence_validator import DocCoherenceValidator
 #!/usr/bin/env python3
 """
 Test Suite for Documentation Coherence Validation System - B-060
@@ -5,18 +16,6 @@ Test Suite for Documentation Coherence Validation System - B-060
 Comprehensive tests for the doc_coherence_validator.py implementation.
 Tests all validation tasks and edge cases.
 """
-
-import os
-import shutil
-import sys
-import tempfile
-from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
-
-from scripts.doc_coherence_validator import DocCoherenceValidator
-
 
 class TestDocCoherenceValidator:
     """Test cases for DocCoherenceValidator class."""
@@ -348,7 +347,6 @@ This is a valid README file.
                 assert len(issues) == 1
                 assert issues[0]["issue"] == "Test issue"
 
-
 class TestDocCoherenceValidatorIntegration:
     """Integration tests for the validation system."""
 
@@ -401,7 +399,6 @@ Context priority guide content.
 
             # Import and run validator
             sys.path.insert(0, self.test_dir)
-            from scripts.doc_coherence_validator import DocCoherenceValidator
 
             validator = DocCoherenceValidator(dry_run=True)
             result = validator.run_all_validations()
@@ -421,14 +418,12 @@ Context priority guide content.
             shutil.copy(validator_script, self.test_dir)
 
             sys.path.insert(0, self.test_dir)
-            from scripts.doc_coherence_validator import DocCoherenceValidator
 
             validator = DocCoherenceValidator(dry_run=True)
             result = validator.run_all_validations()
 
             # Should fail due to naming convention issues
             assert not result
-
 
 if __name__ == "__main__":
     pytest.main([__file__])

@@ -1,8 +1,10 @@
+from __future__ import annotations
+import pytest
 #!/usr/bin/env python3
 """
 Test file that should be quarantined - low signal, redundant.
 """
-import pytest
+
 
 
 def test_redundant_functionality():

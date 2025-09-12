@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import os
 from importlib import reload
-
 
 def test_legacy_aliases(monkeypatch):
     from src.rag import reranker_env as env

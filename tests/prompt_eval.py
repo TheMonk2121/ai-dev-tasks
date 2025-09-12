@@ -1,3 +1,5 @@
+import os
+from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Prompt evaluation harness with cache-augmented generation support.
@@ -9,7 +11,6 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
-
 @dataclass
 class PromptEvalConfig:
     """Configuration for prompt evaluation."""
@@ -19,7 +20,6 @@ class PromptEvalConfig:
     cache_enabled: bool = True
     sweep_range: tuple = (0.80, 0.95)
     sweep_steps: int = 16
-
 
 class PromptEvaluator:
     """Evaluates prompts with cache-augmented generation support."""
@@ -81,7 +81,6 @@ class PromptEvaluator:
             "metrics": metrics,
         }
 
-
 def main():
     """Main evaluation entry point."""
     parser = argparse.ArgumentParser(description="Prompt evaluation with CAG support")
@@ -119,7 +118,6 @@ def main():
 
         with open(args.output, "w") as f:
             json.dump(result, f, indent=2)
-
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import importlib.util
 from pathlib import Path
 from typing import Any, cast
-
+import json
+from typing import Any, Dict, List, Optional, Union
 
 def _load_module_by_path():
     mod_path = Path("scripts/rehydration_integration.py").resolve()
@@ -10,7 +13,6 @@ def _load_module_by_path():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)  # type: ignore[attr-defined]
     return mod
-
 
 def test_disabled_flag_returns_false(tmp_path, monkeypatch):
     mod = cast(Any, _load_module_by_path())
@@ -22,7 +24,6 @@ def test_disabled_flag_returns_false(tmp_path, monkeypatch):
 
     assert mod.is_enabled() is False
     assert mod.should_trigger("B-TEST") is False
-
 
 def test_debounce_logic(tmp_path, monkeypatch):
     mod = cast(Any, _load_module_by_path())

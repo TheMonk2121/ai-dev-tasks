@@ -1,18 +1,16 @@
+from __future__ import annotations
+import shutil
+import tempfile
+from pathlib import Path
+import pytest
+from scripts.repo_maintenance import RepoMaintenance
+import os
 #!/usr/bin/env python3
 """
 Unit tests for repo_maintenance.py
 
 Tests the core functionality of the repository maintenance script.
 """
-
-import shutil
-import tempfile
-from pathlib import Path
-
-import pytest
-
-from scripts.repo_maintenance import RepoMaintenance
-
 
 class TestRepoMaintenance:
     """Test cases for RepoMaintenance class."""
@@ -188,7 +186,6 @@ class TestRepoMaintenance:
         # Check that same content produces same hash
         hash2 = maintenance.calculate_file_hash(test_file)
         assert hash_result == hash2
-
 
 if __name__ == "__main__":
     pytest.main([__file__])

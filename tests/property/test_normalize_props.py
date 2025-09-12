@@ -1,11 +1,13 @@
+from __future__ import annotations
+import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
+import os
 #!/usr/bin/env python3
 """
 Property-based tests for text normalization invariants.
 """
 
-import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 
 def normalize_query(query: str) -> str:

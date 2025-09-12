@@ -3,13 +3,13 @@ from __future__ import annotations
 from datetime import datetime
 
 from src.schemas.eval import (
+import json
     CaseResult,
     ContextChunk,
     EvaluationRun,
     RerankerConfig,
     RetrievalCandidate,
 )
-
 
 def make_chunk(i: int = 0) -> ContextChunk:
     return ContextChunk(
@@ -18,7 +18,6 @@ def make_chunk(i: int = 0) -> ContextChunk:
         start=0,
         end=10,
     )
-
 
 def make_candidate(q: str = "q", i: int = 0) -> RetrievalCandidate:
     chunk = make_chunk(i)
@@ -29,7 +28,6 @@ def make_candidate(q: str = "q", i: int = 0) -> RetrievalCandidate:
         url=f"https://example.com/doc_{i}",
         chunk=chunk.text
     )
-
 
 def make_case_result(case_id: str = "case_1", q: str = "q", k: int = 3) -> CaseResult:
     cands: list[RetrievalCandidate] = [make_candidate(q, i) for i in range(k)]
@@ -47,7 +45,6 @@ def make_case_result(case_id: str = "case_1", q: str = "q", k: int = 3) -> CaseR
         faithfulness=0.9,
         answer_latency_ms=100,
     )
-
 
 def make_eval_run() -> EvaluationRun:
     rr = RerankerConfig()

@@ -1,3 +1,13 @@
+from __future__ import annotations
+import tempfile
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+import pytest
+from scripts.session_registry import SessionRegistry
+        from scripts.session_context_integration import SessionContextIntegrator
+        from scripts.session_context_integration import SessionContextIntegrator
+import sys
+import json
 #!/usr/bin/env python3
 """
 Integration tests for Scribe Session Integration.
@@ -10,15 +20,7 @@ Tests the comprehensive integration between Scribe system and session registry:
 - End-to-end workflow validation
 """
 
-import tempfile
-from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
-
 # Import the session registry system
-from scripts.session_registry import SessionRegistry
-
 
 class TestScribeSessionIntegration:
     """Integration tests for Scribe session management."""
@@ -248,7 +250,6 @@ class TestScribeSessionIntegration:
 
     def test_scribe_session_memory_integration(self, temp_registry_path):
         """Test integration with memory rehydration system."""
-        from scripts.session_context_integration import SessionContextIntegrator
 
         # Create registry with session data
         registry = SessionRegistry(registry_path=temp_registry_path)
@@ -305,7 +306,6 @@ class TestScribeSessionIntegration:
         assert session.last_activity is not None
 
         # 6. Test memory integration
-        from scripts.session_context_integration import SessionContextIntegrator
 
         integrator = SessionContextIntegrator(registry_path=temp_registry_path)
         context = integrator.get_active_sessions_context()
@@ -315,7 +315,6 @@ class TestScribeSessionIntegration:
         session.start_time = "2025-08-14T00:00:00Z"  # Old timestamp
         registry.cleanup_completed_sessions()
         assert "B-1000" not in registry.sessions
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

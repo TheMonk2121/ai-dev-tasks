@@ -1,15 +1,20 @@
-"""Performance validation tests for RAGChecker evaluation system."""
-
+from __future__ import annotations
 import subprocess
 import time
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-
 import pytest
+from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+        import queue
+        import threading
+        import os
+        import psutil
+        import os
+        import psutil
+import sys
+"""Performance validation tests for RAGChecker evaluation system."""
 
 # Import the RAGChecker evaluation classes
-from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
-
 
 class TestRAGCheckerPerformance:
     """Performance validation tests for RAGChecker evaluation system."""
@@ -140,8 +145,6 @@ class TestRAGCheckerPerformance:
 
     def test_concurrent_evaluation_performance(self, evaluator):
         """Test concurrent evaluation performance."""
-        import queue
-        import threading
 
         results_queue = queue.Queue()
 
@@ -188,9 +191,6 @@ class TestRAGCheckerPerformance:
 
     def test_memory_usage_performance(self, evaluator):
         """Test memory usage during evaluation."""
-        import os
-
-        import psutil
 
         # Get initial memory usage
         process = psutil.Process(os.getpid())
@@ -301,7 +301,6 @@ class TestRAGCheckerPerformance:
             except Exception as e:
                 print(f"⚠️ Error recovery failed for {scenario_name}: {e}")
 
-
 class TestRAGCheckerScalability:
     """Scalability tests for RAGChecker evaluation system."""
 
@@ -338,9 +337,6 @@ class TestRAGCheckerScalability:
 
     def test_memory_efficiency(self, evaluator):
         """Test memory efficiency with large datasets."""
-        import os
-
-        import psutil
 
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
@@ -367,7 +363,6 @@ class TestRAGCheckerScalability:
         assert result["total_cases"] == 500
 
         print(f"✅ Memory efficiency: +{memory_increase:.1f}MB for 500 cases")
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

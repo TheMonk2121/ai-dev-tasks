@@ -7,12 +7,31 @@ from typing import Any
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+from typing import Any, Dict, List, Optional, Union
 
 try:
     from dspy_modules.retriever.pg import run_fused_query
 except Exception as e:  # pragma: no cover - fail fast with clear message
     pytest.skip(f"retriever import unavailable: {e}", allow_module_level=True)
 
+def _check_postgres_available() -> bool:
+    """Check if Postgres is available for testing."""
+    import psycopg2
+    from psycopg2 import OperationalError, ProgrammingError
+
+    dsn = os.environ.get("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+
+    # Skip if DSN is mock or invalid format
+    if dsn.startswith("mock://") or not dsn.startswith("postgresql://"):
+        return False
+
+    try:
+        # Try to connect with a short timeout
+        conn = psycopg2.connect(dsn, connect_timeout=2)
+        conn.close()
+        return True
+    except (OperationalError, ProgrammingError):
+        return False
 
 @pytest.mark.integration
 @settings(max_examples=15, deadline=800)
@@ -24,6 +43,9 @@ except Exception as e:  # pragma: no cover - fail fast with clear message
     use_mmr=st.booleans(),
 )
 def test_run_fused_query_basic_properties(q: str, k: int, use_mmr: bool):
+    # Skip if Postgres is not available
+    if not _check_postgres_available():
+        pytest.skip("Postgres not available - skipping database integration test")
     os.environ.setdefault("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
     rows: list[dict[str, Any]] = run_fused_query(
         q_short=q,

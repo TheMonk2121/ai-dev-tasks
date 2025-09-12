@@ -1,13 +1,16 @@
-"""Comprehensive tests for Pydantic models and I/O operations."""
-
+from __future__ import annotations
 from pathlib import Path
-
-# Import QAAnswer directly to avoid agent initialization
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 from pydantic_ai.models.test import TestModel
-
 from src.schemas.eval import CaseResult, EvaluationRun, RerankerConfig, RetrievalCandidate
+    from pydantic import ValidationError
+    from pydantic import ValidationError
+    from pydantic import ValidationError
+    from pydantic import ValidationError
+import json
+"""Comprehensive tests for Pydantic models and I/O operations."""
 
+# Import QAAnswer directly to avoid agent initialization
 
 class QAAnswer(BaseModel):
     """Structured answer output for QA tasks."""
@@ -15,7 +18,6 @@ class QAAnswer(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     answer: str = Field(min_length=1)
     confidence: float | None = None
-
 
 def test_roundtrip_json(tmp_path: Path):
     """Test JSON round-trip serialization."""
@@ -31,14 +33,12 @@ def test_roundtrip_json(tmp_path: Path):
     loaded = EvaluationRun.model_validate_json(p.read_text())
     assert loaded.n_cases == 1
 
-
 def test_list_validation():
     """Test list validation with TypeAdapter."""
     raw = [{"doc_id": "A", "score": 0.7, "chunk": "x"}]
     ta = TypeAdapter(list[RetrievalCandidate])
     items = ta.validate_python(raw)
     assert items[0].doc_id == "A"
-
 
 def test_qa_answer_schema():
     """Test QAAnswer schema validation."""
@@ -48,7 +48,6 @@ def test_qa_answer_schema():
     assert answer.confidence == 0.95
 
     # Test validation
-    from pydantic import ValidationError
 
     try:
         QAAnswer(answer="", confidence=0.5)  # empty answer should fail
@@ -56,10 +55,8 @@ def test_qa_answer_schema():
     except ValidationError:
         pass
 
-
 def test_strict_validation():
     """Test strict validation prevents invalid data."""
-    from pydantic import ValidationError
 
     # This should fail due to strict validation
     try:
@@ -67,7 +64,6 @@ def test_strict_validation():
         assert False, "Should have raised ValidationError"
     except ValidationError:
         pass
-
 
 def test_computed_field():
     """Test computed fields work correctly."""
@@ -83,10 +79,8 @@ def test_computed_field():
     )
     assert run.n_cases == 2
 
-
 def test_non_empty_string_validation():
     """Test NonEmptyStr validation."""
-    from pydantic import ValidationError
 
     try:
         RetrievalCandidate(doc_id="", score=0.5, chunk="test")  # empty doc_id should fail
@@ -94,14 +88,12 @@ def test_non_empty_string_validation():
     except ValidationError:
         pass
 
-
 def test_extra_forbid():
     """Test that extra fields are forbidden."""
-    from pydantic import ValidationError
 
     try:
         # This should fail due to extra="forbid" in model_config
-        CaseResult(case_id="test", mode="rag", query="test", extra_field="should_fail")  # type: ignore
+        CaseResult(case_id="test", mode="rag", query="test", extra_field="should_fail")  # type: ignore[assignment]
         assert False, "Should have raised ValidationError"
     except ValidationError:
         pass
