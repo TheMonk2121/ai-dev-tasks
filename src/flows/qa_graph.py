@@ -13,10 +13,18 @@ from src.agents.qa import Deps, QAAnswer, agent
 if TYPE_CHECKING:  # type-only imports to satisfy Pyright without runtime dependency
     from pydantic_graph import Graph, Node  # type: ignore
 else:
-    Graph = object  # type: ignore
+
+    class Graph:  # type: ignore
+        def __init__(self, start=None, end=None):
+            self.start = start
+            self.end = end
+
+        def __class_getitem__(cls, item):
+            return cls
 
     class Node:  # type: ignore
-        pass
+        def __class_getitem__(cls, item):
+            return cls
 
 
 class FlowState(BaseModel):
