@@ -1,16 +1,13 @@
-from __future__ import annotations
-import hashlib
-import math
-from collections import defaultdict
-from collections.abc import Sequence
-from typing import Any
-import os
-from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Lightweight MMR rerank with per-file diversity for reader lift.
 """
 
+import hashlib
+import math
+from collections import defaultdict
+from collections.abc import Sequence
+from typing import Any
 
 
 def _normalize_row(r: dict[str, Any]) -> dict[str, Any]:

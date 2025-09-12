@@ -1,21 +1,19 @@
+"""Typed graph with state persistence for QA flows."""
+
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Literal
 from uuid import UUID, uuid4
+
 from pydantic import BaseModel, ConfigDict
+
 from src.agents.qa import Deps, QAAnswer, agent
-    from pydantic_graph import Graph, Node  # type: ignore[import-untyped]
-        import httpx
-from typing import Any, Dict, List, Optional, Union
-"""Typed graph with state persistence for QA flows."""
-
-
-
-
 
 if TYPE_CHECKING:  # type-only imports to satisfy Pyright without runtime dependency
+    from pydantic_graph import Graph, Node  # type: ignore
 else:
-    Graph = object  # type: ignore[assignment]
+    Graph = object  # type: ignore
 
     class Node:  # type: ignore
         pass
@@ -46,10 +44,11 @@ class Draft(Node[FlowState, Literal["End"]]):  # type: ignore
     """Draft generation node."""
 
     async def call(self, state: FlowState) -> type[End]:
+        import httpx
 
         deps = Deps(http_client=httpx.AsyncClient())
         res = await agent.run(state.question, deps=deps)  # returns AgentRunResult[QAAnswer]
-        state.draft = res.data.answer  # type: ignore[attr-defined]
+        state.draft = res.data.answer  # type: ignore
         return End
 
 
@@ -87,11 +86,11 @@ async def run_flow(store: FlowStore, state: FlowState) -> FlowState:
         # record "where we are" for resumability
         state.last_node = node.__name__
         await store.save(state)
-        node = await graph.next(state, node)  # type: ignore[attr-defined]
+        node = await graph.next(state, node)  # type: ignore # single-step execution
     await store.save(state)
     return state
 
 
 def export_mermaid_diagram(output_path: str = "docs/qa_graph.png") -> None:
     """Export the graph as a Mermaid diagram."""
-    graph.mermaid_save(output_path)  # type: ignore[call-arg]
+    graph.mermaid_save(output_path)  # type: ignore

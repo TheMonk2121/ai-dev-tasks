@@ -1,12 +1,3 @@
-from __future__ import annotations
-import hashlib
-from typing import Any
-    import numpy as np
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
-    from typing import Any as _Any
-import os
-from typing import Any, Dict, List, Optional, Union
 """
 Near-duplicate suppression for retrieval candidates.
 
@@ -17,13 +8,20 @@ Supports both cosine similarity (fast, embedding-based) and MinHash
 (more robust, token-based) deduplication methods.
 """
 
+from __future__ import annotations
 
+import hashlib
+from typing import Any
 
 try:
+    import numpy as np
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
 
     HAS_SKLEARN = True
 except ImportError:
     HAS_SKLEARN = False
+    from typing import Any as _Any
     cosine_similarity: _Any = None
     TfidfVectorizer: _Any = None
     np: _Any = None

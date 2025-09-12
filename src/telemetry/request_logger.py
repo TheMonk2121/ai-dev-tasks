@@ -1,13 +1,3 @@
-from __future__ import annotations
-import asyncio
-import json
-import time
-import uuid
-from dataclasses import asdict, dataclass, field
-from pathlib import Path
-from typing import Any
-import aiofiles
-from typing import Any, Dict, List, Optional, Union
 """
 Per-request telemetry logging for RAG pipeline observability.
 
@@ -22,8 +12,17 @@ Captures the full query → answer pipeline with structured logging:
 Supports canary tagging and A/B testing analysis.
 """
 
+from __future__ import annotations
 
+import asyncio
+import json
+import time
+import uuid
+from dataclasses import asdict, dataclass, field
+from pathlib import Path
+from typing import Any
 
+import aiofiles
 
 
 @dataclass

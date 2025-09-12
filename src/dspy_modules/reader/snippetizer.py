@@ -1,7 +1,4 @@
-from __future__ import annotations
-
 import re
-import os
 
 ID = r"[A-Za-z_][A-Za-z0-9_]*"
 PATH = r"(?:[A-Za-z0-9._-]+/)+[A-Za-z0-9._-]+(?:\.py)?"

@@ -1,18 +1,13 @@
-from __future__ import annotations
-from typing import Any, Dict, List
-import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
-from ._regression_capture import record_case
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Comprehensive property-based tests for DSPy modules and evaluation system.
 """
 
+from typing import Any, Dict, List
 
+import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 # Note: Using dict-based approach for DSPy modules testing
 
@@ -77,8 +72,6 @@ class TestReaderSignatureProperties:
         """ReaderSignature should be creatable with valid inputs."""
         signature = create_reader_signature(query, context, answer, confidence)
 
-        if signature["query"] != query or signature["context"] != context:
-            record_case("test_reader_signature_creation_mismatch", {"query": query, "context": context, "sig": signature})
         assert signature["query"] == query
         assert signature["context"] == context
         assert signature["answer"] == answer
@@ -94,8 +87,6 @@ class TestReaderSignatureProperties:
         """ReaderSignature should require query and context fields."""
         signature = create_reader_signature(query, context)
 
-        if "query" not in signature or "context" not in signature:
-            record_case("test_reader_signature_required_fields_missing", {"sig": signature})
         assert "query" in signature
         assert "context" in signature
         assert signature["query"] == query
@@ -141,8 +132,6 @@ class TestSpanPickerProperties:
 
         assert input_data["query"] == query
         assert input_data["context"] == context
-        if not (input_data["max_spans"] == max_spans and input_data["min_span_length"] == min_span_length and input_data["max_span_length"] == max_span_length):
-            record_case("test_span_picker_input_creation_mismatch", input_data)
         assert input_data["max_spans"] == max_spans
         assert input_data["min_span_length"] == min_span_length
         assert input_data["max_span_length"] == max_span_length
@@ -164,8 +153,6 @@ class TestSpanPickerProperties:
         input_data = create_span_picker_input(query, context, max_spans, min_span_length, max_span_length)
 
         # Constraints should be reasonable
-        if not (input_data["max_spans"] > 0 and input_data["min_span_length"] > 0):
-            record_case("test_span_picker_constraints_bad_lengths", input_data)
         assert input_data["max_spans"] > 0, "max_spans should be positive"
         assert input_data["min_span_length"] > 0, "min_span_length should be positive"
         assert (
@@ -183,14 +170,10 @@ class TestSpanPickerProperties:
         if len(context) < 10:
             # Very short context should still work
             input_data = create_span_picker_input(query, context, max_spans=1, min_span_length=5, max_span_length=50)
-            if input_data["context"] != context:
-                record_case("test_span_picker_handles_short_context_mismatch", {"context": context, "input": input_data})
             assert input_data["context"] == context
         else:
             # Normal context should work normally
             input_data = create_span_picker_input(query, context)
-            if input_data["context"] != context:
-                record_case("test_span_picker_handles_long_context_mismatch", {"context": context, "input": input_data})
             assert input_data["context"] == context
 
     @pytest.mark.prop

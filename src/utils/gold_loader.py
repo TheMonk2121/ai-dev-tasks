@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 from src.schemas.eval import GoldCase, Mode
-from typing import Any, Dict, List, Optional, Union
 
 
 def load_gold_cases(path: str | Path) -> list[GoldCase]:
@@ -77,63 +76,19 @@ def stratified_sample(
                 buckets[t].append(c)
                 break
     out: list[GoldCase] = []
-
-    # Calculate target samples per stratum, ensuring we don't exceed total size
-    total_available = sum(len(bucket) for bucket in buckets.values())
-
-    # If no cases match any strata, return random samples from all available cases
-    if total_available == 0:
-        all_cases = [c for c in cases if (not mode or c.mode == mode)]
-        rng.shuffle(all_cases)
-        return all_cases[:size]
-
-    if total_available < size:
-        # Not enough cases available, return all we have
-        for bucket in buckets.values():
-            rng.shuffle(bucket)
-            out.extend(bucket)
-        return out
-
-    # Calculate proportional samples per stratum
-    stratum_targets = {}
-    remaining_size = size
-    remaining_strata = list(strata.items())
-
-    for t, frac in remaining_strata:
-        bucket = buckets[t]
-        if not bucket:
-            continue
-        target = max(1, int(round(frac * size)))
-        # Don't exceed what's available in this stratum
-        actual_target = min(target, len(bucket))
-        stratum_targets[t] = actual_target
-        remaining_size -= actual_target
-
-    # If we're under the target, distribute remaining samples proportionally
-    if remaining_size > 0:
-        for t, frac in remaining_strata:
-            if t in stratum_targets and remaining_size > 0:
-                bucket = buckets[t]
-                additional = min(remaining_size, len(bucket) - stratum_targets[t])
-                stratum_targets[t] += additional
-                remaining_size -= additional
-
-    # Sample from each stratum
-    for t, target in stratum_targets.items():
+    for t, frac in strata.items():
         bucket = buckets[t]
         rng.shuffle(bucket)
-        out.extend(bucket[:target])
-
-    # If we still need more samples, pad from remaining cases
-    if len(out) < size:
-        all_pool = [c for c in cases if (not mode or c.mode == mode) and c not in out]
-        rng.shuffle(all_pool)
-        out.extend(all_pool[: size - len(out)])
-
+        take = max(1, int(round(frac * size)))
+        out.extend(bucket[:take])
+    # pad if we're short
+    all_pool = [c for c in cases if (not mode or c.mode == mode) and c not in out]
+    rng.shuffle(all_pool)
+    out.extend(all_pool[: max(0, size - len(out))])
     return out[:size]
 
 
-def load_manifest(path: str | Path = "300_evals/data/gold/v1/manifest.json") -> dict[str, Any]:
+def load_manifest(path: str | Path = "evals/gold/v1/manifest.json") -> dict[str, Any]:
     """Load evaluation manifest with profiles."""
     with open(path) as f:
         return json.load(f)

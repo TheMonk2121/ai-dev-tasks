@@ -1,13 +1,3 @@
-from __future__ import annotations
-import math
-import re
-import time
-from dataclasses import dataclass, field
-from typing import Any
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
-import os
-from typing import Any, Dict, List, Optional, Union
 """
 Phase 2: Multi-Hop & Answer Planning with Data-Driven Gating
 
@@ -19,9 +9,17 @@ Implements plan → retrieve per sub-question → merge → answer pipeline with
 - Mid-gen callbacks: trigger only for unresolved sub-spans
 """
 
+from __future__ import annotations
 
+import math
+import re
+import time
+from dataclasses import dataclass, field
+from typing import Any
 
 try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
 
     HAS_SKLEARN = True
 except ImportError:

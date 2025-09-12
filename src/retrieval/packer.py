@@ -1,5 +1,3 @@
-from __future__ import annotations
-    import re
 """
 Context Packing Utility
 
@@ -7,6 +5,7 @@ Packs selected candidate documents into a single context string with
 per-document caps and overall character budget.
 """
 
+from __future__ import annotations
 
 DocId = str
 Score = float
@@ -14,6 +13,7 @@ Document = str
 
 
 def _first_two_sentences(s: str, max_chars: int = 600) -> str:
+    import re
 
     parts = re.split(r"(?<=[.!?])\s+", s.strip())
     snippet = " ".join(parts[:2]) if parts else s.strip()

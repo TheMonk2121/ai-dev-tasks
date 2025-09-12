@@ -1,12 +1,3 @@
-from __future__ import annotations
-import json
-import math
-from dataclasses import asdict, dataclass
-from pathlib import Path
-import numpy as np
-    from sklearn.calibration import calibration_curve
-    from sklearn.isotonic import IsotonicRegression
-import os
 """
 Enhanced evaluation metrics for Phase 0 RAG evaluation.
 
@@ -19,10 +10,18 @@ Implements:
 - Temperature scaling calibration for confidence scores
 """
 
+from __future__ import annotations
 
+import json
+import math
+from dataclasses import asdict, dataclass
+from pathlib import Path
 
+import numpy as np
 
 try:
+    from sklearn.calibration import calibration_curve
+    from sklearn.isotonic import IsotonicRegression
 
     HAS_SKLEARN = True
 except ImportError:
@@ -229,11 +228,6 @@ class TemperatureScaler:
 
     def _apply_temperature(self, confidences: np.ndarray, temperature: float) -> np.ndarray:
         """Apply temperature scaling to logits."""
-        # Handle edge cases for temperature
-        if temperature == 0.0 or temperature == -0.0:
-            # When temperature is zero, return uniform distribution
-            return np.full_like(confidences, 1.0 / len(confidences))
-
         # Convert confidence to logits
         eps = 1e-7
         confidences = np.clip(confidences, eps, 1 - eps)

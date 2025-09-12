@@ -1,10 +1,3 @@
-from __future__ import annotations
-from typing import TYPE_CHECKING, Any
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
-import os
-from typing import Any, Dict, List, Optional, Union
 """
 Recall-Friendly Pre-filtering for Retrieval Results
 
@@ -18,11 +11,16 @@ Key principles:
 - Respect document length constraints
 """
 
+from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from sklearn.feature_extraction.text import TfidfVectorizer
 
 try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
 except Exception:  # pragma: no cover - optional dependency guard
     TfidfVectorizer = None  # type: ignore[assignment]
     cosine_similarity = None  # type: ignore[assignment]

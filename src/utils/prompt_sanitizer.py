@@ -1,6 +1,3 @@
-from __future__ import annotations
-from typing import Any, Dict, List, Optional, Union
-
 # ANCHOR_KEY: prompt-sanitizer
 # ANCHOR_PRIORITY: 25
 # ROLE_PINS: ["implementer", "coder"]

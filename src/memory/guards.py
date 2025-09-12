@@ -1,19 +1,17 @@
-from __future__ import annotations
-from collections.abc import Iterable
-from typing import Any
-from pydantic import ValidationError
-from .models import Answer, Provenance, RetrievedChunk
-import os
-from typing import Any, Dict, List, Optional, Union
 """Boundary guards to enforce strict provenance on retrieval outputs.
 
 These helpers convert raw retrieval rows (dicts/objects) into strict DTOs and
 apply repository provenance policies. Use at the agent/tool boundary.
 """
 
+from __future__ import annotations
 
+from collections.abc import Iterable
+from typing import Any
 
+from pydantic import ValidationError
 
+from .models import Answer, Provenance, RetrievedChunk
 
 REQUIRED_META_KEYS = ("ingest_run_id", "chunk_variant")
 

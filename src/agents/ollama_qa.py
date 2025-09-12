@@ -1,18 +1,14 @@
+"""PydanticAI QA agent with Ollama local models."""
+
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Annotated
+
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_ai import Agent, RunContext, Tool
 from pydantic_ai.models.instrumented import InstrumentationSettings
-import sys
-import os
-import json
-from typing import Any, Dict, List, Optional, Union
-"""PydanticAI QA agent with Ollama local models."""
-
-
-
 
 
 class OllamaQAAnswer(BaseModel):

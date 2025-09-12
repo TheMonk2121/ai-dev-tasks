@@ -1,14 +1,12 @@
-from __future__ import annotations
-import numpy as np
-import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
-import os
 #!/usr/bin/env python3
 """
 Property-based tests for vector operations invariants.
 """
 
+import numpy as np
+import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:

@@ -1,13 +1,7 @@
-from __future__ import annotations
-
-from typing import Union
-
 import numpy as np
 from pydantic import BaseModel, ConfigDict, field_serializer
 
 from utils.pyd_ndarray import ArrayF32WithShape
-import json
-from typing import Any, Dict, List, Optional, Union
 
 # Common embedding dimension aliases for your project
 Vector384 = ArrayF32WithShape(384)  # all-MiniLM-L6-v2 (your default)
@@ -36,10 +30,9 @@ class FusionFeatures(BaseModel):
     tag_bias_hint: float = 0.0
 
     # optional dense vectors (if you persist them in features)
-    # Use numpy arrays here to avoid union issues with custom validator instances
-    # (Vector384 is an instance of ArrayF32WithShape and does not support `| None`).
-    q_vec: np.ndarray | None = None
-    d_vec: np.ndarray | None = None
+    # enforce known dims when you know them, else use ArrayF32
+    q_vec: Vector384 | None = None  # type: ignore
+    d_vec: Vector384 | None = None  # type: ignore
 
     @field_serializer("q_vec", when_used="json")
     def _ser_q_vec(self, v: np.ndarray | None) -> list[float] | None:

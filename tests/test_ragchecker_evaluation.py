@@ -1,4 +1,3 @@
-import sys
 """Comprehensive test suite for RAGChecker evaluation system."""
 
 import json
@@ -10,6 +9,7 @@ import pytest
 
 # Import the RAGChecker evaluation classes
 from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator, RAGCheckerInput
+
 
 class TestRAGCheckerInput:
     """Test RAGCheckerInput dataclass."""
@@ -47,6 +47,7 @@ class TestRAGCheckerInput:
         assert isinstance(input_data.gt_answer, str)
         assert isinstance(input_data.response, str)
         assert isinstance(input_data.retrieved_context, list)
+
 
 class TestOfficialTestCases:
     """Test official test case creation."""
@@ -100,6 +101,7 @@ class TestOfficialTestCases:
             assert case.query.strip().endswith("?")
             # Verify ground truth answers are not empty
             assert len(case.gt_answer.strip()) > 0
+
 
 class TestOfficialRAGCheckerEvaluator:
     """Test OfficialRAGCheckerEvaluator class."""
@@ -290,6 +292,7 @@ class TestOfficialRAGCheckerEvaluator:
                 mock_fallback.assert_called_once()
                 assert result is not None
 
+
 class TestRAGCheckerIntegration:
     """Integration tests for RAGChecker evaluation system."""
 
@@ -363,6 +366,7 @@ class TestRAGCheckerIntegration:
         # Clean up
         Path(input_file).unlink()
 
+
 class TestRAGCheckerValidation:
     """Validation tests for RAGChecker evaluation system."""
 
@@ -419,6 +423,7 @@ class TestRAGCheckerValidation:
         # Verify it's in the correct location
         assert "metrics" in str(evaluator.metrics_dir)
         assert "baseline_evaluations" in str(evaluator.metrics_dir)
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

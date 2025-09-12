@@ -1,8 +1,4 @@
-from __future__ import annotations
-
 import re
-import sys
-from typing import Any, Dict, List, Optional, Union
 
 # Match repo slugs like 400_12_advanced-configurations (with optional .md)
 SLUG_RE = re.compile(r"\b(?P<slug>\d{3}_\d{2}_[a-z0-9\-]+)(?:\.md)?\b", re.I)

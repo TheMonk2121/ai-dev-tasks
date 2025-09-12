@@ -1,5 +1,3 @@
-import sys
-import os
 #!/usr/bin/env python3
 """
 Property-based tests for retrieval system invariants.
@@ -11,13 +9,12 @@ from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from src.dspy_modules.retriever.rerank import mmr_rerank
-from ._regression_capture import record_case
 
 
 def create_retrieval_candidate(
     content: str,
     score: float,
-    metadata: dict | None = None,
+    metadata: dict = None,
 ) -> dict:
     """Create a retrieval candidate for testing."""
     if metadata is None:
@@ -57,8 +54,6 @@ class TestRerankingProperties:
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
 
         # Should not exceed original count
-        if len(reranked) > original_count:
-            record_case("test_mmr_preserve_count", {"orig": original_count, "got": len(reranked), "k": k, "alpha": alpha, "penalty": penalty})
         assert len(reranked) <= original_count, f"Reranked count {len(reranked)} exceeds original {original_count}"
 
     @pytest.mark.prop
@@ -81,8 +76,6 @@ class TestRerankingProperties:
         """MMR reranking should respect the k limit."""
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
 
-        if len(reranked) > k:
-            record_case("test_mmr_respects_k", {"got": len(reranked), "k": k})
         assert len(reranked) <= k, f"Reranked count {len(reranked)} exceeds k={k}"
 
     @pytest.mark.prop
@@ -109,8 +102,6 @@ class TestRerankingProperties:
         original_contents = {row["content"] for row in rows}
         reranked_contents = {row["content"] for row in reranked}
 
-        if not reranked_contents.issubset(original_contents):
-            record_case("test_mmr_preserves_content", {"missing": list(reranked_contents - original_contents)})
         assert reranked_contents.issubset(original_contents), "Reranked contains items not in original set"
 
     @pytest.mark.prop
@@ -135,13 +126,9 @@ class TestRerankingProperties:
         reranked2 = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
 
         # Results should be identical
-        if len(reranked1) != len(reranked2):
-            record_case("test_mmr_deterministic_len", {"len1": len(reranked1), "len2": len(reranked2)})
         assert len(reranked1) == len(reranked2), "Reranking not deterministic - different lengths"
 
         for i, (r1, r2) in enumerate(zip(reranked1, reranked2)):
-            if r1["content"] != r2["content"]:
-                record_case("test_mmr_deterministic_content", {"pos": i, "c1": r1["content"], "c2": r2["content"]})
             assert r1["content"] == r2["content"], f"Reranking not deterministic at position {i}"
 
     @pytest.mark.prop
@@ -170,8 +157,6 @@ class TestRerankingProperties:
             # Non-empty input should return non-empty output (if k > 0)
             reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
             if k > 0 and len(rows) > 0:
-                if len(reranked) == 0:
-                    record_case("test_mmr_handles_nonempty", {"rows": len(rows), "k": k})
                 assert len(reranked) > 0, "Non-empty input with k > 0 should return non-empty output"
 
     @pytest.mark.prop
@@ -200,17 +185,4 @@ class TestRerankingProperties:
         for row in reranked:
             content = row["content"]
             original_meta = original_metadata[content]
-
-            # MMR reranking adds system fields: ingest_run_id, chunk_variant, chunk_id
-            # Check that original metadata is preserved (subset check)
-            for key, value in original_meta.items():
-                assert key in row["metadata"], f"Original metadata key '{key}' missing for content: {content}"
-                assert (
-                    row["metadata"][key] == value
-                ), f"Original metadata value for '{key}' not preserved for content: {content}"
-
-            # Check that system fields are present
-            for key in ("ingest_run_id", "chunk_variant", "chunk_id"):
-                if key not in row["metadata"]:
-                    record_case("test_mmr_system_fields", {"content": content, "missing": key})
-                assert key in row["metadata"], f"System field '{key}' missing for content: {content}"
+            assert row["metadata"] == original_meta, f"Metadata not preserved for content: {content}"

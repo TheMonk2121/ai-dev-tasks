@@ -1,17 +1,3 @@
-from __future__ import annotations
-import json
-import os
-import sys
-import tempfile
-import uuid
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Any
-import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
-from monitoring.maintenance_metrics import MaintenanceMetricsDB, store_maintenance_analysis
-from typing import Any, Dict, List, Optional, Union
 """
 End-to-end property-based tests for maintenance database integration.
 
@@ -19,12 +5,24 @@ Tests the complete maintenance metrics system with actual database operations
 using Hypothesis to ensure robustness across various scenarios.
 """
 
+import json
+import os
 
 # Add src to path for imports
+import sys
+import tempfile
+import uuid
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any
 
+import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
+from monitoring.maintenance_metrics import MaintenanceMetricsDB, store_maintenance_analysis
 
 
 @pytest.mark.prop

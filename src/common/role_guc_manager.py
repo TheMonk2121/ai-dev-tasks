@@ -1,15 +1,12 @@
-from __future__ import annotations
+#!/usr/bin/env python3
+"""Role-based GUC manager for workload isolation in B-1070."""
+
 import logging
 import os
 import subprocess
 import sys
 import time
 from pathlib import Path
-                from common.db_dsn import resolve_dsn
-    import time
-#!/usr/bin/env python3
-"""Role-based GUC manager for workload isolation in B-1070."""
-
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +48,7 @@ class RoleGUCManager:
             # Try to resolve DSN
             try:
                 sys.path.insert(0, str(Path(__file__).parent.parent))
+                from common.db_dsn import resolve_dsn
 
                 dsn = resolve_dsn(strict=False, emit_warning=False)
             except ImportError:
@@ -207,6 +205,7 @@ class RoleGUCManager:
 
 def main():
     """Test the RoleGUCManager."""
+    import time
 
     logging.basicConfig(level=logging.INFO)
 

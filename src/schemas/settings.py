@@ -1,14 +1,11 @@
+# src/schemas/settings.py
 from __future__ import annotations
 
-import json
-import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Optional
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
-
-# src/schemas/settings.py
 
 
 class EvaluationSettings(BaseSettings):
@@ -44,49 +41,34 @@ class EvaluationSettings(BaseSettings):
     )
 
     # Known tags (configurable)
-    known_tags: str | list[str] = Field(
-        default="ops_health,meta_ops,rag_qa_single,rag_qa_multi,db_workflows,negatives,rag,dspy,memory,context",
-        description="List of known/valid tags (comma-separated string or JSON array)",
+    known_tags: list[str] = Field(
+        default=[
+            "ops_health",
+            "meta_ops",
+            "rag_qa_single",
+            "rag_qa_multi",
+            "db_workflows",
+            "negatives",
+            "rag",
+            "dspy",
+            "memory",
+            "context",
+        ],
+        description="List of known/valid tags",
         json_schema_extra={"type": "array", "items": {"type": "string"}},
     )
 
-    @field_validator("known_tags", mode="after")
+    @field_validator("known_tags", mode="before")
     @classmethod
     def parse_known_tags(cls, v):
         """Parse known_tags from string or list."""
         if isinstance(v, str):
-            if v == "[]" or v.strip() == "":
-                # Return default tags if empty
-                return [
-                    "ops_health",
-                    "meta_ops",
-                    "rag_qa_single",
-                    "rag_qa_multi",
-                    "db_workflows",
-                    "negatives",
-                    "rag",
-                    "dspy",
-                    "memory",
-                    "context",
-                ]
+            if v == "[]":
+                return []
             # Try to parse as JSON array
-
+            import json
             try:
-                parsed = json.loads(v)
-                if not parsed:  # Empty JSON array
-                    return [
-                        "ops_health",
-                        "meta_ops",
-                        "rag_qa_single",
-                        "rag_qa_multi",
-                        "db_workflows",
-                        "negatives",
-                        "rag",
-                        "dspy",
-                        "memory",
-                        "context",
-                    ]
-                return parsed
+                return json.loads(v)
             except json.JSONDecodeError:
                 # If not JSON, split by comma
                 return [tag.strip() for tag in v.split(",") if tag.strip()]

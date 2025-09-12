@@ -1,8 +1,3 @@
-from __future__ import annotations
-from typing import Any
-from pydantic import BaseModel, Field
-import os
-from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Pydantic Models for Backlog Workflow Validation
@@ -11,8 +6,11 @@ Lightweight validation schemas for handoff context bundles, idea capture,
 PRDs, and task lists to ensure reliable data flow across workflow stages.
 """
 
+from __future__ import annotations
 
+from typing import Any
 
+from pydantic import BaseModel, Field
 
 
 class ContextBundle(BaseModel):

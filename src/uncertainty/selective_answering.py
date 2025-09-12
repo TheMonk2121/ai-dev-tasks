@@ -1,11 +1,3 @@
-from __future__ import annotations
-import logging
-from dataclasses import dataclass
-from enum import Enum
-from typing import Any
-import numpy as np
-import os
-from typing import Any, Dict, List, Optional, Union
 """
 Phase 4: Selective Answering Module
 
@@ -13,7 +5,12 @@ Implements evidence quality-based abstention mechanisms and selective
 prediction grounding for production-safe RAG responses.
 """
 
+import logging
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any
 
+import numpy as np
 
 logger = logging.getLogger(__name__)
 

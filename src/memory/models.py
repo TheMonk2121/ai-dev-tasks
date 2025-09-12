@@ -1,8 +1,3 @@
-from __future__ import annotations
-from datetime import datetime
-from typing import Any
-from pydantic import AnyUrl, BaseModel, ConfigDict, Field
-from typing import Any, Dict, List, Optional, Union
 """Typed DTOs for agent boundaries and evaluation interoperability.
 
 These models are intentionally strict (extra='forbid') to prevent silent schema
@@ -10,8 +5,12 @@ creep. They align with our provenance requirements and evaluation harness
 contracts (retrieved_context, citations).
 """
 
+from __future__ import annotations
 
+from datetime import datetime
+from typing import Any
 
+from pydantic import AnyUrl, BaseModel, ConfigDict, Field
 
 
 class Provenance(BaseModel):

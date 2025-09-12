@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import hashlib
 import json
 import logging
@@ -7,21 +5,8 @@ import os
 import sys
 from dataclasses import replace
 from typing import Any, cast
-from typing import Any, Dict, List, Optional, Union
-
-# Ensure DSPy writes its cache inside the workspace to avoid sandbox issues
-try:
-    from pathlib import Path
-
-    _root = Path(__file__).resolve().parents[2]
-    os.environ.setdefault("DSPY_CACHEDIR", str(_root / ".dspy_cache"))
-except Exception:
-    pass
 
 import dspy
-
-# Unified "no answer" constant - match the gold standard exactly
-NOT_STR = os.getenv("EVAL_NOT_STRING", "Not in context.")
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -393,8 +378,8 @@ class IsAnswerableSig(dspy.Signature):
 
 
 class AnswerSig(dspy.Signature):
-    """COPY EXACTLY from the provided context. Return a literal substring (<= 50 tokens).
-    Do not paraphrase, do not add quotes/backticks. If no exact substring answers it, return: Not in context."""
+    """Answer ONLY with a file path or a single SQL line copied verbatim.
+    If not present in context, reply exactly: I don't know."""
 
     context: str = dspy.InputField()
     question: str = dspy.InputField()
@@ -419,8 +404,6 @@ class RAGAnswer(dspy.Module):
             self.precheck_min_overlap = float(os.getenv("READER_PRECHECK_MIN_OVERLAP", "0.10"))
         except ValueError:
             self.precheck_min_overlap = 0.10
-        # Debug tracking
-        self._last_reject_reason = None
 
     def forward(self, question: str, tag: str):
         limits = load_limits(tag)
@@ -558,129 +541,28 @@ class RAGAnswer(dspy.Module):
 
         context, _meta = build_reader_context(rows, question, tag, compact=bool(int(os.getenv("READER_COMPACT", "1"))))
 
-        # Rule-first: Try deterministic span extraction with strict controls
-        span_only = os.getenv("READER_SPAN_ONLY", "1") in {"1", "true", "True"}
-        strict_substring = os.getenv("READER_STRICT_SUBSTRING", "1") in {"1", "true", "True"}
-        try:
-            span_max_tokens = int(os.getenv("READER_SPAN_MAX_TOKENS", "50"))
-        except ValueError:
-            span_max_tokens = 50
-
-        def _shorten(txt: str, n: int) -> str:
-            w = (txt or "").split()
-            return " ".join(w[:n])
-
-        def _row_text(row) -> str:
-            """Extract text content from row (dict, object, or string)."""
-            if isinstance(row, str):
-                return row
-            if isinstance(row, dict):
-                for k in ("text", "content", "page_content", "body", "chunk", "doc", "text_for_reader"):
-                    v = row.get(k)
-                    if isinstance(v, str) and v.strip():
-                        return v
-            for k in ("text", "content", "page_content", "body", "chunk", "doc", "text_for_reader"):
-                if hasattr(row, k):
-                    v = getattr(row, k)
-                    if isinstance(v, str) and v.strip():
-                        return v
-            return str(row)
-
-        def _light_norm(s: str) -> str:
-            """Preserve identifier punctuation but normalize case & whitespace."""
-            return " ".join(s.replace("`", "").replace(""","\"").replace(""", '"').split()).lower()
-
-        def _is_substring(span: str, texts: list[str]) -> bool:
-            if not span:
-                return False
-            nspan = _light_norm(span)
-            for t in texts:
-                if nspan in _light_norm(_row_text(t)):
-                    return True
-            return False
-
-        # Identifier patterns for deterministic extraction
-        ID_PATS = [
-            r"[A-Za-z0-9/_\.\-]+\.md\b",  # file names
-            r"\bwebsearch_to_tsquery\b|\bplainto_tsquery\b|\bto_tsvector\b",
-            r"\b(ivfflat|hnsw)\b|\b\d{1,4}\s+lists?\b",  # ANN config
-            r"\b\d{1,3}\s?%\b|\bpercent\b",  # canary/limits
-        ]
-
-        def extract_candidate(sentence: str) -> str | None:
-            """Extract identifier-like candidate from sentence."""
-            import re
-
-            for p in ID_PATS:
-                m = re.search(p, sentence, flags=re.I)
-                if m:
-                    return m.group(0)
-            # fallback: pick the "identifier-like" longest token-ish chunk
-            m = re.search(r"[A-Za-z0-9/_\.\-]{3,}", sentence)
-            return m.group(0) if m else None
-
-        # Prepare exact sentences used by reader for substring checks
-        try:
-            # Extract the actual sentence strings that were used to build context
-            used_sentences = []
-            for r in self.used_contexts or []:
-                text = _row_text(r)
-                if text and text.strip():
-                    used_sentences.append(text)
-        except Exception:
-            used_sentences = []
-
-        # Try deterministic extraction first (for identifier-like answers)
-        for sentence in used_sentences:
-            candidate = extract_candidate(sentence)
-            if candidate and _is_substring(candidate, used_sentences):
-                return dspy.Prediction(answer=normalize_answer(candidate, tag))
-
-        # Fallback to LM-based span extraction
+        # Rule-first: Try deterministic span extraction
         span = pick_span(context, question, tag)
         if span:
-            span_text = _shorten(str(span).strip(), span_max_tokens)
-            # Enforce strict substring if requested
-            if strict_substring and not _is_substring(span_text, used_sentences):
-                # Treat as no valid span → fall back to generator
-                span_text = NOT_STR
-                # Store reason for debugging (will be picked up by harness)
-                self._last_reject_reason = "strict_substring_fail"
-            if span_text != NOT_STR:
-                return dspy.Prediction(answer=normalize_answer(span_text, tag))
-            # else: fall through to generator
+            return dspy.Prediction(answer=normalize_answer(span, tag))
 
         # Optional pre-check: likely answerable based on context overlap
         if self.precheck_enabled and not self._likely_answerable(context, question, self.precheck_min_overlap):
-            return dspy.Prediction(answer=NOT_STR)
+            return dspy.Prediction(answer="I don't know")
 
         # Stage 1: Optional IsAnswerable gate
         if self.abstain_enabled:
             cls_pred = cast(Any, self.cls(context=context, question=question))
             y = str(getattr(cls_pred, "label", "")).strip().lower()
             if y != "yes":
-                return dspy.Prediction(answer=NOT_STR)
+                return dspy.Prediction(answer="I don't know")
 
         # Stage 2: Generate extractive answer
         gen_pred = cast(Any, self.gen(context=context, question=question))
         answer_text = str(getattr(gen_pred, "answer", "")).strip()
-
-        # Normalize common "no answer" variants
-        if answer_text.strip().upper() in {"NOT_ANSWERABLE", "NOT-IN-CONTEXT", "NO_ANSWER", "N/A", "NA"}:
-            answer_text = NOT_STR
-
-        # Fail-safe if generator produced nothing: if reader path is enabled, don't crash the run
-        if not answer_text:
-            if os.getenv("READER_DISABLE", "0") in {"1", "true", "True"}:
-                raise RuntimeError("Empty generation from LM in RAGAnswer.forward – check LLM routing/config.")
-            answer_text = NOT_STR
         # Optional span enforcement: require answer to be in context
         if self.enforce_span and answer_text and (answer_text.lower() not in context.lower()):
-            answer_text = NOT_STR
-        # Hard cap to reasonable span (<= 50 tokens) to match gold answers
-        words = answer_text.split()
-        if len(words) > 50:
-            answer_text = " ".join(words[:50])
+            answer_text = "I don't know"
         return dspy.Prediction(answer=normalize_answer(answer_text, tag))
 
     def _likely_answerable(self, context: str, question: str, min_overlap: float = 0.10) -> bool:

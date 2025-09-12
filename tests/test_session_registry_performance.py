@@ -1,15 +1,3 @@
-from __future__ import annotations
-import os
-import tempfile
-import time
-from pathlib import Path
-from unittest.mock import patch
-import psutil
-import pytest
-from scripts.session_registry import SessionRegistry
-        import threading
-import sys
-import json
 #!/usr/bin/env python3
 """
 Performance tests for Session Registry System.
@@ -21,7 +9,18 @@ Tests the performance characteristics of the session registry:
 - Scalability testing
 """
 
+import os
+import tempfile
+import time
+from pathlib import Path
+from unittest.mock import patch
+
+import psutil
+import pytest
+
 # Import the session registry system
+from scripts.session_registry import SessionRegistry
+
 
 class TestSessionRegistryPerformance:
     """Performance tests for SessionRegistry class."""
@@ -199,6 +198,7 @@ class TestSessionRegistryPerformance:
 
     def test_concurrent_session_operations(self, registry):
         """Test performance under concurrent session operations."""
+        import threading
 
         results = []
         errors = []
@@ -327,6 +327,7 @@ class TestSessionRegistryPerformance:
 
         # Memory assertion: 50 sessions should use less than 1000MB (realistic for test environment)
         assert memory_usage_mb < 1000, f"Memory usage: {memory_usage_mb:.2f}MB, expected < 1000MB"
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

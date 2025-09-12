@@ -1,18 +1,15 @@
-from __future__ import annotations
-
-import hashlib
-import os
-import re
-import sys
-from dataclasses import dataclass
-from typing import Any, Optional, Union
-
 """
 Phase 1.5: Intent Router for Structured Query Early Routing
 
 Routes structured queries (lookup/id/date/metric) to specialized handlers before text RAG.
 Implements rule-based classification with feature flags for canary deployment.
 """
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
@@ -23,7 +20,7 @@ class IntentClassification:
     confidence: float  # 0.0 to 1.0
     reasoning: str  # Human-readable explanation
     route_target: str  # 'sql', 'kg', 'rag', 'hybrid'
-    structured_fields: dict[str, Any] | None = None  # Extracted structured data
+    structured_fields: dict[str, Any] = None  # Extracted structured data
     should_short_circuit: bool = False  # Whether to skip text RAG
 
 
@@ -42,14 +39,14 @@ class IntentRouterConfig:
     canary_sample_pct: float = 0.1
 
     # Structured query patterns
-    lookup_patterns: list[str] | None = None
-    id_patterns: list[str] | None = None
-    date_patterns: list[str] | None = None
-    metric_patterns: list[str] | None = None
+    lookup_patterns: list[str] = None
+    id_patterns: list[str] = None
+    date_patterns: list[str] = None
+    metric_patterns: list[str] = None
 
     # SQL/KG routing preferences
-    prefer_sql_for: list[str] | None = None
-    prefer_kg_for: list[str] | None = None
+    prefer_sql_for: list[str] = None
+    prefer_kg_for: list[str] = None
 
 
 class StructuredQueryDetector:
@@ -116,7 +113,7 @@ class StructuredQueryDetector:
         """
         query_lower = query.lower()
         confidence = 0.0
-        extracted_data: dict[str, Any] = {}
+        extracted_data = {}
 
         # Check lookup patterns
         lookup_score = self._check_patterns(query_lower, self.config.lookup_patterns)
@@ -152,18 +149,15 @@ class StructuredQueryDetector:
 
         return intent_type, confidence, extracted_data
 
-    def _check_patterns(self, query: str, patterns: list[str] | None) -> float:
+    def _check_patterns(self, query: str, patterns: list[str]) -> float:
         """Check how many patterns match the query."""
-        if not patterns:
-            return 0.0
-
         matches = 0
         for pattern in patterns:
             if re.search(pattern, query, re.IGNORECASE):
                 matches += 1
 
         # Return normalized score (0.0 to 1.0)
-        return min(1.0, matches / len(patterns))
+        return min(1.0, matches / len(patterns)) if patterns else 0.0
 
 
 class RouteTargetSelector:
@@ -187,7 +181,7 @@ class RouteTargetSelector:
         # For structured queries, determine best target
         route_scores = {"sql": 0.0, "kg": 0.0, "rag": 0.0}
 
-        reasoning: list[str] = []
+        reasoning = []
 
         # Score SQL routing
         sql_score = self._calculate_sql_score(extracted_data, query)
@@ -348,6 +342,7 @@ class IntentRouter:
             return False
 
         # Simple hash-based sampling
+        import hashlib
 
         hash_value = int(hashlib.md5(request_id.encode()).hexdigest()[:8], 16)
         sample_threshold = int(self.config.canary_sample_pct * 0xFFFFFFFF)

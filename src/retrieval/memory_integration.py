@@ -1,14 +1,3 @@
-from __future__ import annotations
-import json
-import pathlib
-import subprocess
-import time
-from dataclasses import dataclass
-from typing import Any
-            import yaml
-import sys
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
 """
 Memory Integration for Retrieval System
 
@@ -16,7 +5,14 @@ Integrates the retrieval tuning protocol with the existing memory systems
 and provides governance automation for operational consistency.
 """
 
+from __future__ import annotations
 
+import json
+import pathlib
+import subprocess
+import time
+from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
@@ -193,6 +189,7 @@ class GovernanceAutomator:
         config_path = config_path or self.config_path
 
         try:
+            import yaml
 
             config = yaml.safe_load(pathlib.Path(config_path).read_text())
         except Exception as e:

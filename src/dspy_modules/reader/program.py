@@ -1,13 +1,10 @@
-from __future__ import annotations
-
 import re
 
 import dspy
-import os
 
 # Optional observability for structured error reporting
 try:
-    from scripts.observability import get_logfire  # type: ignore[import-untyped]
+    from scripts.observability import get_logfire  # type: ignore
 
     _LOGFIRE = get_logfire()
 except Exception:  # pragma: no cover - best-effort only
@@ -20,8 +17,8 @@ OPS_TAGS = {"meta_ops", "ops_health"}
 
 def _normalize(ans: str, tag: str) -> str:
     a = ans.strip()
-    if a.upper() in {"NOT_ANSWERABLE", "NOT IN CONTEXT", "NOT-IN-CONTEXT", "NO_ANSWER", "N/A", "NA"}:
-        return "Not in context."
+    if a.upper() == "NOT_ANSWERABLE":
+        return "NOT_ANSWERABLE"
     # Tag-aware canonicalization helps F1 scoring without hallucination
     if tag in OPS_TAGS:
         a = a.replace("\\\\", "/")
@@ -63,17 +60,17 @@ class ExtractiveReader(dspy.Module):
                 except Exception:
                     pass
             # Minimal safe fallback
-            return {"answer": "Not in context."}
+            return {"answer": "NOT_ANSWERABLE"}
         # Calibrated "not answerable" gate via heuristic confidence hook if available
         ans = pred.answer or ""
         ans = _normalize(ans, tag)
         # Optional: if your scorer exposes confidence, gate it here.
-        # For now, simple policy: if no overlap with context tokens, declare Not in context.
-        if ans and ans != "Not in context.":
+        # For now, simple policy: if no overlap with context tokens, declare NOT_ANSWERABLE
+        if ans and ans != "NOT_ANSWERABLE":
             # More lenient check: look for key terms from the answer in the context
             ans_words = set(re.findall(r"[A-Za-z0-9_/.-]+", ans.lower()))
             context_words = set(re.findall(r"[A-Za-z0-9_/.-]+", joined.lower()))
             # If at least 50% of answer words are in context, accept it
             if len(ans_words) > 0 and len(ans_words.intersection(context_words)) / len(ans_words) < 0.5:
-                ans = "Not in context."
+                ans = "NOT_ANSWERABLE"
         return {"answer": ans}

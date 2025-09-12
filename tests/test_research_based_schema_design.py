@@ -1,13 +1,3 @@
-from __future__ import annotations
-import shutil
-import tempfile
-from pathlib import Path
-from unittest.mock import patch
-import pytest
-from scripts.research_based_schema_design import (
-import sys
-import os
-import json
 #!/usr/bin/env python3
 """
 Test suite for Research-Based Schema Design for Extraction
@@ -15,11 +5,20 @@ Test suite for Research-Based Schema Design for Extraction
 Comprehensive tests for the research-based schema design system.
 """
 
+import shutil
+import tempfile
+from pathlib import Path
+from unittest.mock import patch
+
+import pytest
+
+from scripts.research_based_schema_design import (
     ExtractionSchema,
     ResearchBasedSchemaDesign,
     ResearchFinding,
     SchemaPattern,
 )
+
 
 class TestResearchBasedSchemaDesign:
     """Test cases for the ResearchBasedSchemaDesign class."""
@@ -290,6 +289,7 @@ class TestResearchBasedSchemaDesign:
         assert metrics["validation_rule_count"] == len(schema.validation_rules)
         assert isinstance(metrics["performance_targets"], dict)
 
+
 class TestDataClasses:
     """Test cases for data classes."""
 
@@ -345,6 +345,7 @@ class TestDataClasses:
         assert schema.content_type == "test"
         assert schema.research_coverage == 0.8
         assert schema.version == "1.0"
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

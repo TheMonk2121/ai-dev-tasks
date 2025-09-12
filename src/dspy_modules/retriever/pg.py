@@ -1,24 +1,17 @@
-from __future__ import annotations
-import os
-from typing import Any
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from .rerank import mmr_rerank
-from .weights import load_weights
-    import numpy as np
-            from .fusion_head import load_feature_spec, load_head, score_rows
-            import logging
-    from ..evals.gold import gold_hit as real_gold_hit
-import json
-from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 PostgreSQL query execution for fused retrieval with multiplicative prior.
 Implements the surgical patch SQL query.
 """
 
+import os
+from typing import Any
 
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
+from .rerank import mmr_rerank
+from .weights import load_weights
 
 
 def get_db_connection():
@@ -241,6 +234,7 @@ def run_fused_query(
         weights["w_vec"] = weights["w_vec"] * (1.0 + boost)
 
     # Format query vector as pgvector literal to avoid adapter issues
+    import numpy as np
 
     if isinstance(qvec, np.ndarray):
         has_vec = qvec.size > 0
@@ -385,6 +379,7 @@ def run_fused_query(
 
     if enabled and ckpt and os.path.exists(ckpt):
         try:
+            from .fusion_head import load_feature_spec, load_head, score_rows
 
             feature_names = load_feature_spec(spec_path)
             head = load_head(ckpt, in_dim=len(feature_names), hidden=hidden, device=device)
@@ -399,6 +394,7 @@ def run_fused_query(
 
         except Exception as e:
             # Log error but continue with original behavior
+            import logging
 
             logger = logging.getLogger(__name__)
             logger.warning(f"Fusion head failed, falling back to original scoring: {e}")
@@ -421,5 +417,6 @@ def gold_hit(case_id: str, retrieved_rows: list[dict[str, Any]]) -> bool:
     Returns:
         True if any chunk matches gold standard
     """
+    from ..evals.gold import gold_hit as real_gold_hit
 
     return real_gold_hit(case_id, retrieved_rows)

@@ -1,20 +1,17 @@
-from __future__ import annotations
-import os
-from functools import lru_cache
-from typing import Any
-import yaml
-    from src.rag import reranker_env as RENV
-import sys
-from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Configuration loader for reranker settings.
 Integrates with the existing retriever configuration system.
 """
 
+import os
+from functools import lru_cache
+from typing import Any
 
+import yaml
 
 try:
+    from src.rag import reranker_env as RENV
 except Exception:
     RENV = None
 

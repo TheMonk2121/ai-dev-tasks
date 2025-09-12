@@ -1,15 +1,3 @@
-from __future__ import annotations
-import asyncio
-import time
-from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
-from typing import Any
-    import numpy as np
-    import onnxruntime as ort
-    from transformers import AutoTokenizer
-        from .reranker import _score_rerank
-import os
-from typing import Any, Dict, List, Optional, Union
 """
 Cross-encoder reranking client with ONNX optimization and fallback.
 
@@ -21,9 +9,17 @@ Provides a high-performance reranking service with:
 - Circuit breaker pattern for resilience
 """
 
+from __future__ import annotations
 
+import asyncio
+import time
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from typing import Any
 
 try:
+    import numpy as np
+    import onnxruntime as ort
 
     HAS_ONNX = True
 except ImportError:
@@ -32,6 +28,7 @@ except ImportError:
     np = None
 
 try:
+    from transformers import AutoTokenizer
 
     HAS_TRANSFORMERS = True
 except ImportError:
@@ -293,6 +290,7 @@ class CrossEncoderClient:
         """Simple heuristic reranking fallback."""
 
         # Import here to avoid circular dependencies
+        from .reranker import _score_rerank
 
         scores = []
         query_lower = query.lower()

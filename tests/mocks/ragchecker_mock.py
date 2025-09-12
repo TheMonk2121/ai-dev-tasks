@@ -1,8 +1,7 @@
-from __future__ import annotations
-import sys
-from unittest.mock import MagicMock
 """Mock RAGChecker to prevent Torch imports in unit tests."""
 
+import sys
+from unittest.mock import MagicMock
 
 
 # Mock the RAGChecker modules to prevent Torch imports

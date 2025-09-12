@@ -1,15 +1,17 @@
-from __future__ import annotations
+"""Tests for the centralized configuration system."""
+
 import os
 import tempfile
 from pathlib import Path
 from unittest.mock import patch
+
 import pytest
 import yaml
 from pydantic import ValidationError
+
 from src.config.models import RAG, Database, Eval, Observability
 from src.config.settings import Settings, get_settings, reload_settings, reset_settings
-import sys
-"""Tests for the centralized configuration system."""
+
 
 class TestSettings:
     """Test the Settings class and configuration loading."""
@@ -162,6 +164,7 @@ class TestSettings:
         assert settings1 is not settings2
         assert get_settings() is settings2
 
+
 class TestConfigurationPrecedence:
     """Test configuration precedence order."""
 
@@ -213,6 +216,7 @@ class TestConfigurationPrecedence:
                     # Environment variable should win
                     assert settings.rag.topk == 30
 
+
 class TestModelValidation:
     """Test individual model validation."""
 
@@ -260,11 +264,12 @@ class TestModelValidation:
 
         # Invalid driver
         with pytest.raises(ValidationError):
-            Eval(driver="invalid_driver")  # type: ignore[assignment]
+            Eval(driver="invalid_driver")  # type: ignore
 
         # Invalid threshold
         with pytest.raises(ValidationError):
             Eval(precision_threshold=1.5)
+
 
 @pytest.fixture(autouse=True)
 def reset_settings_fixture():

@@ -4,7 +4,7 @@ import pytest
 
 from src.memory.guards import rows_to_dtos
 from src.memory.models import Answer, Provenance, RetrievedChunk
-import os
+
 
 def _row(ok: bool = True) -> dict:
     md = {
@@ -15,6 +15,7 @@ def _row(ok: bool = True) -> dict:
     }
     return {"chunk_id": "abc123", "text": "hello world", "score": 0.9, "metadata": md}
 
+
 def test_rows_to_dtos_enforces_required_provenance():
     chunks = rows_to_dtos([_row(ok=True)], run_id="r1", producer="test", version="v1", strict=True)
     assert len(chunks) == 1
@@ -23,9 +24,11 @@ def test_rows_to_dtos_enforces_required_provenance():
     assert c.provenance.ingest_run_id == "run-123"
     assert c.provenance.chunk_variant == "v1"
 
+
 def test_rows_to_dtos_raises_on_missing_provenance():
     with pytest.raises(ValueError):
         _ = rows_to_dtos([_row(ok=False)], run_id="r1", producer="test", version="v1", strict=True)
+
 
 def test_answer_forbids_extra_fields():
     prov = Provenance(

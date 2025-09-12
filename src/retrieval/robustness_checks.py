@@ -1,16 +1,3 @@
-from __future__ import annotations
-import time
-from collections.abc import Callable
-from dataclasses import dataclass
-from typing import Any
-            from retrieval.fusion import weighted_rrf
-            from retrieval.prefilter import PrefilterConfig, RecallFriendlyPrefilter
-            from retrieval.reranker import heuristic_rerank
-            from retrieval.packer import pack_candidates
-            from retrieval.quality_gates import validate_evaluation_results
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
 """
 Robustness Checks for Retrieval Pipeline
 
@@ -18,7 +5,12 @@ Implements health checks, performance monitoring, and failure detection
 to ensure the retrieval system operates reliably in production.
 """
 
+from __future__ import annotations
 
+import time
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
@@ -178,6 +170,7 @@ class RobustnessChecker:
 
         # Check fusion component
         def check_fusion():
+            from retrieval.fusion import weighted_rrf
 
             # Simple test
             bm25 = [("doc1", 10.0), ("doc2", 5.0)]
@@ -190,6 +183,7 @@ class RobustnessChecker:
 
         # Check prefilter component
         def check_prefilter():
+            from retrieval.prefilter import PrefilterConfig, RecallFriendlyPrefilter
 
             pf = RecallFriendlyPrefilter(PrefilterConfig())
             docs = {"doc1": "Test document content", "doc2": "Another test document"}
@@ -202,6 +196,7 @@ class RobustnessChecker:
 
         # Check reranker component
         def check_reranker():
+            from retrieval.reranker import heuristic_rerank
 
             candidates = [("doc1", 0.8), ("doc2", 0.6)]
             docs = {"doc1": "Test content", "doc2": "Another test"}
@@ -213,6 +208,7 @@ class RobustnessChecker:
 
         # Check packer component
         def check_packer():
+            from retrieval.packer import pack_candidates
 
             candidates = [("doc1", 0.8), ("doc2", 0.6)]
             docs = {"doc1": "Test content", "doc2": "Another test"}
@@ -224,6 +220,7 @@ class RobustnessChecker:
 
         # Check quality gates component
         def check_quality_gates():
+            from retrieval.quality_gates import validate_evaluation_results
 
             metrics = {"recall_at_20": 0.3, "f1_score": 0.2, "faithfulness": 0.6}
             result = validate_evaluation_results(metrics)

@@ -1,14 +1,3 @@
-from __future__ import annotations
-import json
-import os
-import subprocess
-import sys
-from datetime import datetime
-from typing import Any, Optional
-import psycopg2
-from psycopg2.extras import RealDictCursor
-            import psutil
-from typing import Any, Dict, List, Optional, Union
 """
 Health Endpoint Manager for AI Development Tasks
 
@@ -19,7 +8,15 @@ Manages health checks for various system components including:
 - External service dependencies
 """
 
+import json
+import os
+import subprocess
+import sys
+from datetime import datetime
+from typing import Any, Optional
 
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 
 class HealthEndpointManager:
@@ -256,6 +253,7 @@ class HealthEndpointManager:
 
         # Add system resource metrics
         try:
+            import psutil
 
             memory = psutil.virtual_memory()
             disk = psutil.disk_usage("/")

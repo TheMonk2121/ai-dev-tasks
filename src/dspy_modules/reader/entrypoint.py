@@ -1,16 +1,12 @@
-from __future__ import annotations
-import os
-from typing import Any
-from .sentence_select import select_sentences
-            from src.llm.token_count import make_counter
-            from ..retriever.query_rewrite import PHRASE_HINTS
-from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Reader entrypoint for building context from retrieved documents.
 """
 
+import os
+from typing import Any
 
+from .sentence_select import select_sentences
 
 
 def build_reader_context(
@@ -42,6 +38,7 @@ def build_reader_context(
     counter = None
     if enable_token_pack:
         try:
+            from src.llm.token_count import make_counter
 
             counter = make_counter(token_family, token_model, model_path=llama_model_path)
         except Exception:
@@ -50,6 +47,7 @@ def build_reader_context(
     # Use sentence selection for better precision
     if compact:
         try:
+            from ..retriever.query_rewrite import PHRASE_HINTS
 
             phrase_hints = PHRASE_HINTS.get(tag, [])
             compact_sentences, chosen = select_sentences(rows, query, tag, phrase_hints, per_chunk=2, total=10)

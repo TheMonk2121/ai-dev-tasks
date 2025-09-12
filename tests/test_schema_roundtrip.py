@@ -16,6 +16,7 @@ from src.schemas.eval import (
     RetrievalCandidate,
 )
 
+
 def test_roundtrip_case_result():
     chunk = ContextChunk(source_id="doc_1:0", text="hello world", start=0, end=100)
     rc = RetrievalCandidate(doc_id="d1", score=0.9, chunk="chunk text")
@@ -34,6 +35,7 @@ def test_roundtrip_case_result():
     js = c.model_dump_json()
     c2 = CaseResult.model_validate_json(js)
     assert c2 == c
+
 
 def test_roundtrip_evaluation_run():
     rr = RerankerConfig()
@@ -54,6 +56,7 @@ def test_roundtrip_evaluation_run():
     er2 = EvaluationRun.model_validate_json(js)
     assert er2 == er
 
+
 def test_alias_loading_and_roundtrip():
     legacy = {
         "case_id": "C1",
@@ -73,6 +76,7 @@ def test_alias_loading_and_roundtrip():
     assert gc.id == "C1"
     assert gc.query == gc.query
     assert gc.gt_answer == gc.gt_answer
+
 
 def test_result_model_minimal():
     res = EvaluationResult(

@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from scripts.doorway_utils import (
-import sys
     ANCHOR_KEYS,
     atomic_write,
     canonical_paths,
@@ -14,11 +13,13 @@ import sys
     slugify,
 )
 
+
 def test_slugify_and_paths(tmp_path: Path) -> None:
     slug = slugify("Fix the notification system!")
     assert slug == "Fix-The-Notification-System"
     paths = canonical_paths("B-097", slug)
     assert paths["prd"].endswith("PRD-B-097-Fix-The-Notification-System.md")
+
 
 def test_atomic_write_and_versioning(tmp_path: Path) -> None:
     p = tmp_path / "file.md"
@@ -28,12 +29,14 @@ def test_atomic_write_and_versioning(tmp_path: Path) -> None:
     v2 = next_versioned(str(p))
     assert v2.endswith("-v2.md")
 
+
 def test_dedupe_simple() -> None:
     existing = [("B-001", "Fix notifications"), ("B-002", "Add metrics")]
     exact, fuzzy = detect_duplicates("fix notifications", existing)
     assert "B-001" in exact
     assert "B-002" not in exact
     assert isinstance(fuzzy, list)
+
 
 def test_render_md_with_anchors() -> None:
     md = render_md_with_anchors(

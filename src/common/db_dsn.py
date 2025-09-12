@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 # src/common/db_dsn.py
 import json
 import os
