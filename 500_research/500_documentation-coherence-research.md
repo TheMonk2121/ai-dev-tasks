@@ -66,9 +66,9 @@ Our system uses a three-digit prefix naming convention to establish hierarchy:
 
 **MEDIUM Priority (Read as Needed):**
 
-- `000_core/001_create-prd.md` - PRD creation workflow
-- `000_core/002_generate-tasks.md` - Task generation workflow
-- `000_core/003_process-task-list.md` - AI execution workflow
+- `000_core/001_PRD_TEMPLATE.md` - PRD creation workflow
+- `000_core/002_TASK-LIST_TEMPLATE.md` - Task generation workflow
+- `000_core/003_EXECUTION_TEMPLATE.md` - AI execution workflow
 - `100_memory/104_dspy-development-context.md` - Deep technical context
 
 **LOW Priority (Read for Specific Tasks):**
@@ -359,7 +359,7 @@ def analyze_context_priority():
 - `400_guides/400_context-priority-guide.md` - Context priority system
 - `400_guides/400_system-overview.md` - Technical architecture
 - `000_core/000_backlog.md` - Priority managemen
-- `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md` - Workflow files
+- `000_core/001_PRD_TEMPLATE.md`, `000_core/002_TASK-LIST_TEMPLATE.md`, `000_core/003_EXECUTION_TEMPLATE.md` - Workflow files
 - All files with `<!-- -->` comment patterns
 
 ### **Technical References**

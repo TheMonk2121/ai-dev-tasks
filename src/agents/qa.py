@@ -1,14 +1,16 @@
-"""PydanticAI QA agent with typed outputs and instrumentation."""
-
 from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Annotated
-
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_ai import Agent, RunContext, Tool
 from pydantic_ai.models.instrumented import InstrumentationSettings
+import sys
+from typing import Any, Dict, List, Optional, Union
+"""PydanticAI QA agent with typed outputs and instrumentation."""
+
+
+
 
 
 class QAAnswer(BaseModel):

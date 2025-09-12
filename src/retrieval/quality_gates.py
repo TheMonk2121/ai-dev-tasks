@@ -1,3 +1,10 @@
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Any
+        import pathlib
+        import yaml  # type: ignore[import-untyped]
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 """
 Quality Gates for Retrieval Evaluation
 
@@ -5,10 +12,7 @@ Implements soft and hard quality gates based on evaluation metrics
 to ensure retrieval performance meets minimum standards.
 """
 
-from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any
 
 
 @dataclass
@@ -84,9 +88,7 @@ class QualityGateValidator:
 def load_quality_gates(config_path: str = "config/retrieval.yaml") -> QualityGateValidator | None:
     """Load quality gate configuration from YAML file."""
     try:
-        import pathlib
 
-        import yaml  # type: ignore
 
         cfg = yaml.safe_load(pathlib.Path(config_path).read_text())
         tuning_config = cfg.get("tuning", {})

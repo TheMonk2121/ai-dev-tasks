@@ -1,3 +1,4 @@
+from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Four-Part Optimization Loop Demonstration
@@ -14,13 +15,7 @@ from typing import Any
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-# Apply litellm compatibility shim before importing DSPy
-try:
-    from litellm_compatibility_shim import patch_litellm_imports
-
-    patch_litellm_imports()
-except ImportError:
-    pass  # Shim not available, continue without it
+# DSPy 3.0.1 works directly with litellm 1.77.0 - no compatibility shim needed
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature

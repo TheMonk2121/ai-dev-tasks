@@ -1,3 +1,12 @@
+from __future__ import annotations
+import asyncio
+import os
+import time
+from dataclasses import dataclass, field
+from typing import Any
+            from scripts.ltst_memory_integration import LTSTContext, LTSTMemoryIntegration  # type: ignore[import-untyped]
+import sys
+from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Thin adapter exposing a stable memory rehydration interface for the orchestrator.
@@ -11,13 +20,7 @@ Implementation detail:
 - Wraps LTSTMemoryIntegration to obtain a context and similar contexts.
 """
 
-from __future__ import annotations
 
-import asyncio
-import os
-import time
-from dataclasses import dataclass, field
-from typing import Any
 
 
 @dataclass
@@ -97,7 +100,6 @@ class MemoryRehydrator:
 
         # Lazy import to keep adapter lightweight and avoid import cycles at module import time
         try:
-            from scripts.ltst_memory_integration import LTSTContext, LTSTMemoryIntegration  # type: ignore
         except Exception:
             # Import not available; use degraded fallback
             return self._degraded_fallback(request, start)

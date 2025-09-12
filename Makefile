@@ -42,6 +42,35 @@ clean:
 	@echo "Cleaning up virtual environments..."
 	rm -rf .venv .venv-linux
 
+# Evaluation profile targets
+eval-real:
+	@echo "Running evaluation with real profile..."
+	@if [ -f "scripts/eval_real.sh" ]; then \
+		./scripts/eval_real.sh; \
+	else \
+		python3 scripts/ragchecker_official_evaluation.py --profile real; \
+	fi
+
+eval-gold:
+	@echo "Running evaluation with gold profile..."
+	@if [ -f "scripts/eval_gold.sh" ]; then \
+		./scripts/eval_gold.sh; \
+	else \
+		python3 scripts/ragchecker_official_evaluation.py --profile gold; \
+	fi
+
+eval-mock:
+	@echo "Running evaluation with mock profile..."
+	@if [ -f "scripts/eval_mock.sh" ]; then \
+		./scripts/eval_mock.sh; \
+	else \
+		python3 scripts/ragchecker_official_evaluation.py --profile mock; \
+	fi
+
+test-profiles:
+	@echo "Running profile configuration tests..."
+	uv run pytest -v tests/test_config_profiles.py
+
 # Help target
 help:
 	@echo "Available targets:"
@@ -51,4 +80,8 @@ help:
 	@echo "  setup-host       - Setup host environment for quick dev"
 	@echo "  setup-container  - Setup container environment for full testing"
 	@echo "  clean            - Clean up virtual environments"
+	@echo "  eval-real        - Run evaluation with real profile"
+	@echo "  eval-gold        - Run evaluation with gold profile"
+	@echo "  eval-mock        - Run evaluation with mock profile"
+	@echo "  test-profiles    - Run profile configuration tests"
 	@echo "  help             - Show this help message"

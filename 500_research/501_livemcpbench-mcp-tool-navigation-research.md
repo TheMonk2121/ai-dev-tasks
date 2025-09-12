@@ -4,9 +4,6 @@
 
 # LiveMCPBench: Can Agents Navigate an Ocean of MCP Tools?
 
-<!-- MEMORY_CONTEXT: LOW - Research findings on MCP tool navigation and agent capabilities -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_system-overview.md -->
-
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |

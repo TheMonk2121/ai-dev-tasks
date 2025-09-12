@@ -6,24 +6,26 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
+import json
+from typing import Any, Dict, List, Optional, Union
 
 try:
     # Optional dependency; file guards runtime if missing
     from pydantic_graph.persistence import BaseStatePersistence
     from pydantic_graph.snapshots import EndSnapshot, NodeSnapshot, Snapshot
 except Exception:  # pragma: no cover - import-safe in environments without pydantic-graph
-    BaseStatePersistence = object  # type: ignore
-    Snapshot = object  # type: ignore
-    NodeSnapshot = object  # type: ignore
-    EndSnapshot = object  # type: ignore
+    BaseStatePersistence = object  # type: ignore[assignment]
+    Snapshot = object  # type: ignore[assignment]
+    NodeSnapshot = object  # type: ignore[assignment]
+    EndSnapshot = object  # type: ignore[assignment]
 
 try:
     import psycopg2
     from psycopg2.extras import Json, RealDictCursor
 except Exception:  # pragma: no cover
-    psycopg2 = None  # type: ignore
-    Json = None  # type: ignore
-    RealDictCursor = None  # type: ignore
+    psycopg2 = None  # type: ignore[assignment]
+    Json = None  # type: ignore[assignment]
+    RealDictCursor = None  # type: ignore[assignment]
 
 
 def _connect_dsn() -> Any:

@@ -117,6 +117,16 @@ dev = [
     "typer>=0.12.0",
     "tqdm>=4.66.0",
     "datasketch>=1.6.5",
+    # Type stubs for better IDE support and type checking
+    "types-psycopg2>=2.9.21",
+    "types-requests>=2.31.0",
+    "types-flask>=1.1.6",
+    "types-boto3>=1.40.29",
+    "types-tqdm>=4.67.0",
+    "types-jinja2>=2.11.9",
+    "types-pyyaml>=6.0.12",
+    "types-setuptools>=80.9.0",
+    "types-urllib3>=1.26.25",
 ]
 security = ["bandit>=1.7.5", "safety>=2.3.0", "pip-audit>=2.6.0"]
 ml = [
@@ -246,5 +256,27 @@ allowed_types = [
     "merge",
 ]
 message_template = "{type}{scope}: {subject}\n\n{body}\n\n{footer}"
+
+[tool.uv]
+# UV configuration for virtual environment management
+# Python version is specified in .python-version file
+# Prevent automatic venv creation unless explicitly needed
+# no-project-environment = true  # Uncomment to disable auto-venv creation
+# venv-seed = []  # Don't install pip/setuptools/wheel by default
+
 [tool.codespell]
 skip = "600_archives/**,.hypothesis/**,artifacts/**,000_core/**,100_memory/**,200_setup/**,300_experiments/**,400_guides/**,500_research/**,PRD-* ,Task-List-* ,datasets/**,docs/**,dashboard/**"
+
+[dependency-groups]
+dev = [
+    "types-boto3>=1.40.29",
+    "types-flask>=1.1.6",
+    "types-jinja2>=2.11.9",
+    "types-psycopg2>=2.9.21.20250809",
+    "types-pyyaml>=6.0.12.20250822",
+    "types-requests>=2.32.4.20250809",
+    "types-setuptools>=80.9.0.20250822",
+    "types-tqdm>=4.67.0.20250809",
+    "types-urllib3>=1.26.25.14",
+    "vulture>=2.14",
+]

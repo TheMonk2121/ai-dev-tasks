@@ -1,7 +1,5 @@
 # Advanced Resilience Patterns: Task 7.1
 
-<!-- MEMORY_CONTEXT: HIGH - Advanced resilience patterns implementation for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

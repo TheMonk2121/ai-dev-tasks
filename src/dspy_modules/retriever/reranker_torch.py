@@ -1,17 +1,21 @@
+from __future__ import annotations
+import hashlib
+import logging
+import os
+import sqlite3
+from typing import Any
+    from src.rag import reranker_env as RENV  # SSOT env shim
+            import sentence_transformers
+            import torch
+from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Minimal cross-encoder reranker for inference-only PyTorch integration.
 Implements the surgical approach: pre-trained models, cached scores, deterministic results.
 """
 
-import hashlib
-import logging
-import os
-import sqlite3
-from typing import Any
 
 try:
-    from src.rag import reranker_env as RENV  # SSOT env shim
 except Exception:
     RENV = None  # Fallback if path not available; direct envs will be used
 
@@ -27,7 +31,6 @@ def _get_sentence_transformers():
     global _sentence_transformers
     if _sentence_transformers is None:
         try:
-            import sentence_transformers
 
             _sentence_transformers = sentence_transformers
         except ImportError:
@@ -41,7 +44,6 @@ def _get_torch():
     global _torch
     if _torch is None:
         try:
-            import torch
 
             _torch = torch
         except ImportError:

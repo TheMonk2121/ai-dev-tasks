@@ -1,10 +1,12 @@
+from __future__ import annotations
+import re
+import os
 #!/usr/bin/env python3
 """
 Rule-first span picker for deterministic extractive answers.
 Falls back to LLM only when deterministic extraction fails.
 """
 
-import re
 
 SQL_HINTS = r"(create|alter|drop|index|table|materialized|view|foreign key|primary key|using|gin|gist|ivfflat|to_tsvector|tsquery|websearch_to_tsquery)"
 

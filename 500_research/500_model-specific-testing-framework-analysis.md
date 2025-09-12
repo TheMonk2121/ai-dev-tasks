@@ -1,7 +1,5 @@
 # Model-Specific Testing Framework Analysis: Task 2.4
 
-<!-- MEMORY_CONTEXT: HIGH - Model-specific testing framework analysis for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

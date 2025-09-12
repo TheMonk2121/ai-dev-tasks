@@ -13,7 +13,6 @@ REQUIRED_ENV_VARS = ["POSTGRES_DSN", "OPENAI_API_KEY", "AWS_REGION"]
 # Optional but recommended environment variables
 RECOMMENDED_ENV_VARS = ["INGEST_RUN_ID", "CHUNK_VARIANT", "CHUNK_SIZE", "OVERLAP_RATIO", "EVAL_DISABLE_CACHE"]
 
-
 def check_required_env_vars() -> None:
     """Check for required environment variables and fail fast if missing."""
     missing_vars = [var for var in REQUIRED_ENV_VARS if not os.getenv(var)]
@@ -29,7 +28,6 @@ def check_required_env_vars() -> None:
         print("\n🚨 Exiting due to missing environment variables.")
         sys.exit(1)
 
-
 def check_recommended_env_vars() -> list[str]:
     """Check for recommended environment variables and warn if missing."""
     missing_vars = [var for var in RECOMMENDED_ENV_VARS if not os.getenv(var)]
@@ -41,7 +39,6 @@ def check_recommended_env_vars() -> list[str]:
         print("   These are optional but recommended for optimal performance.")
 
     return missing_vars
-
 
 def get_env_summary() -> dict:
     """Get a summary of environment variable status."""
@@ -55,7 +52,6 @@ def get_env_summary() -> dict:
             "missing": [var for var in RECOMMENDED_ENV_VARS if not os.getenv(var)],
         },
     }
-
 
 # Auto-check on import (this is the key behavior)
 check_required_env_vars()

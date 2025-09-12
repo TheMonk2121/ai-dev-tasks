@@ -1,3 +1,10 @@
+from __future__ import annotations
+import re
+from dataclasses import dataclass
+from typing import Any
+    import tiktoken
+import os
+from typing import Any, Dict, List, Optional, Union
 """
 Document windowing for precise cross-encoder reranking.
 
@@ -6,14 +13,9 @@ before reranking to improve relevance scoring granularity while maintaining
 document context and traceability for citation.
 """
 
-from __future__ import annotations
 
-import re
-from dataclasses import dataclass
-from typing import Any
 
 try:
-    import tiktoken
 
     ENCODER = tiktoken.get_encoding("cl100k_base")
 

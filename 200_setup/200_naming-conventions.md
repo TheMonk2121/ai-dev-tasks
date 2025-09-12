@@ -12,17 +12,24 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to
-new files and update existing ones |
+| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to new files and update existing ones |
 
-## TL;DR {#tldr}
+## 📋 Table of Contents
 
-| what this file is | read when | do next |
-|---|---|---|
-| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to
-new files and update existing ones |
-
-## Category Table (Accepted Exceptions & Deferrals)
+- [🔢 Prefix Category Table](#-prefix-category-table)
+- [🔄 File Generation Workflow](#-file-generation-workflow)
+- [📝 File Naming Rules](#-file-naming-rules)
+- [📝 Formatting Standards](#-formatting-standards)
+- [🔐 Core Documentation Invariants](#-core-documentation-invariants)
+- [🤖 AI API Standards](#-ai-api-standards)
+- [🧠 Memory Scaffolding Guidelines](#-memory-scaffolding-documentation-guidelines)
+- [📋 PRD Lifecycle Management](#-prd-lifecycle-management)
+- [🛠️ Implementation Tools](#-implementation-tools)
+  - [Evaluation Profiles](#evaluation-profiles)
+- [📚 Current Project Structure](#-current-project-structure)
+- [🚀 Adding New Categories](#-adding-new-categories)
+- [🔄 Living Document Policy](#-living-document-policy)
+- [🔗 Related Files](#-related-files)
 
 ## 🔢 Prefix Category Table
 
@@ -46,43 +53,7 @@ This table clarifies the buckets for our numeric prefixes, making it easier to c
 | `600-999` | Archives & Legacy | Deprecated files, historical archives, and legacy documentation. | `600_archives/`,
 `docs/legacy/` |
 
-## Evaluations: Profiles, Scripts, Outputs
-
-**Profiles**: `real`, `gold`, `mock` (single responsibility)
-- Env files: `configs/profiles/{profile}.env`
-- Entry scripts: `scripts/eval_{profile}.sh`
-- Orchestrator: `scripts/ragchecker_official_evaluation.py` (uses `--profile`)
-
-**Output folders**:
-`metrics/runs/{YYYYMMDD_HHMMSS}__{profile}__driver-{driver}__f1-{f1}__p-{p}__r-{r}/`
-
-**Never** use `mock` for baselines or main branch.
-
-### Integration with Development Workflow
-
-The naming system **integrates seamlessly**with our development workflow. When creating new files, the process is:
-
-1.**Check existing patterns**in the same prefix range for consistency
-2.**Follow the naming conventions**documented in this file
-3.**Add cross-references**using HTML comment patterns
-4.**Update the context priority guide**if the file belongs in a documented tier
-5.**Consider AI rehydration**- will this file be needed for context sharing?
-
-#### Quality Assurance
-
-- **Consistency checks**ensure similar files use similar naming patterns
-
-- **Cross-reference validation**ensures new files are properly linked
-
-- **Context priority guide updates**keep the documentation hierarchy current
-
-- **AI-friendly naming**ensures files are discoverable by Cursor AI
-
-The result is a**living naming system**that scales with your project while maintaining the cognitive scaffolding that
-makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making
-it easy for both humans and AI to understand its role and importance in the overall system.
-
-## 🔄 File Generation {#file-generation}
+## 🔄 File Generation Workflow {#file-generation}
 
 ### ⭐ CANON RULE: All Guides Go in Root with 400_ Prefix
 
@@ -588,6 +559,18 @@ Use `python3 scripts/show_memory_hierarchy.py` to display the current memory con
 ### Memory Context Updates
 
 Use `python3 scripts/update_cursor_memory.py` to automatically update memory context based on backlog priorities.
+
+### Evaluation Profiles {#evaluation-profiles}
+
+**Profiles**: `real`, `gold`, `mock` (single responsibility)
+- Env files: `configs/profiles/{profile}.env`
+- Entry scripts: `scripts/eval_{profile}.sh`
+- Orchestrator: `scripts/ragchecker_official_evaluation.py` (uses `--profile`)
+
+**Output folders**:
+`metrics/runs/{YYYYMMDD_HHMMSS}__{profile}__driver-{driver}__f1-{f1}__p-{p}__r-{r}/`
+
+**Never** use `mock` for baselines or main branch.
 
 ## 📚 Current Project Structure
 

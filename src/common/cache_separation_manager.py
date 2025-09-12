@@ -1,12 +1,14 @@
-#!/usr/bin/env python3
-"""Cache separation manager for workload isolation in B-1070."""
-
+from __future__ import annotations
 import json
 import logging
 import os
 import shutil
 import time
 from pathlib import Path
+import sys
+#!/usr/bin/env python3
+"""Cache separation manager for workload isolation in B-1070."""
+
 
 logger = logging.getLogger(__name__)
 

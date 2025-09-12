@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-"""
-Structured Logging for DSPy RAG System
-Provides consistent, structured logging across all components.
-"""
-
+from __future__ import annotations
 import json
 import logging
 import sys
@@ -11,6 +6,15 @@ import threading
 import traceback
 from datetime import UTC, datetime
 from typing import Any
+                    from logging.handlers import RotatingFileHandler
+    import os
+from typing import Any, Dict, List, Optional, Union
+#!/usr/bin/env python3
+"""
+Structured Logging for DSPy RAG System
+Provides consistent, structured logging across all components.
+"""
+
 
 # Sensitive field patterns for redaction
 SENSITIVE_PATTERNS = ["password", "token", "secret", "key", "credential", "auth"]
@@ -94,7 +98,6 @@ def get_logger(name: str, level: str = "INFO", log_file: str | None = None) -> l
             # File handler (only if log_file is provided)
             if log_file:
                 try:
-                    from logging.handlers import RotatingFileHandler
 
                     file_handler = RotatingFileHandler(log_file, maxBytes=50 * 1024 * 1024, backupCount=5)  # 50MB
                     file_handler.setFormatter(StructuredFormatter())
@@ -165,7 +168,6 @@ def log_error_with_context(logger: logging.Logger, error: Exception, message: st
 
 def configure_logging_from_env():
     """Configure logging from environment variables"""
-    import os
 
     log_level = os.getenv("LOG_LEVEL", "INFO")
     log_file = os.getenv("LOG_FILE")

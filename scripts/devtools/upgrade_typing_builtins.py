@@ -1,3 +1,9 @@
+from __future__ import annotations
+import re
+from pathlib import Path
+    import sys
+import os
+from typing import Any, Dict, List, Optional, Union
 """
 Refactor deprecated typing aliases (List, Dict, Tuple, Set, FrozenSet)
 to built-in generics (list, dict, tuple, set, frozenset) in the `scripts/`
@@ -6,10 +12,7 @@ directory. Also cleans up imports from typing to remove those names.
 Target Python: 3.12 (PEP 585 generics are available).
 """
 
-from __future__ import annotations
 
-import re
-from pathlib import Path
 
 # Typing aliases that should become built-in generics (PEP 585)
 DEPRECATED = {
@@ -211,7 +214,6 @@ def process_file(path: Path) -> bool:
 
 
 def main() -> None:
-    import sys
     # Accept one or more directories; default to scripts/
     args = sys.argv[1:]
     if not args:

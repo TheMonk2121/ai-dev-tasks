@@ -1,4 +1,0 @@
-name: "rag_quality_standards"
-split: "test"
-max_queries: 500
-task: "latency"

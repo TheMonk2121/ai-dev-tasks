@@ -1,3 +1,13 @@
+from __future__ import annotations
+import json
+import logging
+import os
+from typing import Any
+    from dspy_modules.retriever.feature_schema import FusionFeatures
+        import torch
+        from train.fusion_head import FusionHead
+        import torch
+from typing import Any, Dict, List, Optional, Union
 """
 Runtime loader and scorer for the learned fusion head.
 
@@ -5,10 +15,6 @@ This module provides utilities to load a trained fusion head and apply it
 to retrieval results at runtime.
 """
 
-import json
-import logging
-import os
-from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +131,6 @@ def build_fusion_features_from_row(row: dict[str, Any]):
     Returns:
         FusionFeatures object with validated and typed data
     """
-    from dspy_modules.retriever.feature_schema import FusionFeatures
 
     # Extract scalar features
     file_path = row.get("file_path", "")
@@ -167,8 +172,6 @@ def load_head(checkpoint_path: str, in_dim: int, hidden: int = 0, device: str = 
         RuntimeError: If model loading fails
     """
     try:
-        import torch
-        from train.fusion_head import FusionHead
     except ImportError as e:
         logger.error(f"PyTorch not available for fusion head: {e}")
         raise ImportError("PyTorch required for fusion head but not installed")
@@ -215,7 +218,6 @@ def score_rows(
         return rows
 
     try:
-        import torch
     except ImportError:
         logger.error("PyTorch not available for fusion head scoring")
         return rows

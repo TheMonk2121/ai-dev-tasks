@@ -1,0 +1,40 @@
+---
+description: Enforce multi-agent role patterns and AI development workflows
+globs:
+  - '**/*.py'
+  - '**/*.md'
+  - '**/scripts/**/*'
+alwaysApply: true
+---
+
+# Multi-Agent Role Patterns
+
+## Role Definitions
+- **Planner**: High-level strategy, architecture, and project planning
+- **Implementer**: Code implementation, integration, and deployment
+- **Researcher**: Analysis, investigation, and technical research
+- **Coder**: Specific coding tasks, debugging, and implementation details
+
+## Role-Specific Guidelines
+- **Planner**: Focus on strategy, architecture, and high-level decisions
+- **Implementer**: Handle code implementation and integration tasks
+- **Researcher**: Conduct analysis and technical investigation
+- **Coder**: Execute specific coding and debugging tasks
+
+## Single Doorway Workflow
+- **Backlog** → **PRD** → **Tasks** → **Execution** → **Archive**
+- All development follows this structured workflow
+- No ad-hoc development outside this pattern
+- Each phase has specific deliverables and gates
+
+## AI Development Patterns
+- Use `codebase_search` over `grep` for semantic understanding
+- Always use `todo_write` for multi-step tasks
+- Use `update_memory` for important project decisions
+- Follow memory-first development protocols
+
+## Context Preservation
+- Maintain context across execution phases
+- Use structured logging with request/run IDs
+- Record metrics (dataset hash, seed, profile)
+- Preserve state in `.ai_state.json` (git-ignored)

@@ -1,3 +1,12 @@
+from __future__ import annotations
+import re
+import time
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Any
+import numpy as np
+import os
+from typing import Any, Dict, List, Optional, Union
 """
 Phase 1.5: Freshness Enhancement for RAG Retrieval
 
@@ -5,15 +14,8 @@ Implements light time-decay in BM25 and recency prior in tie-breaks for newsy qu
 Detects freshness-sensitive queries via simple classifier or regex for dates.
 """
 
-from __future__ import annotations
 
-import re
-import time
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Any
 
-import numpy as np
 
 
 @dataclass

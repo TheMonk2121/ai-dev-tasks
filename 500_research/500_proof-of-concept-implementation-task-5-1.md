@@ -1,7 +1,5 @@
 # Proof-of-Concept Implementation: Task 5.1
 
-<!-- MEMORY_CONTEXT: HIGH - Proof-of-concept implementation for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

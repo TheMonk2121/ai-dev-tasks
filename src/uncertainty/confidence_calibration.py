@@ -1,3 +1,18 @@
+from __future__ import annotations
+import json
+import logging
+import os
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+import joblib
+import numpy as np
+from sklearn.calibration import CalibratedClassifierCV
+        from scipy.optimize import minimize
+        from scipy.optimize import minimize
+        from sklearn.calibration import calibration_curve
+import sys
+from typing import Any, Dict, List, Optional, Union
 """
 Phase 4: Confidence Calibration Module
 
@@ -5,16 +20,7 @@ Implements temperature scaling and confidence calibration for production-ready
 uncertainty quantification in the RAG system.
 """
 
-import json
-import logging
-import os
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Any
 
-import joblib
-import numpy as np
-from sklearn.calibration import CalibratedClassifierCV
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +103,6 @@ class ConfidenceCalibrator:
 
     def _calibrate_binary_temperature(self, probs: np.ndarray, labels: np.ndarray) -> float:
         """Calibrate temperature for binary classification."""
-        from scipy.optimize import minimize
 
         def objective(t):
             calibrated_probs = self._sigmoid(np.log(probs / (1 - probs)) / t)
@@ -111,7 +116,6 @@ class ConfidenceCalibrator:
 
     def _calibrate_multiclass_temperature(self, probs: np.ndarray, labels: np.ndarray) -> float:
         """Calibrate temperature for multiclass classification."""
-        from scipy.optimize import minimize
 
         def objective(t):
             calibrated_probs = self._softmax(np.log(probs + 1e-10) / t)
@@ -266,7 +270,6 @@ class ConfidenceCalibrator:
 
     def _calculate_calibration_metrics(self, calibrated_scores: np.ndarray, labels: np.ndarray) -> dict[str, Any]:
         """Calculate calibration error and ECE score."""
-        from sklearn.calibration import calibration_curve
 
         # Calculate calibration curve
         fraction_of_positives, mean_predicted_value = calibration_curve(labels, calibrated_scores, n_bins=10)

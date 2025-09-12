@@ -1,0 +1,46 @@
+---
+description: Enforce CI/CD standards and automated quality gates
+globs:
+  - '**/*.py'
+  - '**/*.md'
+  - '**/.github/workflows/**/*'
+  - '**/Makefile'
+alwaysApply: true
+---
+
+# CI/CD Standards
+
+## Required CI Jobs
+- **Lint**: `uv run ruff check .` (pyupgrade enabled via `select = ["UP", ...]`)
+- **Format**: `uv run black --check .`
+- **Types**: `uv run basedpyright || uv run pyright`
+- **Tests**: `uv run pytest -q` with markers and budgets enforced
+- **Eval gates**: Retrieval micro ≥ 0.85, macro ≥ 0.75; reader F1 ≥ 0.60 or waiver
+- **Profile verifier**: Fails PR if `mock` profile is used on `main`
+- **Artifact policy**: Blocks if large binaries are committed outside Git LFS
+
+## Quality Gates
+- [ ] ruff + black --check via uv run
+- [ ] pyright via uv run
+- [ ] pytest with budgets/markers
+- [ ] eval gates on gold profile (retrieval micro ≥ 0.85; macro ≥ 0.75; reader F1 ≥ 0.60 or waiver)
+- [ ] profile verifier (mock forbidden on main)
+- [ ] artifact policy (no large binaries outside Git LFS)
+
+## Environment Management
+- **Local (macOS)**: `UV_PROJECT_ENVIRONMENT=.venv`, includes dev extras
+- **Docker/CI (Linux)**: `UV_PROJECT_ENVIRONMENT=/opt/venv`, installs from `uv.lock` only
+- Use `uv sync --frozen` in CI (do not re-lock)
+- Use `uv sync --extra dev` for local development
+
+## Provider Smoke Tests
+- Run before any PR eval gate runs
+- Verify provider availability and credentials
+- Use `httpx` for HTTP calls with explicit timeouts
+- Call `.raise_for_status()` for error handling
+
+## Artifact Management
+- Large artifacts (e.g., `*.pt`, `*.bin`) must use Git LFS
+- Each artifact must ship with provenance file (`artifact.json`)
+- Include `git_sha`, `dataset_hash`, `profile`, `created_at`, `sha256`
+- CI enforces Git LFS policy for large binaries

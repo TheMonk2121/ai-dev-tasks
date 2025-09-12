@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/llm/token_count.py
+# hypothesis_version: 6.138.15
+
+['NFC', 'character', 'cl100k_base', 'grapheme', 'hf_fast', 'llama_cpp', 'multilingual', 'openai_bpe', 'script_aware', 'unicode', 'utf-8']

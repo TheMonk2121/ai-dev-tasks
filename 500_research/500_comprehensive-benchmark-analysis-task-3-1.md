@@ -1,7 +1,5 @@
 # Comprehensive Benchmark Analysis: Task 3.1
 
-<!-- MEMORY_CONTEXT: HIGH - Comprehensive benchmark analysis for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

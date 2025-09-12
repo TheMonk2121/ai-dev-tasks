@@ -1,3 +1,4 @@
+from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 # ANCHOR_KEY: demo-complete-dspy-v2-system
 # ANCHOR_PRIORITY: 20
@@ -19,13 +20,7 @@ from typing import Any
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-# Apply litellm compatibility shim before importing DSPy
-try:
-    from litellm_compatibility_shim import patch_litellm_imports
-
-    patch_litellm_imports()
-except ImportError:
-    pass  # Shim not available, continue without it
+# DSPy 3.0.1 works directly with litellm 1.77.0 - no compatibility shim needed
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
@@ -71,7 +66,11 @@ class TaskExecutionModule(Module):
                 task_description=task_description, task_type=task_type, complexity=complexity
             )
 
-            return {"result": getattr(result, "task_result", ""), "quality_score": int(getattr(result, "quality_score", 0)), "success": True}
+            return {
+                "result": getattr(result, "task_result", ""),
+                "quality_score": int(getattr(result, "quality_score", 0)),
+                "success": True,
+            }
 
         except Exception as e:
             return {"result": f"Error: {str(e)}", "quality_score": 0, "success": False}

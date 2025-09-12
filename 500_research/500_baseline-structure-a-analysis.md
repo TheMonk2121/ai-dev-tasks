@@ -1,7 +1,5 @@
 # Baseline Analysis: Test Structure A (Current System)
 
-<!-- MEMORY_CONTEXT: HIGH - Baseline analysis for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

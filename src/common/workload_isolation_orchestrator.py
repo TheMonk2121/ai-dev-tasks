@@ -1,18 +1,23 @@
-#!/usr/bin/env python3
-"""Workload isolation orchestrator for B-1070 database optimization."""
-
+from __future__ import annotations
 import json
 import logging
 import sys
 import time
 from pathlib import Path
 from typing import Any
+from common.cache_separation_manager import CacheSeparationManager
+from common.role_guc_manager import RoleGUCManager
+            import psycopg2
+    import time
+import os
+from typing import Any, Dict, List, Optional, Union
+#!/usr/bin/env python3
+"""Workload isolation orchestrator for B-1070 database optimization."""
+
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from common.cache_separation_manager import CacheSeparationManager
-from common.role_guc_manager import RoleGUCManager
 
 logger = logging.getLogger(__name__)
 
@@ -113,7 +118,6 @@ class WorkloadIsolationOrchestrator:
         """Verify database connectivity after GUC changes."""
         try:
             # Simple connectivity test
-            import psycopg2
 
             conn = psycopg2.connect(self.guc_manager.dsn)
             cur = conn.cursor()
@@ -259,7 +263,6 @@ class WorkloadIsolationOrchestrator:
 
 def main():
     """Test the WorkloadIsolationOrchestrator."""
-    import time
 
     logging.basicConfig(level=logging.INFO)
 

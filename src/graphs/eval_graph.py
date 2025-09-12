@@ -2,15 +2,18 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any, Literal
+from typing import Any, Dict, List, Optional, Union
 
 if TYPE_CHECKING:
-    from pydantic_graph.graph import Graph  # type: ignore
-    from pydantic_graph.nodes import End, Node  # type: ignore
+    from pydantic_graph.graph import Graph  # type: ignore[import-untyped]
+    from pydantic_graph.nodes import End, Node  # type: ignore[import-untyped]
 else:
-    Graph = object  # type: ignore
-    End = object  # type: ignore
+    Graph = object  # type: ignore[assignment]
+    End = object  # type: ignore[assignment]
     class Node:  # type: ignore
-        pass
+        # Allow subscript syntax Node[T] when graph lib is not installed
+        def __class_getitem__(cls, item):  # type: ignore[no-redef]
+            return cls
 
 from src.schemas.eval import CaseResult, ContextChunk, RetrievalCandidate
 
@@ -26,16 +29,32 @@ class LoadCases(Node[list[dict]]):  # returns list of raw case dicts
 
 class Retrieve(Node[list[RetrievalCandidate]]):
     def run(self, question: str) -> list[RetrievalCandidate]:
-        # Use RAG pipeline module directly
-        import os
+        """Fetch retrieval candidates via RAG pipeline, with safe fallbacks.
 
-        from dspy_modules.rag_pipeline import RAGPipeline
+        - If the RAG pipeline module is unavailable, returns an empty list.
+        - If database connectivity or pipeline execution fails, returns an empty list.
+        - Always fails-closed (never raises) to keep eval graph resilient.
+        """
+        try:
+            import os
 
-        db_connection = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-        rp = RAGPipeline(db_connection)
-        out = rp.answer(question)
-        snapshot = getattr(rp.rag_module, "_last_retrieval_candidates_dto", [])
-        return list(snapshot)
+            try:
+                # Local import to avoid hard dependency when not present
+                from dspy_modules.rag_pipeline import RAGPipeline  # type: ignore[import-untyped]
+            except Exception:
+                return []
+
+            db_connection = os.getenv("POSTGRES_DSN", "postgresql://localhost:5432/ai_agency")
+            try:
+                rp = RAGPipeline(db_connection)
+                _ = rp.answer(question)
+                snapshot = getattr(rp.rag_module, "_last_retrieval_candidates_dto", [])
+                return list(snapshot)
+            except Exception:
+                # Any runtime failure (DB/connectivity/model) → degrade gracefully
+                return []
+        except Exception:
+            return []
 
 
 class Score(Node[CaseResult]):
@@ -50,9 +69,9 @@ class Score(Node[CaseResult]):
     ) -> CaseResult:
         # Minimal scoring using existing harness logic (Jaccard-based metrics)
         try:
-            from scripts._ragchecker_eval_impl import CleanRAGCheckerEvaluator  # type: ignore
+            from scripts._ragchecker_eval_impl import CleanRAGCheckerEvaluator  # type: ignore[import-untyped]
         except Exception:
-            CleanRAGCheckerEvaluator = None  # type: ignore
+            CleanRAGCheckerEvaluator = None  # type: ignore[assignment]
 
         precision = recall = f1 = 0.0
         if CleanRAGCheckerEvaluator is not None:

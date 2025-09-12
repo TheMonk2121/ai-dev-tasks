@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+import os
 
 class EvalSettings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore", env_file=".env", env_prefix="")
@@ -35,7 +35,6 @@ class EvalSettings(BaseSettings):
     # Optional timeseries sinks (default off)
     EVAL_TIMESERIES_SINK: bool = False
     EVAL_TIMESERIES_CASES: bool = False
-
 
 def load_eval_settings() -> EvalSettings:
     return EvalSettings()

@@ -1,7 +1,5 @@
 # Performance Analysis and Optimization Opportunities: Task 3.2
 
-<!-- MEMORY_CONTEXT: HIGH - Performance analysis and optimization opportunities for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

@@ -1,3 +1,15 @@
+from __future__ import annotations
+import json
+import os
+import sqlite3
+import uuid
+from datetime import datetime
+from typing import Any, Optional
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+        import subprocess
+import sys
+from typing import Any, Dict, List, Optional, Union
 """
 Maintenance Metrics Database Integration
 
@@ -5,16 +17,8 @@ Stores maintenance analysis data in PostgreSQL following the same pattern
 as evaluation_metrics table. Integrates with existing monitoring system.
 """
 
-import json
-import os
-import sqlite3
-import uuid
-from datetime import datetime
-from typing import Any, Optional
 
 try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
 
     PSYCOPG2_AVAILABLE = True
 except ImportError:
@@ -494,7 +498,6 @@ class MaintenanceMetricsDB:
 def get_git_sha() -> str | None:
     """Get current git SHA for tracking."""
     try:
-        import subprocess
 
         result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True)
         return result.stdout.strip()[:40]  # First 40 characters

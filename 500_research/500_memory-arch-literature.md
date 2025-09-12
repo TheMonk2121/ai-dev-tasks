@@ -1,7 +1,5 @@
 # Memory Architecture Literature Review
 
-<!-- MEMORY_CONTEXT: HIGH - Literature review for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

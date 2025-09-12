@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/common/db_dsn.py
+# hypothesis_version: 6.138.15
+
+[5432, '/', 'DATABASE_URL', 'POSTGRES_DSN', 'chosen', 'db', 'dsn_audit.json', 'env', 'fallback_parsed', 'host', 'mismatch_host_db', 'port', 'primary_parsed', 'scheme', 'user', 'w']

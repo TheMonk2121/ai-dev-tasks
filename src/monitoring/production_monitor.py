@@ -1,3 +1,13 @@
+from __future__ import annotations
+import json
+import os
+import time
+from datetime import datetime, timedelta
+from typing import Any, Optional
+from .health_endpoints import HealthEndpointManager
+from .metrics import get_metrics, get_performance_summary
+import sys
+from typing import Any, Dict, List, Optional, Union
 """
 Production Monitor for AI Development Tasks
 
@@ -8,14 +18,7 @@ Provides production monitoring capabilities including:
 - Health status reporting
 """
 
-import json
-import os
-import time
-from datetime import datetime, timedelta
-from typing import Any, Optional
 
-from .health_endpoints import HealthEndpointManager
-from .metrics import get_metrics, get_performance_summary
 
 
 class ProductionMonitor:

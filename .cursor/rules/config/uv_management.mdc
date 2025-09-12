@@ -1,0 +1,43 @@
+---
+description: Enforce UV package management and environment standards
+globs:
+  - '**/*.py'
+  - '**/pyproject.toml'
+  - '**/uv.lock'
+  - '**/Makefile'
+  - '**/*.env*'
+alwaysApply: true
+---
+
+# UV Package Management Rules
+
+## UV Execution Standards
+- Use `uv run python scripts/` for all Python execution
+- Never use direct `python` or `pip` calls
+- Set `UV_PROJECT_ENVIRONMENT=.venv` for local development
+- Use `uv sync --frozen` in CI/Docker environments
+
+## Environment Management
+- **Local (macOS)**: `UV_PROJECT_ENVIRONMENT=.venv`, includes dev extras
+- **Docker/CI (Linux)**: `UV_PROJECT_ENVIRONMENT=/opt/venv`, installs from `uv.lock` only
+- Use `uv sync --frozen` in CI (do not re-lock)
+- Use `uv sync --extra dev` for local development
+
+## Lock Discipline
+- Local dev may run `uv lock` and commit `uv.lock` only when intentionally upgrading
+- Docker/CI must not re-lock. Use `uv sync --frozen` to install exactly from `uv.lock`
+- Platform-specific deps use PEP-508 markers in `pyproject.toml`
+
+## Provider Selection
+- **PR gates**: Use local providers (ollama/synthetic) for speed/cost
+- **Nightly**: May use cloud providers (bedrock/openai) for regression testing
+- Run provider smoke tests before cloud provider usage
+- Use httpx for HTTP calls with explicit timeouts and `.raise_for_status()`
+
+## Environment Variables
+- `POSTGRES_DSN=postgresql://user@localhost:5432/ai_agency`
+- `EVAL_PROFILE=gold` (real|gold|mock)
+- `EVAL_DRIVER=dspy_rag|synthetic`
+- `RAGCHECKER_USE_REAL_RAG=1`
+- `SEED=42`
+- `MAX_WORKERS=3`

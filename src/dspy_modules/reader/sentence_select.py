@@ -1,6 +1,9 @@
-#!/usr/bin/env python3
+from __future__ import annotations
 import math
 import re
+import os
+#!/usr/bin/env python3
+
 
 _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9])")
 

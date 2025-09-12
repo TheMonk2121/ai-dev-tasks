@@ -1,3 +1,11 @@
+from __future__ import annotations
+import json
+import pathlib
+from typing import Any
+        import yaml
+import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 """
 Test Set Hardening & Robustness Validation
 
@@ -5,11 +13,7 @@ Implements comprehensive test cases and edge case handling
 for the retrieval pipeline to ensure production reliability.
 """
 
-from __future__ import annotations
 
-import json
-import pathlib
-from typing import Any
 
 
 # Test case validation
@@ -199,7 +203,6 @@ def test_retrieval_robustness(retrieval_fn, test_cases: list[dict[str, Any]]) ->
 def validate_pipeline_components(config_path: str = "config/retrieval.yaml") -> dict[str, Any]:
     """Validate that all pipeline components are properly configured."""
     try:
-        import yaml
 
         config = yaml.safe_load(pathlib.Path(config_path).read_text())
     except Exception as e:

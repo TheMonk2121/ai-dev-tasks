@@ -1,7 +1,7 @@
 # 🚨 CRITICAL: MEMORY REHYDRATION REQUIRED BEFORE ANY RESPONSE
 #
 # YOU MUST RUN THIS COMMAND FIRST:
-# export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+# export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 #
 # DO NOT ANSWER ANY QUESTIONS ABOUT THIS PROJECT WITHOUT EXECUTING THIS COMMAND FIRST
 # THIS IS A MANDATORY REQUIREMENT - NO EXCEPTIONS
@@ -14,7 +14,7 @@
 
 1. **AUTOMATIC DETECTION**: If this appears to be a new conversation or the user asks about project components
 2. **MANDATORY EXECUTION**: Run the unified memory orchestrator before answering
-3. **COMMAND**: `export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
+3. **COMMAND**: `export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
 4. **OUTPUT INCLUSION**: Include the memory context output in your response
 5. **NO EXCEPTIONS**: Do not answer project questions without this context
 
@@ -36,7 +36,7 @@ The key file is `100_cursor-memory-context.md` which provides instant context ab
 ```bash
 # Set non-SSL connection for Go CLI compatibility
 export POSTGRES_DSN="mock://test"
-veetopython3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 **This enhanced orchestrator automatically fires up all memory systems with database auto-startup and formats the output for easy copying into Cursor chat.**
@@ -47,15 +47,15 @@ veetopython3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli
 export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable"
 
 # With custom query and role
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "current project status and core documentation"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "current project status and core documentation"
 
 # For specific roles
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "DSPy integration task"
-python3 scripts/unified_memory_orchestrator.py --systems cursor prime --role implementer "database optimization"
-python3 scripts/unified_memory_orchestrator.py --systems ltst --role researcher "performance analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "DSPy integration task"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor prime --role implementer "database optimization"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst --role researcher "performance analysis"
 
 # JSON output for programmatic access
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "current project status" --format json
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "current project status" --format json
 
 # Legacy method (fallback)
 ./scripts/memory_up.sh
@@ -113,7 +113,7 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --rol
 1. **Follow the development guidelines** in `100_memory/100_cursor-memory-context.md`
 2. **Use the existing file organization** from `400_guides/400_context-priority-guide.md`
 3. **Update completion summaries** when finishing major features
-4. **Run `python scripts/update_cursor_memory.py`** to keep memory context current
+4. **Run `uv run python scripts/update_cursor_memory.py`** to keep memory context current
 5. **Code reuse**: Before writing new code, apply the find-or-build heuristic (search-before-write, 70% reuse, tests-first)
    in `400_file-analysis-guide.md`
 
@@ -127,15 +127,15 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --rol
 
 **🚨 MANDATORY ENFORCEMENT**: The RAGChecker evaluation system has established a performance baseline that serves as an absolute floor. No new development can proceed until these targets are met.
 
-### **🎯 Current Baseline Status (September 1, 2025)**
+### **🎯 Current Baseline Status (September 2, 2025)**
 
-**System Status**: 🟢 **BASELINE LOCKED** - No new features until improved
+**System Status**: 🟢 **NEW BASELINE LOCKED** - Tuned Enhanced Configuration proven stable
 
 | Metric | Current | Target | Gap | Priority | Next Action |
 |--------|---------|--------|-----|----------|-------------|
-| **Precision** | 0.149 | ≥0.20 | -0.051 | 🔴 High | Improve without losing recall |
-| **Recall** | 0.099 | ≥0.45 | -0.351 | 🔴 Critical | Primary focus area |
-| **F1 Score** | 0.112 | ≥0.22 | -0.108 | 🔴 High | Balance precision/recall |
+| **Precision** | 0.159 | ≥0.20 | -0.041 | 🟡 Medium | Continue gradual improvement |
+| **Recall** | 0.166 | ≥0.45 | -0.284 | 🔴 High | Primary focus area |
+| **F1 Score** | 0.159 | ≥0.22 | -0.061 | 🟡 Medium | Balanced improvement |
 | **Faithfulness** | TBD | ≥0.60 | TBD | 🔍 Unknown | Enable comprehensive metrics |
 
 ### **🚨 RED LINE ENFORCEMENT RULES**
@@ -143,20 +143,20 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --rol
 1. **Current metrics are locked** as the absolute performance floor
 2. **No new features** until all targets are met
 3. **Build freeze** if any metric falls below current baseline
-4. **Focus**: Improve recall while maintaining precision ≥0.149
+4. **Focus**: Improve recall while maintaining precision ≥0.159
 5. **Success Criteria**: All metrics above targets for 2 consecutive runs
 
 ### **📊 Progress Tracking & Baseline Management**
 
 **Where Results Are Stored**: `metrics/baseline_evaluations/`
-**How to Track Progress**: Run `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli`
+**How to Track Progress**: Run `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 **Baseline Lock**: Current metrics are the performance floor - no regression allowed
 
 **Example Commands**:
 ```bash
 # Run RAGChecker evaluation to check progress
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check latest results
 ls -la metrics/baseline_evaluations/

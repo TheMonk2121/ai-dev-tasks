@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/config/resolve.py
+# hypothesis_version: 6.138.15
+
+['#', '=', 'BM25', 'RAG_', 'RERANK', 'RERANKER_MODEL', 'RERANK_BATCH', 'RERANK_CACHE_BACKEND', 'RERANK_ENABLE', 'RERANK_INPUT_TOPK', 'RERANK_KEEP', 'RETR', 'TORCH_DEVICE', 'VEC', 'batch', 'cache', 'device', 'enable', 'input_topk', 'keep', 'model', 'utf-8']

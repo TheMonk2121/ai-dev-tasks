@@ -2,10 +2,8 @@
 
 > **Central Research Hub**: Comprehensive research findings and implementation guidance for the AI development ecosystem.
 
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- RESEARCH_SYSTEM: 500_research-infrastructure-guide.md -->
 <!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
-<!-- MEMORY_CONTEXT: HIGH - Central research summary for AI development ecosystem -->
 
 ## 🎯 **Research Overview**
 

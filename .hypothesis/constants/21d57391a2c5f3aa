@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/retrieval/freshness_enhancer.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.1, 0.2, 0.3, 0.4, 0.6, 1.0, 1.2, 30.0, 3600, '%Y-%m-%d', '%Y-%m-%d %H:%M:%S', '%Y/%m/%d', '+00:00', '; ', 'Z', '\\b\\d{4}\\b', 'announce', 'announcement', 'breaking', 'change', 'confidence', 'created', 'created_at', 'current', 'date', 'decay_factor', 'doc_age_days', 'doc_timestamp', 'enhanced_scores', 'enhancements_applied', 'fresh', 'freshness_decay', 'freshness_metadata', 'hot', 'just in', 'last_modified', 'latest', 'launch', 'metadata', 'modified_at', 'new', 'newer', 'news', 'older', 'original_score', 'previous', 'publish', 'published_at', 'reasoning', 'recency_boost', 'recent', 'release', 'score', 'this week', 'time_decay', 'timestamp', 'today', 'total_results', 'trending', 'update', 'updated', 'updated_at', 'yesterday']

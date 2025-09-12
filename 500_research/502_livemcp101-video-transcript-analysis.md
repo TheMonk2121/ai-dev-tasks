@@ -4,9 +4,6 @@
 
 # LiveMCP101 Video Transcript Analysis
 
-<!-- MEMORY_CONTEXT: LOW - Video transcript analysis of LiveMCPBench research paper discussion -->
-<!-- CONTEXT_REFERENCE: 500_research/501_livemcpbench-mcp-tool-navigation-research.md -->
-
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |

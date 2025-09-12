@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/ltst_memory_integration.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.001, 0.01, 0.6, 0.7, 0.8, 1.0, 100.0, 500.0, 512.0, 100, 1000, 2000, 5000, 'No context retrieved', '__main__', 'avg_ms', 'cache_entry_id', 'cache_hits', 'cache_misses', 'cache_service', 'cache_warming', 'context_cache_size', 'context_requests', 'direct_retrieval', 'error', 'fallback', 'generation_cache', 'health_check', 'hit_rate', 'hybrid', 'inf', 'integration', 'ltst', 'max_ms', 'memory_usage', 'min_ms', 'miss_rate', 'model_type', 'operations', 'query', 'response_time', 'similarity_engine', 'similarity_score', 'source', 'success_rate', 'test_user', 'timestamp', 'tokens_used', 'total', 'total_ms', 'total_time_ms', 'usage_mb']

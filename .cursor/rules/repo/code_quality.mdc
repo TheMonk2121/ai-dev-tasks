@@ -1,0 +1,40 @@
+---
+description: Enforce code quality standards and Python best practices
+globs:
+  - '**/*.py'
+alwaysApply: true
+---
+
+# Code Quality Standards
+
+## Python Standards
+- **Type hints required** in all Python files
+- **Unit tests required** for new features
+- **Maximum function length**: 50 lines
+- **Document all public functions and classes**
+- **Use black for Python formatting**
+
+## Code Organization
+- Use snake_case for variable and function names
+- Use PascalCase for class names
+- Use UPPER_CASE for constants
+- Limit functions to 50 lines maximum
+- Include type annotations for all function parameters and return types
+
+## Import Standards
+- Use absolute imports (no sys.path hacks)
+- Prefer package-relative imports for modules
+- Use PEP 585 built-in generics and simple typing
+- Keep Ruff and Pyright happy with proper type hints
+
+## Code Reuse
+- Apply find-or-build heuristic (search-before-write, 70% reuse, tests-first)
+- Before writing new code, search existing codebase for similar patterns
+- Prefer extending existing scripts rather than adding new runners
+- Leverage existing SQLAlchemy + Postgres dependencies for data access
+
+## Error Handling
+- Use explicit error handling with proper exception types
+- Include meaningful error messages
+- Use structured logging for debugging
+- Handle edge cases and boundary conditions

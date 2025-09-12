@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/memory_graphs/consolidate.py
+# hypothesis_version: 6.138.15
+
+[240, 'content', 'describes', 'fact', 'from', 'fts', 'note', 'rel', 'role', 'summary', 'text', 'to', 'type', 'user', 'vector']

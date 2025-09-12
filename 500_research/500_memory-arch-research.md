@@ -1,7 +1,5 @@
 # Memory Context System Architecture Research
 
-<!-- MEMORY_CONTEXT: HIGH - Research framework for optimizing memory hierarchy across different AI model capabilities -->
-
 ## 🎯 Research Sprint Overview
 
 **Duration**: 4 development days
@@ -121,6 +119,5 @@ vs baseline performance at 8k tokens.
 
 ## 📚 Related Files
 
-<!-- CONTEXT_REFERENCE: 400_memory-context-guide.md -->
 <!-- SYSTEM_FILES: 400_system-overview.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->

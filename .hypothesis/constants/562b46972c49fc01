@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/schemas/settings.py
+# hypothesis_version: 6.138.15
+
+[100, 300, 500, 1000, 3600, ',', '.env', 'EVAL_', '[]', 'after', 'array', 'context', 'db_workflows', 'dspy', 'ignore', 'items', 'known_tags', 'memory', 'meta_ops', 'negatives', 'ops_health', 'rag', 'rag_qa_multi', 'rag_qa_single', 'string', 'type']

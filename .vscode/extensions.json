@@ -1,26 +1,7 @@
 {
     "recommendations": [
-        // Markdown Essentials
-        "esbenp.prettier-vscode",
-        "davidanson.vscode-markdownlint",
-        "yzhang.markdown-all-in-one",
-        // Python Development
-        "ms-python.python",
-        "ms-python.black-formatter",
-        "charliermarsh.ruff",
-        "anysphere.cursorpyright",
-        "njpwerner.autodocstring",
-        // Git Integration
-        "eamodio.gitlens",
-        // AI & Documentation
-        "tamasfe.even-better-toml",
-        "christian-kohler.path-intellisense",
-        "streetsidesoftware.code-spell-checker",
-        "redhat.vscode-yaml",
-        "timonwong.shellcheck",
-        // Collaboration & Review
-        "ms-vsliveshare.vsliveshare",
-        "wayou.vscode-todo-highlight",
-        "gruntfuggly.todo-tree"
-    ]
+        "ms-vscode.vscode-yaml",
+        "github.vscode-github-actions"
+    ],
+    "unwantedRecommendations": []
 }

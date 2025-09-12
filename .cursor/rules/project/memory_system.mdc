@@ -1,0 +1,33 @@
+---
+description: Enforce memory system integration and rehydration protocols
+globs:
+  - '**/*.py'
+  - '**/*.md'
+  - '**/scripts/**/*'
+alwaysApply: true
+---
+
+# Memory System Integration Rules
+
+## Memory Rehydration Protocol
+- **MANDATORY**: Run memory rehydration before any major task
+- **Command**: `export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
+- **Output**: Include memory context output in responses
+- **Exceptions**: No exceptions for project component questions
+
+## Memory System Operations
+- Use LTST memory system for cross-session continuity
+- Update memory with significant decisions using `update_memory`
+- Validate memory system health before deployments
+- Maintain context across execution phases
+
+## Memory Context Hierarchy
+- **HIGH Priority**: `100_memory/100_cursor-memory-context.md`
+- **MEDIUM Priority**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
+- **LOW Priority**: `100_memory/100_backlog-guide.md`
+
+## Cross-Session Context
+- Preserve context using `.ai_state.json` (git-ignored)
+- Use structured logging with request/run IDs
+- Record metrics (dataset hash, seed, profile)
+- Maintain state continuity across sessions

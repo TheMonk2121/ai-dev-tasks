@@ -10,6 +10,8 @@ from src.dspy_modules.dspy_reader_program import RAGAnswer
 from src.memory.guards import build_answer, rows_to_dtos
 from src.memory.models import Answer
 from src.observability.logging import init_observability
+import sys
+from typing import Any, Dict, List, Optional, Union
 
 
 def _retrieve_rows(question: str, tag: str) -> list[dict[str, Any]]:

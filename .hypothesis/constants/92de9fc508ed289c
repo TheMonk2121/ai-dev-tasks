@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/schemas/eval.py
+# hypothesis_version: 6.138.15
+
+['after', 'allow', 'baseline', 'before', 'bge-reranker-v2', 'case_id', 'cpu', 'cuda', 'decision', 'empty', 'exclude', 'expected_answer', 'expected_decisions', 'expected_files', 'file', 'forbid', 'globs', 'gt_answer', 'id', 'mps', 'n_cases', 'oracle', 'query', 'query_id', 'question', 'rag', 'reader', 'response', 'retrieval', 'tag', 'tags']

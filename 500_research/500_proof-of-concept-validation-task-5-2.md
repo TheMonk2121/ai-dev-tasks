@@ -1,7 +1,5 @@
 # Proof-of-Concept Validation: Task 5.2
 
-<!-- MEMORY_CONTEXT: HIGH - Proof-of-concept validation for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

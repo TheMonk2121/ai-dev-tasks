@@ -31,17 +31,24 @@ def _s(*names: str, default: str = "") -> str:
 
 
 def _device(spec: str) -> str:
-    if spec != "auto":
-        return spec
-    try:
-        import torch  # type: ignore
+    # Handle "auto" by detecting best available device
+    if spec == "auto":
+        try:
+            import torch  # type: ignore[import-untyped]
 
-        if torch.cuda.is_available():
-            return "cuda"
-        if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
-            return "mps"
-    except Exception:
-        pass
+            if torch.cuda.is_available():
+                return "cuda"
+            if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+                return "mps"
+        except Exception:
+            pass
+        return "cpu"
+
+    # Handle known valid device specs
+    if spec in ("cpu", "cuda", "mps"):
+        return spec
+
+    # Fallback to "cpu" for unknown device specs
     return "cpu"
 
 

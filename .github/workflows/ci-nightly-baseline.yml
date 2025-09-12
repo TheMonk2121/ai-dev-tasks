@@ -21,6 +21,15 @@ jobs:
         with:
           version: latest
 
+      - name: Cache UV and virtualenv
+        uses: actions/cache@v4
+        with:
+          path: |
+            .venv
+            ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock', 'pyproject.toml', 'poetry.lock', 'requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
       - name: Install dependencies
         run: |
           uv sync --all-extras --dev
@@ -50,6 +59,11 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
+          echo "🔐 Secrets presence check (values not shown):"
+          if [ -n "${POSTGRES_DSN}" ]; then echo "- POSTGRES_DSN: present"; else echo "- POSTGRES_DSN: absent (will use mock)"; fi
+          if [ -n "${AWS_REGION}" ]; then echo "- AWS_REGION: present"; else echo "- AWS_REGION: absent"; fi
+          if [ -n "${AWS_ACCESS_KEY_ID}" ]; then echo "- AWS_ACCESS_KEY_ID: present"; else echo "- AWS_ACCESS_KEY_ID: absent"; fi
+          if [ -n "${AWS_SECRET_ACCESS_KEY}" ]; then echo "- AWS_SECRET_ACCESS_KEY: present"; else echo "- AWS_SECRET_ACCESS_KEY: absent"; fi
           # Set fallback values if secrets are not available
           export POSTGRES_DSN=${POSTGRES_DSN:-mock://test}
           export AWS_REGION=${AWS_REGION:-us-east-1}

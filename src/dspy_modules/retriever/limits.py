@@ -1,8 +1,10 @@
-#!/usr/bin/env python3
+from __future__ import annotations
 import os
 from functools import lru_cache
-
 import yaml
+#!/usr/bin/env python3
+
+
 
 DEFAULT_LIMITS: dict[str, int] = {"shortlist": 60, "topk": 25}
 

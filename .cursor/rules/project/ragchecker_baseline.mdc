@@ -1,0 +1,39 @@
+---
+description: Enforce RAGChecker baseline compliance and performance requirements
+globs:
+  - '**/*.py'
+  - '**/scripts/**/*'
+  - '**/evals/**/*'
+alwaysApply: true
+---
+
+# RAGChecker Baseline Enforcement Rules
+
+## Critical Operational Principle
+- **MANDATORY ENFORCEMENT**: RAGChecker evaluation system has established a performance baseline that serves as an absolute floor
+- **NO NEW FEATURES** until all targets are met
+- **BUILD FREEZE** if any metric falls below current baseline
+
+## Current Baseline Status (September 2, 2025)
+- **Precision**: 0.159 (Target: ≥0.20, Gap: -0.041)
+- **Recall**: 0.166 (Target: ≥0.45, Gap: -0.284) 
+- **F1 Score**: 0.159 (Target: ≥0.22, Gap: -0.061)
+- **Faithfulness**: TBD (Target: ≥0.60)
+
+## Enforcement Rules
+1. Current metrics are locked as the absolute performance floor
+2. No new features until all targets are met
+3. Build freeze if any metric falls below current baseline
+4. Focus: Improve recall while maintaining precision ≥0.159
+5. Success Criteria: All metrics above targets for 2 consecutive runs
+
+## Required Commands
+- **Evaluation**: `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
+- **Results Storage**: `metrics/baseline_evaluations/`
+- **Progress Tracking**: Run evaluation to check progress before any RAG changes
+
+## Verification Requirements
+- Verify RAGChecker baseline compliance before implementing new features
+- Run evaluation before merge on gold profile
+- Results must be ≥ targets and ≥ current floor
+- Document seeds and dataset hashes for reproducibility

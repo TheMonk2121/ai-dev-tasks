@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-"""
-Retry wrapper utility for DSPy RAG system.
-Implements configurable retry logic with exponential backoff.
-"""
-
+from __future__ import annotations
 import functools
 import json
 import logging
@@ -11,10 +6,25 @@ import os
 import time
 from collections.abc import Callable
 from typing import Any
+    import psycopg2
+from requests.exceptions import RequestException, Timeout
+    from .error_pattern_recognition import analyze_error_pattern, suggest_recovery_strategy
+    from .hotfix_templates import generate_hotfix_template
+    from .model_specific_handling import handle_model_error
+        from ..config import get_settings
+                            import random
+            import signal
+import sys
+from typing import Any, Dict, List, Optional, Union
+#!/usr/bin/env python3
+"""
+Retry wrapper utility for DSPy RAG system.
+Implements configurable retry logic with exponential backoff.
+"""
+
 
 # Optional psycopg2 import so this module works without DB deps
 try:  # pragma: no cover - guarded import
-    import psycopg2  # type: ignore
 
     _PSYCOPG2_AVAILABLE = True
 except Exception:  # pragma: no cover
@@ -24,14 +34,10 @@ except Exception:  # pragma: no cover
         class OperationalError(Exception):
             pass
 
-    psycopg2 = _Psycopg2Shim()  # type: ignore
-from requests.exceptions import RequestException, Timeout
+    psycopg2 = _Psycopg2Shim()  # type: ignore[assignment]
 
 # Import error pattern recognition
 try:
-    from .error_pattern_recognition import analyze_error_pattern, suggest_recovery_strategy
-    from .hotfix_templates import generate_hotfix_template
-    from .model_specific_handling import handle_model_error
 
     ERROR_PATTERN_ANALYSIS_AVAILABLE = True
 except ImportError:
@@ -85,7 +91,6 @@ class ConfigurationError(FatalError):
 def load_error_policy() -> dict[str, Any]:
     """Load error policy from pydantic-settings"""
     try:
-        from ..config import get_settings
 
         settings = get_settings()
 
@@ -247,7 +252,6 @@ def retry(
 
                         # Add jitter to prevent thundering herd
                         if jitter:
-                            import random
 
                             jitter_amount = random.uniform(0, 0.1 * wait_time)
                             wait_time += jitter_amount
@@ -321,7 +325,6 @@ def retry_with_timeout(timeout_seconds: int = 30):
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            import signal
 
             def timeout_handler(signum, frame):
                 raise TimeoutError(f"Function timed out after {timeout_seconds} seconds")

@@ -1,0 +1,45 @@
+---
+description: Enforce task management and workflow patterns
+globs:
+  - '**/tasks/**/*.md'
+  - '**/000_core/**/*.md'
+  - '**/PRD-*.md'
+  - '**/Task-List-*.md'
+alwaysApply: true
+---
+
+# Task Management Rules
+
+## Task Generation Protocol
+- Run memory rehydration before generating tasks
+- Use `uv run python scripts/task_generation_automation.py` when available
+- Apply MoSCoW prioritization with text labels (Must/Should/Could/Won't)
+- Include acceptance criteria and CI gates for each task
+
+## Task Template Requirements
+- **Priority**: Critical|High|Medium|Low
+- **MoSCoW**: Must|Should|Could|Won't
+- **Estimate**: X hours/days
+- **Dependencies**: Backlog IDs, PRD sections, migrations, PRs
+- **Profile(s)**: real|gold|mock
+- **Provider & model**: bedrock|ollama|openai|synthetic
+- **Commands**: Use standardized uv run patterns
+- **Acceptance Criteria**: Verifiable outcomes with metric thresholds
+
+## Solo Developer Optimizations
+- **Auto-advance**: For non-critical tasks only; critical items require manual confirm
+- **Context preservation**: Cache inputs/decisions in task metadata
+- **One-command**: Each task declares a single command (Make + `uv run`)
+- **Limited concurrency**: Default 2–3 workers locally; CI may increase
+
+## Task Execution Patterns
+- Use `uv run python scripts/solo_workflow.py start/continue/ship`
+- Prefer automated execution with `--auto-advance` when appropriate
+- Use `--smart-pause` for critical decision points
+- Apply `--context-preserve` for complex multi-session work
+
+## Progress Tracking
+- Update progress in `.ai_state.json` (git-ignored)
+- Track overall progress and ensure gates are respected
+- Record task completion and blockers
+- Maintain implementation status and quality gates

@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/../dspy_modules/retriever/pg.py
+# hypothesis_version: 6.138.15
+
+[0.0, 1.0, 384, '\x00', ',', '0', '0.10', '1', '384', 'EMBED_DIM', 'FUSION_DEVICE', 'FUSION_FEATURE_SPEC', 'FUSION_HEAD_ENABLE', 'FUSION_HEAD_PATH', 'FUSION_HIDDEN', 'PGVECTOR_OPS', 'POSTGRES_DSN', '[', ']', '^$', 'chunk_variant', 'cosine', 'cpu', 'db_workflows', 'fname_regex', 'has_vec', 'ingest_run_id', 'ip', 'l2', 'legacy', 'limit', 'metadata', 'mock://', 'path_tsv', 'q_bm25', 'q_short', 'q_title', 'qvec', 'score', 'score_learned', 'slug', 'tag', 'w_bm25', 'w_path', 'w_short', 'w_title', 'w_vec']

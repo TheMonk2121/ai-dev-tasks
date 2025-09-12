@@ -1,7 +1,5 @@
 # Automated Performance Monitoring: Task 6.4
 
-<!-- MEMORY_CONTEXT: HIGH - Automated performance monitoring system implementation for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

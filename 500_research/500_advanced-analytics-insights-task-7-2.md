@@ -1,7 +1,5 @@
 # Advanced Analytics and Insights: Task 7.2
 
-<!-- MEMORY_CONTEXT: HIGH - Advanced analytics and insights implementation for B-032 Memory Context System Architecture Research -->
-
 ## Research Overview
 
 **Project**: B-032 Memory Context System Architecture Research

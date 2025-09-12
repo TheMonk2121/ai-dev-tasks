@@ -9,6 +9,10 @@ on:
 jobs:
   reader-gate:
     runs-on: ubuntu-latest
+    env:
+      HF_HOME: $RUNNER_TEMP/hf
+      SENTENCE_TRANSFORMERS_HOME: $RUNNER_TEMP/hf
+      TORCH_HOME: $RUNNER_TEMP/hf
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -17,13 +21,28 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
+      - name: Cache UV and virtualenv
+        uses: actions/cache@v4
+        with:
+          path: |
+            .venv
+            ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock', 'pyproject.toml', 'poetry.lock', 'requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.RUNNER_TEMP }}/hf
+          key: ${{ runner.os }}-hf-${{ hashFiles('**/pyproject.toml', '**/uv.lock', '**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-hf-
       - name: Install dependencies (uv)
         run: |
           uv sync
-      - name: Run reader gate
+      - name: Run reader gate (v1)
         env:
-          CASES_FILE: "evals/gold_cases.json"
-          READER_GOLD_FILE: "evals/reader_gold.jsonl"
+          GOLD_FILE: "evals/gold/v1/gold_cases.jsonl"
           READER_CMD: "uv run python scripts/run_extractive_reader.py"
           READER_MIN_F1_MICRO: "0.35"
           READER_MIN_F1_TAG: "0.25"

@@ -1,3 +1,10 @@
+from __future__ import annotations
+import argparse
+import os
+import sys
+import textwrap
+from pathlib import Path
+    from src.settings import EvalSettings
 #!/usr/bin/env python3
 """
 Evaluation Profile Configuration Loader
@@ -7,19 +14,11 @@ Provides deterministic config resolution with preflight checks to prevent
 profiles: real, gold, mock.
 """
 
-from __future__ import annotations
-
-import argparse
-import os
-import sys
-import textwrap
-from pathlib import Path
 
 
 try:
-    from src.settings import EvalSettings
 except Exception:
-    EvalSettings = None  # type: ignore
+    EvalSettings = None  # type: ignore[assignment]
 
 VALID_PROFILES = {"real", "gold", "mock"}
 
@@ -80,9 +79,11 @@ def resolve_config(argv=None):
              --profile mock   (infra tests only)
         """
         ).strip()
-        sys.exit(msg)
+        print(msg)
+        sys.exit(1)
     if profile not in VALID_PROFILES:
-        sys.exit(f"❌ Invalid --profile {profile}; choose from {sorted(VALID_PROFILES)}")
+        print(f"❌ Invalid --profile {profile}; choose from {sorted(VALID_PROFILES)}")
+        sys.exit(1)
 
     # 1) Profile file → base
     base = load_profile_env(profile)
@@ -99,30 +100,42 @@ def resolve_config(argv=None):
     if args.concurrency is not None:
         base["EVAL_CONCURRENCY"] = str(args.concurrency)
 
-    # 3) Allow CI secrets to flow through without changing core logic
-    keep_existing = {"POSTGRES_DSN", "OPENAI_API_KEY", "BEDROCK_REGION", "BEDROCK_ACCESS_KEY", "BEDROCK_SECRET_KEY"}
-    for k in keep_existing:
-        if k in os.environ and k not in base:
-            base[k] = os.environ[k]
-
-    # 4) Derived invariants (hard rules)
+    # 3) Derived invariants (hard rules) - but allow CLI overrides
     if profile == "mock":
-        base["EVAL_DRIVER"] = "synthetic"
+        if not args.driver:  # Only set if not overridden by CLI
+            base["EVAL_DRIVER"] = "synthetic"
         base["RAGCHECKER_USE_REAL_RAG"] = "0"
         base.setdefault("POSTGRES_DSN", "mock://test")
         base.setdefault("EVAL_CONCURRENCY", "3")  # low-concurrency default
     else:
-        base["EVAL_DRIVER"] = "dspy_rag"
+        if not args.driver:  # Only set if not overridden by CLI
+            base["EVAL_DRIVER"] = "dspy_rag"
         base["RAGCHECKER_USE_REAL_RAG"] = "1"
         base.setdefault("EVAL_CONCURRENCY", "8")  # safe default; bump in nightly
+
+    # 4) Allow CI secrets and test overrides to flow through
+    # Environment variables can override profile settings for testing
+    keep_existing = {
+        "POSTGRES_DSN",
+        "OPENAI_API_KEY",
+        "BEDROCK_REGION",
+        "BEDROCK_ACCESS_KEY",
+        "BEDROCK_SECRET_KEY",
+        "EVAL_DRIVER",
+    }
+    for k in keep_existing:
+        if k in os.environ:
+            base[k] = os.environ[k]
 
     # 5) Preflight gates (refuse foot-guns)
     if profile in {"real", "gold"}:
         if base.get("EVAL_DRIVER") != "dspy_rag":
-            sys.exit("❌ Real/gold require EVAL_DRIVER=dspy_rag (synthetic refused).")
+            print("❌ Real/gold require EVAL_DRIVER=dspy_rag (synthetic refused).")
+            sys.exit(1)
         dsn = base.get("POSTGRES_DSN", "")
         if dsn.startswith("mock://"):
-            sys.exit("❌ Real/gold require a real POSTGRES_DSN (not mock://).")
+            print("❌ Real/gold require a real POSTGRES_DSN (not mock://).")
+            sys.exit(1)
 
     apply_env(base)
 

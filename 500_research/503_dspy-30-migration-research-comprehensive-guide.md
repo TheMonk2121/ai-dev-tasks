@@ -4,9 +4,6 @@
 
 # DSPy 3.0 Migration Research: Comprehensive Implementation Guide
 
-<!-- MEMORY_CONTEXT: HIGH - Core research for DSPy 3.0 migration and system enhancements -->
-<!-- CONTEXT_REFERENCE: 000_core/000_backlog.md, 100_memory/104_dspy-development-context.md -->
-
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |

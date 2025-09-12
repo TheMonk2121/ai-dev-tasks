@@ -1,3 +1,16 @@
+from __future__ import annotations
+import json
+import logging
+import random
+import time
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
+import numpy as np
+from sklearn.model_selection import train_test_split
+import sys
+import os
+from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """Phase 3: Domain Tuning Pipeline for RAG System Enhancement.
 
@@ -12,16 +25,7 @@ Key Features:
 - Evaluation on frozen Phase 0 slices
 """
 
-import json
-import logging
-import random
-import time
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
 
-import numpy as np
-from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
 

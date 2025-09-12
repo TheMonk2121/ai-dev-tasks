@@ -1,0 +1,45 @@
+---
+description: Enforce database and configuration standards
+globs:
+  - '**/*.py'
+  - '**/*.sql'
+  - '**/*.env*'
+  - '**/configs/**/*'
+alwaysApply: true
+---
+
+# Database and Configuration Standards
+
+## Database Standards
+- Use `common.db_dsn.resolve_dsn` for DSN resolution
+- Never read env vars directly for DSNs
+- Use idempotent DDL patterns (`IF NOT EXISTS`, `CREATE OR REPLACE FUNCTION`)
+- Target pgvector ≥ 0.8; prefer HNSW, fallback to IVFFlat
+- Use GIN index for tsvector columns
+
+## Required Extensions
+- `vector` (pgvector) ≥ 0.8 — required for production
+- `pg_trgm` — recommended for text similarity
+- `pg_stat_statements` — required for performance visibility
+
+## Critical Tables
+- `conversation_sessions`, `conversation_messages`, `conversation_context`
+- `user_preferences`, `memory_retrieval_cache`, `session_relationships`
+- `memory_performance_metrics`, `documents`, `document_chunks`, `conversation_memory`
+
+## Index Requirements
+- `document_chunks.content_tsv` (tsvector) with GIN index for text search
+- `conversation_memory.embedding` vector index — HNSW preferred, IVFFlat fallback
+- Add JSONB/BTREE indexes only when query patterns justify
+
+## Configuration Management
+- Use `pydantic-settings` for typed configuration
+- Follow precedence: env vars → profile env → .env.local → defaults
+- Document all settings in PRD Section 11
+- Use profile-specific env files in `configs/`
+
+## Pydantic Contracts
+- Use `extra='forbid'` for strict validation
+- Treat `ValidationError` as hard fail in CI
+- Include `model_config = ConfigDict(extra='forbid', validate_default=True, str_strip_whitespace=True)`
+- Validate dataset hash for learned models

@@ -1,3 +1,15 @@
+from __future__ import annotations
+import json
+import os
+import subprocess
+import time
+from datetime import datetime, timedelta
+from typing import Any, Optional
+import psycopg2
+from psycopg2.extras import RealDictCursor
+        import psutil
+import sys
+from typing import Any, Dict, List, Optional, Union
 """
 Metrics Collection for AI Development Tasks
 
@@ -8,15 +20,7 @@ Collects and analyzes system metrics including:
 - System resource utilization
 """
 
-import json
-import os
-import subprocess
-import time
-from datetime import datetime, timedelta
-from typing import Any, Optional
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
 
 
 def get_metrics() -> dict[str, Any]:
@@ -200,7 +204,6 @@ def get_rag_metrics() -> dict[str, Any]:
 def get_system_metrics() -> dict[str, Any]:
     """Get system resource metrics"""
     try:
-        import psutil
 
         # Memory metrics
         memory = psutil.virtual_memory()

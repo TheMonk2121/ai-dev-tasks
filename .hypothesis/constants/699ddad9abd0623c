@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/rag/reranker_env.py
+# hypothesis_version: 6.138.15
+
+['.cache/rerank.sqlite', '1', 'RERANKER_ENABLED', 'RERANKER_MODEL', 'RERANK_BATCH', 'RERANK_CACHE_BACKEND', 'RERANK_CACHE_DSN', 'RERANK_CACHE_PATH', 'RERANK_ENABLE', 'RERANK_INPUT_TOPK', 'RERANK_KEEP', 'RERANK_POOL', 'RERANK_TOPN', 'TORCH_DEVICE', 'auto', 'cpu', 'cuda', 'mps', 'on', 'sqlite', 'true', 'yes']

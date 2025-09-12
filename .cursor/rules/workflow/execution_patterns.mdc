@@ -1,0 +1,46 @@
+---
+description: Enforce execution workflow and quality standards
+globs:
+  - '**/scripts/**/*.py'
+  - '**/src/**/*.py'
+  - '**/tests/**/*.py'
+  - '**/Makefile'
+alwaysApply: true
+---
+
+# Execution Workflow Rules
+
+## Solo Developer Workflow
+- Use one-command flows: `uv run python scripts/solo_workflow.py start/continue/ship`
+- Prefer automated execution with `--auto-advance` when appropriate
+- Use `--smart-pause` for critical decision points
+- Apply `--context-preserve` for complex multi-session work
+
+## Execution Configuration
+- **Auto-Advance**: For non-critical tasks only
+- **Pause Points**: Critical decisions, deployments, user input
+- **Context Preservation**: LTST integration
+- **Smart Pausing**: Rules for when to pause execution
+
+## Error Handling & Recovery
+- **Failure Ladder**: Re-run with `--json` and increased logging
+- **Readiness Check**: DB, provider smoke, seeds
+- **Concurrency Reduction**: `MAX_WORKERS=1` and retry
+- **Provider Switch**: Switch to local provider for PR gates
+- **HotFix Generation**: Apply minimal change to pass; follow with refactor PR
+
+## Quality Gates (Task-level and Cumulative)
+- [ ] Code review complete
+- [ ] Tests passing (unit/integration)
+- [ ] Documentation updated (400_ governance)
+- [ ] Performance validated (budget stated)
+- [ ] Security reviewed
+- [ ] Resilience tested (timeouts/retries/failover)
+- [ ] Edge cases covered
+- [ ] Eval gates met on gold profile (RAGChecker baseline not regressed)
+
+## State Management
+- **State File**: `.ai_state.json` (git-ignored)
+- **Progress Tracking**: Implementation status
+- **Session Continuity**: What is persisted across sessions
+- **Error Recovery**: HotFix generation and retry logic

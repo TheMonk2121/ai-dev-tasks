@@ -1,3 +1,8 @@
+from __future__ import annotations
+import os
+import re
+import subprocess  # nosec B404
+import sys
 #!/usr/bin/env python3
 """
 Resolve a file's parent backlog ID.
@@ -9,12 +14,7 @@ Order of precedence:
 Usage:
   python scripts/tools/get_parent_backlog_id.py /absolute/or/relative/path.md
 """
-from __future__ import annotations
 
-import os
-import re
-import subprocess  # nosec B404
-import sys
 
 HEADER_PATTERN = re.compile(r"<!--\s*parent_backlog:\s*(B-\d{4,})\s*-->")
 ID_PATTERN = re.compile(r"\b(B-\d{4,})\b")

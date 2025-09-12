@@ -1,0 +1,47 @@
+---
+description: Enforce testing standards and quality gates
+globs:
+  - '**/tests/**/*.py'
+  - '**/test_*.py'
+  - '**/*_test.py'
+alwaysApply: true
+---
+
+# Testing Standards
+
+## Test Categories
+- **Unit tests**: Fast-running tests with no external I/O
+- **Integration tests**: DB, network, or multi-component paths
+- **Smoke tests**: Minimal end-to-end confidence checks
+- **E2E tests**: Full system behavior (rare on PRs)
+- **Property tests**: Hypothesis-based property tests
+- **Slow tests**: Long-running tests (nightly only)
+- **Flaky tests**: Unstable tests (quarantined)
+
+## Test Requirements
+- **Unit tests**: Core logic; mock I/O; exercise error paths
+- **Integration tests**: Postgres + pgvector, reader/retriever flows
+- **Performance tests**: Define latency/throughput budgets and measure
+- **Security tests**: Validate inputs, sanitize prompts/content
+- **Resilience tests**: Simulate network/DB errors; verify retries/backoff
+- **Edge case tests**: Large payloads, unusual characters, empty inputs
+
+## Test Execution
+- Run via `uv run pytest -q`
+- Use markers: `unit`, `integration`, `smoke`, `e2e`, `property`, `slow`, `flaky`
+- Property tests: Use Hypothesis (`@given(...)`) for invariants
+- Load CI profile in `conftest.py` to keep PRs fast and deterministic
+
+## Test Quality Gates
+- [ ] Unit tests (core logic; mock I/O)
+- [ ] Integration tests (Postgres, retrieval/reader path as applicable)
+- [ ] Performance checks (latency/throughput or resource budget)
+- [ ] Security checks (input validation, secrets, auth if relevant)
+- [ ] Resilience checks (timeouts, retries, error paths)
+- [ ] Edge cases (boundary values, malformed inputs)
+
+## Test Coverage
+- Target 90%+ code coverage
+- Focus on critical paths and error conditions
+- Include tests for new features
+- Maintain test quality over quantity

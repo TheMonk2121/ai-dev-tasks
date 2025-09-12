@@ -1,13 +1,17 @@
+from __future__ import annotations
+import logging
+import os
+import re
+from pathlib import Path
+    from .prompt_sanitizer import sanitize_prompt as new_sanitize_prompt
+import sys
+import json
 #!/usr/bin/env python3
 """
 Input validation utilities for DSPy RAG system.
 Implements security hardening for user inputs and file paths.
 """
 
-import logging
-import os
-import re
-from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +43,6 @@ def sanitize_prompt(prompt: str, model_id: str | None = None) -> str:
         SecurityError: If blocked pattern is detected
     """
     # Import the new prompt sanitizer
-    from .prompt_sanitizer import sanitize_prompt as new_sanitize_prompt
 
     try:
         return new_sanitize_prompt(prompt, model_id)

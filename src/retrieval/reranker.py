@@ -1,3 +1,5 @@
+from __future__ import annotations
+import re
 """
 Heuristic Reranker (Lightweight, Dependency-Free)
 
@@ -9,9 +11,7 @@ Reorders fused candidates using simple, robust signals:
 final_score = alpha * rerank_score + (1 - alpha) * normalized_fused_score
 """
 
-from __future__ import annotations
 
-import re
 
 DocId = str
 Score = float

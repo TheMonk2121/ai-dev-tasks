@@ -1,3 +1,9 @@
+from __future__ import annotations
+from collections.abc import Iterable
+from dataclasses import dataclass
+from typing import Any
+from src.config.settings import get_settings
+from typing import Any, Dict, List, Optional, Union
 """Memory consolidation graph (stubbed, off hot path).
 
 This module provides a lightweight, typed orchestration for consolidating
@@ -5,13 +11,8 @@ conversation turns into durable memory artifacts. It is gated by
 `Settings.use_memory_graph` and is safe to import when disabled.
 """
 
-from __future__ import annotations
 
-from collections.abc import Iterable
-from dataclasses import dataclass
-from typing import Any
 
-from src.config.settings import get_settings
 
 
 @dataclass

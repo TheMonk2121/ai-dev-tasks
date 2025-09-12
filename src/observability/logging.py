@@ -1,18 +1,19 @@
+from __future__ import annotations
+import os
+from typing import Any
+    import logfire
+from typing import Any, Dict, List, Optional, Union
 """Logfire/observability initializer used across entrypoints.
 
 Keeps configuration centralized and optional. If a Logfire token is present,
 we emit traces and instrument Pydantic AI; otherwise, we no-op.
 """
 
-from __future__ import annotations
 
-import os
-from typing import Any
 
 try:
-    import logfire
 except Exception:  # pragma: no cover - optional dependency
-    logfire = None  # type: ignore
+    logfire = None  # type: ignore[assignment]
 
 
 def init_observability(service_name: str = "ai-dev-tasks", environment: str | None = None) -> dict[str, Any]:

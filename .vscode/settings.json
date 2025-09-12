@@ -1,14 +1,37 @@
 {
-    "files.exclude": {
-        "dspy-rag-system/": true,
-        "**/600_archives/**": true
+    "github-actions.workflows.pinned.workflows": [],
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": [
+            ".github/workflows/*.yml",
+            ".github/workflows/*.yaml"
+        ]
     },
-    "search.exclude": {
-        "dspy-rag-system/": true,
-        "**/600_archives/**": true
+    "yaml.validate": true,
+    "yaml.schemaStore.enable": true,
+    "yaml.format.enable": true,
+    "yaml.hover": true,
+    "yaml.completion": true,
+    "files.associations": {
+        "*.yml": "yaml",
+        "*.yaml": "yaml"
     },
-    "files.watcherExclude": {
-        "dspy-rag-system/": true,
-        "**/600_archives/**": true
-    }
+    "yaml.customTags": [
+        "!And",
+        "!If",
+        "!Not",
+        "!Equals",
+        "!Or",
+        "!FindInMap sequence",
+        "!Base64",
+        "!Cidr",
+        "!Ref",
+        "!Sub",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!Select",
+        "!Split",
+        "!Join sequence"
+    ],
+    "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json"
 }

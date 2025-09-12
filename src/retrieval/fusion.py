@@ -1,3 +1,5 @@
+from __future__ import annotations
+from collections.abc import Mapping, Sequence
 """
 Weighted Reciprocal Rank Fusion (RRF)
 
@@ -16,9 +18,7 @@ Returns:
     list[tuple[str, float]] sorted by fused score desc
 """
 
-from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
 
 DocId = str
 Rank = int

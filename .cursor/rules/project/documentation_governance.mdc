@@ -1,0 +1,39 @@
+---
+description: Enforce documentation governance and 400_ guide integration
+globs:
+  - '**/*.md'
+  - '**/400_guides/**/*'
+  - '**/000_core/**/*'
+alwaysApply: true
+---
+
+# Documentation Governance Rules
+
+## 400_ Guide Integration
+- **NO NEW GUIDE FILES**: All content must fold into existing 400_ guides
+- **Anchor System**: Use `<!-- ANCHOR_KEY: ... -->` for content organization
+- **Priority Anchors**: Use `<!-- ANCHOR_PRIORITY: ... -->` for importance
+- **Role Pins**: Use `<!-- ROLE_PINS: [...] -->` for role-specific content
+
+## Cross-Reference Maintenance
+- Update cross-references between related sections
+- Maintain table of contents (TOC) when adding content
+- Follow `200_naming_conventions` for headings and file naming
+- Update any 400_ index/TOC doc when modifying content
+
+## Documentation Hierarchy
+- **HIGH Priority**: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`
+- **MEDIUM Priority**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
+- **LOW Priority**: `100_memory/100_backlog-guide.md`
+
+## Content Organization
+- Prefer updating canonical 400_ docs with anchors
+- Cross-link updated sections and update any 400_ index/TOC doc
+- Follow `200_naming_conventions` for headings, code fences, and file naming
+- No new guide .md merges without an approved exception
+
+## Quality Standards
+- All documentation must follow markdown standards
+- Each document must have a single h1 title matching filename
+- TL;DR section required at top of core docs
+- Cross-references must be maintained between related files

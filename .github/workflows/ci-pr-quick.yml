@@ -17,6 +17,16 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           version: latest
+
+      - name: Cache UV and virtualenv
+        uses: actions/cache@v4
+        with:
+          path: |
+            .venv
+            ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock', 'pyproject.toml', 'poetry.lock', 'requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
       
       - name: Install dependencies
         run: |
@@ -38,3 +48,104 @@ jobs:
           # Test that mock profile works
           uv run python scripts/lib/config_loader.py --profile mock
           echo "✅ Profile system validation passed"
+
+  retrieval-smoke-gate:
+    name: Retrieval Smoke Gate (v1 gold)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    env:
+      HF_HOME: $RUNNER_TEMP/hf
+      SENTENCE_TRANSFORMERS_HOME: $RUNNER_TEMP/hf
+      TORCH_HOME: $RUNNER_TEMP/hf
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
+
+      - name: Cache UV and virtualenv
+        uses: actions/cache@v4
+        with:
+          path: |
+            .venv
+            ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock', 'pyproject.toml', 'poetry.lock', 'requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.RUNNER_TEMP }}/hf
+          key: ${{ runner.os }}-hf-${{ hashFiles('**/pyproject.toml', '**/uv.lock', '**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-hf-
+
+      - name: Install dependencies
+        run: |
+          uv sync
+
+      - name: Run lightweight retrieval smoke gate
+        env:
+          POSTGRES_DSN: mock://test
+        run: |
+          uv run python scripts/smoke_eval_gate.py --gold-file evals/gold/v1/gold_cases.jsonl --gold-size 30 > smoke_gate.json
+          cat smoke_gate.json
+
+      - name: Post PR comment with smoke gate summary
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            try {
+              const data = JSON.parse(fs.readFileSync('smoke_gate.json', 'utf8'));
+              const body = [
+                '### 🔎 Retrieval Smoke Gate (v1 gold)',
+                '',
+                `- f1_a: ${data.f1_a?.toFixed?.(3) ?? data.f1_a}`,
+                `- f1_b: ${data.f1_b?.toFixed?.(3) ?? data.f1_b}`,
+                `- f1_drop: ${data.f1_drop?.toFixed?.(3) ?? data.f1_drop}`,
+                `- p50_a: ${data.p50_a?.toFixed?.(3) ?? data.p50_a} s`,
+                `- p50_b: ${data.p50_b?.toFixed?.(3) ?? data.p50_b} s`,
+                `- latency_tax: ${data.latency_tax ? (data.latency_tax*100).toFixed(1) + '%': data.latency_tax}`,
+              ].join('\n');
+              github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body,
+              });
+            } catch (e) {
+              core.warning(`Failed to parse smoke_gate.json: ${e}`);
+            }
+
+      - name: Append to job summary
+        if: always()
+        run: |
+          echo "### 🔎 Retrieval Smoke Gate (v1 gold)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f smoke_gate.json ]; then
+            F1A=$(jq -r '.f1_a' smoke_gate.json)
+            F1B=$(jq -r '.f1_b' smoke_gate.json)
+            DROP=$(jq -r '.f1_drop' smoke_gate.json)
+            P50A=$(jq -r '.p50_a' smoke_gate.json)
+            P50B=$(jq -r '.p50_b' smoke_gate.json)
+            TAX=$(jq -r '.latency_tax' smoke_gate.json)
+            echo "- f1_a: $F1A" >> $GITHUB_STEP_SUMMARY
+            echo "- f1_b: $F1B" >> $GITHUB_STEP_SUMMARY
+            echo "- f1_drop: $DROP" >> $GITHUB_STEP_SUMMARY
+            echo "- p50_a: ${P50A}s" >> $GITHUB_STEP_SUMMARY
+            echo "- p50_b: ${P50B}s" >> $GITHUB_STEP_SUMMARY
+            if [ "$TAX" != "null" ]; then
+              printf "- latency_tax: %.1f%%%%\n" "$(echo "$TAX*100" | bc -l)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "(no summary available)" >> $GITHUB_STEP_SUMMARY
+          fi

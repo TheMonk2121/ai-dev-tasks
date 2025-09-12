@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/../dspy_modules/reader/program.py
+# hypothesis_version: 6.138.15
+
+[0.12, 0.5, '/', 'NOT_ANSWERABLE', '[A-Za-z0-9_/.-]+', '\\\\', '\\s+', '^`|`$', 'answer', 'general', 'meta_ops', 'ops_health', 'reader.predict.error']

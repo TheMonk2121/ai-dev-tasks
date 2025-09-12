@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/monitoring/production_monitor.py
+# hypothesis_version: 6.138.15
+
+[5.0, 80.0, 90.0, 100, '-', '...', 'active_alerts', 'alert_summary', 'critical', 'critical_alerts', 'database_metrics', 'degraded', 'degraded_count', 'disk', 'disk_usage', 'disk_usage_percent', 'error', 'latest_alerts', 'mean_time', 'memory', 'memory_usage', 'memory_usage_percent', 'message', 'metrics', 'monitoring_error', 'overall_status', 'percent_used', 'performance_summary', 'production_status', 'query', 'recent_alerts', 'severity', 'slow_queries', 'slow_query', 'status', 'system_health', 'system_metrics', 'threshold', 'timestamp', 'total_alerts', 'type', 'unhealthy', 'unhealthy_count', 'uptime', 'value', 'w', 'warning', 'warning_alerts']
