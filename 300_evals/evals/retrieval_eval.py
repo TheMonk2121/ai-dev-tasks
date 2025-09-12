@@ -24,7 +24,6 @@ from pydantic_evals.evaluators import Evaluator, EvaluatorContext
 from scripts.migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
 from scripts.observability import init_observability
 
-
 # Define input/output models for retrieval evaluation
 class RetrievalInput(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
@@ -34,14 +33,12 @@ class RetrievalInput(BaseModel):
     category: str | None = None
     notes: str | None = None
 
-
 class RetrievalOutput(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     retrieved_docs: list[str] = []
     citations: list[str] = []
     confidence: float | None = None
     retrieval_time_ms: int | None = None
-
 
 # Custom evaluators for retrieval
 @dataclass
@@ -76,7 +73,6 @@ class FileHitEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
 
         return hit_rate
 
-
 @dataclass
 class ResponseTimeEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
     """Evaluator that checks response time is within acceptable limits."""
@@ -100,7 +96,6 @@ class ResponseTimeEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
         set_eval_attribute("max_time_ms", self.max_time_ms)
 
         return score
-
 
 @dataclass
 class ConfidenceEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
@@ -126,7 +121,6 @@ class ConfidenceEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
 
         return score
 
-
 # Mock retrieval function for demonstration
 async def mock_retrieval_task(inputs: RetrievalInput) -> RetrievalOutput:
     """Mock retrieval task for demonstration purposes."""
@@ -151,7 +145,6 @@ async def mock_retrieval_task(inputs: RetrievalInput) -> RetrievalOutput:
     return RetrievalOutput(
         retrieved_docs=mock_docs, citations=mock_citations, confidence=confidence, retrieval_time_ms=retrieval_time
     )
-
 
 async def run_retrieval_evaluation():
     """Run comprehensive retrieval evaluation using Pydantic Evals."""
@@ -196,7 +189,6 @@ async def run_retrieval_evaluation():
         span.set_attribute("evaluation_complete", True)
 
         return report
-
 
 if __name__ == "__main__":
     import asyncio

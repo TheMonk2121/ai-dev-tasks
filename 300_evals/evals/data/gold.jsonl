@@ -1,0 +1,31 @@
+{"id": "What is DSPy according to 400_07_ai-frameworks-dspy.md?", "file_paths": [], "globs": ["*/400_07_ai-frameworks-dspy.md"]}
+{"id": "List the core workflow guides in 000_core.", "file_paths": [], "globs": ["000_core/*"]}
+{"id": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?", "file_paths": [], "globs": ["*/400_06_memory-and-context-systems.md"]}
+{"id": "Where are the model configuration settings defined?", "file_paths": ["200_setup/201_model-configuration.md"], "globs": []}
+{"id": "What are the naming conventions used in this repo (see 200_setup)?", "file_paths": ["200_setup/200_naming-conventions.md"], "globs": []}
+{"id": "Show the DSPy development context TL;DR.", "file_paths": [], "globs": ["*/104_dspy-development-context.md"]}
+{"id": "Which file summarizes backlog and priorities?", "file_paths": [], "globs": ["*/000_backlog.md"]}
+{"id": "Which file defines the governance and AI constitution?", "file_paths": [], "globs": ["*/400_02_governance-and-ai-constitution.md"]}
+{"id": "Where are database troubleshooting patterns documented?", "file_paths": ["100_memory/100_database-troubleshooting-patterns.md"], "globs": []}
+{"id": "Which file describes the memory/context workflow?", "file_paths": [], "globs": ["*/103_memory-context-workflow.md"]}
+{"id": "Give the high-level getting started index.", "file_paths": [], "globs": ["*/400_00_getting-started-and-index.md"]}
+{"id": "Show me the setup docs under 200_setup.", "file_paths": [], "globs": ["200_setup/*"]}
+{"id": "Point me to memory-related guides under 100_memory.", "file_paths": [], "globs": ["100_memory/*"]}
+{"id": "why_path_tsv", "file_paths": [], "globs": ["scripts/migrations/*", "src/dspy_modules/retriever/*"]}
+{"id": "bm25_hints_policy", "file_paths": [], "globs": ["src/dspy_modules/retriever/*"]}
+{"id": "mmr_cap_effect", "file_paths": [], "globs": ["src/dspy_modules/retriever/*"]}
+{"id": "db_adjacent_phrases", "file_paths": [], "globs": ["src/dspy_modules/retriever/*", "scripts/migrations/*"]}
+{"id": "filename_microboost", "file_paths": [], "globs": ["src/dspy_modules/retriever/*"]}
+{"id": "vector_ops_selection", "file_paths": [], "globs": ["src/dspy_modules/retriever/*"]}
+{"id": "sentence_compaction", "file_paths": [], "globs": ["src/dspy_modules/reader/*"]}
+{"id": "doc_demote", "file_paths": [], "globs": ["*/retriever/*", "*/query_rewrite.py"]}
+{"id": "ops_bias_subtrees", "file_paths": [], "globs": ["*/retriever/*", "*/query_rewrite.py"]}
+{"id": "ops_phrase_hints", "file_paths": [], "globs": ["*/retriever/*", "*/query_rewrite.py"]}
+{"id": "setup_steps_overview", "file_paths": [], "globs": ["200_setup/*", "*/setup*"]}
+{"id": "What is DSPy according to 400_07_ai-frameworks-dspy.md?", "file_paths": ["400_guides/400_09_ai-frameworks-dspy.md"], "globs": ["400_guides/400_*dspy*.md"]}
+{"id": "List the core workflow guides in 000_core.", "file_paths": ["000_core/README.md", "000_core/000_evaluation-system-entry-point.md"], "globs": ["000_core/*.md"]}
+{"id": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?", "file_paths": ["400_guides/400_02_memory-rehydration-context-management.md", "100_memory/100_cursor-memory-context.md"], "globs": ["400_guides/400_*memory*.md", "100_memory/*.md"]}
+{"id": "doc_demote", "file_paths": ["src/dspy_modules/retriever/rerank.py"], "globs": ["*/retriever/*rerank*.py"]}
+{"id": "ops_bias_subtrees", "file_paths": ["src/dspy_modules/retriever/rerank.py"], "globs": ["*/retriever/*rerank*.py"]}
+{"id": "ops_phrase_hints", "file_paths": ["src/dspy_modules/retriever/query_rewrite.py"], "globs": ["*/retriever/*query*.py"]}
+{"id": "setup_steps_overview", "file_paths": ["200_setup/200_naming-conventions.md", "CURSOR_MCP_SETUP.md"], "globs": ["200_setup/*.md"]}

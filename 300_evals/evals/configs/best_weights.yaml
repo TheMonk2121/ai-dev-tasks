@@ -1,0 +1,7 @@
+adjacency_db: 0
+per_file_cap: 4
+w_bm25: 1.0
+w_path: 2.0
+w_short: 1.8
+w_title: 1.4
+w_vec: 1.1
