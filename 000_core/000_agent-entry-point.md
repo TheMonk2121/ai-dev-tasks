@@ -25,32 +25,50 @@ source uv_aliases.sh   # uvd, uvt, uvs, etc.
 # Start memory systems
 ./scripts/memory_up.sh
 
+# Verify memory systems are running
+python3 scripts/healthcheck_db.py
+
 # Pull core context for this session
 python3 scripts/unified_memory_orchestrator.py
   --systems ltst cursor go_cli prime
   --role planner "current project status and core documentation"
+
+# Verify context loaded successfully
+echo "✅ Memory rehydration complete. Check output above for any errors."
 ```
 - Memory quick start: `400_guides/400_01_memory-system-architecture.md`
 - Daily usage: `400_guides/400_02_memory-rehydration-context-management.md`
 
 ### 2) Validate with Evaluations (Single Source of Truth)
 ```bash
+# Load evaluation environment
 source throttle_free_eval.sh
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+
+# Verify environment is configured
+echo "🔒 Environment loaded. Check banner shows 'lock=True'"
+
+# Run evaluation with consistent flags
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+
+# Verify evaluation completed successfully
+echo "✅ Evaluation complete. Check metrics/baseline_evaluations/ for results."
 ```
 - Evaluation SOP: `000_core/000_evaluation-system-entry-point.md`
 - Fast smoke: `./scripts/run_ragchecker_smoke_test.sh`
 
-#### 🔁 “Run the evals” (ABP‑validated quick path)
+#### 🔁 "Run the evals" (ABP‑validated quick path)
 ```bash
 # 1) Ensure baseline manifest is fresh for this profile
 python3 scripts/update_baseline_manifest.py --profile precision_elevated
 
-# 2) Run evaluation with lessons (advisory mode)
-python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory
+# 2) Run evaluation with lessons (advisory mode) - consistent flags
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # 3) Validate ABP & context sidecars
 python3 scripts/abp_validation.py --profile precision_elevated
+
+# 4) Verify all steps completed successfully
+echo "✅ ABP-validated evaluation complete. Check metrics/briefings/ and metrics/baseline_evaluations/"
 ```
 Expected:
 - ABP in `metrics/briefings/` and context meta sidecar in `metrics/baseline_evaluations/`
@@ -82,12 +100,88 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --ro
 - Baselines: `metrics/baseline_evaluations/BASELINE_LOCKED_20250901.md`, `metrics/baseline_evaluations/TUNED_BASELINE_20250902.md`
 - Versioning: `scripts/baseline_version_manager.py`
 
-### 5) Troubleshoot (Common)
-- Agent patterns: `100_memory/100_agent-troubleshooting-patterns.md`
+### 5) Quick Status Check (Before Troubleshooting)
+```bash
+# Check system health
+python3 scripts/healthcheck_db.py
+python3 scripts/metrics_guard.py
+
+# Verify recent evaluation results
+ls -la metrics/baseline_evaluations/ | head -5
+
+# Check memory system status
+python3 scripts/unified_memory_orchestrator.py --systems ltst --role planner "system status check" --dry-run
+```
+
+### 6) Error Recovery & Validation
+```bash
+# If memory rehydration failed
+./scripts/memory_up.sh
+python3 scripts/healthcheck_db.py
+
+# If evaluation failed
+source throttle_free_eval.sh
+./scripts/run_ragchecker_smoke_test.sh
+
+# If role execution failed
+python3 scripts/unified_memory_orchestrator.py --systems ltst --role planner "diagnose system issues"
+
+# Verify all systems are working
+python3 scripts/metrics_guard.py
+```
+
+### 7) Troubleshoot (Common)
+- Agent patterns: `000_core/005_troubleshooting-patterns.md`
 - DB/connection: `dspy-rag-system/test_db_connection.py`, `scripts/healthcheck_db.py`
 - Metrics guard: `scripts/metrics_guard.py`
+- Fast smoke test: `./scripts/run_ragchecker_smoke_test.sh`
+
+#### **Evaluation-Specific Troubleshooting**
+- **If Bedrock creds are missing**: Run the smoke test and report results
+- **If validation warns about stale manifest**: Rerun step (1) in the evaluation workflow above
+- **Primary evaluation SOP**: `000_core/000_evaluation-system-entry-point.md`
+- **Adoption report**: `python3 scripts/abp_adoption_report.py --window 20`
+
+## 🚨 Current Status: RED LINE BASELINE ENFORCEMENT
+
+**Current Performance** (2025-09-06): Precision: 0.129, Recall: 0.157, F1: 0.137
+**Targets**: Precision ≥0.20, Recall ≥0.45, F1 ≥0.22
+**Status**: All metrics below targets - NO NEW FEATURES until baseline restored
+
+### Quick Recall Boost (keep precision ≥0.149)
+```bash
+# 1. Increase breadth in config/retrieval.yaml:
+candidates.final_limit: 50 → 80
+rerank.final_top_n: 8 → 12
+rerank.alpha: 0.7 → 0.6
+
+# 2. Loosen filters:
+prefilter.min_bm25_score: 0.10 → 0.05
+prefilter.min_vector_score: 0.70 → 0.65
+
+# 3. Test incrementally:
+./scripts/run_ragchecker_smoke_test.sh
+# Abort if precision < 0.149 and recall gain < +0.03
+```
+
+### Apply Lessons (when safe)
+```bash
+# Review docket first, then:
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode apply --lessons-scope profile
+```
+
+### ⏩ One-liner Commands
+```bash
+# Quick apply → smoke → eval
+source throttle_free_eval.sh && recall_boost_apply && \
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+
+# Revert quickly after testing
+source throttle_free_eval.sh && recall_boost_revert
+```
+
+**Full details**: See `000_core/000_evaluation-system-entry-point.md` sections 75-137
 
 ## 🧭 Also See
-- Root quick launcher: `START_HERE_FOR_AGENTS.md`
 - Memory overview: `400_guides/400_00_memory-system-overview.md`
 - System overview: `400_guides/400_03_system-overview-and-architecture.md`

@@ -250,7 +250,6 @@
 - **Success Criteria**: Users can chat with individual AI agents, have group conversations with multiple agents, and all agents respond appropriately with access to memory system
 - **Integration Approach**: Leverage existing infrastructure (multi-agent chat bridge, LTST memory, DSPy agents) and fix connection issues
 
-
   - **Backend Enhancements (effective vs. current)**:
     - Identity: accept `user_id`, optional `token`, and `room` on WS query; echo in message envelope; maintain per-connection maps.
     - Persistence: append messages to durable store (reuse `src/utils/conversation_storage.py` or a lightweight SQLite). Add `/messages?since=cursor&agent=…&room=…`.
@@ -510,8 +509,6 @@ and normalize spacing across long-form guides.
 <!-- tech_footprint: Governance Integration + Quality Gates + Mathematical Validation + Automated Testing -->
 <!-- problem: Existing governance rules need mathematical validation to ensure correctness and provide formal guarantees -->
 <!-- outcome: Governance-by-mathematics system with automated quality gates and formal correctness guarantees -->
-
-
 
 - B‑1033 — Fix MCP Memory Server: Port Conflict Resolution and Function Restoration (score 8.5) ✅ **COMPLETED**
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:[]}-->
@@ -883,8 +880,6 @@ QUALITY GATES:
 <!-- tech_footprint: Document Processing + Web Scraping + Data Ingestion + DSPy Integration -->
 <!-- problem: Current document processing could be enhanced with industry-standard tools while maintaining local-first approach -->
 <!-- outcome: Improved document processing capabilities without over-engineering the existing DSPy RAG system -->
-
-
 
 - B‑1020 — Complete HNSW Vector Index Migration (score 7.0) ✅ **COMPLETED**
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:2, deps:[]}-->
@@ -1367,7 +1362,7 @@ Transform the bloated `400_guides` documentation into an intelligent, tiered aut
 
 ## AI-Executable Queue (003)
 
-Items that can be executed directly by AI using `000_core/003_process-task-list.md` (points < 5 AND score_total ≥ 3.0):
+Items that can be executed directly by AI using `000_core/003_EXECUTION_TEMPLATE.md` (points < 5 AND score_total ≥ 3.0):
 
 * **B-001** — Test the single doorway workflow with Python 3.12 (3 points, todo)
 * **B-085** — Code Review Process Upgrade with Performance Reporting - B-077 (3 points, todo)
@@ -1386,7 +1381,7 @@ Items that can be executed directly by AI using `000_core/003_process-task-list.
 
 - PRD skip rule: Skip PRD when points < 5 AND score_total ≥ 3.0
 
-- Execute flow: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md
+- Execute flow: 000_core/001_PRD_TEMPLATE.md → 000_core/002_TASK-LIST_TEMPLATE.md → 000_core/003_EXECUTION_TEMPLATE.md
 
 Quick links: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`,
 `400_guides/400_context-priority-guide.md`
@@ -1408,7 +1403,7 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- RESEARCH_SYSTEM: 500_research/500_research-index.md, 500_research-analysis-summary.md, 500_dspy-research.md,
 500_rag-system-research.md -->
-<!-- WORKFLOW_CHAIN: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md -->
+<!-- WORKFLOW_CHAIN: 000_core/001_PRD_TEMPLATE.md → 000_core/002_TASK-LIST_TEMPLATE.md → 000_core/003_EXECUTION_TEMPLATE.md -->
 <!-- EXECUTION_ENGINE: scripts/process_tasks.py -->
 <!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_memory/100_backlog-guide.md -->
 
@@ -1664,9 +1659,6 @@ PHASE 5 — Safety & Tests (1.0h)
 ROLLBACK
 8) Flip FEATURE_COACHING_MODE=off → watcher/voice/hints disabled; no capture performed.
 -->
-
-
-
 
 | B-075 | Few-Shot Cognitive Scaffolding Integration | ⭐ | 6 | ✅ done | Integrate few-shot examples into cognitive scaffolding for AI agents | Few-shot patterns + AI context engineering | B-074 Few-Shot Integration with Documentation Tools |
 
@@ -1940,7 +1932,7 @@ MVP-first: Optional complexity (co-sign, entity-overlap) only if Failure@20 > 0.
 <!-- tech_footprint: Taiga Backend + PostgreSQL + Python API + Migration Engine + Workflow Automation + Scribe Integration + Git Hooks + CI/CD Integration + Query Interface -->
 <!-- problem: Current 3,800-line backlog.md is fundamentally broken - unmanageable file size, no structured data access, manual workflow friction, no automation capabilities, poor query/filter support -->
 <!-- outcome: Complete backlog system replacement with Taiga backend, Python API integration, automated workflows, Scribe integration, and development tool integration for 90% reduction in manual overhead -->
-<!-- template_files: 000_core/001_create-prd-TEMPLATE.md, 000_core/002_generate-tasks-TEMPLATE.md, 000_core/003_process-task-list-TEMPLATE.md -->
+<!-- template_files: 000_core/001_PRD_TEMPLATE.md, 000_core/002_TASK-LIST_TEMPLATE.md, 000_core/003_EXECUTION_TEMPLATE.md -->
 <!-- implementation_plan:
 1. JSON SCHEMA DEFINITION (schemas/backlog_schema.json):
    - Define comprehensive JSON schema with MoSCoW prioritization fields
@@ -2586,7 +2578,7 @@ comprehensive documentation-->
 <!--completion_date: 2024-08-07-->
 <!--implementation_notes: Split 100_memory/100_cursor-memory-context.md (384 lines) into 5 focused modules:
 100_memory/100_cursor-memory-context.md (primary entry point), 101_memory-context-safety.md (safety requirements),
-102_memory-context-state.md (project state), 103_memory-context-workflow.md (development process),
+102_memory-context-state.md (project state), 000_core/010_memory-context-workflow.md (development process),
 104_memory-context-guidance.md (context-specific help). Created scripts/migrate_memory_context.py to update 47 files
 with cross-references. Migration successful with 0 errors. Modular system improves AI comprehension and reduces context
 overload.-->

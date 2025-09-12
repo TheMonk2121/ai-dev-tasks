@@ -45,7 +45,7 @@ python3 -c "import ragchecker; print('✅ RAGChecker installed successfully!')"
 python3 -c "import spacy; nlp = spacy.load('en_core_web_sm'); print('✅ spaCy model loaded successfully!')"
 
 # Run official evaluation
-python3 scripts/ragchecker_official_evaluation.py
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check evaluation status
 cat metrics/baseline_evaluations/EVALUATION_STATUS.md
@@ -108,7 +108,7 @@ cat metrics/baseline_evaluations/EVALUATION_STATUS.md
 ### What are the quality gates?
 - [ ] **Installation Verification**: `python3 -c "import ragchecker; print('✅ RAGChecker installed successfully!')"`
 - [ ] **spaCy Model Verification**: `python3 -c "import spacy; nlp = spacy.load('en_core_web_sm'); print('✅ spaCy model loaded successfully!')"`
-- [ ] **Evaluation Script Execution**: `python3 scripts/ragchecker_official_evaluation.py` runs successfully
+- [ ] **Evaluation Script Execution**: `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5` runs successfully
 - [ ] **Status Documentation**: `metrics/baseline_evaluations/EVALUATION_STATUS.md` is current and accurate
 - [ ] **Documentation Integration**: All 00-12 guides updated with RAGChecker references
 

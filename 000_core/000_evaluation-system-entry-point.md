@@ -49,7 +49,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --s
 ### **📋 Legacy Evaluation Command (Without Lessons)**
 ```bash
 source throttle_free_eval.sh
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 ```
 
 **Use this only if lessons engine is disabled or for baseline comparisons.**
@@ -60,6 +60,24 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --s
 ```
 
 **Use this for quick iteration and testing changes.**
+
+### **🔍 Quick Status Check (For Stateless Agents)**
+```bash
+# Check system health before running evaluations
+python3 scripts/healthcheck_db.py
+
+# Verify evaluation environment
+source throttle_free_eval.sh
+echo "🔒 Environment loaded. Check banner shows 'lock=True'"
+
+# Check recent evaluation results
+ls -la metrics/baseline_evaluations/ | head -5
+
+# Verify baseline manifest exists
+ls -la metrics/baseline_evaluations/BASELINE_*.md
+```
+
+**Use this to verify system status before running evaluations.**
 
 ### **🔧 Environment Setup Command**
 ```bash
@@ -74,10 +92,30 @@ uv run python scripts/health_gated_evaluation.py --check-only
 
 ### ✅ Standard Evaluation Sequence
 1) `python3 scripts/update_baseline_manifest.py --profile precision_elevated`
-2) `python3 scripts/ragchecker_official_evaluation.py --bypass-cli --lessons-mode advisory`
+2) `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 3) `python3 scripts/abp_validation.py --profile precision_elevated`
 
 Use this 3‑step flow for any official evaluation run. Step 2 supports Bedrock/stable flags via your sourced env (see Quick Start).
+
+### **✅ Post-Evaluation Validation (For Stateless Agents)**
+```bash
+# Verify evaluation completed successfully
+echo "✅ Evaluation complete. Checking results..."
+
+# Check results were generated
+ls -la metrics/baseline_evaluations/ | tail -5
+
+# Verify ABP files were created
+ls -la metrics/briefings/ | tail -3
+
+# Check for any error indicators
+grep -i "error\|failed\|exception" metrics/baseline_evaluations/*.json | head -5
+
+# Display latest metrics summary
+python3 scripts/metrics_guard.py
+```
+
+**Use this to verify evaluation completed successfully and results are valid.**
 
 ### 🧭 If you were told to "run the evals"
 - **MANDATORY**: Run memory rehydration first: `export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
@@ -87,7 +125,7 @@ Use this 3‑step flow for any official evaluation run. Step 2 supports Bedrock/
   python3 scripts/update_baseline_manifest.py --profile precision_elevated
 
   # 2) Run evaluation with lessons (advisory)
-  python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory
+  python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
   # 3) Validate ABP generation and context sidecars
   python3 scripts/abp_validation.py --profile precision_elevated
@@ -101,13 +139,13 @@ Use this 3‑step flow for any official evaluation run. Step 2 supports Bedrock/
 #### **Advisory-First Approach**
 ```bash
 # 1. Run with lessons in advisory mode (recommended)
-python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile --lessons-window 5
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # 2. Review decision docke
 cat metrics/derived_configs/*_decision_docket.md
 
 # 3. Apply lessons if approved
-python3 scripts/ragchecker_official_evaluation.py --lessons-mode apply --lessons-scope profile
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode apply --lessons-scope profile
 ```
 
 **Note**: Runner prints one-line summary when apply is blocked and exact "Decision docket:" path.
@@ -117,7 +155,7 @@ python3 scripts/ragchecker_official_evaluation.py --lessons-mode apply --lessons
   - No hard gates will be violated (see Baseline Targets below)
   - Precision stays above your current guard rail during recall pushes (e.g., ≥ 0.149 interim)
   - The change is configuration-only and reversible
-- Command: `python3 scripts/ragchecker_official_evaluation.py --bypass-cli --lessons-mode apply --lessons-scope profile`
+- Command: `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode apply --lessons-scope profile`
 - If the script prints "apply_blocked: true", keep using advisory and apply changes manually in `config/retrieval.yaml`.
 
 #### **Interpret Output**
@@ -153,7 +191,7 @@ jq '.run_config.lessons' $(ls -t metrics/baseline_evaluations/*.json | head -1)
 Reference: `metrics/baseline_evaluations/TUNED_BASELINE_20250902.md` and `metrics/baseline_evaluations/RED_LINE_ENFORCEMENT_RULES.md`.
 
 ### 🛠 When Metrics Are Below Targe
-- Run with lessons advisory: `python3 scripts/ragchecker_official_evaluation.py --bypass-cli --lessons-mode advisory`
+- Run with lessons advisory: `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 - Review decision docket in `metrics/derived_configs/` and apply if gates allow: `--lessons-mode apply`
 - Re‑run smoke test for quick iteration: `./scripts/run_ragchecker_smoke_test.sh`
 - Validate baselines and context: `python3 scripts/abp_validation.py --profile precision_elevated`

@@ -16,6 +16,27 @@
 
 - **do next**: Apply the configuration patterns to your specific use cases and requirements.
 
+## 📋 **Table of Contents**
+
+### **Core Configuration**
+- [⚙️ Advanced Configuration Patterns](#️-advanced-configuration-patterns)
+- [🔒 Security and Compliance Configuration](#-security-and-compliance-configuration)
+- [📊 Monitoring and Observability Configuration](#-monitoring-and-observability-configuration)
+- [🔧 Integration and Automation Configuration](#-integration-and-automation-configuration)
+
+### **Production & Management**
+- [🔒 Production Configuration Locking System](#-production-configuration-locking-system)
+- [🚀 Production Go-Live Checklist](#-production-go-live-checklist)
+- [📋 Policies](#-policies)
+
+### **Reference Materials**
+- [📋 Checklists](#-checklists)
+- [🔗 Interfaces](#-interfaces)
+- [📚 Examples](#-examples)
+- [🔗 Related Guides](#-related-guides)
+- [📚 References](#-references)
+- [📋 Changelog](#-changelog)
+
 ## 🎯 **Current Status**
 - **Priority**: 🔥 **HIGH** - Essential for advanced system configuration
 - **Phase**: 4 of 4 (Advanced Topics)
@@ -491,6 +512,166 @@ class MonitoringConfigManager:
         }
 
         self.monitoring_configs[system_name] = monitoring_config
+
+### **Document Management Dashboard Configuration**
+
+#### **Dashboard Overview**
+A modern, interactive web dashboard for managing and visualizing documents in your RAG system with enhanced metadata capabilities. This dashboard integrates with the v0.3.1 Ultra-Minimal Router architecture for intelligent document processing and analysis.
+
+#### **Quick Start**
+```bash
+# Navigate to the dashboard directory
+cd dashboard
+
+# Install dependencies
+python3 -m pip install -r requirements.txt
+
+# Start the dashboard
+./start_dashboard.sh
+
+# Or manually
+python3 dashboard.py
+```
+
+**Access Points**:
+- Main Dashboard: http://localhost:5001
+- Health Check: http://localhost:5001/health
+
+#### **Enhanced Metadata System**
+- **Automatic Categorization**: Documents categorized based on filename patterns
+- **Smart Tagging**: Automatic tag extraction from filenames and content
+- **Priority Detection**: Intelligent priority assignment based on keywords
+- **Content Type Analysis**: Automatic detection of document types (CSV, PDF, etc.)
+- **Size Classification**: Documents categorized by size (small, medium, large)
+- **Version Detection**: Automatic extraction of version numbers from filenames
+- **Date Extraction**: Pattern-based date extraction from filenames
+
+#### **Interactive Dashboard Features**
+- **Real-time Statistics**: Live processing statistics and analytics
+- **Advanced Filtering**: Filter by priority, category, and search terms
+- **Document Cards**: Rich document information with metadata badges
+- **Modal Views**: Detailed metadata inspection for each document
+- **Responsive Design**: Works on desktop and mobile devices
+
+#### **API Endpoints**
+- `GET /` - Main dashboard page
+- `GET /api/documents` - JSON list of all documents
+- `GET /api/stats` - Processing statistics
+- `GET /api/metadata/<filename>` - Metadata for specific document
+- `GET /health` - System health check
+
+#### **Metadata Categories**
+| Category | Keywords | Priority |
+|----------|----------|----------|
+| **Pricing & Billing** | pricing, price, cost, billing | High |
+| **Legal & Contracts** | contract, agreement, legal, terms | High |
+| **Marketing & Campaigns** | marketing, campaign, ad, promotion | Medium |
+| **Client & Customer Data** | client, customer, user, profile | Medium |
+| **Reports & Analytics** | report, analytics, data, metrics | Medium |
+| **Technical & Code** | source, code, script, config | Medium |
+| **Testing & Samples** | test, sample, example | Low |
+| **Documentation & Guides** | manual, guide, documentation, help | Medium |
+| **Financial Records** | invoice, receipt, payment | High |
+
+#### **Content Type Badges**
+- **📊 Structured Data** (CSV files)
+- **📄 Document** (PDF, DOC, DOCX)
+- **📝 Text** (TXT, MD)
+- **🖼️ Image** (JPG, PNG, GIF)
+- **❓ Unknown** (other file types)
+
+#### **Size Categories**
+- **Small**: < 1MB
+- **Medium**: 1MB - 10MB
+- **Large**: > 10MB
+
+#### **Database Connection Configuration**
+```python
+def get_db_connection():
+    return psycopg2.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        database=os.getenv("DB_NAME", "ai_agency"),
+        user=os.getenv("DB_USER", "danieljacobs"),
+        password=os.getenv("DB_PASSWORD", "")
+    )
+```
+
+#### **File Structure**
+```
+dashboard/
+├── dashboard.py              # Main Flask application
+├── requirements.txt          # Python dependencies
+├── start_dashboard.sh       # Startup script
+├── README.md               # Documentation
+├── templates/
+│   └── dashboard.html      # Main dashboard template
+└── static/
+    ├── css/
+    │   └── style.css       # Dashboard styling
+    └── js/
+        └── app.js          # Interactive functionality
+```
+
+#### **Integration with RAG System**
+The dashboard integrates seamlessly with your existing DSPy RAG system:
+- **Database Integration**: Reads from existing `documents` and `document_chunks` tables
+- **Metadata Enhancement**: Automatically enhances existing documents with new metadata
+- **AI Integration**: Cursor Native AI integration for intelligent metadata extraction
+- **Real-time Updates**: Reflects changes from your watch folder and processing pipeline
+- **Query Logging**: Displays recent RAG queries (if `query_logs` table exists)
+- **Testing Integration**: Follows patterns from `dspy-rag-system/tests/` for comprehensive testing
+
+#### **Troubleshooting**
+**Common Issues**:
+- **Port 5000/5001 already in use**: `lsof -ti:5001 | xargs kill -9`
+- **Database connection failed**: Ensure PostgreSQL is running and check credentials
+- **No documents showing**: Check if documents exist in your database and verify table structure
+
+**Debug Mode**: The dashboard runs in debug mode by default. Check console output for detailed error messages.
+
+### **Research Organization & Management**
+
+#### **ChatGPT Pro Research Directory**
+This directory contains research findings, reference links, and insights from ChatGPT Pro research sessions for the AI development ecosystem project.
+
+#### **Organization Principles**
+
+**File Naming Convention**:
+- `YYYY-MM-DD-session-name.md` - For individual research sessions
+- `topic-name-research-summary.md` - For topic-specific research summaries
+- `chatgpt-pro-research-log.md` - Master log of all research sessions
+
+**Cross-Referencing**:
+- Link to relevant existing research files in `docs/research/articles/`
+- Reference related backlog items and PRDs
+- Include implementation notes and next steps
+
+#### **Research Session Structure**
+Each research session file should include:
+- **Date and Session Info**: When the research was conducted
+- **Research Type**: Regular or Deep research
+- **Topic**: What was researched
+- **Reference Links**: All links provided by ChatGPT Pro with descriptions
+- **Key Findings**: Summary of main insights
+- **Implementation Notes**: How findings apply to our project
+- **Next Steps**: Action items and follow-up research needed
+
+#### **Current Research Sessions**
+- `2025-01-28-mathematical-framework-implementation.md` - Category Theory and Coalgebras for AI System Mapping (B-1034)
+
+#### **Integration with Existing Research**
+This directory complements existing research files:
+- `../articles/dspy-articles.md` - DSPy-related research
+- `../articles/agent-orchestration-articles.md` - Agent orchestration research
+- `../articles/monitoring-articles.md` - Monitoring and observability research
+- `../articles/performance-articles.md` - Performance optimization research
+- `../articles/rag-articles.md` - RAG system research
+
+#### **Usage Guidelines**
+1. **Before Research**: Check existing files for related research
+2. **During Research**: Capture all reference links and key insights
+3. **After Research**: Cross-reference with existing research and update related files
+4. **Implementation**: Link research findings to backlog items and PRDs
 
         # Apply monitoring configuration
         applied_config = self._apply_monitoring_config(system_name, monitoring_config)
@@ -1037,356 +1218,547 @@ print(f"Custom workflows: {len(status['workflows'])}")
 - **Purpose**: Complete overview of all testing and methodology coverage
 - **Coverage**: Navigation guide, usage instructions, best practices
 
-## 🔧 **Configuration Management & Automation**
-
-### **🚨 CRITICAL: Configuration Management & Automation are Essential**
-
-**Why This Matters**: Configuration management and automation provide the foundation for consistent, reliable, and scalable system deployment and operation. Without proper configuration management, systems become inconsistent, deployment becomes error-prone, and operational efficiency is compromised.
-
-### **Configuration Management Framework**
-
-#### **Configuration Versioning & Control**
-```python
-class ConfigurationManagementFramework:
-    """Comprehensive configuration management and versioning framework."""
-
-    def __init__(self):
-        self.config_categories = {
-            "system": "System-level configuration settings",
-            "application": "Application-specific configuration",
-            "environment": "Environment-specific configuration",
-            "security": "Security and access control configuration",
-            "monitoring": "Monitoring and alerting configuration"
-        }
-        self.config_versions = {}
-
-    def manage_configuration(self, config_data: dict, config_type: str) -> dict:
-        """Manage configuration with versioning and validation."""
-
-        # Validate configuration data
-        if not self._validate_config_data(config_data, config_type):
-            raise ValueError("Invalid configuration data")
-
-        # Create configuration version
-        config_version = self._create_config_version(config_data, config_type)
-
-        # Validate configuration
-        validation_result = self._validate_configuration(config_version)
-
-        # Deploy configuration
-        deployment_result = self._deploy_configuration(config_version)
-
-        return {
-            "configuration_managed": True,
-            "config_version": config_version,
-            "validation_result": validation_result,
-            "deployment_result": deployment_resul
-        }
-
-    def _validate_config_data(self, config_data: dict, config_type: str) -> bool:
-        """Validate configuration data completeness and structure."""
-
-        if config_type not in self.config_categories:
-            return False
-
-        # Implementation for configuration validation
-        return True
-
-    def _create_config_version(self, config_data: dict, config_type: str) -> dict:
-        """Create a new configuration version."""
-
-        # Implementation for configuration versioning
-        return {
-            "version_id": self._generate_version_id(),
-            "config_type": config_type,
-            "config_data": config_data,
-            "created_at": time.time(),
-            "status": "created"
-        }
-```
-
-#### **Configuration Automation & Deployment**
-```python
-class ConfigurationAutomationFramework:
-    """Manages configuration automation and deployment processes."""
-
-    def __init__(self):
-        self.automation_patterns = {
-            "blue_green": "Blue-green deployment pattern",
-            "rolling": "Rolling update deployment pattern",
-            "canary": "Canary deployment pattern",
-            "immutable": "Immutable infrastructure pattern"
-        }
-        self.deployment_strategies = {}
-
-    def automate_configuration_deployment(self, config_version: dict, strategy: str = "rolling") -> dict:
-        """Automate configuration deployment using specified strategy."""
-
-        if strategy not in self.automation_patterns:
-            raise ValueError(f"Unknown deployment strategy: {strategy}")
-
-        # Validate deployment readiness
-        if not self._validate_deployment_readiness(config_version):
-            raise ValueError("Configuration not ready for deployment")
-
-        # Execute deploymen
-        deployment_result = self._execute_deployment(config_version, strategy)
-
-        # Monitor deploymen
-        monitoring_result = self._monitor_deployment(deployment_result)
-
-        # Validate deployment success
-        validation_result = self._validate_deployment_success(deployment_result)
-
-        return {
-            "deployment_automated": True,
-            "strategy_used": strategy,
-            "deployment_result": deployment_result,
-            "monitoring_result": monitoring_result,
-            "validation_result": validation_resul
-        }
-
-    def _validate_deployment_readiness(self, config_version: dict) -> bool:
-        """Validate that configuration is ready for deployment."""
-
-        # Implementation for deployment readiness validation
-        return True  # Placeholder
-```
-
-### **Configuration Management Commands**
-
-#### **Configuration Management Commands**
-```bash
-# Manage configuration
-python3 scripts/manage_configuration.py --config-type system --data config_data.yaml
-
-# Create configuration version
-python3 scripts/create_config_version.py --config-type application --data app_config.yaml
-
-# Validate configuration
-python3 scripts/validate_configuration.py --config-version CONFIG-001 --full-check
-
-# Deploy configuration
-python3 scripts/deploy_configuration.py --config-version CONFIG-001 --strategy rolling
-```
-
-#### **Configuration Automation Commands**
-```bash
-# Automate configuration deploymen
-python3 scripts/automate_config_deployment.py --config-version CONFIG-001 --strategy blue_green
-
-# Monitor deployment progress
-python3 scripts/monitor_deployment.py --deployment-id DEPLOY-001 --real-time
-
-# Validate deployment success
-python3 scripts/validate_deployment.py --deployment-id DEPLOY-001 --full-check
-
-# Rollback configuration
-python3 scripts/rollback_configuration.py --config-version CONFIG-001 --reason "deployment_failure"
-```
-
-### **Configuration Management Quality Gates**
-
-#### **Configuration Standards**
-- **Data Validation**: All configuration data must be validated before deploymen
-- **Version Control**: All configuration changes must be version-controlled
-- **Deployment Validation**: All deployments must be validated for success
-- **Rollback Capability**: Rollback mechanisms must be available for all configurations
-
-#### **Automation Requirements**
-- **Strategy Validation**: All deployment strategies must be validated and tested
-- **Monitoring Coverage**: Comprehensive monitoring must be in place for all deployments
-- **Error Handling**: Proper error handling and recovery mechanisms must be implemented
-- **Performance Optimization**: Deployment processes must be optimized for efficiency
-
-## 🛡️ **Security & Compliance**
-
-### **🚨 CRITICAL: Security & Compliance are Essential**
-
-**Why This Matters**: Security and compliance provide the foundation for safe, reliable, and trustworthy system operation. Without proper security measures, the system is vulnerable to attacks, data breaches, and compliance violations.
-
-### **Security Framework**
-
-#### **Access Control & Authentication**
-```python
-class SecurityFramework:
-    """Comprehensive security framework for system protection."""
-
-    def __init__(self):
-        self.security_layers = {
-            "authentication": "User and system authentication",
-            "authorization": "Access control and permissions",
-            "encryption": "Data encryption and protection",
-            "monitoring": "Security monitoring and alerting"
-        }
-        self.security_policies = {}
-
-    def validate_access(self, user_id: str, resource: str, action: str) -> bool:
-        """Validate user access to a specific resource and action."""
-
-        # Check user authentication
-        if not self._is_user_authenticated(user_id):
-            return False
-
-        # Check user authorization
-        if not self._is_user_authorized(user_id, resource, action):
-            return False
-
-        # Check security policies
-        if not self._check_security_policies(user_id, resource, action):
-            return False
-
-        return True
-
-    def _is_user_authenticated(self, user_id: str) -> bool:
-        """Check if user is properly authenticated."""
-
-        # Implementation for user authentication validation
-        return True  # Placeholder
-
-    def _is_user_authorized(self, user_id: str, resource: str, action: str) -> bool:
-        """Check if user is authorized for the requested action."""
-
-        # Implementation for user authorization validation
-        return True  # Placeholder
-
-    def _check_security_policies(self, user_id: str, resource: str, action: str) -> bool:
-        """Check if the requested action complies with security policies."""
-
-        # Implementation for security policy validation
-        return True  # Placeholder
-```
-
-#### **Data Protection & Encryption**
-```python
-class DataProtectionFramework:
-    """Manages data protection and encryption."""
-
-    def __init__(self):
-        self.encryption_methods = {
-            "at_rest": "AES-256 encryption for stored data",
-            "in_transit": "TLS 1.3 for data in transit",
-            "in_use": "Memory encryption for sensitive data"
-        }
-        self.data_classification = {}
-
-    def encrypt_sensitive_data(self, data: str, classification: str) -> str:
-        """Encrypt sensitive data based on classification."""
-
-        # Determine encryption method based on classification
-        encryption_method = self._get_encryption_method(classification)
-
-        # Apply encryption
-        encrypted_data = self._apply_encryption(data, encryption_method)
-
-        return encrypted_data
-
-    def _get_encryption_method(self, classification: str) -> str:
-        """Get appropriate encryption method for data classification."""
-
-        if classification == "highly_sensitive":
-            return "AES-256-GCM"
-        elif classification == "sensitive":
-            return "AES-256-CBC"
-        else:
-            return "AES-128-CBC"
-
-    def _apply_encryption(self, data: str, method: str) -> str:
-        """Apply encryption using specified method."""
-
-        # Implementation for encryption
-        return f"encrypted_{data}"  # Placeholder
-```
-
-### **Compliance Framework**
-
-#### **AI Constitution Compliance**
-```python
-class ConstitutionComplianceFramework:
-    """Ensures AI operations comply with constitution rules."""
-
-    def __init__(self):
-        self.constitution_rules = [
-            "context_preservation",
-            "safety_validation",
-            "decision_tracking",
-            "error_handling"
-        ]
-        self.compliance_checks = {}
-
-    def validate_constitution_compliance(self, operation: dict) -> dict:
-        """Validate that an operation complies with constitution rules."""
-
-        compliance_results = {}
-
-        for rule in self.constitution_rules:
-            compliance_results[rule] = self._check_rule_compliance(rule, operation)
-
-        # Overall compliance
-        overall_compliance = all(compliance_results.values())
-
-        return {
-            "overall_compliance": overall_compliance,
-            "rule_compliance": compliance_results,
-            "compliance_score": sum(compliance_results.values()) / len(compliance_results)
-        }
-
-    def _check_rule_compliance(self, rule: str, operation: dict) -> bool:
-        """Check compliance with a specific rule."""
-
-        # Implementation for rule compliance checking
-        return True  # Placeholder
-```
-
-### **Security & Compliance Commands**
-
-#### **Security Management Commands**
-```bash
-# Security health check
-python3 scripts/security_health_check.py --full-check
-
-# Validate access controls
-python3 scripts/validate_access_controls.py --stric
-
-# Security policy validation
-python3 scripts/validate_security_policies.py --all
-
-# Generate security repor
-python3 scripts/generate_security_report.py --output security_report.md
-```
-
-#### **Compliance Validation Commands**
-```bash
-# Constitution compliance check
-python3 scripts/check_constitution_compliance.py --operation "your_operation"
-
-# Compliance audi
-python3 scripts/run_compliance_audit.py --full-audi
-
-# Generate compliance repor
-python3 scripts/generate_compliance_report.py --output compliance_report.md
-```
-
-### **Security & Compliance Quality Gates**
-
-#### **Security Standards**
-- **Authentication**: Multi-factor authentication required for all users
-- **Authorization**: Role-based access control with least privilege principle
-- **Encryption**: All sensitive data must be encrypted at rest and in transi
-- **Monitoring**: Continuous security monitoring with real-time alerting
-
-#### **Compliance Requirements**
-- **AI Constitution**: All AI operations must comply with constitution rules
-- **Data Protection**: All data handling must comply with privacy regulations
-- **Audit Trail**: Complete audit trail for all system operations
-- **Incident Response**: Incident response procedures must be documented and tested
-
 ## 📋 **Changelog**
 
 - **2025-01-XX**: Created as part of Phase 4 documentation restructuring
 - **2025-01-XX**: Extracted from `400_guides/400_12_product-management-and-roadmap.md`
 - **2025-01-XX**: Integrated with AI frameworks and system configuration
 - **2025-01-XX**: Added comprehensive advanced configuration frameworks
+
+## 🔒 **Production Configuration Locking System**
+
+### **🎯 Overview**
+
+The Production Configuration Locking System provides a comprehensive approach to managing chunking configurations in production environments. It implements the validated 450/0.10/J=0.8/prefix-A configuration with proper versioning, shadow indexing, and monitoring.
+
+**What**: Lock validated chunking configurations (450/0.10/J=0.8/prefix-A) with versioning, shadow indexing, and production monitoring.
+
+**When**: After validating configuration performance and before production deployment.
+
+**How**: Use `scripts/lock_production_config.py` to lock config, then `scripts/production_evaluation.py` for evaluation.
+
+### **🔧 Core Components**
+
+#### **1. Configuration Locking (`config_lock.py`)**
+
+**Purpose**: Freeze and version chunking configurations with metadata.
+
+**Key Features**:
+- Versioned configurations with timestamps
+- Tokenizer information and hashing
+- Baseline metrics storage
+- Production promotion workflow
+
+**Usage**:
+```python
+from dspy_rag_system.src.utils.config_lock import create_production_config
+
+config = create_production_config(
+    chunk_size=450,
+    overlap_ratio=0.10,
+    jaccard_threshold=0.8,
+    prefix_policy="A",
+    embedder_name="BAAI/bge-large-en-v1.5"
+)
+```
+
+#### **2. Shadow Indexing (`ShadowIndexManager`)**
+
+**Purpose**: Manage dual-table operations for safe configuration rollouts.
+
+**Key Features**:
+- Shadow table creation
+- Dual retrieval support
+- Ingest run ID generation
+- Table routing logic
+
+**Usage**:
+```python
+shadow_manager = ShadowIndexManager(config)
+shadow_table = shadow_manager.create_shadow_table()
+retrieval_table = shadow_manager.get_retrieval_table(use_shadow=True)
+```
+
+#### **3. Production Guardrails (`ProductionGuardrails`)**
+
+**Purpose**: Monitor and validate production health.
+
+**Key Features**:
+- Configuration validation
+- Retrieval health checks
+- Prefix leakage detection
+- Token budget enforcement
+
+**Usage**:
+```python
+guardrails = ProductionGuardrails(config)
+validation = guardrails.validate_config()
+health = guardrails.check_retrieval_health(retrieval_results)
+```
+
+#### **4. Evaluation Runbook (`EvaluationRunbook`)**
+
+**Purpose**: Generate one-command evaluation workflows.
+
+**Key Features**:
+- Environment variable setup
+- Ingest command generation
+- Evaluation command generation
+- Sanity check commands
+
+### **🔄 Production Workflow**
+
+#### **Step 1: Lock Configuration**
+
+```bash
+# Lock the validated configuration
+python scripts/lock_production_config.py
+  --chunk-size 450
+  --overlap-ratio 0.10
+  --jaccard-threshold 0.8
+  --prefix-policy A
+  --embedder "BAAI/bge-large-en-v1.5"
+  --generate-runbook
+```
+
+#### **Step 2: Run Production Evaluation**
+
+```bash
+# Run complete evaluation with locked configuration
+python scripts/production_evaluation.py
+```
+
+#### **Step 3: Monitor Health**
+
+```bash
+# Check production health
+python scripts/production_health_monitor.py
+```
+
+#### **Step 4: Promote to Production**
+
+```bash
+# Promote configuration to production
+python scripts/lock_production_config.py --promote
+```
+
+### **📊 Configuration Structure**
+
+#### **LockedConfig Fields**
+
+```python
+@dataclass
+class LockedConfig:
+    # Core configuration
+    chunk_size: int
+    overlap_ratio: float
+    jaccard_threshold: float
+    prefix_policy: str  # "A" or "B"
+
+    # Versioning
+    chunk_version: str
+    embedder_name: str
+    tokenizer_name: str
+    tokenizer_hash: str
+
+    # Metadata
+    created_at: str
+    created_by: str
+    baseline_metrics: Dict[str, Any]
+
+    # Production flags
+    is_locked: bool = True
+    is_production: bool = False
+    shadow_table: Optional[str] = None
+```
+
+#### **Environment Variables**
+
+The system uses these environment variables for configuration:
+
+- `CHUNK_SIZE`: Chunk size (default: 450)
+- `OVERLAP_RATIO`: Overlap ratio (default: 0.10)
+- `JACCARD_THRESHOLD`: Jaccard threshold (default: 0.8)
+- `PREFIX_POLICY`: Prefix policy "A" or "B" (default: "A")
+- `CHUNK_VERSION`: Configuration version
+- `INGEST_RUN_ID`: Ingest run identifier
+- `EVAL_DISABLE_CACHE`: Disable evaluation caching
+
+### **🛡️ Production Guardrails**
+
+#### **Hard Caps**
+
+- **Max chunk size**: 1000 tokens
+- **Max overlap ratio**: 0.5
+- **Min Jaccard threshold**: 0.5
+- **Token budget**: 1024 tokens per chunk
+
+#### **Health Checks**
+
+1. **Configuration Validation**
+   - Parameter bounds checking
+   - Tokenizer availability
+   - Embedder compatibility
+
+2. **Retrieval Health**
+   - Prefix leakage detection
+   - Token budget compliance
+   - Snapshot size validation
+
+3. **Performance Monitoring**
+   - Oracle hit rates
+   - Retrieval latency
+   - Deduplication rates
+
+#### **Alert Conditions**
+
+- 🚨 Configuration validation failed
+- 🚨 BM25 prefix leakage detected
+- 🚨 Over budget chunks found
+- ⚠️ Low retrieval snapshot size
+- ⚠️ Low oracle hit rate
+
+### **🔄 Shadow Indexing Strategy**
+
+#### **Dual Table Approach**
+
+1. **Primary Table**: `document_chunks` (current production)
+2. **Shadow Table**: `document_chunks_{version}` (new configuration)
+
+#### **Retrieval Routing**
+
+```python
+def get_retrieval_table(use_shadow: bool = False) -> str:
+    if use_shadow and config.is_production:
+        return shadow_table
+    return primary_table
+```
+
+#### **Ingest Run ID Format**
+
+```
+{chunk_version}-{config_hash[:8]}
+```
+
+Example: `2025-09-07-143022-v1-a1b2c3d4`
+
+### **📈 Monitoring and Alerting**
+
+#### **Daily Health Dashboard**
+
+- **Retrieval Oracle Hit Rate**: Target ≥0.45
+- **Filter Hit Rate**: Target ≥0.20
+- **Reader Gold Usage**: Target ≥baseline
+- **Retrieval Snapshot Size**: Target 30-60 chunks
+- **CE Score Distribution**: Monitor for drift
+- **Ingest Throughput**: Monitor performance
+- **Deduplication Rate**: Target 10-35%
+
+#### **Production Metrics**
+
+```json
+{
+  "timestamp": "2025-09-07T14:30:22Z",
+  "config_version": "2025-09-07-143022-v1",
+  "overall_healthy": true,
+  "config_health": {
+    "valid": true,
+    "issues": [],
+    "warnings": []
+  },
+  "retrieval_health": {
+    "healthy": true,
+    "bm25_prefix_leakage": 0,
+    "over_budget_chunks": 0,
+    "avg_snapshot_size": 45.2
+  }
+}
+```
+
+### **🛠️ Troubleshooting**
+
+#### **Common Issues**
+
+1. **Configuration Not Found**
+   ```bash
+   # Check active configuration
+   cat config/locked_configs/active_config.json
+   ```
+
+2. **Environment Variables Not Set**
+   ```bash
+   # Verify environment setup
+   python scripts/production_evaluation.py --skip-ingest --skip-eval
+   ```
+
+3. **Retrieval Health Issues**
+   ```bash
+   # Run health monitor
+   python scripts/production_health_monitor.py
+   ```
+
+#### **Debug Commands**
+
+```bash
+# Check configuration status
+python -c "
+from dspy_rag_system.src.utils.config_lock import ConfigLockManager
+manager = ConfigLockManager()
+config = manager.get_active_config()
+print(f'Active config: {config.chunk_version if config else \"None\"}')
+"
+
+# Validate configuration
+python -c "
+from dspy_rag_system.src.utils.config_lock import ProductionGuardrails, LockedConfig
+import json
+
+with open('config/locked_configs/active_config.json') as f:
+    config_data = json.load(f)
+config = LockedConfig.from_dict(config_data)
+guardrails = ProductionGuardrails(config)
+validation = guardrails.validate_config()
+print(f'Config valid: {validation[\"valid\"]}')
+"
+```
+
+### **🔗 Integration with Existing Systems**
+
+#### **Enhanced Chunking Integration**
+
+The configuration locking system integrates with the enhanced chunking module:
+
+```python
+# Environment variables automatically override config
+config = ChunkingConfig(embedder_name="BAAI/bge-large-en-v1.5")
+# Will use CHUNK_SIZE, OVERLAP_RATIO, etc. from environment
+```
+
+#### **RAGChecker Integration**
+
+The system works with existing RAGChecker evaluation:
+
+```bash
+# Standard RAGChecker evaluation with locked config
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+  --cases eval/test_cases.json
+  --outdir metrics/baseline_evaluations
+  --use-bedrock
+  --bypass-cli
+```
+
+#### **Database Integration**
+
+Shadow tables integrate with existing database schema:
+
+```sql
+-- Shadow table creation (handled by ShadowIndexManager)
+CREATE TABLE document_chunks_2025_09_07_143022_v1 (
+  id VARCHAR(255) PRIMARY KEY,
+  doc_id VARCHAR(255),
+  chunk_index INTEGER,
+  embedding_text TEXT,
+  bm25_text TEXT,
+  embedding_token_count INTEGER,
+  bm25_token_count INTEGER,
+  chunk_version VARCHAR(255),
+  ingest_run_id VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### **✅ Best Practices**
+
+#### **Configuration Management**
+
+1. **Always lock configurations** before production use
+2. **Use shadow indexing** for safe rollouts
+3. **Monitor health metrics** continuously
+4. **Validate configurations** before promotion
+
+#### **Evaluation Workflow**
+
+1. **Lock configuration** with baseline metrics
+2. **Run shadow ingest** with new configuration
+3. **Evaluate performance** against baseline
+4. **Promote to production** if metrics improve
+5. **Monitor continuously** for regressions
+
+#### **Rollback Strategy**
+
+1. **Keep previous configuration** in history
+2. **Maintain dual tables** during transition
+3. **Monitor key metrics** for 48 hours
+4. **Rollback if thresholds** are exceeded
+
+### **🔄 Future Enhancements**
+
+#### **Planned Features**
+
+1. **Automatic A/B Testing**: Route traffic between configurations
+2. **Performance Regression Detection**: Automatic rollback triggers
+3. **Configuration Optimization**: ML-driven parameter tuning
+4. **Multi-Environment Support**: Staging and production configs
+
+#### **Integration Points**
+
+1. **CI/CD Pipeline**: Automated configuration validation
+2. **Monitoring Systems**: Real-time health dashboards
+3. **Alert Systems**: Slack/email notifications
+4. **Database Migrations**: Automated schema updates
+
+---
+
+## 🚀 **Production Go-Live Checklist**
+
+### **🎯 Overview**
+
+**Final tighten before production deployment** - Comprehensive checklist ensuring all systems are ready for production deployment with proper validation, monitoring, and safety measures.
+
+**What**: Complete pre-deployment validation and configuration checklist for production systems.
+
+**When**: Before any production deployment or major system changes.
+
+**How**: Follow the systematic checklist below to ensure all production requirements are met.
+
+### **📋 Pre-Deployment Checklist**
+
+#### **✅ Run Manifest System**
+- [ ] **Freeze run manifest per eval/deploy**
+  - [ ] Model IDs captured and versioned
+  - [ ] CONFIG_HASH generated and stored
+  - [ ] INGEST_RUN_ID tracked and validated
+  - [ ] Rerank settings documented
+  - [ ] Thresholds defined and locked
+  - [ ] Prompt audit flags enabled
+
+**Command**: `python3 scripts/eval_manifest_generator.py --format yaml`
+
+#### **✅ Deterministic Evaluations**
+- [ ] **Temperature=0** for all generation models
+- [ ] **EVAL_DISABLE_CACHE=1** to prevent cache contamination
+- [ ] **Prompt audit on** with few_shot_ids tracking
+- [ ] **Prompt hash** validation enabled
+- [ ] **CoT flag** controlled and audited
+- [ ] **Random seed=42** for reproducibility
+
+**Command**: `source configs/deterministic_evaluation.env`
+
+#### **✅ Health-Gated Evaluation**
+- [ ] **Environment validation** - all critical env vars present
+- [ ] **Index presence** - vector index and data validated
+- [ ] **Token budget** - limits within acceptable ranges
+- [ ] **Prefix leakage** - BM25 text isolation verified
+- [ ] **Database connectivity** - all connections tested
+- [ ] **Model availability** - all models responsive
+
+**Command**: `python3 scripts/health_gated_evaluation.py`
+
+#### **✅ Concurrency Controls**
+- [ ] **2-3 workers maximum** until live profiling
+- [ ] **BEDROCK_MAX_IN_FLIGHT=1** to prevent rate limiting
+- [ ] **Conservative RPS limits** (0.12 for Bedrock)
+- [ ] **Timeout configurations** (35s call, 25s text)
+- [ ] **Resource monitoring** enabled
+
+#### **✅ Backup System**
+- [ ] **Document chunks snapshot** before cutover
+- [ ] **Active-pointer tables** backed up
+- [ ] **Configuration state** preserved
+- [ ] **Restore script** generated and tested
+- [ ] **Backup integrity** validated
+
+**Command**: `python3 scripts/backup_production_state.py`
+
+#### **✅ Monitoring & Alerting**
+- [ ] **Health checks** configured and tested
+- [ ] **Performance baselines** established
+- [ ] **Alert thresholds** set and validated
+- [ ] **Dashboard access** verified
+- [ ] **Notification channels** tested
+
+#### **✅ Security Validation**
+- [ ] **API keys** rotated and secured
+- [ ] **Access controls** verified
+- [ ] **Data encryption** confirmed
+- [ ] **Audit logging** enabled
+- [ ] **Vulnerability scan** completed
+
+#### **✅ Performance Validation**
+- [ ] **Load testing** completed
+- [ ] **Response times** within SLA
+- [ ] **Resource utilization** optimized
+- [ ] **Scalability limits** tested
+- [ ] **Failover procedures** validated
+
+### **🚨 Critical Pre-Deployment Commands**
+
+```bash
+# 1. Generate production manifest
+python3 scripts/eval_manifest_generator.py --format yaml
+
+# 2. Run deterministic evaluation
+source configs/deterministic_evaluation.env
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+
+# 3. Health-gated validation
+python3 scripts/health_gated_evaluation.py
+
+# 4. Backup production state
+python3 scripts/backup_production_state.py
+
+# 5. Final validation
+python3 scripts/production_validation.py --full-check
+```
+
+### **📊 Post-Deployment Monitoring**
+
+#### **Immediate (0-15 minutes)**
+- [ ] **System health** - all services green
+- [ ] **Response times** - within expected ranges
+- [ ] **Error rates** - below threshold
+- [ ] **Resource usage** - normal levels
+
+#### **Short-term (15-60 minutes)**
+- [ ] **Performance metrics** - stable
+- [ ] **User feedback** - no critical issues
+- [ ] **System logs** - no errors
+- [ ] **Database performance** - optimal
+
+#### **Long-term (1-24 hours)**
+- [ ] **Sustained performance** - consistent
+- [ ] **Resource utilization** - stable
+- [ ] **User satisfaction** - positive
+- [ ] **System stability** - no degradation
+
+### **🔄 Rollback Procedures**
+
+#### **Immediate Rollback Triggers**
+- Critical errors in first 15 minutes
+- Performance degradation > 50%
+- Data integrity issues
+- Security vulnerabilities detected
+
+#### **Rollback Commands**
+```bash
+# 1. Stop new traffic
+python3 scripts/emergency_stop.py
+
+# 2. Restore from backup
+python3 scripts/restore_production_state.py --backup-id <backup_id>
+
+# 3. Validate rollback
+python3 scripts/validate_rollback.py
+
+# 4. Resume normal operations
+python3 scripts/resume_operations.py
+```
+
+---
+
+**Status**: ✅ **PRODUCTION CONFIGURATION LOCKING SYSTEM OPERATIONAL**
+**Integration**: Fully integrated with existing systems
+**Next Review**: 2025-09-11
 
 ---
 

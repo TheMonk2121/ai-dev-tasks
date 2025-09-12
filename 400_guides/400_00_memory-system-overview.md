@@ -56,6 +56,34 @@ This documentation is organized by **priority**:
 - **11**: Performance & Optimization
 - **12**: Advanced Configurations
 
+## 📚 **Complete Guide Navigation**
+
+### **Core Guides (00–12)**
+- `400_guides/400_00_memory-system-overview.md` - This file (entry point)
+- `400_guides/400_01_memory-system-architecture.md` - Memory system architecture
+- `400_guides/400_02_memory-rehydration-context-management.md` - Context management
+- `400_guides/400_03_system-overview-and-architecture.md` - System architecture
+- `400_guides/400_04_development-workflow-and-standards.md` - Development workflows
+- `400_guides/400_05_codebase-organization-patterns.md` - Code organization
+- `400_guides/400_06_backlog-management-priorities.md` - Backlog management
+- `400_guides/400_07_project-planning-roadmap.md` - Project planning
+- `400_guides/400_08_task-management-workflows.md` - Task management
+- `400_guides/400_09_ai-frameworks-dspy.md` - AI frameworks
+- `400_guides/400_10_integrations-models.md` - Integrations & models
+- `400_guides/400_11_performance-optimization.md` - Performance optimization
+- `400_guides/400_12_advanced-configurations.md` - Advanced configurations
+
+### **Evaluation Systems**
+- **Code-as-SSOT System**: `evals_300/` - Standardized evaluation system with auto-generated documentation
+- **Generated Docs**: `evals_300/_generated/300_core.md` - Human-readable evaluation documentation
+- **Legacy SOP**: `000_core/000_evaluation-system-entry-point.md`
+- **Legacy Runner**: `scripts/ragchecker_official_evaluation.py`
+
+### **Agent Entry Points**
+- **Discovery ➜ Execution Path**: `000_core/000_agent-entry-point.md`
+- **Memory Rehydration**: `scripts/memory_up.sh`
+- **Unified Memory Orchestrator**: `scripts/unified_memory_orchestrator.py`
+
 ## 🚀 **Quick Start**
 
 ### **For New Users:**

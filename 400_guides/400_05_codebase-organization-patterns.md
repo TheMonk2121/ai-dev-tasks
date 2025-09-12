@@ -20,6 +20,31 @@
 
 - **do next**: Apply the patterns and standards to your development work.
 
+## 📋 **Table of Contents**
+
+### **Core Development Patterns**
+- [🚀 CODER ROLE SPECIFIC GUIDANCE](#-coder-role-specific-guidance)
+- [🔬 RESEARCH & ANALYSIS INTEGRATION PATTERNS](#-research--analysis-integration-patterns)
+- [💻 COMPREHENSIVE CODING BEST PRACTICES](#-comprehensive-coding-best-practices)
+
+### **Quality & Testing**
+- [🧪 TESTING STRATEGY AND QUALITY GATES](#-testing-strategy-and-quality-gates)
+- [⚡ CODE PERFORMANCE OPTIMIZATION](#-code-performance-optimization)
+- [🔧 SCRIPT OPTIMIZATION](#-script-optimization)
+
+### **Learning & Examples**
+- [🎓 ERROR REDUCTION LESSONS LEARNED](#-error-reduction-lessons-learned)
+- [🎯 FEW-SHOT CONTEXT EXAMPLES](#-few-shot-context-examples)
+
+### **Integration Standards**
+- [🔧 MCP Module Development Standards](#-mcp-module-development-standards)
+- [🤖 AGENT TOOL INTEGRATION STANDARDS](#-agent-tool-integration-standards)
+
+### **Technical Reference**
+- [🔧 Technical Artifacts Integration](#-technical-artifacts-integration)
+- [🏗️ Architecture & Design Patterns](#️-architecture--design-patterns)
+- [📚 References](#-references)
+
 ## 🎯 **Current Status**
 - **Priority**: 🔥 **HIGH** - Essential for code quality and patterns
 - **Phase**: 2 of 4 (Codebase Development)
@@ -515,7 +540,7 @@ python3 scripts/system_health_check.py --schema-drif
 
 #### **RAG System Testing with RAGChecker**
 - **Official RAGChecker Evaluation**: Industry-standard RAG evaluation framework
-- **Evaluation Script**: `python3 scripts/ragchecker_official_evaluation.py`
+- **Evaluation Script**: `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 - **Metrics**: Precision, Recall, F1 Score, Context Utilization, Response Length
 - **Quality Gates**:
   - Precision > 0.5, Recall > 0.6, F1 Score > 0.5
@@ -547,7 +572,7 @@ python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
 python -m evals_300.tools.run --suite 300_core --pass deterministic_few_sho
 
 # Legacy direct execution (still supported)
-python3 scripts/ragchecker_official_evaluation.py
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Verify installation
 python3 -c "import ragchecker; print('✅ RAGChecker installed successfully!')"
@@ -870,60 +895,6 @@ results = asyncio.run(fetch_urls_async(urls))
 |**Security**| Prevent vulnerabilities | Basic security validation | Manual review |
 |**Performance**| Ensure efficiency | Basic performance checks | Manual review |
 
-## ⚡ PERFORMANCE OPTIMIZATION
-
-### **System Architecture Optimization**
-
-#### **Performance-Optimized Architecture**
-```
-┌─────────────────────────────────────────────────────────────┐
-│                Performance Layers                          │
-├─────────────────────────────────────────────────────────────┤
-│ 1. Load Balancing (Request Distribution)                  │
-│ 2. Caching Layer (Redis/Memory Cache)                    │
-│ 3. Application Layer (Optimized Code)                     │
-│ 4. Database Layer (PostgreSQL + Indexing)                │
-│ 5. Storage Layer (SSD + RAID)                            │
-│ 6. Network Layer (High Bandwidth)                        │
-└─────────────────────────────────────────────────────────────┘
-```
-
-#### **Component Performance Characteristics**
-
-##### **AI Model Performance**
-```python
-# Model performance configuration
-MODEL_PERFORMANCE_CONFIG = {
-    "cursor-native-ai": {
-        "max_tokens": 2048,
-        "temperature": 0.7,
-        "response_time_target": 3.0,
-        "memory_usage": "n/a",
-        "concurrent_requests": 4
-    }
-}
-```
-
-##### **Database Performance**
-```sql
--- Performance-optimized database configuration
--- PostgreSQL performance settings
-SET shared_buffers = '256MB';
-SET effective_cache_size = '1GB';
-SET work_mem = '4MB';
-SET maintenance_work_mem = '64MB';
-SET checkpoint_completion_target = 0.9;
-SET wal_buffers = '16MB';
-```
-
-### **Performance Baselines**
-
-| Metric | Baseline | Target | Critical |
-|--------|----------|--------|----------|
-|**AI Response Time**| < 5 seconds | < 3 seconds | > 10 seconds |
-|**Database Query Time**| < 100ms | < 50ms | > 500ms |
-|**Dashboard Load Time**| < 2 seconds | < 1 second | > 5 seconds |
-
 ## 🔧 SCRIPT OPTIMIZATION
 
 ### **Top 5 Critical Scripts & Optimization Priorities**
@@ -1023,6 +994,149 @@ class OptimizedConflictChecker:
 - **Current**: ~1-2 seconds
 - **Target**: <200ms (85% improvement)
 - **Memory**: <25MB
+
+## 🚀 **UV Package Management Migration**
+
+### **🎯 Overview**
+
+**UV Migration** represents a successful transition from pip to UV package management, providing significant performance improvements, better dependency management, and modern tooling integration.
+
+**What**: Complete migration from pip to UV package management across all project phases.
+
+**When**: When setting up development environments, managing dependencies, or using modern Python tooling.
+
+**How**: Use UV commands for all package management tasks, following established patterns and best practices.
+
+### **✅ Migration Phases Completed**
+
+#### **Phase 1: Drop-in Replacement**
+- **Installed UV 0.8.15** with Rust performance
+- **Created new `.venv` with Python 3.12.11** (upgraded from 3.9.6)
+- **Installed all 184 packages** using UV (7.48s resolve + 516ms install)
+- **Verified compatibility** with existing pre-commit hooks
+- **Tested key dependencies**: DSPy 3.0.1, PyTorch 2.8.0, psycopg2
+
+#### **Phase 2: pyproject.toml Migration**
+- **Migrated from `requirements.txt` to `pyproject.toml`** with organized dependency groups
+- **Created dependency groups**: `dev`, `test`, `security`, `ml`
+- **Generated `uv.lock` file** with 204 packages for deterministic builds
+- **Updated installation script** (`install_dependencies.sh`) to use UV workflow
+- **Updated README** with comprehensive UV usage guide
+
+#### **Phase 3: CI/CD Integration & Advanced Features**
+- **Updated all GitHub Actions workflows** to use UV:
+  - Quick Check, Deep Audit, Evaluation Pipeline
+  - RAGChecker, Maintenance Validation
+- **Added UVX support** for one-off tools (`scripts/uvx_tools.sh`)
+- **Created requirements export script** (`scripts/uv_export_requirements.py`)
+- **Enhanced pre-commit hooks** with UVX tools check
+- **Comprehensive documentation** updates
+
+### **📊 Performance Improvements**
+
+| Metric | Before (pip) | After (UV) | Improvement |
+|--------|-------------|------------|-------------|
+| **Dependency Resolution** | 30-60s | 1-7s | **10-60x faster** |
+| **Package Installation** | 2-5 minutes | 0.5-1s | **100-600x faster** |
+| **Lock File Generation** | N/A | 1.13s | **New capability** |
+| **Tool Execution** | Global installs | Instant via UVX | **No setup needed** |
+
+### **🔧 Key Benefits Achieved**
+
+#### **🚀 Speed & Performance**
+- **Lightning-fast installs**: 10-100x faster than pip
+- **Rust-based resolver**: Parallel downloads and caching
+- **Deterministic builds**: `uv.lock` ensures reproducible environments
+
+#### **🔧 Developer Experience**
+- **One tool**: Replaces pip + virtualenv + pip-tools
+- **UVX tools**: Run any Python tool without global installation
+- **Better error messages**: Clear dependency conflict resolution
+- **Modern Python**: Automatic Python version management
+
+#### **🛡️ Reliability & Security**
+- **Deterministic builds**: Lock files ensure reproducible environments
+- **Dependency isolation**: Better conflict resolution
+- **Security scanning**: Built-in vulnerability detection
+- **CI/CD integration**: Consistent environments across all systems
+
+### **📋 UV Usage Patterns**
+
+#### **Basic Commands**
+```bash
+# Create virtual environment
+uv venv
+
+# Install dependencies
+uv sync
+
+# Add new dependency
+uv add package-name
+
+# Add development dependency
+uv add --dev package-name
+
+# Run commands in environment
+uv run python script.py
+
+# Run one-off tools
+uvx tool-name
+```
+
+#### **Advanced Commands**
+```bash
+# Export requirements
+uv export --format requirements-txt > requirements.txt
+
+# Update dependencies
+uv sync --upgrade
+
+# Check for outdated packages
+uv tree --outdated
+
+# Run with specific Python version
+uv run --python 3.12 python script.py
+```
+
+#### **CI/CD Integration**
+```yaml
+# GitHub Actions example
+- name: Set up UV
+  uses: astral-sh/setup-uv@v4
+  with:
+    version: "0.8.15"
+
+- name: Install dependencies
+  run: uv sync
+
+- name: Run tests
+  run: uv run pytest
+```
+
+### **🎯 Migration Lessons Learned**
+
+1. **Start with drop-in replacement** - Don't change everything at once
+2. **Test thoroughly** - Verify all existing functionality works
+3. **Update documentation** - Keep usage guides current
+4. **Use dependency groups** - Organize dependencies logically
+5. **Leverage UVX** - Use for one-off tools and scripts
+6. **Update CI/CD** - Ensure consistent environments everywhere
+
+### **🔄 Ongoing Maintenance**
+
+#### **Regular Tasks**
+- **Update UV**: Keep UV version current
+- **Sync dependencies**: Regular `uv sync` to update lock file
+- **Security scanning**: Use `uv audit` for vulnerability checks
+- **Cleanup**: Remove unused dependencies with `uv remove`
+
+#### **Best Practices**
+- **Use lock files**: Always commit `uv.lock` for reproducible builds
+- **Group dependencies**: Organize by purpose (dev, test, security, ml)
+- **Document changes**: Update README when adding new tools
+- **Test migrations**: Verify changes work in CI/CD
+
+---
 
 ## 🎓 ERROR REDUCTION LESSONS LEARNED
 
@@ -1156,20 +1270,6 @@ filename: "400_guides/400_security-best-practices-guide.md"
 **Input**:
 ```markdown
 # Document Title
-
-## Purpose
-Brief description
-
-## Table of Contents
-1. [Section 1](#section-1)
-2. [Section 2](#section-2)
-
-## Section 1
-Content here
-
----
-*Last Updated: 2025-09-11*
-```
 
 **Expected Output**:
 ```json
@@ -2466,7 +2566,304 @@ python3 scripts/analyze_pattern_usage.py --codebase-path src/ --output pattern_a
 - **Pattern Appropriateness**: Patterns must be appropriate for the use case
 - **Implementation Quality**: Pattern implementation must be correct and efficien
 - **Documentation**: All patterns must be properly documented
-- **Testing**: Pattern implementations must be thoroughly tested
+- **Testing**: Pattern implementations must be thoroughly tested          
+
+## 🛡️ Governance-by-Code Insights
+
+<!-- ANCHOR_KEY: governance-by-code-insights -->
+<!-- ANCHOR_PRIORITY: 25 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+
+### **TL;DR**
+Key insights from transitioning from governance-by-documentation to governance-by-code. Apply these principles to CI/CD implementation and future governance decisions.
+
+### **🎯 Core Governance-by-Code Principles**
+
+#### **1. Single Source of Truth = CI**
+- **Principle**: Docs explain; CI enforces
+- **Application**: All governance rules must be automated in CI/CD pipelines
+- **Avoid**: Manual checklists or documentation-only enforcement
+
+#### **2. Automated Enforcement Over Documentation**
+- **Principle**: Code that enforces is more reliable than docs that describe
+- **Application**: Implement automated checks for all governance rules
+- **Benefits**: Consistent enforcement, reduced human error, scalable governance
+
+#### **3. Progressive Enhancement Strategy**
+- **Phase 1**: Start with basic automated checks
+- **Phase 2**: Add more sophisticated validation
+- **Phase 3**: Implement intelligent governance systems
+- **Phase 4**: Full AI-powered governance automation
+
+#### **4. Memory System Evolution**
+- **Current**: Static documentation-based governance
+- **Target**: Dynamic, context-aware governance systems
+- **Implementation**: Use memory systems to track governance compliance over time
+
+### **🏗️ Technical Implementation Patterns**
+
+#### **CI/CD Integration**
+```yaml
+# Example: Automated governance checks
+governance_checks:
+  - name: "Code Quality Enforcement"
+    script: "ruff check . && pyright"
+    on: [push, pull_request]
+  
+  - name: "Documentation Compliance"
+    script: "python scripts/validate_docs.py"
+    on: [push, pull_request]
+  
+  - name: "Security Scanning"
+    script: "bandit -r src/"
+    on: [push, pull_request]
+```
+
+#### **Automated Rule Enforcement**
+```python
+# Example: Governance rule implementation
+class GovernanceEnforcer:
+    def __init__(self):
+        self.rules = [
+            CodeQualityRule(),
+            DocumentationRule(),
+            SecurityRule(),
+            PerformanceRule()
+        ]
+    
+    def enforce(self, changes):
+        violations = []
+        for rule in self.rules:
+            if not rule.validate(changes):
+                violations.append(rule.get_violation())
+        return violations
+```
+
+### **📊 Industry Best Practices**
+
+#### **AI Company Patterns**
+- **OpenAI**: Automated testing and validation pipelines
+- **Anthropic**: Constitutional AI with automated compliance
+- **Google**: Extensive automated governance in CI/CD
+- **Microsoft**: Policy-as-code with automated enforcement
+
+#### **Key Success Factors**
+1. **Start Simple**: Begin with basic automated checks
+2. **Iterate Rapidly**: Continuously improve governance systems
+3. **Measure Everything**: Track governance effectiveness
+4. **Human Oversight**: Maintain human review for complex decisions
+
+### **🔄 Implementation Roadmap**
+
+#### **Phase 1: Foundation (Current)**
+- ✅ Basic CI/CD pipeline setup
+- ✅ Code quality automation
+- ✅ Documentation validation
+- 🔄 Security scanning integration
+
+#### **Phase 2: Enhancement (Next)**
+- **Advanced validation**: Custom governance rules
+- **Performance monitoring**: Automated performance checks
+- **Compliance tracking**: Governance metrics and reporting
+- **Integration testing**: End-to-end governance validation
+
+#### **Phase 3: Intelligence (Future)**
+- **AI-powered governance**: Intelligent rule generation
+- **Predictive compliance**: Proactive governance enforcement
+- **Adaptive systems**: Self-improving governance
+- **Context-aware enforcement**: Dynamic rule application
+
+### **⚠️ Risk Mitigation**
+
+#### **Common Pitfalls**
+- **Over-automation**: Don't automate everything at once
+- **Complexity creep**: Keep governance systems simple
+- **False positives**: Ensure rules are accurate and reliable
+- **Maintenance burden**: Design for long-term sustainability
+
+#### **Mitigation Strategies**
+- **Gradual rollout**: Implement governance incrementally
+- **Human fallback**: Maintain manual override capabilities
+- **Regular review**: Continuously assess governance effectiveness
+- **Community feedback**: Gather input from development team
+
+## 📚 Implementation Patterns Library
+
+<!-- ANCHOR_KEY: implementation-patterns-library -->
+<!-- ANCHOR_PRIORITY: 5 -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
+
+### **TL;DR**
+Comprehensive library of technical implementation patterns for the AI development ecosystem. Use this library to find appropriate implementation patterns for your current task.
+
+### **🎯 Pattern Library Categories**
+
+#### **1. Memory System Patterns**
+
+##### **Memory Rehydration Pattern**
+```python
+def memory_rehydration_pattern(query: str, role: str) -> Dict[str, Any]:
+    """Standard pattern for memory rehydration."""
+    # Set environment
+    os.environ["POSTGRES_DSN"] = "mock://test"
+
+    # Execute memory orchestration
+    result = subprocess.run([
+        "python3", "scripts/unified_memory_orchestrator.py",
+        "--systems", "cursor",
+        "--role", role,
+        query
+    ], capture_output=True, text=True)
+
+    return json.loads(result.stdout)
+```
+
+##### **Context Integration Pattern**
+```python
+def context_integration_pattern(base_context: Dict[str, Any],
+                               additional_context: Dict[str, Any]) -> Dict[str, Any]:
+    """Integrate additional context with base context."""
+    integrated_context = base_context.copy()
+    
+    # Merge additional context
+    for key, value in additional_context.items():
+        if key in integrated_context:
+            if isinstance(integrated_context[key], list):
+                integrated_context[key].extend(value)
+            else:
+                integrated_context[key] = [integrated_context[key], value]
+        else:
+            integrated_context[key] = value
+    
+    return integrated_context
+```
+
+#### **2. DSPy Integration Patterns**
+
+##### **Model Switcher Pattern**
+```python
+def model_switcher_pattern(task_type: str, complexity: str) -> str:
+    """Select appropriate model based on task characteristics."""
+    model_mapping = {
+        "coding": {
+            "simple": "llama-3.1-8b",
+            "moderate": "mistral-7b",
+            "complex": "phi-3.5-3.8b"
+        },
+        "analysis": {
+            "simple": "llama-3.1-8b",
+            "moderate": "mistral-7b",
+            "complex": "phi-3.5-3.8b"
+        }
+    }
+    
+    return model_mapping.get(task_type, {}).get(complexity, "llama-3.1-8b")
+```
+
+##### **Optimization Pattern**
+```python
+def optimization_pattern(module, test_data, metric):
+    """Standard optimization pattern for DSPy modules."""
+    optimizer = LabeledFewShotOptimizer(k=16)
+    optimized_module = optimizer.compile(module, trainset=test_data, metric=metric)
+    return optimized_module
+```
+
+#### **3. Database Patterns**
+
+##### **Connection Management Pattern**
+```python
+def database_connection_pattern(dsn: str) -> psycopg2.connection:
+    """Standard database connection pattern with error handling."""
+    try:
+        conn = psycopg2.connect(dsn)
+        return conn
+    except psycopg2.Error as e:
+        logging.error(f"Database connection failed: {e}")
+        raise
+```
+
+##### **Transaction Pattern**
+```python
+def transaction_pattern(conn, operations):
+    """Standard transaction pattern with rollback."""
+    try:
+        with conn.cursor() as cur:
+            for operation in operations:
+                cur.execute(operation)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise
+```
+
+#### **4. Error Handling Patterns**
+
+##### **Graceful Degradation Pattern**
+```python
+def graceful_degradation_pattern(primary_function, fallback_function, *args, **kwargs):
+    """Try primary function, fallback to secondary if it fails."""
+    try:
+        return primary_function(*args, **kwargs)
+    except Exception as e:
+        logging.warning(f"Primary function failed: {e}, using fallback")
+        return fallback_function(*args, **kwargs)
+```
+
+##### **Retry Pattern**
+```python
+def retry_pattern(func, max_retries=3, delay=1):
+    """Retry function with exponential backoff."""
+    for attempt in range(max_retries):
+        try:
+            return func()
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise
+            time.sleep(delay * (2 ** attempt))
+```
+
+#### **5. Testing Patterns**
+
+##### **Mock Pattern**
+```python
+def mock_pattern(original_function, mock_function):
+    """Standard mocking pattern for testing."""
+    with patch(original_function, mock_function):
+        # Test code here
+        pass
+```
+
+##### **Fixture Pattern**
+```python
+@pytest.fixture
+def test_database():
+    """Standard database fixture for testing."""
+    conn = psycopg2.connect("postgresql://test:test@localhost:5432/test")
+    yield conn
+    conn.close()
+```
+
+### **🔄 Pattern Usage Guidelines**
+
+#### **When to Use Patterns**
+- **Consistency**: Ensure consistent implementation across the codebase
+- **Reusability**: Leverage proven solutions for common problems
+- **Maintainability**: Use patterns that are well-documented and tested
+- **Performance**: Choose patterns that meet performance requirements
+
+#### **Pattern Selection Criteria**
+1. **Appropriateness**: Pattern must fit the specific use case
+2. **Quality**: Pattern must be well-implemented and tested
+3. **Documentation**: Pattern must be properly documented
+4. **Maintenance**: Pattern must be maintainable over time
+
+#### **Pattern Implementation Process**
+1. **Identify Need**: Determine what pattern is needed
+2. **Search Library**: Look for existing patterns
+3. **Adapt Pattern**: Modify pattern for specific use case
+4. **Test Implementation**: Ensure pattern works correctly
+5. **Document Usage**: Document how pattern is used
 
 ## 📋 Changelog
 
@@ -2478,7 +2875,6 @@ python3 scripts/analyze_pattern_usage.py --codebase-path src/ --output pattern_a
   - `400_error-reduction-lessons-learned.md`
   - `400_few-shot-context-examples.md`
   - `400_performance-optimization-guide.md`
-
 
 ## Model/RAG Interfaces Updated (B-1041)
 - `vector_store.py`: retrieval API expanded for hybrid flows; ensure adapters use new methods.

@@ -922,7 +922,111 @@ python3 scripts/monitor_optimization_progress.py --real-time --output progress_r
 - **Strategy Validation**: All optimization strategies must be validated and tested
 - **Impact Measurement**: Optimization impact must be measured and documented
 - **Cost Management**: Optimization must consider cost implications and constraints
-- **Quality Assurance**: Optimized processes must maintain or improve quality standards
+- **Quality Assurance**: Optimized processes must maintain or improve quality standards                        
+
+## 🧠 Memory Context Workflow
+
+<!-- ANCHOR_KEY: memory-context-workflow -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+
+### **TL;DR**
+Quick reference for memory context workflows across different task types. Use this to navigate the appropriate documentation and workflows for your current task.
+
+### **🔧 For Development Tasks**
+
+#### **Core Workflow**
+- **Planning**: `000_core/001_create-prd.md` → `000_core/002_generate-tasks.md` → `000_core/003_process-task-list.md`
+- **Implementation**: `100_memory/104_dspy-development-context.md` + relevant 400-series guides
+- **Testing**: `400_guides/400_testing-strategy-guide.md`
+- **Security**: `400_guides/400_security-best-practices-guide.md`
+- **Performance**: `400_guides/400_performance-optimization-guide.md`
+
+#### **Quick Start Process**
+1. **Memory Rehydration**: Run `./scripts/memory_up.sh -r [role] "task description"`
+2. **Context Analysis**: Review relevant 400-series guides
+3. **Implementation**: Follow DSPy development patterns
+4. **Validation**: Apply testing and quality gates
+
+### **🔬 For Research Tasks**
+
+#### **Research Workflow**
+- **Overview**: `500_research/500_research-summary.md`
+- **Methodology**: `500_research-analysis-summary.md`
+- **Implementation**: `500_research/500_research-implementation-summary.md`
+- **External Sources**: `docs/research/papers/`, `docs/research/articles/`, `docs/research/tutorials/`
+
+#### **Research Process**
+1. **Literature Review**: Check external sources and research summaries
+2. **Methodology Selection**: Choose appropriate research methodology
+3. **Implementation Planning**: Plan research implementation
+4. **Documentation**: Document findings and insights
+
+### **📁 For File Management**
+
+#### **File Analysis Workflow**
+- **Analysis**: `400_guides/400_file-analysis-guide.md` (MANDATORY)
+- **Naming**: `200_setup/200_naming-conventions.md`
+- **Organization**: `400_guides/400_context-priority-guide.md`
+
+#### **File Management Process**
+1. **Analysis**: Use file analysis guide to understand file structure
+2. **Naming**: Apply naming conventions consistently
+3. **Organization**: Follow context priority guidelines
+4. **Integration**: Ensure proper cross-referencing
+
+### **🔗 For System Integration**
+
+#### **Integration Workflow**
+- **Architecture**: `400_guides/400_system-overview.md`
+- **Patterns**: `400_guides/400_integration-patterns-guide.md`
+- **Deployment**: `400_guides/400_deployment-environment-guide.md`
+
+#### **Integration Process**
+1. **Architecture Review**: Understand system architecture
+2. **Pattern Application**: Apply integration patterns
+3. **Deployment Planning**: Plan deployment strategy
+4. **Validation**: Test integration thoroughly
+
+### **🎯 Role-Specific Workflows**
+
+#### **Planner Role**
+- **Strategic Planning**: Focus on high-level architecture and planning
+- **Resource Allocation**: Plan resource usage and dependencies
+- **Risk Assessment**: Identify and mitigate potential risks
+- **Timeline Management**: Manage project timelines and milestones
+
+#### **Implementer Role**
+- **Code Implementation**: Focus on actual code development
+- **Integration**: Integrate components and systems
+- **Testing**: Implement and run tests
+- **Deployment**: Deploy and maintain systems
+
+#### **Researcher Role**
+- **Investigation**: Research and analyze problems
+- **Documentation**: Document findings and insights
+- **Analysis**: Analyze data and patterns
+- **Recommendations**: Provide recommendations based on research
+
+#### **Coder Role**
+- **Code Quality**: Focus on code quality and standards
+- **Debugging**: Debug and fix issues
+- **Optimization**: Optimize code and performance
+- **Maintenance**: Maintain and update code
+
+### **🔄 Workflow Integration**
+
+#### **Cross-Role Collaboration**
+- **Handoffs**: Clear handoff points between roles
+- **Communication**: Regular communication and updates
+- **Coordination**: Coordinate activities across roles
+- **Quality Gates**: Ensure quality at each stage
+
+#### **Continuous Improvement**
+- **Feedback Loops**: Regular feedback and improvement
+- **Pattern Updates**: Update workflows based on experience
+- **Tool Integration**: Integrate new tools and processes
+- **Knowledge Sharing**: Share knowledge and best practices
 
 ## 📋 **Changelog**
 

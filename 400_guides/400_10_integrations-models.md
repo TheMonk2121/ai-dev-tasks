@@ -899,6 +899,163 @@ model_registry.update_model_performance("gpt-4-v1", {"accuracy": 0.96})
 - **Purpose**: Complete overview of all testing and methodology coverage
 - **Coverage**: Navigation guide, usage instructions, best practices
 
+## 🔌 **Cursor MCP Integration**
+
+### **🎯 Overview**
+
+**Cursor MCP Integration** provides seamless integration between Cursor AI and the project's MCP (Model Context Protocol) server, enabling direct access to project tools and evaluation systems.
+
+**What**: MCP server integration for Cursor AI with project-specific tools and evaluation capabilities.
+
+**When**: When using Cursor AI for development tasks that require project context or evaluation capabilities.
+
+**How**: Configure Cursor to connect to the MCP server and use the available tools for enhanced development workflows.
+
+### **🔧 MCP Server Configuration**
+
+#### **Server Details**
+- **URL**: `http://localhost:3000`
+- **Health Check**: `http://localhost:3000/health`
+- **Tools List**: `http://localhost:3000/mcp/tools`
+- **Tool Call**: `POST http://localhost:3000/mcp/tools/call`
+
+#### **Available MCP Tools**
+
+##### **1. get_project_context** ✅ Working
+```json
+{
+  "tool_name": "get_project_context",
+  "arguments": {}
+}
+```
+**Returns**: Project root, backlog, system overview, memory context
+
+##### **2. run_precision_eval** ✅ Working
+```json
+{
+  "tool_name": "run_precision_eval",
+  "arguments": {
+    "config_file": "configs/precision_evidence_filter.env",
+    "script": "scripts/run_precision_with_env_file.sh"
+  }
+}
+```
+**Returns**: Precision evaluation results
+
+##### **3. query_memory** ⚠️ Partial
+```json
+{
+  "tool_name": "query_memory",
+  "arguments": {
+    "query": "current project status",
+    "role": "planner"
+  }
+}
+```
+**Status**: Import issue with memory orchestrator
+
+### **⚙️ Cursor Configuration**
+
+#### **Option 1: Direct MCP Server Connection**
+Add to your Cursor settings:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "ai-dev-tasks": {
+        "command": "python3",
+        "args": ["scripts/mcp_server.py"],
+        "env": {
+          "PROJECT_ROOT": "/path/to/ai-dev-tasks"
+        }
+      }
+    }
+  }
+}
+```
+
+#### **Option 2: HTTP MCP Server Connection**
+```json
+{
+  "mcp": {
+    "servers": {
+      "ai-dev-tasks-http": {
+        "url": "http://localhost:3000",
+        "apiKey": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### **🚀 Getting Started**
+
+#### **1. Start MCP Server**
+```bash
+# Start the MCP server
+python3 scripts/mcp_server.py
+
+# Verify server is running
+curl http://localhost:3000/health
+```
+
+#### **2. Configure Cursor**
+1. Open Cursor settings
+2. Navigate to MCP configuration
+3. Add the server configuration
+4. Restart Cursor
+
+#### **3. Test Integration**
+```bash
+# Test project context retrieval
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"tool_name": "get_project_context", "arguments": {}}'
+```
+
+### **🔧 Troubleshooting**
+
+#### **Common Issues**
+
+**Server Not Starting**
+- Check Python environment and dependencies
+- Verify port 3000 is available
+- Check server logs for errors
+
+**Connection Refused**
+- Ensure MCP server is running
+- Verify URL and port configuration
+- Check firewall settings
+
+**Tool Execution Errors**
+- Verify tool arguments format
+- Check server logs for detailed error messages
+- Ensure required environment variables are set
+
+#### **Debug Commands**
+```bash
+# Check server status
+curl http://localhost:3000/health
+
+# List available tools
+curl http://localhost:3000/mcp/tools
+
+# Test specific tool
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"tool_name": "tool_name", "arguments": {}}'
+```
+
+### **📊 Integration Benefits**
+
+- **Enhanced Context**: Direct access to project context and memory
+- **Evaluation Capabilities**: Run evaluations directly from Cursor
+- **Streamlined Workflow**: Seamless integration with development process
+- **Real-time Updates**: Live project status and information
+
+---
+
 ## 🔌 **Automation & Pipelines**
 
 ### **🚨 CRITICAL: Automation & Pipelines are Essential**

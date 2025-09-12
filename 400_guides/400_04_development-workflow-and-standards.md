@@ -16,6 +16,36 @@
 
 - **do next**: Read 05 (Codebase Organization & Patterns) then apply the workflow to your development.
 
+## 📋 **Table of Contents**
+
+### **Core Workflow**
+- [🧭 Workflow (Idea → Live)](#-workflow-idea--live)
+- [🧱 Detailed Workflow Stages](#-detailed-workflow-stages)
+
+### **Governance & Standards**
+- [🛡️ AI Constitution & Governance Rules](#️-ai-constitution--governance-rules)
+- [🛡️ Governance-by-Code Insights](#️-governance-by-code-insights)
+- [💬 Communication Patterns Guide](#-communication-patterns-guide)
+
+### **Analysis & Problem Solving**
+- [🧠 Strategic Analysis: [Topic]](#-strategic-analysis-topic)
+- [🚨 The Problem is Real](#-the-problem-is-real)
+- [💡 The Opportunity](#-the-opportunity)
+- [🎯 Proposed Solution](#-proposed-solution)
+
+### **Implementation & Quality**
+- [📚 Documentation Playbook & File Management](#-documentation-playbook--file-management)
+- [🧪 Testing & Quality Assurance](#-testing--quality-assurance)
+- [🏗️ Testing Infrastructure Guide](#️-testing-infrastructure-guide)
+- [🔧 Implementation Patterns Library](#-implementation-patterns-library)
+
+### **Reference Materials**
+- [🧩 Standards](#-standards)
+- [🔧 How-To (Common Tasks)](#-how-to-common-tasks)
+- [📝 Checklists](#-checklists)
+- [🔗 Interfaces](#-interfaces)
+- [📚 References](#-references)
+
 ## 🎯 **Current Status**
 - **Priority**: 🔥 **HIGH** - Essential for development workflow
 - **Phase**: 2 of 4 (Codebase Development)
@@ -537,7 +567,7 @@ python3 scripts/check_broken_links.py
 - **RAGChecker Evaluation**: Run official RAGChecker evaluation for RAG system changes
   ```bash
   # Run Official RAGChecker evaluation
-  python3 scripts/ragchecker_official_evaluation.py
+  python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
   # Pre-commit RAGChecker validation
   python3 scripts/pre_commit_ragchecker.py
@@ -586,6 +616,121 @@ ruff check . && pyright .
 # Run tests
 pytest tests/ -q
 ```
+
+### Virtual Environment Management
+
+#### **Virtual Environment Manager Overview**
+The Virtual Environment Manager ensures your project's virtual environment is properly activated and working before running any scripts. This solves the common issue where scripts fail because they can't find required dependencies.
+
+#### **Usage Commands**
+```bash
+# Check Venv Status
+python3 scripts/venv_manager.py --check
+
+# Activate Venv
+python3 scripts/venv_manager.py --activate
+
+# Show Venv Information
+python3 scripts/venv_manager.py --info
+
+# Validate Dependencies
+python3 scripts/venv_manager.py --validate
+
+# Run Workflow with Venv Check
+python3 scripts/run_workflow.py generate "feature"
+```
+
+#### **Integration Points**
+The venv manager is automatically integrated into:
+1. **Memory Rehydrator** - Ensures venv is active before importing modules
+2. **Single Doorway** - Uses venv Python for all subprocess calls
+3. **Workflow Runner** - Checks venv before running any workflow
+
+#### **Required Dependencies**
+The venv manager checks for these essential packages:
+- `psycopg2` - Database connectivity
+- `dspy` - Core AI framework
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+#### **Benefits**
+1. **Automatic Detection** - No need to manually activate venv
+2. **Dependency Validation** - Ensures all required packages are installed
+3. **Clear Error Messages** - Tells you exactly what's missing
+4. **Seamless Integration** - Works with existing workflow scripts
+
+#### **Troubleshooting**
+```bash
+# Venv Not Found
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Missing Dependencies
+source .venv/bin/activate
+pip install psycopg2-binary dspy pytest ruff
+```
+
+**Import Errors**: The venv manager automatically handles Python path issues and ensures the correct Python executable is used.
+
+### **Critical Lessons Learned: Evaluation System Design**
+
+#### **🚨 CRITICAL DISCOVERY: Synthetic Data Evaluation - No True Baseline**
+
+**Date**: 2025-01-06
+**Category**: Evaluation System / Critical Discovery
+**Severity**: CRITICAL - System-Wide Impact
+
+#### **What Happened**
+**CRITICAL DISCOVERY**: The entire evaluation system has been using synthetic test cases instead of the actual DSPy RAG system. This means we have NO TRUE BASELINE for our current RAG performance.
+
+#### **The Real Problem**
+- **Retrieval Oracle Hit: 6.7%** - This was from synthetic data, not real RAG
+- **All performance metrics** are based on hardcoded test cases
+- **No actual RAG system evaluation** has been performed
+- **Baseline targets** (Precision ≥0.20, Recall ≥0.45) are meaningless without real data
+
+#### **Root Cause Analysis**
+1. **Evaluation System Design Flaw**
+   - `ragchecker_official_evaluation.py` uses hardcoded test cases
+   - No integration with actual DSPy RAG system
+   - Synthetic data creates false performance metrics
+
+2. **Missing Real RAG Integration**
+   - Evaluation system calls `generate_answer_with_context()` with fake context
+   - Never calls the actual `RAGModule.forward()` method
+   - No connection to `HybridVectorStore` or real retrieval
+
+3. **Baseline Measurement Error**
+   - All performance targets based on synthetic data
+   - No understanding of actual system capabilities
+   - Optimization efforts targeting wrong metrics
+
+#### **Prevention Strategies**
+
+**Evaluation System Design**:
+1. **Always verify data source** - Is it synthetic or real?
+2. **Test with actual system** before establishing baselines
+3. **Document data provenance** in all evaluation results
+4. **Validate integration points** between evaluation and target system
+
+**Baseline Establishment**:
+1. **Run real system first** to establish true performance
+2. **Compare synthetic vs real** to understand gaps
+3. **Set targets based on real data** not assumptions
+4. **Document evaluation methodology** clearly
+
+**System Integration**:
+1. **Test end-to-end flow** from query to response
+2. **Validate all integration points** between components
+3. **Use real data sources** for evaluation
+4. **Document data flow** and dependencies clearly
+
+#### **Key Lessons**
+- **Test with Real Data**: Synthetic data doesn't reflect real performance
+- **Validate Integration**: Ensure evaluation system connects to actual system
+- **Document Data Sources**: Always know where your evaluation data comes from
+- **Establish True Baselines**: Use real system performance as the foundation
 
 ## 📝 Checklists
 
@@ -1096,6 +1241,152 @@ python3 scripts/generate_quality_recommendations.py --gate-results gate_results.
 - **Security**: All security requirements must be satisfied
 - **Maintainability**: Code must be maintainable and readable
 
+## 🚀 **Implementation Summary & Best Practices**
+
+### **🎯 Overview**
+
+**Implementation Summary** documents completed improvements and best practices learned during development, providing valuable insights for future implementation work.
+
+**What**: Comprehensive summary of implementation improvements, fixes, and patterns that have been successfully applied.
+
+**When**: When implementing new features, fixing issues, or following established development patterns.
+
+**How**: Reference the completed improvements and apply similar patterns to new development work.
+
+### **✅ Completed Implementation Improvements**
+
+#### **1. Import Safety Fixes**
+- **Fixed `scripts/ragchecker_official_evaluation.py`**: Removed import-time `SystemExit` side effects by changing `raise SystemExit(main())` to `sys.exit(main())`
+- **Result**: Script is now safe to import in tests without executing
+- **Pattern**: Always use `sys.exit()` instead of `raise SystemExit()` in scripts
+
+#### **2. Test Configuration Improvements**
+- **Updated `pytest.ini`**: Added `norecursedirs` to exclude archived/experiment paths:
+  - `600_archives`
+  - `300_experiments` 
+  - `docs/legacy`
+  - `node_modules`
+  - `.git`
+  - `.pytest_cache`
+  - `__pycache__`
+  - `.dspy_cache`
+- **Result**: PR test runs are now lean and focused on active code
+- **Pattern**: Always exclude non-testable directories from pytest runs
+
+#### **3. Metrics Cleanup System**
+- **Created `scripts/clean_ephemeral_metrics.py`**: Comprehensive cleanup tool for ephemeral metrics
+  - Removes zero-byte JSON/JSONL files
+  - Optionally quarantines invalid JSON files
+  - Dry-run mode by default
+  - Configurable directories and quarantine location
+- **Usage**:
+  ```bash
+  # Dry run
+  python3 scripts/clean_ephemeral_metrics.py
+  
+  # Apply cleanup
+  python3 scripts/clean_ephemeral_metrics.py --apply --quarantine-invalid
+  ```
+- **Pattern**: Always provide dry-run mode for destructive operations
+
+#### **4. Static Import Analysis**
+- **Created `scripts/check_static_imports.py`**: Comprehensive dependency analysis tool
+  - Parses all Python files in scripts directory
+  - Attempts to import top-level modules
+  - Categorizes missing dependencies (external vs internal)
+  - Generates CSV reports
+  - Excludes test files by default
+- **Usage**:
+  ```bash
+  # Basic analysis
+  python3 scripts/check_static_imports.py
+  
+  # With CSV report
+  python3 scripts/check_static_imports.py --csv dependency_report.csv
+  
+  # Include test files
+  python3 scripts/check_static_imports.py --include-tests
+  ```
+- **Pattern**: Provide comprehensive analysis tools with multiple output formats
+
+#### **5. Development Environment Improvements**
+- **Virtual Environment Management**: Improved venv activation and dependency management
+- **Script Safety**: All scripts now support dry-run and validation modes
+- **Error Handling**: Comprehensive error handling with meaningful error messages
+- **Logging**: Structured logging with appropriate log levels
+
+### **🔧 Implementation Patterns Applied**
+
+#### **Script Development Pattern**
+```python
+def main():
+    """Main function with proper error handling."""
+    try:
+        # Implementation logic
+        result = process_data()
+        return result
+    except Exception as e:
+        logger.error(f"Error in main: {e}")
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+#### **Configuration Management Pattern**
+```python
+class Config:
+    """Configuration with validation and defaults."""
+    def __init__(self, config_file: str = None):
+        self.config = self._load_config(config_file)
+        self._validate_config()
+    
+    def _validate_config(self):
+        """Validate required configuration values."""
+        required_keys = ["database_url", "api_key"]
+        for key in required_keys:
+            if key not in self.config:
+                raise ValueError(f"Missing required config: {key}")
+```
+
+#### **Testing Pattern**
+```python
+def test_script_safety():
+    """Test that scripts can be imported safely."""
+    # Import should not execute main()
+    import scripts.example_script
+    assert hasattr(scripts.example_script, 'main')
+```
+
+### **📊 Implementation Metrics**
+
+| Improvement | Files Affected | Lines Changed | Impact |
+|-------------|----------------|---------------|---------|
+| **Import Safety** | 1 | 2 | High - Test safety |
+| **Test Configuration** | 1 | 8 | High - CI efficiency |
+| **Metrics Cleanup** | 1 | 150+ | Medium - Maintenance |
+| **Import Analysis** | 1 | 200+ | Medium - Development |
+| **Environment** | Multiple | 50+ | High - Developer experience |
+
+### **🎯 Lessons Learned**
+
+1. **Always use `sys.exit()` instead of `raise SystemExit()`** in scripts
+2. **Exclude non-testable directories** from pytest runs
+3. **Provide dry-run mode** for all destructive operations
+4. **Include comprehensive analysis tools** with multiple output formats
+5. **Validate configuration** with meaningful error messages
+6. **Use structured logging** with appropriate log levels
+
+### **🔄 Continuous Improvement Process**
+
+1. **Identify Issues**: Regular analysis of development pain points
+2. **Implement Fixes**: Apply systematic improvements
+3. **Document Patterns**: Capture successful implementation patterns
+4. **Share Knowledge**: Update documentation with lessons learned
+5. **Iterate**: Continuously improve based on feedback
+
+---
+
 ## 🏗️ **Testing Infrastructure Guide**
 
 ### **🚨 CRITICAL: Testing Infrastructure Architecture**
@@ -1557,92 +1848,6 @@ def test_performance_metric():
     pass
 ```
 
-## 🗣️ **Communication Patterns Guide**
-
-### **🚨 CRITICAL: Communication Patterns are Essential**
-
-**Purpose**: Codified communication patterns and formatting preferences for effective AI-user interaction.
-
-**Status**: ✅ **ACTIVE** - Communication patterns guide maintained
-
-#### **Successful Communication Patterns**
-
-##### **1. Strategic Discussion Format**
-**Pattern**: Problem → Analysis → Strategy → Questions
-- **Problem**: Concrete metrics and clear pain points
-- **Analysis**: Systematic breakdown of current state
-- **Strategy**: Phased approach with clear benefits
-- **Questions**: Invite collaboration rather than assumptions
-
-**Example**:
-```
-🚨 **The Problem is Real**: 51 files, 28,707 lines of documentation bloa
-💡 **Proposed Strategy**: Apply README context management principles
-🎯 **Expected Benefits**: Reduced cognitive load, improved quality
-❓ **Questions for You**: What's your tolerance for automated changes?
-```
-
-##### **2. Structured Response Elements**
-**Pattern**: Use consistent formatting that resonates
-- **Clear sections** with emoji headers (🎯, 💡, 🚀, ❓)
-- **Concrete metrics** (file counts, line counts, performance numbers)
-- **Actionable timeframes** (Week 1, Week 2, Phase 1, Phase 2)
-- **Balanced approach** (not over-engineering, but thorough)
-
-##### **3. User Preference Alignment**
-**Pattern**: Match user's communication style
-- **Strategic questions** rather than jumping to implementation
-- **Systematic approaches** with clear phases
-- **Incremental, testable changes** over big-bang solutions
-- **Focus on "why" before "how"**
-
-##### **4. Memory System Integration**
-**Pattern**: Leverage memory context for personalization
-- **Solo developer** in local-first environmen
-- **Simpler, streamlined approaches** preferred
-- **Avoid overfitting or over-complication**
-- **Plain, straightforward language**
-
-#### **Formatting Guidelines**
-
-##### **Strategic Discussions**
-```
-## 🧠 **Strategic Analysis: [Topic]**
-
-### **Current State Assessment**
-- **Concrete metrics** and clear pain points
-- **Systematic breakdown** of current state
-
-### **Proposed Strategy**
-- **Phased approach** with clear timeframes
-- **Expected benefits** with specific outcomes
-
-### **Key Design Decisions**
-- **Options presented** rather than assumptions
-- **Questions for collaboration** and input
-
-### **Expected Benefits**
-- **Concrete improvements** with metrics
-- **Clear value proposition**
-```
-
-##### **Problem-Solution Format**
-```
-## 🚨 **The Problem is Real**
-- **Specific metrics** (files, lines, performance)
-- **Clear pain points** and impac
-
-## 💡 **The Opportunity**
-- **Leverage existing successes** (like README context system)
-- **Apply proven patterns** to new domains
-
-## 🎯 **Proposed Solution**
-- **Systematic approach** with phases
-- **Clear benefits** and outcomes
-```
-
-##### **Questions for Collaboration**
-```
 ## ❓ **Questions for You**
 
 1. **What's your tolerance for [specific aspect]?**
@@ -1876,11 +2081,191 @@ uv run python scripts/analyze_cache_trends.py --save-repor
 - **Verify paths**: Ensure all file paths are correct
 - **Test incrementally**: Run specific cleanup tasks individually
 
+## 🛠️ Agent Troubleshooting Language Patterns
+
+<!-- ANCHOR_KEY: agent-troubleshooting-patterns -->
+<!-- ANCHOR_PRIORITY: 3 -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
+
+### **TL;DR**
+This section captures common language patterns used by AI agents during debugging and troubleshooting sessions. These patterns serve as mental hooks for context retrieval and can be used to improve debugging efficiency and consistency.
+
+### **🔍 Problem Identification Patterns**
+
+#### **Initial Recognition**
+- "I can see the issue..."
+- "I see the problem..."
+- "The issue is..."
+- "The problem is..."
+- "Looking at the error..."
+
+#### **Persistent Issues**
+- "The issue is still there..."
+- "The problem keeps persisting..."
+- "The issue is still persisting..."
+- "This is still not working..."
+- "The problem continues..."
+
+#### **Root Cause Analysis**
+- "The root cause is..."
+- "The underlying issue is..."
+- "The real problem is..."
+- "This is happening because..."
+
+### **🛠️ Debugging Progression Patterns**
+
+#### **Investigation**
+- "Let me check what's happening..."
+- "Let me debug this by..."
+- "Let me investigate..."
+- "Let me examine..."
+- "Let me analyze..."
+
+#### **Iterative Fixes**
+- "Let me try a different approach..."
+- "Let me fix this by..."
+- "Let me address this issue..."
+- "Let me resolve this..."
+- "Let me correct this..."
+
+#### **Testing & Validation**
+- "Now let me test..."
+- "Let me verify..."
+- "Let me check if this works..."
+- "Let me validate..."
+
+### **✅ Solution Implementation Patterns**
+
+#### **Successful Resolution**
+- "That fixed it..."
+- "The issue is resolved..."
+- "The problem is solved..."
+- "This should work now..."
+- "The fix is complete..."
+
+#### **Partial Success**
+- "This partially addresses..."
+- "This helps with..."
+- "This improves..."
+- "This reduces the issue..."
+
+#### **Next Steps**
+- "The next step is..."
+- "Now we need to..."
+- "The remaining issue is..."
+- "To complete this..."
+
+### **🔄 Debugging Effectiveness Analysis**
+
+#### **Measurement Patterns**
+- "Let me measure the effectiveness..."
+- "Let me track the debugging progress..."
+- "Let me analyze the debugging patterns..."
+- "Let me evaluate the solution..."
+
+#### **Learning Patterns**
+- "This teaches us..."
+- "The key insight is..."
+- "The pattern here is..."
+- "This suggests that..."
+
+### **📊 Debugging Effectiveness Analysis Framework**
+
+<!-- ANCHOR_KEY: debugging-effectiveness-analysis -->
+<!-- ANCHOR_PRIORITY: 2 -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
+
+#### **TL;DR**
+Systematic feedback loop to measure and improve the effectiveness of agent troubleshooting patterns, memory system integration, and debugging efficiency over time.
+
+#### **🎯 Key Performance Indicators (KPIs)**
+
+##### **1. Time-Based Metrics**
+- **Time to Problem Identification**: How quickly agents recognize issues
+- **Time to Root Cause**: Duration from problem identification to understanding cause
+- **Time to Resolution**: Total time from first mention to successful fix
+- **Iteration Count**: Number of attempts before successful resolution
+
+##### **2. Pattern Effectiveness Metrics**
+- **Pattern Recognition Accuracy**: How often we correctly identify debugging sessions
+- **Context Retrieval Success**: Percentage of relevant historical context found
+- **Pattern Reuse Rate**: How often similar patterns lead to faster resolution
+- **Learning Transfer**: Effectiveness of applying patterns across different technologies
+
+##### **3. Memory System Performance**
+- **Query Success Rate**: Percentage of successful context retrievals
+- **Relevance Score**: How relevant retrieved context is to current problem
+- **Context Utilization**: How often retrieved context is actually used
+- **Memory Update Frequency**: How often patterns are updated/improved
+
+#### **🔄 Feedback Loop Implementation**
+
+##### **Phase 1: Data Collection**
+```python
+# Example data structure for tracking debugging sessions
+debugging_session = {
+    "session_id": "unique_identifier",
+    "timestamp": "2024-12-19T10:30:00Z",
+    "technology": "bash_scripts",
+    "issue_type": "shellcheck_warnings",
+    "problem_identification_time": "10:30:15",
+    "root_cause_time": "10:32:45",
+    "resolution_time": "10:35:20",
+    "total_iterations": 3,
+    "patterns_used": [
+        "I can see the issue...",
+        "Let me try a different approach...",
+        "Perfect! The script is working correctly..."
+    ],
+    "context_retrieved": [
+        "similar_shellcheck_fix_2024-12-15",
+        "bash_variable_assignment_patterns"
+    ],
+    "context_utilized": True,
+    "resolution_success": True
+}
+```
+
+##### **Phase 2: Analysis & Pattern Recognition**
+- **Session Analysis**: Identify successful vs. unsuccessful debugging patterns
+- **Pattern Extraction**: Extract reusable patterns from successful sessions
+- **Context Mapping**: Map problems to relevant historical context
+- **Effectiveness Scoring**: Rate pattern effectiveness based on resolution time
+
+##### **Phase 3: Continuous Improvement**
+- **Pattern Updates**: Refine patterns based on effectiveness data
+- **Context Enhancement**: Improve context retrieval based on utilization rates
+- **Learning Integration**: Apply successful patterns to new problem domains
+- **Feedback Integration**: Update memory system with new insights
+
+#### **📈 Measurement Strategy**
+
+##### **Automated Tracking**
+```bash
+# Track debugging session metrics
+python3 scripts/debugging_effectiveness_tracker.py --session-start
+python3 scripts/debugging_effectiveness_tracker.py --pattern-used "I can see the issue"
+python3 scripts/debugging_effectiveness_tracker.py --session-end --success
+```
+
+##### **Weekly Analysis**
+- **Pattern Effectiveness Review**: Analyze which patterns lead to faster resolution
+- **Context Utilization Analysis**: Identify gaps in context retrieval
+- **Learning Transfer Assessment**: Measure pattern effectiveness across technologies
+- **Memory System Optimization**: Update context retrieval based on usage patterns
+
+##### **Monthly Optimization**
+- **Pattern Library Updates**: Add new effective patterns, remove ineffective ones
+- **Context Enhancement**: Improve historical context based on utilization data
+- **Training Data Updates**: Update memory system with new successful patterns
+- **Performance Benchmarking**: Compare debugging effectiveness over time
+
 ## 🔗 Related
 
-- Getting Started: `400_00_getting-started-and-index.md`
-- Product & Roadmap: `400_12_product-management-and-roadmap.md`
+- Getting Started: `400_00_getting-started-and-index.md`                  
+- Product & Roadmap: `400_12_product-management-and-roadmap.md`           
 
 ## 📋 Changelog
-- 2025-08-28: Restored consolidated development workflow and standards guide.
+- 2025-08-28: Restored consolidated development workflow and standards guide.                                  
 - 2025-09-10: Added comprehensive project maintenance and cleanup system documentation.
+- 2025-09-11: Added agent troubleshooting language patterns for improved debugging consistency.

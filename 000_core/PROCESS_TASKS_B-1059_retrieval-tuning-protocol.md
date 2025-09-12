@@ -909,8 +909,6 @@ python3 scripts/index_repo.py --rules indexing/config_rules.json
 - Enforce two-green before any gate ratchet.
 - **Track Δ vs last run (CI summary + dashboard) for every change.**
 
-
-
 Process Task List: B-1059 — Retrieval Tuning Protocol & Evaluation Framework
 
 Guided by your process task list template, adapted for solo execution and direct mapping from the B-1059 PRD → WBS.
@@ -961,7 +959,6 @@ python3 scripts/solo_workflow.py continue
 # 3) Ship & archive (after final green run + docs)
 python3 scripts/solo_workflow.py ship
 
-
 (If these helpers don’t exist yet, they are part of the B-1059 WBS: “Solo workflow” items in Phase 9.)
 
 🧭 Execution Configuration
@@ -1009,7 +1006,6 @@ Local & CI runs use Bedrock; artifacts uploaded; fallback allowed only for local
 Commands
 
 bash scripts/run_eval_bedrock.sh
-
 
 Artifacts: Updated CI workflow; logs; verified Bedrock setup doc.
 
@@ -1248,7 +1244,6 @@ python3 scripts/tuning_sweeps.py --summary
 
 # Re-index
 python3 scripts/index_repo.py --rules indexing/config_rules.json
-
 
 (Wire these as part of WBS if not present yet.)
 

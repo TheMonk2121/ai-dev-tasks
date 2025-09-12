@@ -143,10 +143,10 @@ from dspy_modules.model_switcher import ModelSwitcher
 **Workflow Usage**:
 ```bash
 # Check venv status
-python3 scripts/venv_manager.py --check
+uv run python scripts/venv_manager.py --check
 
 # Run DSPy workflows with automatic venv managemen
-python3 scripts/run_workflow.py generate "DSPy optimization feature"
+uv run python scripts/run_workflow.py generate "DSPy optimization feature"
 ```
 
 ### **2. Creating a New DSPy Module**

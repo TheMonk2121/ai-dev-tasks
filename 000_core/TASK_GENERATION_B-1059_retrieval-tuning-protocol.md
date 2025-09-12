@@ -633,8 +633,6 @@ This complete task list provides everything needed to implement B-1059:
 *Backlog Item: B-1059*
 *Priority: 🔥 HIGHEST*
 
-
-
 Task List: B-1059 — Retrieval Tuning Protocol & Evaluation Framework
 Overview
 

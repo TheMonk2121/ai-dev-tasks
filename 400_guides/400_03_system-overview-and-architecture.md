@@ -21,9 +21,71 @@
 - **Phase**: 2 of 4 (Codebase Development)
 - **Dependencies**: 00-02 (Memory System Foundation)
 
+## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE**
+
+### **🏁 ONCE ACHIEVED: NEVER GO BELOW**
+
+**Status**: 🔴 **ABSOLUTE PERFORMANCE FLOOR** - Never Violate
+**Rule**: **NO NEW FEATURES** until metrics are restored above baseline
+**Purpose**: Prevents over-engineering and tech debt accumulation
+
+#### **🎯 Core Principle**
+> **"We don't innovate until we firm things up"**
+
+Once your system achieves production-ready baseline metrics, **these become your absolute performance floor**. You are **FORBIDDEN** from building new features or making changes that would degrade performance below these thresholds.
+
+#### **🚫 BUILD FREEZE TRIGGERS**
+When **ANY** baseline metric falls below target:
+- **Recall@20** < 0.65 → **BUILD FREEZE**
+- **Precision@k** < 0.20 → **BUILD FREEZE**
+- **Faithfulness** < 0.60 → **BUILD FREEZE**
+- **P50 E2E** > 2.0s → **BUILD FREEZE**
+- **P95 E2E** > 4.0s → **BUILD FREEZE**
+
+#### **✅ BUILD RESUME CONDITIONS**
+**ALL** baseline metrics must be restored above targets before:
+- New feature development resumes
+- Major system changes proceed
+- Performance-impacting updates deploy
+- Production deployments continue
+
+**This rule prevents over-engineering and ensures sustainable, quality-first development.**
+
 ## 🎯 **Purpose**
 
 Provide a complete architecture map, core components, interfaces, and flows across planning, development, automation, deployment, observability, and security. This file is the canonical architectural source; details live in linked guides to avoid duplication.
+
+## 🚀 **Quick Start**
+
+### **Single Doorway System (Recommended)**
+```bash
+# Generate a new backlog item and start the full workflow
+python3.12 scripts/single_doorway.py generate "I want to work on fixing a feature"
+
+# Continue an interrupted workflow
+python3.12 scripts/single_doorway.py continue B-XXX
+
+# Archive completed work
+python3.12 scripts/single_doorway.py archive B-XXX
+
+# Open files for a backlog item
+python3.12 scripts/single_doorway.py open B-XXX
+```
+
+**Note**: This system requires Python 3.12. If you're using Python 3.9, the system will automatically detect and use Python 3.12 if available via Homebrew. All tests run in the Python 3.12 virtual environment.
+
+### **Traditional Setup**
+```bash
+# Create and activate virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r dspy-rag-system/requirements.txt
+
+# Start the system
+./dspy-rag-system/quick_start.sh
+```
 
 ## 🧱 Architecture Layers
 
@@ -41,6 +103,44 @@ Provide a complete architecture map, core components, interfaces, and flows acro
 - Development Flow: Backlog → Plan → Implement → Test → Deploy → Observe
 - Context Flow: Memory rehydration → role‑aware bundles → echo verification → self‑critique
 - Automation Flow: n8n workflows, Scribe capture → notifications → dashboards
+
+## 📚 Documentation Organization
+
+### Three-Lens Documentation System
+
+The project uses a progressive disclosure documentation system with three levels:
+
+#### **Beginner Lens** - Business Context
+- **Audience**: Stakeholders & Business Users
+- **Content**: Project vision, business value, key benefits
+- **Time Investment**: 10-15 minutes
+- **Priority**: HIGH for business context
+
+#### **Intermediate Lens** - System Understanding  
+- **Audience**: Product Managers & Technical Leads
+- **Content**: System architecture, workflows, key components
+- **Time Investment**: 20-30 minutes
+- **Priority**: MEDIUM for system understanding
+
+#### **Advanced Lens** - Implementation Details
+- **Audience**: Developers & Architects
+- **Content**: Implementation details, code patterns, technical decisions
+- **Time Investment**: 45-60 minutes
+- **Priority**: LOW for implementation details
+
+### Documentation Quality Standards
+
+#### For Each Lens
+- **Clear Purpose**: Each document has a specific audience and goal
+- **Appropriate Detail**: Right level of technical depth for the audience
+- **Cross-References**: Links to related documents in other lenses
+- **Consistent Structure**: Similar organization across all lenses
+
+#### For the System
+- **Progressive Disclosure**: Information builds from simple to complex
+- **No Duplication**: Each lens provides unique value
+- **Easy Navigation**: Clear paths between different levels
+- **Maintainable**: Easy to update and keep current
 
 ## 🗺️ Map of Topics (Anchors)
 
@@ -66,7 +166,7 @@ Provide a complete architecture map, core components, interfaces, and flows acro
 100_memory/100_cursor-memory-context.md          # Memory scaffold and current state
 000_core/000_backlog.md                          # Priorities and dependencies
 400_guides/400_03_system-overview-and-architecture.md  # This guide
-400_guides/400_00_getting-started-and-index.md   # Entry point and navigation
+400_guides/400_00_memory-system-overview.md      # Entry point and navigation
 400_guides/400_04_development-workflow-and-standards.md  # Development workflows
 400_guides/400_02_governance-and-ai-constitution.md     # AI safety and governance
 400_guides/400_01_documentation-playbook.md      # File management rules
@@ -74,9 +174,9 @@ Provide a complete architecture map, core components, interfaces, and flows acro
 400_guides/400_cursor-context-engineering-guide.md      # Cursor integration
 
 # Workflow Files
-000_core/001_create-prd.md                       # PRD creation workflow
-000_core/002_generate-tasks.md                   # Task generation workflow
-000_core/003_process-task-list.md                # AI execution workflow
+000_core/001_PRD_TEMPLATE.md                       # PRD creation workflow
+000_core/002_TASK-LIST_TEMPLATE.md                 # Task generation workflow
+000_core/003_EXECUTION_TEMPLATE.md                 # AI execution workflow
 
 # Setup and Configuration
 200_setup/202_setup-requirements.md              # Environment setup
@@ -92,7 +192,7 @@ Provide a complete architecture map, core components, interfaces, and flows acro
 ### **Context-Specific Reading Guidance**
 
 #### **For New Sessions**
-1. **`400_guides/400_00_getting-started-and-index.md`** → Entry point and project overview
+1. **`400_guides/400_00_memory-system-overview.md`** → Entry point and project overview
 2. **`100_memory/100_cursor-memory-context.md`** → Current state and rules
 3. **`000_core/000_backlog.md`** → Priorities and dependencies
 4. **`400_guides/400_03_system-overview-and-architecture.md`** → This guide for architecture

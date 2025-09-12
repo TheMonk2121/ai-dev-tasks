@@ -45,7 +45,7 @@ python3 scripts/ai_performance_monitor.py --status
 ```bash
 # Check current RAGChecker performance against baseline
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # View latest results
 ls -la metrics/baseline_evaluations/
@@ -61,6 +61,28 @@ ls -la metrics/baseline_evaluations/
 - ✅ RAGChecker baseline compliance checked
 
 **Next Steps**: Read the User Journey section below for detailed troubleshooting, or jump to the Technical Reference for advanced optimization. **🚨 CRITICAL**: Check the RED LINE BASELINE section above for mandatory performance requirements.
+
+## 📋 **Table of Contents**
+
+### **Critical Requirements**
+- [🚨 CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE](#-critical-operational-principle-red-line-baseline)
+
+### **Core Systems**
+- [📁 Results Storage & Location Reference](#-results-storage--location-reference)
+- [🧪 Comprehensive Testing & Evaluation Systems](#-comprehensive-testing--evaluation-systems)
+- [📊 Performance Monitoring Framework](#-performance-monitoring-framework)
+- [🎯 RAGChecker Performance Baseline](#-ragchecker-performance-baseline-september-2-2025)
+- [🔧 System Optimization](#-system-optimization)
+- [🧠 Memory Context System Optimization](#-memory-context-system-optimization)
+
+### **User Experience**
+- [🗺️ Choose Your Path](#-choose-your-path)
+- [🚀 User Journey & Success Outcomes](#-user-journey--success-outcomes)
+
+### **Technical Reference**
+- [🔧 Technical Reference](#-technical-reference)
+- [📚 Examples](#-examples)
+- [📋 Checklists](#-checklists)
 
 ## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE**
 
@@ -82,7 +104,7 @@ ls -la metrics/baseline_evaluations/
 ### **🚨 RED LINE ENFORCEMENT RULES**
 
 1. **Current metrics are locked** as the absolute performance floor
-2. **No new features** until all targets are me
+2. **No new features** until all targets are met
 3. **Build freeze** if any metric falls below current baseline
 4. **Focus**: Improve recall while maintaining precision ≥0.159
 5. **Success Criteria**: All metrics above targets for 2 consecutive runs
@@ -90,19 +112,21 @@ ls -la metrics/baseline_evaluations/
 ### **📊 Progress Tracking & Baseline Management**
 
 **Where Results Are Stored**: `metrics/baseline_evaluations/`
-**How to Track Progress**: Run `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli`
+**How to Track Progress**: Run `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 **Baseline Lock**: Current metrics are the performance floor - no regression allowed
 
 **Example Commands**:
 ```bash
 # Run RAGChecker evaluation to check progress
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check latest results
 ls -la metrics/baseline_evaluations/
 cat metrics/baseline_evaluations/ragchecker_official_evaluation_*.json | jq '.summary'
 ```
+
+**🚨 CRITICAL**: This is the single source of truth for performance requirements. All other references to RED LINE or RAGChecker baselines should point to this section.
 
 ---
 
@@ -145,7 +169,7 @@ python -m evals_300.tools.run --suite 300_core --pass deterministic_few_sho
 
 # Legacy direct script execution (still supported)
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 ```
 
 **Evaluation System Features**:
@@ -546,6 +570,940 @@ class SystemMetrics:
 
 **When to Use**: When you need to understand why your system is slow or when building monitoring tools.
 
+### **Test Signal Metrics Analysis**
+
+The test signal analysis system helps prioritize which tests to run in different scenarios by analyzing test importance and performance characteristics.
+
+#### **Test Signal Metrics Collection**
+
+**Main Output**: `tests_signal.csv` - Contains test scoring and decision recommendations
+
+**Key Columns**:
+- `test_id`: Full test identifier (e.g., `test_module.py::test_function`)
+- `score`: Overall test importance score (0.0-1.0)
+- `unique_lines`: Number of lines covered only by this test
+- `weighted_unique`: Uniqueness weighted by file churn and complexity
+- `runtime_sec`: Test execution time in seconds
+- `fail_rate`: Historical failure rate (0.0-1.0)
+- `flake_rate`: Flakiness rate from pytest-randomly sampling (0.0-1.0)
+- `avg_churn`: Average churn of files covered by this test
+- `cluster_rep`: Whether this test is a cluster representative (0/1)
+- `decision`: Recommended action (`keep`, `quarantine`, `retire`)
+
+#### **Decision Logic**
+- `keep`: Score ≥ 0.6 OR has unique lines > 0
+- `quarantine`: Score ≥ 0.3 (run nightly only)
+- `retire`: Score < 0.3 (consider removing)
+
+#### **Usage Scenarios**
+1. **PR Runs**: Run only `keep` tests for fast feedback
+2. **Nightly Runs**: Run all tests including `quarantine` tests
+3. **Cleanup**: Review `retire` tests for potential removal
+
+#### **Scoring Weights**
+- **Unique Coverage**: 45% (tests covering unique code paths)
+- **Failure Rate**: 20% (tests that catch real bugs)
+- **Change Coupling**: 15% (tests covering frequently changed code)
+- **Mutation Score**: 10% (placeholder for future mutation testing)
+- **Runtime Cost**: -8% (penalty for slow tests)
+- **Flakiness**: -12% (penalty for unreliable tests)
+
+#### **Input Files (Generated by CI)**
+- `coverage.json`: Per-test coverage contexts from pytest-cov
+- `durations.txt`: Test execution times from pytest --durations
+- `churn.txt`: File change frequency from git log
+- `complexity.json`: Cyclomatic complexity from radon
+- `junit_latest.xml`: Latest test results from pytest
+- `flake_sample.txt`: Flakiness data from pytest-randomly sampling
+
+### **Testing & Experimental Infrastructure**
+
+#### **Testing Infrastructure Overview**
+The project maintains a comprehensive testing infrastructure in the `300_experiments/` directory for performance testing, evaluation, and optimization.
+
+**Current Status**:
+- **Baseline v1.1**: LOCKED (precision ≥ 0.159, recall ≥ 0.166, F1 ≥ 0.159)
+- **Testing Coverage**: 100% for all recent breakthroughs
+- **Infrastructure**: Complete testing scripts, configs, and results organization
+
+#### **Testing Directory Structure**
+```
+300_experiments/
+├── 300_testing-scripts/     # Testing, evaluation, and benchmarking scripts
+├── 300_testing-configs/     # Test environment configurations and parameters
+├── 300_testing-results/     # Test outputs, results, and analysis
+└── 300_testing-methodology-log.md  # Testing strategies and methodologies
+```
+
+#### **Key Testing Capabilities**
+- **Automated Baseline Validation**: CI-integrated baseline compliance testing
+- **Performance Benchmarking**: Comprehensive performance testing and optimization
+- **Integration Testing**: End-to-end system integration validation
+- **Regression Detection**: Automated performance regression prevention
+- **Quality Gates**: Comprehensive testing quality assurance
+
+#### **Testing Methodologies**
+- **Dev Slice Testing**: 8-case stratified testing for development
+- **Full Validation**: 15-case testing with two-run requirement
+- **Baseline Optimization**: Systematic precision/recall improvement testing
+- **Integration Validation**: Cross-component compatibility testing
+
+#### **Quick Start Testing**
+```bash
+# Run RAGChecker Baseline Validation
+cd 300_experiments/300_testing-scripts/
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+
+# Load Testing Configuration
+cd 300_experiments/300_testing-configs/
+source baseline_v1.1.env
+
+# View Testing Results
+cd 300_experiments/300_testing-results/
+ls -la baseline_results/
+```
+
+#### **Available Testing Scripts**
+- **RAGChecker Testing**: `ragchecker_official_evaluation.py`, `ragchecker_performance_monitor.py`
+- **Performance Testing**: `performance_benchmark.py`, `memory_benchmark.py`
+- **Integration Testing**: `bedrock_test.py`, `evaluation_approach_discussion.py`
+
+#### **Test Configurations**
+- **Baseline v1.1**: Current locked baseline configuration
+- **Phase-2 Baseline**: Exact configuration script for baseline validation
+- **Performance Testing**: Configuration for performance benchmarking
+- **Integration Testing**: Configuration for system integration testing
+
+#### **Result Analysis**
+- **Baseline Validation**: Pass/fail status, performance metrics, regression detection
+- **Performance Results**: Throughput, resource usage, scalability metrics
+- **Integration Results**: Component compatibility, workflow validation
+- **System Health Audits**: Critical issue detection, database connection audits
+
+### **Baseline RAGChecker Evaluation System**
+
+#### **Baseline Evaluation Framework**
+This directory contains baseline RAGChecker evaluation results using **fixed, version-controlled criteria** that don't change over time. This ensures reliable progress measurement of the memory system.
+
+#### **Why Baseline Evaluations?**
+**Problem**: Our original RAGChecker evaluations evolved during development, making progress measurement unreliable:
+- Score progression: 70.0 → 65.6 → 76.7 → 74.7 → 77.2 → 77.2 → 78.9 → 80.6 → **85.0** → 83.4
+- Evaluation criteria changed over time (scoring system, bonus points, partial credit)
+- Impossible to determine if score changes were due to system improvements or evaluation changes
+
+**Solution**: Fixed baseline evaluations with consistent criteria that never change.
+
+#### **Baseline Evaluation Framework**
+- **Baseline V1.0**: Fixed evaluation criteria established 2025-08-30
+- **Configuration**: `config/baseline_evaluations/baseline_v1.0.json`
+- **Evaluator**: `scripts/baseline_ragchecker_evaluation.py`
+
+#### **🎯 NEW MILESTONE: Production-Ready RAG System**
+- **Date Established**: 2025-08-31
+- **Documentation**: `NEW_BASELINE_MILESTONE_2025.md`
+- **Target**: Transform from Development Phase to Industry Standard Production Ready
+- **Priority**: 🔥 **HIGHEST** - Industry Standard Production Metrics
+- **🚨 RED LINE RULE**: Once achieved, NEVER go below - NO new features until restored
+
+#### **Fixed Criteria (Never Changes)**
+- **Scoring**: Sources (40pts), Content (40pts), Workflow (20pts), Commands (20pts)
+- **Pass Threshold**: 65/100
+- **Bonus Points**: None (fixed)
+- **Partial Credit**: None (fixed)
+- **Strict Matching**: Yes (fixed)
+
+#### **Evaluation Cases (Fixed)**
+1. **Memory Hierarchy** (3 tests)
+   - Current Project Status Query
+   - PRD Creation Workflow
+   - DSPy Integration Patterns
+
+2. **Workflow Chain** (2 tests)
+   - Complete Development Workflow
+   - Interrupted Session Continuation
+
+3. **Role-Specific** (4 tests)
+   - Planner Role - Development Priorities
+   - Implementer Role - DSPy Implementation
+   - Researcher Role - Memory System Analysis
+   - Coder Role - Codebase Structure
+
+#### **Usage**
+```bash
+# Run baseline evaluation v1.0
+python3 scripts/baseline_ragchecker_evaluation.py
+
+# Run with specific version
+python3 scripts/baseline_ragchecker_evaluation.py --version 1.0
+
+# Save to specific file
+python3 scripts/baseline_ragchecker_evaluation.py --output my_baseline_results.json
+```
+
+#### **View Results**
+```bash
+# List all baseline evaluations
+ls -la metrics/baseline_evaluations/
+
+# View latest baseline result
+cat metrics/baseline_evaluations/baseline_ragchecker_v1.0_YYYYMMDD_HHMMSS.json | jq '.average_score'
+```
+
+#### **📊 Current Evaluation System Status**
+
+**Last Updated**: 2025-09-07  
+**Status**: 🟢 **OPERATIONAL** - Lessons Engine Production Ready
+
+##### **System Status Overview**
+
+- **Lessons Engine**: ✅ **PRODUCTION READY** - Closed-Loop Lessons Engine (CLLE) fully implemented
+- **Integration**: ✅ **COMPLETE** - Full integration with ragchecker_official_evaluation.py
+- **Quality Gates**: ✅ **ENFORCED** - Conservative blocking logic implemented
+- **Documentation**: ✅ **COMPLETE** - Comprehensive guides and protocols
+
+##### **Latest Evaluation Results**
+```bash
+# Get most recent results
+LATEST_RESULTS=$(ls -t metrics/baseline_evaluations/*.json | head -1)
+echo "Latest: $LATEST_RESULTS"
+
+# Check lessons metadata
+jq '.run_config.lessons' "$LATEST_RESULTS"
+```
+
+##### **Current Lessons Status**
+```bash
+# View current lessons
+cat metrics/lessons/lessons.jsonl | tail -5
+
+# Count total lessons
+wc -l metrics/lessons/lessons.jsonl
+```
+
+##### **Generated Configurations**
+```bash
+# View latest derived configs
+ls -la metrics/derived_configs/ | tail -5
+
+# Check evolution tracking
+cat configs/EVOLUTION.md | tail -20
+```
+
+##### **System Health Indicators**
+
+**🟢 Green Indicators:**
+- Lessons engine operational
+- Quality gates enforced
+- Documentation complete
+- Integration functional
+
+**🟡 Yellow Indicators:**
+- Monitor lesson application rate
+- Track configuration evolution
+- Validate quality gate effectiveness
+
+**🔴 Red Indicators:**
+- System degradation
+- Quality gate failures
+- Integration errors
+- Documentation gaps
+```
+
+#### **🚀 Production Readiness Achievement Summary**
+
+**Mission Accomplished**: Production-Grade Baseline Established
+
+We've successfully transformed the RAG system from a development prototype into a **production-ready, enterprise-grade system** with comprehensive monitoring, evaluation, and deployment capabilities.
+
+##### **✅ All Critical Issues Resolved (Red → Green)**
+
+**1. Environment & Configuration Management**
+- ✅ **Environment Guard**: Hard-fail early for missing environment variables
+- ✅ **Active Configuration Pointer**: Single source of truth for production config
+- ✅ **Configuration Locking**: Version-controlled, auditable configuration management
+
+**2. Database & Performance Optimization**
+- ✅ **Vector Dimension Enforcement**: Proper `vector_dims()` function with type safety
+- ✅ **Query Performance**: Vector queries now **0.5ms** (excellent!)
+- ✅ **Generated tsvector Columns**: Fast full-text search with GIN indexes
+- ✅ **HNSW & IVFFLAT Indexes**: Optimized vector similarity search
+
+**3. Embedding Performance**
+- ✅ **Device-Aware Optimization**: MPS/CUDA/CPU with automatic fallback
+- ✅ **Batch Processing**: 64.9ms embedding generation (acceptable)
+- ✅ **Threading Optimization**: Tuned for M-series Mac
+- ✅ **Model Reuse**: Single tokenizer/model initialization
+
+**4. System Health & Monitoring**
+- ✅ **Traffic-Light Health Checks**: 10/12 checks green, 2/12 yellow (expected)
+- ✅ **Comprehensive Monitoring**: Retrieval, data quality, infrastructure, agent tools
+- ✅ **Real-time Alerts**: Critical and warning thresholds with actionable guidance
+
+##### **🏗️ Production Infrastructure Delivered**
+
+**1. Clean & Reproducible Evaluations**
+```bash
+# Two-pass evaluation system
+python3 scripts/production_evaluation.py
+```
+- **Pass 1**: Retrieval-only baseline (FEW_SHOT_K=0, EVAL_COT=0, temperature=0)
+- **Pass 2**: Deterministic few-shot (FEW_SHOT_K=5, FEW_SHOT_SEED=42)
+
+**2. Agent Behavior Locking**
+- **Tool Intent Logging**: `using=<tool_name> reason=<short> expected=<schema>`
+- **Dry-Run Validation**: All mutating tools support `validate_only=true`
+- **Health-First Policy**: Evaluations refuse to run if health checks fail
+- **Schema Fidelity**: Strict JSON schemas with retry logic
+
+**3. Comprehensive Trap Grid**
+- **Ops/Health Traps**: pgvector verification, prefix leakage detection, embedding dimension checks
+- **DB Workflow Traps**: Slow query analysis, index rebuild plans, FTS ranking explanations
+- **RAG QA Traps**: Single-hop, multi-hop, date/number grounding, ambiguity resolution
+
+##### **📊 Performance Metrics Achieved**
+
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| **Vector Query Time** | ~50ms | **0.5ms** | **100x faster** |
+| **Embedding Generation** | ~200ms | **64.9ms** | **3x faster** |
+| **Health Check Status** | 6/12 green | **10/12 green** | **67% improvement** |
+| **Evaluation Reproducibility** | Variable | **100% deterministic** | **Fully reliable** |
+
+##### **🔒 Production Security & Reliability**
+
+- **Environment Validation**: Hard-fail for missing critical variables
+- **Configuration Locking**: Version-controlled, auditable configurations
+- **Health Monitoring**: Real-time system health with traffic-light indicators
+- **Error Handling**: Comprehensive error recovery and retry logic
+- **Audit Logging**: Complete tool usage and decision tracking
+
+#### **File Naming Convention**
+Results are saved as: `baseline_ragchecker_v{VERSION}_{TIMESTAMP}.json`
+
+Example: `baseline_ragchecker_v1.0_20250830_150000.json`
+
+#### **Progress Tracking**
+| Date | Version | Score | Level | Pass Rate | Notes |
+|------|---------|-------|-------|-----------|-------|
+| 2025-08-30 | 1.0 | **73.3/100** | **📊 FAIR** | **88.9% (8/9)** | **Initial baseline established** |
+
+#### **RAGChecker Levels (Baseline)**
+- **🥇 EXCELLENT**: 85-100 RAGChecker
+- **🥈 VERY GOOD**: 80-84 RAGChecker
+- **🥉 GOOD**: 75-79 RAGChecker
+- **📊 FAIR**: 70-74 RAGChecker
+- **⚠️ NEEDS WORK**: <70 RAGChecker
+
+#### **ABP Validation & CI Gates**
+To ensure stateless agents always have reliable context, the pipeline validates the Agent Briefing Pack (ABP) and Baseline Manifest.
+
+**Tools**:
+- `scripts/update_baseline_manifest.py` — builds `config/baselines/<profile>.json` (targets, EMA, gates)
+- `scripts/abp_packer.py` — generates `metrics/briefings/<ts>_<profile>_ABP.md`
+- `scripts/abp_validation.py` — validates freshness/presence; supports CI warnings and strict mode
+- `scripts/abp_adoption_report.py` — reports ABP carry‑over and usage across recent runs
+
+**Local usage**:
+```bash
+# Update manifest for a profile
+python3 scripts/update_baseline_manifest.py --profile precision_elevated
+
+# Validate (local)
+python3 scripts/abp_validation.py --profile precision_elevated --max-age-days 2
+
+# Strict (fail on stale/missing)
+python3 scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --strict
+
+# Adoption report (last 20 runs)
+python3 scripts/abp_adoption_report.py --window 20
+```
+
+**CI integration**:
+- Quick checks (soft warnings): `.github/workflows/quick-check.yml`
+- Evaluation pipeline (soft warnings + release hard gate): `.github/workflows/ragchecker-evaluation.yml`
+
+**Artifacts**:
+- ABP: `metrics/briefings/<ts>_<profile>_ABP.md`
+- Context meta sidecar: `metrics/baseline_evaluations/*_context_meta.json`
+
+### **Gold Dataset v1 (Single Source of Truth)**
+
+#### **Record Schema (JSON Lines)**
+Each line is one case. Fields are optional depending on `mode`.
+
+**Required Fields**:
+- `id` (string, required, stable)
+- `mode` (enum: retrieval | reader | decision, required)
+- `query` (string, required)
+- `tags` (array[string], required)  # e.g. ["ops_health","rag_qa_single"]
+
+**Optional Fields**:
+- `category` (string, optional)
+- `gt_answer` (string, optional)          # reader mode
+- `expected_files` (array[string], opt.)  # retrieval/decision
+- `globs` (array[string], optional)       # retrieval/decision
+- `expected_decisions` (array[string], optional) # decision mode
+- `notes` (string, optional)
+
+#### **Invariants**
+- Exactly one `mode`.
+- At least one of {expected_files | globs | gt_answer | expected_decisions}.
+- `id` is globally unique and stable across versions.
+
+#### **Example Records**
+```json
+{"id":"OPS_RUN_EVALS_001","mode":"reader","query":"How do I run the evals?","tags":["ops_health"],"category":"ops","gt_answer":"Use scripts/ragchecker_official_evaluation.py with --gold-profile ops_smoke ..."}
+{"id":"DSPY_GUIDES_000_CORE_002","mode":"retrieval","query":"List the core workflow guides in 000_core.","tags":["rag_qa_single"],"category":"arch","expected_files":["000_core/001_create-prd.md","000_core/002_generate-tasks.md"],"globs":["000_core/*.md"]}
+{"id":"DECISION_DB_CHOICE_003","mode":"decision","query":"database choice","tags":["meta_ops"],"expected_decisions":["postgres","pgvector","gin+ivfflat"],"notes":"Ported from evaluation_harness.create_gold_set()"}
+```
+
+#### **Usage**
+Load cases using the unified loader:
+```python
+from src.utils.gold_loader import load_gold_cases, stratified_sample
+
+# Load all cases
+cases = load_gold_cases("evals/gold/v1/gold_cases.jsonl")
+
+# Use a profile from manifest.json
+cases = stratified_sample(cases, strata=view["strata"], size=view["size"], seed=view["seed"])
+```
+
+#### **Profiles/Views**
+See `manifest.json` for predefined evaluation profiles that provide deterministic sampling and tag balance.
+
+### **System Health Audits**
+
+#### **🚨 System Health Audits Directory**
+**Location**: `300_experiments/300_testing-results/system_health_audits/`
+**Purpose**: Comprehensive system health audits, database connection audits, and critical system validation results
+
+#### **Available System Health Audits**
+
+**🔒 Database Connection Audits**:
+- **`MEMORY_SYSTEM_DATABASE_AUDIT.md`** - Critical memory system database connection audit
+- **`PIPELINE_DATABASE_AUDIT.md`** - Pipeline system database connection audit
+
+#### **Audit Purpose & Scope**
+
+**System Health Validation**:
+These audits represent comprehensive system health checks that identify critical issues requiring immediate attention. They are the output of systematic system validation testing and provide actionable insights for system reliability.
+
+**Critical Issue Identification**:
+- **Database Connection Mismatches**: Identify incorrect database references
+- **Credential Problems**: Find authentication and authorization issues
+- **System Integration Issues**: Detect component compatibility problems
+- **Configuration Inconsistencies**: Uncover configuration mismatches
+
+#### **Current Critical Issues Identified**
+
+**Memory System Database Audit**:
+- **Status**: 🔴 **CRITICAL - IMMEDIATE ACTION REQUIRED**
+- **Main Issue**: Massive database connection inconsistencies
+- **Impact**: Memory system will cause complete system failures
+- **Affected Components**: LTST Memory System, Memory Rehydrator, Conversation Storage
+
+**Pipeline System Database Audit**:
+- **Status**: 🔴 **CRITICAL - IMMEDIATE ACTION REQUIRED**
+- **Main Issue**: Significant database connection inconsistencies
+- **Impact**: Pipeline failures due to authentication and connection issues
+- **Affected Components**: Vector Store, RAG Pipeline, Model Switcher
+
+#### **Immediate Action Items**
+
+**1. Set Environment Variables (URGENT - DO THIS NOW)**:
+```bash
+export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency"
+export DATABASE_URL="postgresql://danieljacobs@localhost:5432/ai_agency"
+```
+
+**2. Fix Core Memory System (CRITICAL - TODAY)**:
+- Update database defaults in LTST Memory System
+- Fix Conversation Storage database references
+- Update Memory Rehydrator configuration
+
+**3. Fix Pipeline System (HIGH - TODAY)**:
+- Update Vector Store credentials
+- Fix Hybrid Vector Store authentication
+- Update RAG Pipeline database connections
+
+**4. Fix Test Files (MEDIUM - THIS WEEK)**:
+- Update all test files to use ai_agency database
+- Remove references to non-existent databases
+- Fix utility script configurations
+
+#### **Audit Results Integration**
+
+**Testing Infrastructure**:
+These audits are integrated with your testing infrastructure:
+- **Baseline Testing**: Database connection validation
+- **Integration Testing**: Cross-component compatibility
+- **System Health Testing**: Overall system reliability
+- **Quality Gates**: Critical issue detection and resolution
+
+**Testing Methodology**:
+Audits follow your established testing methodology:
+- **Systematic Analysis**: Comprehensive component review
+- **Impact Assessment**: Clear impact categorization
+- **Action Planning**: Prioritized remediation steps
+- **Success Criteria**: Measurable resolution targets
+
+#### **Adding New System Health Audits**
+
+**When to Create Audits**:
+1. **System-Wide Issues**: Critical problems affecting multiple components
+2. **Integration Failures**: Cross-component compatibility issues
+3. **Configuration Problems**: System configuration inconsistencies
+4. **Performance Degradation**: Significant performance issues
+5. **Security Issues**: Authentication, authorization, or data access problems
+
+**Audit Creation Process**:
+1. **Systematic Review**: Comprehensive component analysis
+2. **Issue Categorization**: Critical, High, Medium, Low impact
+3. **Action Planning**: Prioritized remediation steps
+4. **Success Criteria**: Measurable resolution targets
+5. **Documentation**: Clear, actionable audit report
+
+### **RAG Retrieval Tuning Protocol**
+
+#### **Industry-Grade RAG Tuning Methodology**
+This protocol provides a repeatable, deterministic approach to tuning retrieval weights, thresholds, and reranking that prevents the precision/recall yo-yo effect.
+
+**Key Principle**: Optimize precision first until answers stop hallucinating, then recover recall without losing that precision.
+
+#### **What This Protocol Solves**
+- **Precision/Recall Trade-off**: Systematic approach to balancing both metrics
+- **Over-optimization**: Prevents tuning one metric at the expense of another
+- **Intent Mismatch**: Different query types get different optimization strategies
+- **Coverage Gaps**: Systematic approach to indexing and chunking
+- **Hallucination**: Evidence-first answers with proper grounding
+
+#### **Current Baseline Status (September 1, 2025)**
+**✅ RAGChecker Evaluation System Operational**
+- **Evaluation Pipeline**: Fully functional with AWS Bedrock integration
+- **Test Coverage**: 15 comprehensive test cases processing successfully
+- **CLI Bypass**: In-process evaluation working, avoiding LiteLLM issues
+- **Data Processing**: Context normalization and semantic ranking operational
+
+**📊 Current Performance**
+- **System Status**: 🟢 Production-ready baseline achieved
+- **For current baseline metrics and RED LINE rules**: See **CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE** section at the top of this document
+
+#### **When to Use This Protocol**
+- **After major system changes** that affect retrieval performance
+- **When precision/recall metrics are imbalanced**
+- **Before production deployment** to ensure optimal performance
+- **During iterative development** to maintain performance standards
+- **When adding new content types** or changing chunking strategies
+
+#### **Expected Outcomes**
+- **Systematic improvement** in both precision and recall
+- **Intent-aware optimization** for different query types
+- **Evidence-based answers** with reduced hallucination
+- **Repeatable tuning process** that can be applied consistently
+- **Performance gates** that prevent regression
+
+#### **Core Principle**
+**Different query types have different objectives.** Optimize each intent separately rather than using a single global metric.
+
+- **For current RED LINE rules**: See **CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE** section at the top of this document
+
+### **Testing Coverage Matrix**
+
+The `300_experiments/` folder provides **100% comprehensive coverage** of all testing and methodology needs. Every aspect of testing, strategies, results, and lessons learned has a dedicated home in this organized knowledge base.
+
+**🚨 CRITICAL UPDATE**: Comprehensive testing methodologies for all recent breakthroughs (B-1045, B-1048, B-1054, B-1059, B-1009) have been added to the testing methodology log. Current baseline status and optimization testing requirements are now fully documented.
+
+**🎯 BASELINE v1.1 COMPLETE**: Detailed baseline changelog, environment profiles, CI guardrails, and testing protocols are now fully documented. The system has a stable performance floor with comprehensive testing requirements.
+
+#### **Complete Coverage Matrix**
+
+**✅ USER REQUIREMENTS - 100% COVERED**
+
+| Requirement | Coverage | File | Status |
+|-------------|----------|------|---------|
+| **Logs of all our testing** | ✅ 100% | All testing logs | COMPLETE |
+| **Strategies** | ✅ 100% | Methodology log + individual logs | COMPLETE |
+| **What worked** | ✅ 100% | "What Worked" sections in all logs | COMPLETE |
+| **What didn't** | ✅ 100% | "What Didn't" sections in all logs | COMPLETE |
+| **Lessons learned** | ✅ 100% | "Lessons Learned" sections in all logs | COMPLETE |
+| **Approach and methodology** | ✅ 100% | Methodology evolution + historical archive | COMPLETE |
+
+#### **Core Testing Documentation**
+
+**1. Central Testing Hub**
+- **File**: `300_testing-methodology-log.md`
+- **Purpose**: Central hub for all testing strategies and methodologies
+- **Coverage**:
+  - ✅ All testing strategies and methodologies
+  - ✅ Methodology evolution across phases
+  - ✅ Key insights and best practices
+  - ✅ Performance tracking and baselines
+  - ✅ Future testing plans
+
+**2. Historical Testing Archive**
+- **File**: `300_historical-testing-archive.md`
+- **Purpose**: Archive of all historical testing results and learnings
+- **Coverage**:
+  - ✅ Historical test results and performance data
+  - ✅ Evolution of testing approaches over time
+  - ✅ Lessons learned from past experiments
+  - ✅ Performance trends and patterns
+
+**3. Complete Testing Coverage**
+- **File**: `300_complete-testing-coverage.md`
+- **Purpose**: Complete overview of all testing and methodology coverage
+- **Coverage**:
+  - ✅ Complete coverage matrix and status
+  - ✅ File structure and organization
+  - ✅ Testing capabilities and methodologies
+  - ✅ Integration with development workflow
+
+#### **Testing Capabilities**
+- **Automated Baseline Validation**: CI-integrated baseline compliance testing
+- **Performance Benchmarking**: Comprehensive performance testing and optimization
+- **Integration Testing**: End-to-end system integration validation
+- **Regression Detection**: Automated performance regression prevention
+- **Quality Gates**: Comprehensive testing quality assurance
+
+#### **Testing Methodologies**
+- **Dev Slice Testing**: 8-case stratified testing for development
+- **Full Validation**: 15-case testing with two-run requirement
+- **Baseline Optimization**: Systematic precision/recall improvement testing
+- **Integration Validation**: Cross-component compatibility testing
+
+### **Testing Methodology & Strategy Log**
+
+#### **Centralized Testing Strategy Hub**
+This is the **centralized log** of all testing strategies, results, and lessons learned across the AI development ecosystem. It tracks the evolution of our approach from manual prompt engineering to systematic, measurable optimization.
+
+#### **Current Testing Status**
+
+**Active Testing Areas**:
+- **B-1065**: Hybrid Metric Foundation - Learnable retrieval optimization
+- **B-1066**: Evidence Verification - Claims as data with RAGChecker integration
+- **B-1067**: World Model Light - Belief state tracking and simulation
+- **B-1068**: Observability - Per-sentence debugging and visualization
+- **B-1069**: Cursor Integration - Three-layer memory system integration
+
+**Recently Completed Breakthroughs (Testing Documentation)**:
+- **B-1045**: RAGChecker Dynamic-K Evidence Selection - ✅ **COMPLETED & TESTED**
+- **B-1048**: DSPy Role Integration with Vector-Based System Mapping - ✅ **COMPLETED & TESTED**
+- **B-1054**: Generation Cache Implementation - ✅ **COMPLETED & TESTED**
+- **B-1059**: Retrieval Tuning Protocol - ✅ **COMPLETED & TESTED**
+- **B-1009**: AsyncIO Memory System Revolution - ✅ **COMPLETED & TESTED**
+
+**Testing Infrastructure**:
+- **RAGChecker System**: Comprehensive evaluation framework (B-1045 - COMPLETED)
+- **Performance Monitoring**: Real-time metrics and health checks
+- **Baseline Tracking**: Performance floor enforcement and improvement measurement
+
+#### **🚨 Current Baseline Status & Testing Requirements**
+
+**RAGChecker Baseline Performance (September 2025)**
+**Status**: 🟢 **BASELINE v1.1 LOCKED** - Stable floor established with two consecutive runs
+
+**For current baseline metrics and RED LINE rules**: See **CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE** section at the top of this document
+
+#### **Testing Evolution & Methodology**
+
+**Phase 1: Manual Prompt Engineering**
+- **Approach**: Manual prompt optimization and testing
+- **Results**: Inconsistent performance, hard to reproduce
+- **Lessons**: Need systematic approach and measurement
+
+**Phase 2: Systematic Evaluation**
+- **Approach**: RAGChecker integration with baseline tracking
+- **Results**: Consistent measurement, clear performance targets
+- **Lessons**: Baseline enforcement prevents regression
+
+**Phase 3: Automated Optimization**
+- **Approach**: Dynamic-K evidence selection and retrieval tuning
+- **Results**: Systematic improvement in precision and recall
+- **Lessons**: Intent-aware optimization works better than global metrics
+
+**Phase 4: Production Integration**
+- **Approach**: CI/CD integration with performance gates
+- **Results**: Automated testing and deployment with quality assurance
+- **Lessons**: Automation enables consistent performance standards
+
+#### **Key Testing Insights**
+
+**What Worked**:
+- **Baseline Enforcement**: RED LINE rule prevents performance regression
+- **Intent-Aware Testing**: Different query types need different optimization
+- **Systematic Measurement**: RAGChecker provides consistent evaluation
+- **Automated Gates**: CI integration ensures quality standards
+
+**What Didn't Work**:
+- **Global Optimization**: Single metric optimization hurts other metrics
+- **Manual Testing**: Inconsistent results and hard to reproduce
+- **Synthetic Data**: Real system testing provides better insights
+- **One-Size-Fits-All**: Different components need different testing approaches
+
+**Lessons Learned**:
+- **Test with Real Data**: Synthetic data doesn't reflect real performance
+- **Measure Consistently**: Use the same evaluation framework throughout
+- **Optimize Systematically**: Follow the precision-first, then recall approach
+- **Automate Everything**: Manual testing is error-prone and inconsistent
+
+### **RAG Pipeline Governance Integration**
+
+#### **Pipeline Governance Overview**
+The RAG Pipeline Governance system treats RAG workflows as sequential semantic graphs with comprehensive governance capabilities. This system provides validation, optimization, and monitoring for RAG pipeline components.
+
+#### **Key Features**
+
+**Pipeline Graph Representation**:
+- **Sequential Stages**: Ingest, Chunk, Retrieve, Rerank, Generate, Validate
+- **Parameter Flow Tracking**: Typed metadata for each stage
+- **Dependency Management**: Clear stage dependencies and data flow
+- **State Management**: Pipeline state tracking and recovery
+
+**Governance Capabilities**:
+- **Pattern Validation**: Validate against known good patterns
+- **Unusual Pattern Detection**: Identify anomalies and issues
+- **Auto-fill Missing Steps**: Automatically complete incomplete pipelines
+- **Performance Monitoring**: Track pipeline performance metrics
+- **Quality Gates**: Enforce quality standards at each stage
+
+**Integration Benefits**:
+- **Systematic Optimization**: Identify and fix pipeline bottlenecks
+- **Consistent Performance**: Ensure reliable RAG system operation
+- **Debugging Support**: Easily identify and resolve pipeline issues
+- **Scalability**: Handle complex, multi-stage RAG workflows
+
+#### **Pipeline Stages**
+
+**1. Ingest Stage**
+- **Purpose**: Document ingestion and preprocessing
+- **Governance**: Validate input format, check data quality
+- **Monitoring**: Track ingestion success rate, processing time
+- **Optimization**: Optimize document parsing and preprocessing
+
+**2. Chunk Stage**
+- **Purpose**: Document chunking and indexing
+- **Governance**: Validate chunk size, overlap, and quality
+- **Monitoring**: Track chunking metrics, index performance
+- **Optimization**: Optimize chunking strategy and parameters
+
+**3. Retrieve Stage**
+- **Purpose**: Document retrieval and ranking
+- **Governance**: Validate retrieval quality, check relevance
+- **Monitoring**: Track retrieval accuracy, response time
+- **Optimization**: Optimize retrieval algorithms and parameters
+
+**4. Rerank Stage**
+- **Purpose**: Document reranking and filtering
+- **Governance**: Validate reranking quality, check consistency
+- **Monitoring**: Track reranking performance, accuracy
+- **Optimization**: Optimize reranking models and thresholds
+
+**5. Generate Stage**
+- **Purpose**: Answer generation and synthesis
+- **Governance**: Validate answer quality, check coherence
+- **Monitoring**: Track generation quality, response time
+- **Optimization**: Optimize generation models and prompts
+
+**6. Validate Stage**
+- **Purpose**: Answer validation and quality assurance
+- **Governance**: Validate answer accuracy, check completeness
+- **Monitoring**: Track validation metrics, error rates
+- **Optimization**: Optimize validation criteria and thresholds
+
+#### **Usage Examples**
+
+**Pipeline Validation**:
+```python
+# Initialize RAG pipeline governance
+governance = RAGPipelineGovernance()
+
+# Validate pipeline configuration
+validation_result = governance.validate_pipeline(pipeline_config)
+
+# Check for issues and get recommendations
+if not validation_result.is_valid:
+    issues = validation_result.get_issues()
+    recommendations = governance.get_recommendations(issues)
+```
+
+**Performance Monitoring**:
+```python
+# Monitor pipeline performance
+monitor = PipelinePerformanceMonitor()
+
+# Track key metrics
+metrics = monitor.track_pipeline_execution(pipeline_execution)
+
+# Generate performance report
+report = monitor.generate_performance_report(metrics)
+```
+
+**Optimization Support**:
+```python
+# Get optimization recommendations
+optimizer = PipelineOptimizer()
+
+# Analyze pipeline performance
+analysis = optimizer.analyze_pipeline(pipeline_execution)
+
+# Get optimization suggestions
+suggestions = optimizer.get_optimization_suggestions(analysis)
+```
+
+#### **Integration with Development Workflow**
+
+**Development Phase**:
+- **Pipeline Design**: Use governance to design optimal pipelines
+- **Testing**: Validate pipeline configurations before deployment
+- **Debugging**: Use governance to identify and fix issues
+
+**Production Phase**:
+- **Monitoring**: Continuous pipeline performance monitoring
+- **Optimization**: Regular pipeline optimization and tuning
+- **Maintenance**: Proactive issue detection and resolution
+
+**Quality Assurance**:
+- **Validation**: Ensure pipeline quality and consistency
+- **Compliance**: Meet performance and quality standards
+- **Documentation**: Maintain pipeline documentation and standards
+
+### **Testing Coverage Analysis**
+
+#### **Coverage Analysis Overview**
+The testing coverage analysis system provides comprehensive insights into testing effectiveness, coverage gaps, and optimization opportunities across the AI development ecosystem.
+
+#### **Coverage Metrics**
+
+**Test Coverage Categories**:
+- **Unit Tests**: Individual component testing coverage
+- **Integration Tests**: Cross-component testing coverage
+- **End-to-End Tests**: Complete workflow testing coverage
+- **Performance Tests**: Performance and load testing coverage
+- **Security Tests**: Security and vulnerability testing coverage
+
+**Coverage Analysis Dimensions**:
+- **Code Coverage**: Percentage of code executed during tests
+- **Function Coverage**: Percentage of functions tested
+- **Branch Coverage**: Percentage of code branches tested
+- **Line Coverage**: Percentage of lines executed during tests
+- **Condition Coverage**: Percentage of boolean conditions tested
+
+#### **Coverage Analysis Tools**
+
+**Automated Coverage Collection**:
+- **Test Execution**: Automated test execution with coverage collection
+- **Coverage Reporting**: Detailed coverage reports and metrics
+- **Trend Analysis**: Coverage trends over time
+- **Gap Identification**: Identification of uncovered code areas
+
+**Coverage Visualization**:
+- **Coverage Maps**: Visual representation of coverage across codebase
+- **Heat Maps**: Coverage density visualization
+- **Gap Analysis**: Identification of critical uncovered areas
+- **Progress Tracking**: Coverage improvement tracking
+
+#### **Coverage Optimization Strategies**
+
+**Coverage Improvement**:
+- **Gap Analysis**: Identify and prioritize uncovered areas
+- **Test Generation**: Automated test generation for uncovered code
+- **Test Enhancement**: Improve existing tests for better coverage
+- **Test Maintenance**: Regular test maintenance and updates
+
+**Quality Assurance**:
+- **Coverage Thresholds**: Set minimum coverage requirements
+- **Quality Gates**: Enforce coverage standards in CI/CD
+- **Regular Audits**: Periodic coverage audits and reviews
+- **Continuous Improvement**: Ongoing coverage optimization
+
+#### **Coverage Analysis Workflow**
+
+**1. Coverage Collection**
+```bash
+# Run tests with coverage collection
+pytest --cov=src --cov-report=html --cov-report=term
+
+# Generate coverage report
+coverage report -m
+coverage html
+```
+
+**2. Coverage Analysis**
+```python
+# Analyze coverage data
+from coverage_analyzer import CoverageAnalyzer
+
+analyzer = CoverageAnalyzer()
+coverage_data = analyzer.load_coverage_data()
+
+# Identify coverage gaps
+gaps = analyzer.identify_coverage_gaps(coverage_data)
+
+# Generate recommendations
+recommendations = analyzer.generate_recommendations(gaps)
+```
+
+**3. Coverage Optimization**
+```python
+# Optimize test coverage
+from test_optimizer import TestOptimizer
+
+optimizer = TestOptimizer()
+optimization_plan = optimizer.create_optimization_plan(coverage_data)
+
+# Implement optimizations
+optimizer.implement_optimizations(optimization_plan)
+```
+
+#### **Coverage Standards**
+
+**Minimum Coverage Requirements**:
+- **Unit Tests**: ≥80% code coverage
+- **Integration Tests**: ≥70% integration coverage
+- **End-to-End Tests**: ≥60% workflow coverage
+- **Performance Tests**: ≥50% performance scenario coverage
+
+**Quality Gates**:
+- **Coverage Thresholds**: Enforce minimum coverage requirements
+- **Regression Prevention**: Prevent coverage regression
+- **Quality Assurance**: Ensure test quality and effectiveness
+- **Continuous Monitoring**: Monitor coverage trends and changes
+
+#### **Coverage Reporting**
+
+**Coverage Reports**:
+- **HTML Reports**: Interactive coverage reports with drill-down capabilities
+- **Terminal Reports**: Command-line coverage summaries
+- **JSON Reports**: Machine-readable coverage data
+- **XML Reports**: CI/CD integration coverage data
+
+**Coverage Dashboards**:
+- **Real-time Coverage**: Live coverage monitoring
+- **Trend Analysis**: Coverage trends over time
+- **Gap Visualization**: Visual representation of coverage gaps
+- **Progress Tracking**: Coverage improvement tracking
+
+#### **Integration with Development Workflow**
+
+**Development Phase**:
+- **Test-Driven Development**: Write tests before code
+- **Coverage-Driven Development**: Use coverage to guide development
+- **Continuous Testing**: Run tests continuously during development
+- **Coverage Monitoring**: Monitor coverage during development
+
+**CI/CD Integration**:
+- **Automated Coverage**: Collect coverage in CI/CD pipeline
+- **Coverage Gates**: Enforce coverage requirements in CI/CD
+- **Coverage Reporting**: Include coverage in CI/CD reports
+- **Coverage Alerts**: Alert on coverage regression
+
+**Quality Assurance**:
+- **Coverage Audits**: Regular coverage audits and reviews
+- **Coverage Standards**: Maintain coverage standards and requirements
+- **Coverage Training**: Train team on coverage best practices
+- **Coverage Documentation**: Document coverage standards and procedures
+
 class PerformanceMonitor:
     """Comprehensive performance monitoring system."""
 
@@ -824,6 +1782,8 @@ def get_apm_monitor() -> APMMonitor:
 ```
 
 ## 🔧 **System Optimization**
+
+**🚨 COMPREHENSIVE OPTIMIZATION STRATEGY**: This section provides complete system optimization capabilities across all components.
 
 ### **Resource Optimization**
 
@@ -1722,8 +2682,6 @@ print(f"Estimated time savings: {optimization_result['time_savings']:.2f}s")
 - **Integrations & Models**: `400_guides/400_10_integrations-models.md`
 - **Advanced Configurations**: `400_guides/400_12_advanced-configurations.md`
 
-
-
 ## 🔧 **Technical Reference**
 
 > **💡 For Developers**: This section provides detailed technical implementation information for building and extending performance optimization systems.
@@ -1857,650 +2815,9 @@ memory_handler.set_graceful_degradation(True)
 3. Use connection pooling for external services
 4. Consider CDN or edge caching for static contain
 
-## 🎯 **RAGChecker Performance Optimization & Baseline Management**
-
-### **Critical Performance Baseline (RED LINE RULE)**
-
-**🚨 MANDATORY ENFORCEMENT**: The RAGChecker evaluation system has established a performance baseline that serves as an absolute floor. No new development can proceed until these targets are met.
-
-#### **Current Baseline Status (September 1, 2025)**
-
-**System Status**: 🟢 **BASELINE LOCKED** - Production-ready baseline achieved
-
-| Metric | Current | Target | Gap | Priority | Next Action |
-|--------|---------|--------|-----|----------|-------------|
-| **Precision** | 0.149 | ≥0.20 | -0.051 | 🔴 High | Improve without losing recall |
-| **Recall** | 0.099 | ≥0.45 | -0.351 | 🔴 Critical | Primary focus area |
-| **F1 Score** | 0.112 | ≥0.22 | -0.108 | 🔴 High | Balance precision/recall |
-| **Faithfulness** | TBD | ≥0.60 | TBD | 🔍 Unknown | Enable comprehensive metrics |
-
-#### **RED LINE ENFORCEMENT RULES**
-
-1. **Current metrics are locked** as the absolute performance floor
-2. **No new features** until all targets are me
-3. **Build freeze** if any metric falls below current baseline
-4. **Focus**: Improve recall while maintaining precision ≥0.159
-5. **Success Criteria**: All metrics above targets for 2 consecutive runs
-
-#### **Performance Optimization Targets**
-
-**Immediate Goals (Next 2 weeks)**:
-- **Recall**: Improve from 0.099 to ≥0.45 (+351% improvement needed)
-- **Precision**: Maintain ≥0.149 while improving recall
-- **F1 Score**: Improve from 0.112 to ≥0.22 (+96% improvement needed)
-
-**Medium-term Goals (Next 4 weeks)**:
-- **Faithfulness**: Enable and measure, target ≥0.60
-- **All Metrics**: Achieve targets consistently across multiple runs
-
-**Long-term Goals (Next 8 weeks)**:
-- **Performance Stability**: Maintain targets with <5% variance
-- **Continuous Improvement**: Establish ongoing optimization processes
-
-### **RAGChecker Performance Optimization Strategies**
-
-#### **🚀 Dynamic-K Evidence Selection (Breakthrough Implementation)**
-
-**Status**: ✅ **PROVEN STABLE** - Locked as new baseline (Sept 2, 2025)
-
-The Dynamic-K evidence selection system dynamically adjusts the number of evidence sentences based on signal strength, replacing fixed thresholds with intelligent adaptation.
-
-**Key Components:**
-- **Multi-Signal Scoring**: Combines Jaccard (0.20), ROUGE-L (0.30), and Cosine Similarity (0.50)
-- **Per-Case Normalization**: Min-max normalization prevents metric dominance
-- **Signal Strength Detection**: `top_score - median_score > delta` determines evidence quality
-- **Adaptive Targeting**: Weak signals → K=3, Base → K=5, Strong → K=9
-
-**Configuration (Proven Stable):**
-```bash
-# Dynamic-K Evidence Selection
-export RAGCHECKER_EVIDENCE_KEEP_MODE=target_k
-unset RAGCHECKER_EVIDENCE_KEEP_PERCENTILE  # Critical: avoid conflict
-export RAGCHECKER_TARGET_K_WEAK=3
-export RAGCHECKER_TARGET_K_BASE=5
-export RAGCHECKER_TARGET_K_STRONG=9
-export RAGCHECKER_SIGNAL_DELTA_WEAK=0.06
-export RAGCHECKER_SIGNAL_DELTA_STRONG=0.16
-export RAGCHECKER_EVIDENCE_MAX_SENT=11
-export RAGCHECKER_EVIDENCE_MIN_SENT=2
-
-# Multi-Signal Weights (Balanced)
-export RAGCHECKER_WEIGHT_JACCARD=0.20
-export RAGCHECKER_WEIGHT_ROUGE=0.30
-export RAGCHECKER_WEIGHT_COSINE=0.50
-```
-
-**Performance Impact**: +10.4% Precision, +3.8% Recall, +7.4% F1 Score
-
-#### **🎯 Claim Binding Enhancement (Precision Booster)**
-
-**Status**: ✅ **STABLE** - Integrated with Dynamic-K system
-
-Claim binding extracts explicit claims from responses and binds them to supporting evidence, dramatically improving precision while maintaining recall through soft-drop policies.
-
-**Key Features:**
-- **Claim Extraction**: JSON-based claim identification via Bedrock
-- **Evidence Binding**: Top-K evidence snippets per claim
-- **Soft Drop**: `DROP_UNSUPPORTED=0` keeps borderline claims with annotation
-- **Quality Thresholds**: Configurable evidence coverage requirements
-
-**Configuration (Tuned for Balance):**
-```bash
-# Claim Binding (Enhanced)
-export RAGCHECKER_CLAIM_BINDING=1
-export RAGCHECKER_CLAIM_TOPK=4
-export RAGCHECKER_DROP_UNSUPPORTED=0  # Soft drop for better recall
-export RAGCHECKER_EVIDENCE_MIN_FACT_COVERAGE=0.25
-```
-
-**Performance Impact**: Maintains substantial responses (80-170 words) vs previous 20-word drops
-
-#### **🔧 Pydantic Integration for Type Safety**
-
-**Status**: ✅ **IMPLEMENTED** - Enhanced data validation and error handling
-
-The RAGChecker evaluation system now integrates with Pydantic for robust type safety and validation:
-
-**Key Features:**
-- **Type-Safe Evaluation Models**: Structured data models for evaluation inputs/outputs
-- **Constitution-Aware Validation**: Automated compliance checking
-- **Enhanced Error Taxonomy**: Categorized error handling with detailed diagnostics
-- **Performance Monitoring**: Built-in metrics collection and validation
-
-**Configuration:**
-```python
-# Enhanced evaluation with Pydantic validation
-from scripts.b1049_pydantic_ragchecker_integration import PydanticRAGCheckerEvaluator
-
-evaluator = PydanticRAGCheckerEvaluator(
-    enable_validation=True,
-    constitution_checks=True,
-    error_taxonomy_enabled=True
-)
-
-# Run evaluation with type safety
-results = evaluator.evaluate_with_validation(test_cases)
-```
-
-**Benefits:**
-- **Runtime Error Reduction**: 90%+ reduction in type-related evaluation failures
-- **Debugging Enhancement**: Detailed error categorization and diagnostics
-- **Quality Assurance**: Automated validation against project standards
-- **Development Velocity**: Faster iteration with early error detection
-
-### **🚀 B-1045: RAGChecker Dynamic-K Evidence Selection & Claim Binding - BREAKTHROUGH**
-
-#### **Recent Breakthrough Implementation (September 2025)**
-**Status**: ✅ **COMPLETED** - Major performance breakthrough successfully implemented
-
-**What Was Accomplished**:
-- **Dynamic-K Evidence Selection**: Intelligent evidence selection that adapts to signal strength
-- **Claim Binding Enhancement**: Precision improvement through explicit claim-evidence binding
-- **Performance Breakthrough**: 10.4% Precision, 3.8% Recall, 7.4% F1 Score improvements
-- **System Stability**: Proven stable configuration locked as new baseline
-
-#### **Technical Breakthrough Details**
-
-**Dynamic-K Evidence Selection System**:
-```python
-class DynamicKEvidenceSelector:
-    """Intelligently selects evidence based on signal strength and quality."""
-
-    def __init__(self):
-        self.signal_thresholds = {
-            "weak": 0.06,      # Low signal threshold
-            "base": 0.11,      # Medium signal threshold
-            "strong": 0.16     # High signal threshold
-        }
-
-        self.evidence_targets = {
-            "weak": 3,         # Fewer evidence for weak signals
-            "base": 5,         # Standard evidence for base signals
-            "strong": 9        # More evidence for strong signals
-        }
-
-    def select_evidence(self, evidence_scores: List[float]) -> List[float]:
-        """Dynamically select evidence based on signal strength."""
-
-        if not evidence_scores:
-            return []
-
-        # Calculate signal strength
-        top_score = max(evidence_scores)
-        median_score = statistics.median(evidence_scores)
-        signal_delta = top_score - median_score
-
-        # Determine signal category
-        if signal_delta > self.signal_thresholds["strong"]:
-            target_k = self.evidence_targets["strong"]
-        elif signal_delta > self.signal_thresholds["base"]:
-            target_k = self.evidence_targets["base"]
-        else:
-            target_k = self.evidence_targets["weak"]
-
-        # Select top-K evidence
-        sorted_scores = sorted(evidence_scores, reverse=True)
-        return sorted_scores[:target_k]
-```
-
-**Claim Binding Enhancement**:
-```python
-class ClaimBindingEnhancer:
-    """Enhances precision through explicit claim-evidence binding."""
-
-    def __init__(self):
-        self.claim_extraction_model = "bedrock:anthropic.claude-3-sonnet-20240229-v1:0"
-        self.evidence_binding_strategy = "top_k_soft_drop"
-        self.min_fact_coverage = 0.25
-
-    def extract_and_bind_claims(self, response: str, evidence: List[str]) -> Dict[str, Any]:
-        """Extract claims and bind them to supporting evidence."""
-
-        # Extract explicit claims from response
-        claims = self._extract_claims(response)
-
-        # Bind evidence to each claim
-        bound_claims = {}
-        for claim_id, claim_text in claims.items():
-            supporting_evidence = self._find_supporting_evidence(claim_text, evidence)
-
-            # Calculate evidence coverage
-            coverage_score = self._calculate_coverage(claim_text, supporting_evidence)
-
-            # Apply soft drop policy
-            if coverage_score >= self.min_fact_coverage:
-                bound_claims[claim_id] = {
-                    "claim": claim_text,
-                    "evidence": supporting_evidence,
-                    "coverage_score": coverage_score,
-                    "status": "supported"
-                }
-            else:
-                # Soft drop: keep with annotation
-                bound_claims[claim_id] = {
-                    "claim": claim_text,
-                    "evidence": supporting_evidence,
-                    "coverage_score": coverage_score,
-                    "status": "weakly_supported",
-                    "warning": "Low evidence coverage"
-                }
-
-        return bound_claims
-```
-
-#### **Performance Breakthrough Results**
-
-**Before B-1045 Implementation**:
-- Fixed evidence thresholds (static K=5)
-- No claim-evidence binding
-- Manual evidence selection
-- Average F1 Score: 0.082
-- Precision: 0.145
-- Recall: 0.099
-
-**After B-1045 Implementation**:
-- Dynamic evidence selection (K=3,5,9)
-- Intelligent claim-evidence binding
-- Adaptive signal-based selection
-- Average F1 Score: 0.159 (+7.4%)
-- Precision: 0.159 (+10.4%)
-- Recall: 0.166 (+3.8%)
-
-#### **Configuration Breakthrough**
-
-**Dynamic-K Evidence Selection**:
-```bash
-# Breakthrough configuration (proven stable)
-export RAGCHECKER_EVIDENCE_KEEP_MODE=target_k
-unset RAGCHECKER_EVIDENCE_KEEP_PERCENTILE  # Critical: avoid conflict
-
-# Signal-adaptive evidence selection
-export RAGCHECKER_TARGET_K_WEAK=3      # Weak signals: fewer evidence
-export RAGCHECKER_TARGET_K_BASE=5      # Base signals: standard evidence
-export RAGCHECKER_TARGET_K_STRONG=9    # Strong signals: more evidence
-
-# Signal strength thresholds
-export RAGCHECKER_SIGNAL_DELTA_WEAK=0.06    # Low signal threshold
-export RAGCHECKER_SIGNAL_DELTA_STRONG=0.16  # High signal threshold
-
-# Evidence constraints
-export RAGCHECKER_EVIDENCE_MAX_SENT=11      # Maximum evidence sentences
-export RAGCHECKER_EVIDENCE_MIN_SENT=2       # Minimum evidence sentences
-
-# Multi-signal scoring weights
-export RAGCHECKER_WEIGHT_JACCARD=0.20      # Jaccard similarity weigh
-export RAGCHECKER_WEIGHT_ROUGE=0.30        # ROUGE-L weigh
-export RAGCHECKER_WEIGHT_COSINE=0.50       # Cosine similarity weigh
-```
-
-**Claim Binding Enhancement**:
-```bash
-# Precision enhancement through claim binding
-export RAGCHECKER_CLAIM_BINDING=1                    # Enable claim binding
-export RAGCHECKER_CLAIM_TOPK=4                       # Top-K evidence per claim
-export RAGCHECKER_DROP_UNSUPPORTED=0                 # Soft drop for better recall
-export RAGCHECKER_EVIDENCE_MIN_FACT_COVERAGE=0.25    # Minimum evidence coverage
-```
-
-#### **Integration Benefits**
-
-**For Performance Optimization**:
-- **Adaptive Evidence Selection**: Automatically adjusts to query complexity
-- **Intelligent Signal Detection**: Responds to evidence quality dynamically
-- **Balanced Precision/Recall**: Maintains quality while improving coverage
-- **Stable Configuration**: Proven stable baseline for continued developmen
-
-**For System Reliability**:
-- **Reduced Manual Tuning**: Automatic adaptation to different query types
-- **Consistent Performance**: Stable baseline with predictable improvements
-- **Quality Assurance**: Built-in validation and error handling
-- **Development Velocity**: Faster iteration with proven configurations
-
-**For RAG System Evolution**:
-- **Foundation for Advanced Features**: Stable base for future enhancements
-- **Performance Benchmarking**: Clear metrics for optimization tracking
-- **Integration Readiness**: Ready for advanced RAG optimization features
-- **Baseline Compliance**: Meets critical performance requirements
-
-#### **1. Retrieval System Optimization**
-
-**Hybrid Retrieval Enhancement**:
-```python
-# Implement weighted Reciprocal Rank Fusion (RRF)
-def optimize_retrieval_system():
-    """
-    Optimize retrieval system for better recall without losing precision
-    """
-    # BM25 + Vector search with RRF
-    bm25_weight = 0.6  # Traditional keyword search
-    vector_weight = 0.4  # Semantic search
-
-    # Pre-filtering for recall
-    recall_threshold = 0.8  # High recall threshold
-    diversity_factor = 0.3  # Maintain result diversity
-
-    # Reranking for precision
-    precision_threshold = 0.7  # Precision threshold
-    alpha_blend = 0.6  # Balance between relevance and diversity
-
-    return {
-        'bm25_weight': bm25_weight,
-        'vector_weight': vector_weight,
-        'recall_threshold': recall_threshold,
-        'diversity_factor': diversity_factor,
-        'precision_threshold': precision_threshold,
-        'alpha_blend': alpha_blend
-    }
-```
-
-**Context Packing Optimization**:
-```python
-# Optimize context utilization for better recall
-def optimize_context_packing():
-    """
-    Optimize how context is packed and presented to the LLM
-    """
-    # MMR diversity for better coverage
-    mmr_lambda = 0.7  # Balance relevance and diversity
-
-    # Token limit optimization
-    max_tokens = 8000  # Optimal for current models
-    evidence_first = True  # Present evidence before answers
-
-    # Chunking strategy
-    chunk_size = 512  # Optimal chunk size
-    overlap = 128  # Chunk overlap for continuity
-
-    return {
-        'mmr_lambda': mmr_lambda,
-        'max_tokens': max_tokens,
-        'evidence_first': evidence_first,
-        'chunk_size': chunk_size,
-        'overlap': overlap
-    }
-```
-
-#### **2. Intent-Aware Optimization**
-
-**Query Type Classification**:
-```python
-# Classify queries for intent-aware optimization
-def classify_query_intent(query: str) -> str:
-    """
-    Classify query intent for targeted optimization
-    """
-    query_lower = query.lower()
-
-    if any(word in query_lower for word in ['config', 'file', 'setting']):
-        return 'config_lookup'  # High precision needed
-    elif any(word in query_lower for word in ['how', 'fix', 'error', 'troubleshoot']):
-        return 'how_to'  # High recall needed
-    elif any(word in query_lower for word in ['status', 'progress', 'overview']):
-        return 'status_summary'  # Balanced approach
-    elif any(word in query_lower for word in ['integrate', 'connect', 'workflow']):
-        return 'multi_hop'  # Maximum recall needed
-    else:
-        return 'general'  # Default optimization
-```
-
-**Intent-Specific Optimization**:
-```python
-# Apply intent-specific optimization strategies
-def apply_intent_optimization(intent: str, current_metrics: dict) -> dict:
-    """
-    Apply optimization based on query inten
-    """
-    if intent == 'config_lookup':
-        # Prioritize precision for config queries
-        return {
-            'recall_threshold': 0.6,  # Lower recall threshold
-            'precision_threshold': 0.9,  # Higher precision threshold
-            'reranking_weight': 0.8,  # Heavy reranking
-            'diversity_factor': 0.1  # Low diversity (exact matches)
-        }
-
-    elif intent == 'how_to':
-        # Prioritize recall for how-to queries
-        return {
-            'recall_threshold': 0.9,  # High recall threshold
-            'precision_threshold': 0.6,  # Lower precision threshold
-            'reranking_weight': 0.4,  # Light reranking
-            'diversity_factor': 0.5  # High diversity (multiple approaches)
-        }
-
-    elif intent == 'multi_hop':
-        # Maximum recall for complex queries
-        return {
-            'recall_threshold': 0.95,  # Very high recall
-            'precision_threshold': 0.5,  # Lower precision acceptable
-            'reranking_weight': 0.2,  # Minimal reranking
-            'diversity_factor': 0.8  # Maximum diversity
-        }
-
-    else:
-        # Balanced approach for general queries
-        return {
-            'recall_threshold': 0.8,
-            'precision_threshold': 0.7,
-            'reranking_weight': 0.6,
-            'diversity_factor': 0.3
-        }
-```
-
-#### **3. Quality Gates & Validation**
-
-**Performance Quality Gates**:
-```python
-# Implement quality gates for performance validation
-def implement_quality_gates():
-    """
-    Implement quality gates to prevent performance regression
-    """
-    # Two-green rule: Both precision and recall must improve
-    precision_gate = 0.149  # Current baseline
-    recall_gate = 0.099    # Current baseline
-
-    # Ratchet system: Only allow improvements
-    precision_ratchet = True   # Can't go below current
-    recall_ratchet = True      # Can't go below current
-
-    # Success criteria
-    consecutive_successes = 2  # Need 2 successful runs
-    confidence_interval = 0.95  # 95% confidence
-
-    return {
-        'precision_gate': precision_gate,
-        'recall_gate': recall_gate,
-        'precision_ratchet': precision_ratchet,
-        'recall_ratchet': recall_ratchet,
-        'consecutive_successes': consecutive_successes,
-        'confidence_interval': confidence_interval
-    }
-```
-
-**Test Set Hardening**:
-```python
-# Harden test set for better evaluation
-def harden_test_set():
-    """
-    Harden test set to prevent overfitting and ensure robust evaluation
-    """
-    # Add hard negatives
-    hard_negatives_ratio = 0.3  # 30% hard negative examples
-
-    # Multi-hop chains
-    multi_hop_queries = 0.2  # 20% multi-hop queries
-
-    # Edge cases
-    edge_case_ratio = 0.15  # 15% edge case queries
-
-    # Validation se
-    validation_split = 0.2  # 20% for validation
-
-    return {
-        'hard_negatives_ratio': hard_negatives_ratio,
-        'multi_hop_queries': multi_hop_queries,
-        'edge_case_ratio': edge_case_ratio,
-        'validation_split': validation_spli
-    }
-```
-
-### **Performance Monitoring & Alerting**
-
-#### **Real-time Performance Tracking**
-
-**Performance Dashboard**:
-```python
-# Real-time performance monitoring dashboard
-def create_performance_dashboard():
-    """
-    Create real-time performance monitoring dashboard
-    """
-    # Key metrics to track
-    metrics = [
-        'precision', 'recall', 'f1_score', 'faithfulness',
-        'response_time', 'token_usage', 'context_utilization'
-    ]
-
-    # Alert thresholds
-    alerts = {
-        'precision_below_baseline': 0.149,
-        'recall_below_baseline': 0.099,
-        'f1_below_baseline': 0.112,
-        'performance_regression': 0.05  # 5% regression threshold
-    }
-
-    # Update frequency
-    update_interval = 60  # Update every 60 seconds
-
-    return {
-        'metrics': metrics,
-        'alerts': alerts,
-        'update_interval': update_interval
-    }
-```
-
-**Performance Alerts**:
-```python
-# Performance alerting system
-def setup_performance_alerts():
-    """
-    Setup performance alerting for baseline violations
-    """
-    # Critical alerts (immediate action required)
-    critical_alerts = {
-        'precision_regression': 'Precision below baseline (0.149)',
-        'recall_regression': 'Recall below baseline (0.099)',
-        'f1_regression': 'F1 score below baseline (0.112)'
-    }
-
-    # Warning alerts (monitor closely)
-    warning_alerts = {
-        'approaching_baseline': 'Performance approaching baseline',
-        'high_variance': 'High performance variance detected',
-        'trend_degradation': 'Performance trending downward'
-    }
-
-    # Notification channels
-    notification_channels = ['email', 'slack', 'dashboard']
-
-    return {
-        'critical_alerts': critical_alerts,
-        'warning_alerts': warning_alerts,
-        'notification_channels': notification_channels
-    }
-```
-
-### **Optimization Implementation Roadmap**
-
-#### **Phase 1: Immediate Optimization (Week 1-2)**
-
-**Priority 1: Recall Improvement**
-- Implement hybrid retrieval with RRF
-- Add pre-filtering for better recall
-- Optimize context packing strategies
-
-**Priority 2: Precision Maintenance**
-- Implement intent-aware reranking
-- Add quality gates for precision
-- Validate no precision regression
-
-#### **Phase 2: Advanced Optimization (Week 3-4)**
-
-**Priority 1: Faithfulness Measurement**
-- Enable comprehensive metrics
-- Implement faithfulness evaluation
-- Establish baseline for faithfulness
-
-**Priority 2: Performance Stability**
-- Implement performance monitoring
-- Add alerting systems
-- Establish quality gates
-
-#### **Phase 3: Continuous Improvement (Week 5-8)**
-
-**Priority 1: Automation**
-- Automated performance testing
-- Continuous optimization pipeline
-- Performance regression prevention
-
-**Priority 2: Scaling**
-- Scale optimization strategies
-- Performance benchmarking
-- Long-term performance planning
-
-### **Success Metrics & Validation**
-
-#### **Success Criteria**
-
-**Primary Success Metrics**:
-- **Recall**: Achieve ≥0.45 (currently 0.099)
-- **Precision**: Maintain ≥0.149 while improving recall
-- **F1 Score**: Achieve ≥0.22 (currently 0.112)
-- **Faithfulness**: Achieve ≥0.60 (currently TBD)
-
-**Secondary Success Metrics**:
-- **Performance Stability**: <5% variance across runs
-- **Optimization Efficiency**: <2 weeks to achieve targets
-- **System Reliability**: 100% evaluation success rate
-
-#### **Validation Process**
-
-**Performance Validation**:
-```bash
-# Run comprehensive evaluation
-export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
-
-# Validate results against targets
-python3 scripts/validate_performance_targets.py
-  --precision-target 0.20
-  --recall-target 0.45
-  --f1-target 0.22
-  --faithfulness-target 0.60
-
-# Generate performance repor
-python3 scripts/generate_performance_report.py
-  --output performance_optimization_report.md
-```
-
-**Quality Gate Validation**:
-```bash
-# Run quality gate checks
-python3 scripts/quality_gate_validator.py
-  --baseline-file metrics/baseline_evaluations/baseline_20250901.json
-  --current-file metrics/baseline_evaluations/latest_evaluation.json
-  --strict-mode
-
-# Check for performance regression
-python3 scripts/regression_detector.py
-  --baseline metrics/baseline_evaluations/
-  --threshold 0.05
-```
-
----
-
 ## 🧠 **Memory Context System Optimization**
+
+**🚨 REFERENCE**: For comprehensive system optimization strategies, see the **System Optimization** section above.
 
 ### **Research-Based Optimization Patterns**
 
@@ -3049,6 +3366,8 @@ python3 scripts/check_results_storage.py --health-check
 
 ## 🧠 **Memory Context System Optimization**
 
+**🚨 REFERENCE**: For comprehensive system optimization strategies, see the **System Optimization** section above.
+
 ### **Research-Based Optimization Patterns**
 
 Based on comprehensive benchmark testing across 3 models and 2 test structures (30 total tests), we have identified significant optimization opportunities for memory context systems. These patterns are validated through statistical analysis and provide actionable implementation guidance.
@@ -3125,17 +3444,17 @@ RELATED_FILES: ["500_research/"]
 ```markdown
 <!-- HIGH Priority - Core Guide -->
 # Memory Context System Architecture
-<!-- MEMORY_CONTEXT: HIGH -->
+
 <!-- ANCHOR_PRIORITY: 0 -->
 
 <!-- MEDIUM Priority - Implementation Guide -->
 # YAML Front-Matter Implementation
-<!-- MEMORY_CONTEXT: MEDIUM -->
+
 <!-- ANCHOR_PRIORITY: 5 -->
 
 <!-- LOW Priority - Reference Material -->
 # Legacy Integration Patterns
-<!-- MEMORY_CONTEXT: LOW -->
+
 <!-- ANCHOR_PRIORITY: 10 -->
 ```
 
@@ -3559,7 +3878,7 @@ The `300_experiments/` folder provides **100% comprehensive coverage** of all te
 ```bash
 # Run RAGChecker evaluation
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check performance against baseline
 python3 scripts/validate_performance_targets.py
@@ -6067,10 +6386,10 @@ python3 scripts/test_enhanced_bedrock.py
 
 # Test with enhanced clien
 export BEDROCK_ENHANCED_MODE=1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Run full evaluation to compare with baseline
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 python3 scripts/compare_baseline_performance.py
 ```
 
@@ -6236,6 +6555,916 @@ print('✅ Performance monitor working')
 - **Batch Processing**: 3x faster for multiple validations
 - **Error Recovery**: 95%+ recovery success rate
 - **Monitoring Overhead**: <1% performance impac
+
+## 🔒 **Canonical Evaluation Standard Operating Procedure**
+
+### **🎯 Overview**
+
+This SOP establishes a **canonical, locked evaluation system** for regression tracking and performance monitoring. The system ensures **apples-to-apples comparisons** across all evaluation runs.
+
+### **🔒 Core Principles**
+
+1. **One canonical, locked "stable" eval** for regression tracking
+2. **Versioned baselines** when intentionally changing weights/pipeline
+3. **Small smoke tests** for fast iteration between big runs
+4. **Audit trail** with git commits and configuration provenance
+
+### **📋 Standard Evaluation Flow**
+
+#### **🔄 Daily Regression Testing**
+
+**Command (run every time):**
+```bash
+source throttle_free_eval.sh
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
+```
+
+**What this does:**
+- ✅ Loads locked stable configuration
+- ✅ Uses proven throttle-free settings
+- ✅ Runs all 15 test cases
+- ✅ Generates comparable results
+
+**Verify banner shows:**
+```
+🔒 Loaded env from configs/stable_bedrock.env … lock=True
+ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_ID=anthropic.claude-3-haiku-20240307-v1
+```
+
+#### **💨 Fast Iteration (Smoke Tests)**
+
+**For quick testing between changes:**
+```bash
+./scripts/run_ragchecker_smoke_test.sh
+```
+
+**What this does:**
+- ✅ Uses subset of representative test cases
+- ✅ Fast mode enabled
+- ✅ Same locked configuration
+- ✅ Quick feedback loop
+
+### **🔧 Configuration Management**
+
+#### **📁 Stable Configuration**
+
+**File**: `configs/stable_bedrock.env`
+- **Purpose**: Locked configuration for regression tracking
+- **Status**: DO NOT MODIFY without versioning
+- **Contains**: Proven throttle-free settings
+
+#### **🔄 Versioning New Baselines**
+
+**When to version:**
+- Intentionally changing weights/config
+- Want to reset expectations
+- New model or significant changes
+
+**Steps:**
+1. **Create versioned config:**
+   ```bash
+   cp configs/stable_bedrock.env configs/stable_bedrock_YYYYMMDD.env
+   ```
+
+2. **Update default (optional):**
+   ```bash
+   # Edit throttle_free_eval.sh to point to new config
+   export RAGCHECKER_ENV_FILE=configs/stable_bedrock_YYYYMMDD.env
+   ```
+
+3. **Run baseline setup:**
+   ```bash
+   python3 scripts/baseline_version_manager.py --full-setup
+   ```
+
+4. **Run stable eval and promote:**
+   ```bash
+   source throttle_free_eval.sh
+   python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
+   ```
+
+### **📊 Results Management**
+
+#### **📁 Results Storage**
+
+**Location**: `metrics/baseline_evaluations/`
+- **Format**: `ragchecker_official_evaluation_YYYYMMDD_HHMMSS.json`
+- **Contains**: Full evaluation results with provenance
+
+#### **📋 Baseline Documents**
+
+**Created by version manager:**
+- `NEW_BASELINE_MILESTONE_YYYYMMDD.md` - New target baseline
+- `BASELINE_LOCKED_YYYYMMDD.md` - Locked configuration audit
+- `stable_bedrock_YYYYMMDD.env` - Versioned configuration
+
+### **🚨 Red Line Enforcement**
+
+#### **🔴 Build Freeze Triggers**
+
+**When ANY baseline metric falls below target:**
+- **Recall@20** < 0.65 → **BUILD FREEZE**
+- **Precision@k** < 0.20 → **BUILD FREEZE**
+- **Faithfulness** < 0.60 → **BUILD FREEZE**
+
+#### **✅ Build Resume Conditions**
+
+**ALL baseline metrics must be restored above targets before:**
+- New feature development
+- Major system changes
+- Performance-impacting updates
+
+### **🛠️ Troubleshooting**
+
+#### **🚫 Throttling Issues**
+
+**If throttled at all:**
+1. **Reduce rate limit:**
+   ```bash
+   # Edit configs/stable_bedrock.env
+   export BEDROCK_MAX_RPS=0.06  # or 0.04
+   ```
+
+2. **Increase cooldown:**
+   ```bash
+   export BEDROCK_COOLDOWN_SEC=45  # or 60
+   ```
+
+3. **Re-run and lock:**
+   ```bash
+   source throttle_free_eval.sh
+   python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
+   ```
+
+#### **❌ Configuration Issues**
+
+**Missing stable config:**
+```bash
+cp configs/stable_bedrock.env.template configs/stable_bedrock.env
+```
+
+**Wrong environment:**
+```bash
+# Verify banner shows correct settings
+# Check configs/stable_bedrock.env exists
+# Ensure RAGCHECKER_LOCK_ENV=1
+```
+
+### **📈 Performance Monitoring**
+
+#### **📊 Key Metrics to Track**
+
+**Retrieval Quality:**
+- Recall@20 (target: ≥0.65)
+- Precision@k (target: ≥0.20)
+- F1 Score (target: ≥0.22)
+
+**Answer Quality:**
+- Faithfulness (target: ≥0.60)
+- Unsupported Claims (target: ≤15%)
+- Context Utilization (target: ≥60%)
+
+#### **📋 Reporting**
+
+**Weekly baseline reports:**
+- Compare against locked baseline
+- Track regression trends
+- Identify performance gaps
+- Document configuration changes
+
+### **🎯 Best Practices**
+
+#### **✅ Do**
+
+- **Always use stable configuration** for regression testing
+- **Version baselines** when making intentional changes
+- **Run smoke tests** for fast iteration
+- **Document configuration changes** with git commits
+- **Lock successful configurations** immediately
+
+#### **❌ Don't**
+
+- **Modify stable config** without versioning
+- **Run evaluations** without locked configuration
+- **Ignore throttling** - fix configuration instead
+- **Skip smoke tests** for major changes
+- **Deploy without baseline validation**
+
+### **⚙️ Quick Recall Boost (Safe Toggle)**
+
+When under RED LINE enforcement and recall needs improvement while guarding precision, use the safe toggle and aliases:
+
+```bash
+# Apply recall tuning, run smoke test, then evaluate
+source throttle_free_eval.sh && recall_boost_apply &&
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable --lessons-mode advisory
+
+# Revert tuning and re-check quickly
+source throttle_free_eval.sh && recall_boost_revert
+```
+
+Details:
+- Script: `scripts/toggle_recall_boost.py` (apply/revert atomically; backups under `metrics/derived_configs/recall_boost_backups/`)
+- Targets set: `candidates.final_limit=80`, `rerank.final_top_n=12`, `rerank.alpha=0.6`, `prefilter.min_bm25_score=0.05`, `prefilter.min_vector_score=0.65`
+- Guard: Abort changes if precision drops below your interim floor (e.g., ≥0.149) without ≥+0.03 recall gain.
+
+### **🔄 Automation Opportunities**
+
+#### **🤖 Cursor Tasks**
+
+**Add to evaluation script:**
+- `--stable` flag with automatic config loading
+- Post-run queue stats and provenance tracking
+- Automatic baseline versioning on config changes
+
+#### **📅 Scheduled Runs**
+
+**Nightly regression testing:**
+- Source stable config
+- Run full evaluation
+- Compare against baseline
+- Alert on regressions
+
+**PR validation:**
+- Run smoke test on every PR
+- Full evaluation on performance labels
+- Baseline comparison required
+
+---
+
+**Generated**: 2025-09-04
+**Status**: ✅ **CANONICAL EVALUATION SOP ESTABLISHED**
+**Next Review**: 2025-09-11
+
+## 🧠 **Closed-Loop Lessons Engine (CLLE) - Continuous Improvement System**
+
+### **🎯 Overview**
+
+The Closed-Loop Lessons Engine (CLLE) systematically learns from evaluation runs and applies those lessons to future runs, creating a continuous improvement loop that addresses the core gap in the evaluation process.
+
+The lessons engine consists of four core components that work together to:
+1. **Extract** lessons from evaluation results
+2. **Store** lessons persistently for future use
+3. **Load** relevant lessons for new runs
+4. **Apply** lessons to generate improved configurations
+
+### **🔧 Core Components**
+
+#### **1. Lessons Extractor (`scripts/lessons_extractor.py`)**
+
+**Purpose**: Analyzes evaluation results and generates structured lessons
+
+**Key Functions**:
+- `analyze_failure_modes()`: Identifies performance patterns
+- `generate_lessons()`: Creates lessons with parameter recommendations
+- `main()`: Orchestrates the extraction process
+
+**Usage**:
+```bash
+python3 scripts/lessons_extractor.py <run_json_path> [progress_jsonl_path] [out_jsonl]
+```
+
+**Example Lesson Generated**:
+```json
+{
+  "id": "LL-2025-09-06-001",
+  "finding": {"pattern": "high_precision_low_recall", "evidence": {"precision": 0.85, "recall": 0.15}},
+  "recommendation": {
+    "changes": [
+      {"key": "RETRIEVAL_TOP_K", "op": "add", "value": 2},
+      {"key": "RERANK_TOP_K", "op": "add", "value": 5}
+    ],
+    "predicted_effect": {"recall": "+0.03~+0.06", "precision": "-0.01~0"}
+  }
+}
+```
+
+#### **2. Lessons Loader (`scripts/lessons_loader.py`)**
+
+**Purpose**: Loads relevant lessons and generates candidate configurations
+
+**Key Functions**:
+- `filter_lessons()`: Filters lessons by scope and relevance
+- `resolve_conflicts()`: Handles competing lessons
+- `apply_changes()`: Applies parameter changes to configurations
+- `main()`: Orchestrates the loading process
+
+**Usage**:
+```bash
+python3 scripts/lessons_loader.py <base_env> <lessons_jsonl> [--mode advisory|apply] [--scope-level profile|dataset|global] [--window N]
+```
+
+**Modes**:
+- `advisory`: Generate candidate config and decision docket
+- `apply`: Apply lessons directly (with quality gate enforcement)
+
+#### **3. Evolution Tracker (`scripts/evolution_tracker.py`)**
+
+**Purpose**: Tracks configuration lineage and evolution
+
+**Key Functions**:
+- `scan_configs()`: Scans all configuration files and metadata
+- `build_evolution_graph()`: Creates evolution relationships
+- `generate_mermaid_diagram()`: Visualizes configuration evolution
+
+**Usage**:
+```bash
+python3 scripts/evolution_tracker.py
+```
+
+**Outputs**:
+- `configs/EVOLUTION.json`: Structured evolution data
+- `configs/EVOLUTION.md`: Human-readable evolution report
+
+#### **4. Quality Checker (`scripts/lessons_quality_check.py`)**
+
+**Purpose**: Validates system integrity and completeness
+
+**Key Functions**:
+- `check_lessons_file()`: Validates lessons JSONL format
+- `check_config_metadata()`: Ensures metadata completeness
+- `check_derived_configs()`: Validates generated configurations
+- `check_quality_gates()`: Verifies quality gate configuration
+
+**Usage**:
+```bash
+python3 scripts/lessons_quality_check.py
+```
+
+### **🔗 Integration with Evaluation System**
+
+#### **Command Line Integration**
+
+The lessons engine is integrated into `ragchecker_official_evaluation.py` with new arguments:
+
+```bash
+python3 scripts/ragchecker_official_evaluation.py
+  --lessons-mode {off,advisory,apply}
+  --lessons-scope {auto,dataset,profile,global}
+  --lessons-window N
+```
+
+#### **Pre-Run Integration**
+
+Before evaluation:
+1. Loads relevant lessons based on scope
+2. Generates candidate configuration
+3. Applies lessons if in "apply" mode
+4. Sets environment variables for tracking
+
+#### **Post-Run Integration**
+
+After evaluation:
+1. Extracts lessons from results
+2. Stores lessons in JSONL format
+3. Updates evolution tracking
+4. Persists metadata in results
+
+### **🛡️ Quality Gates and Safety**
+
+#### **Quality Gate Configuration**
+
+Quality gates are defined in `config/ragchecker_quality_gates.json`:
+
+```json
+{
+  "precision": {"min": 0.20},
+  "recall": {"min": 0.45},
+  "f1": {"min": 0.22},
+  "latency": {"max": 5.0},
+  "cost": {"max": 0.10}
+}
+```
+
+#### **Safety Mechanisms**
+
+1. **Conservative Effect Parsing**: Handles malformed effect strings gracefully
+2. **Quality Gate Enforcement**: Blocks apply mode if violations detected
+3. **Conflict Resolution**: Prevents duplicate parameter changes
+4. **Scope Filtering**: Only applies relevant lessons
+
+### **📊 Data Flow**
+
+```
+Evaluation Run
+    ↓
+Extract Lessons (lessons_extractor.py)
+    ↓
+Store Lessons (metrics/lessons/lessons.jsonl)
+    ↓
+Load Lessons (lessons_loader.py)
+    ↓
+Apply Lessons (generate candidate config)
+    ↓
+Next Evaluation Run
+```
+
+### **📁 File Structure**
+
+```
+metrics/
+├── lessons/
+│   └── lessons.jsonl          # Stored lessons
+├── derived_configs/
+│   ├── *_candidate.env        # Generated configurations
+│   └── *_decision_docket.md   # Decision documentation
+└── baseline_evaluations/
+    └── *.json                 # Evaluation results with lessons metadata
+
+configs/
+├── *.env                      # Base configurations
+├── *.meta.yml                 # Configuration metadata
+├── EVOLUTION.json             # Evolution tracking data
+├── EVOLUTION.md               # Evolution report
+└── ragchecker_quality_gates.json  # Quality thresholds
+```
+
+### **🔍 Stateless State Discovery**
+
+**For stateless agents to determine current state and next actions:**
+
+#### **Latest Results Analysis**
+```bash
+# Get most recent evaluation results
+LATEST_RESULTS=$(ls -t metrics/baseline_evaluations/*.json | head -1)
+echo "Latest results: $LATEST_RESULTS"
+
+# Parse lessons metadata
+jq '.run_config.lessons' "$LATEST_RESULTS"
+```
+
+#### **Explicit Stateless State Discovery Procedure**
+
+1. **Find latest eval JSON** under `metrics/baseline_evaluations/` and parse:
+   - `.run_config.lessons.lessons_mode`
+   - `.run_config.lessons.applied_lessons[]`
+   - `.run_config.lessons.decision_docket`
+   - `.run_config.lessons.candidate_env`
+   - `.run_config.lessons.apply_blocked`
+   - `.run_config.lessons.gate_warnings[]`
+   - `.run_config.env.RAGCHECKER_ENV_FILE`
+   - `.run_config.env.LESSONS_APPLIED` or `.run_config.env.LESSONS_SUGGESTED`
+   - `.run_config.env.DECISION_DOCKET`
+
+2. **Decision Logic**:
+   - **If `apply_blocked == true`**: Read the docket's "Quality Gates" section; do not apply; propose next eval plan
+   - **If `lessons_mode == "advisory"`**: Human review → optionally rerun in apply mode
+   - **If `lessons_mode == "apply"`**: Check results, document lessons learned
+
+3. **Next Actions**:
+   - **Always**: Run quality checks and evolution tracking
+   - **Document**: Add evaluation results to backlog with docket link
+
+### **🎯 Usage Examples**
+
+#### **Basic Advisory Mode**
+
+```bash
+# Run evaluation with lessons engine in advisory mode
+python3 scripts/ragchecker_official_evaluation.py
+  --lessons-mode advisory
+  --lessons-scope profile
+  --lessons-window 5
+```
+
+#### **Apply Mode with Quality Gates**
+
+```bash
+# Run evaluation with lessons engine in apply mode
+python3 scripts/ragchecker_official_evaluation.py
+  --lessons-mode apply
+  --lessons-scope profile
+  --lessons-window 3
+```
+
+#### **System Health Check**
+
+```bash
+# Check lessons system integrity
+python3 scripts/lessons_quality_check.py
+
+# Generate evolution tracking
+python3 scripts/evolution_tracker.py
+```
+
+### **🛠️ Troubleshooting**
+
+#### **Common Issues**
+
+1. **JSON Parsing Errors**: Ensure logs go to stderr, JSON to stdout
+2. **Quality Gate Violations**: Check predicted effects against gates
+3. **Missing Lessons**: Verify lessons.jsonl exists and is valid
+4. **Scope Mismatches**: Ensure lesson scopes match filter criteria
+
+#### **Debug Commands**
+
+```bash
+# Check lessons file validity
+python3 scripts/lessons_quality_check.py
+
+# Test lessons loader
+python3 scripts/lessons_loader.py configs/precision_elevated.env metrics/lessons/lessons.jsonl --mode advisory
+
+# View evolution tracking
+cat configs/EVOLUTION.md
+```
+
+### **✅ Best Practices**
+
+1. **Always use advisory mode first** to review changes
+2. **Check quality gates** before applying lessons
+3. **Monitor evolution tracking** for configuration lineage
+4. **Run quality checks** regularly to ensure system integrity
+5. **Use appropriate scopes** to avoid irrelevant lessons
+
+### **🔄 Future Enhancements**
+
+#### **Completed ✅**
+- ✅ **Pre-commit hooks**: Lessons quality check runs automatically on commit
+- ✅ **CI/CD integration**: Evolution tracking runs in CI workflows and produces `configs/EVOLUTION.md` regularly
+- ✅ **Quality gate enforcement**: Conservative blocking logic implemented
+- ✅ **JSON-only output**: Loader outputs machine-readable JSON to stdout, logs to stderr
+
+#### **Planned 🔄**
+- **DB episodic store integration**: Persist lessons into episodic memory system
+- **Sidecar metadata updates on apply**: Automatic `.meta.yml` updates (currently manual)
+- **Enhanced conflict resolution**: Full precedence system (manual > profile > dataset > global)
+- **Idempotence fingerprinting**: Prevent duplicate lesson applications
+
+---
+
+**Status**: ✅ **CLOSED-LOOP LESSONS ENGINE OPERATIONAL**                 
+**Integration**: Fully integrated with evaluation system                  
+**Next Review**: 2025-09-11
+
+## 🛠️ Database Troubleshooting Patterns
+
+<!-- ANCHOR_KEY: database-troubleshooting-patterns -->
+<!-- ANCHOR_PRIORITY: 2 -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
+
+### **TL;DR**
+Codified database troubleshooting patterns and recovery procedures for PostgreSQL and DSPy system issues. Apply these patterns systematically and update based on new insights.
+
+### **🚨 Recurring Database Issues Pattern**
+
+#### **1. PostgreSQL Service Issues**
+**Pattern**: `postgresql@14 error` in brew services
+**Symptoms**:
+- `Error: failed to perform vector probe: pq: invalid input syntax for type vector`
+- `Database connection error: 0`
+- `No module named 'dspy_rag_system'`
+
+**Recovery Steps**:
+```bash
+# 1. Check PostgreSQL status
+brew services list | grep postgresql
+
+# 2. Restart PostgreSQL service
+brew services restart postgresql@14
+
+# 3. Verify connection
+psql -d postgres -c "SELECT version();"
+```
+
+#### **2. Database Schema Issues**
+**Pattern**: Missing required columns or tables
+**Symptoms**:
+- `Database schema issue: Requires 'start_char' column that doesn't exist`
+- `Table doesn't exist yet`
+
+**Recovery Steps**:
+```bash
+# 1. Check database schema
+psql -d ai_agency -c "\d+ document_chunks"
+
+# 2. Run schema migration if needed
+python3 scripts/migrate_schema.py
+
+# 3. Verify schema integrity
+python3 scripts/verify_schema.py
+```
+
+#### **3. Vector Extension Issues**
+**Pattern**: pgvector extension not properly installed
+**Symptoms**:
+- `ERROR: type "vector" does not exist`
+- `ERROR: function vector_dims(vector) does not exist`
+
+**Recovery Steps**:
+```bash
+# 1. Check pgvector extension
+psql -d ai_agency -c "SELECT * FROM pg_extension WHERE extname = 'vector';"
+
+# 2. Install pgvector if missing
+psql -d ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
+# 3. Verify vector functions
+psql -d ai_agency -c "SELECT vector_dims('[1,2,3]'::vector);"
+```
+
+### **🔧 Systematic Troubleshooting Process**
+
+#### **Step 1: Service Health Check**
+```bash
+# Check all services
+brew services list | grep -E "(postgresql|redis)"
+ps aux | grep -E "(postgres|redis)"
+```
+
+#### **Step 2: Database Connection Test**
+```bash
+# Test basic connection
+psql -d ai_agency -c "SELECT 1;"
+
+# Test vector operations
+psql -d ai_agency -c "SELECT vector_dims('[1,2,3]'::vector);"
+```
+
+#### **Step 3: Schema Validation**
+```bash
+# Check critical tables
+psql -d ai_agency -c "\d+ document_chunks"
+psql -d ai_agency -c "\d+ conversation_memory"
+```
+
+#### **Step 4: Performance Check**
+```bash
+# Check query performance
+psql -d ai_agency -c "EXPLAIN ANALYZE SELECT * FROM document_chunks LIMIT 10;"
+```
+
+### **📊 Monitoring & Prevention**
+
+#### **Health Check Commands**
+```bash
+# Run comprehensive health check
+python3 scripts/healthcheck_db.py
+
+# Check vector index status
+psql -d ai_agency -c "SELECT schemaname, tablename, indexname FROM pg_indexes WHERE indexdef LIKE '%vector%';"
+```
+
+#### **Preventive Maintenance**
+- **Daily**: Check service status and connection health
+- **Weekly**: Verify schema integrity and index performance
+- **Monthly**: Review query performance and optimize slow queries         
+
+## 🎯 Evaluation Profiles & Performance Measurement
+
+<!-- ANCHOR_KEY: evaluation-profiles-guide -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["researcher", "implementer", "coder"] -->
+
+### **TL;DR**
+Complete guide to the evaluation profile system that prevents "accidentally-synthetic" baselines. Use the appropriate profile for your use case and follow the quick start commands.
+
+### **🎯 Evaluation Profiles Overview**
+
+The evaluation profile system provides **deterministic configuration** with **preflight checks** to prevent "accidentally-synthetic" baselines. This eliminates the confusion between real and mock evaluations.
+
+#### **📋 Available Profiles**
+
+| Profile | Purpose | Use Case | Driver | Database |
+|---------|---------|----------|--------|----------|
+| `real` | Baseline/tuning on real RAG | Production baselines, performance tuning | `dspy_rag` | Real PostgreSQL |
+| `gold` | Real RAG + gold cases | Validation with known good answers | `dspy_rag` | Real PostgreSQL |
+| `mock` | Infra-only, synthetic | CI smoke tests, infrastructure validation | `synthetic` | Mock database |
+
+### **🚀 Quick Start**
+
+#### **Baseline (real data):**
+```bash
+./scripts/eval_real.sh --concurrency 8
+```
+
+#### **Gold validation (real + gold cases):**
+```bash
+./scripts/eval_gold.sh
+```
+
+#### **Infra smoke (mock, fast):**
+```bash
+./scripts/eval_mock.sh --concurrency 3
+```
+
+#### **Using Makefile:**
+```bash
+make eval-real    # Baseline/tuning on real RAG
+make eval-gold    # Real RAG + gold cases
+make eval-mock    # Infra-only smoke
+```
+
+### **🔧 Configuration System**
+
+#### **Profile Files**
+Each profile has a dedicated configuration file:
+
+- `configs/profiles/real.env` - Real evaluations
+- `configs/profiles/gold.env` - Real evaluations with gold cases
+- `configs/profiles/mock.env` - Mock evaluations
+
+#### **Configuration Resolution Order**
+1. **CLI flags** (highest precedence)
+2. **Profile file** configs
+3. **Process env** (for CI secrets only)
+4. **Hardcoded safe defaults**
+
+#### **Preflight Checks**
+The system **refuses to run** if:
+- `real`/`gold` profile with `EVAL_DRIVER=synthetic`
+- `real`/`gold` profile with `POSTGRES_DSN=mock://*`
+- No profile specified
+
+### **📊 Output Structure**
+
+#### **Profile-Aware Output Directories**
+Results are saved to:
+```
+metrics/runs/{YYYYMMDD_HHMMSS}__{profile}__driver-{driver}__f1-{f1}__p-{p}__r-{r}/
+```
+
+#### **Artifacts**
+Each run creates:
+- `summary.json` - Profile and environment information
+- `evaluation_results.json` - Full evaluation results
+- `provenance.json` - Configuration and metadata
+
+### **🛡️ Safety Features**
+
+#### **Branch Protection**
+- **Mock profile blocked on main branch** - Prevents accidental synthetic baselines
+- **Real profile required for baselines** - Ensures production-quality evaluations
+
+#### **Configuration Validation**
+- **Preflight checks** before evaluation starts
+- **Clear error messages** for invalid configurations
+- **Banner display** showing resolved configuration
+
+### **🔄 CI Integration**
+
+#### **PR Workflow** (Fast)
+```yaml
+# .github/workflows/ci-pr-quick.yml
+- name: Eval (mock, low concurrency)
+  run: ./scripts/eval_mock.sh --concurrency 3
+```
+
+#### **Nightly Baseline** (Real)
+```yaml
+# .github/workflows/ci-nightly-baseline.yml
+- name: Eval (real, higher concurrency)
+  env:
+    POSTGRES_DSN: ${{ secrets.POSTGRES_DSN }}
+  run: ./scripts/eval_real.sh --concurrency 12
+```
+
+### **🧪 Testing Profiles**
+
+#### **Test Profile Configuration**
+```bash
+make test-profiles
+```
+
+#### **Manual Testing**
+```bash
+# Test each profile
+python3 scripts/lib/config_loader.py --profile real
+python3 scripts/lib/config_loader.py --profile gold
+python3 scripts/lib/config_loader.py --profile mock
+```
+
+### **🚨 Common Issues & Solutions**
+
+#### **"No profile selected" Error**
+```bash
+❌ No profile selected.
+   Use one of:
+     --profile real   (baseline/tuning on real RAG)
+     --profile gold   (real RAG + gold cases)
+     --profile mock   (infra tests only)
+```
+**Solution**: Always specify a profile: `--profile real`
+
+#### **"Real/gold require EVAL_DRIVER=dspy_rag" Error**
+```bash
+❌ Real/gold require EVAL_DRIVER=dspy_rag (synthetic refused).
+```
+**Solution**: Use real profile, not mock: `--profile real`
+
+#### **"Real/gold require a real POSTGRES_DSN" Error**
+```bash
+❌ Real/gold require a real POSTGRES_DSN (not mock://).
+```
+**Solution**: Set real database connection in profile file
+
+#### **"Refusing to run mock profile on main branch" Error**
+```bash
+❌ Refusing to run mock profile on main branch.
+```
+**Solution**: Use real profile for main branch: `--profile real`
+
+### **📝 Environment Variables**
+
+#### **Profile-Specific Variables**
+| Variable | real | gold | mock | Description |
+|----------|------|------|------|-------------|
+| `EVAL_DRIVER` | `dspy_rag` | `dspy_rag` | `synthetic` | Evaluation driver |
+| `RAGCHECKER_USE_REAL_RAG` | `1` | `1` | `0` | Use real RAG system |
+| `POSTGRES_DSN` | Real DB | Real DB | `mock://test` | Database connection |
+| `EVAL_CONCURRENCY` | `8` | `8` | `3` | Worker concurrency |
+
+#### **CI Secrets** (Flow through automatically)
+- `POSTGRES_DSN`
+- `OPENAI_API_KEY`
+- `BEDROCK_REGION`
+- `BEDROCK_ACCESS_KEY`
+- `BEDROCK_SECRET_KEY`
+
+### **🎯 Best Practices**
+
+#### **For Baselines**
+- ✅ Always use `--profile real`
+- ✅ Use higher concurrency (8-12 workers)
+- ✅ Run on real database
+- ❌ Never use mock profile
+
+#### **For Development**
+- ✅ Use `--profile mock` for fast iteration
+- ✅ Use lower concurrency (3 workers)
+- ✅ Test infrastructure changes
+- ❌ Don't use for performance measurements
+
+#### **For Validation**
+- ✅ Use `--profile gold` with known test cases
+- ✅ Compare against expected results
+- ✅ Validate system behavior
+
+### **🔍 Troubleshooting**
+
+#### **Check Current Configuration**
+```bash
+python3 scripts/lib/config_loader.py --profile real
+```
+
+#### **Validate Profile Files**
+```bash
+# Check if profile files exist
+ls -la configs/profiles/
+```
+
+#### **Test Profile System**
+```bash
+# Test all profiles
+make test-profiles
+```
+
+### **🔧 Pydantic Array Fields for Evaluation Data**
+
+#### **Array Field Guidelines**
+
+The evaluation system uses strongly-typed NumPy arrays in Pydantic models for feature data:
+
+```python
+from dspy_modules.retriever.feature_schema import Vector384, FusionFeatures
+
+# Use the correct dimension for your embedding model
+feature = FusionFeatures(
+    s_bm25=0.3, s_vec=0.5, s_title=0.1, s_short=0.2,
+    r_bm25=0.1, r_vec=0.2, len_norm=0.9,
+    q_vec=[0.1] * 384,  # 384-dim for all-MiniLM-L6-v2
+    d_vec=[0.2] * 384
+)
+```
+
+#### **Environment Control**
+
+```bash
+# Strict validation (CI/Production)
+export EVAL_STRICT_ARRAYS=1
+
+# Permissive mode (Development)
+export EVAL_STRICT_ARRAYS=0
+```
+
+#### **JSONL Persistence**
+
+```python
+from train.feature_io import write_feature, read_feature
+
+# Write validated features
+jsonl_line = write_feature(feature)
+
+# Read with validation
+feature = read_feature(jsonl_line)
+```
+
+#### **Available Vector Types**
+
+- `Vector384` - all-MiniLM-L6-v2 (your default)
+- `Vector768` - all-mpnet-base-v2, all-distilroberta-v1
+- `Vector1024` - intfloat/e5-large-v2
+- `Vector1536` - text-embedding-ada-002
 
 ## 📋 **Changelog**
 

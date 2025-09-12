@@ -51,14 +51,14 @@ RELATED_FILES:
     {"path": "400_guides/400_12_product-management-and-roadmap.md", "role": "quick-reference"},
     {"path": "500_research-index.md", "role": "research-index"},
     {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"},
-    {"path": "100_memory/100_agent-troubleshooting-patterns.md", "role": "debugging-patterns"},
+    {"path": "000_core/005_troubleshooting-patterns.md", "role": "debugging-patterns"},
     {"path": "100_memory/100_communication-patterns-guide.md", "role": "communication-patterns"},
     {"path": "100_memory/100_dspy-role-communication-guide.md", "role": "dspy-communication"},
     {"path": "100_memory/100_technical-artifacts-integration-guide.md", "role": "technical-integration"},
     {"path": "100_memory/100_role-system-alignment-guide.md", "role": "role-alignment"},
-    {"path": "100_memory/100_implementation-patterns-library.md", "role": "implementation-patterns"},
+    {"path": "000_core/009_implementation-patterns.md", "role": "implementation-patterns"},
     {"path": "100_memory/100_evidence-based-optimization-guide.md", "role": "evidence-optimization"},
-    {"path": "100_memory/100_database-troubleshooting-patterns.md", "role": "database-troubleshooting"},
+    {"path": "000_core/006_database-troubleshooting.md", "role": "database-troubleshooting"},
     {"path": "artifacts/execution/Execution-B-1032-Documentation-t-t3-Authority-Structure-Implementation.md", "role": "b-1032-completion"}
   ]
 }
@@ -136,7 +136,7 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orches
 2. **Read**: `000_core/000_evaluation-system-entry-point.md` for evaluation SOP
 3. **Use**: Lessons engine with `--lessons-mode advisory` firs
 4. **Check**: Quality gates and baseline requirements
-5. **Command**: `uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
+5. **Command**: `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 6. **DOCUMENT**: Update `000_core/000_backlog.md` with evaluation results and lessons learned
 
 ### **Path 4: Memory System Work**
@@ -184,7 +184,7 @@ Add standard snippet to paste into `000_core/000_backlog.md`:
 **Example Documentation**:
 ```markdown
 ### **Evaluation Run - [DATE]**
-- **Command**: `uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
+- **Command**: `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 - **Results**: [precision, recall, f1 scores]
 - **Lessons Generated**: [list of new lessons]
 - **Configurations Created**: [list of generated configs]
@@ -201,13 +201,13 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orches
 ### **Lessons Engine**
 ```bash
 # Run evaluation with lessons
-uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check system health
 uv run python scripts/lessons_quality_check.py
 
 # Generate evolution tracking
-python3 scripts/evolution_tracker.py
+uv run python scripts/evolution_tracker.py
 ```
 
 ### **Complete Evaluation Workflow**
@@ -216,7 +216,7 @@ python3 scripts/evolution_tracker.py
 cat metrics/lessons/lessons.jsonl
 
 # 2. Run evaluation with lessons engine
-uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # 3. Check new lessons generated
 cat metrics/lessons/lessons.jsonl
@@ -225,7 +225,7 @@ cat metrics/lessons/lessons.jsonl
 ls -la metrics/derived_configs/
 
 # 5. Update evolution tracking
-python3 scripts/evolution_tracker.py
+uv run python scripts/evolution_tracker.py
 
 # 6. Verify system health
 uv run python scripts/lessons_quality_check.py
@@ -246,13 +246,13 @@ uv run python scripts/unified_memory_orchestrator.py --systems cursor --role res
 ### **System Health Checks**
 ```bash
 # Memory health check
-python3 scripts/memory_healthcheck.py
+uv run python scripts/memory_healthcheck.py
 
 # Lessons quality check
 uv run python scripts/lessons_quality_check.py
 
 # Update memory context
-python3 scripts/update_cursor_memory.py
+uv run python scripts/update_cursor_memory.py
 ```
 
 ### **State Check Commands**
@@ -277,7 +277,7 @@ uv run python scripts/lessons_quality_check.py
 
 1. **File Safety**: Run file analysis before destructive changes; protect critical files; preserve cross-references
 2. **Context Hierarchy**: Hydrate via `./scripts/memory_up.sh`; read `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md`
-3. **Workflow Chain**: Follow `000_backlog.md` → `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`
+3. **Workflow Chain**: Follow `000_backlog.md` → `001_PRD_TEMPLATE.md` (to author PRDs) → `002_TASK-LIST_TEMPLATE.md` (to generate tasks) → `003_EXECUTION_TEMPLATE.md` (to execute)
 4. **Error Prevention**: Enforce testing, rollback plans, and DSPy assertions
 5. **Documentation**: Use tiered guides, explicit links, single index
 6. **Integration**: Constitution hooks in prompts, CI checks, and runtime validators
@@ -299,13 +299,13 @@ uv run python scripts/lessons_quality_check.py
 ### **Usage**
 ```bash
 # Run evaluation with lessons engine
-uv run python scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check system health
 uv run python scripts/lessons_quality_check.py
 
 # Generate evolution tracking
-python3 scripts/evolution_tracker.py
+uv run python scripts/evolution_tracker.py
 ```
 
 ### **Integration Points**
@@ -340,14 +340,14 @@ python3 scripts/evolution_tracker.py
 ### **📊 Progress Tracking & Baseline Management**
 
 **Where Results Are Stored**: `metrics/baseline_evaluations/`
-**How to Track Progress**: Run `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli`
+**How to Track Progress**: Run `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 **Baseline Lock**: Current metrics are the performance floor - no regression allowed
 
 **Example Commands**:
 ```bash
 # Run RAGChecker evaluation to check progress
 export AWS_REGION=us-east-1
-uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check latest results
 ls -la metrics/baseline_evaluations/
@@ -382,7 +382,7 @@ Read these files in order (1–2 min total):
 ```bash
 # Quick baseline check
 export AWS_REGION=us-east-1
-uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # View current metrics
 ls -la metrics/baseline_evaluations/
@@ -413,9 +413,9 @@ uv run python scripts/unified_memory_orchestrator.py --systems cursor --role cod
 uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 
 # Episodic Memory System (Complete Learning System)
-python3 scripts/episodic_memory_system.py --query "implement database error handling" --role coder
-python3 scripts/episodic_memory_system.py --store-completion --task-description "implemented error handling" --input-text "database code" --output-text "error handling with retries" --agent cursor_ai --task-type database
-python3 scripts/episodic_memory_system.py --stats
+uv run python scripts/episodic_memory_system.py --query "implement database error handling" --role coder
+uv run python scripts/episodic_memory_system.py --store-completion --task-description "implemented error handling" --input-text "database code" --output-text "error handling with retries" --agent cursor_ai --task-type database
+uv run python scripts/episodic_memory_system.py --stats
 ```
 
 ### **DSPy Role Capabilities**
@@ -518,15 +518,15 @@ See `UV_MIGRATION_COMPLETE.md` and `VENV_MAPPING_VERIFICATION.md` for complete d
 ### **Key Scripts & Tools**
 ```bash
 # AWS Bedrock evaluation
-uv run python scripts/ragchecker_official_evaluation.py --use-bedrock
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Results managemen
-python3 scripts/ragchecker_with_monitoring.py
-python3 scripts/bedrock_cost_monitor.py --period today
+uv run python scripts/ragchecker_with_monitoring.py
+uv run python scripts/bedrock_cost_monitor.py --period today
 
 # Results analysis
-python3 scripts/evaluation_analysis.py --period 7d --metric f1_score
-python3 scripts/baseline_comparison.py --baseline 20250830_141742 --current latest
+uv run python scripts/evaluation_analysis.py --period 7d --metric f1_score
+uv run python scripts/baseline_comparison.py --baseline 20250830_141742 --current latest
 ```
 
 ### **Results Storage & Organization**
@@ -617,15 +617,15 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 - **`src/schemas/models.py`**: Pydantic validation models for data flow integrity
 
 ### **A-Z Flow Paths**
-1. **Idea → Backlog**: `echo "idea" | python3 scripts/create_backlog_item.py` → Auto B-XXXX
-2. **Pickup → Context**: `python3 scripts/extract_context.py B-XXXX` → Instant orientation
-3. **Context → Execution**: `python3 scripts/workflow_orchestrator.py B-XXXX --execute` → Full setup
-4. **Cross-Chat Resume**: `python3 scripts/workflow_orchestrator.py B-XXXX --context-only` → Clean pickup
+1. **Idea → Backlog**: `echo "idea" | uv run python scripts/create_backlog_item.py` → Auto B-XXXX
+2. **Pickup → Context**: `uv run python scripts/extract_context.py B-XXXX` → Instant orientation
+3. **Context → Execution**: `uv run python scripts/workflow_orchestrator.py B-XXXX --execute` → Full setup
+4. **Cross-Chat Resume**: `uv run python scripts/workflow_orchestrator.py B-XXXX --context-only` → Clean pickup
 
 ### **Clean Chat Pickup Protocol**
 ```bash
 # Any chat starts here for instant orientation
-python3 scripts/workflow_orchestrator.py B-1061 --context-only
+uv run python scripts/workflow_orchestrator.py B-1061 --context-only
 
 # Output: Title, what, where, next + all commands needed
 ```
@@ -670,19 +670,19 @@ python scripts/single_doorway.py scribe validate
 ### **🎯 Enhanced Handoff System Commands**
 ```bash
 # Extract context for any backlog item (instant pickup)
-python3 scripts/extract_context.py B-1061
+uv run python scripts/extract_context.py B-1061
 
 # Create new backlog item with auto-ID assignmen
-echo "optimize database pooling" | python3 scripts/create_backlog_item.py
+echo "optimize database pooling" | uv run python scripts/create_backlog_item.py
 
 # Generate PRD from backlog context (auto-populated)
-python3 scripts/generate_prd.py B-1061 --generate-prd
+uv run python scripts/generate_prd.py B-1061 --generate-prd
 
 # Complete workflow orchestration (A-Z setup)
-python3 scripts/workflow_orchestrator.py B-1061 --execute
+uv run python scripts/workflow_orchestrator.py B-1061 --execute
 
 # Quick context-only pickup for clean chats
-python3 scripts/workflow_orchestrator.py B-1061 --context-only
+uv run python scripts/workflow_orchestrator.py B-1061 --context-only
 ```
 
 ### **Integration Points**
@@ -791,13 +791,13 @@ cat 300_experiments/300_integration-testing-results.md
 **Testing Infrastructure Setup**:
 ```bash
 # Set up testing environmen
-python3 scripts/setup_ai_testing.py --environment tes
+uv run python scripts/setup_ai_testing.py --environment tes
 
 # Run comprehensive tests
 python3 -m pytest -m "retrieval or memory or integration" -v
 
 # Generate testing reports
-python3 scripts/generate_testing_summary.py --output testing_summary.md
+uv run python scripts/generate_testing_summary.py --output testing_summary.md
 ```
 
 ### **🔗 Core Guide Testing Integration**
@@ -908,11 +908,11 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - **Testing methodology**: `cat 300_experiments/300_testing-methodology-log.md`
 - **Testing infrastructure**: `cat 300_experiments/300_testing-infrastructure-guide.md`
 - **Run comprehensive tests**: `python3 -m pytest -m "retrieval or memory or integration" -v`
-- **Generate testing reports**: `python3 scripts/generate_testing_summary.py --output testing_summary.md`
+- **Generate testing reports**: `uv run python scripts/generate_testing_summary.py --output testing_summary.md`
 
 ### **System Management**
 - Start dashboard: `./dspy-rag-system/start_mission_dashboard.sh`
-- Quick inventory: `python3 scripts/documentation_navigator.py inventory`
+- Quick inventory: `uv run python scripts/documentation_navigator.py inventory`
 - Quick conflict check: `python scripts/quick_conflict_check.py`
 - Comprehensive conflict audit: `python scripts/conflict_audit.py --full`
 
@@ -1071,7 +1071,7 @@ without requiring the AI to read multiple files.
 ## 🔒 **Canonical Evaluation System (CRITICAL)**
 
 **🎯 PRIMARY ENTRY POINT**: `000_core/000_evaluation-system-entry-point.md`
-**📋 Standard Command**: `source throttle_free_eval.sh && uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable`
+**📋 Standard Command**: `source throttle_free_eval.sh && uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 **💨 Fast Testing**: `./scripts/run_ragchecker_smoke_test.sh`
 **🔧 Configuration**: `configs/stable_bedrock.env` (LOCKED - do not modify without versioning)
 **📖 Complete SOP**: `400_guides/400_canonical-evaluation-sop.md`
@@ -1167,23 +1167,23 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 **🎯 Enhanced Handoff Workflow (NEW - 2025-09-03):**
 ```bash
 # Instant context pickup for any backlog item
-python3 scripts/extract_context.py B-1061
+uv run python scripts/extract_context.py B-1061
 
 # Complete workflow orchestration
-python3 scripts/workflow_orchestrator.py B-1061 --execute
+uv run python scripts/workflow_orchestrator.py B-1061 --execute
 
 # Create new backlog items with auto-ID
-echo "your idea" | python3 scripts/create_backlog_item.py
+echo "your idea" | uv run python scripts/create_backlog_item.py
 
 # Auto-generate PRDs from backlog context
-python3 scripts/generate_prd.py B-1061 --generate-prd
+uv run python scripts/generate_prd.py B-1061 --generate-prd
 ```
 
 **Traditional Manual Workflow:**
 1. **Backlog Selection** → Pick top scored item from `000_core/000_backlog.md`
-2. **PRD Creation** → Use `000_core/001_create-prd.md` (skip for items < 5 pts AND score≥3.0)
-3. **Task Generation** → Use `000_core/002_generate-tasks.md` workflow
-4. **AI Execution** → Use `000_core/003_process-task-list.md` (the execution engine)
+2. **PRD Creation** → Use `000_core/001_PRD_TEMPLATE.md` (skip for items < 5 pts AND score≥3.0)
+3. **Task Generation** → Use `000_core/002_TASK-LIST_TEMPLATE.md` workflow
+4. **AI Execution** → Use `000_core/003_EXECUTION_TEMPLATE.md` (the execution engine)
 5. **State Management** → `.ai_state.json` for context persistence
 
 <!-- WORKFLOW_REFERENCE: 400_guides/400_00_getting-started-and-index.md -->
@@ -1205,7 +1205,7 @@ python3 scripts/generate_prd.py B-1061 --generate-prd
 
 - *Before suggesting ANY file deletion or deprecation, you MUST:
 
-1. Run the analysis checklist**: `python3 scripts/file_analysis_checklist.py <target_file>`
+1. Run the analysis checklist**: `uv run python scripts/file_analysis_checklist.py <target_file>`
 2. **Follow the 6-step process**in `400_guides/400_01_documentation-playbook.md`
 3.**Complete ALL steps**before making recommendations
 4.**Get explicit user approval**for high-risk operations**This is NON-NEGOTIABLE**- failure to follow these steps means you cannot suggest file deletion!
@@ -1236,7 +1236,7 @@ python3 scripts/generate_prd.py B-1061 --generate-prd
 **Essential Files Quick Reference:**
 
 - **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_03_system-overview-and-architecture.md`, `400_guides/400_00_getting-started-and-index.md`, `400_guides/400_04_development-workflow-and-standards.md`, `400_guides/400_02_governance-and-ai-constitution.md`, `400_guides/400_01_documentation-playbook.md`, `400_guides/400_11_deployments-ops-and-observability.md`, `400_guides/400_cursor-context-engineering-guide.md`
-- **Workflow**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
+- **Workflow**: `000_core/001_PRD_TEMPLATE.md`, `000_core/002_TASK-LIST_TEMPLATE.md`, `000_core/003_EXECUTION_TEMPLATE.md`
 - **Setup**: `200_setup/202_setup-requirements.md`
 - **Architecture**: `100_memory/104_dspy-development-context.md`
 - **Coding Standards**: `400_guides/400_04_development-workflow-and-standards.md` (NEW - conflict prevention system)

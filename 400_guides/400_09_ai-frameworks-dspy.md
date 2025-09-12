@@ -11,6 +11,31 @@
 |---|---|---|
 | Complete AI framework integration and DSPy implementation guide with user journey and technical reference | Working with AI frameworks, implementing DSPy modules, or integrating AI capabilities | Read 10 (Integrations & Models) then 11 (Performance & Optimization) |
 
+## 📋 **Table of Contents**
+
+### **Core DSPy Framework**
+- [🧠 DSPy Role Communication & Memory Access](#-dspy-role-communication--memory-access)
+- [🤖 DSPy Framework Integration](#-dspy-framework-integration)
+- [🚀 DSPy Role Integration with Vector-Based System Mapping](#-dspy-role-integration-with-vector-based-system-mapping)
+
+### **AI Development & Optimization**
+- [🔧 AI Performance Optimization](#-ai-performance-optimization)
+- [🛡️ AI Safety and Governance](#️-ai-safety-and-governance)
+- [🧪 AI Testing & Methodology Integration](#-ai-testing--methodology-integration)
+- [🤖 AI Model Management & Optimization](#-ai-model-management--optimization)
+
+### **Integration & Memory**
+- [📋 Integration with Memory Systems](#-integration-with-memory-systems)
+- [🔗 Cursor Role System Alignment Guide](#-cursor-role-system-alignment-guide)
+
+### **User Experience**
+- [🗺️ Choose Your Path](#-choose-your-path)
+- [🚀 User Journey & Success Outcomes](#-user-journey--success-outcomes)
+
+### **Technical Reference**
+- [🔧 Technical Reference](#-technical-reference)
+- [📚 References](#-references)
+
 ## ⚡ **5-Minute Quick Start**
 
 ### **Get Up and Running in 5 Minutes**
@@ -317,6 +342,116 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role plan
 - **Performance Optimization**: 40% improvement in role-based context retrieval speed
 
 #### **Technical Implementation Details**
+
+### **Semantic Process Augmentation Implementation**
+
+#### **Overview**
+Based on the research paper "Augmentation of Semantic Processes for Deep Learning Applications" and ChatGPT Pro's recommendations, we've implemented three key systems that apply semantic process augmentation to your AI development ecosystem.
+
+#### **Implemented Systems**
+
+**1. Enhanced Query Pattern Knowledge Graph (`300_enhanced_query_pattern_graph.py`)**
+
+**Purpose**: Apply semantic augmentation to your existing Query Pattern Knowledge Graph system
+
+**Key Features**:
+- **Graph-based representation** with semantic nodes (Task, Data, Query, Intent)
+- **Cat-1 augmentation**: Delete non-critical nodes/edges (10-20% of the time)
+- **Cat-2 augmentation**: Swap adjacent tasks, modify metadata
+- **Triplet generation** for training similarity models
+- **Semantic edge types**: Control flow, data flow, semantic similarity, temporal sequence
+
+**Integration with your system**:
+- Extends your existing `QueryPatternAnalyzer`
+- Works with your LTST Memory System
+- Generates training data for your prediction models
+
+**2. SOP (Standard Operating Procedures) Engine (`300_sop_engine.py`)**
+
+**Purpose**: Convert lessons-learned into graphified SOPs with augmentation capabilities
+
+**Key Features**:
+- **Process graph representation** with nodes (Task, Data, Decision, Gateway, Result)
+- **Lessons → SOP conversion** with structured process extraction
+- **SOP augmentation** using the same Cat-1/Cat-2 approach
+- **Similarity matching** for SOP retrieval and template recommendations
+- **Metadata tracking** for confidence, categories, and source lessons
+
+**Integration with your system**:
+- Converts your existing lessons-learned into structured SOPs
+- Provides better SOP matching and retrieval
+- Enables "nearest template" recommendations
+
+**3. RAG Pipeline Governance (`300_rag_pipeline_governance.py`)**
+
+**Purpose**: Treat RAG workflows as sequential semantic graphs with governance
+
+**Key Features**:
+- **Pipeline graph representation** with stages (Ingest, Chunk, Retrieve, Rerank, Generate, Validate)
+- **Parameter flow tracking** with typed metadata
+- **Pipeline validation** against known good patterns
+- **Unusual pattern detection** with guardrails
+- **Auto-fill missing steps** functionality
+
+**Integration with your system**:
+- Works with your existing RAG pipeline components
+- Provides governance and validation for RAG workflows
+- Enables systematic optimization and debugging
+
+#### **Key Benefits**
+
+**Semantic Understanding**:
+- **Graph-based representation** captures semantic relationships
+- **Augmentation techniques** improve model robustness
+- **Similarity matching** enables better retrieval and recommendations
+
+**Process Optimization**:
+- **SOP conversion** makes lessons-learned actionable
+- **Pipeline governance** ensures consistent RAG performance
+- **Pattern detection** identifies optimization opportunities
+
+**System Integration**:
+- **Extends existing systems** without major refactoring
+- **Works with LTST Memory System** for context awareness
+- **Generates training data** for continuous improvement
+
+#### **Usage Examples**
+
+**Query Pattern Analysis**:
+```python
+# Initialize enhanced query pattern analyzer
+analyzer = EnhancedQueryPatternAnalyzer()
+
+# Analyze query patterns with semantic augmentation
+patterns = analyzer.analyze_queries(queries)
+
+# Generate training data for similarity models
+training_data = analyzer.generate_training_data(patterns)
+```
+
+**SOP Management**:
+```python
+# Initialize SOP engine
+sop_engine = SOPEngine()
+
+# Convert lessons-learned to structured SOPs
+sops = sop_engine.convert_lessons(lessons_learned)
+
+# Find similar SOPs for recommendations
+similar_sops = sop_engine.find_similar(current_task, sops)
+```
+
+**RAG Pipeline Governance**:
+```python
+# Initialize RAG pipeline governance
+governance = RAGPipelineGovernance()
+
+# Validate pipeline against known patterns
+validation_result = governance.validate_pipeline(pipeline_config)
+
+# Detect unusual patterns and suggest improvements
+improvements = governance.detect_improvements(pipeline_execution)
+```
 
 **Vector-Based Role Classification**:
 ```python
@@ -983,6 +1118,127 @@ def ai_cache_decorator(cache: AICache):
     return decorator
 ```
 
+### **PyTorch Reranker Integration**
+
+#### **Reranker Overview**
+The PyTorch-based reranker implementation provides a minimal, surgical approach to cross-encoder reranking for the DSPy RAG system.
+
+**Key Features**:
+- **Inference-only**: Uses pre-trained models, no training required
+- **Cached scores**: SQLite-based caching for deterministic, fast results
+- **Configurable**: Environment variables and YAML config support
+- **Fallback**: Graceful fallback to legacy reranker if PyTorch unavailable
+
+#### **Quick Start**
+```bash
+# Install Dependencies
+pip install torch sentence-transformers
+
+# Enable Reranker
+source configs/reranker_toggle.env
+
+# Or set environment variables manually
+export RERANKER_ENABLED=true
+export RERANKER_MODEL="cross-encoder/ms-marco-MiniLM-L-6-v2"
+export RERANK_INPUT_TOPK=50
+export RERANK_KEEP=12
+export RERANK_BATCH=8
+export TORCH_DEVICE="auto"
+
+# Test Integration
+python3 scripts/test_reranker_integration.py
+
+# Run Evaluation Comparison
+python3 scripts/eval_reranker_comparison.py --output-dir metrics/reranker_comparison
+```
+
+#### **Configuration**
+
+**Environment Variables**:
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RERANKER_ENABLED` | `false` | Enable/disable reranker |
+| `RERANKER_MODEL` | `cross-encoder/ms-marco-MiniLM-L-6-v2` | Model name |
+| `RERANK_INPUT_TOPK` | `50` | Candidates to send to reranker |
+| `RERANK_KEEP` | `12` | Final results after reranking |
+| `RERANK_BATCH` | `8` | Batch size for inference |
+| `TORCH_DEVICE` | `auto` | Device (auto, cpu, mps, cuda) |
+| `RERANKER_CACHE_DIR` | `cache` | Cache directory |
+
+**YAML Configuration**:
+```yaml
+default:
+  reranker:
+    enabled: true
+    model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    input_topk: 50
+    keep: 12
+    batch_size: 8
+    device: "auto"
+    cache_enabled: true
+```
+
+#### **Architecture Integration**
+
+**Pipeline Integration**:
+1. **Prefilter**: SQL-based BM25 + vector + metadata fusion
+2. **Rerank**: Cross-encoder reranking of top candidates
+3. **Final**: Return top-k results to reader
+
+**Caching System**:
+- **SQLite cache**: Stores scores by (model, query_hash, chunk_id)
+- **Deterministic**: Same query + model = same scores
+- **Fast**: Avoids recomputation for repeated queries
+
+**Device Support**:
+- **Auto**: Automatically selects best available device
+- **MPS**: Apple Silicon GPU acceleration
+- **CUDA**: NVIDIA GPU acceleration
+- **CPU**: Fallback for all systems
+
+#### **Performance Expectations**
+
+**Expected Improvements**:
+- **F1 Score**: +0.05 to +0.15 improvement
+- **Precision**: Better relevance ranking
+- **Recall**: Maintained through prefiltering
+
+**Latency**:
+- **First run**: ~2-5 seconds (model loading)
+- **Cached**: ~100-500ms (cache lookup)
+- **Batch processing**: Optimized for throughput
+
+#### **Troubleshooting**
+
+**Common Issues**:
+1. **Import errors**: Install `torch` and `sentence-transformers`
+2. **MPS issues**: Set `TORCH_DEVICE=cpu` on Apple Silicon
+3. **Memory issues**: Reduce `RERANK_BATCH` size
+4. **Cache issues**: Clear `cache/` directory
+
+**Debug Mode**:
+```bash
+export RERANKER_DEBUG=1
+python3 scripts/test_reranker_integration.py
+```
+
+#### **Evaluation**
+
+**Comparison Script**:
+```bash
+# Compare with/without reranker
+python3 scripts/eval_reranker_comparison.py
+
+# Check results
+ls metrics/reranker_comparison/
+```
+
+**Integration Test**:
+```bash
+# Test all components
+python3 scripts/test_reranker_integration.py
+```
+
 ## 🛡️ **AI Safety and Governance**
 
 ### **Constitution Compliance Framework**
@@ -1483,8 +1739,6 @@ if not validation_result["is_safe"]:
 - **For Implementers**: Focus on performance monitoring and governance frameworks
 - **For Coders**: Focus on signature validation and error handling patterns
 
-
-
 ## 🔧 **Technical Reference**
 
 > **💡 For Developers**: This section provides detailed technical implementation information for building and extending AI framework integrations.
@@ -1701,139 +1955,6 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --rol
 # Planner coordinating with multiple roles
 python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "coordinate implementation strategy across all roles"
 ```
-
-## 🎭 **DSPy Role Communication & Memory Access Guide**
-
-### **🚨 CRITICAL: DSPy Role Communication is Essential**
-
-**Purpose**: Essential guide for accessing and communicating with DSPy roles through the Unified Memory Orchestrator.
-
-**Status**: ✅ **ACTIVE** - DSPy role communication guide maintained
-
-#### **Quick Access Commands**
-
-##### **Essential Setup**
-```bash
-# Set non-SSL connection for Go CLI compatibility (required for all role access)
-export POSTGRES_DSN="mock://test"
-```
-
-##### **Role-Specific Access**
-```bash
-# Strategic planning and high-level analysis
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "your query here"
-
-# Technical implementation and workflow design
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "your query here"
-
-# Research methodology and evidence-based analysis
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "your query here"
-
-# Code implementation and technical patterns
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "your query here"
-```
-
-##### **Full Memory Context Access**
-```bash
-# Complete memory context with all systems
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
-
-# JSON output for programmatic access
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query" --format json
-```
-
-#### **DSPy Role Capabilities & Use Cases**
-
-##### **Planner Role** 🎯
-**Primary Focus**: Strategic analysis, planning, and high-level decision making
-
-**Capabilities**:
-- Strategic analysis and planning
-- PRD creation and requirements gathering
-- Roadmap planning and prioritization
-- High-level architecture decisions
-- Business value assessmen
-- Risk analysis and mitigation
-
-**Example Queries**:
-```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "create a comprehensive PRD for restructuring the 00-12 guides"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "analyze the strategic impact of implementing advanced RAG optimization"
-```
-
-##### **Implementer Role** ⚙️
-**Primary Focus**: Technical implementation, workflow design, and system integration
-
-**Capabilities**:
-- Technical implementation planning
-- Workflow design and optimization
-- System integration strategies
-- Execution planning and coordination
-- Technical architecture decisions
-- Implementation patterns and best practices
-
-**Example Queries**:
-```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "design an implementation plan for the 00-12 guide restructuring"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "create a workflow for automated memory system validation"
-```
-
-##### **Researcher Role** 🔬
-**Primary Focus**: Research methodology, analysis frameworks, and evidence-based decision making
-
-**Capabilities**:
-- Research methodology design
-- Analysis framework developmen
-- Evidence-based decision making
-- Data analysis and interpretation
-- Systematic evaluation approaches
-- Knowledge synthesis and integration
-
-**Example Queries**:
-```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "analyze the effectiveness of our current memory system architecture"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "evaluate different approaches to improving AI comprehension"
-```
-
-##### **Coder Role** 💻
-**Primary Focus**: Code implementation, debugging, optimization, and technical patterns
-
-**Capabilities**:
-- Code implementation and developmen
-- Debugging and troubleshooting
-- Performance optimization
-- Technical pattern implementation
-- Code quality and best practices
-- Technical problem solving
-
-**Example Queries**:
-```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "implement the memory system integration for the new guide structure"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "optimize the RAGChecker evaluation framework for better performance"
-```
-
-#### **Memory System Integration**
-
-##### **Unified Memory Orchestrator**
-The orchestrator provides centralized access to all memory systems:
-- **LTST Memory System**: Database-backed conversation memory
-- **Cursor Memory**: Static documentation bundling
-- **Go CLI Memory**: Fast startup with lean hybrid approach
-- **Prime Cursor**: Enhanced Cursor integration
-
-##### **Role-Based Context Retrieval**
-Each role receives tailored context based on their perspective:
-- **Planner**: Strategic context, business value, roadmap information
-- **Implementer**: Technical context, workflow patterns, implementation details
-- **Researcher**: Analysis context, methodology, evidence-based insights
-- **Coder**: Technical context, code patterns, implementation details
-
-##### **Mock Mode Support**
-For testing and development without database dependencies:
-```bash
-export POSTGRES_DSN="mock://test"
-```
-This enables mock data mode for all memory systems.
 
 ## 🔗 **Cursor Role System Alignment Guide**
 
