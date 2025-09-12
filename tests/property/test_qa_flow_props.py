@@ -3,16 +3,15 @@ import asyncio
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
-    from src.flows.qa_graph import Draft, End, FlowState, Start  # type: ignore[import-untyped]
-#!/usr/bin/env python3
+from src.flows.qa_graph import Draft, End, FlowState, Start  # type: ignore[import-untyped]
+
 """
 Property tests for simple QA flow start routing.
 """
 
-
-
 SKIP_QA = False
 try:
+    pass
 except Exception:
     SKIP_QA = True
 

@@ -1,4 +1,5 @@
 from __future__ import annotations
+import importlib
 import os
 import pytest
 from hypothesis import HealthCheck, given, settings
@@ -6,9 +7,8 @@ from hypothesis import strategies as st
 from src.dspy_modules.retriever.reranker_config import load_reranker_config
 from src.dspy_modules.retriever.weights import DEFAULT, load_weights
 from ._regression_capture import record_case
-    import importlib
-    import src.rag.reranker_env
-#!/usr/bin/env python3
+import src.rag.reranker_env
+
 """
 Property-based tests for retriever weights and reranker config.
 """

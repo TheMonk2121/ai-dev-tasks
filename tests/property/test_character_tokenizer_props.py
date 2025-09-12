@@ -4,18 +4,6 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from src.llm.character_tokenizer import (
-from ._regression_capture import record_case
-import os
-#!/usr/bin/env python3
-"""
-Property-based tests for character-level tokenizer monotonicity.
-
-Tests that character-level tokenizers guarantee the monotonicity property
-count(a + b) = count(a) + count(b) for any strings a and b.
-"""
-
-
-
     grapheme_cluster_tokenizer,
     make_character_tokenizer,
     strict_character_tokenizer,

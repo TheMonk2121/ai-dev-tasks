@@ -4,17 +4,14 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from src.dspy_modules.retriever.query_rewrite import (
-from ._regression_capture import record_case
-#!/usr/bin/env python3
-"""
-Property-based tests for query_rewrite invariants.
-"""
-
-
-
     build_channel_queries,
     filename_regex_from_query,
 )
+from ._regression_capture import record_case
+
+"""
+Property-based tests for query_rewrite invariants.
+"""
 
 
 @pytest.mark.prop

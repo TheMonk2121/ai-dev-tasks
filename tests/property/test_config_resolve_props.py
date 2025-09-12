@@ -1,11 +1,11 @@
 from __future__ import annotations
 import os
+import tempfile
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from src.config.resolve import compose_layers
-    import tempfile
-#!/usr/bin/env python3
+
 """
 Property tests for config resolve layering.
 """

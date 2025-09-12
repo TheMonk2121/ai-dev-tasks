@@ -1,26 +1,16 @@
 from __future__ import annotations
+import os
 import unicodedata
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from src.llm.script_aware_tokenizer import (
-from ._regression_capture import record_case
-import os
-#!/usr/bin/env python3
-"""
-Property-based tests for script-aware tokenizer monotonicity.
-
-Tests that script-aware tokenizers maintain monotonicity while respecting
-Unicode script boundaries for multilingual text processing.
-"""
-
-
-
     make_multilingual_tokenizer,
     make_script_aware_tokenizer,
     multilingual_character_tokenizer,
     script_aware_character_tokenizer,
 )
+from ._regression_capture import record_case
 
 
 
