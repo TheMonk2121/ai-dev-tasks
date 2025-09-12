@@ -125,3 +125,7 @@ out/
 test/*.js
 test/*.js.map
 artifacts/session_memory/
+
+# MCP Server logs
+.mcp-server.err
+.mcp-server.out
