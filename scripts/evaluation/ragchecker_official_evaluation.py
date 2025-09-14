@@ -30,10 +30,9 @@ def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
 
     if "--help" in argv or "-h" in argv:
-        print("Usage: scripts/ragchecker_official_evaluation.py [--profile real|gold|mock] [args]")
+        print("Usage: scripts/ragchecker_official_evaluation.py [--profile gold|mock] [args]")
         print("")
         print("Profiles:")
-        print("  real  - Baseline/tuning on real RAG")
         print("  gold  - Real RAG + gold cases")
         print("  mock  - Infra-only, synthetic")
         return 0
@@ -78,43 +77,20 @@ def main(argv: list[str] | None = None) -> int:
         if str(repo_root) not in sys.path:
             sys.path.insert(0, str(repo_root))
 
-        # Prefer local lightweight implementation if experiments tree is absent
-        impl_path = Path("300_experiments/300_testing-scripts/ragchecker_official_evaluation.py").resolve()
-        if not impl_path.exists():
-            impl_path = Path("scripts/evaluation/_ragchecker_eval_impl.py").resolve()
-        module = SourceFileLoader("ragchecker_official_eval_impl", str(impl_path)).load_module()
-        Evaluator = getattr(module, "OfficialRAGCheckerEvaluator")
-        evaluator = Evaluator()
+        # Use the clean DSPy evaluator
+        from scripts.evaluation.clean_dspy_evaluator import CleanDSPyEvaluator
+
+        evaluator = CleanDSPyEvaluator()
 
         # Run real evaluation with gold cases and DSPy RAG system
         try:
             # Run real evaluation with gold test cases
             results = evaluator.run_evaluation(
-                cases_file=None,  # Use gold cases
-                outdir=outdir,
-                use_bedrock=True,
-                reader=None,
-                args=type(
-                    "Args",
-                    (),
-                    {
-                        "gold_file": "300_evals/evals/data/gold/v1/gold_cases.jsonl",
-                        "gold_profile": "gold",
-                        "gold_tags": None,
-                        "gold_mode": None,
-                        "gold_size": 5,  # Small test
-                        "seed": 1337,
-                    },
-                )(),
+                gold_file="300_evals/data/gold/v1/gold_cases.jsonl", limit=5  # Small test
             )
         except Exception as e:
-            print(f"⚠️ Real evaluation failed ({e}), falling back to mock")
-            # Fallback to mock evaluation if real evaluation fails
-            results = evaluator.create_fallback_evaluation(
-                evaluator.prepare_official_input_data().get("results", [])
-                if hasattr(evaluator, "prepare_official_input_data")
-                else evaluator.create_official_test_cases()
-            )
+            print(f"⚠️ Real evaluation failed ({e})")
+            return 1
 
         # Write to requested outdir with the name the runner expects
         import json as _json
@@ -132,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
     # Forward into SSOT runner programmatically (avoid CLI parsing conflicts) for standalone calls
     try:
         # Ensure repository root is on sys.path so 'evals_300' is importable
-        repo_root = Path(__file__).resolve().parents[1]
+        repo_root = Path(__file__).resolve().parents[2]
         if str(repo_root) not in sys.path:
             sys.path.insert(0, str(repo_root))
         from evals_300.tools.run import run as ssot_run
@@ -205,7 +181,7 @@ class OfficialRAGCheckerEvaluator:
 
             impl_path = Path("300_experiments/300_testing-scripts/ragchecker_official_evaluation.py").resolve()
             if not impl_path.exists():
-                impl_path = Path("scripts/evaluation/_ragchecker_eval_impl.py").resolve()
+                impl_path = Path("600_archives/600_deprecated/_ragchecker_eval_impl.py").resolve()
             module = SourceFileLoader("ragchecker_official_eval_impl", str(impl_path)).load_module()
             self._impl = getattr(module, "OfficialRAGCheckerEvaluator")()
         except Exception as e:

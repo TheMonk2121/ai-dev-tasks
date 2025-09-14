@@ -162,7 +162,7 @@ class EvaluationSystemIntegration:
 
         # Initialize RAGChecker Evaluator
         try:
-            from scripts.evaluation._ragchecker_eval_impl import CleanRAGCheckerEvaluator
+            from 600_archives.600_deprecated._ragchecker_eval_impl import CleanRAGCheckerEvaluator
 
             self.rag_evaluator = CleanRAGCheckerEvaluator()
             results["ragchecker_evaluator"] = "✅ Initialized"

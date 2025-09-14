@@ -65,7 +65,7 @@ def test_evaluation_pipeline() -> dict[str, Any]:
 
     # Test RAGChecker evaluator
     try:
-        from scripts.evaluation._ragchecker_eval_impl import CleanRAGCheckerEvaluator
+        from 600_archives.600_deprecated._ragchecker_eval_impl import CleanRAGCheckerEvaluator
 
         _ = CleanRAGCheckerEvaluator()  # Just test instantiation
         results["ragchecker_evaluator"] = "✅ Available"

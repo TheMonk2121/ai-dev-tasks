@@ -9,7 +9,6 @@ all system components work correctly before training agents.
 from __future__ import annotations
 
 import json
-import os
 import sys
 import time
 from pathlib import Path
@@ -133,7 +132,8 @@ def run_synthetic_evaluation(
     print("🧪 Running Synthetic Evaluation")
     print("=" * 50)
 
-    results = {
+    # Widen type for results to allow later additions without Pyright narrowing
+    results: dict[str, Any] = {
         "evaluation_type": "synthetic_smoke_test",
         "test_cases": [],
         "overall_metrics": {"precision": 0.0, "recall": 0.0, "f1_score": 0.0, "faithfulness": 0.0},
@@ -145,6 +145,9 @@ def run_synthetic_evaluation(
             "result_aggregation": "✅ Working",
         },
     }
+
+    # Collect test case results in a typed list to satisfy type checker
+    test_case_entries: list[dict[str, Any]] = []
 
     total_precision = 0.0
     total_recall = 0.0
@@ -163,6 +166,7 @@ def run_synthetic_evaluation(
         precision = 0.7 + (i * 0.02)  # Simulate varying precision
         recall = 0.6 + (i * 0.03)  # Simulate varying recall
         faithfulness = 0.8 + (i * 0.01)  # Simulate varying faithfulness
+        f1 = 2 * (precision * recall) / (precision + recall)
 
         total_precision += precision
         total_recall += recall
@@ -177,14 +181,17 @@ def run_synthetic_evaluation(
             "metrics": {
                 "precision": precision,
                 "recall": recall,
-                "f1_score": 2 * (precision * recall) / (precision + recall),
+                "f1_score": f1,
                 "faithfulness": faithfulness,
             },
             "status": "✅ Success",
         }
 
-        results["test_cases"].append(case_result)
-        print(f"   ✅ Precision: {precision:.3f}, Recall: {recall:.3f}, F1: {case_result['metrics']['f1_score']:.3f}")
+        test_case_entries.append(case_result)
+        print(f"   ✅ Precision: {precision:.3f}, Recall: {recall:.3f}, F1: {f1:.3f}")
+
+    # Attach accumulated test cases
+    results["test_cases"] = test_case_entries
 
     # Calculate overall metrics
     num_cases = len(test_cases)
@@ -201,7 +208,7 @@ def run_synthetic_evaluation(
     return results
 
 
-def test_memory_system_integration() -> Dict[str, Any]:
+def test_memory_system_integration() -> dict[str, str]:
     """Test memory system integration components."""
 
     print("\n🧠 Testing Memory System Integration")
@@ -219,7 +226,7 @@ def test_memory_system_integration() -> Dict[str, Any]:
     try:
         from scripts.utilities.unified_memory_orchestrator import UnifiedMemoryOrchestrator
 
-        orchestrator = UnifiedMemoryOrchestrator()
+        _orchestrator = UnifiedMemoryOrchestrator()
         memory_tests["unified_orchestrator"] = "✅ Available"
         print("   ✅ Unified Memory Orchestrator: Available")
     except Exception as e:
@@ -228,7 +235,7 @@ def test_memory_system_integration() -> Dict[str, Any]:
     # Test LTST memory integration
     try:
         from scripts.utilities.ltst_memory_integration import LTSTMemoryIntegration
-
+        _ = LTSTMemoryIntegration
         memory_tests["ltst_memory"] = "✅ Available"
         print("   ✅ LTST Memory Integration: Available")
     except Exception as e:
@@ -237,7 +244,7 @@ def test_memory_system_integration() -> Dict[str, Any]:
     # Test episodic memory system
     try:
         from scripts.utilities.episodic_memory_system import EpisodicMemorySystem
-
+        _ = EpisodicMemorySystem
         memory_tests["episodic_memory"] = "✅ Available"
         print("   ✅ Episodic Memory System: Available")
     except Exception as e:
@@ -246,7 +253,7 @@ def test_memory_system_integration() -> Dict[str, Any]:
     return memory_tests
 
 
-def test_evaluation_components() -> Dict[str, Any]:
+def test_evaluation_components() -> dict[str, str]:
     """Test evaluation system components."""
 
     print("\n📊 Testing Evaluation Components")
@@ -261,9 +268,9 @@ def test_evaluation_components() -> Dict[str, Any]:
 
     # Test RAGChecker evaluator
     try:
-        from scripts.evaluation._ragchecker_eval_impl import CleanRAGCheckerEvaluator
+        from 600_archives.600_deprecated._ragchecker_eval_impl import CleanRAGCheckerEvaluator
 
-        evaluator = CleanRAGCheckerEvaluator()
+        _evaluator = CleanRAGCheckerEvaluator()
         eval_tests["ragchecker_evaluator"] = "✅ Available"
         print("   ✅ RAGChecker Evaluator: Available")
     except Exception as e:
@@ -272,7 +279,7 @@ def test_evaluation_components() -> Dict[str, Any]:
     # Test gold loader
     try:
         from src.utils.gold_loader import load_gold_cases
-
+        _ = load_gold_cases
         eval_tests["gold_loader"] = "✅ Available"
         print("   ✅ Gold Loader: Available")
     except Exception as e:
