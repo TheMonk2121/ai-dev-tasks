@@ -129,3 +129,5 @@ artifacts/session_memory/
 # MCP Server logs
 .mcp-server.err
 .mcp-server.out
+.env
+.env.bak
