@@ -4,9 +4,6 @@ Audit and enforce chunking and embedding standards across the repository.
 """
 
 import os
-import sys
-from pathlib import Path
-from typing import Dict, List, Tuple
 
 
 def audit_chunking_standards() -> dict[str, list[str]]:

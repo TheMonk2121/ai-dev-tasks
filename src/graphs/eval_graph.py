@@ -49,7 +49,7 @@ class Score(Node[CaseResult]):
     ) -> CaseResult:
         # Minimal scoring using existing harness logic (Jaccard-based metrics)
         try:
-            from scripts._ragchecker_eval_impl import CleanRAGCheckerEvaluator  # type: ignore
+            from 600_archives.600_deprecated._ragchecker_eval_impl import CleanRAGCheckerEvaluator  # type: ignore
         except Exception:
             CleanRAGCheckerEvaluator = None  # type: ignore
 

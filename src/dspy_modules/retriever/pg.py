@@ -145,6 +145,7 @@ def run_fused_query(
         dc.short_tsv,
         dc.title_tsv,
         dc.content_tsv,
+        dc.content,
         dc.embedding,
         dc.embedding_text,
         dc.bm25_text,
@@ -165,7 +166,8 @@ def run_fused_query(
       b.file_path,
       b.embedding,
       b.embedding_text,
-      COALESCE(b.embedding_text, b.bm25_text) AS text_for_reader,
+      b.content,
+      COALESCE(b.embedding_text, b.bm25_text, b.content) AS text_for_reader,
 
       -- Switch to ts_rank with normalization=32 to penalize long docs.
       COALESCE(%(w_path)s * ts_rank(b.path_tsv,  q.tsq_short, 32), 0.0)   AS s_path,

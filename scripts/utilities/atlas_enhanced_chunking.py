@@ -43,9 +43,7 @@ class AtlasEnhancedChunking:
         self.overlap_size: int = 100  # tokens (20-25% of 500 = 100-125)
         self.min_chunk_size: int = 100  # tokens
 
-    def chunk_conversation_turn(
-        self, session_id: str, role: str, content: str, metadata: dict[str, str | bool] | None = None
-    ) -> list[str]:
+    def chunk_conversation_turn(self, session_id: str, role: str, content: str) -> list[str]:
         """Chunk a conversation turn into semantic pieces."""
         chunks = []
 
@@ -67,16 +65,11 @@ class AtlasEnhancedChunking:
 
             # Create chunk node
             raw_metadata = chunk_data.get("metadata", {})
-            if not isinstance(raw_metadata, dict):
-                final_metadata: dict[str, str | int | float | bool | None] = {}
-            else:
+            final_metadata: dict[str, str | int | float | bool | None] = {}
+            if isinstance(raw_metadata, dict):
                 # Convert to the expected type
-                final_metadata: dict[str, str | int | float | bool | None] = {}
                 for k, v in raw_metadata.items():
-                    if isinstance(v, (str, int, float, bool)) or v is None:
-                        final_metadata[k] = v
-                    else:
-                        final_metadata[k] = str(v)
+                    final_metadata[k] = v
 
             parent_turn_id = chunk_data.get("parent_turn_id")
             if not isinstance(parent_turn_id, str):
@@ -401,9 +394,7 @@ def main() -> None:
     3. Maintains relationships between chunks
     """
 
-    chunks = chunker.chunk_conversation_turn(
-        session_id="test_enhanced_chunking", role="user", content=test_content, metadata={"test": True}
-    )
+    chunks = chunker.chunk_conversation_turn(session_id="test_enhanced_chunking", role="user", content=test_content)
 
     print(f"✅ Created {len(chunks)} chunks:")
     for i, chunk_id in enumerate(chunks):
