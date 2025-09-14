@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/atlas_simple_extractor.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.1, 100, 450, 1024, '\n### My Replies:\n', '...', 'POSTGRES_DSN', '__main__', 'assistant', 'connection_strength', 'connections', 'content', 'created_at', 'embedding', 'id', 'metadata', 'node_id', 'queries', 'query_id', 'query_preview', 'replies', 'reply_id', 'reply_preview', 'role', 'session_id', 'test_simple_session', 'total_connections', 'total_queries', 'total_replies', 'unknown', 'user']
