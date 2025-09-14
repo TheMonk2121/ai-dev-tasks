@@ -11,6 +11,8 @@ echo "==============================="
 STABLE_ENV_FILE="${RAGCHECKER_ENV_FILE:-configs/stable_bedrock.env}"
 if [ -f "$STABLE_ENV_FILE" ]; then
   echo "📁 Loading stable config: $STABLE_ENV_FILE"
+  # shellcheck source=configs/stable_bedrock.env
+  # shellcheck disable=SC1091
   source "$STABLE_ENV_FILE"
   echo "🔒 Loaded env from $STABLE_ENV_FILE … lock=True"
 else

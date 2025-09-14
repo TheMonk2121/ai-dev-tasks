@@ -7802,3 +7802,245 @@
 {"type": "case", "query": "What are the naming conventions used in this repo (200_setup)?", "timing_sec": 0.282}
 {"type": "case", "query": "How should vector search be implemented?", "timing_sec": 0.32}
 {"type": "case", "query": "What is the main purpose of 100_debugging-effectiveness-analysis.md?", "timing_sec": 0.343}
+{"type": "case", "query": "what does 400_08_task-management-workflows.md?", "timing_sec": 3.456}
+{"type": "case", "query": "what does memory system-context-management.md?", "timing_sec": 0.237}
+{"type": "case", "query": "what does 400_12_advanced-configurations.md?", "timing_sec": 0.212}
+{"type": "case", "query": "Which file describes the memory/context workflow?", "timing_sec": 0.217}
+{"type": "case", "query": "what does DSPy_MULTI_AGENT_COMPLETION_SUMMARY.md?", "timing_sec": 0.187}
+{"type": "case", "query": "What is the RAGChecker evaluation system?", "timing_sec": 0.202}
+{"type": "case", "query": "what does 100_implementation-patterns-library.md?", "timing_sec": 0.175}
+{"type": "case", "query": "Where are the model configuration settings defined?", "timing_sec": 0.213}
+{"type": "case", "query": "What are the evaluation metrics and thresholds?", "timing_sec": 0.209}
+{"type": "case", "query": "what does README.md?", "timing_sec": 0.187}
+{"type": "case", "query": "What are the phrase hints for different tags?", "timing_sec": 0.21}
+{"type": "case", "query": "what does 500_b031-completion-summary.md?", "timing_sec": 0.181}
+{"type": "case", "query": "what does 400_06_backlog-management-priorities.md?", "timing_sec": 0.216}
+{"type": "case", "query": "What is the litellm compatibility shim?", "timing_sec": 0.164}
+{"type": "case", "query": "what does 100_communication-patterns-guide.md?", "timing_sec": 0.144}
+{"type": "case", "query": "show me me the setup docs for setup.?", "timing_sec": 0.174}
+{"type": "case", "query": "What are the core steps emphasized for setup?", "timing_sec": 0.178}
+{"type": "case", "query": "Where are database troubleshooting patterns documented?", "timing_sec": 0.164}
+{"type": "case", "query": "How do I run memory rehydration?", "timing_sec": 0.169}
+{"type": "case", "query": "What are the naming conventions used in this repo?", "timing_sec": 0.181}
+{"type": "case", "query": "what does 400_01_memory-system-architecture.md?", "timing_sec": 0.288}
+{"type": "case", "query": "Which file summarizes backlog and priorities?", "timing_sec": 0.169}
+{"type": "case", "query": "What is the memory orchestrator system?", "timing_sec": 0.204}
+{"type": "case", "query": "Which file defines the governance and AI constitution?", "timing_sec": 0.173}
+{"type": "case", "query": "Where are database troubleshooting patterns documented?", "timing_sec": 0.161}
+{"type": "case", "query": "what does 100_cursor-memory-context.md?", "timing_sec": 0.146}
+{"type": "case", "query": "what does 400_11_performance-optimization.md?", "timing_sec": 0.168}
+{"type": "case", "query": "How does the retriever system work?", "timing_sec": 0.22}
+{"type": "case", "query": "How does the DSPy reader program work?", "timing_sec": 0.172}
+{"type": "case", "query": "How do I compile and test DSPy programs?", "timing_sec": 0.177}
+{"type": "case", "query": "what does 400_07_project-planning-roadmap.md?", "timing_sec": 0.181}
+{"type": "case", "query": "What is the sentence selection process?", "timing_sec": 0.219}
+{"type": "case", "query": "Where are the model configuration settings defined?", "timing_sec": 0.187}
+{"type": "case", "query": "What are the naming conventions used in this repo (200_setup)?", "timing_sec": 0.222}
+{"type": "case", "query": "What MCP tools are available in this project?", "timing_sec": 0.178}
+{"type": "case", "query": "give me the high-level getting started index.?", "timing_sec": 0.175}
+{"type": "case", "query": "what does 100_debugging-effectiveness-analysis.md?", "timing_sec": 0.142}
+{"type": "case", "query": "point me to me to memory-related guides for memory management.?", "timing_sec": 0.194}
+{"type": "case", "query": "Which file summarizes backlog and priorities?", "timing_sec": 0.167}
+{"type": "case", "query": "Which file defines the governance and AI constitution?", "timing_sec": 0.174}
+{"type": "case", "query": "what does PRECISION_CLIMB_V2_IMPLEMENTATION_SUMMARY.md?", "timing_sec": 0.151}
+{"type": "case", "query": "How does MMR reranking work?", "timing_sec": 0.167}
+{"type": "case", "query": "give me the high-level getting started index.?", "timing_sec": 0.181}
+{"type": "case", "query": "what does 400_04_development-workflow-and-standards.md?", "timing_sec": 0.232}
+{"type": "case", "query": "Which file describes the memory/context workflow?", "timing_sec": 0.167}
+{"type": "case", "query": "How do I run the evaluation tests?", "timing_sec": 0.17}
+{"type": "case", "query": "what does 400_03_system-overview-and-architecture.md?", "timing_sec": 0.175}
+{"type": "case", "query": "show me me the setup docs for setup.?", "timing_sec": 0.171}
+{"type": "case", "query": "What is DSPy and how is it used in this project?", "timing_sec": 0.228}
+{"type": "case", "query": "What is the per-file cap mechanism?", "timing_sec": 0.173}
+{"type": "case", "query": "what does TASK_GENERATION_B-1059_retrieval-tuning-protocol.md?", "timing_sec": 0.19}
+{"type": "case", "query": "How do I test the MCP server?", "timing_sec": 0.174}
+{"type": "case", "query": "How do I run the CI gate for reader?", "timing_sec": 0.178}
+{"type": "case", "query": "What is DSPy and how is it used in this project?", "timing_sec": 0.188}
+{"type": "case", "query": "what does 400_05_codebase-organization-patterns.md?", "timing_sec": 0.173}
+{"type": "case", "query": "what does 500_advanced-model-adaptation-framework-task-6-2.md?", "timing_sec": 0.187}
+{"type": "case", "query": "what does B-1007_COMPLETION_SUMMARY.md?", "timing_sec": 0.143}
+{"type": "case", "query": "what does PRD_B-1059_retrieval-tuning-protocol.md?", "timing_sec": 0.194}
+{"type": "case", "query": "What are the DSPy integration patterns in DSPy framework.md?", "timing_sec": 0.172}
+{"type": "case", "query": "How does the virtual environment manager work?", "timing_sec": 0.169}
+{"type": "case", "query": "According to memory system-context-management.md, what is the memory system in this project?", "timing_sec": 0.244}
+{"type": "case", "query": "what does 002_generate-tasks-TEMPLATE.md?", "timing_sec": 0.146}
+{"type": "case", "query": "what does 100_governance-by-code-insights.md?", "timing_sec": 0.147}
+{"type": "case", "query": "what does 000_backlog.md?", "timing_sec": 0.145}
+{"type": "case", "query": "what does OPTIMIZATION_SUMMARY.md?", "timing_sec": 0.148}
+{"type": "case", "query": "What are the reader limits and budgets?", "timing_sec": 0.175}
+{"type": "case", "query": "What is the sentence compaction process?", "timing_sec": 0.175}
+{"type": "case", "query": "show me the DSPy development context TL;DR.?", "timing_sec": 0.177}
+{"type": "case", "query": "what does 400_00_memory-system-overview.md?", "timing_sec": 0.178}
+{"type": "case", "query": "point me to me to memory-related guides for memory management.?", "timing_sec": 0.189}
+{"type": "case", "query": "How do I use the unified memory orchestrator?", "timing_sec": 0.178}
+{"type": "case", "query": "What is list the core workflow guides in 000_core.?", "timing_sec": 0.183}
+{"type": "case", "query": "show me the DSPy development context TL;DR.?", "timing_sec": 0.18}
+{"type": "case", "query": "what does DSPy framework.md?", "timing_sec": 0.147}
+{"type": "case", "query": "what does 100_database-troubleshooting-patterns.md?", "timing_sec": 0.143}
+{"type": "case", "query": "what does 400_02_memory-rehydration-context-management.md?", "timing_sec": 0.221}
+{"type": "case", "query": "What are the naming conventions used in this repo (200_setup)?", "timing_sec": 0.184}
+{"type": "case", "query": "According to 400_02_memory-rehydration-context-management.md, what is the memory system in this project?", "timing_sec": 0.309}
+{"type": "case", "query": "What text search algorithm should be used?", "timing_sec": 0.17}
+{"type": "case", "query": "What database technology should be used?", "timing_sec": 0.167}
+{"type": "case", "query": "How should search be optimized?", "timing_sec": 0.156}
+{"type": "case", "query": "What API design should be implemented?", "timing_sec": 0.165}
+{"type": "case", "query": "What vector extension should be used?", "timing_sec": 0.164}
+{"type": "case", "query": "What memory system architecture should be used?", "timing_sec": 0.169}
+{"type": "case", "query": "What search architecture should be implemented?", "timing_sec": 0.169}
+{"type": "case", "query": "What database should be chosen?", "timing_sec": 0.338}
+{"type": "case", "query": "How should vector search be implemented?", "timing_sec": 0.198}
+{"type": "case", "query": "Why do we demote docs/design subtrees slightly?", "timing_sec": 0.169}
+{"type": "case", "query": "Why do we bias ops/shell/setup subtrees for ops_health?", "timing_sec": 0.214}
+{"type": "case", "query": "Why do ops_health phrase hints include health check and shell init?", "timing_sec": 0.19}
+{"type": "case", "query": "What is the RRF fusion method?", "timing_sec": 0.168}
+{"type": "case", "query": "How do I run the evaluation tests?", "timing_sec": 0.171}
+{"type": "case", "query": "Where do evaluation manifests live?", "timing_sec": 0.162}
+{"type": "case", "query": "What is the context consumption enforcement?", "timing_sec": 0.165}
+{"type": "case", "query": "How does the RAGChecker evaluation work?", "timing_sec": 0.173}
+{"type": "case", "query": "How do I use the teleprompter?", "timing_sec": 0.174}
+{"type": "case", "query": "What is the canary deployment percentage limit and how is it configured?", "timing_sec": 0.203}
+{"type": "case", "query": "What is the HybridVectorStore?", "timing_sec": 0.164}
+{"type": "case", "query": "What are the RAGChecker baseline performance metrics?", "timing_sec": 0.169}
+{"type": "case", "query": "What is the chunking configuration for embeddings?", "timing_sec": 0.176}
+{"type": "case", "query": "How do I set up shell integration for this project?", "timing_sec": 0.183}
+{"type": "case", "query": "What is the evaluation manifest template?", "timing_sec": 0.157}
+{"type": "case", "query": "How does the database schema work?", "timing_sec": 0.171}
+{"type": "case", "query": "What is the gate and promote system?", "timing_sec": 0.169}
+{"type": "case", "query": "How do I configure the reranker?", "timing_sec": 0.172}
+{"type": "case", "query": "What is the provenance tracking system?", "timing_sec": 0.164}
+{"type": "case", "query": "What is the citation extraction process?", "timing_sec": 0.17}
+{"type": "case", "query": "How do I configure evaluation thresholds?", "timing_sec": 0.166}
+{"type": "case", "query": "What is the API key for the Mars colony database?", "timing_sec": 0.178}
+{"type": "case", "query": "How does multi-hop retrieval work with fusion?", "timing_sec": 0.215}
+{"type": "case", "query": "How do I create a vector index with IVFFLAT?", "timing_sec": 0.179}
+{"type": "case", "query": "How do I create a Product Requirements Document (PRD)?", "timing_sec": 0.184}
+{"type": "case", "query": "How do I configure pgvector for ANN operations?", "timing_sec": 0.175}
+{"type": "case", "query": "How does the DSPy RAG pipeline work?", "timing_sec": 0.173}
+{"type": "case", "query": "How do I run database migrations?", "timing_sec": 0.17}
+{"type": "case", "query": "How do I configure the quantum entanglement module?", "timing_sec": 0.169}
+{"type": "case", "query": "What is the websearch tsquery function?", "timing_sec": 0.161}
+{"type": "case", "query": "What is the memory rehydration protocol and how do I use it?", "timing_sec": 0.248}
+{"type": "case", "query": "How do I install the time travel dependencies?", "timing_sec": 0.175}
+{"type": "case", "query": "How do I run the runbook?", "timing_sec": 0.162}
+{"type": "case", "query": "Which gates block deployment?", "timing_sec": 0.188}
+{"type": "case", "query": "what does 400_08_task-management-workflows.md?", "timing_sec": 3.361}
+{"type": "case", "query": "what does memory system-context-management.md?", "timing_sec": 0.508}
+{"type": "case", "query": "what does 400_12_advanced-configurations.md?", "timing_sec": 0.274}
+{"type": "case", "query": "Which file describes the memory/context workflow?", "timing_sec": 0.256}
+{"type": "case", "query": "what does DSPy_MULTI_AGENT_COMPLETION_SUMMARY.md?", "timing_sec": 0.196}
+{"type": "case", "query": "What is the RAGChecker evaluation system?", "timing_sec": 0.321}
+{"type": "case", "query": "what does 100_implementation-patterns-library.md?", "timing_sec": 0.209}
+{"type": "case", "query": "Where are the model configuration settings defined?", "timing_sec": 0.211}
+{"type": "case", "query": "What are the evaluation metrics and thresholds?", "timing_sec": 0.206}
+{"type": "case", "query": "what does README.md?", "timing_sec": 0.186}
+{"type": "case", "query": "What are the phrase hints for different tags?", "timing_sec": 0.213}
+{"type": "case", "query": "what does 500_b031-completion-summary.md?", "timing_sec": 0.183}
+{"type": "case", "query": "what does 400_06_backlog-management-priorities.md?", "timing_sec": 0.213}
+{"type": "case", "query": "What is the litellm compatibility shim?", "timing_sec": 0.162}
+{"type": "case", "query": "what does 100_communication-patterns-guide.md?", "timing_sec": 0.145}
+{"type": "case", "query": "show me me the setup docs for setup.?", "timing_sec": 0.174}
+{"type": "case", "query": "What are the core steps emphasized for setup?", "timing_sec": 0.175}
+{"type": "case", "query": "Where are database troubleshooting patterns documented?", "timing_sec": 0.164}
+{"type": "case", "query": "How do I run memory rehydration?", "timing_sec": 0.167}
+{"type": "case", "query": "What are the naming conventions used in this repo?", "timing_sec": 0.18}
+{"type": "case", "query": "what does 400_01_memory-system-architecture.md?", "timing_sec": 0.226}
+{"type": "case", "query": "Which file summarizes backlog and priorities?", "timing_sec": 0.159}
+{"type": "case", "query": "What is the memory orchestrator system?", "timing_sec": 0.19}
+{"type": "case", "query": "Which file defines the governance and AI constitution?", "timing_sec": 0.167}
+{"type": "case", "query": "Where are database troubleshooting patterns documented?", "timing_sec": 0.161}
+{"type": "case", "query": "what does 100_cursor-memory-context.md?", "timing_sec": 0.147}
+{"type": "case", "query": "what does 400_11_performance-optimization.md?", "timing_sec": 0.169}
+{"type": "case", "query": "How does the retriever system work?", "timing_sec": 0.239}
+{"type": "case", "query": "How does the DSPy reader program work?", "timing_sec": 0.174}
+{"type": "case", "query": "How do I compile and test DSPy programs?", "timing_sec": 0.176}
+{"type": "case", "query": "what does 400_07_project-planning-roadmap.md?", "timing_sec": 0.192}
+{"type": "case", "query": "What is the sentence selection process?", "timing_sec": 0.201}
+{"type": "case", "query": "Where are the model configuration settings defined?", "timing_sec": 0.171}
+{"type": "case", "query": "What are the naming conventions used in this repo (200_setup)?", "timing_sec": 0.227}
+{"type": "case", "query": "What MCP tools are available in this project?", "timing_sec": 0.177}
+{"type": "case", "query": "give me the high-level getting started index.?", "timing_sec": 0.179}
+{"type": "case", "query": "what does 100_debugging-effectiveness-analysis.md?", "timing_sec": 0.146}
+{"type": "case", "query": "point me to me to memory-related guides for memory management.?", "timing_sec": 0.191}
+{"type": "case", "query": "Which file summarizes backlog and priorities?", "timing_sec": 0.159}
+{"type": "case", "query": "Which file defines the governance and AI constitution?", "timing_sec": 0.254}
+{"type": "case", "query": "what does PRECISION_CLIMB_V2_IMPLEMENTATION_SUMMARY.md?", "timing_sec": 0.147}
+{"type": "case", "query": "How does MMR reranking work?", "timing_sec": 0.164}
+{"type": "case", "query": "give me the high-level getting started index.?", "timing_sec": 0.178}
+{"type": "case", "query": "what does 400_04_development-workflow-and-standards.md?", "timing_sec": 0.28}
+{"type": "case", "query": "Which file describes the memory/context workflow?", "timing_sec": 0.171}
+{"type": "case", "query": "How do I run the evaluation tests?", "timing_sec": 0.172}
+{"type": "case", "query": "what does 400_03_system-overview-and-architecture.md?", "timing_sec": 0.173}
+{"type": "case", "query": "show me me the setup docs for setup.?", "timing_sec": 0.17}
+{"type": "case", "query": "What is DSPy and how is it used in this project?", "timing_sec": 0.28}
+{"type": "case", "query": "What is the per-file cap mechanism?", "timing_sec": 0.175}
+{"type": "case", "query": "what does TASK_GENERATION_B-1059_retrieval-tuning-protocol.md?", "timing_sec": 0.181}
+{"type": "case", "query": "How do I test the MCP server?", "timing_sec": 0.174}
+{"type": "case", "query": "How do I run the CI gate for reader?", "timing_sec": 0.182}
+{"type": "case", "query": "What is DSPy and how is it used in this project?", "timing_sec": 0.188}
+{"type": "case", "query": "what does 400_05_codebase-organization-patterns.md?", "timing_sec": 0.177}
+{"type": "case", "query": "what does 500_advanced-model-adaptation-framework-task-6-2.md?", "timing_sec": 0.192}
+{"type": "case", "query": "what does B-1007_COMPLETION_SUMMARY.md?", "timing_sec": 0.143}
+{"type": "case", "query": "what does PRD_B-1059_retrieval-tuning-protocol.md?", "timing_sec": 0.191}
+{"type": "case", "query": "What are the DSPy integration patterns in DSPy framework.md?", "timing_sec": 0.167}
+{"type": "case", "query": "How does the virtual environment manager work?", "timing_sec": 0.166}
+{"type": "case", "query": "According to memory system-context-management.md, what is the memory system in this project?", "timing_sec": 0.253}
+{"type": "case", "query": "what does 002_generate-tasks-TEMPLATE.md?", "timing_sec": 0.146}
+{"type": "case", "query": "what does 100_governance-by-code-insights.md?", "timing_sec": 0.144}
+{"type": "case", "query": "what does 000_backlog.md?", "timing_sec": 0.144}
+{"type": "case", "query": "what does OPTIMIZATION_SUMMARY.md?", "timing_sec": 0.145}
+{"type": "case", "query": "What are the reader limits and budgets?", "timing_sec": 0.171}
+{"type": "case", "query": "What is the sentence compaction process?", "timing_sec": 0.171}
+{"type": "case", "query": "show me the DSPy development context TL;DR.?", "timing_sec": 0.174}
+{"type": "case", "query": "what does 400_00_memory-system-overview.md?", "timing_sec": 0.17}
+{"type": "case", "query": "point me to me to memory-related guides for memory management.?", "timing_sec": 0.193}
+{"type": "case", "query": "How do I use the unified memory orchestrator?", "timing_sec": 0.176}
+{"type": "case", "query": "What is list the core workflow guides in 000_core.?", "timing_sec": 0.184}
+{"type": "case", "query": "show me the DSPy development context TL;DR.?", "timing_sec": 0.173}
+{"type": "case", "query": "what does DSPy framework.md?", "timing_sec": 0.15}
+{"type": "case", "query": "what does 100_database-troubleshooting-patterns.md?", "timing_sec": 0.147}
+{"type": "case", "query": "what does 400_02_memory-rehydration-context-management.md?", "timing_sec": 0.224}
+{"type": "case", "query": "What are the naming conventions used in this repo (200_setup)?", "timing_sec": 0.185}
+{"type": "case", "query": "According to 400_02_memory-rehydration-context-management.md, what is the memory system in this project?", "timing_sec": 0.409}
+{"type": "case", "query": "What text search algorithm should be used?", "timing_sec": 0.199}
+{"type": "case", "query": "What database technology should be used?", "timing_sec": 0.168}
+{"type": "case", "query": "How should search be optimized?", "timing_sec": 0.162}
+{"type": "case", "query": "What API design should be implemented?", "timing_sec": 0.16}
+{"type": "case", "query": "What vector extension should be used?", "timing_sec": 0.161}
+{"type": "case", "query": "What memory system architecture should be used?", "timing_sec": 0.161}
+{"type": "case", "query": "What search architecture should be implemented?", "timing_sec": 0.166}
+{"type": "case", "query": "What database should be chosen?", "timing_sec": 0.317}
+{"type": "case", "query": "How should vector search be implemented?", "timing_sec": 0.191}
+{"type": "case", "query": "Why do we demote docs/design subtrees slightly?", "timing_sec": 0.169}
+{"type": "case", "query": "Why do we bias ops/shell/setup subtrees for ops_health?", "timing_sec": 0.223}
+{"type": "case", "query": "Why do ops_health phrase hints include health check and shell init?", "timing_sec": 0.194}
+{"type": "case", "query": "What is the RRF fusion method?", "timing_sec": 0.165}
+{"type": "case", "query": "How do I run the evaluation tests?", "timing_sec": 0.173}
+{"type": "case", "query": "Where do evaluation manifests live?", "timing_sec": 0.158}
+{"type": "case", "query": "What is the context consumption enforcement?", "timing_sec": 0.161}
+{"type": "case", "query": "How does the RAGChecker evaluation work?", "timing_sec": 0.174}
+{"type": "case", "query": "How do I use the teleprompter?", "timing_sec": 0.168}
+{"type": "case", "query": "What is the canary deployment percentage limit and how is it configured?", "timing_sec": 0.197}
+{"type": "case", "query": "What is the HybridVectorStore?", "timing_sec": 0.161}
+{"type": "case", "query": "What are the RAGChecker baseline performance metrics?", "timing_sec": 0.167}
+{"type": "case", "query": "What is the chunking configuration for embeddings?", "timing_sec": 0.174}
+{"type": "case", "query": "How do I set up shell integration for this project?", "timing_sec": 0.183}
+{"type": "case", "query": "What is the evaluation manifest template?", "timing_sec": 0.158}
+{"type": "case", "query": "How does the database schema work?", "timing_sec": 0.17}
+{"type": "case", "query": "What is the gate and promote system?", "timing_sec": 0.169}
+{"type": "case", "query": "How do I configure the reranker?", "timing_sec": 0.166}
+{"type": "case", "query": "What is the provenance tracking system?", "timing_sec": 0.162}
+{"type": "case", "query": "What is the citation extraction process?", "timing_sec": 0.165}
+{"type": "case", "query": "How do I configure evaluation thresholds?", "timing_sec": 0.166}
+{"type": "case", "query": "What is the API key for the Mars colony database?", "timing_sec": 0.177}
+{"type": "case", "query": "How does multi-hop retrieval work with fusion?", "timing_sec": 0.204}
+{"type": "case", "query": "How do I create a vector index with IVFFLAT?", "timing_sec": 0.176}
+{"type": "case", "query": "How do I create a Product Requirements Document (PRD)?", "timing_sec": 0.175}
+{"type": "case", "query": "How do I configure pgvector for ANN operations?", "timing_sec": 0.174}
+{"type": "case", "query": "How does the DSPy RAG pipeline work?", "timing_sec": 0.168}
+{"type": "case", "query": "How do I run database migrations?", "timing_sec": 0.169}
+{"type": "case", "query": "How do I configure the quantum entanglement module?", "timing_sec": 0.174}
+{"type": "case", "query": "What is the websearch tsquery function?", "timing_sec": 0.16}
+{"type": "case", "query": "What is the memory rehydration protocol and how do I use it?", "timing_sec": 0.247}
+{"type": "case", "query": "How do I install the time travel dependencies?", "timing_sec": 0.174}
+{"type": "case", "query": "How do I run the runbook?", "timing_sec": 0.165}
+{"type": "case", "query": "Which gates block deployment?", "timing_sec": 0.186}

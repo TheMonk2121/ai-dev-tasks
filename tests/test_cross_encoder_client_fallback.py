@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import asyncio
+import os
 import time
+
 from src.retrieval.cross_encoder_client import CrossEncoderClient
 from tests.property._regression_capture import record_case
-import os
+
 #!/usr/bin/env python3
 """
 Test CrossEncoderClient timeout/fallback behavior.

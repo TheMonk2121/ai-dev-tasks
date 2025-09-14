@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import json
+import os
 import time
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Optional, Union
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
-import os
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Simple Database Monitor - Basic performance monitoring for the consolidated ai_agency database

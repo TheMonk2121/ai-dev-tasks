@@ -13,6 +13,7 @@ import sys
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 from utils.predictive_intelligence import PredictiveIntelligence
 
+
 def test_predictive_intelligence():
     """Test the complete predictive intelligence workflow"""
 
@@ -84,7 +85,6 @@ def test_predictive_intelligence():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
-
         traceback.print_exc()
         return False
 

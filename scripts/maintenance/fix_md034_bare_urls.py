@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import os
 import re
+
 #!/usr/bin/env python3
 """
 Fix MD034 - Bare URL used

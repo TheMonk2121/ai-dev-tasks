@@ -254,7 +254,7 @@ class TestConstitutionComplianceChecker(unittest.TestCase):
         self.assertGreater(len(test_checker.rules), 0)
 
         # Check that we have rules from different articles
-        articles = set(rule.article for rule in test_checker.rules)
+        articles = {rule.article for rule in test_checker.rules}
         self.assertIn("I", articles)  # File Safety
         self.assertIn("II", articles)  # Context Preservation
         self.assertIn("III", articles)  # Error Prevention

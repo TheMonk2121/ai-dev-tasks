@@ -10,6 +10,7 @@ from typing import Any
 
 import networkx as nx
 
+
 class PipelineStage(Enum):
     INGEST = "ingest"
     CHUNK = "chunk"
@@ -18,17 +19,20 @@ class PipelineStage(Enum):
     GENERATE = "generate"
     VALIDATE = "validate"
 
+
 class PipelineNodeType(Enum):
     STAGE = "stage"
     PARAMETER = "parameter"
     CONFIG = "config"
     RESULT = "result"
 
+
 class PipelineEdgeType(Enum):
     SEQUENTIAL = "sequential"
     PARAMETER_FLOW = "parameter_flow"
     DATA_FLOW = "data_flow"
     CONDITIONAL = "conditional"
+
 
 @dataclass
 class PipelineNode:
@@ -41,6 +45,7 @@ class PipelineNode:
     parameters: dict[str, Any]
     metadata: dict[str, Any]
 
+
 @dataclass
 class PipelineEdge:
     """Represents an edge in the RAG pipeline graph"""
@@ -50,6 +55,7 @@ class PipelineEdge:
     edge_type: PipelineEdgeType
     condition: str | None = None
     metadata: dict[str, Any] = None
+
 
 class RAGPipelineGovernance:
     """Governance system for RAG pipelines using semantic graph representation"""
@@ -439,6 +445,7 @@ class RAGPipelineGovernance:
                 "edges": [(u, v, d) for u, v, d in graph.edges(data=True)],
             },
         }
+
 
 # Example usage
 if __name__ == "__main__":

@@ -1,9 +1,13 @@
 from __future__ import annotations
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.quality_gates import QualityGateValidator, validate_evaluation_results
+
 from ._regression_capture import record_case
+
 #!/usr/bin/env python3
 """
 Property-based tests for QualityGateValidator invariants.

@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import numpy as np
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.uncertainty.confidence_calibration import CalibrationConfig, ConfidenceCalibrator
+
 #!/usr/bin/env python3
 """
 Property tests for ConfidenceCalibrator bounds and stability.

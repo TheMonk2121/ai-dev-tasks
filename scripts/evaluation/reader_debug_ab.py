@@ -11,7 +11,7 @@ from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Debug A/B test to ensure DSPy reader controls are wired the same way in every path.

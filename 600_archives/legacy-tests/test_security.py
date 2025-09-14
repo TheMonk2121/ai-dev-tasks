@@ -68,7 +68,7 @@ class TestSecurityScanner:
             report_file = f.name
 
         try:
-            with patch("builtins.open", return_value=open(report_file, "r")):
+            with patch("builtins.open", return_value=open(report_file)):
                 scanner = SecurityScanner()
                 result = scanner.run_bandit_scan()
 

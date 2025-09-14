@@ -4,9 +4,11 @@ PostgreSQL query execution for fused retrieval with multiplicative prior.
 Implements the surgical patch SQL query.
 """
 
+import logging
 import os
 from typing import Any
 
+import numpy as np
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -87,7 +89,7 @@ def run_fused_query(
     tag: str = "",
     weights: dict[str, float] | None = None,
     weights_file: str | None = None,
-    return_components: bool = True,
+    return_components: bool = True,  # noqa: ARG001
     fname_regex: str | None = None,
     adjacency_db: bool = False,
     cold_start: bool = False,
@@ -103,6 +105,7 @@ def run_fused_query(
         k: Number of results to return
         use_mmr: Whether to apply MMR reranking
         weights: Optional weight dictionary for channels
+        return_components: Reserved for future use (API compatibility)
 
     Returns:
         List of result dictionaries
@@ -110,10 +113,11 @@ def run_fused_query(
 
     VEC = _vec_expr()
 
+    # Acknowledge return_components parameter for API compatibility
+    _ = return_components
+
     # Sanitize inputs to avoid postgres/driver issues (e.g., NUL 0x00)
     def _clean(s: str) -> str:
-        if not isinstance(s, str):
-            return ""
         # Replace NULs and collapse excessive whitespace
         s = s.replace("\x00", " ")
         return s
@@ -234,8 +238,6 @@ def run_fused_query(
         weights["w_vec"] = weights["w_vec"] * (1.0 + boost)
 
     # Format query vector as pgvector literal to avoid adapter issues
-    import numpy as np
-
     if isinstance(qvec, np.ndarray):
         has_vec = qvec.size > 0
     else:
@@ -394,8 +396,6 @@ def run_fused_query(
 
         except Exception as e:
             # Log error but continue with original behavior
-            import logging
-
             logger = logging.getLogger(__name__)
             logger.warning(f"Fusion head failed, falling back to original scoring: {e}")
 

@@ -11,6 +11,7 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+
 class RateLimiter:
     def __init__(self, rps: float):
         self.min_interval = 1.0 / max(rps, 1e-6)

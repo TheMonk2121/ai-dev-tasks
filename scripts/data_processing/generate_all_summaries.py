@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import argparse
+import os
+import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
-    import re
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Generate All Summaries - Batch summary generation for Scribe worklogs
@@ -18,6 +19,7 @@ This script ensures all Scribe data is properly integrated into the
 memory rehydration system and graph visualization.
 """
 
+
 def get_active_worklogs() -> list[str]:
     """Get all active worklog files."""
     worklog_dir = Path("artifacts/worklogs")
@@ -27,6 +29,7 @@ def get_active_worklogs() -> list[str]:
     worklog_files = list(worklog_dir.glob("*.md"))
     return [f.stem for f in worklog_files]  # Return just the backlog IDs
 
+
 def get_existing_summaries() -> list[str]:
     """Get all existing summary files."""
     summaries_dir = Path("artifacts/summaries")
@@ -35,6 +38,7 @@ def get_existing_summaries() -> list[str]:
 
     summary_files = list(summaries_dir.glob("*-summary.md"))
     return [f.stem.replace("-summary", "") for f in summary_files]
+
 
 def needs_summary(backlog_id: str) -> bool:
     """Check if a worklog needs a summary generated."""
@@ -52,6 +56,7 @@ def needs_summary(backlog_id: str) -> bool:
         return worklog_mtime > summary_mtime
 
     return False
+
 
 def generate_summary(backlog_id: str, force: bool = False) -> dict[str, Any]:
     """Generate summary for a specific backlog ID."""
@@ -75,6 +80,7 @@ def generate_summary(backlog_id: str, force: bool = False) -> dict[str, Any]:
     except Exception as e:
         return {"status": "error", "backlog_id": backlog_id, "error": str(e)}
 
+
 def update_memory_rehydration_integration() -> dict[str, Any]:
     """Ensure summaries are properly integrated into memory rehydration."""
     try:
@@ -93,6 +99,7 @@ def update_memory_rehydration_integration() -> dict[str, Any]:
 
     except Exception as e:
         return {"status": "error", "error": str(e)}
+
 
 def generate_graph_integration_report() -> dict[str, Any]:
     """Generate a report on graph integration status."""
@@ -126,6 +133,7 @@ def generate_graph_integration_report() -> dict[str, Any]:
 
     except Exception as e:
         return {"status": "error", "error": str(e)}
+
 
 def main():
     parser = argparse.ArgumentParser(description="Generate summaries for all active worklogs")
@@ -221,6 +229,7 @@ def main():
             print("   - Role-based context assignment")
 
     return 0 if error_count == 0 else 1
+
 
 if __name__ == "__main__":
 

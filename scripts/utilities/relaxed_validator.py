@@ -1,10 +1,13 @@
 from __future__ import annotations
+
+import argparse
+import json
 import re
 import sys
 from pathlib import Path
+
 from doc_coherence_validator import DocCoherenceValidator
-    import argparse
-import json
+
 #!/usr/bin/env python3
 """
 Relaxed Documentation Coherence Validator
@@ -13,6 +16,7 @@ Ignores line length violations but enforces critical structural issues.
 
 # Add the scripts directory to the path so we can import the main validator
 sys.path.insert(0, str(Path(__file__).parent))
+
 
 class RelaxedDocValidator(DocCoherenceValidator):
     def __init__(self, *args, **kwargs):
@@ -81,6 +85,7 @@ class RelaxedDocValidator(DocCoherenceValidator):
             self.log("All files pass critical VS Code markdown rules (line length ignored)", "INFO")
             return True
 
+
 def main():
     """Main entry point for relaxed validation."""
 
@@ -121,6 +126,7 @@ def main():
     else:
         print("❌ Relaxed validation failed (critical issues found)")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

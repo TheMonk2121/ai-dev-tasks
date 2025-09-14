@@ -1,7 +1,7 @@
 from __future__ import annotations
 import logging
 import os
-    import argparse
+import argparse
 #!/usr/bin/env python3
 """
 Production RAGAS Configuration - Tight, No-Drama Rollout

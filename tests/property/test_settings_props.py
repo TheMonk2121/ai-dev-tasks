@@ -1,9 +1,13 @@
 from __future__ import annotations
+
 import os
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.schemas.settings import EvaluationSettings
+
 #!/usr/bin/env python3
 """
 Property tests for EvaluationSettings parsing behavior.

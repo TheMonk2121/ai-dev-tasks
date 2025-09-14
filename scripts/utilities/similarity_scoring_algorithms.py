@@ -1,15 +1,17 @@
 from __future__ import annotations
+
+import asyncio
 import logging
 import math
 import os
 import sys
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Optional, Union
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-    import asyncio
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Similarity Scoring Algorithms for Generation Cache Implementation

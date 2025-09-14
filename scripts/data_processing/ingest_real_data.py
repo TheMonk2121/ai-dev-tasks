@@ -1,17 +1,19 @@
 from __future__ import annotations
+
 import hashlib
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from sentence_transformers import SentenceTransformer
+
 from src.common.db_dsn import resolve_dsn
-            import subprocess
-                import hashlib
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Real Data Ingestion for Evaluation System
@@ -21,6 +23,7 @@ Ingests actual project documentation and files into the database.
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
+
 
 class RealDataIngester:
     """Ingests real project data into the database for evaluation."""
@@ -472,6 +475,7 @@ class RealDataIngester:
         print("🎉 Database is now ready for evaluation")
         return 0
 
+
 def main():
     """Main entry point."""
     dsn = resolve_dsn(strict=True)
@@ -482,6 +486,7 @@ def main():
 
     ingester = RealDataIngester(dsn)
     return ingester.main()
+
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,15 +1,17 @@
 from __future__ import annotations
+
 import asyncio
 import json
 import logging
+import os
 import sqlite3
 import time
-from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, Optional, Union
 from uuid import uuid4
-import os
-from typing import Any, Dict, List, Optional, Union
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
 #!/usr/bin/env python3
 """
 Agent Communication Implementation
@@ -26,6 +28,7 @@ Version: 1.0.0
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class MessageType(Enum):
     """Enumeration of message types."""
 
@@ -34,6 +37,7 @@ class MessageType(Enum):
     NOTIFICATION = "notification"
     ERROR = "error"
     HEARTBEAT = "heartbeat"
+
 
 class AgentRole(Enum):
     """Enumeration of agent roles."""
@@ -44,30 +48,63 @@ class AgentRole(Enum):
     DOCUMENTATION = "documentation"
     NATIVE_AI = "native_ai"
 
-@dataclass
-class AgentMessage:
-    """Data structure for agent messages."""
 
-    id: str = field(default_factory=lambda: str(uuid4()))
-    message_type: MessageType = MessageType.REQUEST
-    sender: str = ""
-    recipient: str = ""
-    content: dict[str, Any] = field(default_factory=dict)
-    metadata: dict[str, Any] = field(default_factory=dict)
-    timestamp: float = field(default_factory=time.time)
-    priority: int = 1  # 1=low, 2=medium, 3=high, 4=critical
+class AgentMessage(BaseModel):
+    """Data structure for agent messages with Pydantic validation."""
 
-@dataclass
-class AgentSession:
-    """Data structure for agent communication sessions."""
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+        use_enum_values=True,
+    )
 
-    id: str = field(default_factory=lambda: str(uuid4()))
-    participants: list[str] = field(default_factory=list)
-    context: dict[str, Any] = field(default_factory=dict)
-    messages: list[AgentMessage] = field(default_factory=list)
-    created_at: float = field(default_factory=time.time)
-    updated_at: float = field(default_factory=time.time)
-    status: str = "active"  # "active", "paused", "completed"
+    id: str = Field(default_factory=lambda: str(uuid4()), description="Unique message identifier")
+    message_type: MessageType = Field(default=MessageType.REQUEST, description="Type of message")
+    sender: str = Field(..., min_length=1, description="Sender agent identifier")
+    recipient: str = Field(..., min_length=1, description="Recipient agent identifier")
+    content: dict[str, Any] = Field(default_factory=dict, description="Message content")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Message metadata")
+    timestamp: float = Field(default_factory=time.time, ge=0.0, description="Message timestamp")
+    priority: int = Field(default=1, ge=1, le=4, description="Message priority (1=low, 2=medium, 3=high, 4=critical)")
+
+    @field_validator("sender", "recipient")
+    @classmethod
+    def validate_agent_ids(cls, v):
+        """Validate agent identifiers."""
+        if not v or not v.strip():
+            raise ValueError("Agent identifier cannot be empty")
+        return v.strip()
+
+
+class AgentSession(BaseModel):
+    """Data structure for agent communication sessions with Pydantic validation."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+    )
+
+    id: str = Field(default_factory=lambda: str(uuid4()), description="Unique session identifier")
+    participants: list[str] = Field(default_factory=list, description="List of participant agent IDs")
+    context: dict[str, Any] = Field(default_factory=dict, description="Session context")
+    messages: list[AgentMessage] = Field(default_factory=list, description="Session messages")
+    created_at: float = Field(default_factory=time.time, ge=0.0, description="Session creation timestamp")
+    updated_at: float = Field(default_factory=time.time, ge=0.0, description="Last update timestamp")
+    status: str = Field(default="active", pattern="^(active|paused|completed)$", description="Session status")
+
+    @field_validator("participants")
+    @classmethod
+    def validate_participants(cls, v):
+        """Validate participant list."""
+        if not isinstance(v, list):
+            raise ValueError("Participants must be a list")
+        for participant in v:
+            if not isinstance(participant, str) or not participant.strip():
+                raise ValueError("All participants must be non-empty strings")
+        return v
+
 
 class CommunicationDatabase:
     """Database for storing communication data and session history."""
@@ -178,6 +215,7 @@ class CommunicationDatabase:
         conn.close()
         return message.id
 
+
 class AgentCommunicationManager:
     """Manages communication between agents."""
 
@@ -201,7 +239,7 @@ class AgentCommunicationManager:
             "coordinator": ["research", "coder", "documentation", "native_ai"],
         }
 
-    async def register_agent(self, agent_id: str, agent_instance: Any, capabilities: list[str]):
+    async def register_agent(self, agent_id: str, agent_instance: Any, capabilities: list[str]) -> None:
         """Register an agent for communication."""
         self.agent_registry[agent_id] = {
             "instance": agent_instance,
@@ -211,7 +249,7 @@ class AgentCommunicationManager:
         }
         logger.info(f"Registered agent: {agent_id}")
 
-    async def unregister_agent(self, agent_id: str):
+    async def unregister_agent(self, agent_id: str) -> None:
         """Unregister an agent from communication."""
         if agent_id in self.agent_registry:
             del self.agent_registry[agent_id]
@@ -338,6 +376,7 @@ class AgentCommunicationManager:
                 "last_seen": agent_info["last_seen"],
             }
         return status
+
 
 class AgentCoordinator:
     """Coordinates communication between agents and manages workflows."""
@@ -469,6 +508,7 @@ class AgentCoordinator:
             workflow_id: await self.get_workflow_status(workflow_id) for workflow_id in self.active_workflows.keys()
         }
 
+
 # Example usage and testing
 async def main():
     """Example usage of the Agent Communication System."""
@@ -546,6 +586,7 @@ async def main():
     print(f"Workflow status: {json.dumps(workflow_status, indent=2)}")
 
     print("--- Agent Communication Test Complete ---")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

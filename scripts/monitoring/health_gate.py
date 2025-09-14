@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import json
 import sys
 from subprocess import run
+
 #!/usr/bin/env python3
 """
 Health Gate for CI/Automation

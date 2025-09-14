@@ -1,5 +1,6 @@
 import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Cleanup script to remove DSPy venv references and update imports.
@@ -14,7 +15,7 @@ This script:
 import os
 import re
 from pathlib import Path
-from typing import Optional
+
 
 def find_dspy_venv_references() -> list[tuple[str, int, str]]:
     """Find all files with DSPy venv references."""

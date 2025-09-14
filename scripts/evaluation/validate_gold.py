@@ -4,8 +4,8 @@ import json
 import os
 import sys
 from pathlib import Path
-        import sys
-        from src.utils.gold_loader import load_gold_cases
+import sys
+from src.utils.gold_loader import load_gold_cases
 #!/usr/bin/env python3
 """
 Gold Dataset Validation Script

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import json
 import subprocess
@@ -6,6 +7,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 UV Performance Monitor

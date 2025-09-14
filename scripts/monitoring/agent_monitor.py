@@ -1,13 +1,16 @@
 from __future__ import annotations
+
 import asyncio
 import json
+import os
 import time
 from datetime import datetime
 from pathlib import Path
+
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-    import uvicorn
-import os
+
 #!/usr/bin/env python3
 """
 Agent Monitor - Monitor Cursor and Codex activity

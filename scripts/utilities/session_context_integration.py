@@ -1,8 +1,10 @@
 from __future__ import annotations
+
+import argparse
 import json
 from datetime import UTC, datetime, timezone
 from pathlib import Path
-    import argparse
+
 #!/usr/bin/env python3
 """
 Session Context Integration for Memory Rehydration
@@ -10,6 +12,7 @@ Session Context Integration for Memory Rehydration
 Enhances memory rehydration with session registry data to provide
 rich context about active Scribe sessions and their context tags.
 """
+
 
 class SessionContextIntegrator:
     """Integrates session registry data into memory rehydration."""
@@ -112,6 +115,7 @@ class SessionContextIntegrator:
 
         return enhanced_context
 
+
 def integrate_with_memory_rehydrator():
     """Integration function for memory rehydrator."""
     integrator = SessionContextIntegrator()
@@ -126,6 +130,7 @@ def integrate_with_memory_rehydrator():
         "session_summary": session_summary,
         "integration_timestamp": datetime.now(UTC).isoformat(),
     }
+
 
 def main():
     """CLI interface for session context integration."""
@@ -155,6 +160,7 @@ def main():
     elif args.command == "integrate":
         integration_data = integrate_with_memory_rehydrator()
         print(json.dumps(integration_data, indent=2))
+
 
 if __name__ == "__main__":
     main()

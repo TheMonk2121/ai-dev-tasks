@@ -1,8 +1,11 @@
 from __future__ import annotations
+
 import asyncio
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.flows.qa_graph import Draft, End, FlowState, Start  # type: ignore[import-untyped]
 
 """

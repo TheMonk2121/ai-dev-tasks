@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import os
 import sys
+
 from utils.db_pool import get_conn  # type: ignore[import-untyped]
 from utils.decision_extractor import create_decisions_table  # type: ignore[import-untyped]
 from utils.supersedence_retrieval import create_supersedence_tables  # type: ignore[import-untyped]
+
 #!/usr/bin/env python3
 """
 Minimal DB setup runner (safe/idempotent).

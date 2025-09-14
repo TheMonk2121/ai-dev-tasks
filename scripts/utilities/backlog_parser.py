@@ -1,16 +1,17 @@
 from __future__ import annotations
+
 import argparse
+import json
 import logging
+import os
 import re
+import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any
-            import json
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Backlog Parser Module

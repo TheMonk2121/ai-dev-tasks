@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import os
 import pathlib
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Bootstrap sys.path so scripts can import project packages reliably.

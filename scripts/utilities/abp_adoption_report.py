@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import argparse
 import glob
 import json
 import os
-from typing import Any
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 ABP Adoption Report

@@ -1,16 +1,17 @@
 from __future__ import annotations
+
 import hashlib
 import json
 import logging
 import queue
 import sqlite3
+import sys
 import threading
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
-import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Advanced Resilience Patterns for Memory Context System

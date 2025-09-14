@@ -142,7 +142,7 @@ class TestRAGCheckerPerformance:
         """Test concurrent evaluation performance."""
         import queue
         import threading
-
+        
         results_queue = queue.Queue()
 
         def run_evaluation(eval_id):
@@ -189,9 +189,8 @@ class TestRAGCheckerPerformance:
     def test_memory_usage_performance(self, evaluator):
         """Test memory usage during evaluation."""
         import os
-
         import psutil
-
+        
         # Get initial memory usage
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
@@ -339,7 +338,6 @@ class TestRAGCheckerScalability:
     def test_memory_efficiency(self, evaluator):
         """Test memory efficiency with large datasets."""
         import os
-
         import psutil
 
         process = psutil.Process(os.getpid())

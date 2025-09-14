@@ -1,15 +1,17 @@
 from __future__ import annotations
-import re
-from dataclasses import dataclass
-from typing import Any
-import sys
+
 import os
-from typing import Any, Dict, List, Optional, Union
+import re
+import sys
+from dataclasses import dataclass
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Overflow Handling Strategies for Memory Context System
 Implements sliding-window summarizers and hierarchy-based compression
 """
+
 
 @dataclass
 class OverflowConfig:
@@ -20,6 +22,7 @@ class OverflowConfig:
     compression_threshold: float = 0.8
     f1_degradation_limit: float = 0.05
     hierarchy_levels: int = 3
+
 
 @dataclass
 class CompressionResult:
@@ -32,6 +35,7 @@ class CompressionResult:
     degradation: float
     strategy_used: str
     metadata: dict[str, Any]
+
 
 class SlidingWindowSummarizer:
     """Implements sliding-window summarization for context overflow handling"""
@@ -187,6 +191,7 @@ class SlidingWindowSummarizer:
             return self._further_compress(result, target_tokens)
 
         return result
+
 
 class HierarchyBasedCompressor:
     """Implements hierarchy-based compression for large contexts"""
@@ -349,6 +354,7 @@ class HierarchyBasedCompressor:
 
         return "\n".join(parts)
 
+
 class OverflowHandler:
     """Main overflow handling orchestrator"""
 
@@ -430,6 +436,7 @@ class OverflowHandler:
             return 0.04  # 4% degradation
         else:
             return 0.045  # Maximum 4.5% degradation (under 5% limit)
+
 
 def test_overflow_handling():
     """Test overflow handling strategies"""
@@ -526,6 +533,7 @@ Next steps include implementing overflow handling strategies, creating advanced 
                 print("    - Hierarchical compression based on content structure")
             elif result.strategy_used == "sliding_window":
                 print("    - Sliding-window summarization for sequential content")
+
 
 if __name__ == "__main__":
     test_overflow_handling()

@@ -39,8 +39,8 @@ def _generate_tasks_body_from_prd(prd_path: str, timeout_s: int = 12) -> str:
 
 def generate(backlog_id: str, timeout_s: int = 12) -> str:
     # Derive paths by finding the PRD path for this backlog_id
-    import re
-    from glob import glob
+import re
+from glob import glob
 
     prds = sorted(glob(f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-*.md"))
     if not prds:

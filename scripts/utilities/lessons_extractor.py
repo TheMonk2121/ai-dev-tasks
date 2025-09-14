@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 import json
 import os
 import sys
-from typing import Any
+from typing import Any, Optional, Union
+
 from lessons_model import Lesson, append_lesson, new_lesson
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Lessons Extractor - Post-run analysis to extract lessons from evaluation artifacts

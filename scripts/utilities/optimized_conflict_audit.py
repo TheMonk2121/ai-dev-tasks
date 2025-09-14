@@ -1,16 +1,18 @@
 from __future__ import annotations
+
 import argparse
+import importlib.util
 import json
 import multiprocessing
+import os
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from tqdm import tqdm
-            import importlib.util
-import os
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Optimized Conflict Audit Script
@@ -20,6 +22,7 @@ Target: 60% performance improvement (3.86s → <1.5s)
 
 Usage: python scripts/optimized_conflict_audit.py [--full] [--verbose] [--json]
 """
+
 
 class OptimizedConflictAuditor:
     def __init__(self, full_audit: bool = False, verbose: bool = False):
@@ -209,6 +212,7 @@ class OptimizedConflictAuditor:
             "all_passed": len(self.issues) == 0,
         }
 
+
 def main():
     parser = argparse.ArgumentParser(description="Optimized conflict audit")
     parser.add_argument("--full", action="store_true", help="Run full audit")
@@ -236,6 +240,7 @@ def main():
             print("\nWarnings:")
             for warning in results["warnings"]:
                 print(f"  ⚠️ {warning}")
+
 
 if __name__ == "__main__":
     main()

@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import ast
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Extract Python docstrings and basic symbol metadata for indexing (B-1059 Phase 2 B2).

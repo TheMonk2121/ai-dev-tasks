@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import argparse
 import ast
 import json
 import os
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Build a repo-local Python import graph and export JSON for visualization.

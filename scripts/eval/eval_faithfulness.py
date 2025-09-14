@@ -1,12 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import json
 import pathlib
 import sys
+from pathlib import Path
+
 import yaml
 from eval.contracts import DatasetConfig
 from eval.ragchecker_adapter import RAGCheckerAdapter
-from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Production-grade faithfulness evaluation runner.

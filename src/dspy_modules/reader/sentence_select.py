@@ -27,18 +27,18 @@ OPS_TOKENS = {"health", "check", "shell", "zshrc", "zprofile", "env", "setup"}
 META_TOKENS = {"canary", "percentage", "rollout", "deploy", "flag", "check"}
 
 
-def _is_sql_line(s):
+def _is_sql_line(s: str) -> bool:
     return "```" in s.lower() or any(t in s.lower() for t in SQL_TOKENS)
 
 
-def _is_sql_command(s):
+def _is_sql_command(s: str) -> bool:
     """Check if line starts with SQL command keywords."""
     sql_commands = ["create", "alter", "drop", "insert", "update", "delete", "select"]
     s_lower = s.lower().strip()
     return any(s_lower.startswith(cmd) for cmd in sql_commands)
 
 
-def _has_sql_index_hint(s):
+def _has_sql_index_hint(s: str) -> bool:
     """Check if line contains SQL index hints."""
     index_hints = ["using gin", "using gist", "using ivfflat", "using hnsw"]
     s_lower = s.lower()
@@ -64,7 +64,12 @@ def _filename_tokens(fp: str) -> list[str]:
     return [t for t in re.findall(r"[A-Za-z0-9_.-]{3,}", name) if not t.isdigit()]
 
 
-def _score_sentence(sent: str, q_uni: set, phrase_list: list[str], fname_toks: set, tag: str = "") -> float:
+from typing import Any
+
+
+def _score_sentence(
+    sent: str, q_uni: set[str], phrase_list: list[str], fname_toks: set[str], tag: str = ""
+) -> float:
     if not sent:
         return 0.0
     s_uni = set(_norm_tokens(sent))
@@ -89,13 +94,13 @@ def _score_sentence(sent: str, q_uni: set, phrase_list: list[str], fname_toks: s
 
 
 def select_sentences(
-    rows: list[dict],
+    rows: list[dict[str, Any]],
     query: str,
     tag: str,
     phrase_hints: list[str],
     per_chunk: int = 2,
     total: int = 10,
-) -> tuple[str, list[dict]]:
+) -> tuple[str, list[dict[str, Any]]]:
     """
     rows: retrieved items with keys: file_path/filename, embedding_text (chunk text), score,...
     returns (compact_context, selections_meta)

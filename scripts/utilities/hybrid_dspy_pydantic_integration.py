@@ -15,8 +15,8 @@ from scripts.observability import init_observability
         from pydantic_ai.models.test import TestModel
             from dspy_modules.model_switcher import LocalModel, ModelSwitcher
             from dspy_modules.model_switcher import LocalModel
-        import traceback
-from typing import Any, Dict, List, Optional, Union
+import traceback
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Hybrid DSPy + Pydantic Integration

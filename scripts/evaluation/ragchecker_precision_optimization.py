@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Any
 import numpy as np
 from ragchecker_enhanced_with_limit_features import EnhancedRAGCheckerWithLimitFeatures
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Precision Optimization

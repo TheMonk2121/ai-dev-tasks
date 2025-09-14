@@ -3,9 +3,8 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
-                    import yaml
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+import yaml
 #!/usr/bin/env python3
 """
 Lessons Quality Check - Validates lessons system integrity and quality gates

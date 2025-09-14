@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import logging
 import os
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Giant Guide Reference Migration Script

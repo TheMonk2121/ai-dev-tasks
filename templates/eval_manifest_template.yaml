@@ -14,7 +14,7 @@ chunking:
 
 models:
   embedder: intfloat/e5-large-v2
-  embed_dim: 1024         # or 384 if you switched
+  embed_dim: 384          # all-MiniLM-L6-v2 standard
   reranker: BAAI/bge-reranker-base
   generator: <name-or-bedrock-id>
 

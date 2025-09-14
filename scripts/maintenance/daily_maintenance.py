@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import subprocess
 from datetime import datetime
+
 #!/usr/bin/env python3
 """
 Daily UV Maintenance Script

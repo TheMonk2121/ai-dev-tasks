@@ -1,20 +1,21 @@
 from __future__ import annotations
+
 import importlib
 import os
+
 import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
+
+import src.rag.reranker_env
 from src.dspy_modules.retriever.reranker_config import load_reranker_config
 from src.dspy_modules.retriever.weights import DEFAULT, load_weights
+
 from ._regression_capture import record_case
-import src.rag.reranker_env
 
 """
 Property-based tests for retriever weights and reranker config.
 """
-
-
-
 
 
 @pytest.mark.prop
@@ -54,7 +55,6 @@ def test_reranker_env_overrides(
     load_reranker_config.cache_clear()
 
     # Reload the reranker_env module to pick up new environment variables
-
 
     importlib.reload(src.rag.reranker_env)
 

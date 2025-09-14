@@ -11,7 +11,6 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
 from scripts.research_based_schema_design import (
     ExtractionSchema,
     ResearchBasedSchemaDesign,

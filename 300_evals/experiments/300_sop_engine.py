@@ -10,6 +10,7 @@ from typing import Any
 
 import networkx as nx
 
+
 class SOPNodeType(Enum):
     TASK = "task"
     DATA = "data"

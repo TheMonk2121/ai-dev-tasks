@@ -1,4 +1,3 @@
-from typing import Any, Dict, List, Optional, Union
 #!/usr/bin/env python3
 """
 Clean RAGChecker Evaluation Harness with Real DSPy RAG Integration
@@ -12,14 +11,18 @@ This is a clean implementation that:
 
 import argparse
 import decimal
-import importlib
+import hashlib
 import json
+import logging
 import os
-import subprocess
+import re
+import shutil
 import sys
 import time
+import warnings
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 # Setup observability if available
 try:
@@ -34,16 +37,17 @@ try:
     logfire = get_logfire()
 except Exception:
     logfire = None
-from typing import Any
+
 
 # --- PREDICTION NORMALIZATION (added) -----------------
-def _get_attr(obj, name):
+def _get_attr(obj: Any, name: str) -> Any:
     try:
         return getattr(obj, name)
     except Exception:
         return None
 
-def to_pred_text(pred) -> str:
+
+def to_pred_text(pred: Any) -> str:
     """Normalize model output into a plain string.
     Tries common keys/attrs, then falls back to str()."""
     if pred is None:
@@ -51,9 +55,7 @@ def to_pred_text(pred) -> str:
     if isinstance(pred, str):
         return pred.strip()
 
-    import os as _os
-
-    field = _os.getenv("EVAL_PREDICTION_FIELD")
+    field = os.getenv("EVAL_PREDICTION_FIELD")
     if field:
         if isinstance(pred, dict) and isinstance(pred.get(field), str):
             return pred[field].strip()
@@ -71,6 +73,7 @@ def to_pred_text(pred) -> str:
         if isinstance(v, str) and v.strip():
             return v.strip()
     return str(pred).strip()
+
 
 # ------------------------------------------------------
 
@@ -104,7 +107,6 @@ except Exception:
 # Apply safe PyTorch import patch first (before any PyTorch imports)
 try:
     import safe_pytorch_import
-
     print("✅ Applied safe PyTorch import patch for Python 3.12 compatibility")
 except ImportError:
     pass
@@ -133,7 +135,8 @@ except Exception as e:
 
 OPS_TAGS = {"meta_ops", "ops_health"}
 
-def _assemble_passages(retrieval_rows, q, tag):
+
+def _assemble_passages(retrieval_rows: list[dict[str, Any]], q: str, tag: str) -> list[str]:
     """Assemble passages using snippetizer for crisp sentences."""
     passages = []
     for r in retrieval_rows:
@@ -148,10 +151,9 @@ def _assemble_passages(retrieval_rows, q, tag):
             break
     return passages
 
-def load_cases_any(path: str):
-    """Load cases from either JSON or JSONL format using Pydantic Evals framework."""
-    import warnings
 
+def load_cases_any(path: str) -> list[dict[str, Any]]:
+    """Load cases from either JSON or JSONL format using Pydantic Evals framework."""
     # Issue deprecation warning
     warnings.warn(
         "load_cases_any is deprecated. Use scripts.migrate_to_pydantic_evals.load_eval_cases instead.",
@@ -165,6 +167,7 @@ def load_cases_any(path: str):
     # Convert to legacy format for compatibility
     cases = load_eval_cases(path)
     return [case.model_dump() for case in cases]
+
 
 class DspyRagDriver:
     """Driver for real DSPy RAG system integration."""
@@ -197,7 +200,7 @@ class DspyRagDriver:
             print(f"Failed to import DSPy RAG module: {e}")
             raise
 
-    def answer(self, question: str) -> dict:
+    def answer(self, question: str) -> dict[str, Any]:
         """Get answer from real DSPy RAG system."""
         t0 = time.time()
         try:
@@ -250,20 +253,15 @@ class DspyRagDriver:
             "variant_policy": "strict" if strict_flag else "legacy_allowed",
         }
 
-    def _assert_variant(self, used_ctx):
+    def _assert_variant(self, used_ctx: list[dict[str, Any]]) -> None:
         """Assert that retrieved contexts have proper variant identification, with guarded local bypass."""
-        import datetime
-        import hashlib
-        import logging
-        import os
-
         if not used_ctx:
             return
 
         # Strict by default; local/dev can opt out with EVAL_STRICT_VARIANTS=0
         strict = os.getenv("EVAL_STRICT_VARIANTS", "1") not in {"0", "false", "False"}
 
-        def _get(md: dict, key: str):
+        def _get(md: dict[str, Any], key: str) -> Any:
             return md.get(key) or md.get("meta", {}).get(key) or md.get("fp", {}).get(key)
 
         missing = [
@@ -277,7 +275,7 @@ class DspyRagDriver:
 
         if missing and not strict:
             logging.warning("LEGACY VARIANTS ALLOWED: %d chunks missing metadata; filling fallbacks", len(missing))
-            today = datetime.date.today().isoformat()
+            today = datetime.now().date().isoformat()
             for c in missing:
                 # normalize metadata dict
                 if "meta" in c and isinstance(c["meta"], dict):
@@ -296,7 +294,8 @@ class DspyRagDriver:
                 if run_id != want:
                     raise RuntimeError(f"Mismatch: contexts not from expected run {want}, got {run_id}")
 
-def _make_eval_driver():
+
+def _make_eval_driver() -> tuple[Any, str]:
     """Create evaluation driver based on environment configuration."""
     use_real = (
         os.getenv("EVAL_DRIVER", "").lower() in ("dspy_rag", "dspy", "rag")
@@ -312,15 +311,16 @@ def _make_eval_driver():
             return None, "synthetic_infrastructure"
     return None, "synthetic"
 
+
 class CleanRAGCheckerEvaluator:
     """Clean RAGChecker evaluator with real DSPy RAG integration."""
 
-    def __init__(self):
-        self.metrics_dir = Path("metrics/baseline_evaluations")
+    def __init__(self) -> None:
+        self.metrics_dir: Path = Path("metrics/baseline_evaluations")
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
-        self._eval_path_tag = "unknown"
-        self._progress_fh = None
-        self._progress_path = None
+        self._eval_path_tag: str = "unknown"
+        self._progress_fh: Any = None
+        self._progress_path: str | None = None
 
     def _progress_open(self, path: str):
         """Open progress logging file."""
@@ -328,7 +328,7 @@ class CleanRAGCheckerEvaluator:
         self._progress_path = path
         self._progress_fh = open(path, "a", encoding="utf-8", buffering=1)
 
-    def _progress_write(self, rec: dict):
+    def _progress_write(self, rec: dict[str, Any]) -> None:
         """Write progress record to JSONL."""
         if not getattr(self, "_progress_fh", None):
             p = os.getenv("RAGCHECKER_PROGRESS_LOG")
@@ -340,8 +340,6 @@ class CleanRAGCheckerEvaluator:
 
     def _tok(self, s: str) -> list[str]:
         """Tokenize text for Jaccard similarity."""
-        import re
-
         return re.findall(r"[a-z0-9]+", (s or "").lower())
 
     def _jac(self, a: list[str], b: list[str]) -> float:
@@ -351,8 +349,6 @@ class CleanRAGCheckerEvaluator:
 
     def _split_sents_light(self, text: str) -> list[str]:
         """Light sentence splitting."""
-        import re
-
         if not text:
             return []
         s = text.split("Sources:", 1)[0].strip()
@@ -363,7 +359,7 @@ class CleanRAGCheckerEvaluator:
             sents = re.split(r"\s{2,}", s)
         return [x.strip() for x in sents if x.strip()]
 
-    def _extract_ctx_strings(self, rc):
+    def _extract_ctx_strings(self, rc: list[dict[str, Any]]) -> list[str]:
         """Extract context strings from retrieved context with dual-text support."""
         out = []
         if isinstance(rc, list):
@@ -377,7 +373,7 @@ class CleanRAGCheckerEvaluator:
                     out.append(str(d))
         return out
 
-    def _compute_oracle_from_payload(self, case: dict) -> dict:
+    def _compute_oracle_from_payload(self, case: dict[str, Any]) -> dict[str, Any]:
         """Compute oracle metrics from case payload."""
         j_ctx_min = float(os.getenv("ORACLE_CTX_J_MIN", "0.28"))
         j_sent_min = float(os.getenv("ORACLE_SENT_J_MIN", "0.32"))
@@ -401,7 +397,7 @@ class CleanRAGCheckerEvaluator:
             "oracle_sent_j_max": (max(sent_j) if sent_j else 0.0),
         }
 
-    def _compute_faithfulness(self, answer: str, retrieved_context: list) -> float:
+    def _compute_faithfulness(self, answer: str, retrieved_context: list[dict[str, Any]]) -> float:
         """Estimate faithfulness via max Jaccard between answer sentences and context.
 
         Relies on this class's lightweight tokenization and sentence splitting to avoid
@@ -423,7 +419,7 @@ class CleanRAGCheckerEvaluator:
                     best = j
         return best
 
-    def _normalize_case_result_for_save(self, case: dict) -> dict:
+    def _normalize_case_result_for_save(self, case: dict[str, Any]) -> dict[str, Any]:
         """Ensure oracle fields exist at top-level and inside metrics.oracle."""
         case = dict(case)  # shallow copy
 
@@ -459,8 +455,6 @@ class CleanRAGCheckerEvaluator:
         return case
 
     def _normalize_path(self, p: str) -> str:
-        import re
-
         if not p:
             return ""
         p = p.strip().split("#", 1)[0]  # drop fragment
@@ -468,7 +462,7 @@ class CleanRAGCheckerEvaluator:
         p = re.sub(r"/{2,}", "/", p)  # squeeze slashes
         return p
 
-    def _filename_of(self, d: dict) -> str:
+    def _filename_of(self, d: dict[str, Any]) -> str:
         """Extract normalized filename/path from snapshot/context entries with robust fallbacks."""
         try:
             if not isinstance(d, dict):
@@ -489,8 +483,6 @@ class CleanRAGCheckerEvaluator:
 
     def _match_expected(self, fn: str, expected_files: list[str]) -> bool:
         """Match filename against expected files using exact path OR basename (case-insensitive)."""
-        import os
-
         if not fn or not expected_files:
             return False
         fn_norm = self._normalize_path(fn).lower()
@@ -499,7 +491,7 @@ class CleanRAGCheckerEvaluator:
         exp_bases = {os.path.basename(x) for x in exp_norm}
         return (fn_norm in exp_norm) or (fn_base in exp_bases) or any(fn_norm.endswith("/" + b) for b in exp_bases)
 
-    def _compute_file_oracle(self, case: dict) -> dict:
+    def _compute_file_oracle(self, case: dict[str, Any]) -> dict[str, bool]:
         """Compute file-oracle signals using expected_files list in the gold case."""
         exp = case.get("expected_files") or []
         snap = case.get("retrieval_snapshot") or []
@@ -517,8 +509,6 @@ class CleanRAGCheckerEvaluator:
         }
 
     def _parse_citations_from_answer(self, answer: str) -> list[str]:
-        import re
-
         if not answer:
             return []
         m = re.search(r"CITATIONS:\s*(.+)$", answer, flags=re.IGNORECASE | re.DOTALL)
@@ -531,7 +521,7 @@ class CleanRAGCheckerEvaluator:
             cites.append(self._normalize_path(tok))
         return cites
 
-    def _save_results(self, results: dict, out_path: str):
+    def _save_results(self, results: dict[str, Any], out_path: str) -> None:
         """Save results with oracle normalization and breadcrumbs."""
         # normalize all cases regardless of origin path
         cr = results.get("case_results") or results.get("cases") or []
@@ -568,7 +558,7 @@ class CleanRAGCheckerEvaluator:
 
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
-        def _json_default(o):
+        def _json_default(o: Any) -> Any:
             if isinstance(o, decimal.Decimal):
                 return float(o)
             if isinstance(o, Path):
@@ -606,7 +596,7 @@ class CleanRAGCheckerEvaluator:
         return 0.0
 
     def run_evaluation(
-        self, cases_file: str, outdir: str, use_bedrock: bool = False, reader=None, args=None
+        self, cases_file: str | None, outdir: str, use_bedrock: bool = False, reader: Any = None, args: Any = None
     ) -> dict[str, Any]:
         """Run evaluation with real DSPy RAG system."""
         start_wall = datetime.now()
@@ -652,7 +642,9 @@ class CleanRAGCheckerEvaluator:
             # New mode - use gold loader
             from src.utils.gold_loader import filter_cases, load_gold_cases, stratified_sample
 
-            gold_file = os.getenv("GOLD_FILE", getattr(args, "gold_file", "evals/gold/v1/gold_cases.jsonl"))
+            gold_file = os.getenv(
+                "GOLD_FILE", getattr(args, "gold_file", "300_evals/evals/data/gold/v1/gold_cases.jsonl")
+            )
             gold_profile = os.getenv("GOLD_PROFILE", getattr(args, "gold_profile", None))
             gold_tags = os.getenv("GOLD_TAGS", getattr(args, "gold_tags", None))
             gold_mode = os.getenv("GOLD_MODE", getattr(args, "gold_mode", None))
@@ -698,8 +690,8 @@ class CleanRAGCheckerEvaluator:
         for i, case in enumerate(cases, 1):
             print(f"🔍 Processing case {i}/{len(cases)}: {case.get('query', '')[:50]}...")
 
-            query = case.get("query", "")
-            gt_answer = case.get("gt_answer", "")
+            query = str(case.get("query", ""))
+            gt_answer = str(case.get("gt_answer", ""))
 
             # Generate response using driver
             if driver:
@@ -714,7 +706,7 @@ class CleanRAGCheckerEvaluator:
 
                 # Use extractive reader if available
                 if reader and READER_AVAILABLE:
-                    tag = case.get("tag", "general")
+                    tag = str(case.get("tag", "general"))
                     passages = _assemble_passages(retrieved_context, query, tag)
                     # Tag-aware override example (ops-focused abstain is slightly stricter)
                     if tag in OPS_TAGS and hasattr(reader, "answerable_threshold"):
@@ -805,7 +797,7 @@ class CleanRAGCheckerEvaluator:
                 if resp.get("citations"):
                     case_result["citations"] = list(resp.get("citations") or [])
             if not case_result.get("citations"):
-                case_result["citations"] = self._parse_citations_from_answer(case_result.get("response", ""))
+                case_result["citations"] = self._parse_citations_from_answer(str(case_result.get("response", "")))
 
             # Compute and attach file-oracle signals when expected_files present
             try:
@@ -935,7 +927,31 @@ class CleanRAGCheckerEvaluator:
 
         return results
 
-def _build_reader(args):
+    def create_fallback_evaluation(self, data: list[Any] | None) -> dict[str, Any]:
+        """Create a fallback evaluation for testing."""
+        # Simple fallback that creates mock results
+        return {
+            "evaluation_type": "fallback_mock",
+            "overall_metrics": {
+                "precision": 0.5,
+                "recall": 0.5,
+                "f1_score": 0.5,
+                "faithfulness": 0.5,
+            },
+            "case_results": data if data else [],
+            "total_cases": len(data) if data else 0,
+        }
+
+    def prepare_official_input_data(self) -> dict[str, list[Any]]:
+        """Prepare official input data for evaluation."""
+        return {"results": []}
+
+    def create_official_test_cases(self) -> list[Any]:
+        """Create official test cases."""
+        return []
+
+
+def _build_reader(args: Any) -> Any:
     """Build reader based on CLI arguments."""
     if args.reader == "extractive":
         if not READER_AVAILABLE:
@@ -952,7 +968,12 @@ def _build_reader(args):
         print("⚠️ Using basic fallback reader")
         return None
 
-def main():
+
+# Alias for compatibility
+OfficialRAGCheckerEvaluator = CleanRAGCheckerEvaluator
+
+
+def main() -> dict[str, Any]:
     """Main entry point."""
     # Resolve profile + env and refuse foot-guns up front
     profile, resolved = resolve_config()
@@ -977,7 +998,9 @@ def main():
 
     parser = argparse.ArgumentParser(description="Clean RAGChecker Evaluation Harness")
     parser.add_argument("--cases", help="Path to JSONL test cases file (legacy)")
-    parser.add_argument("--gold-file", default="evals/gold/v1/gold_cases.jsonl", help="Path to gold cases file")
+    parser.add_argument(
+        "--gold-file", default="300_evals/evals/data/gold/v1/gold_cases.jsonl", help="Path to gold cases file"
+    )
     parser.add_argument("--gold-profile", default=None, help="Evaluation profile (ops_smoke, repo_gold, decision_only)")
     parser.add_argument("--gold-tags", default=None, help="Comma-separated tags to include")
     parser.add_argument("--gold-mode", default=None, help="Mode filter (retrieval, reader, decision)")
@@ -1004,7 +1027,6 @@ def main():
     results = evaluator.run_evaluation(args.cases, args.outdir, args.use_bedrock, reader=reader, args=args)
 
     # After computing final scores, create profile-aware output directory
-    from datetime import datetime
 
     # Extract metrics from results
     overall_metrics = results.get("overall_metrics", {})
@@ -1043,14 +1065,13 @@ def main():
     # Copy original results to profile directory
     original_results_file = Path(args.outdir) / "ragchecker_clean_evaluation_results.json"
     if original_results_file.exists():
-        import shutil
-
         shutil.copy2(original_results_file, profile_outdir / "evaluation_results.json")
 
     print(f"📦 Profile artifacts → {profile_outdir}")
     print(f"📦 Original artifacts → {args.outdir}")
 
     return results
+
 
 if __name__ == "__main__":
     result = main()

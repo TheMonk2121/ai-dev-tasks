@@ -1,9 +1,13 @@
 from __future__ import annotations
+
+import json
 import sys
 from pathlib import Path
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from src.schemas.eval import CaseResult, ContextChunk, EvaluationRun, RerankerConfig, RetrievalCandidate
-    import json
+
 """Export JSON schemas for Pydantic models."""
 
 # Add project root to path
@@ -12,12 +16,14 @@ sys.path.insert(0, str(project_root))
 
 # Import QAAnswer directly to avoid agent initialization
 
+
 class QAAnswer(BaseModel):
     """Structured answer output for QA tasks."""
 
     model_config = ConfigDict(strict=True, extra="forbid")
     answer: str = Field(min_length=1)
     confidence: float | None = None
+
 
 def export_schemas():
     """Export JSON schemas for all Pydantic models."""
@@ -47,6 +53,7 @@ def export_schemas():
     print("   - context_chunk.schema.json")
     print("   - reranker_config.schema.json")
     print("   - qa_answer.schema.json")
+
 
 if __name__ == "__main__":
     export_schemas()

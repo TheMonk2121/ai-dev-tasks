@@ -1,10 +1,12 @@
 from __future__ import annotations
+
+import argparse
 import json
 import subprocess
 import sys
 import time
 from pathlib import Path
-    import argparse
+
 #!/usr/bin/env python3
 """
 Scribe File System Watcher
@@ -20,6 +22,7 @@ MONITOR_PATTERNS = [
     "artifacts/summaries/",
     ".ai_state.json",
 ]
+
 
 class ScribeFileWatcher:
     """Monitors file changes and triggers Scribe updates."""
@@ -120,6 +123,7 @@ class ScribeFileWatcher:
         except KeyboardInterrupt:
             print("\n🛑 Scribe file watcher stopped")
 
+
 def main():
     """Main entry point."""
 
@@ -143,6 +147,7 @@ def main():
         sys.exit(0 if success else 1)
     else:
         watcher.watch_continuous(args.interval)
+
 
 if __name__ == "__main__":
     main()

@@ -1,8 +1,11 @@
 from __future__ import annotations
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.reranker import _score_rerank, heuristic_rerank
+
 #!/usr/bin/env python3
 """
 Property-based tests for heuristic reranker invariants.

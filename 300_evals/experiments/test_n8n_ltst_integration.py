@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 from utils.database_resilience import execute_query
 from utils.n8n_ltst_integration import N8nLTSTIntegration
 
+
 def test_n8n_ltst_integration():
     """Test the complete n8n LTST integration workflow"""
 
@@ -77,7 +78,6 @@ def test_n8n_ltst_integration():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
-
         traceback.print_exc()
         return False
 

@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import argparse
 import re
-from pathlib import Path
 import sys
+from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Add TL;DR Sections Script

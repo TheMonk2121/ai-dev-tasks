@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import pytest
 from hypothesis import given, settings
@@ -9,12 +9,19 @@ from hypothesis import strategies as st
 
 from src.flows.qa_graph import graph
 
+
 # Create a mock QAGraph class for testing
 class QAGraph:
     def __init__(self):
         self.graph = graph
-    
-    def forward(self, query: str, context: list = None, max_tokens: int = None, temperature: float = None):
+
+    def forward(
+        self,
+        query: str,
+        context: list[dict[str, Any]] | None = None,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ):
         """Mock forward method for testing."""
         # Return a mock response that matches expected format with all string values
         return {
@@ -22,8 +29,10 @@ class QAGraph:
             "confidence": "0.8",
             "context_used": str(context or []),
             "tokens_used": str(max_tokens or 100),
-            "temperature": str(temperature or 0.7)
+            "temperature": str(temperature or 0.7),
         }
+
+
 from ._regression_capture import record_case
 
 
@@ -405,7 +414,8 @@ class TestQAFlowTypeInvariants:
                 for key, value in item.items():
                     assert isinstance(key, str)
                     assert isinstance(value, (str, int, float, bool, type(None))) or (
-                        isinstance(value, list) and all(isinstance(x, (str, int, float, bool, type(None))) for x in value)
+                        isinstance(value, list)
+                        and all(isinstance(x, (str, int, float, bool, type(None))) for x in value)
                     )
 
         except Exception as e:

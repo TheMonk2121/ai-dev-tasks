@@ -17,7 +17,7 @@ from pathlib import Path
 
 # Optional imports (may not be available in all environments)
 try:
-    import psutil
+import psutil
 except ImportError:
     psutil = None
 

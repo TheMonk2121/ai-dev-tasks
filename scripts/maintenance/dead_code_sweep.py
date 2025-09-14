@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import datetime
 import json
@@ -6,6 +7,7 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Dead code sweeper using vulture to identify unreferenced code.

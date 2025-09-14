@@ -1,19 +1,21 @@
 from __future__ import annotations
+
 import hashlib
 import json
 import logging
+import os
 import sqlite3
 import statistics
+import sys
 import threading
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Optional, Union
+
 import numpy as np
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Advanced Analytics and Insights System for Memory Context System

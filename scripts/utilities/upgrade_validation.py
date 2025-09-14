@@ -1,16 +1,18 @@
 from __future__ import annotations
+
+import argparse
 import json
 import logging
 import os
 import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
+
 import psutil
 import psycopg2
 import requests
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Upgrade Validation Framework

@@ -1,17 +1,19 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import pathlib
+import subprocess
 import sys
 import time
-from typing import Any
+from pathlib import Path
+from typing import Any, Optional, Union
+
 from retrieval.memory_integration import GovernanceAutomator, MemoryIntegrator
 from retrieval.robustness_checks import RobustnessChecker
 from retrieval.test_hardening import validate_pipeline_components
-            import subprocess
-import os
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Operational Runbooks for Retrieval System

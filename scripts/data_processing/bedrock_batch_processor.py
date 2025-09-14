@@ -1,20 +1,23 @@
 from __future__ import annotations
+
+import argparse
 import json
+import os
+import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from bedrock_client import BedrockClient, BedrockUsage
-    import argparse
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 AWS Bedrock Batch Processing System
 Implements batch processing and parallel evaluation for improved performance and cost efficiency
 """
+
 
 @dataclass
 class BatchRequest:
@@ -27,6 +30,7 @@ class BatchRequest:
     system_prompt: str | None = None
     use_json_prompt: bool = False
 
+
 @dataclass
 class BatchResponse:
     """Response from batch processing."""
@@ -37,6 +41,7 @@ class BatchResponse:
     processing_time: float
     success: bool = True
     error: str | None = None
+
 
 class BedrockBatchProcessor:
     """
@@ -367,6 +372,7 @@ Score range: 0.0 to 1.0
 
         print(f"📄 Results exported to: {output_path}")
 
+
 def main():
     """Main function for batch processing CLI."""
 
@@ -426,6 +432,7 @@ def main():
         # Export if requested
         if args.export:
             processor.export_results(responses, args.export)
+
 
 if __name__ == "__main__":
     main()

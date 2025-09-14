@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import ast
 import os
 import re
@@ -6,6 +7,7 @@ import subprocess
 import sys
 from collections.abc import Iterable
 from dataclasses import dataclass
+
 #!/usr/bin/env python3
 """
 Lightweight dead code finder for Python files in the repo.
@@ -24,6 +26,7 @@ Notes:
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SCAN_DIRS = ["src", "dspy-rag-system", "scripts"]  # primary code locations
 
+
 def iter_python_files(root: str) -> Iterable[str]:
     skip_dirs = {".git", "__pycache__", ".venv", "venv", "node_modules", ".mypy_cache", ".pytest_cache"}
     for base, dirs, files in os.walk(root):
@@ -32,6 +35,7 @@ def iter_python_files(root: str) -> Iterable[str]:
         for f in files:
             if f.endswith(".py") and not f.endswith("_pb2.py"):
                 yield os.path.join(base, f)
+
 
 def iter_target_files(root: str) -> Iterable[str]:
     # Prefer scanning common code directories for definitions to keep runtime reasonable.
@@ -50,12 +54,14 @@ def iter_target_files(root: str) -> Iterable[str]:
             if ap not in yielded:
                 yield path
 
+
 @dataclass
 class Symbol:
     kind: str  # "function" | "class"
     name: str
     filepath: str
     line: int
+
 
 def collect_symbols(pyfile: str) -> list[Symbol]:
     with open(pyfile, encoding="utf-8", errors="ignore") as f:
@@ -74,6 +80,7 @@ def collect_symbols(pyfile: str) -> list[Symbol]:
         elif isinstance(node, ast.ClassDef):
             symbols.append(Symbol("class", node.name, pyfile, node.lineno))
     return symbols
+
 
 def rg_search(pattern: str, root: str) -> list[tuple[str, int, str]]:
     """Run ripgrep and return list of (file, line, text)."""
@@ -109,6 +116,7 @@ def rg_search(pattern: str, root: str) -> list[tuple[str, int, str]]:
                 continue
     return results
 
+
 def is_interesting(name: str) -> bool:
     if not name:
         return False
@@ -117,6 +125,7 @@ def is_interesting(name: str) -> bool:
     if name.startswith("_"):
         return False  # private by convention
     return True
+
 
 def find_potentially_dead(root: str) -> list[tuple[Symbol, list[tuple[str, int, str]]]]:
     symbols: list[Symbol] = []
@@ -138,7 +147,13 @@ def find_potentially_dead(root: str) -> list[tuple[Symbol, list[tuple[str, int, 
             candidates.append((sym, hits))
     return candidates
 
+
 def main() -> int:
+    # Disabled by default; enable explicitly with ENABLE_DEAD_CODE_SCANNER=1
+    if os.getenv("ENABLE_DEAD_CODE_SCANNER") != "1":
+        print("dead_code_scanner disabled (set ENABLE_DEAD_CODE_SCANNER=1 to run)")
+        return 0
+
     root = REPO_ROOT
     candidates = find_potentially_dead(root)
     if not candidates:
@@ -151,6 +166,7 @@ def main() -> int:
         print(f"- {sym.kind}: {sym.name}  ->  {rel}:{sym.line}")
     print("\nNote: This is heuristic. Review before deleting. Consider dynamic uses, CLI entrypoints, and imports.")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

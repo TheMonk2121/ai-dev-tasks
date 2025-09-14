@@ -1,8 +1,10 @@
 from __future__ import annotations
+
+import argparse
 import json
 import sys
 from pathlib import Path
-    import argparse
+
 #!/usr/bin/env python3
 """
 Validate CONTEXT_INDEX blocks in documentation files.

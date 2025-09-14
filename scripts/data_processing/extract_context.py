@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
-    from src.schemas.models import ContextBundle
-import os
+
+from src.schemas.models import ContextBundle
+
 #!/usr/bin/env python3
 """
 Context Bundle Extractor
@@ -32,12 +35,14 @@ except ImportError:
 
 BACKLOG_PATH = Path("000_core/000_backlog.md")
 
+
 def _read_backlog_text() -> str:
     try:
         return BACKLOG_PATH.read_text(encoding="utf-8")
     except FileNotFoundError:
         print(f"Error: {BACKLOG_PATH} not found", file=sys.stderr)
         sys.exit(1)
+
 
 def _find_section(text: str, backlog_id: str) -> str | None:
     # Headings look like: ### **B-1071: Title** ...
@@ -54,12 +59,14 @@ def _find_section(text: str, backlog_id: str) -> str | None:
     end = next_match.start() if next_match else len(text)
     return text[start:end].strip()
 
+
 def _extract_field_lines(section: str, prefix: str) -> list[str]:
     lines = []
     for line in section.splitlines():
         if line.strip().startswith(prefix):
             lines.append(line.strip())
     return lines
+
 
 def _extract_value_after_prefix(section: str, prefix: str) -> str | None:
     for line in section.splitlines():
@@ -70,6 +77,7 @@ def _extract_value_after_prefix(section: str, prefix: str) -> str | None:
             if len(parts) == 2:
                 return parts[1].strip()
     return None
+
 
 def _extract_context_bundle_json(section: str) -> dict[str, object] | None:
     # Heuristically find a JSON-like block after a "Context Bundle" label
@@ -108,6 +116,7 @@ def _extract_context_bundle_json(section: str) -> dict[str, object] | None:
     except json.JSONDecodeError:
         return None
 
+
 def _extract_next_steps(section: str) -> list[str]:
     steps: list[str] = []
     in_next = False
@@ -128,7 +137,9 @@ def _extract_next_steps(section: str) -> list[str]:
                 break
     return steps
 
-def build_handoff_bundle(section: str, backlog_id: str) -> dict[str, object]:
+
+def build_handoff_bundle(section: str, backlog_id: str) -> ContextBundle:
+    """Build a validated handoff bundle using Pydantic validation."""
     title_match = re.search(rf"^### \*\*{re.escape(backlog_id)}: (.+?)\*\*", section, re.MULTILINE)
     title = title_match.group(1) if title_match else backlog_id
 
@@ -142,16 +153,18 @@ def build_handoff_bundle(section: str, backlog_id: str) -> dict[str, object]:
 
     context_json = _extract_context_bundle_json(section) or {}
 
-    bundle: dict[str, object] = {
-        "backlog_id": backlog_id,
-        "title": title,
-        "what": description,
-        "where": status,
-        "priority": priority,
-        "next": next_action,
-        "context": context_json,
-    }
+    # Create and validate the bundle using Pydantic
+    bundle = ContextBundle(
+        backlog_id=backlog_id,
+        title=title,
+        what=description,
+        where=status,
+        priority=priority,
+        next=next_action,
+        context=context_json,
+    )
     return bundle
+
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Extract compact handoff context for a backlog ID")
@@ -166,29 +179,19 @@ def main() -> None:
         print(f"Error: Section for {args.backlog_id} not found", file=sys.stderr)
         sys.exit(2)
 
-    bundle = build_handoff_bundle(section, args.backlog_id)
-
-    # Validate if requested
-    if args.validate:
-        if not VALIDATION_AVAILABLE:
-            print("Error: Validation requested but Pydantic schemas not available", file=sys.stderr)
-            sys.exit(3)
-        try:
-            ContextBundle(**bundle)
-        except Exception as e:
-            print(f"Validation error: {e}", file=sys.stderr)
-            sys.exit(4)
+    try:
+        bundle = build_handoff_bundle(section, args.backlog_id)
+    except Exception as e:
+        print(f"Error building handoff bundle: {e}", file=sys.stderr)
+        sys.exit(4)
 
     if args.format == "json":
-        print(json.dumps(bundle, ensure_ascii=False, indent=2))
+        print(json.dumps(bundle.model_dump(), ensure_ascii=False, indent=2))
         return
 
     # text format
-    what = bundle.get("what", "") or ""
-    where = bundle.get("where", "") or ""
-    nxt = bundle.get("next", "") or ""
-    title = bundle.get("title", "") or ""
-    print(f"{args.backlog_id} — {title}\nWhat: {what}\nWhere: {where}\nNext: {nxt}")
+    print(f"{bundle.backlog_id} — {bundle.title}\nWhat: {bundle.what}\nWhere: {bundle.where}\nNext: {bundle.next}")
+
 
 if __name__ == "__main__":  # pragma: no cover
     main()

@@ -141,7 +141,6 @@ def test_supersedence_retrieval():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
-
         traceback.print_exc()
         return False
 

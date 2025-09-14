@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 import json
+
 #!/usr/bin/env python3
 """
 Refine Glob Patterns in Gold Cases
@@ -9,7 +11,7 @@ Refine Glob Patterns in Gold Cases
 def refine_glob_patterns():
     """Replace overly broad glob patterns with specific ones."""
     # Load gold cases
-    with open("evals/gold/v1/gold_cases.jsonl", "r") as f:
+    with open("evals/gold/v1/gold_cases.jsonl") as f:
         cases = [json.loads(line) for line in f if line.strip()]
     
     # Define glob pattern refinements

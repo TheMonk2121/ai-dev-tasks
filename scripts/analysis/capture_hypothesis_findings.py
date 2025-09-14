@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 import json
 import pathlib
 import subprocess
 from datetime import datetime
-from typing import Any
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Capture Hypothesis findings and save them to edge_cases.jsonl.

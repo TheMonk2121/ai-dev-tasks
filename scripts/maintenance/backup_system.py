@@ -7,15 +7,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 import yaml
-            from dspy_rag_system.src.utils.database_resilience import get_database_manager
+from dspy_rag_system.src.utils.database_resilience import get_database_manager
 import json
 import sys
 from pathlib import Path
         from utils.database_resilience import get_database_manager
             from dspy_rag_system.src.utils.database_resilience import get_database_manager
-        import hashlib
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import hashlib
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Backup System for Production Cutover

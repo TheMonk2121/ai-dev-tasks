@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import re
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Script to migrate markdown files to VS Code compliant format.

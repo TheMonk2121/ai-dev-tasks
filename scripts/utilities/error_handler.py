@@ -12,10 +12,10 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
-            import random
-                    import random
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import random
+import random
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Error Handler Module

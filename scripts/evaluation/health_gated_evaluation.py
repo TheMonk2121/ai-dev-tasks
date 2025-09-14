@@ -250,7 +250,6 @@ class HealthGatedEvaluator:
         # Check available disk space
         try:
             import shutil
-
             total, used, free = shutil.disk_usage("/")
             free_gb = free // (1024**3)
             if free_gb < 5:
@@ -261,7 +260,6 @@ class HealthGatedEvaluator:
         # Check memory usage (basic check)
         try:
             import psutil
-
             memory = psutil.virtual_memory()
             if memory.percent > 90:
                 self.warning_checks.append(f"High memory usage: {memory.percent}%")
@@ -315,7 +313,6 @@ class HealthGatedEvaluator:
 def main():
     """Main entry point for health-gated evaluation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="Health-gated evaluation system")
     parser.add_argument(
         "--check-only", action="store_true", help="Only run health checks, don't proceed with evaluation"

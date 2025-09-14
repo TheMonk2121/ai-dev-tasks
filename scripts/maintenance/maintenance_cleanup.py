@@ -12,10 +12,10 @@ from typing import Any
     from monitoring.maintenance_metrics import store_maintenance_analysis
     from monitoring.metrics import get_metrics
         from collections import defaultdict
-            import json
-                import glob
+import json
+import glob
             from monitoring.health_endpoints import HealthEndpointManager
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Maintenance Cleanup Script for AI Development Tasks

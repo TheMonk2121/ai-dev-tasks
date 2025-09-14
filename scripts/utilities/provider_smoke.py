@@ -1,19 +1,23 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
 import sys as _sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
+import boto3
 import httpx
+
 from scripts.utils.http_client import create_client, get_with_backoff  # type: ignore[import-untyped]
-        import boto3
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 
 # Ensure project root is on sys.path for utility imports
 _sys.path.append(str(Path(__file__).resolve().parents[1]))
+
 
 def _print_result(ok: bool, details: dict[str, Any]) -> None:
     result = {
@@ -21,6 +25,7 @@ def _print_result(ok: bool, details: dict[str, Any]) -> None:
         "details": details,
     }
     print(json.dumps(result, indent=2, sort_keys=True))
+
 
 def smoke_ollama(model: str | None, mode: str) -> int:
     base_url = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
@@ -41,6 +46,7 @@ def smoke_ollama(model: str | None, mode: str) -> int:
     except Exception as exc:  # noqa: BLE001
         _print_result(False, {"provider": "ollama", "error": str(exc)})
         return 2
+
 
 def smoke_bedrock(model: str | None, mode: str) -> int:
     # Meta mode: verify required env and model id provided
@@ -84,6 +90,7 @@ def smoke_bedrock(model: str | None, mode: str) -> int:
         _print_result(False, {"provider": "bedrock", "mode": "live", "error": str(exc)})
         return 2
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Provider smoke test (meta/live)")
     parser.add_argument("--provider", required=True, choices=["ollama", "bedrock"], help="Provider to check")
@@ -97,6 +104,7 @@ def main() -> int:
         return smoke_bedrock(args.model, args.mode)
     print(json.dumps({"ok": False, "error": "unsupported provider"}))
     return 2
+
 
 if __name__ == "__main__":
     sys.exit(main())

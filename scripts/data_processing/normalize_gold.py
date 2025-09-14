@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import json
 from pathlib import Path
+
 #!/usr/bin/env python3
 
 def normalize_case(obj):

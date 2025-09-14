@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import json
 import os
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Fix Gold Cases File References

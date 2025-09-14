@@ -1,12 +1,17 @@
 from __future__ import annotations
+
 import json
+import os
 from pathlib import Path
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.utils.gold_loader import load_gold_cases, stratified_sample
+
 from ._regression_capture import record_case
-import os
+
 #!/usr/bin/env python3
 """
 Property-style tests for manifest-driven sampling against real v1 gold.

@@ -1,9 +1,11 @@
 from __future__ import annotations
+
+import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
-import sys
-import json
+
 #!/usr/bin/env python3
 """
 Role Assignment Metadata System

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Nightly Smoke Evaluation System
@@ -248,7 +248,6 @@ class NightlySmokeEvaluator:
         """Test resource availability."""
         try:
             import shutil
-
             total, used, free = shutil.disk_usage("/")
             free_gb = free // (1024**3)
 
@@ -533,7 +532,6 @@ class NightlySmokeEvaluator:
 def main():
     """Main entry point for nightly smoke evaluation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="Nightly smoke evaluation system")
     parser.add_argument("--output-dir", default="metrics/nightly_smoke", help="Output directory for results")
     parser.add_argument("--category", help="Run specific category only")

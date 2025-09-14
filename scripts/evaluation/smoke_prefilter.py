@@ -11,7 +11,7 @@ from dspy_modules.retriever.query_rewrite import build_channel_queries
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 from evals.gold import gold_hit
 from scripts.migrate_to_pydantic_evals import load_eval_cases
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Smoke test for prefilter recovery after BM25 hinting fix.

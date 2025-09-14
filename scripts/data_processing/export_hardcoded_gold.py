@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import json
-import re
-from pathlib import Path
-import sys
 import os
+import re
+import sys
+from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Extracts hardcoded GOLD sets and writes them into evals/gold/v1/gold_cases.jsonl

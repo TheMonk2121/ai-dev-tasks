@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import glob
-import re
 import json
+import re
+
 #!/usr/bin/env python3
 """
 Fix MD040 - Fenced code blocks should have a language specified.

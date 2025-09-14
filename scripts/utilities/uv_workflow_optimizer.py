@@ -1,14 +1,12 @@
 from __future__ import annotations
+
 import argparse
 import json
+import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
-import subprocess
-import sys
-from datetime import datetime
-import subprocess
-import sys
-from datetime import datetime
+
 #!/usr/bin/env python3
 """
 UV Workflow Optimizer
@@ -16,6 +14,7 @@ UV Workflow Optimizer
 This script optimizes UV workflows by analyzing usage patterns,
 providing automation suggestions, and creating optimized scripts.
 """
+
 
 class UVWorkflowOptimizer:
     """Optimize UV workflows and provide automation suggestions."""
@@ -270,7 +269,7 @@ uvx ruff check .
 uv run pytest tests/ -v --tb=short
 
 # Run type checking
-uv run python -m pyright
+uv run python -m basedpyright
 
 echo "✅ Quick tests completed!"
 """
@@ -455,6 +454,7 @@ if __name__ == "__main__":
 
         return guide
 
+
 def main():
     """Main function."""
     parser = argparse.ArgumentParser(description="Optimize UV workflows")
@@ -520,6 +520,7 @@ def main():
             print("\n💡 Top Recommendations:")
             for suggestion in patterns["optimization_suggestions"][:3]:
                 print(f"- {suggestion}")
+
 
 if __name__ == "__main__":
     main()

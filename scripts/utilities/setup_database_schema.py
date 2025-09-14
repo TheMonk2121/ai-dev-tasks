@@ -1,10 +1,14 @@
 from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
+
 from src.common.db_dsn import resolve_dsn
+
 #!/usr/bin/env python3
 """
 Database Schema Setup for Evaluation System

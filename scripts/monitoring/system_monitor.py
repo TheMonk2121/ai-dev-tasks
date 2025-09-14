@@ -8,10 +8,10 @@ from typing import Any
     from monitoring.health_endpoints import HealthEndpointManager
     from monitoring.metrics import get_metrics
     from monitoring.production_monitor import ProductionMonitor
-            import psycopg2
-            import subprocess
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import psycopg2
+import subprocess
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 System Monitor for AI Development Tasks

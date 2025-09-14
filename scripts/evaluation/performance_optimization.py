@@ -9,9 +9,9 @@ from typing import Any
 from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
 from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
 from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
-                import gc
-            import psutil
-from typing import Any, Dict, List, Optional, Union
+import gc
+import psutil
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Performance Optimization for Generation Cache Implementation

@@ -8,6 +8,7 @@ import ast
 import sys
 from pathlib import Path
 
+
 def get_used_names(file_path: Path) -> set[str]:
     """Extract all used names from a Python file."""
     try:

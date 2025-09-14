@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 DEPRECATED: Comprehensive Evaluation Suite Runner (legacy repo-gold flow).
@@ -125,7 +125,6 @@ class EvaluationSuiteRunner:
             # Find the actual output file (ragchecker creates timestamped files)
             # Look for files created in the last few minutes
             import glob
-
             pattern = str(self.results_dir / "ragchecker_*_*.json")
             all_files = glob.glob(pattern)
 

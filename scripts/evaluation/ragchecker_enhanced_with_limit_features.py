@@ -9,8 +9,8 @@ from typing import Any
 import numpy as np
 from final_precision_push_config import FinalPrecisionPushConfig
 from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Enhanced with LIMIT Features Implementation

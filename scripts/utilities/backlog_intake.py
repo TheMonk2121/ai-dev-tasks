@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from pathlib import Path
 
 from scripts.doorway_utils import detect_duplicates
-import os
 
 BACKLOG_FILE = Path("000_core/000_backlog.md")
 

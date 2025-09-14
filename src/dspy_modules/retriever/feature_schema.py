@@ -35,8 +35,8 @@ class FusionFeatures(BaseModel):
 
     # optional dense vectors (if you persist them in features)
     # enforce known dims when you know them, else use ArrayF32
-    q_vec: Union[Vector384, None] = None  # type: ignore
-    d_vec: Union[Vector384, None] = None  # type: ignore
+    q_vec: Vector384 | None = None  # type: ignore
+    d_vec: Vector384 | None = None  # type: ignore
 
     @field_serializer("q_vec", when_used="json")
     def _ser_q_vec(self, v: np.ndarray | None) -> list[float] | None:

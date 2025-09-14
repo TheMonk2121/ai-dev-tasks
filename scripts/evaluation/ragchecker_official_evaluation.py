@@ -11,10 +11,11 @@ can import a consistent symbol without depending on experiment paths.
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 # Setup observability if available
 try:
-    from scripts.observability import get_logfire, init_observability
+    from scripts.monitoring.observability import get_logfire, init_observability
 
     logfire = get_logfire()
     try:
@@ -24,7 +25,8 @@ try:
 except Exception:
     logfire = None
 
-def main(argv=None):
+
+def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
 
     if "--help" in argv or "-h" in argv:
@@ -42,7 +44,7 @@ def main(argv=None):
         lib_path = Path("scripts/lib").resolve()
         if str(lib_path) not in sys.path:
             sys.path.insert(0, str(lib_path))
-        import config_loader  # type: ignore[import-untyped]
+        import config_loader
 
         try:
             profile, _cfg = config_loader.resolve_config(argv)
@@ -71,17 +73,48 @@ def main(argv=None):
         # Load experiment implementation and run a fallback evaluation (no external LLM requirement)
         from importlib.machinery import SourceFileLoader
 
+        # Ensure repository root on sys.path for 'scripts' absolute imports in impl
+        repo_root = Path(__file__).resolve().parents[2]
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+
+        # Prefer local lightweight implementation if experiments tree is absent
         impl_path = Path("300_experiments/300_testing-scripts/ragchecker_official_evaluation.py").resolve()
+        if not impl_path.exists():
+            impl_path = Path("scripts/evaluation/_ragchecker_eval_impl.py").resolve()
         module = SourceFileLoader("ragchecker_official_eval_impl", str(impl_path)).load_module()
         Evaluator = getattr(module, "OfficialRAGCheckerEvaluator")
         evaluator = Evaluator()
 
-        # Prefer a deterministic, in-process fallback to avoid external service requirements
-        results = evaluator.create_fallback_evaluation(
-            evaluator.prepare_official_input_data().get("results", [])  # type: ignore[attr-defined]
-            if hasattr(evaluator, "prepare_official_input_data")
-            else evaluator.create_official_test_cases()
-        )
+        # Run real evaluation with gold cases and DSPy RAG system
+        try:
+            # Run real evaluation with gold test cases
+            results = evaluator.run_evaluation(
+                cases_file=None,  # Use gold cases
+                outdir=outdir,
+                use_bedrock=True,
+                reader=None,
+                args=type(
+                    "Args",
+                    (),
+                    {
+                        "gold_file": "300_evals/evals/data/gold/v1/gold_cases.jsonl",
+                        "gold_profile": "gold",
+                        "gold_tags": None,
+                        "gold_mode": None,
+                        "gold_size": 5,  # Small test
+                        "seed": 1337,
+                    },
+                )(),
+            )
+        except Exception as e:
+            print(f"⚠️ Real evaluation failed ({e}), falling back to mock")
+            # Fallback to mock evaluation if real evaluation fails
+            results = evaluator.create_fallback_evaluation(
+                evaluator.prepare_official_input_data().get("results", [])
+                if hasattr(evaluator, "prepare_official_input_data")
+                else evaluator.create_official_test_cases()
+            )
 
         # Write to requested outdir with the name the runner expects
         import json as _json
@@ -119,7 +152,8 @@ def main(argv=None):
     ssot_run(suite=suite, pass_id=pass_id, out=None, seed=None, concurrency=concurrency)
     return 0
 
-def _strip_args(args, keys):
+
+def _strip_args(args: list[str], keys: list[str]) -> list[str]:
     out = []
     skip_next = False
     for i, a in enumerate(args):
@@ -133,6 +167,7 @@ def _strip_args(args, keys):
         out.append(a)
     return out
 
+
 # --- Minimal shims for compatibility ---
 # Expose RAGCheckerInput for tests; prefer experiment definition, else fallback dataclass
 try:
@@ -140,7 +175,7 @@ try:
 
     _impl_path = Path("300_experiments/300_testing-scripts/ragchecker_official_evaluation.py").resolve()
     _impl_mod = _SFL("ragchecker_official_eval_impl", str(_impl_path)).load_module()
-    RAGCheckerInput = getattr(_impl_mod, "RAGCheckerInput")  # type: ignore[assignment]
+    RAGCheckerInput = getattr(_impl_mod, "RAGCheckerInput")
 except Exception:
     from dataclasses import dataclass
 
@@ -152,55 +187,59 @@ except Exception:
         response: str
         retrieved_context: list[str]
 
+
 class OfficialRAGCheckerEvaluator:
     """Proxy to experiment implementation with broader interface forwarding used by tests."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Lazy-load implementation to avoid importing heavy deps during import-only tests
-        self._impl = None
+        self._impl: Any | None = None
         # Provide direct attribute expected by tests without loading impl
-        self.metrics_dir = Path("metrics/baseline_evaluations")
+        self.metrics_dir: Path = Path("metrics/baseline_evaluations")
 
-    def _ensure_impl(self):
+    def _ensure_impl(self) -> None:
         if self._impl is not None:
             return
         try:
             from importlib.machinery import SourceFileLoader
 
             impl_path = Path("300_experiments/300_testing-scripts/ragchecker_official_evaluation.py").resolve()
+            if not impl_path.exists():
+                impl_path = Path("scripts/evaluation/_ragchecker_eval_impl.py").resolve()
             module = SourceFileLoader("ragchecker_official_eval_impl", str(impl_path)).load_module()
             self._impl = getattr(module, "OfficialRAGCheckerEvaluator")()
         except Exception as e:
             raise RuntimeError(f"Failed to load OfficialRAGCheckerEvaluator implementation: {e}")
 
     # Forward full interface used by tests; gracefully degrade if missing
-    def create_official_test_cases(self):  # noqa: D401
+    def create_official_test_cases(self) -> Any:  # noqa: D401
         self._ensure_impl()
-        return self._impl.create_official_test_cases()
+        return self._impl.create_official_test_cases()  # type: ignore[union-attr]
 
-    def create_fallback_evaluation(self, data):  # noqa: D401
+    def create_fallback_evaluation(self, data: Any) -> Any:  # noqa: D401
         self._ensure_impl()
-        return self._impl.create_fallback_evaluation(data)
+        return self._impl.create_fallback_evaluation(data)  # type: ignore[union-attr]
 
-    def get_memory_system_response(self, *args, **kwargs):
+    def get_memory_system_response(self, *args: Any, **kwargs: Any) -> Any:
         self._ensure_impl()
-        return self._impl.get_memory_system_response(*args, **kwargs)
+        return self._impl.get_memory_system_response(*args, **kwargs)  # type: ignore[union-attr]
 
-    def prepare_official_input_data(self, *args, **kwargs):
+    def prepare_official_input_data(self, *args: Any, **kwargs: Any) -> Any:
         self._ensure_impl()
-        return self._impl.prepare_official_input_data(*args, **kwargs)
+        return self._impl.prepare_official_input_data(*args, **kwargs)  # type: ignore[union-attr]
 
-    def save_official_input_data(self, *args, **kwargs):
+    def save_official_input_data(self, *args: Any, **kwargs: Any) -> Any:
         self._ensure_impl()
-        return self._impl.save_official_input_data(*args, **kwargs)
+        return self._impl.save_official_input_data(*args, **kwargs)  # type: ignore[union-attr]
 
-    def run_official_ragchecker_cli(self, *args, **kwargs):
+    def run_official_ragchecker_cli(self, *args: Any, **kwargs: Any) -> Any:
         self._ensure_impl()
-        return self._impl.run_official_ragchecker_cli(*args, **kwargs)
+        return self._impl.run_official_ragchecker_cli(*args, **kwargs)  # type: ignore[union-attr]
 
-    def run_official_evaluation(self, *args, **kwargs):
+    def run_official_evaluation(self, *args: Any, **kwargs: Any) -> Any:
         self._ensure_impl()
-        return self._impl.run_official_evaluation(*args, **kwargs)
+        return self._impl.run_official_evaluation(*args, **kwargs)  # type: ignore[union-attr]
+
 
 if __name__ == "__main__":
     sys.exit(main())

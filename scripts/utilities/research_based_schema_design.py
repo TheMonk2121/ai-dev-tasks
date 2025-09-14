@@ -1,15 +1,16 @@
 from __future__ import annotations
+
+import argparse
 import json
 import logging
+import os
 import re
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-    import argparse
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Research-Based Schema Design for Extraction
@@ -33,6 +34,7 @@ Usage:
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class ResearchFinding:
     """Represents a research finding with metadata."""
@@ -46,6 +48,7 @@ class ResearchFinding:
     confidence: float = 1.0
     last_updated: str | None = None
 
+
 @dataclass
 class SchemaPattern:
     """Represents a schema pattern derived from research."""
@@ -57,6 +60,7 @@ class SchemaPattern:
     validation_criteria: list[str]
     performance_benchmarks: dict[str, Any]
     content_types: list[str]
+
 
 @dataclass
 class ExtractionSchema:
@@ -70,6 +74,7 @@ class ExtractionSchema:
     research_coverage: float
     created_at: str
     version: str = "1.0"
+
 
 class ResearchBasedSchemaDesign:
     """Handles research-based schema design for extraction."""
@@ -541,6 +546,7 @@ class ResearchBasedSchemaDesign:
 
         return summary
 
+
 def main():
     """Main entry point for research-based schema design."""
 
@@ -615,6 +621,7 @@ def main():
         print("  python3 scripts/research_based_schema_design.py --analyze-research")
         print("  python3 scripts/research_based_schema_design.py --generate-schema --content-type documentation")
         print("  python3 scripts/research_based_schema_design.py --validate-schema --schema-id documentation_schema_v1")
+
 
 if __name__ == "__main__":
     main()

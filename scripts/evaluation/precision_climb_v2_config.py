@@ -1,10 +1,10 @@
 from __future__ import annotations
+import argparse
 import logging
 import os
 import sys
-from typing import Any
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Precision-Climb v2 Configuration Script
@@ -22,6 +22,7 @@ Optional: Cross-encoder rerank for top-N candidates
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 class PrecisionClimbV2Config:
     """Precision-focused configuration manager for RAGChecker optimization."""
@@ -261,6 +262,7 @@ class PrecisionClimbV2Config:
             "unsupported_percent": 0.15,
         }
 
+
 def main():
     """Main function for configuration management."""
 
@@ -322,6 +324,7 @@ def main():
 
     else:
         print("Use --help for usage information")
+
 
 if __name__ == "__main__":
     main()

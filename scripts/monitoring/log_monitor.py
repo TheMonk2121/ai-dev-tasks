@@ -1,16 +1,19 @@
 from __future__ import annotations
+
 import asyncio
 import json
+import os
+import subprocess
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
+
+import uvicorn
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-    import subprocess
-    import uvicorn
-import sys
-import os
+
 #!/usr/bin/env python3
 """
 Log Monitor for MCP Server - Provides real-time logs to both Cursor and Codex

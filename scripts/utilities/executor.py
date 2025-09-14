@@ -34,8 +34,8 @@ def _determine_start_task(tasks_md: str, current_task: str | None) -> str:
 
 def execute(backlog_id: str, telemetry: bool) -> None:
     # Locate active TASKS and RUN paths
-    import re
-    from glob import glob
+import re
+from glob import glob
 
     tasks = sorted(glob(f"600_archives/artifacts/000_core_temp_files/TASKS-{backlog_id}-*.md"))
     if not tasks:

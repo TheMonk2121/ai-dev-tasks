@@ -4,18 +4,10 @@ import os
 import sys
 import time
 from pathlib import Path
-                from common.db_dsn import resolve_dsn
-                from src.utils.retry_wrapper import retry_database as _retry_db  # noqa: F401
-                import src.agents.ollama_qa  # noqa: F401
-                import src.agents.qa  # noqa: F401
-                from src.retrieval.quality_gates import load_quality_gates  # noqa: F401
-                from scripts.observability import init_observability
-            import psutil
-                    from common.db_dsn import resolve_dsn
-                    import src.agents.ollama_qa  # noqa: F401
-                    import src.agents.qa  # noqa: F401
-    import pathlib
-    import argparse
+import psutil
+from common.db_dsn import resolve_dsn
+import pathlib
+import argparse
 #!/usr/bin/env python3
 """
 System Health Check Script - B-065 Implementation

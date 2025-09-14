@@ -11,6 +11,7 @@ new work.
 """
 
 import warnings
+
 warnings.warn(
     "evals.gold is deprecated; use src.utils.gold_loader with 300_evals/data/gold/v1/gold_cases.jsonl",
     DeprecationWarning,
@@ -24,6 +25,7 @@ import os
 import sys
 from pathlib import PurePosixPath
 from typing import Any
+
 
 def _norm(p: str) -> str:
     return str(PurePosixPath((p or "").strip().replace("\\", "/"))).lower()

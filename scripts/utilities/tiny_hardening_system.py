@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import hashlib
 import json
 import os
@@ -6,9 +7,8 @@ import random
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-    import hashlib
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Tiny Hardening System

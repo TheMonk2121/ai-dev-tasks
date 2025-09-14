@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import json
 import os
 import random
 import re
+
 import psycopg2
 from psycopg2.extras import DictCursor
+
 #!/usr/bin/env python3
 """
 Bootstrap Q/A from Postgres content -> JSONL you will CURATE.

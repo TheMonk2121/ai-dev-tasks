@@ -1,14 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-            import re
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Multi-Role PR Sign-Off System v2.0
@@ -152,6 +153,7 @@ STRATEGIC_ALIGNMENT_STEPS = {
 
 # Required roles for PR closure (including stakeholder)
 REQUIRED_ROLES_V2 = ["stakeholder", "planner", "implementer", "coder", "researcher"]
+
 
 class PRSignOffSystemV2:
     """Enhanced multi-role PR sign-off system with 5-step strategic alignment."""
@@ -715,6 +717,7 @@ class PRSignOffSystemV2:
         except Exception as e:
             print(f"Warning: Could not clean up sign-off file: {e}")
 
+
 def main():
     """Main CLI interface for v2.0."""
     parser = argparse.ArgumentParser(description="Multi-Role PR Sign-Off System v2.0")
@@ -816,6 +819,7 @@ def main():
         except ValueError as e:
             print(f"❌ Cleanup failed: {e}")
             sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

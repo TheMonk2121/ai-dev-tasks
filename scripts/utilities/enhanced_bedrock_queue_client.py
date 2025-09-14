@@ -1,20 +1,21 @@
 from __future__ import annotations
+
 import asyncio
 import json
 import logging
 import os
 import random
+import sys
 import threading
 import time
 from dataclasses import dataclass
 from queue import Empty, Queue
-from typing import Any
+from typing import Any, Optional, Union
+
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
-        import random
-import sys
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Enhanced Bedrock Client with Intelligent Request Queue System
@@ -103,7 +104,7 @@ class IntelligentBedrockQueue:
         temperature: float = 0.1,
         system_prompt: str | None = None,
         priority: int = 0,
-    ) -> tuple[str, "BedrockUsage"]:
+    ) -> tuple[str, BedrockUsage]:
         """Submit a request to the queue and return the (text, usage)."""
         request_id = f"req_{int(time.time() * 1000)}"
         loop = asyncio.get_running_loop()
@@ -227,7 +228,7 @@ class IntelligentBedrockQueue:
 
         return delay
 
-    def _process_single_request(self, request: QueuedRequest) -> tuple[str, "BedrockUsage"]:
+    def _process_single_request(self, request: QueuedRequest) -> tuple[str, BedrockUsage]:
         """Process a single request using round-robin keys with retries. Returns (text, usage)."""
         last_error: Exception | None = None
 

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import json
 import logging
 import os
@@ -8,10 +9,11 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any
+from typing import Any, Optional, Union
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Cache Invalidation System

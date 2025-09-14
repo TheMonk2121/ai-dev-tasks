@@ -2,11 +2,8 @@ from __future__ import annotations
 import os
 import sys
 from typing import Any
-    from pydantic import BaseModel, Field
-    from src.dspy_modules.constitution_validation import (
-    from src.dspy_modules.error_taxonomy import CoherenceError, ConstitutionErrorMapper, ErrorType, ValidationError
-    from src.dspy_modules.error_taxonomy import ErrorSeverity as TaxonomyErrorSeverity
-from typing import Any, Dict, List, Optional, Union
+from pydantic import BaseModel, Field
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Constitution-Aware Validation for RAGChecker Evaluation System
@@ -17,13 +14,20 @@ Integrates existing constitution validation with RAGChecker Pydantic models.
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
-
+    from src.dspy_modules.constitution_validation import (
         ConstitutionCompliance,
         ConstitutionRule,
         ConstitutionValidator,
         ErrorSeverity,
         ProgramOutput,
     )
+    from src.dspy_modules.error_taxonomy import (
+        CoherenceError,
+        ConstitutionErrorMapper,
+        ErrorType,
+        ValidationError,
+    )
+    from src.dspy_modules.error_taxonomy import ErrorSeverity as TaxonomyErrorSeverity
 except ImportError as e:
     print(f"⚠️  Warning: Could not import constitution validation modules: {e}")
     print("   Constitution validation will be disabled")

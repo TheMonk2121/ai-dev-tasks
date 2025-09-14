@@ -1,12 +1,17 @@
 from __future__ import annotations
+
 import json
+import os
 from pathlib import Path
+
 import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
+
 from src.utils.gold_loader import filter_cases, load_gold_cases, stratified_sample
+
 from ._regression_capture import record_case
-import os
+
 #!/usr/bin/env python3
 """
 Property-based tests for gold_loader invariants.
@@ -112,7 +117,7 @@ def test_stratified_sample_invariants(tmp_path: Path, cases: list[dict], take: i
     # Changing seed should change ordering (not guaranteed different set but usually)
     sampled3 = stratified_sample(items, strata=strata, size=take, seed=seed + 1)
     assert [c.id for c in sampled3] != [c.id for c in sampled] or len(
-        set(c.id for c in sampled3) ^ set(c.id for c in sampled)
+        {c.id for c in sampled3} ^ {c.id for c in sampled}
     ) >= 0
 
 

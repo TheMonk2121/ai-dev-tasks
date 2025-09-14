@@ -14,6 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 class VenvManager:
     """Manages virtual environment activation and validation."""
 
@@ -158,7 +159,6 @@ def get_venv_python() -> str | None:
 if __name__ == "__main__":
     # CLI interface for venv management
     import argparse
-
     parser = argparse.ArgumentParser(description="Virtual Environment Manager")
     parser.add_argument("--check", action="store_true", help="Check venv status")
     parser.add_argument("--activate", action="store_true", help="Activate venv")

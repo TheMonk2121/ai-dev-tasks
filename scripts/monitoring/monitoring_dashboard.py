@@ -8,8 +8,8 @@ from typing import Any
     from monitoring.health_endpoints import HealthEndpointManager
     from monitoring.metrics import get_metrics, get_performance_summary
     from monitoring.production_monitor import ProductionMonitor
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Monitoring Dashboard for AI Development Tasks

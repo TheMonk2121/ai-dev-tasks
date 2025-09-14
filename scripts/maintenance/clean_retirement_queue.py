@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import csv
 import datetime as dt
-import pathlib
 import os
+import pathlib
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Deduplicate metrics/retirement_queue.csv entries.

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 # ANCHOR_KEY: demo-assertion-framework
 # ANCHOR_PRIORITY: 20

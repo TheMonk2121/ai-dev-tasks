@@ -13,10 +13,10 @@ import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
     from scripts.bedrock_client import BedrockUsage
-    import os
-    import sys
-    from scripts.bedrock_client import BedrockUsage
-from typing import Any, Dict, List, Optional, Union
+import os
+import sys
+from scripts.bedrock_client import BedrockUsage
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Enhanced AWS Bedrock Client with Multi-Key Load Balancing

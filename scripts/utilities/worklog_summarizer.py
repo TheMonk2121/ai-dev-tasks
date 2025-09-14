@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env -S uv run python
 """
 Worklog Summarizer - Extract insights from Scribe worklogs

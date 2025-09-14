@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Reranker Comparison Evaluation Script
@@ -32,7 +32,6 @@ def run_evaluation_with_config(config_name: str, config_file: str, output_dir: s
 
         # Find the actual output file (ragchecker creates timestamped files)
         import glob
-
         pattern = str(Path(output_dir) / "ragchecker_*_*.json")
         all_files = glob.glob(pattern)
 

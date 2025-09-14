@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import os
 import re
 import sys
+
 import psycopg2
 import psycopg2.extras
+
 #!/usr/bin/env python3
 """
 Backfill section_title/section_path for document_chunks using existing text.

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Migration helper to convert legacy load_eval_cases usage to Pydantic Evals framework.

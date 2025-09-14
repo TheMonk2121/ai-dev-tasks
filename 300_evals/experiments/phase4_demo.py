@@ -17,6 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from rag.phase4_integration import Phase4Config, Phase4RAGSystem
+
 from uncertainty.confidence_calibration import CalibrationConfig
 from uncertainty.feedback_loops import FeedbackConfig, FeedbackPriority, FeedbackType
 from uncertainty.selective_answering import SelectiveAnsweringConfig
@@ -24,6 +25,7 @@ from uncertainty.selective_answering import SelectiveAnsweringConfig
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 def create_mock_evaluation_data() -> list:
     """Create mock evaluation data for confidence calibration."""
@@ -80,6 +82,7 @@ def create_mock_evaluation_data() -> list:
 
     return mock_data
 
+
 def create_mock_evidence_chunks() -> list:
     """Create mock evidence chunks for testing."""
 
@@ -115,6 +118,7 @@ def create_mock_evidence_chunks() -> list:
             "chunk_id": "chunk_005",
         },
     ]
+
 
 def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
     """Demonstrate confidence calibration capabilities."""
@@ -167,6 +171,7 @@ def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
         print(f"   Raw: {raw_confidence:.3f} -> Calibrated: {calibrated_confidence:.3f}")
 
     return calibration_results
+
 
 def demo_selective_answering(phase4_system: Phase4RAGSystem):
     """Demonstrate selective answering capabilities."""
@@ -233,6 +238,7 @@ def demo_selective_answering(phase4_system: Phase4RAGSystem):
                 print(f"   📊 Quality Score: {response['quality_score']:.3f}")
 
         print(f"   Expected: {test_case['expected']}")
+
 
 def demo_feedback_loops(phase4_system: Phase4RAGSystem):
     """Demonstrate feedback loop capabilities."""
@@ -342,6 +348,7 @@ def demo_feedback_loops(phase4_system: Phase4RAGSystem):
     except Exception as e:
         print(f"   ❌ Weekly report error: {e}")
 
+
 def demo_system_integration(phase4_system: Phase4RAGSystem):
     """Demonstrate full system integration."""
 
@@ -391,6 +398,7 @@ def demo_system_integration(phase4_system: Phase4RAGSystem):
         print(f"   Confidence calibrated: {metadata.get('confidence_calibrated', False)}")
         print(f"   Selective answering: {metadata.get('selective_answering_enabled', False)}")
         print(f"   Feedback loops: {metadata.get('feedback_loops_enabled', False)}")
+
 
 def main():
     """Main demo function."""
@@ -461,6 +469,7 @@ def main():
 
     except Exception as e:
         print(f"❌ Failed to get final status: {e}")
+
 
 if __name__ == "__main__":
     main()

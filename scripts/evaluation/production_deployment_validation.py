@@ -9,9 +9,9 @@ from typing import Any
 from scripts.cache_performance_monitoring import CachePerformanceMonitor, MonitoringConfig
 from scripts.ltst_memory_integration import LTSTIntegrationConfig, LTSTMemoryIntegration
 from scripts.postgresql_cache_service import CacheConfig, CacheEntry, PostgreSQLCacheService
-            import psutil
-            import socket
-from typing import Any, Dict, List, Optional, Union
+import psutil
+import socket
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Production Deployment Validation for Generation Cache System

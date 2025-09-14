@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 import json
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 import yaml
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Evolution Tracker - Tracks configuration evolution and generates evolution maps

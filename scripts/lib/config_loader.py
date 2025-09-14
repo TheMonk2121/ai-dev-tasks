@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import argparse
 import os
 import sys
 import textwrap
 from pathlib import Path
-    from src.settings import EvalSettings
+
 #!/usr/bin/env python3
 """
 Evaluation Profile Configuration Loader
@@ -15,8 +16,8 @@ profiles: real, gold, mock.
 """
 
 
-
 try:
+    from src.settings import EvalSettings
 except Exception:
     EvalSettings = None  # type: ignore[assignment]
 

@@ -1,11 +1,15 @@
 from __future__ import annotations
+
+import argparse
 import logging
 import os
 import sys
 from pathlib import Path
+
 from utils.database_resilience import execute_query
+
 from utils.logger import setup_logger
-    import argparse
+
 #!/usr/bin/env python3
 """
 Query Pattern Knowledge Graph Schema Migration Script

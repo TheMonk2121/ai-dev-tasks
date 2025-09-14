@@ -69,7 +69,6 @@ async def quick_test():
 
 if __name__ == "__main__":
     import uvicorn
-
     print("🚀 Starting Simple MCP Test Server on port 8000")
     print("📡 Test endpoint: http://localhost:8000/quick-test")
     print("🔧 Tool test: POST http://localhost:8000/test-tool")

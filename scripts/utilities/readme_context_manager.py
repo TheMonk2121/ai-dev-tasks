@@ -1,12 +1,13 @@
 from __future__ import annotations
+
+import argparse
 import json
 import re
+import subprocess
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-        import subprocess
-        import subprocess
-    import argparse
-import sys
+
 #!/usr/bin/env python3
 """
 README Context Manager
@@ -14,6 +15,7 @@ README Context Manager
 - Prevents bloat through smart consolidation
 - Ensures compliance without overfitting
 """
+
 
 class READMEContextManager:
     """Manages README context documentation with smart consolidation."""
@@ -302,6 +304,7 @@ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
         return report
 
+
 def main():
     """Main function for README context management."""
 
@@ -327,6 +330,7 @@ def main():
         print(
             f"Need documentation: {sum(1 for item in backlog_items.values() if item.get('documentation_needed', False))}"
         )
+
 
 if __name__ == "__main__":
     main()

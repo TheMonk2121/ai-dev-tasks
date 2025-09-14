@@ -10,6 +10,7 @@ from pathlib import Path
 # sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 from dspy_modules.document_processor import DocumentProcessor
 
+
 def test_smart_chunker_integration():
     """Test that document processor now uses smart chunking"""
 
@@ -57,5 +58,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
-
         traceback.print_exc()

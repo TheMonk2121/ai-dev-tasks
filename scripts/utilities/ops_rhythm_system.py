@@ -1,18 +1,20 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import subprocess
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any
-    import argparse
-import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Ops Rhythm System
 Nightly smoke, weekly full eval, few-shot refresh with automated triage.
 """
+
 
 class OpsRhythmSystem:
     """Manages operational rhythm for production system."""
@@ -402,6 +404,7 @@ class OpsRhythmSystem:
 
         return history
 
+
 def main():
     """Main entry point for ops rhythm system."""
 
@@ -433,6 +436,7 @@ def main():
                 "✅" if entry["overall_status"] == "passed" else "❌" if entry["overall_status"] == "failed" else "🔄"
             )
             print(f"{status_emoji} {entry['type']} - {entry['timestamp']} ({entry['overall_status']})")
+
 
 if __name__ == "__main__":
     main()

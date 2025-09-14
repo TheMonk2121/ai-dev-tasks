@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Any
     from dspy_modules.vector_store import HybridVectorStore
     from utils.database_resilience import get_database_manager
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Documentation Indexer for RAG System

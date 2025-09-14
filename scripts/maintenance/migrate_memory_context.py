@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import glob
 import os
 import re
 import sys
+
 #!/usr/bin/env python3
 """
 Memory Context Migration Script

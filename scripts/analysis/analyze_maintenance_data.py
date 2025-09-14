@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
 from datetime import datetime, timedelta
-from typing import Any
-    from monitoring.maintenance_metrics import MaintenanceMetricsDB
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
+from monitoring.maintenance_metrics import MaintenanceMetricsDB
+
 #!/usr/bin/env python3
 """
 Maintenance Data Analysis Script
@@ -16,14 +18,8 @@ as evaluation metrics analysis. Provides insights into maintenance patterns,
 trends, and effectiveness.
 """
 
-# Add src directory to Python path
+# Add src directory to Python path for module resolution when running directly
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-
-try:
-except ImportError:
-    print("❌ Error: monitoring.maintenance_metrics module not found")
-    print("Make sure you're running from the project root directory")
-    sys.exit(1)
 
 def analyze_maintenance_trends(db: MaintenanceMetricsDB, days: int = 30) -> dict[str, Any]:
     """Analyze maintenance trends over time."""

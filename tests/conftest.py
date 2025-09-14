@@ -1,19 +1,11 @@
-"""Test configuration for AI development tasks."""
+"""Pytest configuration for memory consolidation tests."""
 
+import os
 import sys
 from pathlib import Path
 
-# Import mocks early to prevent Torch/DSPy imports in unit tests
-try:
-    from tests.mocks import ragchecker_mock  # noqa: F401
-except ImportError:
-    pass  # Mocks not available, continue normally
+# Set environment variable before any imports
+os.environ["APP_USE_MEMORY_GRAPH"] = "true"
 
-# Ensure common project paths are importable for all tests
-project_root = Path(__file__).parent.parent
-scripts_dir = project_root / "scripts"
-src_dir = project_root / "src"
-
-for p in (project_root, scripts_dir, src_dir):
-    if str(p) not in sys.path:
-        sys.path.insert(0, str(p))
+# Add src to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))

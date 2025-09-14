@@ -1,6 +1,6 @@
 import sys
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Evaluation System
@@ -16,6 +16,7 @@ Reference: https://arxiv.org/abs/2408.08067
 import json
 import subprocess
 from datetime import datetime
+import time
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
@@ -243,8 +244,6 @@ class RAGCheckerEvaluator:
     @with_error_recovery("constitution_validation")
     def validate_with_constitution(self, evaluation_data: dict[str, Any]) -> dict[str, Any]:
         """Validate RAGChecker evaluation data with constitution awareness."""
-        import time
-
         # Create debug context for validation
         evaluation_id = f"eval_{int(time.time())}"
         debug_context = self.debug_manager.capture_ragchecker_context(

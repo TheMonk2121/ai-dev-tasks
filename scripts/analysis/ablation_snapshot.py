@@ -1,15 +1,18 @@
 from __future__ import annotations
+
 import json
 import os
 import sys
-from typing import Any
+from typing import Any, Optional, Union
+
 from _bootstrap import ROOT, SRC  # noqa: F401
-from dspy_modules.retriever.pg import run_fused_query
-from dspy_modules.retriever.query_rewrite import build_channel_queries
 from evals.gold import gold_hit
 from scripts.migrate_to_pydantic_evals import load_eval_cases
-            from dspy_modules.retriever.rerank import per_file_cap
-from typing import Any, Dict, List, Optional, Union
+
+from dspy_modules.retriever.pg import run_fused_query
+from dspy_modules.retriever.query_rewrite import build_channel_queries
+from dspy_modules.retriever.rerank import per_file_cap
+
 #!/usr/bin/env python3
 """
 Ablation snapshot for retrieval-13of13-stable.

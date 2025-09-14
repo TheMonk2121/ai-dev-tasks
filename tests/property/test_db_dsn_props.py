@@ -1,9 +1,13 @@
 from __future__ import annotations
+
 import os
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.common.db_dsn import CANON_ENV, FALLBACK_ENV, resolve_dsn
+
 #!/usr/bin/env python3
 """
 Property tests for DB DSN resolver.

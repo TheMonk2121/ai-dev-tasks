@@ -1,17 +1,19 @@
 from __future__ import annotations
+
 import json
 import logging
 import os
+import random
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
+
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError, NoCredentialsError
-        import random
-    import sys
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 AWS Bedrock Client Integration Module
@@ -21,6 +23,7 @@ Provides BedrockClient class with Claude 3.5 Sonnet integration, retry logic, an
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class BedrockUsage:
@@ -41,6 +44,7 @@ class BedrockUsage:
             "total_cost": self.total_cost,
             "timestamp": self.timestamp,
         }
+
 
 class BedrockClient:
     """
@@ -405,6 +409,7 @@ class BedrockClient:
             logger.warning(f"Failed to read usage log: {e}")
             return BedrockUsage()
 
+
 def main():
     """Test the BedrockClient functionality."""
     print("🧪 Testing BedrockClient...")
@@ -450,6 +455,7 @@ def main():
     except Exception as e:
         print(f"❌ Test failed: {e}")
         return 1
+
 
 if __name__ == "__main__":
 

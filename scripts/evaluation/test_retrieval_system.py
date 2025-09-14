@@ -7,9 +7,9 @@ import time
 from typing import Any
 from retrieval.robustness_checks import RobustnessChecker, test_error_recovery
 from retrieval.test_hardening import run_comprehensive_tests
-    import random
+import random
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Comprehensive Retrieval System Test Suite

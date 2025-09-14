@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import os
 import re
 import subprocess  # nosec B404
 import sys
+
 #!/usr/bin/env python3
 """
 Resolve a file's parent backlog ID.

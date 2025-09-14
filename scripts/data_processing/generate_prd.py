@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Template Integration - Auto-populate PRDs with backlog context

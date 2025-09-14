@@ -3,8 +3,8 @@ import argparse
 import importlib.util
 import os
 import sys
-        import psycopg2
-        from psycopg2.extras import RealDictCursor
+import psycopg2
+from psycopg2.extras import RealDictCursor
 #!/usr/bin/env python3
 """
 Setup AI Models (Cursor-native safe checks)

@@ -5,6 +5,7 @@ import time
 
 import psycopg2
 
+
 def test_query():
     try:
         conn = psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency")

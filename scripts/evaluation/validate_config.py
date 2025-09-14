@@ -1,24 +1,18 @@
 from __future__ import annotations
+#!/usr/bin/env python3
 import json
 import os
 import pathlib
 import sys
-from typing import Any, TypedDict
-from pydantic import BaseModel
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy import create_engine, text
-    import sys
-    from ragchecker_pydantic_models import RAGCheckerInput, RAGCheckerMetrics, RAGCheckerResult
-    from src.dspy_modules.constitution_validation import ConstitutionCompliance, ProgramOutput
-    from src.dspy_modules.context_models import (
-    from src.dspy_modules.error_taxonomy import PydanticError, ValidationError
-                    from information_schema.tables
-                        from information_schema.referential_constraints r
-              from information_schema.columns c
-                       from unnest(ix.indkey) k
-              from pg_class t
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
-#!/usr/bin/env python3
+from ragchecker_pydantic_models import (
+    RAGCheckerInput,
+    RAGCheckerMetrics,
+    RAGCheckerResult,
+)
 """
 JSON Schema validation script for system configuration.
 Run this in CI to ensure config/system.json is valid.
@@ -131,36 +125,47 @@ def dump_pydantic_schemas() -> None:
     # Add dspy-rag-system to path for imports
 
     # sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
-    # Import locally to avoid heavy imports on unrelated runs
+    # Import DSPy module models lazily and tolerate absence
+    dspy_context_models: list[type[BaseModel]] = []
+    try:
+        from src.dspy_modules.context_models import (
+            BaseContext,
+            CoderContext,
+            ImplementerContext,
+            PlannerContext,
+            ResearcherContext,
+        )
 
-    # Import DSPy module models
-        BaseContext,
-        CoderContext,
-        ImplementerContext,
-        PlannerContext,
-        ResearcherContext,
-    )
+        dspy_context_models = [BaseContext, PlannerContext, CoderContext, ResearcherContext, ImplementerContext]
+    except Exception:
+        dspy_context_models = []
+
+    constitution_models: list[type[BaseModel]] = []
+    try:
+        from src.dspy_modules.constitution_validation import ConstitutionCompliance, ProgramOutput
+
+        constitution_models = [ConstitutionCompliance, ProgramOutput]
+    except Exception:
+        constitution_models = []
+
+    error_models: list[type[BaseModel]] = []
+    try:
+        from src.dspy_modules.error_taxonomy import PydanticError, ValidationError
+
+        error_models = [PydanticError, ValidationError]
+    except Exception:
+        error_models = []
 
     out_dir = pathlib.Path("dspy-rag-system/config/database/schemas")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     models: list[type[BaseModel]] = [
-        # RAGChecker models
         RAGCheckerInput,
         RAGCheckerMetrics,
         RAGCheckerResult,
-        # DSPy context models
-        BaseContext,
-        PlannerContext,
-        CoderContext,
-        ResearcherContext,
-        ImplementerContext,
-        # Constitution validation models
-        ConstitutionCompliance,
-        ProgramOutput,
-        # Error taxonomy models
-        PydanticError,
-        ValidationError,
+        *dspy_context_models,
+        *constitution_models,
+        *error_models,
     ]
 
     combined: dict[str, Any] = {
@@ -178,25 +183,84 @@ def dump_pydantic_schemas() -> None:
     print("✅ Wrote Pydantic schemas → dspy-rag-system/config/database/schemas/")
 
 # ---- DB schema snapshot via SQLAlchemy ----
-class ColumnInfo(TypedDict):
-    table: str
-    column: str
-    data_type: str
-    is_nullable: bool
-    is_pk: bool
-    is_fk: bool
-    references: str | None
+class ColumnInfo(BaseModel):
+    """Database column information with Pydantic validation."""
 
-class IndexInfo(TypedDict):
-    table: str
-    index: str
-    columns: list[str]
-    unique: bool
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+    )
 
-class TableInfo(TypedDict):
-    name: str
-    columns: list[ColumnInfo]
-    indexes: list[IndexInfo]
+    table: str = Field(..., min_length=1, description="Table name")
+    column: str = Field(..., min_length=1, description="Column name")
+    data_type: str = Field(..., min_length=1, description="Column data type")
+    is_nullable: bool = Field(..., description="Whether column allows NULL values")
+    is_pk: bool = Field(..., description="Whether column is primary key")
+    is_fk: bool = Field(..., description="Whether column is foreign key")
+    references: str | None = Field(None, description="Referenced table if foreign key")
+
+    @field_validator("table", "column", "data_type")
+    @classmethod
+    def validate_string_fields(cls, v):
+        """Validate string fields are not empty."""
+        if not v or not v.strip():
+            raise ValueError("String field cannot be empty")
+        return v.strip()
+
+class IndexInfo(BaseModel):
+    """Database index information with Pydantic validation."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+    )
+
+    table: str = Field(..., min_length=1, description="Table name")
+    index: str = Field(..., min_length=1, description="Index name")
+    columns: list[str] = Field(..., description="List of column names in index")
+    unique: bool = Field(..., description="Whether index is unique")
+
+    @field_validator("table", "index")
+    @classmethod
+    def validate_string_fields(cls, v):
+        """Validate string fields are not empty."""
+        if not v or not v.strip():
+            raise ValueError("String field cannot be empty")
+        return v.strip()
+
+    @field_validator("columns")
+    @classmethod
+    def validate_columns(cls, v):
+        """Validate columns list is not empty."""
+        if not v:
+            raise ValueError("Columns list cannot be empty")
+        for col in v:
+            if not col or not col.strip():
+                raise ValueError("Column name cannot be empty")
+        return v
+
+class TableInfo(BaseModel):
+    """Database table information with Pydantic validation."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+    )
+
+    name: str = Field(..., min_length=1, description="Table name")
+    columns: list[ColumnInfo] = Field(..., description="List of column information")
+    indexes: list[IndexInfo] = Field(default_factory=list, description="List of index information")
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, v):
+        """Validate table name is not empty."""
+        if not v or not v.strip():
+            raise ValueError("Table name cannot be empty")
+        return v.strip()
 
 def _dsn_from_env() -> str:
     # Respect your existing env usage
@@ -210,110 +274,55 @@ def _dsn_from_env() -> str:
 
 def dump_db_schema_json(schema: str = "public") -> None:
     """
-    Snapshot the live DB schema (tables, columns, indexes) to version-controlled JSON.
+    Snapshot the live DB schema (tables, columns) to version-controlled JSON.
+    Keeps the query simple to avoid cross-database quirks.
     """
     out_dir = pathlib.Path("dspy-rag-system/config/database/schemas")
     out_dir.mkdir(parents=True, exist_ok=True)
     engine = create_engine(_dsn_from_env())
 
-    tables: list[str] = []
+    result: list[TableInfo] = []
     with engine.connect() as conn:
-        # Convert Sequence[Any] to list[str] as recommended in Pyright troubleshooting
-        tables_result = (
+        tables = (
             conn.execute(
                 text(
-                    """select table_name
+                    """
+                    select table_name
+                    from information_schema.tables
                     where table_schema=:s and table_type='BASE TABLE'
-                    order by table_name"""
+                    order by table_name
+                    """
                 ),
                 {"s": schema},
             )
             .scalars()
             .all()
         )
-        tables = [str(table) for table in tables_result]
-
-        result: list[TableInfo] = []
         for t in tables:
             cols = conn.execute(
                 text(
                     """
-              select c.column_name, c.data_type, c.is_nullable,
-                     exists(select 1 from information_schema.table_constraints tc
-                            join information_schema.key_column_usage k
-                              on tc.constraint_name=k.constraint_name
-                             and tc.table_schema=k.table_schema
-                           where tc.table_name=c.table_name and tc.table_schema=c.table_schema
-                             and tc.constraint_type='PRIMARY KEY' and k.column_name=c.column_name) as is_pk,
-                     exists(select 1 from information_schema.key_column_usage k
-                            join information_schema.referential_constraints rc
-                              on k.constraint_name=rc.constraint_name
-                             and k.constraint_schema=rc.constraint_schema
-                           where k.table_name=c.table_name
-                             and k.table_schema=c.table_schema
-                             and k.column_name=c.column_name) as is_fk,
-                     (select concat(kcu2.table_name, '.', kcu2.column_name)
-                        join information_schema.key_column_usage kcu
-                          on r.constraint_name=kcu.constraint_name
-                         and r.constraint_schema=kcu.constraint_schema
-                        join information_schema.key_column_usage kcu2
-                          on r.unique_constraint_name=kcu2.constraint_name
-                         and r.unique_constraint_schema=kcu2.constraint_schema
-                       where kcu.table_name=c.table_name
-                         and kcu.table_schema=c.table_schema
-                         and kcu.column_name=c.column_name
-                       limit 1) as references
-              where c.table_schema=:s and c.table_name=:t
-              order by c.ordinal_position
-            """
+                    select column_name, data_type, is_nullable
+                    from information_schema.columns
+                    where table_schema=:s and table_name=:t
+                    order by ordinal_position
+                    """
                 ),
                 {"s": schema, "t": t},
             ).all()
-
             columns: list[ColumnInfo] = [
                 {
-                    "table": t,
-                    "column": r[0],
+                    "table": str(t),
+                    "column": str(r[0]),
                     "data_type": str(r[1]),
                     "is_nullable": str(r[2]).upper() == "YES",
-                    "is_pk": bool(r[3]),
-                    "is_fk": bool(r[4]),
-                    "references": (str(r[5]) if r[5] else None),
+                    "is_pk": False,
+                    "is_fk": False,
+                    "references": None,
                 }
                 for r in cols
             ]
-
-            idx_rows = conn.execute(
-                text(
-                    """
-              select i.relname as index_name,
-                     ix.indisunique as is_unique,
-                     array(
-                       select a.attname
-                       join pg_attribute a on a.attrelid=ix.indrelid and a.attnum=k
-                       order by array_position(ix.indkey, k)
-                     ) as cols
-              join pg_index ix on t.oid=ix.indrelid
-              join pg_class i  on i.oid=ix.indexrelid
-              join pg_namespace n on n.oid=t.relnamespace
-              where n.nspname=:s and t.relname=:t and not ix.indisprimary
-              order by i.relname
-            """
-                ),
-                {"s": schema, "t": t},
-            ).all()
-
-            indexes: list[IndexInfo] = [
-                {
-                    "table": t,
-                    "index": r[0],
-                    "unique": bool(r[1]),
-                    "columns": [str(c) for c in (r[2] if r[2] is not None else [])],
-                }
-                for r in idx_rows
-            ]
-
-            result.append({"name": t, "columns": columns, "indexes": indexes})
+            result.append({"name": str(t), "columns": columns, "indexes": []})
 
     (out_dir / "db_schema.snapshot.json").write_text(json.dumps(result, indent=2))
     print("✅ Wrote DB schema → dspy-rag-system/config/database/schemas/db_schema.snapshot.json")

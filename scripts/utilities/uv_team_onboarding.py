@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import platform
 import subprocess
 import sys
 from pathlib import Path
-        import os
+
 #!/usr/bin/env python3
 """
 UV Team Onboarding Automation

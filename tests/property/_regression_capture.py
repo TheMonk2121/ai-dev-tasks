@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 import json
 import os
 from pathlib import Path
-from typing import Any
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Lightweight helper to capture Hypothesis counter-examples into tests/data/edge_cases.jsonl

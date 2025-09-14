@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import argparse
 import json
 from collections import deque
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Compute the transitive reverse-dependency (blast radius) for given files.

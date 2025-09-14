@@ -1,11 +1,16 @@
 from __future__ import annotations
+
 import asyncio
+import os
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.windowing import DocumentWindower, count_tokens
+
 from ._regression_capture import record_case
-import os
+
 #!/usr/bin/env python3
 """
 Property-based tests for windowing invariants.

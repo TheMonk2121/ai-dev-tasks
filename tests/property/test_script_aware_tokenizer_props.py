@@ -1,17 +1,20 @@
 from __future__ import annotations
+
 import os
 import unicodedata
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.llm.script_aware_tokenizer import (
     make_multilingual_tokenizer,
     make_script_aware_tokenizer,
     multilingual_character_tokenizer,
     script_aware_character_tokenizer,
 )
-from ._regression_capture import record_case
 
+from ._regression_capture import record_case
 
 
 @pytest.mark.prop

@@ -1,8 +1,11 @@
 from __future__ import annotations
+
 import unicodedata
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.llm.character_tokenizer import (
     grapheme_cluster_tokenizer,
     make_character_tokenizer,
@@ -10,6 +13,7 @@ from src.llm.character_tokenizer import (
     unicode_character_tokenizer,
 )
 
+from ._regression_capture import record_case
 
 
 @pytest.mark.prop

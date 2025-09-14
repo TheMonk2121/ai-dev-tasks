@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 import argparse
 import os
 import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Manual Chat Logger (opt-in)

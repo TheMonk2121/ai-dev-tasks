@@ -2,10 +2,10 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
-        from dspy_modules.retriever.reranker_torch import get_model_info, is_available
-        from dspy_modules.retriever.reranker_torch import rerank
-        from dspy_modules.retriever.reranker_config import apply_reranker_config, load_reranker_config
-        from dspy_modules.rag_pipeline import _load_reranker
+from dspy_modules.retriever.reranker_torch import get_model_info, is_available
+from dspy_modules.retriever.reranker_torch import rerank
+from dspy_modules.retriever.reranker_config import apply_reranker_config, load_reranker_config
+from dspy_modules.rag_pipeline import _load_reranker
 #!/usr/bin/env python3
 """
 Test script for PyTorch reranker integration.

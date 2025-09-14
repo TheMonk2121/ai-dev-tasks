@@ -5,17 +5,11 @@ import os
 import sys
 from pathlib import Path
 from typing import Any
-        from pydantic_evals import Case, Dataset  # noqa: F401
-        from pydantic_evals.evaluators import Evaluator, EvaluatorContext, IsInstance  # noqa: F401
-        from src.common.db_dsn import resolve_dsn
-    import importlib
-        from src.utils.gold_loader import load_gold_cases as _load_v1
-    from pydantic_evals import Case, Dataset
-    from pydantic_evals.evaluators import Evaluator, EvaluatorContext, IsInstance
-    from pydantic_evals import Case, Dataset
-    from pydantic_evals.evaluators import Evaluator, EvaluatorContext, IsInstance
-                from os.path import basename
-from typing import Any, Dict, List, Optional, Union
+import importlib
+from os.path import basename
+from src.common.db_dsn import resolve_dsn
+from src.utils.gold_loader import load_gold_cases as _load_v1
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Pydantic Evals integration demo for the RAG pipeline.
@@ -57,6 +51,10 @@ except Exception:
 def _require_pydantic_evals():
     try:
         # Imports are scoped so the script still loads to print helpful errors if missing
+        global Case, Dataset, Evaluator, EvaluatorContext, IsInstance
+        from pydantic_evals import Case, Dataset
+        from pydantic_evals.evaluators import Evaluator, EvaluatorContext, IsInstance
+        return Case, Dataset, Evaluator, EvaluatorContext, IsInstance
     except Exception as e:  # pragma: no cover
         print(
             "\n❌ pydantic-evals is not installed.\n"
@@ -69,7 +67,6 @@ def _require_pydantic_evals():
 def _resolve_dsn() -> str | None:
     """Resolve a database DSN via canonical helper with safe fallback."""
     try:
-
         return resolve_dsn(strict=False)  # type: ignore[no-any-return]
     except Exception:
         # Conservative local default
@@ -126,10 +123,9 @@ def _load_gold_cases() -> list[dict[str, Any]]:
 
     # Use the canonical loader
     try:
+        cases = _load_v1(str(p))
     except Exception:
         return []
-
-    cases = _load_v1(str(p))
     out: list[dict[str, Any]] = []
     for c in cases:
         # Keep only cases that supervise retrieval with concrete targets

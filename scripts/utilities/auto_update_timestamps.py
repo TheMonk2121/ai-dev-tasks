@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import re
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-    import subprocess
-            import subprocess
+
 #!/usr/bin/env python3
 """
 Auto Timestamp Update Script for Pre-commit Hooks

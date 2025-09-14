@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import json
-import re
 import os
+import re
+
 #!/usr/bin/env python3
 """
 Fix Unclear Phrasing in Gold Cases
@@ -11,7 +13,7 @@ Fix Unclear Phrasing in Gold Cases
 def fix_unclear_phrasing():
     """Fix unclear phrasing in gold cases."""
     # Load gold cases
-    with open("evals/gold/v1/gold_cases.jsonl", "r") as f:
+    with open("evals/gold/v1/gold_cases.jsonl") as f:
         cases = [json.loads(line) for line in f if line.strip()]
     
     # Define fixes

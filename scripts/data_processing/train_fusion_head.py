@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import json
 import logging
@@ -6,6 +7,7 @@ import os
 import random
 import sys
 from pathlib import Path
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -13,7 +15,9 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from train.fusion_dataset import build_pairs, load_gold_cases
 from train.fusion_head import FusionHead
+
 from src.dspy_modules.retriever.fusion_head import load_feature_spec
+
 #!/usr/bin/env python3
 """
 Training script for learned fusion head.

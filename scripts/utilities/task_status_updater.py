@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
-    import sys
+
 #!/usr/bin/env python3
 """
 Task Status Updater

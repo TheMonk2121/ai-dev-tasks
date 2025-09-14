@@ -2,14 +2,8 @@ from __future__ import annotations
 import os
 import sys
 import time
-from typing import Any
-        from scripts.memory_healthcheck import main as hc_main  # type: ignore[import-untyped]
-            from memory_healthcheck import main as hc_main  # type: ignore[import-untyped]
-    import hashlib
-        from utils.conversation_storage import ConversationMessage, ConversationSession  # type: ignore[import-untyped]
-        from utils.memory_rehydrator import MemoryRehydrator  # type: ignore[import-untyped]
-        from utils.conversation_storage import ConversationStorage  # type: ignore[import-untyped]
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+import hashlib
 #!/usr/bin/env python3
 """
 Run Memory System Verification
@@ -33,22 +27,27 @@ def add_src_to_path() -> None:
 
 def run_healthcheck() -> bool:
     try:
-    except Exception:
-        # Fallback to relative import
         try:
+            from scripts.memory_healthcheck import main as hc_main  # type: ignore[import-untyped]
         except Exception:
-            print("[WARN] Could not import memory_healthcheck; skipping")
-            return True
-    code = hc_main()
-    return code == 0
+            from memory_healthcheck import main as hc_main  # type: ignore[import-untyped]
+        code = hc_main()
+        return code == 0
+    except Exception:
+        print("[WARN] Could not import memory_healthcheck; skipping")
+        return True
 
 def generate_session_id(user_id: str) -> str:
 
     ts = str(time.time())
     return hashlib.sha256(f"{user_id}:{ts}".encode()).hexdigest()[:16]
 
-def seed_demo(conversation_storage, session_id: str, user_id: str) -> bool:
+def seed_demo(conversation_storage: Any, session_id: str, user_id: str) -> bool:
     try:
+        from utils.conversation_storage import (
+            ConversationMessage,
+            ConversationSession,
+        )  # type: ignore[import-untyped]
     except Exception as e:
         print(f"[FAIL] Could not import ConversationStorage models: {e}")
         return False
@@ -115,6 +114,7 @@ def seed_demo(conversation_storage, session_id: str, user_id: str) -> bool:
 
 def run_rehydration(session_id: str, user_id: str) -> dict[str, Any]:
     try:
+        from utils.memory_rehydrator import MemoryRehydrator  # type: ignore[import-untyped]
     except Exception as e:
         return {"ok": False, "error": f"Import rehydrator failed: {e}"}
 
@@ -150,6 +150,7 @@ def main() -> int:
 
     # 2) Seed data
     try:
+        from utils.conversation_storage import ConversationStorage  # type: ignore[import-untyped]
     except Exception as e:
         print(f"[FAIL] Import ConversationStorage failed: {e}")
         return 3

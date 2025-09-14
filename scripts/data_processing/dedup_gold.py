@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import json
 from pathlib import Path
+
 #!/usr/bin/env python3
 
 p = Path("evals/gold/v1/gold_cases.jsonl")

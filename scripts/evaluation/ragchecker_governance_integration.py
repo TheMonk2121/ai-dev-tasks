@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import Any
 from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 from ragchecker_pipeline_governance import RAGCheckerPipelineGovernance
-    import argparse
+import argparse
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Governance Integration with Real Evaluation

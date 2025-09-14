@@ -5,6 +5,7 @@ Test script to verify decision extraction functionality
 
 import requests
 
+
 def test_decision_extraction():
     """Test decision extraction from conversations"""
 

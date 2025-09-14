@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import hashlib
 import os
 import sys
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Optional, Union, cast
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Manually index the retriever files that the documentation_indexer can't handle.

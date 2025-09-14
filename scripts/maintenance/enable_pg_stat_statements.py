@@ -1,9 +1,12 @@
 from __future__ import annotations
+
+import os
 import subprocess
 import sys
 from pathlib import Path
+
 import psycopg2
-import os
+
 #!/usr/bin/env python3
 """
 Enable pg_stat_statements extension for database performance monitoring

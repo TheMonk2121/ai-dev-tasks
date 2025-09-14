@@ -11,6 +11,7 @@ from pathlib import Path
 # sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 from utils.smart_chunker import create_smart_chunker
 
+
 def test_code_aware_chunking():
     """Test the smart chunker with DSPy code examples"""
 
@@ -192,5 +193,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
-
         traceback.print_exc()

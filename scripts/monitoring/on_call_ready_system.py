@@ -1,14 +1,15 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import shutil
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-    import argparse
-import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 On-Call Ready System

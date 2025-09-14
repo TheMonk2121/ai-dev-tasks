@@ -3,7 +3,7 @@
 Comprehensive property-based tests for DSPy modules and evaluation system.
 """
 
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 from hypothesis import given, settings

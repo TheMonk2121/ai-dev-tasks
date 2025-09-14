@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
-from typing import Any
+from typing import Any, Optional, Union
+
 from _bootstrap import ROOT, SRC  # noqa: F401
 from common.case_id import canonical_case_id
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Rewrite legacy reader/gold case IDs to canonical deterministic IDs and emit an ID map.

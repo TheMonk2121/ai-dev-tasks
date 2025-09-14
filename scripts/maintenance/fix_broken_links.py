@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
-import sys
-import os
+
 #!/usr/bin/env python3
 """
 Broken Links Fixer

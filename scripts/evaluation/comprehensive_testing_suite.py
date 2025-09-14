@@ -11,7 +11,7 @@ from scripts.cache_performance_monitoring import CachePerformanceMonitor, Monito
 from scripts.ltst_memory_integration import LTSTIntegrationConfig, LTSTMemoryIntegration
 from scripts.postgresql_cache_service import CacheConfig, CacheEntry, PostgreSQLCacheService
 from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Comprehensive Testing Suite for Generation Cache Implementation

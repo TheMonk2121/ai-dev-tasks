@@ -8,13 +8,11 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any
-    import numpy as np
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
-    from sentence_transformers import SentenceTransformer
-                from dspy_rag_system.src.utils.optimized_embeddings import OptimizedEmbedder
-            import psutil
-from typing import Any, Dict, List, Optional, Union
+import numpy as np
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import psutil
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Healthcheck Notebook - Traffic Light System Health Report
@@ -28,6 +26,8 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(dspy_rag_path))
 
 try:
+    from sentence_transformers import SentenceTransformer
+    from dspy_rag_system.src.utils.optimized_embeddings import OptimizedEmbedder
 except ImportError as e:
     print(f"❌ Missing dependencies: {e}")
     print("Run: pip install psycopg2-binary sentence-transformers numpy")

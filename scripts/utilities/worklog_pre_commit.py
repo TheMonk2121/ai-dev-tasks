@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 import json
 from pathlib import Path
+
 from worklog_summarizer import generate_markdown_summary, summarize_worklog
+
 #!/usr/bin/env python3
 """
 Pre-commit worklog summarization

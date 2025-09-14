@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 import math
 import os
 import sys
 import time
+
 import psycopg2
 from psycopg2.extras import execute_values
 from sentence_transformers import SentenceTransformer
+
 #!/usr/bin/env python3
 
 DSN = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")

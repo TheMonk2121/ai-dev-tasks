@@ -115,8 +115,8 @@ def compile_rag(
 
 def save_compiled(compiled: dspy.Module, config_hash: str, run_id: str = None):
     """Save compiled DSPy artifacts with versioning."""
-    import json
-    from pathlib import Path
+import json
+from pathlib import Path
 
     # Create compiled artifacts directory
     artifacts_dir = Path("compiled_artifacts") / config_hash
@@ -140,8 +140,8 @@ def save_compiled(compiled: dspy.Module, config_hash: str, run_id: str = None):
 
 def load_compiled(config_hash: str) -> dspy.Module:
     """Load compiled DSPy artifacts."""
-    import json
-    from pathlib import Path
+import json
+from pathlib import Path
 
     artifacts_dir = Path("compiled_artifacts") / config_hash
     compiled_file = artifacts_dir / "compiled_program.json"
@@ -160,7 +160,6 @@ def load_compiled(config_hash: str) -> dspy.Module:
 def main():
     """Main entry point for DSPy compilation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="DSPy RAG compilation")
     parser.add_argument("--trainset", required=True, help="Training dataset file")
     parser.add_argument("--valset", required=True, help="Validation dataset file")
@@ -178,9 +177,8 @@ def main():
 
     if args.compile:
         # Load datasets
-        import json
-
-        with open(args.trainset) as f:
+import json
+with open(args.trainset) as f:
             trainset = [json.loads(line) for line in f if line.strip()]
 
         with open(args.valset) as f:

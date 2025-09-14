@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import csv
 import datetime
@@ -6,6 +7,7 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Hard delete quarantined tests that have aged beyond the threshold.

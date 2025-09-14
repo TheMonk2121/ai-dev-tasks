@@ -1,14 +1,16 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 import yaml
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 48-Hour Canary Monitoring System

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import glob
 import re
+
 #!/usr/bin/env python3
 """
 Fix MD004 - Unordered list style.

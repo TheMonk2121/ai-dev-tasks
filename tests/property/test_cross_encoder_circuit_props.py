@@ -1,10 +1,14 @@
 from __future__ import annotations
+
+import os
 import time
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.cross_encoder_client import CircuitBreaker
-import os
+
 #!/usr/bin/env python3
 """
 Property-based tests for CircuitBreaker behavior in cross encoder client.

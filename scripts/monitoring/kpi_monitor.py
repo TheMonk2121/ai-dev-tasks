@@ -1,13 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from src.utils.config_lock import ConfigLockManager, LockedConfig
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 KPI Monitor Script

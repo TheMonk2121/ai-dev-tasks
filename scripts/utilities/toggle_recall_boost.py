@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import datetime as dt
 import json
-from pathlib import Path
-from typing import Any
-import yaml
 import os
-from typing import Any, Dict, List, Optional, Union
+from pathlib import Path
+from typing import Any, Optional, Union
+
+import yaml
+
 #!/usr/bin/env python3
 """
 Toggle recall boost settings in config/retrieval.yaml with safety:

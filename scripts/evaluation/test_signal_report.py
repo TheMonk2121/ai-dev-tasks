@@ -5,13 +5,13 @@ import pathlib
 import re
 import statistics as stats
 from collections import Counter, defaultdict
-    from datasketch import MinHash, MinHashLSH
-        import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET
 import os
 from pathlib import Path
 #!/usr/bin/env python3
 
 try:
+    from datasketch import MinHash, MinHashLSH
 except Exception:
     MinHash = None  # type: ignore[assignment]
     MinHashLSH = None  # type: ignore[assignment]
@@ -73,9 +73,6 @@ def parse_complexity():
     return cc_by_file
 
 def parse_junit_fail_rate():
-    try:
-    except Exception:
-        return {}
     if not JUNIT_XML.exists():
         return {}
     root = ET.fromstring(JUNIT_XML.read_text())

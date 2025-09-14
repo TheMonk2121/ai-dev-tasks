@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 import json
+import os
 import re
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-import sys
-import os
+
 #!/usr/bin/env python3
 """
 Documentation Coherence Validator (minimal implementation for tests)

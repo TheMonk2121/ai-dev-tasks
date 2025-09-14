@@ -1,9 +1,13 @@
 from __future__ import annotations
+
 import re
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.packer import pack_candidates
+
 #!/usr/bin/env python3
 """
 Property-based tests for packer invariants.

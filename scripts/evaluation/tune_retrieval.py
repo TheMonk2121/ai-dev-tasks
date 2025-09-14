@@ -8,11 +8,11 @@ import time
 from typing import Any
 import yaml  # type: ignore[import-untyped]
 from retrieval.quality_gates import validate_evaluation_results
-    import random
-        import random
+import random
+import random
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Retrieval Tuning Utility

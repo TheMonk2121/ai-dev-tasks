@@ -1,9 +1,13 @@
 from __future__ import annotations
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.fusion import weighted_rrf
+
 from ._regression_capture import record_case
+
 #!/usr/bin/env python3
 """
 Property-based tests for retrieval fusion invariants.

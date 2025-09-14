@@ -9,6 +9,7 @@ import pytest
 
 from src.graphs.eval_graph import Retrieve
 
+
 def test_retrieve_guarded_import_and_fallback() -> None:
     r = Retrieve()  # type: ignore[call-arg]
     out = r.run("What is the answer?")

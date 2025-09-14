@@ -2,6 +2,7 @@
 
 import psycopg2
 
+
 def test_connection_resilience():
     print("✅ Testing connection resilience...")
 

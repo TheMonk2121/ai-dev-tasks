@@ -3,7 +3,7 @@ from typing import Any
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """Test database query for reader gold generation."""
 

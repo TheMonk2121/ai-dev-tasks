@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import json
 import sys
+
 #!/usr/bin/env python3
 """
 Fix Short Queries in Gold Cases
@@ -10,7 +12,7 @@ Fix Short Queries in Gold Cases
 def fix_short_queries():
     """Fix queries that are too short."""
     # Load gold cases
-    with open("evals/gold/v1/gold_cases.jsonl", "r") as f:
+    with open("evals/gold/v1/gold_cases.jsonl") as f:
         cases = [json.loads(line) for line in f if line.strip()]
     
     # Define expansions for short queries

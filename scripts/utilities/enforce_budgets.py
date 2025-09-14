@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import pathlib
 import subprocess
 import sys
-import yaml
 from pathlib import Path
+
+import yaml
+
 #!/usr/bin/env python3
 """
 Enforce test suite budgets to prevent bloat.

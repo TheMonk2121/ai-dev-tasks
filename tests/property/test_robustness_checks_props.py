@@ -1,10 +1,15 @@
 from __future__ import annotations
+
 import time
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.robustness_checks import RobustnessChecker
+
 from ._regression_capture import record_case
+
 #!/usr/bin/env python3
 """
 Property-based tests for RobustnessChecker invariants.

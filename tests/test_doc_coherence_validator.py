@@ -14,7 +14,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from scripts.doc_coherence_validator import DocCoherenceValidator
 
 

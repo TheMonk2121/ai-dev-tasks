@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import argparse
 import os
 import subprocess
 import sys
 from pathlib import Path
+
 from src.utils.config_lock import ConfigLockManager, LockedConfig, ShadowIndexManager
+
 #!/usr/bin/env python3
 """
 Shadow Ingest Script

@@ -1,13 +1,16 @@
 from __future__ import annotations
+
 import asyncio
 import json
+import os
+import sys
 from datetime import datetime
+
 import uvicorn
 import websockets
 from fastapi import FastAPI, Request, WebSocket
 from fastapi.responses import HTMLResponse
-import sys
-import os
+
 #!/usr/bin/env python3
 """
 Simple Multi-Agent Chat Web Interface

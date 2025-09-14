@@ -1,16 +1,17 @@
 from __future__ import annotations
+
+import argparse
+import csv
 import json
 import logging
+import os
 import sqlite3
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any
-    import argparse
-    import csv
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 
 # ANCHOR_KEY: state-manager

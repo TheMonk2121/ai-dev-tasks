@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 from llm.script_aware_tokenizer import (
 from llm.token_count import make_character_counter, make_counter
-    import time
+import time
 import os
 #!/usr/bin/env python3
 """

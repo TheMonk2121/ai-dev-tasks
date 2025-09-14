@@ -4,12 +4,8 @@ import os
 import sys
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
-    from pydantic import BaseModel, Field
-    from src.dspy_modules.enhanced_debugging import (
-    from src.dspy_modules.error_taxonomy import ErrorSeverity
-    from pydantic import BaseModel as PydanticModel
-    from pydantic import Field as PydField
-from typing import Any, Dict, List, Optional, Union
+from pydantic import BaseModel, Field
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Debug Manager with Enhanced Debugging Integration
@@ -20,13 +16,14 @@ Integrates enhanced debugging capabilities with RAGChecker evaluation workflows.
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
-
+    from src.dspy_modules.enhanced_debugging import (
         DebuggingContext,
         EnhancedDebuggingManager,
         RichErrorMessage,
         StructuredLogEntry,
         enhanced_debugging,
     )
+    from src.dspy_modules.error_taxonomy import ErrorSeverity
 except ImportError as e:
     print(f"⚠️  Warning: Could not import enhanced debugging modules: {e}")
     print("   Enhanced debugging will be disabled")
@@ -56,6 +53,8 @@ except ImportError as e:
 
 # Static typing aliases to satisfy pyright while keeping runtime fallbacks
 if TYPE_CHECKING:
+    from pydantic import BaseModel as PydanticModel  # type: ignore[no-redef]
+    from pydantic import Field as PydField  # type: ignore[no-redef]
 else:
     PydanticModel = BaseModel  # type: ignore[assignment]
     PydField = Field  # type: ignore[assignment]

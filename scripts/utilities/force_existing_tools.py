@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Force usage of existing tools instead of creating new ones.

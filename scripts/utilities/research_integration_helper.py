@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import Any
-import sys
+
 import os
-from typing import Any, Dict, List, Optional, Union
+import sys
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Research Integration Helper

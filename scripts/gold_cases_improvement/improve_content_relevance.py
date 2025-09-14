@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 import json
+
 #!/usr/bin/env python3
 """
 Improve Content Relevance in Gold Cases
@@ -9,7 +11,7 @@ Improve Content Relevance in Gold Cases
 def improve_content_relevance():
     """Improve content relevance by adding specific file references."""
     # Load gold cases
-    with open("evals/gold/v1/gold_cases.jsonl", "r") as f:
+    with open("evals/gold/v1/gold_cases.jsonl") as f:
         cases = [json.loads(line) for line in f if line.strip()]
     
     # Define improvements for specific cases

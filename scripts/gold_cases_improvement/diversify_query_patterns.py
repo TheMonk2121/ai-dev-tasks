@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import json
-import sys
 import os
+import sys
+
 #!/usr/bin/env python3
 """
 Diversify Query Patterns in Gold Cases
@@ -11,7 +13,7 @@ Diversify Query Patterns in Gold Cases
 def diversify_query_patterns():
     """Replace repetitive query patterns with varied ones."""
     # Load gold cases
-    with open("evals/gold/v1/gold_cases.jsonl", "r") as f:
+    with open("evals/gold/v1/gold_cases.jsonl") as f:
         cases = [json.loads(line) for line in f if line.strip()]
     
     # Define pattern replacements

@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import json
 import pathlib
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Convert JSON array to JSONL format for evaluation datasets.

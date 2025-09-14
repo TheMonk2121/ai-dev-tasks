@@ -1,8 +1,11 @@
 from __future__ import annotations
+
+import os
 import subprocess
 import sys
+
 import psycopg2
-import os
+
 #!/usr/bin/env python3
 """
 Simple script to enable pg_stat_statements extension

@@ -1,9 +1,11 @@
 from __future__ import annotations
-import re
-from pathlib import Path
-    import sys
+
 import os
-from typing import Any, Dict, List, Optional, Union
+import re
+import sys
+from pathlib import Path
+from typing import Any, Optional, Union
+
 """
 Refactor deprecated typing aliases (List, Dict, Tuple, Set, FrozenSet)
 to built-in generics (list, dict, tuple, set, frozenset) in the `scripts/`

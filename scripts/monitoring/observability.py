@@ -1,6 +1,10 @@
 from __future__ import annotations
+
 import os
+from typing import Any
+
 import logfire
+
 """Logfire bootstrap and instrumentation setup.
 
 This module centralizes Logfire configuration and provides small helper
@@ -9,7 +13,8 @@ helpers here avoids optional import churn across scripts and makes static
 type checkers happy where symbols are imported from this module.
 """
 
-def init_observability(service="ai-dev-tasks", environment=os.getenv("ENV", "dev")) -> None:
+
+def init_observability(service: str = "ai-dev-tasks", environment: str | None = os.getenv("ENV", "dev")) -> None:
     """Initialize Logfire observability with instrumentation.
 
     Args:
@@ -39,6 +44,7 @@ def init_observability(service="ai-dev-tasks", environment=os.getenv("ENV", "dev
         pass
     # PydanticAI auto-instrumentation happens when you set Agent(..., instrument=...)
 
+
 def get_logfire():
     """Return the configured logfire module.
 
@@ -47,16 +53,19 @@ def get_logfire():
     """
     return logfire
 
-def create_span(name: str, **attributes):
+
+def create_span(name: str, **attributes: Any) -> Any:
     """Create a manual span for custom instrumentation."""
     return logfire.span(name, attributes=attributes)
 
-def log_metrics(**metrics):
+
+def log_metrics(**metrics: Any) -> None:
     """Log custom metrics."""
     logfire.info("eval.metrics", **metrics)
 
+
 # ----- Thin wrappers used by evaluation scripts -----------------------------
-def log_eval_metrics(_logfire, metrics: dict) -> None:
+def log_eval_metrics(_logfire: Any, metrics: dict[str, Any]) -> None:
     """Emit a consolidated metrics record.
 
     Args:
@@ -68,7 +77,8 @@ def log_eval_metrics(_logfire, metrics: dict) -> None:
     except Exception:
         pass
 
-def log_retrieval_span(_logfire, query: str, n_candidates: int, latency_ms: float) -> None:
+
+def log_retrieval_span(_logfire: Any, query: str, n_candidates: int, latency_ms: float) -> None:
     """Create a retrieval span with basic attributes."""
     try:
         with _logfire.span(
@@ -83,7 +93,8 @@ def log_retrieval_span(_logfire, query: str, n_candidates: int, latency_ms: floa
     except Exception:
         pass
 
-def log_reader_span(_logfire, query: str, answer_len: int, ok: bool) -> None:
+
+def log_reader_span(_logfire: Any, query: str, answer_len: int, ok: bool) -> None:
     """Create a reader span recording answer length and success state."""
     try:
         with _logfire.span(
@@ -98,7 +109,8 @@ def log_reader_span(_logfire, query: str, answer_len: int, ok: bool) -> None:
     except Exception:
         pass
 
-def log_scoring_span(_logfire, case_id: str, precision: float, recall: float, f1: float) -> None:
+
+def log_scoring_span(_logfire: Any, case_id: str, precision: float, recall: float, f1: float) -> None:
     """Create a scoring span for a single case."""
     try:
         with _logfire.span(

@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import csv
 import re
 from datetime import datetime
 from pathlib import Path
+
 #!/usr/bin/env python3
 
 BACKLOG_PATH = Path("000_core/000_backlog.md")

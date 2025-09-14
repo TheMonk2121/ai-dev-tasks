@@ -10,7 +10,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from scripts.repo_maintenance import RepoMaintenance
 
 

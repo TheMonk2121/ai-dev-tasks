@@ -8,10 +8,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
             from scripts.workflow_performance_monitor import WorkflowPerformanceMonitor
-            import re
-                    import re
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import re
+import re
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Code Review Core Implementation

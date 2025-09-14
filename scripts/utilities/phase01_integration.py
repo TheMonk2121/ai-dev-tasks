@@ -1,21 +1,23 @@
 from __future__ import annotations
+
 import argparse
 import asyncio
+import json
+import os
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 import yaml
+from utils.hybrid_retriever import HybridRetriever, create_hybrid_retriever
+
 from evaluation.enhanced_metrics import EnhancedEvaluator, QueryResult, load_golden_queries
 from retrieval.cross_encoder_client import create_cross_encoder_client
 from retrieval.deduplication import create_deduplicator
 from retrieval.windowing import create_windower
 from telemetry.request_logger import CanaryTagger, RequestLogger, log_rag_request
-from utils.hybrid_retriever import HybridRetriever
-    from utils.hybrid_retriever import create_hybrid_retriever
-import os
-import json
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Phase 0/1 Integration Script
@@ -42,10 +44,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Import existing components
 try:
+    from utils.hybrid_retriever import create_hybrid_retriever
 except ImportError:
 
     def create_hybrid_retriever(**kwargs):
         return HybridRetriever(**kwargs)
+
 
 class Phase01Pipeline:
     """Complete Phase 0/1 RAG pipeline with all enhancements."""
@@ -263,6 +267,7 @@ class Phase01Pipeline:
         print(f"Evaluation complete! Results saved to {results_file}")
         return {"metrics": metrics, "results_file": results_file, "query_count": len(all_results)}
 
+
 async def main():
     parser = argparse.ArgumentParser(description="Phase 0/1 RAG Pipeline Demo")
     parser.add_argument("--config", default="config/retrieval.yaml", help="Config file path")
@@ -313,6 +318,7 @@ async def main():
 
     finally:
         await pipeline.stop()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

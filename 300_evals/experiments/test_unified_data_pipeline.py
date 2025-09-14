@@ -13,6 +13,7 @@ from pathlib import Path
 # sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src" / "utils"))  # REMOVED: DSPy venv consolidated into main project
 from unified_data_pipeline import UnifiedDataPipeline, execute_unified_pipeline
 
+
 def test_unified_data_pipeline():
     """Test the complete Unified Data Pipeline workflow."""
 

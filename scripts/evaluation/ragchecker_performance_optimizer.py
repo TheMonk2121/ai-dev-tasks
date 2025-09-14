@@ -9,10 +9,9 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any
-    from pydantic import BaseModel, Field
-        import hashlib
-            import psutil
-from typing import Any, Dict, List, Optional, Union
+import hashlib
+import psutil
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Performance Optimization System for RAGChecker Validation Workflows
@@ -23,6 +22,7 @@ Implements intelligent performance optimization and caching strategies.
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
+    from pydantic import BaseModel, Field
 except ImportError as e:
     print(f"⚠️  Warning: Could not import Pydantic: {e}")
     BaseModel = None

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 import logging
 import os
@@ -6,10 +7,11 @@ import sys
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
+
 from scripts.cache_invalidation_system import CacheInvalidationSystem, InvalidationConfig
 from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Cache Invalidation Service Integration for Generation Cache Implementation

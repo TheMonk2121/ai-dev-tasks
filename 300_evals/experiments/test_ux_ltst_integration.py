@@ -12,6 +12,7 @@ import sys
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 from utils.ux_ltst_integration import UXLTSTIntegration
 
+
 def test_ux_ltst_integration():
     """Test the complete UX LTST integration workflow"""
 
@@ -77,7 +78,6 @@ def test_ux_ltst_integration():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
-
         traceback.print_exc()
         return False
 

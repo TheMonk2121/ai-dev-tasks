@@ -1,12 +1,14 @@
 from __future__ import annotations
+
+import argparse
 import logging
 import os
-from typing import Any
-            from sentence_transformers import CrossEncoder
-        import re
-    import argparse
+import re
 import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
+from sentence_transformers import CrossEncoder
+
 #!/usr/bin/env python3
 """
 Lightweight Cross-Encoder Reranker for RAGChecker Precision Optimization
@@ -20,6 +22,7 @@ Based on the proven approach used by RAGAS leaders to achieve P≥0.20.
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 class CrossEncoderReranker:
     """Lightweight cross-encoder reranker for precision optimization."""
@@ -170,6 +173,7 @@ class CrossEncoderReranker:
         self.cache.clear()
         logger.info("🧹 Cross-encoder cache cleared")
 
+
 class EnhancedEvidenceFilter:
     """Enhanced evidence filter with cross-encoder integration."""
 
@@ -242,6 +246,7 @@ class EnhancedEvidenceFilter:
 
         return " ".join(filtered_sentences)
 
+
 def main():
     """Test the cross-encoder reranker."""
 
@@ -298,6 +303,7 @@ def main():
         print(f"\n📝 Original: {len(test_answer)} chars")
         print(f"📝 Filtered: {len(filtered)} chars")
         print(f"📝 Filtered text: {filtered[:200]}...")
+
 
 if __name__ == "__main__":
     main()

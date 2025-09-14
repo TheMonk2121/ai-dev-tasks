@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 def block_deployment_if_unsafe(canary_percentage: int, eval_passes: int) -> bool:
     """Block deployment if canary percentage is too high or eval passes insufficient."""
     max_canary = 50

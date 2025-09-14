@@ -2,18 +2,20 @@ from __future__ import annotations
 
 import argparse
 import re
+
+# Removed heavy parser import - will use lazy import only if needed
+import sys
 from glob import glob
 from pathlib import Path
 
-# Removed heavy parser import - will use lazy import only if needed
 from scripts.doorway_utils import (
-import sys
     atomic_write,
     canonical_paths,
     content_unchanged,
     next_versioned,
     slugify,
 )
+
 
 def _fast_slug_from_backlog(backlog_id: str) -> str | None:
     """Lightweight scan of 000_core/000_backlog.md → title → slugify(title)."""
@@ -36,12 +38,14 @@ def _fast_slug_from_backlog(backlog_id: str) -> str | None:
                 return slugify(title)
     return None
 
+
 def _slug_from_existing_prd(backlog_id: str) -> str | None:
     files = sorted(glob(f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-*.md"))
     if not files:
         return None
     m = re.match(rf"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-(.+)\.md$", files[0])
     return m.group(1) if m else None
+
 
 def _extract_backlog_metadata(backlog_id: str) -> dict[str, str]:
     """Extract metadata from the backlog item for PRD generation."""
@@ -89,6 +93,7 @@ def _extract_backlog_metadata(backlog_id: str) -> dict[str, str]:
                     break
 
     return metadata
+
 
 def _build_prd_content(backlog_id: str, slug: str) -> str:
     """Build comprehensive PRD content using the proper template."""
@@ -208,6 +213,7 @@ def _build_prd_content(backlog_id: str, slug: str) -> str:
 
     return body
 
+
 def generate(backlog_id: str, slug: str | None = None) -> str:
     if not slug:
         slug = _fast_slug_from_backlog(backlog_id) or _slug_from_existing_prd(backlog_id) or backlog_id
@@ -229,12 +235,14 @@ def generate(backlog_id: str, slug: str | None = None) -> str:
     print(f"[PRD] Created {out_path.name}")
     return str(out_path)
 
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("backlog_id")
     ap.add_argument("--slug")  # optional: router can pass slug; otherwise fast-scan
     args = ap.parse_args()
     generate(args.backlog_id, args.slug)
+
 
 if __name__ == "__main__":
     main()

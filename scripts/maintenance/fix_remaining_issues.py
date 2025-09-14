@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import json
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Optional, Union
+
 from src.schemas.eval import GoldCase, Mode
 from src.utils.gold_loader import load_gold_cases
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Fix Remaining Issues in Gold Test Cases

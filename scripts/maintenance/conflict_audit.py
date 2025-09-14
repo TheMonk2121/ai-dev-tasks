@@ -1,16 +1,18 @@
 from __future__ import annotations
+
 import argparse
+import importlib.util
 import json
 import multiprocessing
+import os
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from tqdm import tqdm
-            import importlib.util
-import os
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Optimized Conflict Audit Script

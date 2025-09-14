@@ -1,8 +1,11 @@
 from __future__ import annotations
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.memory_graphs.consolidate import collect_turns, run, summarize
+
 #!/usr/bin/env python3
 """
 Property tests for memory consolidation graph stubs.

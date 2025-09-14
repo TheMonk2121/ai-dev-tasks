@@ -1,15 +1,16 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import random
 import re
 import sys
 from pathlib import Path
-from typing import Any
-    from utils.database_resilience import get_database_manager
-    from utils.database_resilience import get_database_manager
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
+from utils.database_resilience import get_database_manager
+
 #!/usr/bin/env python3
 """
 DEPRECATED: Repo-Gold dataset bootstrapper.
@@ -23,9 +24,12 @@ This script remains for archival reference only.
 
 # Import database utilities directly to avoid PyTorch issues
 try:
+    from utils.database_resilience import get_database_manager
 except ImportError:
     # Fallback for when running from outside src directory
     # sys.path.insert(0, "src")  # DSPy modules now in main src directory
+    pass
+
 
 class RepoGoldDatasetBootstrap:
     """Bootstrap repo-gold dataset from existing documentation."""
@@ -470,6 +474,7 @@ class RepoGoldDatasetBootstrap:
         print("3. Set DATASET_HAS_GOLD=1 in evaluation config")
         print("4. Re-enable strict oracle gates")
 
+
 def main():
     """Main entry point."""
 
@@ -483,6 +488,7 @@ def main():
 
     bootstrap = RepoGoldDatasetBootstrap(args.db)
     bootstrap.bootstrap_dataset(args.output)
+
 
 if __name__ == "__main__":
     main()

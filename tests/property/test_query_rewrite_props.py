@@ -1,12 +1,16 @@
 from __future__ import annotations
+
 import re
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.dspy_modules.retriever.query_rewrite import (
     build_channel_queries,
     filename_regex_from_query,
 )
+
 from ._regression_capture import record_case
 
 """
@@ -53,5 +57,8 @@ def test_build_channel_queries_shape_and_flags(user_q: str, tag: str) -> None:
     toks = re.findall(r"[A-Za-z0-9_]{3,}", (user_q or ""))
     expect_cold = len(toks) < 3
     if out["cold_start"] != expect_cold:
-        record_case("test_query_rewrite_cold_start_flag", {"raw": user_q, "tag": tag, "expect": expect_cold, "got": out["cold_start"]})
+        record_case(
+            "test_query_rewrite_cold_start_flag",
+            {"raw": user_q, "tag": tag, "expect": expect_cold, "got": out["cold_start"]},
+        )
     assert out["cold_start"] == expect_cold

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 import logging
 import os
@@ -6,14 +7,14 @@ import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
+
+import psutil
 from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
 from scripts.ltst_memory_integration import LTSTIntegrationConfig, LTSTMemoryIntegration
 from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
 from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
-            import psutil
-            import psutil
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Cache Performance Monitoring for Generation Cache Implementation

@@ -1202,12 +1202,286 @@ python3 scripts/generate_pipeline_report.py --output pipeline_report.md
 - **Testing Coverage**: Minimum 90% test coverage required
 - **Performance Validation**: Performance regression detection must be enabled
 
+## 🎯 **Cursor IDE Integration**
+
+### **Overview**
+
+The Cursor IDE integration provides seamless conversation capture and memory rehydration capabilities. This integration allows automatic capture of Cursor conversations for analysis, context preservation, and project memory enhancement.
+
+### **🚀 Quick Setup**
+
+```bash
+# Run the setup script
+./scripts/setup_cursor_integration.sh
+
+# Restart Cursor after setup
+```
+
+### **🔧 Configuration Files**
+
+#### MCP Configuration (`~/.cursor/mcp.json`)
+```json
+{
+  "mcpServers": {
+    "AI Dev Tasks Memory": {
+      "command": "uv run python scripts/utilities/mcp_memory_server.py",
+      "cwd": "/Users/danieljacobs/Code/ai-dev-tasks",
+      "env": {
+        "POSTGRES_DSN": "postgresql://danieljacobs@localhost:5432/ai_agency"
+      },
+      "args": []
+    }
+  }
+}
+```
+
+#### VS Code Tasks (`.vscode/tasks.json`)
+Pre-configured tasks for conversation capture:
+- Capture Conversation Turn
+- Capture User Query
+- Capture AI Response
+- Get Session Stats
+- Close Session
+
+#### Keyboard Shortcuts (`.vscode/keybindings.json`)
+- `Cmd+Shift+C, Cmd+Shift+T` - Capture conversation turn
+- `Cmd+Shift+C, Cmd+Shift+Q` - Capture user query
+- `Cmd+Shift+C, Cmd+Shift+R` - Capture AI response
+- `Cmd+Shift+C, Cmd+Shift+S` - Get session stats
+- `Cmd+Shift+C, Cmd+Shift+X` - Close session
+
+### **📝 Usage Methods**
+
+#### Method 1: Command Palette
+1. Open Command Palette (`Cmd+Shift+P`)
+2. Type "Capture" to see available tasks
+3. Select the appropriate capture task
+4. Enter the required information when prompted
+
+#### Method 2: Keyboard Shortcuts
+Use the configured keyboard shortcuts for quick access to capture functions.
+
+#### Method 3: Manual Commands
+```bash
+# Capture a complete conversation turn
+./scripts/utilities/cursor_commands.sh capture-turn "user query" "AI response"
+
+# Capture only a user query
+./scripts/utilities/cursor_commands.sh capture-query "user query"
+
+# Capture only an AI response
+./scripts/utilities/cursor_commands.sh capture-response "AI response" "query_turn_id"
+
+# Get session statistics
+./scripts/utilities/cursor_commands.sh stats
+
+# Close current session
+./scripts/utilities/cursor_commands.sh close
+```
+
+#### Method 4: Python API
+```python
+from scripts.utilities.cursor_mcp_capture import CursorMCPCapture
+
+# Initialize capture system
+capture = CursorMCPCapture()
+
+# Capture a conversation turn
+result = capture.capture_conversation_turn(
+    user_query="What is the project status?",
+    ai_response="The project is running well with all systems operational.",
+    metadata={"source": "cursor_chat", "timestamp": "2025-09-13"}
+)
+
+print(result)
+```
+
+### **🌐 MCP Server API**
+
+The MCP server provides a REST API for conversation capture:
+
+#### Health Check
+```bash
+curl http://localhost:3000/health
+```
+
+#### Available Tools
+```bash
+curl http://localhost:3000/mcp/tools
+```
+
+#### Capture User Query
+```bash
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tool_name": "capture_user_query",
+    "arguments": {
+      "query": "What is the current project status?",
+      "metadata": {"source": "cursor_chat"}
+    }
+  }'
+```
+
+#### Capture AI Response
+```bash
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tool_name": "capture_ai_response",
+    "arguments": {
+      "response": "The project is running smoothly with all systems operational.",
+      "query_turn_id": "turn_thread_123_456_789",
+      "metadata": {"source": "cursor_chat"}
+    }
+  }'
+```
+
+### **📊 Database Storage**
+
+Conversations are stored in PostgreSQL with the following structure:
+
+#### Tables
+- `conversation_sessions` - Session information
+- `conversation_messages` - Individual messages
+- `atlas_thread` - Thread tracking
+
+#### Query Recent Messages
+```sql
+SELECT 
+    cs.session_id,
+    cm.message_type,
+    LEFT(cm.content, 100) as content_preview,
+    cm.created_at
+FROM conversation_messages cm
+JOIN conversation_sessions cs ON cm.session_id = cs.session_id
+WHERE cm.created_at > NOW() - INTERVAL '1 hour'
+ORDER BY cm.created_at DESC;
+```
+
+### **🔍 Monitoring and Debugging**
+
+#### Check MCP Server Status
+```bash
+curl -s http://localhost:3000/health | jq
+```
+
+#### View Server Logs
+```bash
+tail -f mcp_server.log
+```
+
+#### Test Conversation Capture
+```bash
+./scripts/utilities/cursor_commands.sh stats
+```
+
+#### Check Database Connection
+```bash
+export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency"
+uv run python -c "
+import psycopg2
+import os
+conn = psycopg2.connect(os.getenv('POSTGRES_DSN'))
+print('✅ Database connection successful')
+conn.close()
+"
+```
+
+### **🛠️ Troubleshooting**
+
+#### MCP Server Not Starting
+1. Check if port 3000 is available: `lsof -i :3000`
+2. Check PostgreSQL is running: `pg_isready -h localhost -p 5432`
+3. Check server logs: `cat mcp_server.log`
+
+#### Cursor Not Loading MCP Configuration
+1. Restart Cursor completely
+2. Check `~/.cursor/mcp.json` syntax
+3. Verify the command path is correct
+
+#### Conversation Capture Failing
+1. Check database connection
+2. Verify MCP server is running
+3. Check script permissions: `ls -la scripts/utilities/cursor_commands.sh`
+
+#### Database Issues
+1. Ensure PostgreSQL is running
+2. Check database exists: `psql -h localhost -p 5432 -U danieljacobs -d ai_agency -c "\dt"`
+3. Verify DSN is correct in environment variables
+
+### **🔄 Integration with Memory Systems**
+
+The captured conversations are automatically integrated with the project's memory systems:
+
+1. **LTST Memory**: Conversations are indexed for semantic search
+2. **Cursor Memory**: Context is preserved across sessions
+3. **Prime System**: High-level project insights are extracted
+4. **Go CLI**: Command-line access to conversation data
+
+#### Memory Rehydration
+```bash
+export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "recent conversations and project status"
+```
+
+### **📈 Advanced Usage**
+
+#### Custom Metadata
+Add custom metadata to track conversation context:
+```bash
+./scripts/utilities/cursor_commands.sh capture-query "How do I implement feature X?" '{"project": "ai-dev-tasks", "feature": "conversation-capture", "priority": "high"}'
+```
+
+#### Session Management
+```bash
+# Get current session info
+./scripts/utilities/cursor_commands.sh stats
+
+# Close current session
+./scripts/utilities/cursor_commands.sh close
+```
+
+#### Batch Capture
+For capturing multiple conversations at once:
+```python
+from scripts.utilities.cursor_mcp_capture import CursorMCPCapture
+
+capture = CursorMCPCapture()
+
+conversations = [
+    ("Query 1", "Response 1"),
+    ("Query 2", "Response 2"),
+    ("Query 3", "Response 3")
+]
+
+for query, response in conversations:
+    result = capture.capture_conversation_turn(query, response)
+    print(f"Captured: {result['success']}")
+```
+
+### **🎯 Best Practices**
+
+1. **Regular Capture**: Capture conversations regularly to maintain context
+2. **Meaningful Metadata**: Use descriptive metadata for better organization
+3. **Session Management**: Close sessions when switching contexts
+4. **Monitoring**: Check server health and database connectivity regularly
+5. **Backup**: Ensure database backups include conversation data
+
+### **📚 Related Files**
+
+- **MCP Server**: `scripts/utilities/mcp_memory_server.py`
+- **Capture Scripts**: `scripts/utilities/cursor_mcp_capture.py`
+- **Command Interface**: `scripts/utilities/cursor_commands.sh`
+- **Setup Script**: `scripts/setup_cursor_integration.sh`
+- **Database Schema**: `scripts/utilities/setup_database_schema.py`
+
 ## 📋 **Changelog**
 
 - **2025-01-XX**: Created as part of Phase 4 documentation restructuring
 - **2025-01-XX**: Extracted from `400_guides/400_08_integrations-editor-and-models.md`
 - **2025-01-XX**: Integrated with AI frameworks and performance optimization
 - **2025-01-XX**: Added comprehensive security and testing frameworks
+- **2025-09-13**: Added Cursor IDE integration documentation
 
 ---
 

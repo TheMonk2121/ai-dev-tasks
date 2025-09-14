@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 import os
 import sys
+
 import psycopg2
+
 #!/usr/bin/env python3
 """
 Run the quick migration to add content_tsv and its GIN index on legacy document_chunks.

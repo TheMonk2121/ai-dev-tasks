@@ -1,8 +1,14 @@
 from __future__ import annotations
+
 import asyncio
+import json
+import os
 import sys
+import traceback
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
+import httpx
 import logfire
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_ai import Agent, RunContext, Tool
@@ -11,11 +17,7 @@ from pydantic_evals.dataset import Case, Dataset, increment_eval_metric, set_eva
 from pydantic_evals.evaluators import Evaluator, EvaluatorContext
 from scripts.migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
 from scripts.observability import init_observability
-            import httpx
-        import traceback
-import os
-import json
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Ollama + Pydantic Ecosystem Integration

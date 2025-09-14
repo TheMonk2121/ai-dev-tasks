@@ -6,8 +6,8 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-    import psutil  # type: ignore[import-untyped]
-        import sys
+import psutil  # type: ignore[import-untyped]
+import sys
 import os
 #!/usr/bin/env python3
 """

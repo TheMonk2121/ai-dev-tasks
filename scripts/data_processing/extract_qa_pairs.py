@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from src.schemas.eval import GoldCase, Mode
 from src.utils.gold_loader import load_gold_cases
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Extract Q&A pairs from gold test cases with file locations

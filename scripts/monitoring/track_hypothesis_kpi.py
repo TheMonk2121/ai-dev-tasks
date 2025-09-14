@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import json
 import pathlib
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Track Hypothesis KPI: Keep if ≥3 unique counterexamples promoted within a week.

@@ -1,13 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import copy
 import json
 import os
 import sys
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
+
 from lessons_model import Lesson, filter_lessons, load_lessons
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Lessons Loader - Pre-run component to load relevant lessons and generate candidate configs

@@ -10,6 +10,7 @@ from pathlib import Path
 # sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 from utils.smart_chunker import create_smart_chunker
 
+
 def main():
     """Demonstrate smart chunking impact"""
 
@@ -103,6 +104,7 @@ def split_validation(data, split_ratio):
     print("  This should push you over the 20% milestone!")
 
     return chunks, stitched_chunks
+
 
 if __name__ == "__main__":
     try:

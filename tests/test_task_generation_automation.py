@@ -13,7 +13,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from scripts.task_generation_automation import (
     BacklogParser,
     GeneratedTask,

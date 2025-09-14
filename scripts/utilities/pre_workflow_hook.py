@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import subprocess
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Pre-workflow hook that forces memory hydration and quality gates.

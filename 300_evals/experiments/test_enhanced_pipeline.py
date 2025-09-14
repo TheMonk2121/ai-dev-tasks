@@ -11,6 +11,7 @@ from pathlib import Path
 from dspy_modules.enhanced_answer_generator import create_enhanced_generator
 from dspy_modules.retrieval_pipeline import create_enhanced_pipeline
 
+
 def test_enhanced_pipeline():
     """Test the enhanced retrieval pipeline"""
 
@@ -157,7 +158,6 @@ def main():
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
-
         traceback.print_exc()
 
 if __name__ == "__main__":

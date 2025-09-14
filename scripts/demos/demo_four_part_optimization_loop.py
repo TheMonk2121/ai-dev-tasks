@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Four-Part Optimization Loop Demonstration
@@ -295,8 +295,7 @@ def demonstrate_four_part_optimization_loop():
 
     # Check for type hints
     if hasattr(baseline_module, "forward"):
-        import inspect
-
+    import inspect
         sig = inspect.signature(baseline_module.forward)
         if sig.return_annotation != inspect.Signature.empty:
             optimized_quality += 0.2

@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import glob
 import os
 import re
+
 #!/usr/bin/env python3
 """
 Fix MD041 - First line in a file should be a top-level heading.

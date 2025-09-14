@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import argparse
+import os
 import sys
 from pathlib import Path
+
 from role_assignment_metadata import RoleAssignment, RoleAssignmentMetadata
-import os
+
 #!/usr/bin/env python3
 """
 Automated Role Assignment Script

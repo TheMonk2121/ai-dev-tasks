@@ -7,7 +7,7 @@ from typing import Any
 from src.schemas.eval import CaseResult, ContextChunk, EvaluationRun, RetrievalCandidate
 from src.settings import load_eval_settings
     from pydantic import TypeAdapter
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 """Integration example showing how to wire in new Pydantic models to existing evaluation runners."""
 
 # Add project root to path

@@ -1,8 +1,11 @@
 from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
+
 from src.common.db_dsn import resolve_dsn
+
 #!/usr/bin/env python3
 """
 Update Environment for Production Database

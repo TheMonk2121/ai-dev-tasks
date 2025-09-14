@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 import json
 import sys
-from typing import Any
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 A/B Test Metrics Summary Script

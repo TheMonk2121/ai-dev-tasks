@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
+
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+
 #!/usr/bin/env python3
 """
 Apply database optimizations for trigram fallback performance.

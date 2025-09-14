@@ -1,12 +1,15 @@
 from __future__ import annotations
+
 import asyncio
 import json
+import os
 import sys
 import time
 from pathlib import Path
+
 import websockets
 from pydantic import BaseModel
-import os
+
 #!/usr/bin/env python3
 """
 DSPy Agent Connector - Connects DSPy agents to the multi-agent chat system

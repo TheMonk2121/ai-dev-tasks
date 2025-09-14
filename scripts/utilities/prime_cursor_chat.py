@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import os
-import subprocess
 import sys
+from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Cursor Chat Primer
@@ -18,24 +20,45 @@ Examples:
     python3 scripts/prime_cursor_chat.py researcher "performance analysis"
 """
 
+
 def run_memory_rehydrator(role="planner", task="current project status and core documentation"):
-    """Run the memory rehydrator and return the formatted output"""
+    """Run the memory rehydrator adapter and return a text bundle"""
 
     try:
-        # Run the memory rehydrator
-        cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", role, task]
+        # Ensure repository root is on sys.path for adapter import
+        project_root = Path(__file__).resolve().parent.parent.parent
+        if str(project_root) not in sys.path:
+            sys.path.insert(0, str(project_root))
 
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(os.path.dirname(__file__)))
+        from src.utils.memory_rehydrator import rehydrate as cursor_rehydrate  # type: ignore
 
-        if result.returncode != 0:
-            print(f"❌ Error running memory rehydrator: {result.stderr}")
-            return None
+        bundle = cursor_rehydrate(query=task, role=role)
 
-        return result.stdout
+        # Compose a simple, stable output that the formatter can handle
+        header = [
+            "=" * 80,
+            "🎯 CURSOR AI MEMORY REHYDRATION BUNDLE",
+            "=" * 80,
+            f"Role: {role}",
+            f"Task: {task}",
+            "",
+        ]
+        footer = [
+            "",
+            "=" * 80,
+            "📊 BUNDLE METADATA",
+            "=" * 80,
+            f"Processing Time: {bundle.meta.get('processing_time')}s",
+            f"Cache Hit: {bundle.meta.get('cache_hit')}",
+            f"Mode: {bundle.meta.get('mode')}",
+        ]
+
+        return "\n".join(header) + (bundle.text or "") + "\n" + "\n".join(footer)
 
     except Exception as e:
         print(f"❌ Error: {e}")
         return None
+
 
 def format_for_cursor_chat(bundle_output):
     """Format the bundle output for easy copying into Cursor chat"""
@@ -67,6 +90,7 @@ def format_for_cursor_chat(bundle_output):
 *This bundle provides current project context, system architecture, available workflows, and development guidelines.*"""
 
     return formatted
+
 
 def main():
     """Main function to prime Cursor chat with memory context"""
@@ -117,6 +141,7 @@ def main():
     print("2. Paste it as the first message in your new Cursor chat")
     print("3. The AI will now have full project context!")
     print("=" * 80)
+
 
 if __name__ == "__main__":
     main()

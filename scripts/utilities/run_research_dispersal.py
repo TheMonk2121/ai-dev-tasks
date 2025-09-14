@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 import os
 import sys
+
 from research_dispersal_automation import ResearchDispersalAutomation
+
 #!/usr/bin/env python3
 """
 Run Research Dispersal Automation

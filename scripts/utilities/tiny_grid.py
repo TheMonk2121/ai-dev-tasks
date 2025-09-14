@@ -16,7 +16,7 @@ from dspy_modules.retriever.weights import load_weights
 from evals.gold import gold_hit
 from scripts.migrate_to_pydantic_evals import load_eval_cases
             from dspy_modules.retriever.rerank import per_file_cap as _cap
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Tiny weight grid sweep for stability - 30-second sweep to lock in best combo per-tag.

@@ -31,7 +31,7 @@ class TestBedrockIntegration(unittest.TestCase):
     def tearDown(self):
         """Clean up test environment."""
         import shutil
-
+        
         shutil.rmtree(self.temp_dir)
 
     def test_bedrock_client_initialization(self):
@@ -355,8 +355,8 @@ def run_validation_suite():
     suite = unittest.TestSuite()
 
     # Add test cases
-    suite.addTest(unittest.makeSuite(TestBedrockIntegration))
-    suite.addTest(unittest.makeSuite(TestRAGCheckerIntegration))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBedrockIntegration))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRAGCheckerIntegration))
 
     # Run tests
     runner = unittest.TextTestRunner(verbosity=2)

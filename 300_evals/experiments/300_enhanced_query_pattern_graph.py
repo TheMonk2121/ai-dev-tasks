@@ -10,17 +10,20 @@ from typing import Any
 
 import networkx as nx
 
+
 class NodeType(Enum):
     TASK = "task"
     DATA = "data"
     QUERY = "query"
     INTENT = "intent"
 
+
 class EdgeType(Enum):
     CONTROL_FLOW = "control_flow"
     DATA_FLOW = "data_flow"
     SEMANTIC_SIMILARITY = "semantic_similarity"
     TEMPORAL_SEQUENCE = "temporal_sequence"
+
 
 @dataclass
 class SemanticNode:
@@ -32,6 +35,7 @@ class SemanticNode:
     metadata: dict[str, Any]
     embedding: list[float] | None = None
 
+
 @dataclass
 class SemanticEdge:
     """Represents an edge in the semantic process graph"""
@@ -41,6 +45,7 @@ class SemanticEdge:
     edge_type: EdgeType
     weight: float
     metadata: dict[str, Any]
+
 
 class EnhancedQueryPatternGraph:
     """Enhanced Query Pattern Knowledge Graph with semantic process representation"""
@@ -252,6 +257,7 @@ class EnhancedQueryPatternGraph:
                 "edge_types": list(set([data.get("edge_type") for _, _, data in self.graph.edges(data=True)])),
             },
         }
+
 
 # Example usage
 if __name__ == "__main__":

@@ -13,11 +13,11 @@ from uuid import uuid4
                 from dspy_rag_system.src.utils.database_resilience import get_database_manager
             from scripts.pre_workflow_hook import run_quality_gates
                 from scripts.code_review_core import CodeReviewCore
-            import sys
-            from scripts.code_review_core import CodeReviewCore
-    import argparse
+import sys
+from scripts.code_review_core import CodeReviewCore
+import argparse
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Code Review Integration Module

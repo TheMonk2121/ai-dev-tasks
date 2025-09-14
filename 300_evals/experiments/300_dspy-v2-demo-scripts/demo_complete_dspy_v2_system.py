@@ -22,7 +22,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
-
 from dspy_modules.metrics_dashboard import get_metrics_dashboard
 from dspy_modules.optimization_loop import get_optimization_loop
 from dspy_modules.role_refinement import RoleDefinition, RoleType, get_role_refinement_system

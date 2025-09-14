@@ -1,13 +1,15 @@
 from __future__ import annotations
+
 import logging
 import os
 import sys
 import time
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Generation Cache Schema Migration Script

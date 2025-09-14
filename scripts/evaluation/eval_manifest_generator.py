@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Evaluation Manifest Generator
@@ -218,7 +218,6 @@ class EvalManifestGenerator:
         """Get current git commit hash."""
         try:
             import subprocess
-
             result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
             return result.stdout.strip()[:8] if result.returncode == 0 else "unknown"
         except Exception:
@@ -228,7 +227,6 @@ class EvalManifestGenerator:
         """Get current git branch."""
         try:
             import subprocess
-
             result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
             return result.stdout.strip() if result.returncode == 0 else "unknown"
         except Exception:
@@ -287,7 +285,6 @@ class EvalManifestGenerator:
 def main():
     """Main entry point for manifest generation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="Generate evaluation manifest")
     parser.add_argument("--output-dir", default="metrics/manifests", help="Output directory for manifests")
     parser.add_argument("--format", choices=["yaml", "json"], default="yaml", help="Output format")

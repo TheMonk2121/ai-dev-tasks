@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker RAGAS-Competitive Evaluation
@@ -11,6 +11,7 @@ import sys
 import time
 from pathlib import Path
 from typing import Any
+import random
 
 # Add src to path for imports - use absolute path and check for duplicates
 scripts_path = Path(__file__).parent.resolve()
@@ -150,8 +151,6 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
         """Calculate faithfulness score (1 - hallucination rate)."""
         # Simulate faithfulness calculation
         # In real implementation, this would use LLM-as-judge
-        import random
-
         random.seed(hash(response) % 2**32)
 
         # Simulate hallucination detection
@@ -162,8 +161,6 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
     def _calculate_unsupported_claims(self, response: str, gt_answer: str) -> float:
         """Calculate unsupported claims percentage."""
         # Simulate unsupported claims calculation
-        import random
-
         random.seed(hash(response) % 2**32)
 
         # Simulate claim extraction and validation
@@ -175,8 +172,6 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
     def _calculate_recall_at_20(self, response: str, gt_answer: str) -> float:
         """Calculate recall@20 metric."""
         # Simulate recall@20 calculation
-        import random
-
         random.seed(hash(response) % 2**32)
 
         # Simulate retrieval evaluation
@@ -257,7 +252,6 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
 def main():
     """Main function to run RAGAS-competitive evaluation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="RAGAS-Competitive RAGChecker Evaluation")
     parser.add_argument(
         "--output", type=str, default="ragas_competitive_evaluation.json", help="Output file for results"

@@ -1,7 +1,9 @@
 from __future__ import annotations
+
+import os
 import re
 import sys
-import os
+
 #!/usr/bin/env python3
 """
 Normalize markdown formatting for markdownlint basics:

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import re
 import sys
+
 #!/usr/bin/env python3
 """
 PRD Decision Helper

@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 import json
+import os
 import subprocess
+import sys
 from collections import defaultdict
 from pathlib import Path
-import sys
-import os
+
 #!/usr/bin/env python3
 """
 Markdown Linting Issues Analyzer

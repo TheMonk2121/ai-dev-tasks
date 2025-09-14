@@ -20,10 +20,12 @@ from typing import Any
 # Add src to path for imports
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 from utils.conversation_storage import ConversationMessage, ConversationSession
-from utils.logger import setup_logger
 from utils.query_pattern_knowledge_graph import create_query_pattern_knowledge_graph
 
+from utils.logger import setup_logger
+
 logger = setup_logger(__name__)
+
 
 class QueryPatternKnowledgeGraphDemo:
     """Demo class for query pattern knowledge graph functionality."""
@@ -141,8 +143,6 @@ class QueryPatternKnowledgeGraphDemo:
             self.kg_system.storage.store_message(message)
 
             # Simulate some time between queries
-            import time
-
             time.sleep(0.1)
 
         print(f"  ✅ Created demo session with {len(demo_queries)} queries")
@@ -504,6 +504,7 @@ class QueryPatternKnowledgeGraphDemo:
                 print(f"  {i+1}. \"{content}{'...' if len(sim.get('content', '')) > 60 else ''}\"")
                 print(f"     (similarity: {similarity:.1%})")
 
+
 def main():
     """Main function for CLI usage."""
     import argparse
@@ -536,6 +537,7 @@ def main():
         logger.error(f"Demo failed: {e}")
         print(f"\n❌ Demo failed: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

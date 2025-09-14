@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 import os
 import sys
+
 import psycopg2
+
 #!/usr/bin/env python3
 
 def _conn():

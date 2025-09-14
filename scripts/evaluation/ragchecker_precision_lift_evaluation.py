@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Precision Lift Pack Evaluation
@@ -12,6 +12,7 @@ import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+import random
 
 # Add src to path for imports - use absolute path and check for duplicates
 scripts_path = Path(__file__).parent.resolve()
@@ -120,8 +121,6 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
 
     def _simulate_precision_lift_metrics(self, query: str) -> dict[str, Any]:
         """Simulate precision lift pack metrics (placeholder for real implementation)."""
-        import random
-
         random.seed(hash(query) % 2**32)  # Deterministic for same query
 
         # Simulate precision lift pack effects
@@ -290,7 +289,6 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
 def main():
     """Main function to run precision lift pack evaluation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="RAGChecker Precision Lift Pack Evaluation")
     parser.add_argument("--output", type=str, default=None, help="Output file for results (default: auto-generated)")
     parser.add_argument("--fast-mode", action="store_true", help="Run in fast mode with limited test cases")

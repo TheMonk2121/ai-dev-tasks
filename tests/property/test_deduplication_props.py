@@ -1,11 +1,16 @@
 from __future__ import annotations
+
+import os
 import time
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.retrieval.deduplication import HAS_SKLEARN, NearDuplicateFilter
+
 from ._regression_capture import record_case
-import os
+
 #!/usr/bin/env python3
 """
 Property-based tests for deduplication invariants across methods.

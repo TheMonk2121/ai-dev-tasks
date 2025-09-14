@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import os
 import re
+
 #!/usr/bin/env python3
 """
 Fix MD012 - Multiple consecutive blank lines

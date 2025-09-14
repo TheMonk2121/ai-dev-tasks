@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 import argparse
 import hashlib
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
-import os
+
 #!/usr/bin/env python3
 """
 Duplicate File Finder - Content-Based Analysis

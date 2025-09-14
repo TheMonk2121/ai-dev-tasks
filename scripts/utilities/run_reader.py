@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import json
-import sys
 import os
+import sys
+
 #!/usr/bin/env python3
 """
 Mock reader script for testing the reader gate.

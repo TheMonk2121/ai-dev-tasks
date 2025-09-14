@@ -2,11 +2,9 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
-        from cross_encoder_reranker import CrossEncoderReranker, EnhancedEvidenceFilter
-        from sentence_transformers import CrossEncoder
-        from ragchecker_precision_climb_v2_evaluation import PrecisionClimbV2Evaluator
-        from cross_encoder_reranker import CrossEncoderReranker
-        from cross_encoder_reranker import EnhancedEvidenceFilter
+from cross_encoder_reranker import CrossEncoderReranker, EnhancedEvidenceFilter
+from sentence_transformers import CrossEncoder
+from ragchecker_precision_climb_v2_evaluation import PrecisionClimbV2Evaluator
 #!/usr/bin/env python3
 """
 Test Cross-Encoder Integration with Precision-Climb v2

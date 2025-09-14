@@ -57,8 +57,8 @@ def normalize_kind(kind: str) -> str:
 
 
 def build_marker_expression(
-    tiers: Optional[List[str]] = None, kinds: Optional[List[str]] = None, extra_expr: Optional[str] = None
-) -> Optional[str]:
+    tiers: list[str] | None = None, kinds: list[str] | None = None, extra_expr: str | None = None
+) -> str | None:
     """
     Build pytest marker expression from tier and kind specifications.
 
@@ -93,7 +93,7 @@ def build_marker_expression(
     return " and ".join(parts)
 
 
-def get_tier_for_component(component_name: str) -> Optional[str]:
+def get_tier_for_component(component_name: str) -> str | None:
     """
     Get the tier for a given component name.
 

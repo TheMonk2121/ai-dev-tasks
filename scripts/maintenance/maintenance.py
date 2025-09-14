@@ -1,9 +1,12 @@
 from __future__ import annotations
-import subprocess
-from datetime import datetime
-        import psycopg2
-import sys
+
 import os
+import subprocess
+import sys
+from datetime import datetime
+
+import psycopg2
+
 #!/usr/bin/env python3
 """
 System Maintenance for AI Development Tasks

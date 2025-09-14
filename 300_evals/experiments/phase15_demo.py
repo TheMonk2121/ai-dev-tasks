@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import time
 
+
 class MockRetriever:
     """Mock retriever with timestamped documents for freshness testing."""
 

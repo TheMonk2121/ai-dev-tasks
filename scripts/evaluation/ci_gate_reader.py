@@ -15,7 +15,7 @@ from dspy_modules.retriever.query_rewrite import PHRASE_HINTS, build_channel_que
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 from src.utils.gold_loader import load_gold_cases as _load_v1
 from src.schemas.eval import Mode
-                from src.dspy_modules.dspy_reader_program import _apply_cross_encoder_rerank
+from src.dspy_modules.dspy_reader_program import _apply_cross_encoder_rerank
 #!/usr/bin/env python3
 
 # bootstrap

@@ -7,8 +7,8 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
-    import importlib.util as _importlib_util  # noqa: F401
-from typing import Any, Dict, List, Optional, Union
+import importlib.util as _importlib_util  # noqa: F401
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Baseline Metrics Collector
@@ -25,11 +25,11 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 try:
     # Optional DSPy imports (unused in this script’s simulation path)
-
     # DEPRECATED: dspy_rag_system module has been consolidated into main project
     # from dspy_rag_system.src.dspy_modules.rag_system import create_rag_interface  # noqa: F401
     # from dspy_rag_system.src.dspy_modules.vector_store import HybridVectorStore  # noqa: F401
     # from dspy_rag_system.src.utils.ltst_memory_system import LTSTMemorySystem  # noqa: F401
+    pass
 except ImportError as e:
     print(f"⚠️  Warning: Could not import DSPy modules: {e}")
     print("   Some metrics will be simulated for demonstration")

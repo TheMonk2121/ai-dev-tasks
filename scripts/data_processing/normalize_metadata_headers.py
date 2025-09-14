@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import argparse
-import re
-from pathlib import Path
-import sys
 import os
+import re
+import sys
+from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Normalize metadata headers across markdown files to the minimal schema:

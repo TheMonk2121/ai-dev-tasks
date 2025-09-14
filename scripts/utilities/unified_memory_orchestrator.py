@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -16,9 +17,10 @@ Automatically handles virtual environment activation and database startup.
 Provides comprehensive context retrieval from LTST, Cursor, Go CLI, and Prime systems.
 """
 
-# Add project root to path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+# Add project root to path (repository root, not scripts/)
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 # DSPy 3.0.1 works directly with litellm 1.77.0 - no compatibility shim needed
 
@@ -33,11 +35,26 @@ try:
 except ImportError:
     LTST_AVAILABLE = False
 
+# Import memory adapter (used for LTST and as a Cursor fallback)
+try:
+    from src.utils.memory_rehydrator import (
+        MemoryRehydrator,
+        RehydrationRequest,
+    )
+    from src.utils.memory_rehydrator import (
+        rehydrate as cursor_rehydrate,
+    )
+
+    MEMORY_ADAPTER_AVAILABLE = True
+except Exception:
+    MEMORY_ADAPTER_AVAILABLE = False
+
+
 class UnifiedMemoryOrchestrator:
     """Orchestrates all memory rehydration systems with automatic venv and database handling."""
 
     def __init__(self):
-        self.project_root = Path(__file__).parent.parent
+        self.project_root = Path(__file__).resolve().parent.parent.parent
         self.results = {}
         self.errors = []
         self.venv_activated = False
@@ -141,7 +158,7 @@ class UnifiedMemoryOrchestrator:
 
     def get_ltst_memory(self, query: str, role: str = "planner") -> dict:
         """Get memory from LTST system."""
-        if not LTST_AVAILABLE:
+        if not LTST_AVAILABLE or not MEMORY_ADAPTER_AVAILABLE:
             return {
                 "source": "LTST Memory System",
                 "status": "error",
@@ -189,15 +206,30 @@ class UnifiedMemoryOrchestrator:
 
     def get_cursor_memory(self, query: str, role: str = "planner") -> dict:
         """Get memory from Cursor memory rehydrator."""
-        cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", role, query]
-        success, stdout, stderr = self.run_command(cmd)
-
-        return {
-            "source": "Cursor Memory Rehydrator",
-            "status": "success" if success else "error",
-            "output": stdout if success else stderr,
-            "timestamp": time.time(),
-        }
+        if MEMORY_ADAPTER_AVAILABLE:
+            try:
+                bundle = cursor_rehydrate(query=query, role=role)
+                return {
+                    "source": "Cursor Memory Rehydrator",
+                    "status": "success",
+                    "output": bundle.text,
+                    "meta": bundle.meta,
+                    "timestamp": time.time(),
+                }
+            except Exception as e:
+                return {
+                    "source": "Cursor Memory Rehydrator",
+                    "status": "error",
+                    "error": str(e),
+                    "timestamp": time.time(),
+                }
+        else:
+            return {
+                "source": "Cursor Memory Rehydrator",
+                "status": "error",
+                "error": "Memory adapter unavailable",
+                "timestamp": time.time(),
+            }
 
     def get_go_cli_memory(self, query: str) -> dict:
         """Get memory from Go CLI."""
@@ -223,7 +255,8 @@ class UnifiedMemoryOrchestrator:
 
     def get_prime_cursor_output(self, query: str, role: str = "planner") -> dict:
         """Get formatted output from prime cursor chat."""
-        cmd = [sys.executable, "scripts/prime_cursor_chat.py", role, query]
+        # Corrected path to utility script
+        cmd = [sys.executable, "scripts/utilities/prime_cursor_chat.py", role, query]
         success, stdout, stderr = self.run_command(cmd)
 
         return {
@@ -368,6 +401,7 @@ class UnifiedMemoryOrchestrator:
 
         return "\n".join(output)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Unified Memory Orchestrator")
     parser.add_argument("query", help="Query for memory retrieval")
@@ -406,6 +440,7 @@ def main():
         print(json.dumps(results, indent=2))
     else:
         print(orchestrator.format_for_cursor(results))
+
 
 if __name__ == "__main__":
     main()

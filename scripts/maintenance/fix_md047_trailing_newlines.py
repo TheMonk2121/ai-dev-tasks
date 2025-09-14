@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 import os
+
 #!/usr/bin/env python3
 """
 Fix MD047 - Files should end with a single newline character

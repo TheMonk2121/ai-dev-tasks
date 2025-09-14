@@ -6,9 +6,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-            import re
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+import re
+import argparse
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 DEPRECATED: Gate and Promote System (legacy promotion flow).

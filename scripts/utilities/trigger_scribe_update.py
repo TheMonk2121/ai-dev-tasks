@@ -1,9 +1,11 @@
 from __future__ import annotations
+
+import argparse
 import json
 import subprocess
 import sys
 from pathlib import Path
-    import argparse
+
 #!/usr/bin/env python3
 """
 Manual Scribe Update Trigger

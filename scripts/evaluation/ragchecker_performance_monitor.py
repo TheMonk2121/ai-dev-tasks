@@ -11,10 +11,8 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-    from pydantic import BaseModel as PydBaseModel
-    from pydantic import Field as PydField
-            import psutil
-from typing import Any, Dict, List, Optional, Union
+import psutil
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Performance Monitoring System for RAGChecker Validation Workflows
@@ -25,6 +23,8 @@ Implements comprehensive performance monitoring, alerting, and reporting.
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
+    from pydantic import BaseModel as PydBaseModel
+    from pydantic import Field as PydField
 except ImportError as e:
     print(f"⚠️  Warning: Could not import Pydantic: {e}")
 

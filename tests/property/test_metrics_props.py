@@ -1,11 +1,16 @@
 from __future__ import annotations
+
 import math
+
 import numpy as np
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
 from src.evaluation.enhanced_metrics import ECECalculator, NDCGCalculator, TemperatureScaler
+
 from ._regression_capture import record_case
+
 #!/usr/bin/env python3
 """
 Property-based tests for enhanced_metrics invariants.

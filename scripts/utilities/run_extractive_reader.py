@@ -1,10 +1,14 @@
 from __future__ import annotations
+
 import json
 import os
 import sys
+
 import dspy  # type: ignore[import-untyped]
+
 from dspy_modules.dspy_reader_program import _lm  # reuse shared LM configuration
 from dspy_modules.reader import READER  # pre-configured ExtractiveReader instance
+
 #!/usr/bin/env python3
 """
 CLI shim to run the new ExtractiveReader on a provided context.

@@ -1,15 +1,17 @@
 from __future__ import annotations
+
+import argparse
 import json
+import os
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any
-    import matplotlib.pyplot as plt  # type: ignore[import-untyped]
-    import pandas as pd  # type: ignore[import-untyped]
-    import argparse
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
+import matplotlib.pyplot as plt  # type: ignore[import-untyped]
+import pandas as pd  # type: ignore[import-untyped]
+
 #!/usr/bin/env python3
 """
 AWS Bedrock Cost Monitoring and Analytics Dashboard

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 import json
 import logging
@@ -7,11 +8,12 @@ import sys
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
 from urllib.parse import urlparse
+
 import asyncpg
 from asyncpg import Connection, Pool
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 PostgreSQL Cache Service Core

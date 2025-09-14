@@ -1,10 +1,12 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import time
 from datetime import datetime
 from pathlib import Path
-    import argparse
+
 #!/usr/bin/env python3
 """
 Canary Rollout Manager

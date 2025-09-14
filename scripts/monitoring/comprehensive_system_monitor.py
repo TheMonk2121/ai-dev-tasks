@@ -1,17 +1,19 @@
 from __future__ import annotations
+
 import logging
 import os
 import queue
+import sys
 import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional, Union
+
 import psutil
 import psycopg2
-import sys
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Comprehensive System Monitor - Industry Standards Compliance

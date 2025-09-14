@@ -1,10 +1,15 @@
 from __future__ import annotations
+
 import os
+
 import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
+
 from src.rag import reranker_env as env
+
 from ._regression_capture import record_case
+
 #!/usr/bin/env python3
 """
 Property-based tests for reranker_env helpers.

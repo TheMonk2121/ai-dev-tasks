@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Precision Recovery Evaluation
@@ -329,7 +329,6 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
 def main():
     """Main function to run precision recovery evaluation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="RAGChecker Precision Recovery Evaluation")
     parser.add_argument(
         "--step",

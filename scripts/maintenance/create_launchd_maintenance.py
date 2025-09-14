@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import os
 import plistlib
 import subprocess
-from pathlib import Path
 import sys
+from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Creates/updates a launchd job to run system maintenance daily at 3am.

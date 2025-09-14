@@ -4,8 +4,8 @@ import json
 import time
 from pathlib import Path
 import websockets
-    import aiohttp
-        import requests
+import aiohttp
+import requests
 import sys
 import os
 #!/usr/bin/env python3

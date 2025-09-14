@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import re
@@ -6,9 +8,8 @@ import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-    import argparse
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Few-Shot Cognitive Scaffolding Integration

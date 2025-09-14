@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
-        import psycopg2
+import psycopg2
 #!/usr/bin/env python3
 """
 Backfill file_path on document_chunks and add slug/identifier columns and indexes.

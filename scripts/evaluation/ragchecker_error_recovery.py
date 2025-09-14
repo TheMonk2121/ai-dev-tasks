@@ -7,8 +7,7 @@ from collections.abc import Callable
 from datetime import datetime
 from functools import wraps
 from typing import Any
-    from pydantic import BaseModel, Field, ValidationError
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Error Recovery Mechanisms for RAGChecker Evaluation System
@@ -19,6 +18,7 @@ Implements intelligent error recovery and fallback strategies for validation fai
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
+    from pydantic import BaseModel, Field, ValidationError
 except ImportError as e:
     print(f"⚠️  Warning: Could not import Pydantic: {e}")
     BaseModel = None

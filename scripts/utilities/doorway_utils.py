@@ -6,6 +6,7 @@ import tempfile
 from datetime import date
 from difflib import SequenceMatcher
 
+
 # ---------- Naming / Slugs / Paths ----------
 def slugify(title: str) -> str:
     """Convert a title into Capitalized-Kebab form, preserving common words like 'The'."""

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker LIMIT-Inspired Evaluation
@@ -12,6 +12,7 @@ import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+import random
 
 # Add src to path for imports - use absolute path and check for duplicates
 scripts_path = Path(__file__).parent.resolve()
@@ -141,8 +142,6 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
     def _simulate_vector_scores(self, query: str) -> list[float]:
         """Simulate vector scores for geometry analysis (placeholder for real implementation)."""
         # In real implementation, this would come from actual vector retrieval
-        import random
-
         random.seed(hash(query) % 2**32)  # Deterministic for same query
 
         # Simulate different score distributions based on query characteristics
@@ -159,8 +158,6 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
     def _simulate_facet_yields(self, query: str) -> list[dict[str, Any]]:
         """Simulate facet yields (placeholder for real implementation)."""
         # In real implementation, this would come from actual facet generation and evaluation
-        import random
-
         random.seed(hash(query) % 2**32)  # Deterministic for same query
 
         facets = []
@@ -305,7 +302,6 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
 def main():
     """Main function to run LIMIT-inspired evaluation."""
     import argparse
-
     parser = argparse.ArgumentParser(description="RAGChecker LIMIT-Inspired Evaluation")
     parser.add_argument("--output", type=str, default=None, help="Output file for results (default: auto-generated)")
     parser.add_argument("--fast-mode", action="store_true", help="Run in fast mode with limited test cases")

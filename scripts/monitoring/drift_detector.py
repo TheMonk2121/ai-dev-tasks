@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import datetime as dt
 import json
 import os
 import sys
+
 #!/usr/bin/env python3
 
 RETR_LATEST = "evals/latest_retrieval_metrics.json"
