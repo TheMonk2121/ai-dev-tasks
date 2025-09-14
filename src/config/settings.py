@@ -23,7 +23,7 @@ from .models import (
 class YamlSource(PydanticBaseSettingsSource):
     """Custom settings source for YAML configuration files."""
 
-    def __init__(self, settings_cls, path: Path):
+    def __init__(self, settings_cls: type[BaseSettings], path: Path) -> None:
         super().__init__(settings_cls)
         self.path = path
 
@@ -40,7 +40,7 @@ class YamlSource(PydanticBaseSettingsSource):
             print(f"Warning: Could not load YAML config from {self.path}: {e}")
             return {}
 
-    def get_field_value(self, field_info, field_name: str) -> tuple[Any, str, bool]:
+    def get_field_value(self, field_info: Any, field_name: str) -> tuple[Any, str, bool]:
         """Get field value from YAML source."""
         data = self()
         if not data:
@@ -100,12 +100,12 @@ class Settings(BaseSettings):
     @classmethod
     def settings_customise_sources(
         cls,
-        settings_cls,
-        init_settings,
-        env_settings,
-        dotenv_settings,
-        file_secret_settings,
-    ):
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
         """Customize settings sources with clear precedence order."""
         # Determine environment-specific YAML file
         env = os.getenv("APP_ENV", "dev")

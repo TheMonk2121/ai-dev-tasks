@@ -8,7 +8,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict
 
-from src.agents.qa import Deps, QAAnswer, agent
+from src.agents.qa import Deps, QAAnswer, run_agent
 
 if TYPE_CHECKING:  # type-only imports to satisfy Pyright without runtime dependency
     from pydantic_graph import Graph, Node  # type: ignore
@@ -40,7 +40,7 @@ class FlowState(BaseModel):
 
 # Node types
 @dataclass
-class Start(Node[FlowState, Literal["Draft", "End"]]):  # type: ignore
+class Start(Node[FlowState, Literal["Draft", "End"]]):
     """Starting node that determines flow path."""
 
     async def call(self, state: FlowState) -> type[Draft] | type[End]:
@@ -48,20 +48,20 @@ class Start(Node[FlowState, Literal["Draft", "End"]]):  # type: ignore
 
 
 @dataclass
-class Draft(Node[FlowState, Literal["End"]]):  # type: ignore
+class Draft(Node[FlowState, Literal["End"]]):
     """Draft generation node."""
 
     async def call(self, state: FlowState) -> type[End]:
-        import httpx
-
-        deps = Deps(http_client=httpx.AsyncClient())
-        res = await agent.run(state.question, deps=deps)  # returns AgentRunResult[QAAnswer]
-        state.draft = res.data.answer  # type: ignore
+    import httpx
+        async with httpx.AsyncClient() as client:
+            deps = Deps(http_client=client)
+            qa = await run_agent(state.question, deps=deps)
+            state.draft = qa.answer
         return End
 
 
 @dataclass
-class End(Node[FlowState, None]):  # type: ignore
+class End(Node[FlowState, None]):
     """Terminal node."""
 
     async def call(self, state: FlowState) -> None:
@@ -89,7 +89,7 @@ class FlowStore:
 
 async def run_flow(store: FlowStore, state: FlowState) -> FlowState:
     """Run a flow with persistence between nodes."""
-    node: type[Node] | None = Start  # type: ignore
+    node: type[Node] | None = Start
     while node is not None:
         # record "where we are" for resumability
         state.last_node = node.__name__
@@ -101,4 +101,4 @@ async def run_flow(store: FlowStore, state: FlowState) -> FlowState:
 
 def export_mermaid_diagram(output_path: str = "docs/qa_graph.png") -> None:
     """Export the graph as a Mermaid diagram."""
-    graph.mermaid_save(output_path)  # type: ignore
+    graph.mermaid_save(output_path)

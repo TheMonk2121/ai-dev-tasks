@@ -19,17 +19,17 @@ from dspy_modules.retriever.query_rewrite import build_channel_queries, parse_do
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 
 # Cross-encoder singleton handle
-_CE_SINGLETON = None
+_ce_singleton = None
 
 # Import reranker environment and cross-encoder
-os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+_ = os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 from src.rag import reranker_env as RENV
 
 REQUIRED_META_KEYS = ("ingest_run_id", "chunk_variant")
 REQ_META = REQUIRED_META_KEYS
 
 
-def _merge_meta(dst_md: dict | None, *sources: dict | None) -> dict:
+def _merge_meta(dst_md: dict[str, Any] | None, *sources: dict[str, Any] | None) -> dict[str, Any]:
     """Left-biased merge: fill ONLY missing REQUIRED_META_KEYS from sources."""
     dst = dict(dst_md or {})
     for k in REQUIRED_META_KEYS:
@@ -38,14 +38,14 @@ def _merge_meta(dst_md: dict | None, *sources: dict | None) -> dict:
         for s in sources:
             if not s:
                 continue
-            v = s.get(k) if isinstance(s, dict) else None
+            v = s.get(k) if hasattr(s, "get") else None
             if v:
                 dst[k] = v
                 break
     return dst
 
 
-def _carry_provenance(row, *source_rows):
+def _carry_provenance(row: Any, *source_rows: Any) -> Any:
     """Ensure row.metadata contains REQUIRED_META_KEYS, copying from sources."""
     src_mds = []
     for s in source_rows:
@@ -83,7 +83,7 @@ def _carry_provenance(row, *source_rows):
         return row
 
 
-def _index_by_key(rows):
+def _index_by_key(rows: list[Any]) -> dict[tuple[str, Any], Any]:
     idx = {}
     for r in rows or []:
         k = _key(r)
@@ -93,8 +93,8 @@ def _index_by_key(rows):
     return idx
 
 
-def _assert_provenance(rows, where: str, strict: bool):
-    def _has(r):
+def _assert_provenance(rows: list[Any], where: str, strict: bool) -> None:
+    def _has(r: Any) -> bool:
         md = (r.get("metadata") if isinstance(r, dict) else getattr(r, "metadata", None)) or {}
         return all(md.get(k) for k in REQUIRED_META_KEYS)
 
@@ -110,7 +110,7 @@ def _assert_provenance(rows, where: str, strict: bool):
         )
 
 
-def _first_offender(rows):
+def _first_offender(rows: list[Any]) -> dict[str, Any] | None:
     for r in rows:
         d = (
             r
@@ -138,7 +138,7 @@ def _first_offender(rows):
     return None
 
 
-def _stable_chunk_id_basis(row) -> str:
+def _stable_chunk_id_basis(row: Any) -> str:
     is_dict = isinstance(row, dict)
     md = (row.get("metadata") if is_dict else getattr(row, "metadata", None)) or {}
     path = (row.get("file_path") if is_dict else getattr(row, "file_path", None)) or md.get("source_path") or ""
@@ -151,7 +151,7 @@ def _stable_chunk_id_basis(row) -> str:
     return f"{run}|{var}|{path}|{start}|{end}|{text_sig}"
 
 
-def _ensure_chunk_id(row):
+def _ensure_chunk_id(row: Any) -> Any:
     is_dict = isinstance(row, dict)
     cid = row.get("chunk_id") if is_dict else getattr(row, "chunk_id", None)
     if cid:
@@ -179,13 +179,13 @@ def _ensure_chunk_id(row):
     return row
 
 
-def _key(row):
+def _key(row: Any) -> tuple[str, Any]:
     is_dict = isinstance(row, dict)
     cid = row.get("chunk_id") if is_dict else getattr(row, "chunk_id", None)
     return ("chunk_id", cid)
 
 
-def _to_row_dict(row: object) -> dict:
+def _to_row_dict(row: Any) -> dict[str, Any]:
     if isinstance(row, dict):
         d = dict(row)
         d.setdefault("metadata", {})
@@ -204,7 +204,7 @@ def _to_row_dict(row: object) -> dict:
     }
 
 
-def _ensure_chunk_id_inplace(d: dict) -> dict:
+def _ensure_chunk_id_inplace(d: dict[str, Any]) -> dict[str, Any]:
     if d.get("chunk_id"):
         return d
     md = d.get("metadata") or {}
@@ -225,7 +225,7 @@ def _ensure_chunk_id_inplace(d: dict) -> dict:
     return d
 
 
-def _carry_meta_inplace(dst: dict, *sources) -> dict:
+def _carry_meta_inplace(dst: dict[str, Any], *sources: Any) -> dict[str, Any]:
     md = dst.setdefault("metadata", {})
     for k in REQUIRED_META_KEYS:
         if md.get(k):
@@ -271,11 +271,11 @@ def _apply_cross_encoder_rerank(
         from sentence_transformers import CrossEncoder
 
         # Lazy singleton init
-        global _CE_SINGLETON
-        if "_CE_SINGLETON" not in globals() or _CE_SINGLETON is None:
-            _CE_SINGLETON = CrossEncoder(RENV.RERANKER_MODEL)
+        global _ce_singleton
+        if _ce_singleton is None:
+            _ce_singleton = CrossEncoder(RENV.RERANKER_MODEL)
             print("[reranker] Cross-encoder model loaded successfully")
-        model = _CE_SINGLETON
+        model = _ce_singleton
 
         # Prepare query-document pairs for reranking
         pairs = []
@@ -291,7 +291,7 @@ def _apply_cross_encoder_rerank(
 
         # Hybrid scoring: combine original BM25/fused scores with cross-encoder scores
         # Best practice: inject first-stage scores into reranker
-        for i, (row, cross_score) in enumerate(zip(candidates, cross_scores)):
+        for row, cross_score in zip(candidates, cross_scores):
             original_score = row.get("score", 0.0)
             # Weighted combination: 70% cross-encoder, 30% original score
             hybrid_score = 0.7 * float(cross_score) + 0.3 * original_score
@@ -388,24 +388,29 @@ class AnswerSig(dspy.Signature):
 
 # ---- Program (baseline: retrieval → compact context → answer)
 class RAGAnswer(dspy.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.cls = dspy.Predict(IsAnswerableSig)
-        self.gen = dspy.Predict(AnswerSig)
+        self.cls: dspy.Predict = dspy.Predict(IsAnswerableSig)
+        self.gen: dspy.Predict = dspy.Predict(AnswerSig)
         # Abstention/precision policy (tunable via env)
         # READER_ABSTAIN: 1=enable IsAnswerable gate (default), 0=disable
         # READER_ENFORCE_SPAN: 1=ensure answer substring appears in context (default), 0=disable
         # READER_PRECHECK: 1=enable token-overlap precheck (default), 0=disable
         # READER_PRECHECK_MIN_OVERLAP: float in [0,1], default 0.10
-        self.abstain_enabled = bool(int(os.getenv("READER_ABSTAIN", "1")))
-        self.enforce_span = bool(int(os.getenv("READER_ENFORCE_SPAN", "1")))
-        self.precheck_enabled = bool(int(os.getenv("READER_PRECHECK", "1")))
+        self.abstain_enabled: bool = bool(int(os.getenv("READER_ABSTAIN", "1")))
+        self.enforce_span: bool = bool(int(os.getenv("READER_ENFORCE_SPAN", "1")))
+        self.precheck_enabled: bool = bool(int(os.getenv("READER_PRECHECK", "1")))
         try:
-            self.precheck_min_overlap = float(os.getenv("READER_PRECHECK_MIN_OVERLAP", "0.10"))
+            precheck_min_overlap = float(os.getenv("READER_PRECHECK_MIN_OVERLAP", "0.10"))
         except ValueError:
-            self.precheck_min_overlap = 0.10
+            precheck_min_overlap = 0.10
+        self.precheck_min_overlap: float = precheck_min_overlap
 
-    def forward(self, question: str, tag: str):
+        # Initialize instance variables that may be set later
+        self._last_retrieval_snapshot: list[dict[str, Any]] = []
+        self.used_contexts: list[dict[str, Any]] = []
+
+    def forward(self, question: str, tag: str) -> dspy.Prediction:
         limits = load_limits(tag)
         qs = build_channel_queries(question, tag)
         # For now, use empty vector - the retrieval system will handle this safely
@@ -462,11 +467,11 @@ class RAGAnswer(dspy.Module):
         run_id = os.getenv("INGEST_RUN_ID", "legacy")
         variant = os.getenv("CHUNK_VARIANT", "legacy")
 
-        def _index(rows_any):
+        def _index(rows_any: list[Any]) -> dict[tuple[str, Any], dict[str, Any]]:
             m = {}
             for rr in rows_any:
                 dd = _to_row_dict(rr)
-                _ensure_chunk_id_inplace(dd)
+                _ = _ensure_chunk_id_inplace(dd)
                 m[_key(dd)] = dd
             return m
 
@@ -476,10 +481,10 @@ class RAGAnswer(dspy.Module):
         norm_rows = []
         for r in rows:
             d = _to_row_dict(r)
-            _ensure_chunk_id_inplace(d)
+            _ = _ensure_chunk_id_inplace(d)
             src1 = prefetch_map.get(_key(d))
             src2 = canon_map.get(_key(d))
-            _carry_meta_inplace(d, src1, src2)
+            _ = _carry_meta_inplace(d, src1, src2)
             d.setdefault("metadata", {})
             d["metadata"].setdefault("ingest_run_id", run_id)
             d["metadata"].setdefault("chunk_variant", variant)
@@ -575,14 +580,14 @@ class RAGAnswer(dspy.Module):
 
 
 # ---- Metric (SQuAD-style F1)
-def _norm(s):
+def _norm(s: str) -> str:
     s = (s or "").lower().strip()
     s = __import__("re").sub(r"[^a-z0-9\s]", " ", s)
     s = __import__("re").sub(r"\s+", " ", s)
     return s
 
 
-def f1(pred, golds):
+def f1(pred: str, golds: list[str]) -> float:
     p = _norm(pred)
     best = 0.0
     for g in golds:
@@ -603,11 +608,11 @@ def f1(pred, golds):
 
 
 # ---- Data loaders
-def load_jsonl(path):
+def load_jsonl(path: str) -> list[dict[str, Any]]:
     return [json.loads(line) for line in open(path, encoding="utf-8") if line.strip()]
 
 
-def to_examples(rows):
+def to_examples(rows: list[dict[str, Any]]) -> list[dspy.Example]:
     # rows should include: id/case_id (ignored here), query, tag, answers
     ex = []
     for r in rows:
@@ -619,7 +624,9 @@ def to_examples(rows):
 
 
 # ---- Compile (Teleprompt) and export
-def compile_and_save(dev_path="../../evals/dspy/dev_curated.jsonl", out_dir="../../artifacts/dspy"):
+def compile_and_save(
+    dev_path: str = "../../evals/dspy/dev_curated.jsonl", out_dir: str = "../../artifacts/dspy"
+) -> None:
     dspy.settings.configure(lm=_lm())
     os.makedirs(out_dir, exist_ok=True)
     dev = to_examples(load_jsonl(dev_path))
@@ -628,7 +635,8 @@ def compile_and_save(dev_path="../../evals/dspy/dev_curated.jsonl", out_dir="../
     # Teleprompter: BootstrapFewShot is a robust default
     from dspy.teleprompt import BootstrapFewShot
 
-    def metric(example, pred, trace=None):
+    def metric(example: dspy.Example, pred: dspy.Prediction, trace: Any | None = None) -> float:  # noqa: ARG001
+        _ = trace  # Suppress unused parameter warning
         return f1(pred.answer, example.answers)
 
     tele = BootstrapFewShot(

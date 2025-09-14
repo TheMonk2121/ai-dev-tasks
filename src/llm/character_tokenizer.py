@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 import unicodedata
 from dataclasses import dataclass
-from typing import Protocol
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Protocol, Union
+
 #!/usr/bin/env python3
 """
 Character-level tokenizer implementation for guaranteed monotonicity.

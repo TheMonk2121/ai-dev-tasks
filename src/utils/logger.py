@@ -44,9 +44,11 @@ class StructuredFormatter(logging.Formatter):
 
             # Add exception info if present
             if record.exc_info:
+                exc_type = record.exc_info[0].__name__ if record.exc_info[0] else None
+                exc_msg = str(record.exc_info[1]) if record.exc_info[1] else None
                 log_entry["exception"] = {
-                    "type": record.exc_info[0].__name__,
-                    "message": str(record.exc_info[1]),
+                    "type": exc_type,
+                    "message": exc_msg,
                     "traceback": traceback.format_exception(*record.exc_info),
                 }
 
@@ -118,7 +120,7 @@ def setup_logger(name: str, level: str = "INFO", log_file: str | None = None) ->
     return get_logger(name, level, log_file)
 
 
-def log_with_context(logger: logging.Logger, message: str, level: str = "INFO", **context):
+def log_with_context(logger: logging.Logger, message: str, level: str = "INFO", **context: Any) -> None:
     """
     Log with additional context fields
 
@@ -133,8 +135,8 @@ def log_with_context(logger: logging.Logger, message: str, level: str = "INFO", 
 
 
 def log_document_processing(
-    logger: logging.Logger, document_id: str, stage: str, message: str, level: str = "INFO", **context
-):
+    logger: logging.Logger, document_id: str, stage: str, message: str, level: str = "INFO", **context: Any
+) -> None:
     """
     Log document processing events with standard context
 
@@ -150,7 +152,9 @@ def log_document_processing(
     log_with_context(logger, message, level=level, **context)
 
 
-def log_error_with_context(logger: logging.Logger, error: Exception, message: str = "Error occurred", **context):
+def log_error_with_context(
+    logger: logging.Logger, error: Exception, message: str = "Error occurred", **context: Any
+) -> None:
     """
     Log errors with full context and traceback
 
@@ -163,7 +167,7 @@ def log_error_with_context(logger: logging.Logger, error: Exception, message: st
     logger.error(message, exc_info=True, extra=context)
 
 
-def configure_logging_from_env():
+def configure_logging_from_env() -> logging.Logger:
     """Configure logging from environment variables"""
     import os
 

@@ -1,10 +1,13 @@
 from __future__ import annotations
+
+import json
+import os
+
 import numpy as np
 from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
 from pydantic_core import CoreSchema, core_schema
 from pydantic_core.core_schema import no_info_plain_validator_function
-import os
-import json
+
 #!/usr/bin/env python3
 """
 Pydantic-compatible numpy array types with shape validation.

@@ -1,7 +1,7 @@
 """Typed configuration models for the AI Development Tasks ecosystem."""
 
 from pathlib import Path
-from typing import Annotated, Literal
+from typing import Annotated, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, DirectoryPath, Field, HttpUrl, NonNegativeInt, PostgresDsn, SecretStr
 from pydantic_core import MultiHostUrl
@@ -12,7 +12,9 @@ class Database(BaseModel):
 
     model_config = ConfigDict(validate_assignment=True)
 
-    dsn: PostgresDsn = Field(default="postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable")
+    dsn: PostgresDsn = Field(
+        default_factory=lambda: cast(PostgresDsn, "postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable")
+    )
     pool_size: int = Field(ge=1, le=64, default=8)
     timeout_ms: int = Field(ge=100, le=60_000, default=5_000)
     connect_timeout: int = Field(ge=1, le=60, default=10)

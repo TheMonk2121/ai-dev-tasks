@@ -154,7 +154,7 @@ class MaintenanceMetricsDB:
             FROM maintenance_metrics
             WHERE ts >= datetime('now', '-{days} days')
             """
-            params = []
+            params: list[Any] = []
 
             if maintenance_type:
                 query += " AND maintenance_type = ?"
@@ -405,7 +405,7 @@ class MaintenanceMetricsDB:
                     "timestamp": datetime.now().isoformat(),
                 }
 
-    def _ensure_sqlite_table_exists(self, cur) -> None:
+    def _ensure_sqlite_table_exists(self, cur: Any) -> None:
         """Ensure maintenance_metrics table exists in SQLite with proper structure."""
         cur.execute(
             """
@@ -442,7 +442,7 @@ class MaintenanceMetricsDB:
             """
         )
 
-    def _ensure_table_exists(self, cur) -> None:
+    def _ensure_table_exists(self, cur: Any) -> None:
         """Ensure maintenance_metrics table exists with proper structure."""
         cur.execute(
             """

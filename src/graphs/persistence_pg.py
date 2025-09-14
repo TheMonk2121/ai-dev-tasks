@@ -18,8 +18,8 @@ except Exception:  # pragma: no cover - import-safe in environments without pyda
     EndSnapshot = object  # type: ignore
 
 try:
-    import psycopg2
-    from psycopg2.extras import Json, RealDictCursor
+import psycopg2
+from psycopg2.extras import Json, RealDictCursor
 except Exception:  # pragma: no cover
     psycopg2 = None  # type: ignore
     Json = None  # type: ignore

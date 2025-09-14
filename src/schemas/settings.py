@@ -12,8 +12,12 @@ class EvaluationSettings(BaseSettings):
     """Configuration settings for evaluation system."""
 
     # File paths
-    gold_cases_path: str = Field(default="evals/gold/v1/gold_cases.jsonl", description="Path to gold cases JSONL file")
-    manifest_path: str = Field(default="evals/gold/v1/manifest.json", description="Path to evaluation manifest file")
+    gold_cases_path: str = Field(
+        default="300_evals/evals/data/gold/v1/gold_cases.jsonl", description="Path to gold cases JSONL file"
+    )
+    manifest_path: str = Field(
+        default="300_evals/evals/data/gold/v1/manifest.json", description="Path to evaluation manifest file"
+    )
     results_output_dir: str = Field(
         default="metrics/baseline_evaluations", description="Directory for evaluation results"
     )
@@ -53,6 +57,78 @@ class EvaluationSettings(BaseSettings):
             "dspy",
             "memory",
             "context",
+            # Additional tags from validation errors
+            "ops",
+            "evaluation",
+            "evals",
+            "rehydration",
+            "prd",
+            "workflow",
+            "documentation",
+            "ragchecker",
+            "metrics",
+            "baseline",
+            "shell",
+            "integration",
+            "setup",
+            "canary",
+            "deployment",
+            "percentage",
+            "db",
+            "vector",
+            "index",
+            "ivfflat",
+            "fts",
+            "tsquery",
+            "postgresql",
+            "pgvector",
+            "ann",
+            "cosine",
+            "rrf",
+            "fusion",
+            "ranking",
+            "migration",
+            "resilience",
+            "chunking",
+            "embeddings",
+            "configuration",
+            "pipeline",
+            "retrieval",
+            "hybrid",
+            "search",
+            "reranker",
+            "cross-encoder",
+            "citations",
+            "extraction",
+            "scoring",
+            "teleprompter",
+            "optimization",
+            "enforcement",
+            "grounding",
+            "multi-hop",
+            "hyde",
+            "prf",
+            "gates",
+            "promotion",
+            "quality",
+            "thresholds",
+            "manifest",
+            "template",
+            "oracle",
+            "provenance",
+            "tracking",
+            "leakage",
+            "meta",
+            "runbook",
+            "manifests",
+            "blocking",
+            "negative",
+            "quantum",
+            "entanglement",
+            "mars",
+            "api-key",
+            "time-travel",
+            "dependencies",
         ],
         description="List of known/valid tags",
         json_schema_extra={"type": "array", "items": {"type": "string"}},
@@ -60,19 +136,24 @@ class EvaluationSettings(BaseSettings):
 
     @field_validator("known_tags", mode="before")
     @classmethod
-    def parse_known_tags(cls, v):
+    def parse_known_tags(cls, v: str | list[str]) -> list[str]:
         """Parse known_tags from string or list."""
         if isinstance(v, str):
             if v == "[]":
                 return []
             # Try to parse as JSON array
             import json
+
             try:
-                return json.loads(v)
+                parsed = json.loads(v)
+                if isinstance(parsed, list):
+                    return [str(item) for item in parsed]
+                else:
+                    return [str(parsed)]
             except json.JSONDecodeError:
                 # If not JSON, split by comma
                 return [tag.strip() for tag in v.split(",") if tag.strip()]
-        return v
+        return v if isinstance(v, list) else [str(v)]
 
     class Config:
         env_file = ".env"

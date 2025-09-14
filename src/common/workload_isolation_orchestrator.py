@@ -113,8 +113,7 @@ class WorkloadIsolationOrchestrator:
         """Verify database connectivity after GUC changes."""
         try:
             # Simple connectivity test
-            import psycopg2
-
+    import psycopg2
             conn = psycopg2.connect(self.guc_manager.dsn)
             cur = conn.cursor()
 
@@ -260,7 +259,6 @@ class WorkloadIsolationOrchestrator:
 def main():
     """Test the WorkloadIsolationOrchestrator."""
     import time
-
     logging.basicConfig(level=logging.INFO)
 
     print("🧪 Testing WorkloadIsolationOrchestrator")

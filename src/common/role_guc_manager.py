@@ -206,7 +206,6 @@ class RoleGUCManager:
 def main():
     """Test the RoleGUCManager."""
     import time
-
     logging.basicConfig(level=logging.INFO)
 
     print("🧪 Testing RoleGUCManager")

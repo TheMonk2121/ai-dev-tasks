@@ -175,8 +175,8 @@ class SelectiveAnswering:
             )
 
         # Extract scores
-        scores = [chunk.get("score", 0.0) for chunk in evidence_chunks]
-        scores = np.array(scores)
+        scores_list = [chunk.get("score", 0.0) for chunk in evidence_chunks]
+        scores = np.array(scores_list)
 
         # Basic statistics
         evidence_count = len(scores)
@@ -490,7 +490,7 @@ class SelectiveAnswering:
             + weights["intent"] * intent_norm
         )
 
-        return min(1.0, max(0.0, quality_score))
+        return float(min(1.0, max(0.0, quality_score)))
 
     def _generate_recommendations(
         self, should_abstain: bool, reasons: list[str], quality_score: float, evidence_quality: EvidenceQuality

@@ -14,7 +14,7 @@ import hashlib
 from typing import Any
 
 try:
-    import numpy as np
+import numpy as np
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
 

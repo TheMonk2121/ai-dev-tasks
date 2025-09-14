@@ -2,14 +2,19 @@
 import json
 import os
 import sys
+from typing import Optional
 from urllib.parse import urlparse
 
 CANON_ENV = "DATABASE_URL"  # canonical
 FALLBACK_ENV = "POSTGRES_DSN"  # temporary fallback during transition
 
 
-def _parse(dsn):
-    """Parse DSN into components for comparison."""
+def _parse(dsn: str) -> dict[str, str | int]:
+    """Parse DSN into components for comparison.
+
+    Returns a mapping with keys: scheme, user, host, port, db.
+    Returns an empty dict on parse failure.
+    """
     try:
         u = urlparse(dsn)
         return {
@@ -23,7 +28,7 @@ def _parse(dsn):
         return {}
 
 
-def resolve_dsn(strict=True, emit_warning=True):
+def resolve_dsn(strict: bool = True, emit_warning: bool = True) -> str | None:
     """
     Resolve database connection string with fallback logic.
 
@@ -32,7 +37,7 @@ def resolve_dsn(strict=True, emit_warning=True):
         emit_warning: If True, print warnings to stderr
 
     Returns:
-        str: Resolved DSN string or None if not found and not strict
+        Resolved DSN string, or None if not found and not strict.
     """
     primary = os.getenv(CANON_ENV, "").strip()
     fallback = os.getenv(FALLBACK_ENV, "").strip()

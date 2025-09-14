@@ -28,7 +28,6 @@ class Retrieve(Node[list[RetrievalCandidate]]):
     def run(self, question: str) -> list[RetrievalCandidate]:
         # Use RAG pipeline module directly
         import os
-
         from dspy_modules.rag_pipeline import RAGPipeline
 
         db_connection = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")

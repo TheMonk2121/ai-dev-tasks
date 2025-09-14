@@ -20,7 +20,6 @@ from typing import Any
 try:
     import numpy as np
     import onnxruntime as ort
-
     HAS_ONNX = True
 except ImportError:
     HAS_ONNX = False

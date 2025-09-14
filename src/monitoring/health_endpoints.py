@@ -22,7 +22,7 @@ from psycopg2.extras import RealDictCursor
 class HealthEndpointManager:
     """Manages health checks for system components"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.database_url = os.getenv("DATABASE_URL", "postgresql://localhost:5432/ai_agency")
         self.health_thresholds = {
             "database_response_time": 5.0,  # seconds

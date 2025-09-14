@@ -103,7 +103,7 @@ def get_database_metrics() -> dict[str, Any]:
 def get_memory_metrics() -> dict[str, Any]:
     """Get memory system metrics"""
     try:
-        metrics = {}
+        metrics: dict[str, Any] = {}
 
         # Check memory system file sizes
         memory_files = [
@@ -111,7 +111,7 @@ def get_memory_metrics() -> dict[str, Any]:
             "100_memory/104_dspy-development-context.md",
         ]
 
-        file_metrics = {}
+        file_metrics: dict[str, int | None] = {}
         total_size = 0
         for file_path in memory_files:
             if os.path.exists(file_path):
@@ -130,7 +130,7 @@ def get_memory_metrics() -> dict[str, Any]:
             "scripts/update_cursor_memory.py",
         ]
 
-        script_metrics = {}
+        script_metrics: dict[str, int | None] = {}
         for script_path in memory_scripts:
             if os.path.exists(script_path):
                 size = os.path.getsize(script_path)
@@ -149,7 +149,7 @@ def get_memory_metrics() -> dict[str, Any]:
 def get_rag_metrics() -> dict[str, Any]:
     """Get RAG system metrics"""
     try:
-        metrics = {}
+        metrics: dict[str, Any] = {}
 
         # Check evaluation data
         eval_files = [
@@ -157,7 +157,7 @@ def get_rag_metrics() -> dict[str, Any]:
             "metrics/baseline_evaluations/",
         ]
 
-        eval_metrics = {}
+        eval_metrics: dict[str, int | str | None] = {}
         for file_path in eval_files:
             if os.path.exists(file_path):
                 if os.path.isfile(file_path):

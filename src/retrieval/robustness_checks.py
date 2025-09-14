@@ -44,7 +44,7 @@ class PerformanceMetrics:
 class RobustnessChecker:
     """Monitors retrieval pipeline health and performance."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.latency_history: list[float] = []
         self.error_count = 0
         self.success_count = 0
@@ -56,7 +56,7 @@ class RobustnessChecker:
         """Perform health check on a pipeline component."""
         start_time = time.time()
         status = "healthy"
-        details = {}
+        details: dict[str, Any] = {}
 
         try:
             # Run with timeout
@@ -169,8 +169,8 @@ class RobustnessChecker:
         overall_status = "healthy"
 
         # Check fusion component
-        def check_fusion():
-            from retrieval.fusion import weighted_rrf
+        def check_fusion() -> bool:
+            from retrieval.fusion import weighted_rrf  # type: ignore[import-untyped]
 
             # Simple test
             bm25 = [("doc1", 10.0), ("doc2", 5.0)]
@@ -182,8 +182,8 @@ class RobustnessChecker:
         health_results.append(fusion_health)
 
         # Check prefilter component
-        def check_prefilter():
-            from retrieval.prefilter import PrefilterConfig, RecallFriendlyPrefilter
+        def check_prefilter() -> bool:
+            from retrieval.prefilter import PrefilterConfig, RecallFriendlyPrefilter  # type: ignore[import-untyped]
 
             pf = RecallFriendlyPrefilter(PrefilterConfig())
             docs = {"doc1": "Test document content", "doc2": "Another test document"}
@@ -195,8 +195,8 @@ class RobustnessChecker:
         health_results.append(prefilter_health)
 
         # Check reranker component
-        def check_reranker():
-            from retrieval.reranker import heuristic_rerank
+        def check_reranker() -> bool:
+            from retrieval.reranker import heuristic_rerank  # type: ignore[import-untyped]
 
             candidates = [("doc1", 0.8), ("doc2", 0.6)]
             docs = {"doc1": "Test content", "doc2": "Another test"}
@@ -207,8 +207,8 @@ class RobustnessChecker:
         health_results.append(reranker_health)
 
         # Check packer component
-        def check_packer():
-            from retrieval.packer import pack_candidates
+        def check_packer() -> bool:
+            from retrieval.packer import pack_candidates  # type: ignore[import-untyped]
 
             candidates = [("doc1", 0.8), ("doc2", 0.6)]
             docs = {"doc1": "Test content", "doc2": "Another test"}
@@ -219,8 +219,8 @@ class RobustnessChecker:
         health_results.append(packer_health)
 
         # Check quality gates component
-        def check_quality_gates():
-            from retrieval.quality_gates import validate_evaluation_results
+        def check_quality_gates() -> bool:
+            from retrieval.quality_gates import validate_evaluation_results  # type: ignore[import-untyped]
 
             metrics = {"recall_at_20": 0.3, "f1_score": 0.2, "faithfulness": 0.6}
             result = validate_evaluation_results(metrics)
@@ -255,7 +255,9 @@ class RobustnessChecker:
         }
 
 
-def test_error_recovery(retrieval_fn) -> dict[str, Any]:
+
+
+def test_error_recovery(retrieval_fn: Callable[[str], Any]) -> dict[str, Any]:
     """Test error recovery capabilities."""
     recovery_tests = [
         {"name": "empty_query", "query": "", "expected": "graceful_handling"},

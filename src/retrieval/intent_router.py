@@ -8,7 +8,7 @@ Implements rule-based classification with feature flags for canary deployment.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 
@@ -20,7 +20,7 @@ class IntentClassification:
     confidence: float  # 0.0 to 1.0
     reasoning: str  # Human-readable explanation
     route_target: str  # 'sql', 'kg', 'rag', 'hybrid'
-    structured_fields: dict[str, Any] = None  # Extracted structured data
+    structured_fields: dict[str, Any] = field(default_factory=dict)  # Extracted structured data
     should_short_circuit: bool = False  # Whether to skip text RAG
 
 
@@ -39,14 +39,14 @@ class IntentRouterConfig:
     canary_sample_pct: float = 0.1
 
     # Structured query patterns
-    lookup_patterns: list[str] = None
-    id_patterns: list[str] = None
-    date_patterns: list[str] = None
-    metric_patterns: list[str] = None
+    lookup_patterns: list[str] = field(default_factory=list)
+    id_patterns: list[str] = field(default_factory=list)
+    date_patterns: list[str] = field(default_factory=list)
+    metric_patterns: list[str] = field(default_factory=list)
 
     # SQL/KG routing preferences
-    prefer_sql_for: list[str] = None
-    prefer_kg_for: list[str] = None
+    prefer_sql_for: list[str] = field(default_factory=list)
+    prefer_kg_for: list[str] = field(default_factory=list)
 
 
 class StructuredQueryDetector:

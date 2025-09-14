@@ -39,19 +39,21 @@ def _as_rank_map(items: Sequence[DocId] | Sequence[tuple[DocId, Score]] | Mappin
             rank_map[doc_id] = idx
         return rank_map
 
-    if not items:
+    # Convert to a concrete list to inspect first element without type ignores
+    seq = list(items)
+    if not seq:
         return rank_map
 
-    first = items[0]  # type: ignore[index]
+    first = seq[0]
     if isinstance(first, tuple) and len(first) == 2:  # Sequence[tuple[DocId, Score]]
-        pairs = list(items)  # type: ignore[assignment]
+        pairs = list(seq)
         pairs.sort(key=lambda kv: kv[1], reverse=True)
         for idx, (doc_id, _score) in enumerate(pairs, start=1):
-            rank_map[doc_id] = idx
+            rank_map[str(doc_id)] = idx
         return rank_map
 
     # Sequence[DocId]
-    for idx, doc_id in enumerate(items, start=1):  # type: ignore[arg-type]
+    for idx, doc_id in enumerate(seq, start=1):
         rank_map[str(doc_id)] = idx
     return rank_map
 

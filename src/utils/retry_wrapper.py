@@ -25,6 +25,7 @@ except Exception:  # pragma: no cover
             pass
 
     psycopg2 = _Psycopg2Shim()  # type: ignore
+
 from requests.exceptions import RequestException, Timeout
 
 # Import error pattern recognition
@@ -322,7 +323,7 @@ def retry_with_timeout(timeout_seconds: int = 30):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             import signal
-
+            
             def timeout_handler(signum, frame):
                 raise TimeoutError(f"Function timed out after {timeout_seconds} seconds")
 

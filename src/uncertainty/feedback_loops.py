@@ -9,13 +9,13 @@ import json
 import logging
 import sqlite3
 import time
-from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 logger = logging.getLogger(__name__)
 
@@ -44,65 +44,99 @@ class FeedbackPriority(Enum):
     CRITICAL = "critical"
 
 
-@dataclass
-class UserFeedback:
-    """User feedback data structure."""
+class UserFeedback(BaseModel):
+    """User feedback data structure with Pydantic validation."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+        use_enum_values=True,
+    )
 
     # Core feedback data
-    feedback_id: str
-    query: str
-    answer: str | None
-    feedback_type: FeedbackType
-    feedback_value: bool | int | float | str  # Boolean, rating, or text
+    feedback_id: str = Field(..., min_length=1, description="Unique feedback identifier")
+    query: str = Field(..., min_length=1, description="User query that generated the response")
+    answer: str | None = Field(None, description="System answer that was evaluated")
+    feedback_type: FeedbackType = Field(..., description="Type of feedback provided")
+    feedback_value: bool | int | float | str = Field(..., description="Boolean, rating, or text feedback value")
 
     # Context information
-    confidence_score: float
-    evidence_chunks: list[dict[str, Any]]
-    response_time_ms: float
-    timestamp: datetime
+    confidence_score: float = Field(..., ge=0.0, le=1.0, description="System confidence score")
+    evidence_chunks: list[dict[str, Any]] = Field(default_factory=list, description="Evidence chunks used in response")
+    response_time_ms: float = Field(..., ge=0.0, description="Response time in milliseconds")
+    timestamp: datetime = Field(default_factory=datetime.now, description="When feedback was provided")
 
     # User information
-    user_id: str | None = None
-    session_id: str | None = None
+    user_id: str | None = Field(None, description="User identifier")
+    session_id: str | None = Field(None, description="Session identifier")
 
     # Additional metadata
-    feedback_text: str | None = None
-    priority: FeedbackPriority = FeedbackPriority.MEDIUM
-    tags: list[str] | None = None
+    feedback_text: str | None = Field(None, description="Additional text feedback")
+    priority: FeedbackPriority = Field(default=FeedbackPriority.MEDIUM, description="Feedback priority level")
+    tags: list[str] | None = Field(None, description="Optional tags for categorization")
 
     # Processing status
-    processed: bool = False
-    processed_timestamp: datetime | None = None
-    processing_notes: str | None = None
+    processed: bool = Field(default=False, description="Whether feedback has been processed")
+    processed_timestamp: datetime | None = Field(None, description="When feedback was processed")
+    processing_notes: str | None = Field(None, description="Notes from processing")
+
+    @field_validator("feedback_value")
+    @classmethod
+    def validate_feedback_value(cls, v: Any) -> bool | int | float | str:
+        """Validate feedback value is appropriate type."""
+        if isinstance(v, (bool, int, float, str)):
+            return v
+        raise ValueError("feedback_value must be bool, int, float, or str")
+
+    @field_validator("evidence_chunks")
+    @classmethod
+    def validate_evidence_chunks(cls, v: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Validate evidence chunks structure."""
+        if not isinstance(v, list):
+            raise ValueError("evidence_chunks must be a list")
+        for chunk in v:
+            if not isinstance(chunk, dict):
+                raise ValueError("Each evidence chunk must be a dictionary")
+        return v
 
 
-@dataclass
-class FeedbackConfig:
-    """Configuration for feedback loop processing."""
+class FeedbackConfig(BaseModel):
+    """Configuration for feedback loop processing with Pydantic validation."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+    )
 
     # Database configuration
-    db_path: str = "data/feedback.db"
-    auto_backup: bool = True
-    backup_interval_hours: int = 24
+    db_path: str = Field(default="data/feedback.db", description="Path to feedback database")
+    auto_backup: bool = Field(default=True, description="Enable automatic backups")
+    backup_interval_hours: int = Field(default=24, ge=1, le=168, description="Backup interval in hours")
 
     # Feedback processing
-    batch_size: int = 100
-    processing_interval_minutes: int = 30
-    max_feedback_age_days: int = 90
+    batch_size: int = Field(default=100, ge=1, le=1000, description="Batch size for processing feedback")
+    processing_interval_minutes: int = Field(default=30, ge=1, le=1440, description="Processing interval in minutes")
+    max_feedback_age_days: int = Field(default=90, ge=1, le=365, description="Maximum age of feedback to process")
 
     # Quality thresholds
-    min_feedback_count: int = 10
-    confidence_calibration_threshold: float = 0.1
-    quality_improvement_threshold: float = 0.05
+    min_feedback_count: int = Field(default=10, ge=1, description="Minimum feedback count for analysis")
+    confidence_calibration_threshold: float = Field(
+        default=0.1, ge=0.0, le=1.0, description="Confidence calibration threshold"
+    )
+    quality_improvement_threshold: float = Field(
+        default=0.05, ge=0.0, le=1.0, description="Quality improvement threshold"
+    )
 
     # Output paths
-    reports_path: str = "metrics/feedback/"
-    model_updates_path: str = "models/feedback_updates/"
+    reports_path: str = Field(default="metrics/feedback/", description="Path for feedback reports")
+    model_updates_path: str = Field(default="models/feedback_updates/", description="Path for model updates")
 
     # Notification settings
-    enable_notifications: bool = True
-    critical_feedback_alert: bool = True
-    weekly_summary: bool = True
+    enable_notifications: bool = Field(default=True, description="Enable notification system")
+    critical_feedback_alert: bool = Field(default=True, description="Enable critical feedback alerts")
+    weekly_summary: bool = Field(default=True, description="Enable weekly summary reports")
 
 
 class FeedbackDatabase:
@@ -112,7 +146,7 @@ class FeedbackDatabase:
         self.db_path = db_path
         self._init_database()
 
-    def _init_database(self):
+    def _init_database(self) -> None:
         """Initialize the feedback database."""
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
 
@@ -202,7 +236,7 @@ class FeedbackDatabase:
 
                 if limit:
                     query += " LIMIT ?"
-                    params.append(limit)
+                    params.append(str(limit))
 
                 cursor = conn.execute(query, params)
                 rows = cursor.fetchall()
@@ -606,7 +640,7 @@ class FeedbackProcessor:
 
         return recommendations
 
-    def _save_report(self, report: dict[str, Any], report_type: str):
+    def _save_report(self, report: dict[str, Any], report_type: str) -> None:
         """Save a report to disk."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{report_type}_feedback_report_{timestamp}.json"

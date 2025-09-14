@@ -8,6 +8,7 @@ uncertainty quantification in the RAG system.
 import json
 import logging
 import os
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -99,27 +100,29 @@ class ConfidenceCalibrator:
         """Calibrate temperature for binary classification."""
         from scipy.optimize import minimize
 
-        def objective(t):
+        def objective(t: float) -> float:
             calibrated_probs = self._sigmoid(np.log(probs / (1 - probs)) / t)
-            return -np.mean(
-                labels * np.log(calibrated_probs + 1e-10) + (1 - labels) * np.log(1 - calibrated_probs + 1e-10)
+            return float(
+                -np.mean(
+                    labels * np.log(calibrated_probs + 1e-10) + (1 - labels) * np.log(1 - calibrated_probs + 1e-10)
+                )
             )
 
         result = minimize(objective, x0=self.config.temperature_init, method="L-BFGS-B", bounds=[(0.1, 10.0)])
 
-        return result.x[0]
+        return float(result.x[0])
 
     def _calibrate_multiclass_temperature(self, probs: np.ndarray, labels: np.ndarray) -> float:
         """Calibrate temperature for multiclass classification."""
         from scipy.optimize import minimize
 
-        def objective(t):
+        def objective(t: float) -> float:
             calibrated_probs = self._softmax(np.log(probs + 1e-10) / t)
-            return -np.mean([np.log(calibrated_probs[i, labels[i]] + 1e-10) for i in range(len(labels))])
+            return float(-np.mean([np.log(calibrated_probs[i, labels[i]] + 1e-10) for i in range(len(labels))]))
 
         result = minimize(objective, x0=self.config.temperature_init, method="L-BFGS-B", bounds=[(0.1, 10.0)])
 
-        return result.x[0]
+        return float(result.x[0])
 
     def calibrate_isotonic(self, scores: np.ndarray, labels: np.ndarray) -> None:
         """
@@ -130,6 +133,7 @@ class ConfidenceCalibrator:
             labels: Ground truth labels [n_samples]
         """
         if not self.config.isotonic_calibration:
+            logger.info("Isotonic calibration disabled")
             return
 
         logger.info("Calibrating isotonic regression...")
@@ -145,7 +149,8 @@ class ConfidenceCalibrator:
         else:
             scores_2d = scores
 
-        self.isotonic_calibrator.fit(scores_2d, labels)
+        assert self.isotonic_calibrator is not None
+        self.isotonic_calibrator.fit(scores_2d, labels)  # type: ignore[unreachable]
         logger.info("Isotonic calibration complete")
 
     def calibrate_platt(self, scores: np.ndarray, labels: np.ndarray) -> None:
@@ -157,6 +162,7 @@ class ConfidenceCalibrator:
             labels: Ground truth labels [n_samples]
         """
         if not self.config.platt_calibration:
+            logger.info("Platt calibration disabled")
             return
 
         logger.info("Calibrating Platt scaling...")
@@ -172,7 +178,8 @@ class ConfidenceCalibrator:
         else:
             scores_2d = scores
 
-        self.platt_calibrator.fit(scores_2d, labels)
+        assert self.platt_calibrator is not None
+        self.platt_calibrator.fit(scores_2d, labels)  # type: ignore[unreachable]
         logger.info("Platt scaling calibration complete")
 
     def calibrate_confidence(
@@ -202,7 +209,7 @@ class ConfidenceCalibrator:
         # Perform calibration based on method
         if method == "temperature" and self.config.temperature_scaling:
             self.calibrate_temperature(scores, labels)
-            results["temperature"] = self.temperature
+            results["temperature"] = str(self.temperature)
 
         elif method == "isotonic" and self.config.isotonic_calibration:
             self.calibrate_isotonic(scores, labels)
@@ -215,7 +222,7 @@ class ConfidenceCalibrator:
             self.calibrate_temperature(scores, labels)
             self.calibrate_isotonic(scores, labels)
             self.calibrate_platt(scores, labels)
-            results["temperature"] = self.temperature
+            results["temperature"] = str(self.temperature)
 
         # Calculate calibration metrics
         calibrated_scores = self.apply_calibration(scores, method)
@@ -247,15 +254,15 @@ class ConfidenceCalibrator:
             else:
                 return self._softmax(np.log(scores + 1e-10) / self.temperature)
 
-        elif method == "isotonic" and self.isotonic_calibrator:
-            if scores.ndim == 1:
+        if method == "isotonic" and self.isotonic_calibrator:
+            if scores.ndim == 1:  # type: ignore[unreachable]
                 scores_2d = scores.reshape(-1, 1)
             else:
                 scores_2d = scores
             return self.isotonic_calibrator.predict_proba(scores_2d)[:, 1]
 
-        elif method == "platt" and self.platt_calibrator:
-            if scores.ndim == 1:
+        if method == "platt" and self.platt_calibrator:
+            if scores.ndim == 1:  # type: ignore[unreachable]
                 scores_2d = scores.reshape(-1, 1)
             else:
                 scores_2d = scores
@@ -297,12 +304,12 @@ class ConfidenceCalibrator:
 
     def _sigmoid(self, x: np.ndarray) -> np.ndarray:
         """Apply sigmoid function."""
-        return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
+        return np.array(1 / (1 + np.exp(-np.clip(x, -500, 500))))
 
     def _softmax(self, x: np.ndarray) -> np.ndarray:
         """Apply softmax function."""
         exp_x = np.exp(x - np.max(x, axis=-1, keepdims=True))
-        return exp_x / np.sum(exp_x, axis=-1, keepdims=True)
+        return np.array(exp_x / np.sum(exp_x, axis=-1, keepdims=True))
 
     def save_calibrator(self, filepath: str) -> None:
         """Save the calibrated model to disk."""
@@ -321,12 +328,12 @@ class ConfidenceCalibrator:
             json.dump(save_data, f, indent=2)
 
         # Save sklearn calibrators if they exist
-        if self.isotonic_calibrator:
-            isotonic_path = filepath.replace(".json", "_isotonic.pkl")
+        if self.isotonic_calibrator is not None:
+            isotonic_path = filepath.replace(".json", "_isotonic.pkl")  # type: ignore[unreachable]
             joblib.dump(self.isotonic_calibrator, isotonic_path)
 
-        if self.platt_calibrator:
-            platt_path = filepath.replace(".json", "_platt.pkl")
+        if self.platt_calibrator is not None:
+            platt_path = filepath.replace(".json", "_platt.pkl")  # type: ignore[unreachable]
             joblib.dump(self.platt_calibrator, platt_path)
 
         logger.info(f"Calibrator saved to {filepath}")

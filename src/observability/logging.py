@@ -10,7 +10,7 @@ import os
 from typing import Any
 
 try:
-    import logfire
+import logfire
 except Exception:  # pragma: no cover - optional dependency
     logfire = None  # type: ignore
 
@@ -31,6 +31,8 @@ def init_observability(service_name: str = "ai-dev-tasks", environment: str | No
             send_to_logfire="if-token-present",
             environment=env,
             service_name=service_name,
+            # Suppress inspect warning in interactive/one-liner contexts
+            inspect_arguments=False,
         )
         # Instrument all Pydantic AI agents/models if imported anywhere
         try:

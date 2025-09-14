@@ -1,11 +1,13 @@
 from __future__ import annotations
+
+import os
+import sys
 import unicodedata
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Optional, Protocol, Union
+
 from .character_tokenizer import CharacterTokenizer, make_character_tokenizer
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Script-aware tokenizer implementation for multilingual text.

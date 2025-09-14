@@ -189,8 +189,7 @@ class GovernanceAutomator:
         config_path = config_path or self.config_path
 
         try:
-            import yaml
-
+    import yaml
             config = yaml.safe_load(pathlib.Path(config_path).read_text())
         except Exception as e:
             return {"valid": False, "error": f"Failed to load config: {e}"}

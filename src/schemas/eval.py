@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Literal
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, computed_field
 from pydantic.functional_validators import AfterValidator
+
+if TYPE_CHECKING:
+    from src.schemas.validation import ValidationResult
 
 # Reusable constraints
 NonEmptyStr = Annotated[str, AfterValidator(lambda s: s if s.strip() else (_ for _ in ()).throw(ValueError("empty")))]
@@ -74,16 +77,15 @@ class EvaluationRun(BaseModel):
     artifact_paths: dict[str, str] | None = None
 
     @computed_field  # included in dumps/schemas without storing on disk
-    @property
     def n_cases(self) -> int:
         return len(self.cases)
 
-    def model_dump(self, **kwargs):
+    def model_dump(self, **kwargs: Any) -> dict[str, Any]:
         """Override to exclude computed fields from serialization."""
         kwargs.setdefault("exclude", set()).add("n_cases")
         return super().model_dump(**kwargs)
 
-    def model_dump_json(self, **kwargs):
+    def model_dump_json(self, **kwargs: Any) -> str:
         """Override to exclude computed fields from JSON serialization."""
         kwargs.setdefault("exclude", set()).add("n_cases")
         return super().model_dump_json(**kwargs)
@@ -227,7 +229,7 @@ class GoldCase(BaseModel):
         #     raise ValueError(f"{self.id}: decision mode requires expected_decisions")
         return self
 
-    def validate_case(self, config=None):
+    def validate_case(self, config: Any = None) -> ValidationResult:
         """Validate this case against configuration rules."""
         from src.schemas.validation import ValidationConfig, ValidationResult
 

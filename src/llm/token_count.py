@@ -28,7 +28,7 @@ class _OpenAIBPE(TokenCounter):
 
     def __post_init__(self) -> None:
         try:
-            import tiktoken  # type: ignore
+import tiktoken  # type: ignore
         except Exception as exc:  # pragma: no cover - optional dep
             raise RuntimeError("tiktoken is required for openai_bpe token counting") from exc
         # Prefer model-specific encoding; fallback to cl100k_base
