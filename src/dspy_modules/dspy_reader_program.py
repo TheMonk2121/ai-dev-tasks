@@ -386,12 +386,25 @@ class AnswerSig(dspy.Signature):
     answer: str = dspy.OutputField()
 
 
+class GenerateAnswer(dspy.Signature):
+    """Answer questions with short factoid answers."""
+
+    context: str = dspy.InputField(desc="may contain relevant facts")
+    question: str = dspy.InputField()
+    answer: str = dspy.OutputField(desc="often between 1 and 5 words")
+
+
 # ---- Program (baseline: retrieval → compact context → answer)
 class RAGAnswer(dspy.Module):
     def __init__(self) -> None:
         super().__init__()
+        # Configure DSPy with language model
+        lm = _lm()
+        dspy.settings.configure(lm=lm)
         self.cls: dspy.Predict = dspy.Predict(IsAnswerableSig)
-        self.gen: dspy.Predict = dspy.Predict(AnswerSig)
+        self.gen: dspy.Predict = dspy.Predict(GenerateAnswer)
+        # Store LM reference to ensure it's available
+        self._lm = lm
         # Abstention/precision policy (tunable via env)
         # READER_ABSTAIN: 1=enable IsAnswerable gate (default), 0=disable
         # READER_ENFORCE_SPAN: 1=ensure answer substring appears in context (default), 0=disable
@@ -563,6 +576,9 @@ class RAGAnswer(dspy.Module):
                 return dspy.Prediction(answer="I don't know")
 
         # Stage 2: Generate extractive answer
+        # Ensure DSPy is properly configured
+        if dspy.settings.lm is None:
+            dspy.settings.configure(lm=self._lm)
         gen_pred = cast(Any, self.gen(context=context, question=question))
         answer_text = str(getattr(gen_pred, "answer", "")).strip()
         # Optional span enforcement: require answer to be in context

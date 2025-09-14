@@ -24,19 +24,36 @@ def pick_span(context: str, question: str, tag: str) -> str | None:
     if not context or not context.strip():
         return None
 
+    # For general questions, be very selective about span extraction
+    # Only extract spans for specific question types
+    general_question_indicators = ["what", "how", "why", "when", "where", "who"]
+    question_lower = question.lower()
+    is_general_question = any(indicator in question_lower for indicator in general_question_indicators)
+
+    if is_general_question:
+        # For general questions, only extract spans if they're very specific matches
+        # Skip most span extraction to let DSPy generator handle it
+        return None
+
     lines = [line.strip() for line in context.splitlines() if line.strip()]
 
     # 1) Exact file path match (highest priority)
-    # If question mentions file/guide/doc/path/where, prioritize file paths
-    # Note: file_priority detection could be used for future enhancements
+    # Only extract file paths if the question is asking for file paths specifically
+    file_keywords = ["file", "path", "where", "location", "guide", "doc", "document"]
+    question_lower = question.lower()
+    is_file_question = any(keyword in question_lower for keyword in file_keywords)
 
-    for line in lines:
-        # Match file paths like: path/to/file.ext, ./file.ext, file.ext
-        if re.search(r"[A-Za-z0-9/_\-]+\.[A-Za-z0-9]+", line):
-            # Clean up the path
-            path_match = re.search(r"[A-Za-z0-9/_\-]+\.[A-Za-z0-9]+", line)
-            if path_match:
-                return path_match.group(0)
+    if is_file_question:
+        for line in lines:
+            # Match file paths like: path/to/file.ext, ./file.ext, file.ext
+            # Exclude database connection strings and URLs
+            if re.search(r"[A-Za-z0-9/_\-]+\.[A-Za-z0-9]+", line) and not re.search(
+                r"(postgresql://|http://|https://|://)", line
+            ):
+                # Clean up the path
+                path_match = re.search(r"[A-Za-z0-9/_\-]+\.[A-Za-z0-9]+", line)
+                if path_match:
+                    return path_match.group(0)
 
     # 2) SQL lines for db_workflows (second priority)
     if tag == "db_workflows":
@@ -52,14 +69,35 @@ def pick_span(context: str, question: str, tag: str) -> str | None:
         # Look for quoted strings
         quoted = re.findall(r'"([^"]+)"', line)
         if quoted:
-            # Return the longest quoted phrase
-            longest_quote = max(quoted, key=len)
-            if len(longest_quote) <= 180:
-                return longest_quote
+            # Filter out database connection strings and other non-answer content
+            filtered_quoted = [
+                q
+                for q in quoted
+                if not re.search(
+                    r"(postgresql://|http://|https://|://|database|connection|DATABASE_URL|connection_string)", q
+                )
+            ]
+            if filtered_quoted:
+                # Return the longest filtered quoted phrase
+                longest_quote = max(filtered_quoted, key=len)
+                if len(longest_quote) <= 180:
+                    return longest_quote
 
-    # 4) Single line answers (fourth priority)
+    # 4) Single line answers (fourth priority) - be much more selective
     for line in lines:
-        if len(line) <= 180 and not line.startswith("==="):
+        # Only return lines that look like actual answers, not system artifacts
+        if (
+            len(line) <= 180
+            and not line.startswith("===")
+            and not re.search(
+                r"(postgresql://|http://|https://|://|❌|✅|├──|└──|scripts/|test_|MEMORY_SYSTEM|database|connection|os\.getenv|connection_string)",
+                line,
+            )
+            and len(line.split()) >= 3  # At least 3 words
+            and not line.isupper()  # Not all caps
+            and not re.search(r"^[A-Za-z0-9_\-\.]+$", line)  # Not just identifiers
+            and not re.search(r"=.*postgresql://", line)  # Not assignment statements with postgresql
+        ):
             return line
 
     return None
@@ -84,6 +122,16 @@ def normalize_answer(answer: str, tag: str = "") -> str:
     normalized = re.sub(r";+$", "", normalized)  # Remove trailing semicolons
     normalized = re.sub(r"`+$", "", normalized)  # Remove trailing backticks
     normalized = re.sub(r"\s+", " ", normalized)  # Normalize whitespace
+
+    # Remove metadata chunks like [file.md#chunk:abc123]
+    normalized = re.sub(r"\[[^\]]*\.md#[^\]]*\]", "", normalized)
+
+    # Remove excessive whitespace and clean up
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+
+    # Limit length for better readability
+    if len(normalized) > 300:
+        normalized = normalized[:297] + "..."
 
     # Tag-specific normalization for db_workflows
     if tag == "db_workflows":
