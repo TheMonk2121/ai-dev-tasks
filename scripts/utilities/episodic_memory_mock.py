@@ -1,11 +1,12 @@
 from __future__ import annotations
+
+import os
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Episodic Memory Mock Implementation

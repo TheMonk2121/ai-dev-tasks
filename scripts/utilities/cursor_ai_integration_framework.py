@@ -7,10 +7,19 @@ import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, Optional, Union
 from uuid import uuid4
+try:
     from cursor_ai_agent_types import AgentType  # type: ignore[import-untyped]
-from typing import Any, Dict, List, Optional, Union
+except Exception:
+    # Fallback definition when helper module is unavailable
+    class AgentType(Enum):
+        """Enumeration of available agent types."""
+
+        NATIVE_AI = "native_ai"
+        RESEARCH = "research"
+        CODER = "coder"
+        DOCUMENTATION = "documentation"
 #!/usr/bin/env python3
 """
 Cursor AI Integration Framework
@@ -29,15 +38,9 @@ logger = logging.getLogger(__name__)
 
 try:
     # Stable definition across reloads
+    pass
 except Exception:
-
-    class AgentType(Enum):
-        """Enumeration of available agent types."""
-
-        NATIVE_AI = "native_ai"
-        RESEARCH = "research"
-        CODER = "coder"
-        DOCUMENTATION = "documentation"
+    pass
 
 class ContextType(Enum):
     """Enumeration of context types."""

@@ -1,14 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import statistics
+import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any
-import sys
-import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 
 """

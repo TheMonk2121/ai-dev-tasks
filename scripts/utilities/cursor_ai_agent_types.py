@@ -1,6 +1,8 @@
 from __future__ import annotations
-from enum import Enum
+
 import os
+from enum import Enum
+
 #!/usr/bin/env python3
 
 class AgentType(Enum):

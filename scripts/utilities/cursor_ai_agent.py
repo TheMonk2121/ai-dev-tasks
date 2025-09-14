@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 import asyncio
 import json
+import os
+import sys
 import time
 from datetime import datetime
+
 import websockets
-import sys
-import os
+
 #!/usr/bin/env python3
 """
 Cursor AI Agent - Connects to the multi-agent chat system

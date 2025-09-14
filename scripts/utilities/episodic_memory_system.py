@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from scripts.enhanced_memory_orchestrator_with_heuristics import EnhancedMemoryOrchestratorWithHeuristics
-from typing import Any, Dict, List, Optional, Union
+
 #!/usr/bin/env python3
 """
 Episodic Memory System - Complete Integration
