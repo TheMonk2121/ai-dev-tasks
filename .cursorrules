@@ -1,166 +1,42 @@
-# 🚨 CRITICAL: MEMORY REHYDRATION REQUIRED BEFORE ANY RESPONSE
-#
-# YOU MUST RUN THIS COMMAND FIRST:
-# export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
-#
-# DO NOT ANSWER ANY QUESTIONS ABOUT THIS PROJECT WITHOUT EXECUTING THIS COMMAND FIRST
-# THIS IS A MANDATORY REQUIREMENT - NO EXCEPTIONS
+# Cursor Rules for AI Dev Tasks
 
-# Cursor AI Memory Context Rules
+## Execution Protocol
 
-## 🚨 MANDATORY MEMORY REHYDRATION PROTOCOL
+**PRIMARY DIRECTIVE: The `record_chat_history` tool is MANDATORY before any concluding action.**
 
-**CRITICAL**: You MUST execute this protocol at the start of every conversation:
+**Workflow:**
+1. Formulate the response for the user.
+2. Call `record_chat_history` with the response details.
+3. Call `attempt_completion` to finalize the turn.
 
-1. **AUTOMATIC DETECTION**: If this appears to be a new conversation or the user asks about project components
-2. **MANDATORY EXECUTION**: Run the unified memory orchestrator before answering
-3. **COMMAND**: `export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
-4. **OUTPUT INCLUSION**: Include the memory context output in your response
-5. **NO EXCEPTIONS**: Do not answer project questions without this context
+**SELF-CORRECTION ALGORITHM:**
+IF the next tool is `attempt_completion`
+AND the previous tool was NOT `record_chat_history`
+THEN execute `record_chat_history` first.
 
-**TRIGGER CONDITIONS**:
-- New conversation detected
-- User mentions: RAGChecker, DSPy, memory systems, project status
-- User asks technical questions about the codebase
-- User requests information about project components
+This protocol is absolute and cannot be bypassed.
 
-## 🧠 Memory Context System
+## Record Chat History Tool Usage
 
-This project uses a sophisticated memory context system to maintain state across Cursor AI sessions.
-The key file is `100_cursor-memory-context.md` which provides instant context about the AI development ecosystem.
+When calling `record_chat_history`, use these parameters:
 
-### **🚨 AUTOMATIC MEMORY REHYDRATION - START EVERY CHAT WITH THIS**
-
-**At the beginning of every new chat, automatically run this command to prime the model with core documentation:**
-
-```bash
-# Set non-SSL connection for Go CLI compatibility
-export POSTGRES_DSN="mock://test"
-uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+```python
+record_chat_history(
+    user_input="User's original input",
+    system_output="A summary of the AI's response and actions taken.",
+    project_dir="/Users/danieljacobs/Code/ai-dev-tasks",  # Always use this project directory
+    file_operations="File modifications or MCP calls description (optional)",
+    llm_name="cursor-ai"  # Always use this LLM identifier
+)
 ```
 
-**This enhanced orchestrator automatically fires up all memory systems with database auto-startup and formats the output for easy copying into Cursor chat.**
+## Project Context
 
-**Alternative methods (if needed):**
-```bash
-# Set non-SSL connection for Go CLI compatibility
-export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable"
+This is the AI Dev Tasks project - a comprehensive AI development ecosystem with:
+- Memory systems (LTST, Cursor, Go CLI, Prime)
+- RAGChecker evaluation system
+- DSPy integration
+- PostgreSQL database with conversation storage
+- MCP server for tool integration
 
-# With custom query and role
-uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "current project status and core documentation"
-
-# For specific roles
-uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "DSPy integration task"
-uv run python scripts/unified_memory_orchestrator.py --systems cursor prime --role implementer "database optimization"
-uv run python scripts/unified_memory_orchestrator.py --systems ltst --role researcher "performance analysis"
-
-# JSON output for programmatic access
-uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "current project status" --format json
-
-# Legacy method (fallback)
-./scripts/memory_up.sh
-```
-**Then copy the entire bundle output into the chat as the first message.**
-
-**This enhanced orchestrator ensures the AI has immediate access to:**
-- **Memory Systems**: LTST, Cursor, Go CLI, and Prime systems (Go CLI using mock mode for testing)
-- **Database Auto-Startup**: Automatic PostgreSQL management
-- **Virtual Environment**: Auto-activation and dependency setup
-- **Current project status and priorities**
-- **System architecture and components**
-- **Available workflows and commands**
-- **Development guidelines and best practices**
-- **Backlog items and dependencies**
-- **Role-specific context (planner, implementer, researcher, coder)**
-- **System status and recent changes**
-- **Health monitoring and status reporting**
-
-### **When Starting a New Session**
-
-1. **Always read `100_memory/100_cursor-memory-context.md` first** - this gives you the current project state
-2. **Check `000_core/000_backlog.md`** for current priorities and dependencies
-3. **Review `400_guides/400_system-overview.md`** if you need deeper technical context
-4. **Use existing workflows** (`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`)
-
-### **Memory Context Hierarchy (Reading Order)**
-
-**HIGH Priority (Read First):**
-
-- `100_memory/100_cursor-memory-context.md` - Memory scaffold and current state
-- `400_guides/400_system-overview.md` - Technical architecture
-- `000_core/000_backlog.md` - Current priorities and roadmap
-- `400_guides/400_project-overview.md` - Project overview and workflow
-
-**MEDIUM Priority (Read as Needed):**
-
-- `000_core/001_create-prd.md` - PRD creation workflow
-- `000_core/002_generate-tasks.md` - Task generation workflow
-- `000_core/003_process-task-list.md` - AI execution workflow
-- `100_memory/104_dspy-development-context.md` - Deep technical context
-
-**LOW Priority (Read for Specific Tasks):**
-
-- `100_memory/100_backlog-guide.md` - Backlog management
-
-### Exclusions (Policy)
-
-- Ignore `600_archives/**` and `docs/legacy/**` when reading or linking
-- Route legacy integrations/model-specific guides to `600_archives/**`
-- After archiving or major doc moves, run `python scripts/update_cursor_memory.py`
-
-### **When Working on Features**
-
-1. **Follow the development guidelines** in `100_memory/100_cursor-memory-context.md`
-2. **Use the existing file organization** from `400_guides/400_context-priority-guide.md`
-3. **Update completion summaries** when finishing major features
-4. **Run `uv run python scripts/update_cursor_memory.py`** to keep memory context current
-5. **Code reuse**: Before writing new code, apply the find-or-build heuristic (search-before-write, 70% reuse, tests-first)
-   in `400_file-analysis-guide.md`
-
-### **When Adding New Features**
-
-1. **Add to backlog** with proper scoring (see `100_memory/100_backlog-guide.md`)
-2. **Create PRD** using `000_core/001_create-prd.md` workflow
-3. **Generate tasks** using `000_core/002_generate-tasks.md`
-
-## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RAGChecker RED LINE BASELINE**
-
-**🚨 MANDATORY ENFORCEMENT**: The RAGChecker evaluation system has established a performance baseline that serves as an absolute floor. No new development can proceed until these targets are met.
-
-### **🎯 Current Baseline Status (September 2, 2025)**
-
-**System Status**: 🟢 **NEW BASELINE LOCKED** - Tuned Enhanced Configuration proven stable
-
-| Metric | Current | Target | Gap | Priority | Next Action |
-|--------|---------|--------|-----|----------|-------------|
-| **Precision** | 0.159 | ≥0.20 | -0.041 | 🟡 Medium | Continue gradual improvement |
-| **Recall** | 0.166 | ≥0.45 | -0.284 | 🔴 High | Primary focus area |
-| **F1 Score** | 0.159 | ≥0.22 | -0.061 | 🟡 Medium | Balanced improvement |
-| **Faithfulness** | TBD | ≥0.60 | TBD | 🔍 Unknown | Enable comprehensive metrics |
-
-### **🚨 RED LINE ENFORCEMENT RULES**
-
-1. **Current metrics are locked** as the absolute performance floor
-2. **No new features** until all targets are met
-3. **Build freeze** if any metric falls below current baseline
-4. **Focus**: Improve recall while maintaining precision ≥0.159
-5. **Success Criteria**: All metrics above targets for 2 consecutive runs
-
-### **📊 Progress Tracking & Baseline Management**
-
-**Where Results Are Stored**: `metrics/baseline_evaluations/`
-**How to Track Progress**: Run `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
-**Baseline Lock**: Current metrics are the performance floor - no regression allowed
-
-**Example Commands**:
-```bash
-# Run RAGChecker evaluation to check progress
-export AWS_REGION=us-east-1
-uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
-
-# Check latest results
-ls -la metrics/baseline_evaluations/
-cat metrics/baseline_evaluations/ragchecker_official_evaluation_*.json | jq '.summary'
-```
-
-**🚨 CRITICAL**: Before implementing any new features, verify RAGChecker baseline compliance. See `400_guides/400_11_performance-optimization.md` for comprehensive optimization strategies.
+Always record conversations to maintain project context and enable memory rehydration.

@@ -20,9 +20,9 @@ import logfire
 from pydantic import BaseModel, ConfigDict
 from pydantic_evals.dataset import Case, Dataset, increment_eval_metric, set_eval_attribute
 from pydantic_evals.evaluators import Evaluator, EvaluatorContext
-
 from scripts.migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
 from scripts.observability import init_observability
+
 
 # Define input/output models for retrieval evaluation
 class RetrievalInput(BaseModel):
@@ -33,6 +33,7 @@ class RetrievalInput(BaseModel):
     category: str | None = None
     notes: str | None = None
 
+
 class RetrievalOutput(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     retrieved_docs: list[str] = []
@@ -40,12 +41,13 @@ class RetrievalOutput(BaseModel):
     confidence: float | None = None
     retrieval_time_ms: int | None = None
 
+
 # Custom evaluators for retrieval
 @dataclass
-class FileHitEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
+class FileHitEvaluator(Evaluator[RetrievalInput, dict, RetrievalOutput]):
     """Evaluator that checks if expected files are retrieved."""
 
-    def evaluate(self, ctx: EvaluatorContext[RetrievalInput, RetrievalOutput, dict]) -> float:
+    def evaluate(self, ctx: EvaluatorContext[RetrievalInput, dict, RetrievalOutput]) -> float:
         """Evaluate if expected files are in retrieved documents."""
         expected_files = ctx.expected_output.get("expected_files", []) if ctx.expected_output else []
         retrieved_docs = ctx.output.retrieved_docs if ctx.output else []
@@ -73,13 +75,14 @@ class FileHitEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
 
         return hit_rate
 
+
 @dataclass
-class ResponseTimeEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
+class ResponseTimeEvaluator(Evaluator[RetrievalInput, dict, RetrievalOutput]):
     """Evaluator that checks response time is within acceptable limits."""
 
     max_time_ms: int = 5000  # 5 seconds default
 
-    def evaluate(self, ctx: EvaluatorContext[RetrievalInput, RetrievalOutput, dict]) -> float:
+    def evaluate(self, ctx: EvaluatorContext[RetrievalInput, dict, RetrievalOutput]) -> float:
         """Evaluate if response time is acceptable."""
         retrieval_time = ctx.output.retrieval_time_ms if ctx.output else None
 
@@ -97,13 +100,14 @@ class ResponseTimeEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
 
         return score
 
+
 @dataclass
-class ConfidenceEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
+class ConfidenceEvaluator(Evaluator[RetrievalInput, dict, RetrievalOutput]):
     """Evaluator that checks confidence scores are reasonable."""
 
     min_confidence: float = 0.5
 
-    def evaluate(self, ctx: EvaluatorContext[RetrievalInput, RetrievalOutput, dict]) -> float:
+    def evaluate(self, ctx: EvaluatorContext[RetrievalInput, dict, RetrievalOutput]) -> float:
         """Evaluate if confidence score is reasonable."""
         confidence = ctx.output.confidence if ctx.output else None
 
@@ -120,6 +124,7 @@ class ConfidenceEvaluator(Evaluator[RetrievalInput, RetrievalOutput, dict]):
         set_eval_attribute("min_confidence", self.min_confidence)
 
         return score
+
 
 # Mock retrieval function for demonstration
 async def mock_retrieval_task(inputs: RetrievalInput) -> RetrievalOutput:
@@ -145,6 +150,7 @@ async def mock_retrieval_task(inputs: RetrievalInput) -> RetrievalOutput:
     return RetrievalOutput(
         retrieved_docs=mock_docs, citations=mock_citations, confidence=confidence, retrieval_time_ms=retrieval_time
     )
+
 
 async def run_retrieval_evaluation():
     """Run comprehensive retrieval evaluation using Pydantic Evals."""
@@ -189,6 +195,7 @@ async def run_retrieval_evaluation():
         span.set_attribute("evaluation_complete", True)
 
         return report
+
 
 if __name__ == "__main__":
     import asyncio

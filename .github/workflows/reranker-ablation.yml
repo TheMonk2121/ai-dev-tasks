@@ -34,19 +34,19 @@ jobs:
       - name: Cache HuggingFace
         uses: actions/cache@v4
         with:
-          path: ${{ env.RUNNER_TEMP }}/hf
+          path: ${{ runner.temp }}/hf
           key: ${{ runner.os }}-hf-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: ${{ runner.os }}-hf-
 
       - name: Install deps
         env:
-          HF_HOME: $RUNNER_TEMP/hf
+          HF_HOME: ${{ runner.temp }}/hf
         run: |
           uv sync --all-extras --dev
 
       - name: OFF pass (reranker disabled)
         env:
-          HF_HOME: $RUNNER_TEMP/hf
+          HF_HOME: ${{ runner.temp }}/hf
         run: |
           uv run python -m evals_300.tools.run \
             --suite 300_core \
@@ -57,7 +57,7 @@ jobs:
 
       - name: ON pass (reranker enabled)
         env:
-          HF_HOME: $RUNNER_TEMP/hf
+          HF_HOME: ${{ runner.temp }}/hf
         run: |
           uv run python -m evals_300.tools.run \
             --suite 300_core \

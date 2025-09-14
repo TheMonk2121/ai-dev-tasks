@@ -94,6 +94,7 @@ dependencies = [
     "hypothesis>=6.135.24,<6.140.0",
     "pytest>=8.4.2",
     "asyncpg>=0.30.0",
+    "openai>=1.107.1",
 ]
 
 [project.optional-dependencies]
@@ -112,7 +113,6 @@ dev = [
     "py-spy>=0.3.0",
     "radon>=5.1.0",
     "mccabe>=0.7.0",
-    "pyright>=1.1.350",
     "commitizen>=3.12.0",
     "typer>=0.12.0",
     "tqdm>=4.66.0",
@@ -127,6 +127,10 @@ dev = [
     "types-pyyaml>=6.0.12",
     "types-setuptools>=80.9.0",
     "types-urllib3>=1.26.25",
+    # Additional development tools
+    "mypy>=1.18.1",
+    "pyupgrade>=3.20.0",
+    "vulture>=2.14",
 ]
 security = ["bandit>=1.7.5", "safety>=2.3.0", "pip-audit>=2.6.0"]
 ml = [
@@ -210,10 +214,12 @@ norecursedirs = [
 addopts = "--import-mode=importlib --ignore=dspy-rag-system/baseline_rag_performance_test.py --ignore=dspy-rag-system/complex_test.py --ignore=dspy-rag-system/simple_test.py --ignore=dspy-rag-system/quality_comparison_test.py --ignore=dspy-rag-system/tests/"
 
 # Exclude legacy duplicates that conflict with demo tests
-[tool.pyright]
+[tool.basedpyright]
+# Basedpyright configuration (replaces pyright)
 include = ["scripts", "tests"]
 exclude = [
     "venv",
+    ".venv",
     "600_archives",
     "docs/legacy",
     "**/__pycache__",
@@ -231,6 +237,11 @@ reportOptionalMemberAccess = "none"
 reportMissingImports = "none"
 reportAssignmentType = "none"
 reportPossiblyUnboundVariable = "none"
+reportExplicitAny = "none" # Don't warn about explicit Any usage
+reportAny = "none" # Don't warn about inferred Any types
+# Suppress type stub errors that are not actionable for our codebase
+reportIncompatibleVariableOverride = false
+reportIncompatibleMethodOverride = false
 
 [tool.commitizen]
 name = "cz_conventional_commits"
@@ -266,17 +277,3 @@ message_template = "{type}{scope}: {subject}\n\n{body}\n\n{footer}"
 
 [tool.codespell]
 skip = "600_archives/**,.hypothesis/**,artifacts/**,000_core/**,100_memory/**,200_setup/**,300_experiments/**,400_guides/**,500_research/**,PRD-* ,Task-List-* ,datasets/**,docs/**,dashboard/**"
-
-[dependency-groups]
-dev = [
-    "types-boto3>=1.40.29",
-    "types-flask>=1.1.6",
-    "types-jinja2>=2.11.9",
-    "types-psycopg2>=2.9.21.20250809",
-    "types-pyyaml>=6.0.12.20250822",
-    "types-requests>=2.32.4.20250809",
-    "types-setuptools>=80.9.0.20250822",
-    "types-tqdm>=4.67.0.20250809",
-    "types-urllib3>=1.26.25.14",
-    "vulture>=2.14",
-]

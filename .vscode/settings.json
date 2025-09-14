@@ -1,4 +1,7 @@
 {
+    "basedpyright.analysis.exclude": [
+        ".venv/**"
+    ],
     "github-actions.workflows.pinned.workflows": [],
     "yaml.schemas": {
         "https://json.schemastore.org/github-workflow.json": [

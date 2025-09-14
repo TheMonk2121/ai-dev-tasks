@@ -8,14 +8,17 @@ from pydantic import BaseModel, ConfigDict
 from pydantic_evals.dataset import Dataset, increment_eval_metric, set_eval_attribute
 from pydantic_evals.evaluators import Evaluator, EvaluatorContext
 
+
 # 1) Define inputs/outputs
 class QAInputs(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     question: str
 
+
 class QAOutput(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     answer: str
+
 
 # 2) A direct evaluator example
 @dataclass
@@ -27,12 +30,14 @@ class ContainsAnswer(Evaluator[QAInputs, QAOutput, dict]):
         increment_eval_metric("contains_answer", 1 if ok else 0)  # adds to telemetry/metrics
         return ok
 
+
 # 3) Task under test
 async def task(inputs: QAInputs) -> QAOutput:
     """Task function that would call your agent/graph."""
     # Here call your agent/graph; for brevity we'll stub:
     set_eval_attribute("profile", "qa-baseline")
     return QAOutput(answer=f"Echo: {inputs.question}")
+
 
 # 4) Run
 async def main(dataset_path: str):
@@ -64,6 +69,7 @@ async def main(dataset_path: str):
     # For now, just test the basic functionality
     print(f"Dataset created with {len(ds.cases)} cases")
     print("✅ Pydantic Evals integration working")
+
 
 if __name__ == "__main__":
     import asyncio
