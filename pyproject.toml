@@ -83,7 +83,7 @@ dependencies = [
     "pydantic-ai>=0.0.17",
     "pydantic-evals>=1.0.2",
     "httpx>=0.27",
-    "psycopg[binary]>=3.2",
+    "psycopg[binary,pool]>=3.2",
     "pydantic-graph>=0.2",
     "opentelemetry-instrumentation-botocore>=0.57b0",
     "opentelemetry-instrumentation-jinja2>=0.57b0",
@@ -155,25 +155,31 @@ exclude = [
     "600_archives",
     "docs/legacy",
     "**/__pycache__",
-    "dspy-rag-system/**",      # Exclude entire dspy-rag-system for migration
-    "scripts/demos/**",
-    "**/scripts/demos/**",
-    "**/scripts/*evaluation*",
-    "**/scripts/*prototype*",
+    "dspy-rag-system/**",
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP"]
+# Minimal set of critical checks
+select = [
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    "I",  # isort
+    "UP", # pyupgrade
+]
+
 ignore = [
     "E501", # Line too long - handled by black
-    "E402", # Module level import not at top of file - common in scripts
-    "E722", # Do not use bare except - common in error handling
-    "F401", # Imported but unused - common in conditional imports
-    "F841", # Local variable assigned but never used - common in test code
-    "F821", # Undefined name - common in conditional code
-    "F402", # Import shadowed by loop variable - minor issue
-    "E741", # Ambiguous variable name - minor issue
+    "E402", # Module level import not at top of file
+    "E722", # Do not use bare except
+    "F401", # Imported but unused
+    "F841", # Local variable assigned but never used
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",
+    "ANN",
+] # Allow assert in tests, relax annotation rules
 
 [tool.pytest.ini_options]
 # Add src directory to Python path for proper module resolution
@@ -215,8 +221,7 @@ addopts = "--import-mode=importlib --ignore=dspy-rag-system/baseline_rag_perform
 
 # Exclude legacy duplicates that conflict with demo tests
 [tool.basedpyright]
-# Basedpyright configuration (replaces pyright)
-include = ["scripts", "tests"]
+include = ["scripts", "tests", "src"]
 exclude = [
     "venv",
     ".venv",
@@ -227,7 +232,9 @@ exclude = [
 ]
 pythonVersion = "3.12"
 pythonPlatform = "Darwin"
-extraPaths = ["scripts"]
+extraPaths = ["scripts", "src"]
+
+# Minimal type checking
 reportMissingTypeStubs = "none"
 reportUnknownMemberType = "none"
 reportUnknownVariableType = "none"
@@ -237,9 +244,10 @@ reportOptionalMemberAccess = "none"
 reportMissingImports = "none"
 reportAssignmentType = "none"
 reportPossiblyUnboundVariable = "none"
-reportExplicitAny = "none" # Don't warn about explicit Any usage
-reportAny = "none" # Don't warn about inferred Any types
-# Suppress type stub errors that are not actionable for our codebase
+reportExplicitAny = "none"
+reportAny = "none"
+
+# Suppress type stub errors
 reportIncompatibleVariableOverride = false
 reportIncompatibleMethodOverride = false
 
@@ -276,4 +284,4 @@ message_template = "{type}{scope}: {subject}\n\n{body}\n\n{footer}"
 # venv-seed = []  # Don't install pip/setuptools/wheel by default
 
 [tool.codespell]
-skip = "600_archives/**,.hypothesis/**,artifacts/**,000_core/**,100_memory/**,200_setup/**,300_experiments/**,400_guides/**,500_research/**,PRD-* ,Task-List-* ,datasets/**,docs/**,dashboard/**"
+skip = "600_archives/**,.hypothesis/**,artifacts/**,000_core/**,100_memory/**,200_setup/**,300_experiments/**,400_guides/**,500_research/**,PRD-* ,Task-List-* ,300_evals/datasets/**,docs/**,dashboard/**"
