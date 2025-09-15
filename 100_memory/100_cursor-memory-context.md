@@ -10,7 +10,7 @@ ROLE_PINS:
   - coder
 CONTENT_TYPE: guide
 COMPLEXITY: intermediate
-LAST_UPDATED: 2025-09-04
+LAST_UPDATED: 2025-09-11
 NEXT_REVIEW: 2025-01-31
 RELATED_FILES:
   - 400_01_memory-system-architecture.md
@@ -416,6 +416,13 @@ uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cl
 uv run python scripts/episodic_memory_system.py --query "implement database error handling" --role coder
 uv run python scripts/episodic_memory_system.py --store-completion --task-description "implemented error handling" --input-text "database code" --output-text "error handling with retries" --agent cursor_ai --task-type database
 uv run python scripts/episodic_memory_system.py --stats
+
+# Enhanced Memory Orchestrator (Advanced Context Injection)
+uv run python scripts/enhanced_memory_orchestrator.py --query "current project status" --role planner
+uv run python scripts/enhanced_memory_orchestrator_with_heuristics.py --query "implement authentication" --role coder
+
+# Memory Consolidation Demo
+uv run python scripts/demo_memory_consolidation.py
 ```
 
 ### **DSPy Role Capabilities**
@@ -559,7 +566,7 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 
 1. **Check Existing Documentation**: Search for existing guides in `400_guides/` before creating new files
 2. **Reference Tier System**: Use `400_guides/400_06_memory-and-context-systems.md` for proper categorization
-3. **Follow Naming Conventions**: Use `200_setup/200_naming-conventions.md` for file placemen
+3. **Follow Naming Conventions**: Use `200_setup/400_guides/400_05_codebase-organization-patterns.md` for file placemen
 4. **Protect Core Files**: NEVER delete or suggest deletion of Tier 1 files (Priority 0-10)
 
 ### **Documentation Tier Categories**
@@ -571,7 +578,7 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 ### **Documentation Creation Checklist**
 - [ ] Search existing `400_guides/` for similar contain
 - [ ] Check `400_guides/400_06_memory-and-context-systems.md` for proper categorization
-- [ ] Verify placement using `200_setup/200_naming-conventions.md`
+- [ ] Verify placement using `200_setup/400_guides/400_05_codebase-organization-patterns.md`
 - [ ] Ensure no Tier 1 files are affected
 - [ ] Add appropriate `ANCHOR_PRIORITY` and `ROLE_PINS`
 - [ ] Update cross-references in related files
@@ -1278,7 +1285,7 @@ uv run python scripts/generate_prd.py B-1061 --generate-prd
 1. **New Sessions**: `400_guides/400_00_getting-started-and-index.md` → `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_03_system-overview-and-architecture.md`
 2. **Development**: `400_guides/400_00_getting-started-and-index.md` → workflow files → implementation guides
 3. **Research**: `500_research/500_research-index.md` → `500_research/500_dspy-research.md`, `500_research/500_rag-system-research.md`
-4. **File Management**: `400_guides/400_01_documentation-playbook.md` (MANDATORY) → `200_setup/200_naming-conventions.md`
+4. **File Management**: `400_guides/400_01_documentation-playbook.md` (MANDATORY) → `200_setup/400_guides/400_05_codebase-organization-patterns.md`
 
 ### **🔗 Cross-Reference System**
 

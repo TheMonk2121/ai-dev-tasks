@@ -699,7 +699,7 @@ class IntegrationTestSuite:
                 test_result = await test["function"]()
                 results["test_results"][test["name"]] = {
                     "status": "passed" if test_result else "failed",
-                    "result": test_resul
+                    "result": test_result
                 }
 
                 if test_result:
@@ -741,7 +741,7 @@ class IntegrationTestSuite:
 - [ ] **Retry logic** implemented with backoff
 - [ ] **Monitoring** active for all integrations
 - [ ] **Security** measures implemented
-- [ ] **Testing** comprehensive and automated
+- [ ] **Testing** comprehensive and automated (`uv run pytest -q`)
 - [ ] **Documentation** complete and accurate
 - [ ] **Performance** optimized and tracked
 
@@ -750,7 +750,7 @@ class IntegrationTestSuite:
 - [ ] **Version control** implemented
 - [ ] **Performance tracking** active
 - [ ] **Resource optimization** implemented
-- [ ] **Quality assurance** processes in place
+- [ ] **Quality assurance** processes in place (`uv run pytest -q`)
 - [ ] **Documentation** complete and current
 - [ ] **Security** measures implemented
 
@@ -994,7 +994,7 @@ Add to your Cursor settings:
 #### **1. Start MCP Server**
 ```bash
 # Start the MCP server
-python3 scripts/mcp_server.py
+uv run python scripts/mcp_server.py
 
 # Verify server is running
 curl http://localhost:3000/health
@@ -1161,31 +1161,31 @@ class CICDPipelineIntegration:
 #### **Workflow Automation Commands**
 ```bash
 # Trigger n8n workflows
-python3 scripts/trigger_n8n_workflow.py --type backlog_management --data '{"action": "update_status"}'
+uv run python scripts/trigger_n8n_workflow.py --type backlog_management --data '{"action": "update_status"}'
 
 # Monitor workflow execution
-python3 scripts/monitor_workflows.py --active-only
+uv run python scripts/monitor_workflows.py --active-only
 
 # Validate workflow configuration
-python3 scripts/validate_workflow_config.py --all
+uv run python scripts/validate_workflow_config.py --all
 
 # Generate workflow reports
-python3 scripts/generate_workflow_report.py --output workflow_report.md
+uv run python scripts/generate_workflow_report.py --output workflow_report.md
 ```
 
 #### **CI/CD Pipeline Commands**
 ```bash
 # Run CI/CD pipeline
-python3 scripts/run_cicd_pipeline.py --config pipeline_config.yaml
+uv run python scripts/run_cicd_pipeline.py --config pipeline_config.yaml
 
 # Check pipeline status
-python3 scripts/check_pipeline_status.py --pipeline-id latest
+uv run python scripts/check_pipeline_status.py --pipeline-id latest
 
 # Validate quality gates
-python3 scripts/validate_quality_gates.py --stric
+uv run python scripts/validate_quality_gates.py --strict
 
 # Generate pipeline reports
-python3 scripts/generate_pipeline_report.py --output pipeline_report.md
+uv run python scripts/generate_pipeline_report.py --output pipeline_report.md
 ```
 
 ### **Automation Quality Gates**
@@ -1482,6 +1482,8 @@ for query, response in conversations:
 - **2025-01-XX**: Integrated with AI frameworks and performance optimization
 - **2025-01-XX**: Added comprehensive security and testing frameworks
 - **2025-09-13**: Added Cursor IDE integration documentation
+- **2025-09-15**: Updated all command examples to use UV package management standards
+- **2025-09-15**: Aligned testing references with current UV standards and testing markers
 
 ---
 

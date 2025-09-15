@@ -1,0 +1,28 @@
+---
+description: Simplified linting configuration for Python 3.12 projects
+globs:
+  - '**/*.py'
+alwaysApply: false
+---
+
+# Linting Configuration Guidelines
+
+## Linting Principles
+- Focus on critical, high-impact issues
+- Avoid blocking development with excessive warnings
+- Prioritize code readability and functionality
+
+## Recommended Approach
+- Use minimal, targeted linting
+- Manually review and address critical warnings
+- Gradually increase linting strictness as project matures
+
+## Temporary Linting Suspension
+- Linting is currently suspended to reduce noise
+- Periodically re-enable and review linter output
+- Incrementally address any critical issues
+
+## Best Practices
+- Manually run linters before commits
+- Use type hints and clear code structure
+- Prioritize code clarity over strict rule adherence

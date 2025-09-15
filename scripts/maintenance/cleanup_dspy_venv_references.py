@@ -16,7 +16,6 @@ import os
 import re
 from pathlib import Path
 
-
 def find_dspy_venv_references() -> list[tuple[str, int, str]]:
     """Find all files with DSPy venv references."""
     references = []

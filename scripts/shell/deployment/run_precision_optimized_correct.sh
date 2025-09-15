@@ -15,7 +15,7 @@ export AWS_REGION=us-east-1
 export POSTGRES_DSN="mock://test"
 
 # Set the optimized configuration file
-export RAGCHECKER_ENV_FILE="configs/precision_optimized_bedrock_correct.env"
+export RAGCHECKER_ENV_FILE="300_evals/configs/precision_optimized_bedrock_correct.env"
 
 echo "🔧 Loading precision optimized configuration (correct variables)..."
 echo "   RAGCHECKER_CONCISE=1 (response limiting)"

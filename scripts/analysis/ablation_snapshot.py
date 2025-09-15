@@ -7,7 +7,8 @@ from typing import Any, Optional, Union
 
 from _bootstrap import ROOT, SRC  # noqa: F401
 from evals.gold import gold_hit
-from scripts.migrate_to_pydantic_evals import load_eval_cases
+# FIXME: Update this import path after reorganization
+# from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries

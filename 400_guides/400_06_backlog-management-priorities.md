@@ -239,13 +239,13 @@ class BacklogItemScore:
 ### **Weekly Maintenance**
 ```bash
 # Check for stale items (older than 7 days)
-python3 scripts/backlog_status_tracking.py --check-stale --stale-days 7
+uv run python scripts/backlog_status_tracking.py --check-stale --stale-days 7
 
 # Update item status and progress
-python3 scripts/backlog_status_tracking.py --update-status
+uv run python scripts/backlog_status_tracking.py --update-status
 
 # Validate dependencies and relationships
-python3 scripts/backlog_status_tracking.py --validate-dependencies
+uv run python scripts/backlog_status_tracking.py --validate-dependencies
 ```
 
 ### **Monthly Review**
@@ -272,25 +272,25 @@ python3 scripts/backlog_status_tracking.py --validate-dependencies
 ### **Status Tracking**
 ```bash
 # Start work on an item
-python3 scripts/backlog_status_tracking.py --start-work B-XXXX
+uv run python scripts/backlog_status_tracking.py --start-work B-XXXX
 
 # Update progress
-python3 scripts/backlog_status_tracking.py --update-progress B-XXXX --progress 50
+uv run python scripts/backlog_status_tracking.py --update-progress B-XXXX --progress 50
 
 # Mark as complete
-python3 scripts/backlog_status_tracking.py --complete B-XXXX
+uv run python scripts/backlog_status_tracking.py --complete B-XXXX
 ```
 
 ### **Dependency Management**
 ```bash
 # Check blocking dependencies
-python3 scripts/backlog_status_tracking.py --check-dependencies B-XXXX
+uv run python scripts/backlog_status_tracking.py --check-dependencies B-XXXX
 
 # Resolve dependency
-python3 scripts/backlog_status_tracking.py --resolve-dependency B-XXXX B-YYYY
+uv run python scripts/backlog_status_tracking.py --resolve-dependency B-XXXX B-YYYY
 
 # Add new dependency
-python3 scripts/backlog_status_tracking.py --add-dependency B-XXXX B-YYYY
+uv run python scripts/backlog_status_tracking.py --add-dependency B-XXXX B-YYYY
 ```
 
 ## 📋 **Checklists**
@@ -447,31 +447,31 @@ class RoadmapManager:
 #### **Strategic Planning Commands**
 ```bash
 # Define product vision
-python3 scripts/define_product_vision.py --input vision_data.yaml --output vision_summary.md
+uv run python scripts/define_product_vision.py --input vision_data.yaml --output vision_summary.md
 
 # Create roadmap item
-python3 scripts/create_roadmap_item.py --title "Feature X" --phase "phase_2" --priority "high"
+uv run python scripts/create_roadmap_item.py --title "Feature X" --phase "phase_2" --priority "high"
 
 # Generate roadmap repor
-python3 scripts/generate_roadmap_report.py --output roadmap_report.md
+uv run python scripts/generate_roadmap_report.py --output roadmap_report.md
 
 # Validate roadmap consistency
-python3 scripts/validate_roadmap.py --full-check
+uv run python scripts/validate_roadmap.py --full-check
 ```
 
 #### **Roadmap Management Commands**
 ```bash
 # Update roadmap status
-python3 scripts/update_roadmap_status.py --item-id RM-001 --status "in_progress"
+uv run python scripts/update_roadmap_status.py --item-id RM-001 --status "in_progress"
 
 # Check roadmap dependencies
-python3 scripts/check_roadmap_dependencies.py --item-id RM-001
+uv run python scripts/check_roadmap_dependencies.py --item-id RM-001
 
 # Generate roadmap visualization
-python3 scripts/generate_roadmap_viz.py --output roadmap_visualization.html
+uv run python scripts/generate_roadmap_viz.py --output roadmap_visualization.html
 
 # Export roadmap data
-python3 scripts/export_roadmap.py --format json --output roadmap_data.json
+uv run python scripts/export_roadmap.py --format json --output roadmap_data.json
 ```
 
 ### **Product Management Quality Gates**

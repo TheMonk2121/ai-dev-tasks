@@ -1,0 +1,421 @@
+[0;34m🧠 Unified Memory System Launcher[0m
+
+[0;32m✅ Virtual environment found[0m
+[0;34m📝 Query:[0m current project status and core documentation
+[0;34m🎭 Role:[0m researcher
+[0;34m🔧 Format:[0m cursor
+
+[0;32m🚀 Generating Unified Memory Context...[0m
+
+# 🧠 **UNIFIED MEMORY CONTEXT BUNDLE**
+
+## 📋 **Project Overview**
+
+
+
+<!-- CONTEXT_INDEX
+{
+  "files": [
+    {"path": "100_memory/100_cursor-memory-context.md", "role": "entry"},
+    {"path": "000_core/000_backlog.md", "role": "priorities"},
+    {"path": "000_core/004_development-roadmap.md", "role": "roadmap"},
+    {"path": "400_guides/400_getting-started.md", "role": "getting-started"},
+    {"path": "400_guides/400_system-overview.md", "role": "architecture"},
+    {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
+    {"path": "400_guides/400_ai-constitution.md", "role": "ai-safety"},
+    {"path": "400_guides/400_file-analysis-guide.md", "role": "file-analysis"},
+
+    {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
+    {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
+    {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
+    {"path": "400_guides/400_development-workflow.md", "role": "development-workflow"},
+    {"path": "400_guides/400_deployment-operations.md", "role": "deployment-operations"},
+    {"path": "400_guides/400_integration-security.md", "role": "integration-security"},
+    {"path": "400_guides/400_migration-upgrade-guide.md", "role": "migration"},
+    {"path": "400_guides/400_performance-optimization-guide.md", "role": "performance"},
+    {"path": "400_guides/400_few-shot-context-examples.md", "role": "few-shot"},
+    {"path": "400_guides/400_lean-hybrid-memory-system.md", "role": "memory-system"},
+    {"path": "scripts/task_generation_automation.py", "role": "automation"},
+    {"path": "scripts/backlog_status_tracking.py", "role": "automation"},
+    {"path": "scripts/venv_manager.py", "role": "dev-environment"},
+    {"path": "scripts/run_workflow.py", "role": "dev-environment"},
+    {"path": "scripts/README_venv_manager.md", "role": "dev-environment"},
+    {"path": "400_guides/400_backlog-status-tracking-guide.md", "role": "quick-reference"},
+    {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
+    {"path": "500_research-index.md", "role": "research-index"},
+    {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"}
+  ]
+}
+CONTEXT_INDEX -->
+
+<!-- ANCHOR_KEY: memory-context -->
+<!-- ANCHOR_PRIORITY: 0 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
+
+# Cursor Memory Context
+
+## 🔎 TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state
+| Check backlog and system overview for next priorities |
+
+<!-- ANCHOR_KEY: tldr -->
+<!-- ANCHOR_PRIORITY: 0 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
+
+## ⚡ AI Rehydration Quick Start {#quick-start}
+
+Read these files in order (1–2 min total):
+
+1. **`400_guides/400_getting-started.md`** – Entry point and project overview ← **START HERE**
+2. **`400_guides/400_guide-index.md`** – Navigation hub for all guides
+3. **`100_memory/100_cursor-memory-context.md`** – current state and rules
+4. **`000_core/000_backlog.md`** – priorities and dependencies
+5. **`400_guides/400_development-workflow.md`** – Complete development workflow
+
+## 🔧 Development Environment Setup {#dev-env}
+
+**Virtual Environment Management**: All development requires proper venv setup.
+
+```bash
+# Check venv status
+python3 scripts/venv_manager.py --check
+
+# Run workflows with automatic venv management
+python3 scripts/single_doorway.py generate "feature"
+```
+
+**Required Dependencies**:
+- `psycopg2` - Database connectivity
+- `dspy` - Core AI framework
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+See `scripts/README_venv_manager.md` for complete documentation.
+
+<!-- ANCHOR_KEY: quick-start -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
+
+## 🧠 Hydration Bundle Policy {#hydration-policy}
+
+The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **Industry-Grade Observability**:
+
+### **Core Philosophy**
+- **Semantic-first**: Vector search does the heavy lifting
+- **Tiny pins**: Only 200 tokens for guardrails (style, conventions, repo map)
+- **Kill-switches**: Simple CLI flags to disable features when needed
+- **Observability**: Stanford/Berkeley/Anthropic-grade structured tracing and verification
+
+## 📚 Documentation Tiering System {#doc-tiering}
+
+
+... (truncated)
+
+## 🏗️ **System Architecture**
+
+<!-- ANCHOR_KEY: system-overview -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+
+# 🏗️ System Overview
+
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - System overview maintained
+
+- **Priority**: 🔥 Critical - Essential for technical understanding
+
+- **Points**: 5 - High complexity, architectural importance
+
+- **Dependencies**: 400_guides/400_context-priority-guide.md, 100_memory/100_cursor-memory-context.md
+
+- **Next Steps**: Update as system architecture evolves
+
+{#tldr}
+
+## 🔎 TL;DR
+
+| what this file is | read when | do next |
+|---|---|---|
+| Technical architecture and component overview for the AI development ecosystem | You need the technical mental model
+or are integrating components | Jump to `#architecture` and `#core-components`; then review relevant 400-series guides |
+
+- **what this file is**: Architecture map and component responsibilities for the AI development ecosystem.
+
+- **read when**: You need the technical mental model or are integrating components.
+
+- **do next**: Jump to `#architecture` and `#core-components`; then review `400_guides/400_development-workflow.md`
+and `400_guides/400_deployment-operations.md`.
+
+- **anchors**: `architecture`, `context-management`, `core-components`, `workflow`, `security`, `performance`,
+`integration`, `deployment`, `testing`
+
+<!-- ANCHOR_KEY: tldr -->
+<!-- ANCHOR_PRIORITY: 0 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+
+## 🧭 Critical Path
+
+1) `100_memory/100_cursor-memory-context.md` → 2) `000_core/000_backlog.md` → 3) `400_guides/400_system-overview.md` →
+4) topic guide
+(testing/deploy/integration/etc.)
+
+## 🔧 Development Environment
+
+**Virtual Environment Management**: All development requires proper venv setup.
+
+```bash
+# Check venv status
+python3 scripts/venv_manager.py --check
+
+# Run workflows with automatic venv management
+python3 scripts/run_workflow.py generate "feature"
+```
+
+**Required Dependencies**:
+- `psycopg2` - Database connectivity
+- `dspy` - Core AI framework
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+See `scripts/README_venv_manager.md` for complete documentation.
+
+## 🗺️ Map of Topics
+
+| Topic | Anchor | Why | Next |
+|---|---|---|---|
+| Architecture | #architecture | Mental model of the system | Dive into core components |
+| Context management | #context-management | How context is stored, cached, and shared | See integration patterns |
+| Core components | #core-components | What runs where | See testing, performance |
+| Workflow | #workflow | How work flows end-to-end | Backlog → PRD → Tasks → Execute |
+| Security | #security | Safety, validation, monitoring | Security guide
+(400_guides/400_security-best-practices-guide.md) |
+| Performance | #performance | Metrics, tuning, troubleshooting | Performance guide |
+| Integration | #integration | Component/API integration | Integration guide |
+| Deployment | #deployment | Procedures and environments | Deployment guide |
+| Migration | #migration | Changes and rollbacks | Migration guide |
+| Testing | #testing | Strategy and gates | Testing guide |
+
+<!-- ANCHOR: architecture -->
+{#architecture}
+
+<!-- ANCHOR_KEY: architecture -->
+<!-- ANCHOR_PRIORITY: 20 -->
+<!-- ROLE_PINS: ["implementer"] -->
+
+## Architecture
+
+├─────────────────────────────────────────────────────────────────┤
+│  🔧 Core Systems                                            │
+│  ├── DSPy Multi-Agent System (Local Model Inference)        │
+│  ├── DSPy RAG System (Document Processing)                  │
+│  ├── Scribe System (Context Capture & Summarization)        │
+│  │   ├── Session Recording & Context Capture                │
+│  │   ├── Insight Extraction & Summarization                 │
+│  │   ├── Progress Tracking & Milestone Management           │
+
+... (truncated)
+
+## 📋 **Current Priorities**
+
+<!-- ANCHOR_KEY: backlog -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["planner"] -->
+
+# 📋 Backlog
+
+## 🔎 TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Prioritized backlog with AI scoring and execution flow | When selecting next work item or checking project status |
+Check P0 lane and AI-executable queue; follow PRD skip rule |
+
+- **what this file is**: Prioritized roadmap with AI scoring, lanes, and execution flow.
+
+- **read when**: Selecting next work or checking dependencies and status.
+
+- **do next**: See `#p0-lane` and `#ai-executable-queue-003`; follow PRD rule in "PRD Rule & Execute Flow".
+
+- **anchors**: `p0-lane`, `p1-lane`, `p2-lane`, `ai-executable-queue-003`, `live-backlog`, `completed-items`
+
+<!-- ANCHOR_KEY: tldr -->
+<!-- ANCHOR_PRIORITY: 0 -->
+<!-- ROLE_PINS: ["planner"] -->
+
+<!-- ANCHOR: toc -->
+
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Backlog maintained and current
+
+- **Priority**: 🔥 Critical - Essential for development planning
+
+- **Points**: 5 - High complexity, strategic importance
+
+- **Dependencies**: 400_guides/400_context-priority-guide.md, 100_memory/100_cursor-memory-context.md
+
+- **Next Steps**: Update priorities and track completion
+
+## Quick Navigation
+
+- [P0 Lane](#p0-lane)
+
+- [P1 Lane](#p1-lane)
+
+- [P2 Lane](#p2-lane)
+
+- [AI‑Executable Queue (003)](#ai-executable-queue-003)
+
+- [Live Backlog](#live-backlog)
+
+- [Completed Items](#-completed-items-context-preservation)
+
+<!-- ANCHOR: governance-p0 -->
+
+## Governance P0 (Non-Negotiables)
+
+These must be addressed before or alongside feature work to maintain cognitive digestibility and safety.
+
+- **Critical Policies surfacing**: Add a "Critical Policies (Read First)" callout in
+`100_memory/100_cursor-memory-context.md` (Safety Ops, Exclusions, Validators/Tests, Post‑Change `python3
+scripts/update_cursor_memory.py`). Cross‑link from `400_guides/400_system-overview.md` (Safety Ops anchor) and
+`400_guides/400_context-priority-guide.md` (mini‑index).
+
+- **Cursor‑native focus cleanup**: Remove or annotate legacy model references (Mistral, Yi‑Coder) in `400_*` guides; add
+a validator check to prevent reintroduction.
+
+- **Research summaries consolidation**: Merge `500_research/500_research-summary.md` and
+`500_research-analysis-summary.md` into `500_research/500_research-index.md`; archive originals with deprecation notes.
+
+- **Markdown lint remediation plan**:
+- Config + light auto-fixes (30–60 minutes): Keep MD034 (no bare URLs) and MD040 (code fence language) enabled and fix
+across repo. Replace bare URLs with `[text](url)`. Add language tags to fenced code blocks. Run
+`scripts/fix_markdown_blanks.py` to settle heading/list spacing.
+- Full cleanup (strict conformance without disabling) (2–4 hours): Remove inline HTML anchors, rework heading levels,
+and normalize spacing across long-form guides.
+
+<!-- ANCHOR: p0-lane -->
+
+<!-- ANCHOR_KEY: p0-lane -->
+<!-- ANCHOR_PRIORITY: 5 -->
+<!-- ROLE_PINS: ["planner"] -->
+
+## P0 Lane
+
+- B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0)
+
+- B‑062 — Context Priority Guide Auto-Generation (score 8.0) ✅ **COMPLETED**
+
+## P1 Lane
+
+- B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
+
+- B‑077 — Code Review Process Upgrade with Performance Reporting (score 7.5)
+
+- B‑1002 — Create Comprehensive Root README for External Discovery (score 6.5)
+<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding -->
+<!-- est_hours: 4 -->
+<!-- acceptance: Root README provides complete project overview without requiring internal file links -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-external"] -->
+<!-- reference_cards: ["500_reference-cards.md#github-readme"] -->
+<!-- tech_footprint: Documentation + External Visibility + Onboarding -->
+<!-- problem: Project lacks external-facing README for GitHub discovery and zero-context onboarding -->
+<!-- outcome: Professional 500-line README that showcases the AI development ecosystem without requiring internal documentation -->
+
+- B‑999 — Session Registry Core Implementation (score 7.0) ✅ **COMPLETED**
+<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Implement comprehensive code review testing suite with performance reporting -->
+<!-- est_hours: 8 -->
+<!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
+<!-- lessons_applied: ["400_guides/400_development-workflow.md#performance-optimization", "400_guides/400_development-workflow.md#quality-standards"] -->
+<!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
+<!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
+<!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
+<!-- outcome: Canonical code review process with integrated performance monitoring and automated testing suite -->
+
+- B‑1000 — Session Registry Testing Suite (score 6.5) ✅ **COMPLETED**
+<!--score: {bv:3, tc:4, rr:3, le:2, effort:2, deps:["B-999"]}-->
+
+- B‑1001 — Session Registry Documentation Integration (score 5.5) ✅ **COMPLETED**
+<!--score: {bv:3, tc:2, rr:3, le:2, effort:1, deps:["B-999", "B-1000"]}-->
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Implement comprehensive code review testing suite with performance reporting -->
+<!-- est_hours: 8 -->
+<!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
+<!-- lessons_applied: ["400_guides/400_development-workflow.md#performance-optimization", "400_guides/400_development-workflow.md#quality-standards"] -->
+<!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
+<!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
+<!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
+<!-- outcome: Canonical code review process with integrated performance monitoring and automated testing suite -->
+
+- B‑084 — Research-Based Schema Design for Extraction (score 6.0)
+
+- B‑050 — Enhance 002 Task Generation with Automation (score 5.5)
+
+- B‑052‑f — Enhanced Repository Maintenance Safety System (score 5.1)
+
+- B‑052‑b — Config Externalization to TOML + Ignore (score 5.0)
+
+- B‑1004 — Simplify Overengineered Quality Gates (score 7.5)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:3, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Strip down pre-commit hooks to essentials, remove dead database sync check, simplify conflict detection -->
+<!-- est_hours: 6 -->
+<!-- acceptance: Quality gates are fast (<5s), simple, reliable, and focused on actual problems -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#overengineering-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#quality-gates"] -->
+<!-- tech_footprint: Pre-commit + Ruff + Pyright + Security + Testing -->
+
+... (truncated)
+
+## 🔬 **Researcher Context**
+
+File not found: 500_research-index.md
+
+## 🔧 **Development Environment**
+
+- **Virtual Environment**: ✅ Active
+- **Python Version**: Python 3.12.11
+- **Project Root**: /Users/danieljacobs/Code/ai-dev-tasks
+- **Query**: current project status and core documentation
+- **Role**: researcher
+- **Timestamp**: Mon Aug 25 02:55:02 CDT 2025
+
+## 📝 **Recent Changes**
+
+96273ef3 feat: Phase 1 - Extract high-value code components from clean-history
+a4562ca2 fix: resolve broken links in README.md and update cSpell configuration
+5d2caa9a docs: update worklog B-096 with latest backlog changes
+a95ceace feat: add B-1008 implementation plan for hybrid JSON backlog system
+5b6f7508 fix: complete memory system integration for guide restructuring
+
+## 🟢 **System Status**
+
+- **Database Sync**: ❌ Issues
+- **LTST Memory**: ✅ Available
+- **Go CLI**: ✅ Available
+
+## 💡 **Usage Tips**
+
+- Copy this bundle into Cursor chat for immediate context
+- Use different roles (planner, implementer, researcher, coder) for specific context
+- Check system status above for troubleshooting
+- Run `./scripts/memory_up.sh -h` for more options
+
+---
+*Generated by Unified Memory System Launcher - Mon Aug 25 02:55:03 CDT 2025*
+
+
+[0;32m✅ Unified memory context generated successfully![0m
+
+[0;34m💡 Tips:[0m
+  - Copy the formatted output above into Cursor chat
+  - Use --format json for programmatic access
+  - Use --role to get role-specific context
+  - This provides comprehensive project context without relying on broken rehydration systems

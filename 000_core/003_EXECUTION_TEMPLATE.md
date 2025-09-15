@@ -7,7 +7,7 @@
 > TL;DR
 > - Drive a PRD/backlog task list to completion with uv-only one-command flows and CI-verifiable gates.
 > - Rehydrate memory before execution; declare provider/profile/seed; prefer local providers for PR gates.
-> - Respect RAGChecker baseline: no regression; document seeds and dataset hashes.
+> - Respect evaluation standards: document seeds and dataset hashes for reproducibility.
 
 This replaces ad‑hoc Python calls and emoji‑heavy formatting with the current stack: `uv` for envs/execution, `pydantic-settings` for configuration, Postgres (+pgvector; optional TimescaleDB), evaluation **profiles** (`real`/`gold`/`mock`), provider selection (Bedrock/Ollama/OpenAI/Synthetic), dual environments (local macOS vs Docker Linux), CI gates, deterministic seeds, artifact provenance, and 400_ documentation governance.
 
@@ -245,7 +245,7 @@ If a step fails:
 - [ ] Security reviewed
 - [ ] Resilience tested (timeouts/retries/failover)
 - [ ] Edge cases covered
-- [ ] Eval gates met on gold profile (RAGChecker baseline not regressed)
+- [ ] Eval gates met on gold profile (retrieval micro ≥ 0.85; macro ≥ 0.75; reader F1 ≥ 0.60 or waiver)
 ```
 
 ### Eval & provider gates (add to each relevant task)

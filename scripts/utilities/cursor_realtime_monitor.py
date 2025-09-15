@@ -17,9 +17,9 @@ from typing import cast
 import psutil
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 # Import our working integration
-from common.db_dsn import resolve_dsn  # type: ignore[import-untyped]
+from src.common.db_dsn import resolve_dsn
 
 from .cursor_working_integration import CursorWorkingIntegration
 
@@ -28,7 +28,7 @@ class CursorRealtimeMonitor:
     """Real-time monitoring system for Cursor AI conversations."""
 
     def __init__(self, dsn: str | None = None) -> None:
-        self.dsn: str | None = dsn or resolve_dsn()
+        self.dsn: str = dsn or resolve_dsn()
         self.current_integration: CursorWorkingIntegration | None = None
         self.monitoring_active: bool = False
         self.session_file: str = os.path.expanduser("~/.cursor_realtime_monitor.json")

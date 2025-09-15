@@ -5,7 +5,7 @@ import glob
 import json
 import os
 import time
-from typing import Any, Optional, Union
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -19,6 +19,7 @@ Usage:
   python3 scripts/abp_validation.py --profile precision_elevated --max-age-days 2 [--ci-mode] [--strict]
 """
 
+
 def _fresh(path: str, max_age_days: int) -> bool:
     try:
         mtime = os.path.getmtime(path)
@@ -27,6 +28,7 @@ def _fresh(path: str, max_age_days: int) -> bool:
     except Exception:
         return False
 
+
 def _load(path: str) -> dict[str, Any] | None:
     try:
         with open(path, encoding="utf-8") as f:
@@ -34,17 +36,18 @@ def _load(path: str) -> dict[str, Any] | None:
     except Exception:
         return None
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate ABP and Baseline Manifest")
-    parser.add_argument("--profile", required=True)
-    parser.add_argument("--max-age-days", type=int, default=2)
-    parser.add_argument("--ci-mode", action="store_true", help="Print GitHub Actions warnings instead of failing")
-    parser.add_argument("--strict", action="store_true", help="Treat warnings as errors (fail on stale/missing)")
+    _ = parser.add_argument("--profile", required=True)
+    _ = parser.add_argument("--max-age-days", type=int, default=2)
+    _ = parser.add_argument("--ci-mode", action="store_true", help="Print GitHub Actions warnings instead of failing")
+    _ = parser.add_argument("--strict", action="store_true", help="Treat warnings as errors (fail on stale/missing)")
     args = parser.parse_args()
 
     # Check baseline manifest
     manifest = os.path.join("config", "baselines", f"{args.profile}.json")
-    issues = []  # collected human-readable issues
+    issues: list[str] = []  # collected human-readable issues
     if not os.path.exists(manifest):
         issues.append(f"Missing Baseline Manifest: {manifest}")
     elif not _fresh(manifest, args.max_age_days):
@@ -104,6 +107,7 @@ def main() -> int:
                 return 1
 
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

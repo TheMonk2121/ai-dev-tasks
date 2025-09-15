@@ -15,7 +15,8 @@ from botocore.exceptions import ClientError
     from scripts.bedrock_client import BedrockUsage
 import os
 import sys
-from scripts.bedrock_client import BedrockUsage
+# FIXME: Update this import path after reorganization
+# from scripts.bedrock_client import BedrockUsage
 from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """

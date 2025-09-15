@@ -6,7 +6,7 @@ set -euo pipefail
 
 REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 
-ENV_FILE="${REPO_ROOT}/configs/recall_optimized_bedrock.env"
+ENV_FILE="${REPO_ROOT}/300_evals/configs/recall_optimized_bedrock.env"
 if [ ! -f "$ENV_FILE" ]; then
   echo "❌ Recall env not found: $ENV_FILE"
   exit 1

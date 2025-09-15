@@ -40,8 +40,8 @@ class RAG(BaseModel):
     prefix_policy: Literal["A", "B", "C"] = "A"
 
     # Embedding configuration
-    embedder_name: str = "BAAI/bge-large-en-v1.5"
-    embedding_dim: int = Field(ge=128, le=4096, default=1024)
+    embedder_name: str = "BAAI/bge-small-en-v1.5"
+    embedding_dim: int = Field(ge=128, le=4096, default=384)
 
 
 class Eval(BaseModel):

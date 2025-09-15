@@ -483,7 +483,7 @@ if cached_result:
 - `dspy-rag-system/tests/test_*.py` - Comprehensive test coverage
 
 ### **Demonstration Scripts**
-- `400_guides/demo_complete_dspy_v2_system.py` - Complete DSPy v2 system demonstration
+- `300_evals/experiments/300_dspy-v2-demo-scripts/demo_complete_dspy_v2_system.py` - Complete DSPy v2 system demonstration
 - `400_guides/demo_assertion_framework.py` - Assertion framework patterns
 - `400_guides/demo_four_part_optimization_loop.py` - Optimization loop workflow
 - `400_guides/demo_labeled_few_shot_optimizer.py` - Few-shot optimization examples

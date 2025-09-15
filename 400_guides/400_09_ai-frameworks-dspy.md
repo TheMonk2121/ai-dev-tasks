@@ -49,7 +49,7 @@ cd dspy-rag-system
 source .venv/bin/activate
 
 # Test basic AI integration
-python3 run_researcher_analysis.py
+uv run python run_researcher_analysis.py
 ```
 
 **Step 2: Create Your First AI Context**
@@ -141,25 +141,25 @@ export POSTGRES_DSN="mock://test"
 #### **Role-Specific Access**
 ```bash
 # Strategic planning and high-level analysis
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "your query here"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "your query here"
 
 # Technical implementation and workflow design
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "your query here"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "your query here"
 
 # Research methodology and evidence-based analysis
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "your query here"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "your query here"
 
 # Code implementation and technical patterns
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "your query here"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "your query here"
 ```
 
 #### **Full Memory Context Access**
 ```bash
 # Complete memory context with all systems
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 
 # JSON output for programmatic access
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query" --format json
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "query" --format json
 ```
 
 ### **DSPy Role Capabilities & Use Cases**
@@ -184,8 +184,8 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "
 
 **Example Queries**:
 ```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "create a comprehensive PRD for restructuring the 00-12 guides"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "analyze the strategic impact of implementing advanced RAG optimization"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "create a comprehensive PRD for restructuring the 00-12 guides"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "analyze the strategic impact of implementing advanced RAG optimization"
 ```
 
 #### **Implementer Role** ⚙️
@@ -208,8 +208,8 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "
 
 **Example Queries**:
 ```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "design a workflow for automated testing integration"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "plan the integration of new memory system components"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "design a workflow for automated testing integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "plan the integration of new memory system components"
 ```
 
 #### **Researcher Role** 🔬
@@ -232,8 +232,8 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role implement
 
 **Example Queries**:
 ```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "analyze the performance impact of different RAG optimization strategies"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "research best practices for memory system optimization"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "analyze the performance impact of different RAG optimization strategies"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "research best practices for memory system optimization"
 ```
 
 #### **Coder Role** 💻
@@ -256,8 +256,8 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role researche
 
 **Example Queries**:
 ```bash
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "implement a new memory system component with proper error handling"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "optimize the performance of the RAG retrieval system"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "implement a new memory system component with proper error handling"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "optimize the performance of the RAG retrieval system"
 ```
 
 ### **Memory System Integration**
@@ -327,7 +327,7 @@ class RoleAwareContextBuilder:
 ./scripts/memory_up.sh -r coder "code implementation context"
 
 # Full context with role awareness
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
 ```
 
 ### **🚀 B-1048: DSPy Role Integration with Vector-Based System Mapping - BREAKTHROUGH**
@@ -529,19 +529,19 @@ class IntelligentRoleRouter:
 **Automatic Role Selection**:
 ```bash
 # The system now automatically selects the best role
-python3 scripts/unified_memory_orchestrator.py --systems cursor "analyze project performance metrics"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor "analyze project performance metrics"
 
 # Previously required manual role specification
-# python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "analyze project performance metrics"
+# uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "analyze project performance metrics"
 ```
 
 **Context-Aware Role Switching**:
 ```bash
 # Start with strategic planning
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "create project roadmap"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "create project roadmap"
 
 # Continue with implementation details (context preserved)
-python3 scripts/unified_memory_orchestrator.py --systems cursor "implement the first phase"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor "implement the first phase"
 
 # System automatically switches to implementer role while maintaining context
 ```
@@ -1146,10 +1146,10 @@ export RERANK_BATCH=8
 export TORCH_DEVICE="auto"
 
 # Test Integration
-python3 scripts/test_reranker_integration.py
+uv run python scripts/test_reranker_integration.py
 
 # Run Evaluation Comparison
-python3 scripts/eval_reranker_comparison.py --output-dir metrics/reranker_comparison
+uv run python scripts/eval_reranker_comparison.py --output-dir metrics/reranker_comparison
 ```
 
 #### **Configuration**
@@ -1227,7 +1227,7 @@ python3 scripts/test_reranker_integration.py
 **Comparison Script**:
 ```bash
 # Compare with/without reranker
-python3 scripts/eval_reranker_comparison.py
+uv run python scripts/eval_reranker_comparison.py
 
 # Check results
 ls metrics/reranker_comparison/
@@ -1236,7 +1236,7 @@ ls metrics/reranker_comparison/
 **Integration Test**:
 ```bash
 # Test all components
-python3 scripts/test_reranker_integration.py
+uv run python scripts/test_reranker_integration.py
 ```
 
 ## 🛡️ **AI Safety and Governance**
@@ -1487,37 +1487,37 @@ class AIContextManager:
 **DSPy Module Testing**:
 ```bash
 # Test DSPy module functionality
-python3 -m pytest tests/unit/test_dspy_modules.py -v
+uv run pytest tests/unit/test_dspy_modules.py -v
 
 # Test AI performance optimization
-python3 -m pytest tests/performance/test_ai_optimization.py -v
+uv run pytest tests/performance/test_ai_optimization.py -v
 
 # Test AI safety and governance
-python3 -m pytest tests/integration/test_ai_safety.py -v
+uv run pytest tests/integration/test_ai_safety.py -v
 ```
 
 **AI Performance Benchmarking**:
 ```bash
 # Run AI performance benchmarks
-python3 scripts/ai_performance_monitor.py --benchmark
+uv run python scripts/ai_performance_monitor.py --benchmark
 
 # Test AI model switching
-python3 scripts/ai_performance_monitor.py --test-model-switching
+uv run python scripts/ai_performance_monitor.py --test-model-switching
 
 # Validate AI safety compliance
-python3 scripts/ai_performance_monitor.py --validate-safety
+uv run python scripts/ai_performance_monitor.py --validate-safety
 ```
 
 **AI Context Testing**:
 ```bash
 # Test AI context managemen
-python3 scripts/test_ai_context.py --test-context-retrieval
+uv run python scripts/test_ai_context.py --test-context-retrieval
 
 # Test AI memory integration
-python3 scripts/test_ai_context.py --test-memory-integration
+uv run python scripts/test_ai_context.py --test-memory-integration
 
 # Test AI context persistence
-python3 scripts/test_ai_context.py --test-context-persistence
+uv run python scripts/test_ai_context.py --test-context-persistence
 ```
 
 #### **AI Testing Best Practices**
@@ -1545,13 +1545,13 @@ python3 scripts/test_ai_context.py --test-context-persistence
 **Testing Environment Setup**:
 ```bash
 # Set up AI testing environmen
-python3 scripts/setup_ai_testing.py --environment tes
+uv run python scripts/setup_ai_testing.py --environment tes
 
 # Install AI testing dependencies
-pip install -r requirements-ai-testing.tx
+uv sync --extra ai-testing
 
 # Configure AI testing parameters
-python3 scripts/configure_ai_testing.py --config ai_testing_config.yaml
+uv run python scripts/configure_ai_testing.py --config ai_testing_config.yaml
 ```
 
 **AI Testing Tools**:
@@ -1903,16 +1903,16 @@ The DSPy role system now integrates with Vector-Based System Mapping to provide 
 **Role-Specific Context Enhancement:**
 ```bash
 # Planner: Strategic project analysis
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "analyze project architecture and dependencies"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "analyze project architecture and dependencies"
 
 # Implementer: Implementation with smart recommendations
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role implementer "implement feature with component analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role implementer "implement feature with component analysis"
 
 # Researcher: Deep semantic analysis
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "research patterns in codebase with vector analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "research patterns in codebase with vector analysis"
 
 # Coder: Development with intelligent assistance
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role coder "code solution with semantic understanding"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role coder "code solution with semantic understanding"
 ```
 
 ### **Multi-Role Collaboration Patterns**
@@ -1920,16 +1920,16 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --ro
 **Sequential Role Execution:**
 ```bash
 # Research → Plan → Implement → Review workflow
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "analyze requirements for new feature"
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "create implementation plan based on research"
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role implementer "implement planned solution"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "analyze requirements for new feature"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "create implementation plan based on research"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role implementer "implement planned solution"
 ```
 
 **Parallel Role Consultation:**
 ```bash
 # Get multiple perspectives on complex decisions
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "evaluate technical approaches for RAG optimization"
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role implementer "assess implementation complexity for same approaches"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "evaluate technical approaches for RAG optimization"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role implementer "assess implementation complexity for same approaches"
 ```
 
 ### **Vector-Enhanced Context Loading**
@@ -1950,10 +1950,10 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role impl
 **Role-to-Role Communication:**
 ```bash
 # Implementer consulting with Researcher
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role implementer "get researcher insights on memory system optimization"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role implementer "get researcher insights on memory system optimization"
 
 # Planner coordinating with multiple roles
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "coordinate implementation strategy across all roles"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "coordinate implementation strategy across all roles"
 ```
 
 ## 🔗 **Cursor Role System Alignment Guide**
@@ -1985,17 +1985,17 @@ role-specific configuration files      # Individual role configurations
 **Unified Memory Orchestrator Integration**
 ```bash
 # Role-specific memory access
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
 ```
 
 **Memory Context Alignment**
 ```bash
 # Role-specific memory context
 export POSTGRES_DSN="mock://test"
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status"
 ```
 
 ##### **2. Role-Specific Context Patterns**
@@ -2003,29 +2003,29 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prim
 **Planner Role Context**
 ```bash
 # Strategic planning context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "development priorities and roadmap"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "PRD creation and task generation"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "development priorities and roadmap"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "PRD creation and task generation"
 ```
 
 **Implementer Role Context**
 ```bash
 # Implementation context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "development workflow and technical integration"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "system architecture and component integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "development workflow and technical integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "system architecture and component integration"
 ```
 
 **Researcher Role Context**
 ```bash
 # Research context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "research methodology and evidence-based analysis"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "memory system optimization and performance analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "research methodology and evidence-based analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "memory system optimization and performance analysis"
 ```
 
 **Coder Role Context**
 ```bash
 # Technical implementation context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical implementation patterns and code components"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "DSPy RAG system architecture and implementation"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical implementation patterns and code components"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "DSPy RAG system architecture and implementation"
 ```
 
 ##### **3. Configuration Alignment**
@@ -2034,7 +2034,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "DS
 ```bash
 # .cursorrules configuration for role alignment
 export POSTGRES_DSN="mock://test"
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 **VS Code Settings Integration**
@@ -2072,16 +2072,16 @@ def optimize_for_role(role: str) -> Dict[str, Any]:
 ##### **Debugging Commands**
 ```bash
 # Debug role system alignment
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "debug role system alignment"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "debug role system alignment"
 
 # Check role-specific context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "check technical context integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "check technical context integration"
 
 # Validate role configuration
-python3 scripts/validate_config.py --role-system
+uv run python scripts/validate_config.py --role-system
 
 # Monitor role performance
-python3 scripts/performance_optimization.py --role-specific
+uv run python scripts/performance_optimization.py --role-specific
 ```
 
 ## 📚 **References**
@@ -2228,31 +2228,31 @@ class ModelOptimizationFramework:
 #### **Model Registry Commands**
 ```bash
 # Register AI model
-python3 scripts/register_ai_model.py --spec model_spec.yaml --output registration_result.json
+uv run python scripts/register_ai_model.py --spec model_spec.yaml --output registration_result.json
 
 # List registered models
-python3 scripts/list_ai_models.py --type all --output models_list.md
+uv run python scripts/list_ai_models.py --type all --output models_list.md
 
 # Update model performance
-python3 scripts/update_model_performance.py --model-id MODEL-001 --metrics performance_metrics.yaml
+uv run python scripts/update_model_performance.py --model-id MODEL-001 --metrics performance_metrics.yaml
 
 # Validate model registry
-python3 scripts/validate_model_registry.py --full-check
+uv run python scripts/validate_model_registry.py --full-check
 ```
 
 #### **Model Optimization Commands**
 ```bash
 # Optimize AI model
-python3 scripts/optimize_ai_model.py --model-id MODEL-001 --config optimization_config.yaml
+uv run python scripts/optimize_ai_model.py --model-id MODEL-001 --config optimization_config.yaml
 
 # Measure optimization impac
-python3 scripts/measure_optimization_impact.py --model-id MODEL-001 --baseline baseline_metrics.yaml
+uv run python scripts/measure_optimization_impact.py --model-id MODEL-001 --baseline baseline_metrics.yaml
 
 # Generate optimization repor
-python3 scripts/generate_optimization_report.py --model-id MODEL-001 --output optimization_report.md
+uv run python scripts/generate_optimization_report.py --model-id MODEL-001 --output optimization_report.md
 
 # Monitor model performance
-python3 scripts/monitor_model_performance.py --model-id MODEL-001 --real-time
+uv run python scripts/monitor_model_performance.py --model-id MODEL-001 --real-time
 ```
 
 ### **AI Model Management Quality Gates**
@@ -2287,6 +2287,8 @@ python3 scripts/monitor_model_performance.py --model-id MODEL-001 --real-time
 - **2025-01-XX**: Extracted from `400_guides/400_07_ai-frameworks-dspy.md`
 - **2025-01-XX**: Integrated with memory systems and performance optimization
 - **2025-01-XX**: Added comprehensive AI safety and governance frameworks
+- **2025-09-15**: Updated all command examples to use UV package management standards
+- **2025-09-15**: Aligned testing references with current testing standards and quality gates
 
 ---
 

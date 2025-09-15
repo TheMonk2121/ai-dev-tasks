@@ -81,7 +81,7 @@ This documentation is organized by **priority**:
 
 ### **Agent Entry Points**
 - **Discovery ➜ Execution Path**: `000_core/000_agent-entry-point.md`
-- **Memory Rehydration**: `scripts/memory_up.sh`
+- **Memory Rehydration**: `scripts/shell/utilities/memory_up.sh`
 - **Unified Memory Orchestrator**: `scripts/unified_memory_orchestrator.py`
 
 ## 🚀 **Quick Start**
@@ -90,10 +90,10 @@ This documentation is organized by **priority**:
 1. **Read this file** (00) - Understand the memory system overview
 2. **Read 01** - Learn about memory system architecture
 3. **Read 02** - Understand memory rehydration and context managemen
-4. **Use memory rehydration** - Run `scripts/memory_up.sh` to get current context
+4. **Use memory rehydration** - Run `./scripts/shell/utilities/memory_up.sh` to get current context
 
 ### **For Returning Users:**
-1. **Rehydrate memory** - Run `scripts/memory_up.sh` to restore context
+1. **Rehydrate memory** - Run `./scripts/shell/utilities/memory_up.sh` to restore context
 2. **Check current state** - Review `100_cursor-memory-context.md`
 3. **Continue from where you left off** - Use the memory system to resume work
 
@@ -101,13 +101,16 @@ This documentation is organized by **priority**:
 
 ```bash
 # Memory rehydration (restore project context)
-./scripts/memory_up.sh
+./scripts/shell/utilities/memory_up.sh
 
 # DSPy memory orchestrator (advanced context)
-export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "current project status"
+export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "current project status"
 
-# Check memory system status
-python3 scripts/memory_system_status.py
+# Check memory system health
+uv run python 300_evals/scripts/evaluation/memory_healthcheck.py
+
+# System health check
+uv run python 300_evals/scripts/evaluation/system_health_check.py
 ```
 
 ## 📋 **Current Project State**
@@ -141,10 +144,11 @@ class MemorySystemArchitecture:
 
     def __init__(self):
         self.memory_layers = {
-            "ltst": "Long-Term Short-Term memory system",
-            "cursor": "Cursor IDE memory context",
-            "go_cli": "Go CLI memory rehydration",
-            "prime": "Prime Cursor integration"
+            "ltst": "Long-Term Short-Term memory system with vector search",
+            "cursor": "Cursor IDE memory context and session continuity",
+            "go_cli": "Go CLI memory rehydration for system operations",
+            "prime": "Prime Cursor integration for complex analysis",
+            "unified_orchestrator": "Unified memory orchestrator coordinating all systems"
         }
         self.context_stores = {}
         self.memory_orchestrator = None
@@ -225,31 +229,31 @@ class ContextFlowPipeline:
 #### **Core Memory Operations**
 ```bash
 # Memory rehydration (restore project context)
-./scripts/memory_up.sh
+./scripts/shell/utilities/memory_up.sh
 
 # DSPy memory orchestrator (advanced context)
-export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "current project status"
+export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "current project status"
 
-# Check memory system status
-python3 scripts/memory_system_status.py
+# Check memory system health
+uv run python 300_evals/scripts/evaluation/memory_healthcheck.py
 
-# Memory context validation
-python3 scripts/validate_memory_context.py --full-check
+# System health check
+uv run python 300_evals/scripts/evaluation/system_health_check.py
 ```
 
 #### **Role-Specific Memory Access**
 ```bash
 # Strategic planning context
-./scripts/memory_up.sh -r planner "strategic analysis context"
+./scripts/shell/utilities/memory_up.sh -r planner "strategic analysis context"
 
 # Technical implementation context
-./scripts/memory_up.sh -r implementer "technical implementation context"
+./scripts/shell/utilities/memory_up.sh -r implementer "technical implementation context"
 
 # Research methodology context
-./scripts/memory_up.sh -r researcher "research methodology context"
+./scripts/shell/utilities/memory_up.sh -r researcher "research methodology context"
 
 # Code implementation context
-./scripts/memory_up.sh -r coder "code implementation context"
+./scripts/shell/utilities/memory_up.sh -r coder "code implementation context"
 ```
 
 ### **Memory System Health Monitoring**
@@ -257,16 +261,16 @@ python3 scripts/validate_memory_context.py --full-check
 #### **Health Check Commands**
 ```bash
 # Check memory system health
-python3 scripts/memory_health_check.py
+uv run python 300_evals/scripts/evaluation/memory_healthcheck.py
 
-# Validate memory context integrity
-python3 scripts/validate_memory_integrity.py
+# System health check
+uv run python 300_evals/scripts/evaluation/system_health_check.py
 
-# Monitor memory system performance
-python3 scripts/monitor_memory_performance.py
+# Monitor system performance
+uv run python scripts/monitoring/system_monitor.py
 
-# Memory system diagnostics
-python3 scripts/memory_diagnostics.py --full
+# Comprehensive system monitoring
+uv run python scripts/monitoring/comprehensive_system_monitor.py
 ```
 
 #### **Memory Quality Gates**
@@ -457,32 +461,32 @@ class MemoryWorkflowOrchestrator:
 
 #### **Lifecycle Management Commands**
 ```bash
-# Manage memory lifecycle
-python3 scripts/manage_memory_lifecycle.py --memory-item memory_item.yaml
+# Memory system health check
+uv run python 300_evals/scripts/evaluation/memory_healthcheck.py
 
-# Monitor memory status
-python3 scripts/monitor_memory_status.py --memory-id MEM-001 --real-time
+# System health monitoring
+uv run python scripts/monitoring/system_monitor.py
 
-# Optimize memory usage
-python3 scripts/optimize_memory.py --strategy performance --output optimization_report.md
+# Memory system maintenance
+uv run python scripts/maintenance/maintenance.py
 
-# Archive old memory
-python3 scripts/archive_memory.py --age-days 30 --output archival_report.md
+# Comprehensive system monitoring
+uv run python scripts/monitoring/comprehensive_system_monitor.py
 ```
 
 #### **Workflow Orchestration Commands**
 ```bash
-# Orchestrate memory workflow
-python3 scripts/orchestrate_workflow.py --type memory_retrieval --config workflow_config.yaml
+# Unified memory orchestrator
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "query"
 
-# Monitor workflow progress
-python3 scripts/monitor_workflow.py --workflow-id WF-001 --real-time
+# Memory system integration
+uv run python scripts/utilities/mcp_memory_server.py
 
-# Validate workflow execution
-python3 scripts/validate_workflow.py --workflow-id WF-001 --full-check
+# Agent memory training
+uv run python scripts/utilities/agent_memory_trainer.py
 
-# Generate workflow repor
-python3 scripts/generate_workflow_report.py --workflow-id WF-001 --output workflow_report.md
+# Memory system verification
+uv run python scripts/utilities/run_memory_verification.py
 ```
 
 ### **Memory Operations Quality Gates**
@@ -498,6 +502,34 @@ python3 scripts/generate_workflow_report.py --workflow-id WF-001 --output workfl
 - **Execution Monitoring**: Workflow execution must be monitored and controlled
 - **Error Handling**: Proper error handling and recovery mechanisms must be in place
 - **Performance Optimization**: Workflows must be optimized for performance and efficiency
+
+## 🧪 **Evaluation System Structure**
+
+The evaluation system (`300_evals/`) has been streamlined for **stateless agents** with a simple, clear structure:
+
+### **📁 Streamlined Directory Structure**
+```
+300_evals/
+├── test_results/           # All test outputs, baselines, and artifacts
+├── stable_build/          # Production-ready evaluation components
+│   ├── modules/           # Evaluation modules and tools
+│   ├── harnesses/         # Test harnesses and compiled configs
+│   └── config/            # Active configuration files
+└── experiments/           # Experimental work
+    ├── active/            # Current experiments and research
+    └── legacy/            # Archived experiments (gitignored, excluded from DB)
+```
+
+### **🎯 Key Design Principles**
+- **Simple & Clear**: 3 main folders instead of 15+ nested directories
+- **Stateless-Friendly**: Easy for agents to understand and navigate
+- **Consolidated**: All test results in one place
+- **Organized**: Stable build components by function
+- **Isolated**: Legacy experiments properly archived
+
+### **🔒 Database Exclusion**
+- `experiments/legacy/` is automatically excluded from database ingestion
+- Contains `.gitignore` to exclude from git tracking
 
 ---
 

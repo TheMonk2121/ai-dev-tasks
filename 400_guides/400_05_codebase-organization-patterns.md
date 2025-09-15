@@ -1568,6 +1568,39 @@ def smart_error_fix(error_code: str, file_path: str) -> bool:
 - **Role-Specific Context**: Implement role-aware context for enhanced AI interactions
 - **Cursor Integration**: Include Cursor knowledge integration where appropriate
 
+### **MCP Server Orchestration (B-1040)**
+
+**Purpose**: Multi-server tool integration and routing for enhanced MCP capabilities.
+
+**Core Features**:
+- **Multi-Server Integration**: Coordinate multiple MCP servers for comprehensive tool coverage
+- **Tool Routing**: Intelligent routing of requests to appropriate MCP servers
+- **Performance Monitoring**: Real-time monitoring of MCP server health and performance
+- **Load Balancing**: Distribute requests across available MCP servers
+- **Failover Handling**: Automatic failover to backup servers when primary servers fail
+
+**Implementation Pattern**:
+```python
+class MCPOrchestrator:
+    """Multi-server MCP orchestration system."""
+    
+    def __init__(self, servers: List[MCPServer]):
+        self.servers = servers
+        self.health_monitor = MCPHealthMonitor()
+        self.load_balancer = MCPLoadBalancer()
+    
+    def route_request(self, request: MCPRequest) -> MCPResponse:
+        """Route request to appropriate MCP server."""
+        available_servers = self.health_monitor.get_healthy_servers()
+        selected_server = self.load_balancer.select_server(available_servers, request)
+        return selected_server.process_request(request)
+    
+    def monitor_health(self) -> Dict[str, bool]:
+        """Monitor health of all MCP servers."""
+        return {server.name: self.health_monitor.check_health(server) 
+                for server in self.servers}
+```
+
 **Server Implementation Pattern**:
 ```python
 from utils.mcp_integration import MCPServer, MCPConfig, MCPError, DocumentMetadata, ProcessedDocumen
@@ -1687,6 +1720,40 @@ class RoleSpecificMCPServer(MCPServer):
 - **File Context**: Include current file and import analysis where relevan
 
 ## 🤖 AGENT TOOL INTEGRATION STANDARDS
+
+### **Cursor AI Rules System Integration**
+
+**Purpose**: Integration with Cursor AI Rules System for automated governance and tool discovery.
+
+**Core Features**:
+- **Rule Organization**: `.cursor/rules/` directory structure for organized rule management
+- **Project Rules**: Memory system, RAGChecker baseline, multi-agent patterns
+- **Repository Rules**: Code quality, testing standards, CI/CD enforcement
+- **Configuration Rules**: Database standards, UV management, environment setup
+- **Workflow Rules**: Task management, execution patterns, quality gates
+
+**Rule Structure**:
+```yaml
+# .cursor/rules/project/memory_system.mdc
+---
+description: Enforce memory rehydration protocols and LTST integration
+globs:
+  - '**/*.py'
+  - '**/scripts/**/*'
+alwaysApply: true
+---
+
+# Memory System Rules
+- Always run memory rehydration before major tasks
+- Use LTST memory system for cross-session continuity
+- Update memory with significant decisions
+```
+
+**Integration Benefits**:
+- **Automated Enforcement**: Rules automatically applied based on file patterns
+- **Consistent Behavior**: Standardized AI behavior across all interactions
+- **Governance by Code**: Rules enforced through code rather than documentation
+- **Role-Specific Context**: Different rules for different agent roles
 
 ### **Agent Tool Discovery Standards**
 
@@ -2346,6 +2413,243 @@ python3 scripts/validate_artifact_dependencies.py --stric
 - **Error Handling**: Artifacts must have proper error handling and recovery
 - **Performance Monitoring**: Artifacts must support performance tracking
 
+## 📝 NAMING CONVENTIONS & FILE ORGANIZATION
+
+<!-- ANCHOR_KEY: naming-conventions -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
+
+### **TL;DR**
+File and directory naming standards for the project. Apply conventions to new files and update existing ones.
+
+### **🔢 Prefix Category Table**
+
+This table clarifies the buckets for our numeric prefixes, making it easier to categorize and find files.
+
+| Prefix Range | Category Name                 | Purpose                                                                 | Examples                                                              |
+| :----------- | :---------------------------- | :---------------------------------------------------------------------- | :-------------------------------------------------------------------- |
+| `000-099` | Core Workflow & Planning | Core processes, backlog, PRDs, and high-level project plans. | `000_core/000_backlog.md`, `000_core/001_create-prd.md` |
+| `100-199` | Guides & Automation | Memory context, workflow guides, and automation tools. | `100_memory/100_cursor-memory-context.md`, `100_memory/100_backlog-guide.md` |
+| `200-299` | Configuration & Setup | Environment setup, naming conventions, and tool configuration. | `200_setup/202_setup-requirements.md`, `400_guides/400_05_codebase-organization-patterns.md` |
+| `300-399` | Templates & Examples | Reusable templates, documentation examples, and few-shot prompts. | `300_examples/300_documentation-example.md`, `400_guides/400_few-shot-context-examples.md` |
+| `400-499` | System Architecture & Overviews | High-level system design, project overviews, and context guides. | `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md` |
+| `500-599` | Research, Testing & Analysis | Research, benchmarks, testing, observability, and completion summaries. | `500_research/500_dspy-research.md`, `500_test-harness-guide.md` |
+| `600-999` | Archives & Legacy | Deprecated files, historical archives, and legacy documentation. | `600_archives/`, `docs/legacy/` |
+
+### **🔄 File Generation Workflow**
+
+#### **⭐ CANON RULE: All Guides Go in Root with 400_ Prefix**
+
+**This is absolute canon and non-negotiable:**
+
+- **ALL guides** must use `400_` prefix
+- **ALL guides** must be in the **root directory**
+- **NO guides** in subdirectories (docs/, processed_documents/, etc.)
+- **NO exceptions** - this is enforced by the naming system
+
+**Examples of correct guide placement:**
+- ✅ `400_00_memory-system-overview.md` (root)
+- ✅ `400_03_system-overview-and-architecture.md` (root)
+- ✅ `400_04_development-workflow-and-standards.md` (root)
+- ✅ `400_09_ai-frameworks-dspy.md` (root)
+
+**Examples of incorrect guide placement:**
+- ❌ `docs/400_guide.md` (subdirectory)
+- ❌ `processed_documents/400_guide.md` (subdirectory)
+- ❌ `400_guides/400_guide.md` (subdirectory)
+
+#### **Step 1: Determine if a File is Needed**
+
+**Ask these questions:**
+- **Is this information that will be referenced multiple times?** (If yes → file)
+- **Is this a process or workflow that others/AI will need to follow?** (If yes → file)
+- **Is this context that will help with future decisions?** (If yes → file)
+- **Is this a one-off note or temporary information?** (If no → don't create file)
+
+#### **Step 2: Choose the Right Prefix Range**
+
+**000-099: Core Planning & Context**
+- Backlog, project overview, system overview
+- Files that give immediate understanding of the project
+- Essential for anyone working on the project
+
+**100-199: Memory & Guides**
+- Memory context, backlog guide, automation patterns
+- Files that help with ongoing work and decision-making
+- Important for regular development activities
+
+**200-299: Configuration & Setup**
+- Naming conventions, model config, setup requirements
+- Files that help with environment and tool setup
+- Important when setting up or configuring
+
+**400-499: Architecture & Overview** ⭐ **CANON RULE**
+- System overview, project overview, context priority guide
+- **ALL guides go in root directory with 400_ prefix**
+- Files that explain the big picture and relationships
+- Essential for understanding the system architecture
+- **NO guides in subdirectories - this is canon**
+
+**500+: Research & Meta**
+- Completion summaries, research notes, benchmarks
+- Files that provide historical context and analysis
+- Useful for learning from past work
+
+#### **Step 3: Create Descriptive, Self-Documenting Names**
+
+**Follow these naming principles:**
+- **Clear purpose**: The name should indicate what the file contains
+- **Consistent format**: `prefix_descriptive-name.md`
+- **Kebab-case**: Lowercase with hyphens for readability
+- **Avoid ambiguity**: Make it clear what the file is for
+
+**Examples of good names:**
+- ✅ `100_memory/100_cursor-memory-context.md` (clear purpose)
+- ✅ `400_guides/400_system-overview.md` (descriptive)
+- ✅ `500_research/500_memory-arch-research.md` (research focus)
+
+**Examples of bad names:**
+- ❌ `misc.md` (unclear purpose)
+- ❌ `stuff.md` (not descriptive)
+- ❌ `temp.md` (temporary feeling)
+
+### **📝 File Naming Rules**
+
+#### **✅ Correct Examples**
+- `000_core/000_backlog.md` (three-digit prefix, single underscore, kebab-case)
+- `100_memory/100_cursor-memory-context.md` (automation category)
+- `400_guides/400_project-overview.md` (documentation category)
+- `500_test-harness-guide.md` (testing category)
+
+#### **❌ Incorrect Examples**
+- `99_misc.md` (needs three-digit prefix)
+- `100_backlog_automation.md` (second underscore disallowed)
+- `100-backlog-automation.md` (missing required first underscore)
+
+### **📝 Formatting Standards**
+
+#### **Header Structure Rules**
+- **Single h1 per document**: Use filename as the implicit h1 title
+- **Main content starts with h2**: `## 🎯 Current Status` or `## 📋 Overview`
+- **Consistent emoji usage**: Use emojis for visual hierarchy and AI parsing
+- **No h1 in content**: All content headings should be h2 or lower
+- **Hierarchical structure**: Use h2 for main sections, h3 for subsections, h4 for details
+
+### **🔐 Core Documentation Invariants**
+
+**Purpose**: Single normative source for core documentation requirements. Validator enforces these invariants.
+
+#### **Required top metadata header (HTML comments)**
+- HIGH‑priority docs must include:
+  - `<!-- CONTEXT_REFERENCE: <file> -->`
+  - `<!-- MEMORY_CONTEXT: <LEVEL> - <description> -->`
+- `MODULE_REFERENCE` is required when a closely related implementation module exists.
+
+#### **TL;DR + At‑a‑glance**
+- TL;DR section is required in core docs
+  - A single explicit anchor is allowed: `{#tldr}`
+  - Heading: `## 🔎 TL;DR`
+- Immediately after TL;DR, include a 3‑column "At‑a‑glance" table with exact headers:
+
+| what this file is | read when | do next |
+|---|---|---|
+|_one‑line purpose_|_trigger moments_|_2–3 links/actions_ |
+
+#### **Stable Anchors (kebab‑case)**
+- Required anchors per doc type (must exist as section anchors):
+  - `100_memory/100_cursor-memory-context.md`: `tldr`, `quick-start`, `quick-links`, `commands`
+  - `400_guides/400_project-overview.md`: `tldr`, `quick-start`, `mini-map`
+  - `400_guides/400_context-priority-guide.md`: `tldr`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`
+  - `000_core/000_backlog.md`: `tldr`, `p0-lane`, `ai-executable-queue-003`, `live-backlog`
+  - `400_guides/400_05_codebase-organization-patterns.md`: `tldr`, `naming-conventions`, `formatting-standards`, `ai-api-standards`
+  - `100_memory/100_backlog-guide.md`: `tldr`, `scoring`, `prd-rule`, `selection-criteria`
+
+#### **Table Usage Mandate**
+Markdown tables are the **required standard** for presenting structured data:
+- **Status tracking**: Use tables for backlog items, task lists, and progress tracking
+- **Decision records**: Structure decisions with clear columns for date, decision, rationale, impact
+- **Priority matrices**: Use tables for comparing options or categorizing items
+- **Stakeholder information**: Organize roles, responsibilities, and contact information
+- **Cross-reference matrices**: Map relationships between files and components
+
+#### **Internal Linking Standards**
+- **Primary method**: Use auto-generated heading IDs `[Link Text](#-section-title)`
+- **Critical sections**: Allow explicit IDs for stability `[Link Text](#explicit-id)`
+- **Cross-file linking**: Use relative paths with anchor links
+- **AI-friendly linking**: Include context in link text for better AI parsing
+- **Validation**: Ensure all referenced sections exist
+
+### **🤖 AI API Standards**
+
+The HTML comments in our documentation serve as a **formal API for AI consumption**. These comments enable cognitive scaffolding and context rehydration.
+
+#### **Core Comment Types**
+
+| Key | Purpose | Example | Required For |
+| :--- | :--- | :--- | :--- |
+| CONTEXT_REFERENCE | Links to the main guide for context | `<!-- CONTEXT_REFERENCE: 400_guides/400_system-overview.md -->` | HIGH priority files |
+| MODULE_REFERENCE | Links to a related implementation module | `<!-- MODULE_REFERENCE: src/utils/memory_rehydrator.py -->` | MEDIUM priority files |
+| MEMORY_CONTEXT | Specifies priority level for AI rehydration | `<!-- MEMORY_CONTEXT: HIGH - Core system overview -->` | All files |
+| ESSENTIAL_FILES | Lists files critical for understanding | `<!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md -->` | HIGH priority files |
+
+#### **Usage Patterns**
+- **HIGH priority files**: Must include CONTEXT_REFERENCE and MEMORY_CONTEXT
+- **MEDIUM priority files**: Should include MODULE_REFERENCE and MEMORY_CONTEXT
+- **Cross-references**: Always validate that referenced files exist
+- **Consistency**: Use consistent comment patterns across similar file types
+
+### **📋 PRD Lifecycle Management**
+
+#### **PRD Naming Convention**
+- **Active PRDs**: `PRD-{BacklogID}-{Descriptive-Name}.md`
+  - Example: `PRD-B-084-Research-Based-Schema-Design.md`
+  - Location: `000_core/` while project is active
+- **Completed PRDs**: Move to `600_archives/prds/` with metadata preservation
+  - Keep original filename for traceability
+  - Add completion metadata to preserve insights
+
+#### **Doorway Artifacts (Active vs Archive)**
+The single doorway system creates standardized artifacts with deterministic naming:
+
+**Active Artifacts** (in `000_core/`)
+- **PRDs**: `PRD-{BacklogID}-{Slug}.md`
+  - Example: `PRD-B-108-Single-Doorway-System.md`
+- **Task Lists**: `TASKS-{BacklogID}-{Slug}.md`
+  - Example: `TASKS-B-108-Single-Doorway-System.md`
+- **Execution Logs**: `RUN-{BacklogID}-{Slug}.md`
+  - Example: `RUN-B-108-Single-Doorway-System.md`
+
+**Versioning for Conflicts**
+- If same-day files exist, append `-v2`, `-v3`, etc.
+- Example: `PRD-B-108-Single-Doorway-System-v2.md`
+
+**Archive Structure** (in `600_archives/`)
+- **PRDs**: `600_archives/prds/PRD-{BacklogID}-{Slug}.md`
+- **Task Lists**: `600_archives/tasks/TASKS-{BacklogID}-{Slug}.md`
+- **Execution Logs**: `600_archives/runs/RUN-{BacklogID}-{Slug}_{YYYY-MM-DD}.md`
+
+### **🛠️ Implementation Tools**
+
+#### **Collision Detection**
+The `scripts/check-number-unique.sh` script runs as a warning-only pre-commit hook to detect duplicate numeric prefixes in HIGH priority files (000-099, 400-499, 500-599).
+
+#### **Memory Hierarchy Display**
+Use `python3 scripts/show_memory_hierarchy.py` to display the current memory context hierarchy for human understanding.
+
+#### **Memory Context Updates**
+Use `python3 scripts/update_cursor_memory.py` to automatically update memory context based on backlog priorities.
+
+#### **Evaluation Profiles**
+**Profiles**: `real`, `gold`, `mock` (single responsibility)
+- Env files: `300_evals/configs/profiles/{profile}.env`
+- Entry scripts: `scripts/eval_{profile}.sh`
+- Orchestrator: `scripts/ragchecker_official_evaluation.py` (uses `--profile`)
+
+**Output folders**:
+`metrics/runs/{YYYYMMDD_HHMMSS}__{profile}__driver-{driver}__f1-{f1}__p-{p}__r-{r}/`
+
+**Never** use `mock` for baselines or main branch.
+
 ## 📚 References
 
 - **Migration Map**: `migration_map.csv`
@@ -2599,6 +2903,25 @@ Key insights from transitioning from governance-by-documentation to governance-b
 - **Current**: Static documentation-based governance
 - **Target**: Dynamic, context-aware governance systems
 - **Implementation**: Use memory systems to track governance compliance over time
+
+### **🚀 Current Implementation Status**
+
+#### **✅ Implemented Governance Systems**
+- **Cursor AI Rules System**: `.cursor/rules/` directory with automated rule enforcement
+- **RAGChecker Baseline Enforcement**: Automated performance baseline monitoring
+- **UV Package Management**: Automated dependency management and environment standards
+- **Code Quality Gates**: Automated linting, formatting, and type checking
+- **Testing Standards**: Automated test execution and coverage validation
+
+#### **🔄 In Progress**
+- **Documentation Governance**: B-1034 documentation governance codification
+- **Memory System Integration**: Enhanced memory rehydration with governance context
+- **Performance Monitoring**: Real-time governance compliance tracking
+
+#### **📋 Planned**
+- **AI-Powered Governance**: Intelligent rule generation and adaptation
+- **Predictive Compliance**: Proactive governance enforcement
+- **Context-Aware Rules**: Dynamic rule application based on project context
 
 ### **🏗️ Technical Implementation Patterns**
 
@@ -2875,6 +3198,12 @@ def test_database():
   - `400_error-reduction-lessons-learned.md`
   - `400_few-shot-context-examples.md`
   - `400_performance-optimization-guide.md`
+- **2025-01-02**: Added MCP Server Orchestration patterns (B-1040)
+- **2025-01-02**: Integrated Cursor AI Rules System documentation
+- **2025-01-02**: Enhanced governance-by-code section with current implementation status
+- **2025-09-15**: Integrated Microsoft Learn Python best practices and Azure SDK patterns
+- **2025-09-15**: Enhanced error handling patterns with current industry standards
+- **2025-09-15**: Updated docstring standards for better AI code generation
 
 ## Model/RAG Interfaces Updated (B-1041)
 - `vector_store.py`: retrieval API expanded for hybrid flows; ensure adapters use new methods.

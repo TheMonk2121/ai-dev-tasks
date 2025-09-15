@@ -96,9 +96,9 @@ Define the end-to-end development workflow (from idea to deployment) and the sta
 ## 🧱 Detailed Workflow Stages
 
 ### Stage 1: Setup & Context
-- Environment check: `python3 scripts/venv_manager.py --check`
-- Memory rehydration: `./scripts/memory_up.sh -q "your task"`
-- Quick conflict check: `python scripts/quick_conflict_check.py`
+- Environment check: `uv run python scripts/venv_manager.py --check`
+- Memory rehydration: `./scripts/shell/utilities/memory_up.sh -q "your task"`
+- Quick conflict check: `uv run python scripts/quick_conflict_check.py`
 - **Cursor Git Integration Fix**: If you see "🔍 Quick conflict check" messages during commits, use `git commit --no-verify` or `./scripts/commit_without_cursor.sh "message"` to bypass Cursor's built-in conflict detection
 
 ## 🛡️ **AI Constitution & Governance Rules**
@@ -178,20 +178,20 @@ class ConstitutionValidator:
 #### **Constitution Compliance Commands**
 ```bash
 # Validate constitution compliance
-python3 scripts/validate_constitution.py --check-all
+uv run python scripts/validate_constitution.py --check-all
 
 # Check AI operation safety
-python3 scripts/ai_safety_check.py --operation "your_operation"
+uv run python scripts/ai_safety_check.py --operation "your_operation"
 
 # Validate context integrity
-python3 scripts/validate_context.py --full-check
+uv run python scripts/validate_context.py --full-check
 
 # Constitution compliance repor
-python3 scripts/constitution_report.py --output compliance_report.md
+uv run python scripts/constitution_report.py --output compliance_report.md
 ```
 
 #### **Cursor Rules Integration**
-- **Memory Rehydration Trigger**: `.cursorrules` automatically triggers `./scripts/memory_up.sh` at the start of new chats
+- **Memory Rehydration Trigger**: `.cursorrules` automatically triggers `./scripts/shell/utilities/memory_up.sh` at the start of new chats
 - **Two Types of Cursor Rules**:
   - **Root Level**: `.cursorrules` - Contains memory rehydration trigger and core project rules
   - **Directory Level**: `.cursor/rules/` - Contains specialized rules for specific contexts
@@ -270,31 +270,31 @@ python3 scripts/constitution_report.py --output compliance_report.md
 #### **Governance Management Commands**
 ```bash
 # Validate governance compliance
-python3 scripts/validate_governance_compliance.py --policy ai_safety --full-check
+uv run python scripts/validate_governance_compliance.py --policy ai_safety --full-check
 
 # Test governance rules
-python3 scripts/test_governance_rules.py --rule ethical_ai --test-scenario fairness
+uv run python scripts/test_governance_rules.py --rule ethical_ai --test-scenario fairness
 
 # Monitor governance health
-python3 scripts/monitor_governance_health.py --real-time --output governance_report.md
+uv run python scripts/monitor_governance_health.py --real-time --output governance_report.md
 
 # Generate governance repor
-python3 scripts/generate_governance_report.py --policy all --output governance_report.md
+uv run python scripts/generate_governance_report.py --policy all --output governance_report.md
 ```
 
 #### **CI/CD Integration Commands**
 ```bash
 # Integrate governance into CI/CD
-python3 scripts/integrate_governance_cicd.py --pipeline main --governance-policy ai_safety
+uv run python scripts/integrate_governance_cicd.py --pipeline main --governance-policy ai_safety
 
 # Test governance pipeline
-python3 scripts/test_governance_pipeline.py --pipeline main --governance-rule ethical_ai
+uv run python scripts/test_governance_pipeline.py --pipeline main --governance-rule ethical_ai
 
 # Validate governance automation
-python3 scripts/validate_governance_automation.py --pipeline main --full-check
+uv run python scripts/validate_governance_automation.py --pipeline main --full-check
 
 # Monitor governance pipeline health
-python3 scripts/monitor_governance_pipeline.py --pipeline main --real-time
+uv run python scripts/monitor_governance_pipeline.py --pipeline main --real-time
 ```
 
 ### **Governance-by-Code Quality Gates**
@@ -398,31 +398,31 @@ python3 scripts/monitor_governance_pipeline.py --pipeline main --real-time
 #### **Pattern Management Commands**
 ```bash
 # List communication patterns
-python3 scripts/list_communication_patterns.py --category strategic
+uv run python scripts/list_communication_patterns.py --category strategic
 
 # Apply communication pattern
-python3 scripts/apply_communication_pattern.py --pattern strategic_discussion --context user_preferences
+uv run python scripts/apply_communication_pattern.py --pattern strategic_discussion --context user_preferences
 
 # Validate communication effectiveness
-python3 scripts/validate_communication_effectiveness.py --pattern strategic_discussion --user-feedback feedback.json
+uv run python scripts/validate_communication_effectiveness.py --pattern strategic_discussion --user-feedback feedback.json
 
 # Generate communication repor
-python3 scripts/generate_communication_report.py --pattern all --output communication_report.md
+uv run python scripts/generate_communication_report.py --pattern all --output communication_report.md
 ```
 
 #### **Pattern Quality Commands**
 ```bash
 # Test communication pattern
-python3 scripts/test_communication_pattern.py --pattern strategic_discussion --test-scenario planning
+uv run python scripts/test_communication_pattern.py --pattern strategic_discussion --test-scenario planning
 
 # Measure pattern effectiveness
-python3 scripts/measure_communication_effectiveness.py --pattern strategic_discussion --metrics clarity engagemen
+uv run python scripts/measure_communication_effectiveness.py --pattern strategic_discussion --metrics clarity engagemen
 
 # Generate pattern repor
-python3 scripts/generate_communication_pattern_report.py --pattern strategic_discussion --output pattern_report.md
+uv run python scripts/generate_communication_pattern_report.py --pattern strategic_discussion --output pattern_report.md
 
 # Monitor communication quality
-python3 scripts/monitor_communication_quality.py --real-time --output quality_report.md
+uv run python scripts/monitor_communication_quality.py --real-time --output quality_report.md
 ```
 
 ### **Communication Pattern Quality Gates**
@@ -477,11 +477,11 @@ python3 scripts/monitor_communication_quality.py --real-time --output quality_re
 #### **Step 1: File Analysis Checklist**
 ```bash
 # Run the analysis checklis
-python3 scripts/file_analysis_checklist.py <target_file>
+uv run python scripts/file_analysis_checklist.py <target_file>
 
 # Check for conflicts and dependencies
-python3 scripts/quick_conflict_check.py
-python3 scripts/conflict_audit.py --full
+uv run python scripts/quick_conflict_check.py
+uv run python scripts/conflict_audit.py --full
 ```
 
 #### **Step 2: Cross-Reference Analysis**
@@ -537,40 +537,40 @@ python3 scripts/conflict_audit.py --full
 #### **Safe File Operations**
 ```bash
 # Quick conflict check
-python3 scripts/quick_conflict_check.py
+uv run python scripts/quick_conflict_check.py
 
 # Comprehensive conflict audi
-python3 scripts/conflict_audit.py --full
+uv run python scripts/conflict_audit.py --full
 
 # File analysis checklis
-python3 scripts/file_analysis_checklist.py <target_file>
+uv run python scripts/file_analysis_checklist.py <target_file>
 
 # Documentation coherence validation
-python3 scripts/doc_coherence_validator.py
+uv run python scripts/doc_coherence_validator.py
 
 # Memory context update
-python3 scripts/update_cursor_memory.py
+uv run python scripts/update_cursor_memory.py
 ```
 
 #### **Documentation Health Monitoring**
 ```bash
 # Check documentation health
-python3 scripts/documentation_health_check.py
+uv run python scripts/documentation_health_check.py
 
 # Validate cross-references
-python3 scripts/validate_cross_references.py
+uv run python scripts/validate_cross_references.py
 
 # Check for broken links
-python3 scripts/check_broken_links.py
+uv run python scripts/check_broken_links.py
 ```
-- Run: `pytest tests/ -q` (see markers/tiers in repo)
+- Run: `uv run pytest tests/ -q` (see markers/tiers in repo)
 - **RAGChecker Evaluation**: Run official RAGChecker evaluation for RAG system changes
   ```bash
   # Run Official RAGChecker evaluation
-  python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+  uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
   # Pre-commit RAGChecker validation
-  python3 scripts/pre_commit_ragchecker.py
+  uv run python scripts/pre_commit_ragchecker.py
 
   # Check evaluation status
   cat metrics/baseline_evaluations/EVALUATION_STATUS.md
@@ -608,13 +608,13 @@ python3 scripts/check_broken_links.py
 ### Development Commands
 ```bash
 # Start development session
-python3 scripts/single_doorway.py generate "feature description"
+uv run python scripts/single_doorway.py generate "feature description"
 
 # Check code quality
-ruff check . && pyright .
+uv run ruff check . && uv run pyright .
 
 # Run tests
-pytest tests/ -q
+uv run pytest tests/ -q
 ```
 
 ### Virtual Environment Management
@@ -625,19 +625,19 @@ The Virtual Environment Manager ensures your project's virtual environment is pr
 #### **Usage Commands**
 ```bash
 # Check Venv Status
-python3 scripts/venv_manager.py --check
+uv run python scripts/venv_manager.py --check
 
 # Activate Venv
-python3 scripts/venv_manager.py --activate
+uv run python scripts/venv_manager.py --activate
 
 # Show Venv Information
-python3 scripts/venv_manager.py --info
+uv run python scripts/venv_manager.py --info
 
 # Validate Dependencies
-python3 scripts/venv_manager.py --validate
+uv run python scripts/venv_manager.py --validate
 
 # Run Workflow with Venv Check
-python3 scripts/run_workflow.py generate "feature"
+uv run python scripts/run_workflow.py generate "feature"
 ```
 
 #### **Integration Points**
@@ -662,13 +662,12 @@ The venv manager checks for these essential packages:
 #### **Troubleshooting**
 ```bash
 # Venv Not Found
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uv venv --python 3.12
+uv sync --extra dev
 
 # Missing Dependencies
-source .venv/bin/activate
-pip install psycopg2-binary dspy pytest ruff
+uv sync --extra dev
+uv add psycopg2-binary dspy pytest ruff
 ```
 
 **Import Errors**: The venv manager automatically handles Python path issues and ensures the correct Python executable is used.
@@ -1030,28 +1029,28 @@ def database_integration_pattern(query: str, parameters: Dict[str, Any] = None) 
 #### **Pattern Management Commands**
 ```bash
 # List available patterns
-python3 scripts/list_implementation_patterns.py --category memory_system
+uv run python scripts/list_implementation_patterns.py --category memory_system
 
 # Apply pattern to code
-python3 scripts/apply_implementation_pattern.py --pattern memory_rehydration --target-file target.py
+uv run python scripts/apply_implementation_pattern.py --pattern memory_rehydration --target-file target.py
 
 # Validate pattern implementation
-python3 scripts/validate_pattern_implementation.py --pattern memory_rehydration --target-file target.py
+uv run python scripts/validate_pattern_implementation.py --pattern memory_rehydration --target-file target.py
 
 # Generate pattern documentation
-python3 scripts/generate_pattern_documentation.py --pattern memory_rehydration --output pattern_doc.md
+uv run python scripts/generate_pattern_documentation.py --pattern memory_rehydration --output pattern_doc.md
 ```
 
 #### **Pattern Quality Commands**
 ```bash
 # Test pattern implementation
-python3 scripts/test_pattern_implementation.py --pattern memory_rehydration --target-file target.py
+uv run python scripts/test_pattern_implementation.py --pattern memory_rehydration --target-file target.py
 
 # Measure pattern effectiveness
-python3 scripts/measure_pattern_effectiveness.py --pattern memory_rehydration --target-file target.py
+uv run python scripts/measure_pattern_effectiveness.py --pattern memory_rehydration --target-file target.py
 
 # Generate pattern repor
-python3 scripts/generate_pattern_report.py --pattern memory_rehydration --output pattern_report.md
+uv run python scripts/generate_pattern_report.py --pattern memory_rehydration --output pattern_report.md
 ```
 
 ### **Implementation Pattern Quality Gates**
@@ -1199,31 +1198,31 @@ class QualityAssuranceFramework:
 #### **Testing Management Commands**
 ```bash
 # Plan testing strategy
-python3 scripts/plan_testing.py --project-scope project_scope.yaml --output testing_strategy.md
+uv run python scripts/plan_testing.py --project-scope project_scope.yaml --output testing_strategy.md
 
 # Execute test suite
-python3 scripts/execute_tests.py --test-type all --output test_results.json
+uv run python scripts/execute_tests.py --test-type all --output test_results.json
 
 # Generate test coverage repor
-python3 scripts/generate_coverage_report.py --output coverage_report.md
+uv run python scripts/generate_coverage_report.py --output coverage_report.md
 
 # Validate test quality
-python3 scripts/validate_test_quality.py --test-results test_results.json
+uv run python scripts/validate_test_quality.py --test-results test_results.json
 ```
 
 #### **Quality Assurance Commands**
 ```bash
 # Validate quality gates
-python3 scripts/validate_quality_gates.py --metrics quality_metrics.yaml --stric
+uv run python scripts/validate_quality_gates.py --metrics quality_metrics.yaml --stric
 
 # Generate quality repor
-python3 scripts/generate_quality_report.py --output quality_report.md
+uv run python scripts/generate_quality_report.py --output quality_report.md
 
 # Monitor quality trends
-python3 scripts/monitor_quality_trends.py --timeframe 30d --output quality_trends.md
+uv run python scripts/monitor_quality_trends.py --timeframe 30d --output quality_trends.md
 
 # Quality improvement recommendations
-python3 scripts/generate_quality_recommendations.py --gate-results gate_results.json
+uv run python scripts/generate_quality_recommendations.py --gate-results gate_results.json
 ```
 
 ### **Testing & Quality Quality Gates**
@@ -2243,9 +2242,9 @@ debugging_session = {
 ##### **Automated Tracking**
 ```bash
 # Track debugging session metrics
-python3 scripts/debugging_effectiveness_tracker.py --session-start
-python3 scripts/debugging_effectiveness_tracker.py --pattern-used "I can see the issue"
-python3 scripts/debugging_effectiveness_tracker.py --session-end --success
+uv run python scripts/debugging_effectiveness_tracker.py --session-start
+uv run python scripts/debugging_effectiveness_tracker.py --pattern-used "I can see the issue"
+uv run python scripts/debugging_effectiveness_tracker.py --session-end --success
 ```
 
 ##### **Weekly Analysis**

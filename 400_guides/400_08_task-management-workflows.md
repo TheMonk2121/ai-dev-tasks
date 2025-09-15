@@ -966,7 +966,7 @@ Quick reference for memory context workflows across different task types. Use th
 
 #### **File Analysis Workflow**
 - **Analysis**: `400_guides/400_file-analysis-guide.md` (MANDATORY)
-- **Naming**: `200_setup/200_naming-conventions.md`
+- **Naming**: `200_setup/400_guides/400_05_codebase-organization-patterns.md`
 - **Organization**: `400_guides/400_context-priority-guide.md`
 
 #### **File Management Process**

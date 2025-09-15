@@ -1,9 +1,9 @@
-# 🤖 v0.3.1 Model Configuration Guide
+# 🤖 Model Configuration Guide
 
-This document outlines the specific AI model configuration for the AI Dev Tasks project.
+This document outlines the AI model configuration for the AI Dev Tasks project.
 
-<!-- SYSTEM_FILES: 400_system-overview.md, dspy-rag-system/README.md -->
-<!-- INTEGRATION_FILES: 103_yi-coder-integration.md -->
+<!-- SYSTEM_FILES: 400_03_system-overview-and-architecture.md, 400_09_ai-frameworks-dspy.md -->
+<!-- INTEGRATION_FILES: 400_10_integrations-models.md -->
 <!-- ARCHITECTURE_FILES: 104_dspy-development-context.md -->
 
 ### **AI Development Ecosystem Context**
@@ -68,120 +68,79 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 
 ## 🔧 **Setup Instructions**
 
-### **Mistral 7B Instruct Setup**
+### **UV Package Management Setup**
 
-1. **Install Ollama** (if not already installed):
-   ```bash
-   curl -fsSL https://ollama.ai/install.sh | sh
-   ```
+**Status**: ✅ **MIGRATED** - Project uses UV for 100-600x faster package management
 
-2. **Pull the Model**:
-   ```bash
-   ollama pull mistral:7b-instruc
-   ```
-
-3. **Start Ollama**:
-   ```bash
-   ollama serve
-   ```
-
-4. **Verify Installation**:
-   ```bash
-   ollama lis
-   ```
-
-### **Yi-Coder-9B-Chat-Q6_K Setup**
-
-#### **Prerequisites**
-| Component | macOS Command | Linux (Ubuntu 22.04) | Notes |
-|-----------|---------------|----------------------|-------|
-| Homebrew | built-in | — | Package manager (macOS) |
-| Git & curl | `brew install git curl` | `sudo apt install git curl` | For CLI download/testing |
-| LM Studio ≥ 0.2.18 | `brew install --cask lm-studio` or download DMG from https://lmstudio.ai/ | AppImage on website | Runs the model & exposes OpenAI-compatible API |
-| (the execution engine) huggingface-hub CLI | `pip install --upgrade huggingface-hub` | same | Enables command-line model downloads |
-
-#### **Download the Model**
-
-**Option A: Inside LM Studio (GUI – easiest)**
-1. Launch LM Studio → Models
-2. Search "Yi-Coder-9B-Chat-GGUF"
-3. Click Download on Yi-Coder-9B-Chat-Q6_K.gguf (≈ 4.9 GB)
-4. Wait for checksum to finish
-
-**Option B: Command-line (offline / scripted)**
+#### **Quick Setup**:
 ```bash
-# create a models folder
-mkdir -p ~/lmstudio/models/yi-coder
-cd ~/lmstudio/models/yi-coder
+# Install UV (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# pull only the Q6_K file
-huggingface-cli download
-  TheBloke/Yi-Coder-9B-Chat-GGUF
-  Yi-Coder-9B-Chat-Q6_K.gguf
-  --local-dir . --resume-download
+# Setup development environment
+uv venv --python 3.12
+uv sync --extra dev
+
+# Use shell aliases for common tasks
+source uv_aliases.sh
+uvd  # Quick dev setup
+uvt  # Run tests
+uvs  # System health check
 ```
 
-After manual download, click Models → Add local model in LM Studio and point to the .gguf file.
+#### **Environment Management**:
+- **Local (macOS)**: `UV_PROJECT_ENVIRONMENT=.venv`, includes dev extras
+- **Docker/CI (Linux)**: `UV_PROJECT_ENVIRONMENT=/opt/venv`, installs from `uv.lock` only
+- Use `uv sync --frozen` in CI (do not re-lock)
+- Use `uv sync --extra dev` for local development
 
-#### **Configure the Model in LM Studio**
+### **Model Provider Configuration**
 
-**Load Tab Settings:**
-- Context Length: 8092
-- GPU Offload: 48 / 48 (full)
-- Evaluation Batch Size: 384
-- Offload KV Cache to GPU: On
-- Flash Attention: On
-- K / V Cache Quantization: (the execution engine) q8_0 for both
+The system supports multiple model providers with explicit selection per run:
 
-**Prompt Tab Settings:**
-1. Select Template (Jinja) and paste the full template:
-```jinja
-{# --- optional system message --- #}
-{% if messages and messages[0].get('role') == 'system' %}
-<|im_start|>system
-{{ messages[0]['content'] | trim }}
-<|im_end|>
-{% set start_index = 1 %}
-{% else %}
-{% set start_index = 0 %}
-{% endif %}
+- **Providers**: `EVAL_PROVIDER={bedrock|ollama|openai|synthetic}`
+- **Models**:
+  - Bedrock: `BEDROCK_MODEL_ID` (default `anthropic.claude-3-haiku-20240307-v1:0`)
+  - Ollama: `OLLAMA_MODEL` and `OLLAMA_HOST` (default `http://localhost:11434`)
+  - OpenAI: `OPENAI_MODEL` (e.g., `gpt-4o-mini`)
+  - Synthetic: no external calls; for plumbing and unit tests
 
-{# --- history loop --- #}
-{% for m in messages[start_index:] %}
-{% if m['role'] in ['user', 'assistant'] %}
-<|im_start|>{{ m['role'] }}
-{{ m['content'] | trim }}
-<|im_end|>
-{% endif %}
-{% endfor %}
+#### **Local Model Setup (Optional)**
 
-{# --- assistant preamble --- #}
-<|im_start|>assistan
+> **Note**: Local model setup instructions have been moved to `600_archives/legacy-integrations/` to keep core docs focused on Cursor-native development.
+
+#### **Provider Smoke Tests**
+
+Run before any evaluation to verify provider availability:
+
+```bash
+# Test Bedrock provider
+uv run python scripts/provider_smoke.py --provider bedrock --model "$BEDROCK_MODEL_ID"
+
+# Test Ollama provider  
+uv run python scripts/provider_smoke.py --provider ollama --model "$OLLAMA_MODEL"
+
+# Test OpenAI provider
+uv run python scripts/provider_smoke.py --provider openai --model "$OPENAI_MODEL"
 ```
 
-2. Additional Stop Strings:
-```
-<|im_start|>
-<|im_end|>
-```
+#### **Environment Variables**
 
-3. System Prompt (1-liner):
+```bash
+# Core evaluation settings
+EVAL_PROFILE=gold  # real|gold|mock
+EVAL_DRIVER=dspy_rag  # dspy_rag|synthetic
+RAGCHECKER_USE_REAL_RAG=1
+SEED=42
+MAX_WORKERS=3
+
+# Provider-specific settings
+EVAL_PROVIDER=bedrock  # bedrock|ollama|openai|synthetic
+BEDROCK_MODEL_ID=anthropic.claude-3-haiku-20240307-v1:0
+OLLAMA_MODEL=mistral:7b-instruct
+OLLAMA_HOST=http://localhost:11434
+OPENAI_MODEL=gpt-4o-mini
 ```
-You are Yi-Coder, a deterministic coding assistant. Output runnable code.
-```
-
-4. Toggle Reasoning Section Parsing → OFF
-
-**Inference Tab Settings:**
-- Temperature: 0.35
-- Top-K / Top-P: 40 / 0.9
-- Repeat Penalty: 1.1
-- Min-P Sampling: Off
-- Limit Response Length: On, 2048 tokens
-- Context Overflow: Truncate Middle
-- CPU Threads: 12
-
-Click Save.
 
 ## 🛡️ **Runtime Guard-Rails**
 

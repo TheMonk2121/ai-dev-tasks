@@ -96,7 +96,7 @@ This guide covers comprehensive project planning and roadmap management includin
 
 ### **Current Sprint Status**
 
-#### **Active Sprint: Documentation Restructuring & System Enhancement (January 2025)**
+#### **Active Sprint: Documentation Restructuring & System Enhancement (September 2025)**
 **Current Focus**: Complete documentation restructuring and system enhancemen
 
 #### **Completed This Sprint**
@@ -372,37 +372,37 @@ class CapacityPlan:
 #### **Backlog Integration**
 ```bash
 # Generate sprint plan from backlog
-python3 scripts/sprint_planning.py --generate-plan --sprint-id SPRINT-001
+uv run python scripts/sprint_planning.py --generate-plan --sprint-id SPRINT-001
 
 # Validate sprint plan
-python3 scripts/sprint_planning.py --validate-plan --sprint-id SPRINT-001
+uv run python scripts/sprint_planning.py --validate-plan --sprint-id SPRINT-001
 
 # Track sprint progress
-python3 scripts/sprint_planning.py --track-progress --sprint-id SPRINT-001
+uv run python scripts/sprint_planning.py --track-progress --sprint-id SPRINT-001
 ```
 
 #### **Development Workflow Integration**
 ```bash
 # Start sprin
-python3 scripts/sprint_planning.py --start-sprint --sprint-id SPRINT-001
+uv run python scripts/sprint_planning.py --start-sprint --sprint-id SPRINT-001
 
 # Update sprint progress
-python3 scripts/sprint_planning.py --update-progress --sprint-id SPRINT-001 --item B-XXXX --progress 75
+uv run python scripts/sprint_planning.py --update-progress --sprint-id SPRINT-001 --item B-XXXX --progress 75
 
 # Complete sprin
-python3 scripts/sprint_planning.py --complete-sprint --sprint-id SPRINT-001
+uv run python scripts/sprint_planning.py --complete-sprint --sprint-id SPRINT-001
 ```
 
 ### **Strategic Planning Integration**
 ```bash
 # Generate strategic roadmap
-python3 scripts/strategic_planning.py --generate-roadmap --timeframe 6-months
+uv run python scripts/strategic_planning.py --generate-roadmap --timeframe 6-months
 
 # Update strategic goals
-python3 scripts/strategic_planning.py --update-goals --goal-id GOAL-001
+uv run python scripts/strategic_planning.py --update-goals --goal-id GOAL-001
 
 # Track strategic progress
-python3 scripts/strategic_planning.py --track-progress --goal-id GOAL-001
+uv run python scripts/strategic_planning.py --track-progress --goal-id GOAL-001
 ```
 
 ## 📋 **Checklists**
@@ -587,31 +587,31 @@ class ResourceManagementFramework:
 #### **Analytics Commands**
 ```bash
 # Track project progress
-python3 scripts/track_project_progress.py --project-id PROJECT-001 --data progress_data.yaml
+uv run python scripts/track_project_progress.py --project-id PROJECT-001 --data progress_data.yaml
 
 # Generate project analytics
-python3 scripts/generate_project_analytics.py --project-id PROJECT-001 --output analytics_report.md
+uv run python scripts/generate_project_analytics.py --project-id PROJECT-001 --output analytics_report.md
 
 # Analyze project trends
-python3 scripts/analyze_project_trends.py --project-id PROJECT-001 --timeframe 30d
+uv run python scripts/analyze_project_trends.py --project-id PROJECT-001 --timeframe 30d
 
 # Generate project recommendations
-python3 scripts/generate_project_recommendations.py --project-id PROJECT-001
+uv run python scripts/generate_project_recommendations.py --project-id PROJECT-001
 ```
 
 #### **Resource Management Commands**
 ```bash
 # Optimize resource allocation
-python3 scripts/optimize_resources.py --project-id PROJECT-001 --constraints constraints.yaml
+uv run python scripts/optimize_resources.py --project-id PROJECT-001 --constraints constraints.yaml
 
 # Monitor resource usage
-python3 scripts/monitor_resource_usage.py --project-id PROJECT-001
+uv run python scripts/monitor_resource_usage.py --project-id PROJECT-001
 
 # Generate resource repor
-python3 scripts/generate_resource_report.py --project-id PROJECT-001 --output resource_report.md
+uv run python scripts/generate_resource_report.py --project-id PROJECT-001 --output resource_report.md
 
 # Validate resource optimization
-python3 scripts/validate_resource_optimization.py --project-id PROJECT-001
+uv run python scripts/validate_resource_optimization.py --project-id PROJECT-001
 ```
 
 ### **Project Management Quality Gates**

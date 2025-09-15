@@ -11,6 +11,13 @@ generate_prd: |
   Skip PRD generation for items with points<5 AND score_total>=3.0
   Generate PRD for items with points>=5 OR score_total<3.0
 
+backlog_tools: |
+  # Get parent backlog ID for a file
+  python scripts/tools/get_parent_backlog_id.py /path/to/file.md
+  
+  # Generate backlog cycle time metrics
+  python scripts/data_processing/generate_backlog_cycle_times.py
+
 ```tex
 
 ## Update Status

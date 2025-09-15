@@ -16,8 +16,8 @@ import psycopg2
 from sentence_transformers import SentenceTransformer
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-from common.db_dsn import resolve_dsn
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.db_dsn import resolve_dsn
 
 # JSON-like typing that avoids Any
 JSONScalar = str | int | float | bool | None
@@ -28,10 +28,7 @@ class CursorRealtimeCapture:
     """Real-time conversation capture system for Cursor AI."""
 
     def __init__(self, dsn: str | None = None):
-        resolved_dsn = dsn if dsn is not None else resolve_dsn()
-        if resolved_dsn is None:
-            raise ValueError("Database DSN could not be resolved; provide dsn or configure environment")
-        self.dsn: str = resolved_dsn
+        self.dsn: str = dsn if dsn is not None else resolve_dsn()
         self.embedder: SentenceTransformer = SentenceTransformer("all-MiniLM-L6-v2")
         self.embedding_dim: int = 384
         self.session_id: str = f"cursor_session_{int(time.time())}"

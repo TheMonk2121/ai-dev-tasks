@@ -13,9 +13,9 @@ import sys
 from datetime import datetime
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from common.db_dsn import resolve_dsn
+from src.common.db_dsn import resolve_dsn
 
 from .cursor_working_integration import CursorWorkingIntegration
 
@@ -38,10 +38,7 @@ class CursorMCPCapture:
     """Bridge between Cursor and MCP server for conversation capture."""
 
     def __init__(self, dsn: str | None = None) -> None:
-        resolved_dsn = dsn if dsn is not None else resolve_dsn()
-        if resolved_dsn is None:
-            raise ValueError("Database DSN could not be resolved")
-        self.dsn: str = resolved_dsn
+        self.dsn: str = dsn if dsn is not None else resolve_dsn()
         self.integration: CursorWorkingIntegration = CursorWorkingIntegration(self.dsn)
         self.session_file: str = os.path.expanduser("~/.cursor_mcp_session.json")
         self.last_capture: str | None = None

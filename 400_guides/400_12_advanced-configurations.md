@@ -524,7 +524,7 @@ A modern, interactive web dashboard for managing and visualizing documents in yo
 cd dashboard
 
 # Install dependencies
-python3 -m pip install -r requirements.txt
+uv sync --extra dev
 
 # Start the dashboard
 ./start_dashboard.sh
@@ -1224,6 +1224,9 @@ print(f"Custom workflows: {len(status['workflows'])}")
 - **2025-01-XX**: Extracted from `400_guides/400_12_product-management-and-roadmap.md`
 - **2025-01-XX**: Integrated with AI frameworks and system configuration
 - **2025-01-XX**: Added comprehensive advanced configuration frameworks
+- **2025-09-15**: Updated all command examples to use UV package management standards
+- **2025-09-15**: Aligned testing references with current UV standards and testing markers
+- **2025-09-15**: Updated dependency management commands to use uv sync instead of pip install
 
 ## 🔒 **Production Configuration Locking System**
 
@@ -1540,7 +1543,7 @@ The system works with existing RAGChecker evaluation:
 
 ```bash
 # Standard RAGChecker evaluation with locked config
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
   --cases eval/test_cases.json
   --outdir metrics/baseline_evaluations
   --use-bedrock
@@ -1632,7 +1635,7 @@ CREATE TABLE document_chunks_2025_09_07_143022_v1 (
   - [ ] Thresholds defined and locked
   - [ ] Prompt audit flags enabled
 
-**Command**: `python3 scripts/eval_manifest_generator.py --format yaml`
+**Command**: `uv run python scripts/eval_manifest_generator.py --format yaml`
 
 #### **✅ Deterministic Evaluations**
 - [ ] **Temperature=0** for all generation models
@@ -1652,7 +1655,7 @@ CREATE TABLE document_chunks_2025_09_07_143022_v1 (
 - [ ] **Database connectivity** - all connections tested
 - [ ] **Model availability** - all models responsive
 
-**Command**: `python3 scripts/health_gated_evaluation.py`
+**Command**: `uv run python scripts/health_gated_evaluation.py`
 
 #### **✅ Concurrency Controls**
 - [ ] **2-3 workers maximum** until live profiling
@@ -1668,7 +1671,7 @@ CREATE TABLE document_chunks_2025_09_07_143022_v1 (
 - [ ] **Restore script** generated and tested
 - [ ] **Backup integrity** validated
 
-**Command**: `python3 scripts/backup_production_state.py`
+**Command**: `uv run python scripts/backup_production_state.py`
 
 #### **✅ Monitoring & Alerting**
 - [ ] **Health checks** configured and tested
@@ -1695,20 +1698,20 @@ CREATE TABLE document_chunks_2025_09_07_143022_v1 (
 
 ```bash
 # 1. Generate production manifest
-python3 scripts/eval_manifest_generator.py --format yaml
+uv run python scripts/eval_manifest_generator.py --format yaml
 
 # 2. Run deterministic evaluation
 source configs/deterministic_evaluation.env
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # 3. Health-gated validation
-python3 scripts/health_gated_evaluation.py
+uv run python scripts/health_gated_evaluation.py
 
 # 4. Backup production state
-python3 scripts/backup_production_state.py
+uv run python scripts/backup_production_state.py
 
 # 5. Final validation
-python3 scripts/production_validation.py --full-check
+uv run python scripts/production_validation.py --full-check
 ```
 
 ### **📊 Post-Deployment Monitoring**
@@ -1742,16 +1745,16 @@ python3 scripts/production_validation.py --full-check
 #### **Rollback Commands**
 ```bash
 # 1. Stop new traffic
-python3 scripts/emergency_stop.py
+uv run python scripts/emergency_stop.py
 
 # 2. Restore from backup
-python3 scripts/restore_production_state.py --backup-id <backup_id>
+uv run python scripts/restore_production_state.py --backup-id <backup_id>
 
 # 3. Validate rollback
-python3 scripts/validate_rollback.py
+uv run python scripts/validate_rollback.py
 
 # 4. Resume normal operations
-python3 scripts/resume_operations.py
+uv run python scripts/resume_operations.py
 ```
 
 ---

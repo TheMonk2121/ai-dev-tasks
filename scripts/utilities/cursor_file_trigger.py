@@ -11,11 +11,10 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import cast
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-from common.db_dsn import resolve_dsn
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.db_dsn import resolve_dsn
 
 # Import our working integration
 from .cursor_working_integration import CursorWorkingIntegration
@@ -25,7 +24,7 @@ class CursorFileTrigger:
     """File-based trigger system for automatic conversation capture."""
 
     def __init__(self, dsn: str | None = None) -> None:
-        self.dsn: str = cast(str, dsn or resolve_dsn())
+        self.dsn: str = dsn or resolve_dsn()
         self.trigger_dir: Path = Path.home() / ".cursor_triggers"
         self.trigger_dir.mkdir(exist_ok=True)
         self.session_file: Path = self.trigger_dir / "active_session.json"
@@ -149,7 +148,7 @@ class CursorFileTrigger:
         try:
             if self.session_file.exists():
                 with open(self.session_file) as f:
-                    session_data = cast(dict[str, object], json.load(f))
+                    session_data = json.load(f)
 
                 if session_data.get("active", False):  # type: ignore[arg-type]
                     # Recreate integration with existing session

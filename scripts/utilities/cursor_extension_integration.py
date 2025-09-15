@@ -11,9 +11,9 @@ from datetime import datetime
 from typing import Any
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 # Import our working integration
-from common.db_dsn import resolve_dsn
+from src.common.db_dsn import resolve_dsn
 
 from .cursor_working_integration import CursorWorkingIntegration
 
@@ -27,10 +27,8 @@ class CursorExtensionAPI:
         resolved_dsn = resolve_dsn()
         if dsn is not None:
             self.dsn = dsn
-        elif resolved_dsn is not None:
-            self.dsn = resolved_dsn
         else:
-            self.dsn = "postgresql://danieljacobs@localhost:5432/ai_agency"  # fallback
+            self.dsn = resolved_dsn
         self.session_file: str = os.path.expanduser("~/.cursor_active_session.json")
         self.current_integration: CursorWorkingIntegration | None = None
         self._load_active_session()

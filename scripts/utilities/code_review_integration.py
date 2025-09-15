@@ -14,7 +14,8 @@ from uuid import uuid4
             from scripts.pre_workflow_hook import run_quality_gates
                 from scripts.code_review_core import CodeReviewCore
 import sys
-from scripts.code_review_core import CodeReviewCore
+# FIXME: Update this import path after reorganization
+# from scripts.code_review_core import CodeReviewCore
 import argparse
 import os
 from typing import Any, Optional, Union

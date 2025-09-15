@@ -6,7 +6,8 @@ import re
 import sys
 from pathlib import Path
 
-from scripts.doorway_utils import detect_duplicates
+# FIXME: Update this import path after reorganization
+# from scripts.doorway_utils import detect_duplicates
 
 BACKLOG_FILE = Path("000_core/000_backlog.md")
 

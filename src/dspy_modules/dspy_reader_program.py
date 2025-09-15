@@ -11,6 +11,9 @@ import dspy
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
+# Import for query embedding generation
+from sentence_transformers import SentenceTransformer
+
 from dspy_modules.reader.entrypoint import build_reader_context
 from dspy_modules.reader.span_picker import normalize_answer, pick_span
 from dspy_modules.retriever.limits import load_limits
@@ -21,8 +24,31 @@ from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 # Cross-encoder singleton handle
 _ce_singleton = None
 
+# Query embedding model singleton
+_query_embedder = None
+
+
+def _get_query_embedder():
+    """Get or create the query embedding model."""
+    global _query_embedder
+    if _query_embedder is None:
+        _query_embedder = SentenceTransformer("BAAI/bge-small-en-v1.5")
+        _query_embedder.max_seq_length = 512  # Safe for BGE small
+    return _query_embedder
+
+
+def _generate_query_embedding(query: str) -> list[float]:
+    """Generate embedding for a query string with BGE query prefix."""
+    embedder = _get_query_embedder()
+    # BGE models benefit from instruction prefix for queries
+    prefixed_query = f"query: {query}"
+    embedding = embedder.encode([prefixed_query], normalize_embeddings=True)[0]
+    return embedding.tolist()
+
+
 # Import reranker environment and cross-encoder
 _ = os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+_ = os.environ.setdefault("EMBED_DIM", "384")
 from src.rag import reranker_env as RENV
 
 REQUIRED_META_KEYS = ("ingest_run_id", "chunk_variant")
@@ -438,11 +464,16 @@ class RAGAnswer(dspy.Module):
 
         # Get more candidates for reranking if enabled
         input_topk = RENV.RERANK_INPUT_TOPK if RENV.RERANK_ENABLE else limits["shortlist"]
+
+        # Generate query embedding for vector search
+        query_text = qs["short"] or qs["title"] or qs["bm25"] or ""
+        qvec = _generate_query_embedding(query_text) if query_text else []
+
         rows = run_fused_query(
             qs["short"],
             qs["title"],
             qs["bm25"],
-            qvec=[],  # empty vector for now
+            qvec=qvec,  # Generated query embedding
             tag=tag,
             k=input_topk,  # Get more candidates for reranking
             return_components=True,

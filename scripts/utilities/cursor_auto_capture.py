@@ -10,11 +10,10 @@ import signal
 import sys
 from datetime import datetime
 from types import FrameType
-from typing import cast
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-from common.db_dsn import resolve_dsn
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.db_dsn import resolve_dsn
 
 # Import our working integration
 from .cursor_working_integration import CursorWorkingIntegration
@@ -24,7 +23,7 @@ class CursorAutoCapture:
     """Automatic conversation capture system."""
 
     def __init__(self, dsn: str | None = None) -> None:
-        self.dsn: str = cast(str, dsn or resolve_dsn())
+        self.dsn: str = dsn or resolve_dsn()
         self.current_integration: CursorWorkingIntegration | None = None
         self.capture_active: bool = False
         self.session_file: str = os.path.expanduser("~/.cursor_auto_capture.json")
@@ -44,7 +43,7 @@ class CursorAutoCapture:
         try:
             if os.path.exists(self.session_file):
                 with open(self.session_file) as f:
-                    session_data = cast(dict[str, object], json.load(f))
+                    session_data = json.load(f)
 
                 if session_data.get("active", False):  # type: ignore[arg-type]
                     session_id = str(session_data.get("session_id", ""))

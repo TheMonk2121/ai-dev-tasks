@@ -47,10 +47,13 @@ class RoleGUCManager:
         if dsn is None:
             # Try to resolve DSN
             try:
-                sys.path.insert(0, str(Path(__file__).parent.parent))
-                from common.db_dsn import resolve_dsn
+                from .db_dsn import resolve_dsn
 
-                dsn = resolve_dsn(strict=False, emit_warning=False)
+                try:
+                    dsn = resolve_dsn(strict=False)
+                except RuntimeError:
+                    # Fallback to environment if resolver is strict about unset DSNs
+                    dsn = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
             except ImportError:
                 dsn = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
 

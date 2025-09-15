@@ -14,7 +14,6 @@ else:
 
 from src.schemas.eval import CaseResult, ContextChunk, RetrievalCandidate
 
-
 class LoadCases(Node[list[dict]]):  # returns list of raw case dicts
     def run(self, gold_file: str) -> list[dict]:
         from src.utils.gold_loader import load_gold_cases
@@ -22,7 +21,6 @@ class LoadCases(Node[list[dict]]):  # returns list of raw case dicts
         cases = load_gold_cases(gold_file)
         # Convert GoldCase models to plain dicts for downstream simplicity
         return [c.model_dump() for c in cases]
-
 
 class Retrieve(Node[list[RetrievalCandidate]]):
     def run(self, question: str) -> list[RetrievalCandidate]:
@@ -36,7 +34,6 @@ class Retrieve(Node[list[RetrievalCandidate]]):
         snapshot = getattr(rp.rag_module, "_last_retrieval_candidates_dto", [])
         return list(snapshot)
 
-
 class Score(Node[CaseResult]):
     def run(
         self,
@@ -49,7 +46,7 @@ class Score(Node[CaseResult]):
     ) -> CaseResult:
         # Minimal scoring using existing harness logic (Jaccard-based metrics)
         try:
-            from 600_archives.600_deprecated._ragchecker_eval_impl import CleanRAGCheckerEvaluator  # type: ignore
+
         except Exception:
             CleanRAGCheckerEvaluator = None  # type: ignore
 
@@ -77,11 +74,9 @@ class Score(Node[CaseResult]):
             f1=f1,
         )
 
-
 def build_graph() -> Any:
     g = Graph(nodes=[LoadCases(), Retrieve(), Score()])  # type: ignore
     return g
-
 
 def export_mermaid(path: str = "docs/graphs/eval_graph.mmd") -> None:
     try:

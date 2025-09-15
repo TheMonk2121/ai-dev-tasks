@@ -12,11 +12,11 @@ import time
 from datetime import datetime
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 # Import our working integration
 from utilities.cursor_working_integration import CursorWorkingIntegration
 
-from common.db_dsn import resolve_dsn
+from src.common.db_dsn import resolve_dsn
 
 
 class CursorDaemonCapture:
@@ -28,10 +28,8 @@ class CursorDaemonCapture:
         resolved_dsn = resolve_dsn()
         if dsn_param is not None:
             self.dsn = dsn_param
-        elif resolved_dsn is not None:
-            self.dsn = resolved_dsn
         else:
-            raise ValueError("No DSN provided and resolve_dsn() returned None")
+            self.dsn = resolved_dsn
         self.pid_file: str = os.path.expanduser("~/.cursor_capture_daemon.pid")
         self.session_file: str = os.path.expanduser("~/.cursor_active_session.json")
         self.log_file: str = os.path.expanduser("~/.cursor_capture.log")

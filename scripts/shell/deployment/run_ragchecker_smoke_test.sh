@@ -8,16 +8,16 @@ echo "🚀 RAGChecker Smoke Test Runner"
 echo "==============================="
 
 # Load stable configuration
-STABLE_ENV_FILE="${RAGCHECKER_ENV_FILE:-configs/stable_bedrock.env}"
+STABLE_ENV_FILE="${RAGCHECKER_ENV_FILE:-300_evals/configs/stable_bedrock.env}"
 if [ -f "$STABLE_ENV_FILE" ]; then
   echo "📁 Loading stable config: $STABLE_ENV_FILE"
-  # shellcheck source=configs/stable_bedrock.env
+  # shellcheck source=300_evals/configs/stable_bedrock.env
   # shellcheck disable=SC1091
   source "$STABLE_ENV_FILE"
   echo "🔒 Loaded env from $STABLE_ENV_FILE … lock=True"
 else
   echo "❌ Stable config not found: $STABLE_ENV_FILE"
-  echo "💡 Run: cp configs/stable_bedrock.env.template configs/stable_bedrock.env"
+  echo "💡 Run: cp 300_evals/configs/stable_bedrock.env.template 300_evals/configs/stable_bedrock.env"
   exit 1
 fi
 

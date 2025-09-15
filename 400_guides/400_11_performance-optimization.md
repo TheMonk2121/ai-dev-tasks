@@ -17,35 +17,35 @@
 **Step 1: Check Current System Performance**
 ```bash
 # Run a quick performance check
-python3 scripts/performance_monitor.py --quick-check
+uv run python scripts/performance_monitor.py --quick-check
 
 # Check system health
-python3 scripts/performance_monitor.py --health-check
+uv run python scripts/performance_monitor.py --health-check
 ```
 
 **Step 2: Identify Performance Issues**
 ```bash
 # Get current performance metrics
-python3 scripts/performance_monitor.py --metrics
+uv run python scripts/performance_monitor.py --metrics
 
 # Look for bottlenecks
-python3 scripts/performance_monitor.py --bottlenecks
+uv run python scripts/performance_monitor.py --bottlenecks
 ```
 
 **Step 3: Apply Basic Optimizations**
 ```bash
 # Optimize database connections
-python3 scripts/db_optimizer.py --quick-optimize
+uv run python scripts/db_optimizer.py --quick-optimize
 
 # Check AI model performance
-python3 scripts/ai_performance_monitor.py --status
+uv run python scripts/ai_performance_monitor.py --status
 ```
 
 **Step 4: Check RAGChecker Baseline (CRITICAL)**
 ```bash
 # Check current RAGChecker performance against baseline
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # View latest results
 ls -la metrics/baseline_evaluations/
@@ -112,14 +112,14 @@ ls -la metrics/baseline_evaluations/
 ### **📊 Progress Tracking & Baseline Management**
 
 **Where Results Are Stored**: `metrics/baseline_evaluations/`
-**How to Track Progress**: Run `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
+**How to Track Progress**: Run `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 **Baseline Lock**: Current metrics are the performance floor - no regression allowed
 
 **Example Commands**:
 ```bash
 # Run RAGChecker evaluation to check progress
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check latest results
 ls -la metrics/baseline_evaluations/
@@ -169,7 +169,7 @@ python -m evals_300.tools.run --suite 300_core --pass deterministic_few_sho
 
 # Legacy direct script execution (still supported)
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 ```
 
 **Evaluation System Features**:
@@ -254,8 +254,8 @@ cat 300_experiments/300_complete-testing-coverage.md
 cat 300_experiments/300_testing-infrastructure-guide.md
 
 # Use testing workflows
-python3 -m pytest --help
-python3 -m pytest -m "retrieval or memory or integration"
+uv run pytest --help
+uv run pytest -m "retrieval or memory or integration"
 ```
 
 ### **🧠 Memory System Performance Results**
@@ -270,7 +270,7 @@ python3 -m pytest -m "retrieval or memory or integration"
 **Example Paths**:
 ```bash
 # Run memory benchmark
-python3 scripts/memory_benchmark.py --full-benchmark --output benchmark_results/comprehensive_benchmark.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output benchmark_results/comprehensive_benchmark.md
 
 # Check existing results
 ls -la benchmark_results/
@@ -285,10 +285,10 @@ ls -la benchmark_results/
 **Example Commands**:
 ```bash
 # Get current metrics
-python3 scripts/performance_monitor.py --metrics
+uv run python scripts/performance_monitor.py --metrics
 
 # Export metrics to file
-python3 scripts/performance_monitor.py --export metrics/system_performance_$(date +%Y%m%d).json
+uv run python scripts/performance_monitor.py --export metrics/system_performance_$(date +%Y%m%d).json
 ```
 
 ### **🔍 AI Model Performance Results**
@@ -301,11 +301,35 @@ python3 scripts/performance_monitor.py --export metrics/system_performance_$(dat
 
 ### **📋 Test Results & Validation**
 
-**Test Outputs**: `test_outputs/` or `pytest_results/`
+**Test Outputs**: `300_evals/test_results/` or `pytest_results/`
 
 **Integration Test Results**: `integration_test_results/`
 
 **Performance Test Results**: `performance_test_results/`
+
+### **🧪 Streamlined Evaluation System Structure**
+
+The evaluation system (`300_evals/`) has been optimized for **stateless agents** with a simple, clear structure:
+
+**📁 Directory Structure**:
+```
+300_evals/
+├── test_results/           # All test outputs, baselines, and artifacts
+├── stable_build/          # Production-ready evaluation components
+│   ├── modules/           # Evaluation modules and tools
+│   ├── harnesses/         # Test harnesses and compiled configs
+│   └── config/            # Active configuration files
+└── experiments/           # Experimental work
+    ├── active/            # Current experiments and research
+    └── legacy/            # Archived experiments (gitignored, excluded from DB)
+```
+
+**🎯 Key Benefits**:
+- **Simple & Clear**: 3 main folders instead of 15+ nested directories
+- **Stateless-Friendly**: Easy for agents to understand and navigate
+- **Consolidated**: All test results in one place (`test_results/`)
+- **Organized**: Stable build components by function
+- **Isolated**: Legacy experiments properly archived
 
 ### **🚫 IMPORTANT: Do NOT Create New Documentation Files**
 
@@ -630,7 +654,7 @@ The project maintains a comprehensive testing infrastructure in the `300_experim
 ```
 300_experiments/
 ├── 300_testing-scripts/     # Testing, evaluation, and benchmarking scripts
-├── 300_testing-configs/     # Test environment configurations and parameters
+├── 300_testing-300_evals/configs/     # Test environment configurations and parameters
 ├── 300_testing-results/     # Test outputs, results, and analysis
 └── 300_testing-methodology-log.md  # Testing strategies and methodologies
 ```
@@ -652,10 +676,10 @@ The project maintains a comprehensive testing infrastructure in the `300_experim
 ```bash
 # Run RAGChecker Baseline Validation
 cd 300_experiments/300_testing-scripts/
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Load Testing Configuration
-cd 300_experiments/300_testing-configs/
+cd 300_experiments/300_testing-300_evals/configs/
 source baseline_v1.1.env
 
 # View Testing Results
@@ -731,13 +755,13 @@ This directory contains baseline RAGChecker evaluation results using **fixed, ve
 #### **Usage**
 ```bash
 # Run baseline evaluation v1.0
-python3 scripts/baseline_ragchecker_evaluation.py
+uv run python scripts/baseline_ragchecker_evaluation.py
 
 # Run with specific version
-python3 scripts/baseline_ragchecker_evaluation.py --version 1.0
+uv run python scripts/baseline_ragchecker_evaluation.py --version 1.0
 
 # Save to specific file
-python3 scripts/baseline_ragchecker_evaluation.py --output my_baseline_results.json
+uv run python scripts/baseline_ragchecker_evaluation.py --output my_baseline_results.json
 ```
 
 #### **View Results**
@@ -783,10 +807,10 @@ wc -l metrics/lessons/lessons.jsonl
 ##### **Generated Configurations**
 ```bash
 # View latest derived configs
-ls -la metrics/derived_configs/ | tail -5
+ls -la metrics/derived_300_evals/configs/ | tail -5
 
 # Check evolution tracking
-cat configs/EVOLUTION.md | tail -20
+cat 300_evals/configs/EVOLUTION.md | tail -20
 ```
 
 ##### **System Health Indicators**
@@ -844,7 +868,7 @@ We've successfully transformed the RAG system from a development prototype into 
 **1. Clean & Reproducible Evaluations**
 ```bash
 # Two-pass evaluation system
-python3 scripts/production_evaluation.py
+uv run python scripts/production_evaluation.py
 ```
 - **Pass 1**: Retrieval-only baseline (FEW_SHOT_K=0, EVAL_COT=0, temperature=0)
 - **Pass 2**: Deterministic few-shot (FEW_SHOT_K=5, FEW_SHOT_SEED=42)
@@ -906,16 +930,16 @@ To ensure stateless agents always have reliable context, the pipeline validates 
 **Local usage**:
 ```bash
 # Update manifest for a profile
-python3 scripts/update_baseline_manifest.py --profile precision_elevated
+uv run python scripts/update_baseline_manifest.py --profile precision_elevated
 
 # Validate (local)
-python3 scripts/abp_validation.py --profile precision_elevated --max-age-days 2
+uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2
 
 # Strict (fail on stale/missing)
-python3 scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --strict
+uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --strict
 
 # Adoption report (last 20 runs)
-python3 scripts/abp_adoption_report.py --window 20
+uv run python scripts/abp_adoption_report.py --window 20
 ```
 
 **CI integration**:
@@ -3086,28 +3110,28 @@ class PerformanceImprovementValidator:
 #### **Performance Research Commands**
 ```bash
 # Conduct performance optimization research
-python3 scripts/performance_research.py --target-metric recall --methodology experimental
+uv run python scripts/performance_research.py --target-metric recall --methodology experimental
 
 # Validate performance improvements
-python3 scripts/validate_improvements.py --baseline-file baseline_20250901.json --improvement-file improvement_20250902.json
+uv run python scripts/validate_improvements.py --baseline-file baseline_20250901.json --improvement-file improvement_20250902.json
 
 # Generate research reports
-python3 scripts/generate_research_report.py --output performance_research_report.md
+uv run python scripts/generate_research_report.py --output performance_research_report.md
 
 # Analyze optimization patterns
-python3 scripts/analyze_optimization_patterns.py --timeframe 30d --output patterns_analysis.md
+uv run python scripts/analyze_optimization_patterns.py --timeframe 30d --output patterns_analysis.md
 ```
 
 #### **Evidence Collection Commands**
 ```bash
 # Collect performance evidence
-python3 scripts/collect_performance_evidence.py --metric f1_score --duration 7d
+uv run python scripts/collect_performance_evidence.py --metric f1_score --duration 7d
 
 # Run systematic benchmarks
-python3 scripts/systematic_benchmark.py --framework ragchecker --iterations 10
+uv run python scripts/systematic_benchmark.py --framework ragchecker --iterations 10
 
 # Validate research findings
-python3 scripts/validate_research_findings.py --research-file research_results.json
+uv run python scripts/validate_research_findings.py --research-file research_results.json
 ```
 
 ### **Research Quality Gates**
@@ -3323,31 +3347,31 @@ class ResultsArchivalSystem:
 #### **Results Analysis Commands**
 ```bash
 # Analyze performance trends
-python3 scripts/analyze_performance_trends.py --timeframe 30d --output trend_analysis.md
+uv run python scripts/analyze_performance_trends.py --timeframe 30d --output trend_analysis.md
 
 # Compare evaluations
-python3 scripts/compare_evaluations.py --baseline baseline_20250901.json --current latest_evaluation.json
+uv run python scripts/compare_evaluations.py --baseline baseline_20250901.json --current latest_evaluation.json
 
 # Generate performance reports
-python3 scripts/generate_performance_report.py --period 7d --output performance_report.md
+uv run python scripts/generate_performance_report.py --period 7d --output performance_report.md
 
 # Validate results integrity
-python3 scripts/validate_results_integrity.py --full-check
+uv run python scripts/validate_results_integrity.py --full-check
 ```
 
 #### **Results Management Commands**
 ```bash
 # Archive old results
-python3 scripts/archive_old_results.py --dry-run
+uv run python scripts/archive_old_results.py --dry-run
 
 # Compress archived results
-python3 scripts/compress_archives.py --all
+uv run python scripts/compress_archives.py --all
 
 # Generate results summary
-python3 scripts/generate_results_summary.py --output results_summary.md
+uv run python scripts/generate_results_summary.py --output results_summary.md
 
 # Check results storage health
-python3 scripts/check_results_storage.py --health-check
+uv run python scripts/check_results_storage.py --health-check
 ```
 
 ### **Results Quality Gates**
@@ -3520,15 +3544,15 @@ RELATED_FILES: ["500_research/"]
 **Validation Commands:**
 ```bash
 # Run comprehensive benchmark testing
-python3 scripts/memory_benchmark.py --full-benchmark --output benchmark_results/comprehensive_benchmark.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output benchmark_results/comprehensive_benchmark.md
 
 # Cross-model validation
-python3 scripts/memory_benchmark.py --cross-validation
+uv run python scripts/memory_benchmark.py --cross-validation
 
 # Model-specific performance reports
-python3 scripts/memory_benchmark.py --model-report mistral-7b
-python3 scripts/memory_benchmark.py --model-report mixtral-8x7b
-python3 scripts/memory_benchmark.py --model-report gpt-4o
+uv run python scripts/memory_benchmark.py --model-report mistral-7b
+uv run python scripts/memory_benchmark.py --model-report mixtral-8x7b
+uv run python scripts/memory_benchmark.py --model-report gpt-4o
 ```
 
 **Quality Gates:**
@@ -3625,13 +3649,13 @@ cp -r 000_core/ 000_core_backup/
 **Validate Migration Tools:**
 ```bash
 # Test memory benchmark framework
-python3 scripts/memory_benchmark.py --full-benchmark --output pre_migration_baseline.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output pre_migration_baseline.md
 
 # Verify YAML parsing capabilities
-python3 -c "import yaml; print('YAML support available')"
+uv run python -c "import yaml; print('YAML support available')"
 
 # Test memory system integration
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test memory system"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test memory system"
 ```
 
 **Establish Migration Environment:**
@@ -3666,7 +3690,7 @@ RELATED_FILES: ["400_01_memory-system-architecture.md", "400_02_memory-rehydrati
 **Validation Commands:**
 ```bash
 # Test YAML parsing
-python3 -c "
+uv run python -c "
 import yaml
 with open('100_memory/100_cursor-memory-context.md', 'r') as f:
     content = f.read()
@@ -3677,7 +3701,7 @@ with open('100_memory/100_cursor-memory-context.md', 'r') as f:
 "
 
 # Test memory system integration
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test cursor memory context"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test cursor memory context"
 ```
 
 #### **Step 3: Performance Validation (Day 4)**
@@ -3685,13 +3709,13 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role plan
 **Run Performance Benchmark:**
 ```bash
 # Execute comprehensive benchmark testing
-python3 scripts/memory_benchmark.py --full-benchmark --output proof_of_concept_benchmark.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output proof_of_concept_benchmark.md
 
 # Cross-model validation
-python3 scripts/memory_benchmark.py --cross-validation
+uv run python scripts/memory_benchmark.py --cross-validation
 
 # Model-specific performance reports
-python3 scripts/memory_benchmark.py --model-report mistral-7b
+uv run python scripts/memory_benchmark.py --model-report mistral-7b
 ```
 
 **Success Criteria Validation:**
@@ -3717,10 +3741,10 @@ python3 scripts/memory_benchmark.py --model-report mistral-7b
 **Validation Commands:**
 ```bash
 # Test core system performance
-python3 scripts/memory_benchmark.py --full-benchmark --output core_migration_benchmark.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output core_migration_benchmark.md
 
 # Validate memory system integration
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test core system migration"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test core system migration"
 ```
 
 ### **Risk Assessment and Mitigation**
@@ -3760,7 +3784,7 @@ cp -r 400_guides_backup/* 400_guides/
 cp -r 000_core_backup/* 000_core/
 
 # Validate rollback
-python3 scripts/memory_benchmark.py --full-benchmark --output rollback_validation.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output rollback_validation.md
 ```
 
 **Partial Rollback:**
@@ -3769,7 +3793,7 @@ python3 scripts/memory_benchmark.py --full-benchmark --output rollback_validatio
 git checkout backup/pre-migration-$(date +%Y%m%d) -- [specific_files]
 
 # Validate partial rollback
-python3 scripts/memory_benchmark.py --full-benchmark --output partial_rollback_validation.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output partial_rollback_validation.md
 ```
 
 ### **Implementation Timeline**
@@ -3878,10 +3902,10 @@ The `300_experiments/` folder provides **100% comprehensive coverage** of all te
 ```bash
 # Run RAGChecker evaluation
 export AWS_REGION=us-east-1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Check performance against baseline
-python3 scripts/validate_performance_targets.py
+uv run python scripts/validate_performance_targets.py
   --precision-target 0.20
   --recall-target 0.45
   --f1-target 0.22
@@ -3891,25 +3915,25 @@ python3 scripts/validate_performance_targets.py
 **Memory System Performance Testing**:
 ```bash
 # Run memory benchmark
-python3 scripts/memory_benchmark.py --full-benchmark --output benchmark_results/comprehensive_benchmark.md
+uv run python scripts/memory_benchmark.py --full-benchmark --output benchmark_results/comprehensive_benchmark.md
 
 # Test memory system integration
-python3 scripts/test_memory_integration.py --test-all-components
+uv run python scripts/test_memory_integration.py --test-all-components
 
 # Validate memory performance
-python3 scripts/validate_memory_performance.py --baseline baseline_results/
+uv run python scripts/validate_memory_performance.py --baseline baseline_results/
 ```
 
 **System Integration Testing**:
 ```bash
 # Test end-to-end workflows
-python3 -m pytest tests/integration/test_end_to_end.py -v
+uv run pytest tests/integration/test_end_to_end.py -v
 
 # Test cross-system communication
-python3 -m pytest tests/integration/test_cross_system.py -v
+uv run pytest tests/integration/test_cross_system.py -v
 
 # Test error handling and recovery
-python3 -m pytest tests/integration/test_error_handling.py -v
+uv run pytest tests/integration/test_error_handling.py -v
 ```
 
 #### **Testing Best Practices**
@@ -3943,8 +3967,8 @@ python3.12 -m venv venv
 source .venv/bin/activate
 
 # Install testing dependencies
-pip install -r requirements.tx
-pip install -r requirements-dev.tx
+uv sync --extra dev
+uv sync --extra dev
 
 # Configure testing environmen
 export TESTING_MODE=true
@@ -3960,7 +3984,7 @@ createdb ai_agency_tes
 psql -d ai_agency_test -c "CREATE EXTENSION IF NOT EXISTS vector;"
 
 # Load test data
-python3 scripts/load_test_data.py --database ai_agency_tes
+uv run python scripts/load_test_data.py --database ai_agency_tes
 ```
 
 **Testing Tools Configuration**:
@@ -3972,7 +3996,7 @@ cp pytest.ini.example pytest.ini
 pre-commit install
 
 # Configure testing markers
-python3 -m pytest --markers
+uv run pytest --markers
 ```
 
 #### **CI/CD Integration**
@@ -4000,9 +4024,9 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.tx
-        pip install -r requirements-dev.tx
+        uv sync --upgrade
+        uv sync --extra dev
+        uv sync --extra dev
 
     - name: Run tests
       run: |
@@ -4060,25 +4084,25 @@ repos:
 **Data Generation**:
 ```bash
 # Generate synthetic test data
-python3 scripts/generate_test_data.py --type performance --count 1000
+uv run python scripts/generate_test_data.py --type performance --count 1000
 
 # Generate integration test scenarios
-python3 scripts/generate_test_data.py --type integration --scenarios 50
+uv run python scripts/generate_test_data.py --type integration --scenarios 50
 
 # Generate error test cases
-python3 scripts/generate_test_data.py --type errors --cases 100
+uv run python scripts/generate_test_data.py --type errors --cases 100
 ```
 
 **Data Validation**:
 ```bash
 # Validate test data integrity
-python3 scripts/validate_test_data.py --check-forma
+uv run python scripts/validate_test_data.py --check-forma
 
 # Validate data relationships
-python3 scripts/validate_test_data.py --check-relationships
+uv run python scripts/validate_test_data.py --check-relationships
 
 # Check data quality metrics
-python3 scripts/validate_test_data.py --check-quality
+uv run python scripts/validate_test_data.py --check-quality
 ```
 
 ### **Testing Monitoring & Reporting**
@@ -4100,13 +4124,13 @@ pytest --durations=0
 **Performance Monitoring**:
 ```bash
 # Monitor performance during testing
-python3 scripts/performance_monitor.py --monitor-tests
+uv run python scripts/performance_monitor.py --monitor-tests
 
 # Track resource usage
-python3 scripts/performance_monitor.py --track-resources
+uv run python scripts/performance_monitor.py --track-resources
 
 # Monitor test performance
-python3 scripts/performance_monitor.py --test-performance
+uv run python scripts/performance_monitor.py --test-performance
 ```
 
 #### **Testing Reporting**
@@ -4126,13 +4150,13 @@ pytest --benchmark-only --benchmark-json=benchmark_results.json
 **Testing Summary Reports**:
 ```bash
 # Generate testing summary
-python3 scripts/generate_testing_summary.py --output testing_summary.md
+uv run python scripts/generate_testing_summary.py --output testing_summary.md
 
 # Generate performance repor
-python3 scripts/generate_performance_report.py --output performance_report.md
+uv run python scripts/generate_performance_report.py --output performance_report.md
 
 # Generate methodology repor
-python3 scripts/generate_methodology_report.py --output methodology_report.md
+uv run python scripts/generate_methodology_report.py --output methodology_report.md
 ```
 
 ### **Testing Quality Gates**
@@ -4195,10 +4219,10 @@ cd ai-dev-tasks
 source .venv/bin/activate
 
 # Install dependencies
-pip install -r requirements.tx
+uv sync --extra dev
 
 # Verify installation
-python3 scripts/memory_benchmark.py --help
+uv run python scripts/memory_benchmark.py --help
 ```
 
 ###### **Step 2: Basic Memory Context Optimization**
@@ -4905,28 +4929,28 @@ RAGChecker Evaluation System
 #### **Basic Evaluation with Governance**
 ```bash
 # Run basic evaluation with governance
-python3 scripts/run_ragchecker_with_governance.py
+uv run python scripts/run_ragchecker_with_governance.py
 
 # Generate pipeline variants for training
-python3 scripts/run_ragchecker_with_governance.py --generate-variants 5
+uv run python scripts/run_ragchecker_with_governance.py --generate-variants 5
 
 # Full integration with real RAGChecker
-python3 scripts/ragchecker_governance_integration.py --use-bedrock
+uv run python scripts/ragchecker_governance_integration.py --use-bedrock
 
 # Test the system
-python3 scripts/test_governance_simple.py
+uv run python scripts/test_governance_simple.py
 ```
 
 #### **Configuration Management**
 ```bash
 # Custom pipeline configuration
-python3 scripts/run_ragchecker_with_governance.py --pipeline-config my_config.json
+uv run python scripts/run_ragchecker_with_governance.py --pipeline-config my_config.json
 
 # Export results
-python3 scripts/run_ragchecker_with_governance.py --output results.json
+uv run python scripts/run_ragchecker_with_governance.py --output results.json
 
 # Verbose logging
-python3 scripts/run_ragchecker_with_governance.py --verbose
+uv run python scripts/run_ragchecker_with_governance.py --verbose
 ```
 
 ### **Performance Targets**
@@ -5862,10 +5886,10 @@ def comprehensive_measurement_pattern(system_data: Dict[str, Any]) -> Dict[str, 
 ##### **1. Memory Context Integration**
 ```bash
 # Access evidence-based optimization via memory system
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "evidence-based optimization methodologies"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "evidence-based optimization methodologies"
 
 # Get research-based insights
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "research methodologies for performance optimization"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "research methodologies for performance optimization"
 ```
 
 ##### **2. Research Integration**
@@ -5912,13 +5936,13 @@ def integrate_research_with_memory(research_findings: Dict[str, Any],
 ##### **Monitoring Commands**
 ```bash
 # Monitor research quality
-python3 scripts/monitoring_dashboard.py --research-quality
+uv run python scripts/monitoring_dashboard.py --research-quality
 
 # Track optimization effectiveness
-python3 scripts/ragchecker_evaluation.py --optimization-effectiveness
+uv run python scripts/ragchecker_evaluation.py --optimization-effectiveness
 
 # Monitor continuous improvement
-python3 scripts/system_health_check.py --continuous-improvement
+uv run python scripts/system_health_check.py --continuous-improvement
 ```
 
 ## 📊 **Performance Monitoring & Analytics**
@@ -5940,6 +5964,219 @@ python3 scripts/system_health_check.py --continuous-improvement
 - **Bottleneck Identification**: System performance constraints
 - **Capacity Planning**: Resource scaling and optimization
 - **Performance Forecasting**: Future performance predictions
+
+### **TimescaleDB Telemetry Integration**
+
+The system uses TimescaleDB for high-performance time-series telemetry data storage and analysis:
+
+#### **Database Schema Overview**
+
+The TimescaleDB schema is optimized for evaluation telemetry with three main tables:
+
+**1. `eval_event` (Time-series hypertable)**
+- Stores individual evaluation events with timestamps
+- Optimized for time-based queries and compression
+- Fields: `ts`, `run_id`, `case_id`, `stage`, `metric_name`, `metric_value`, `model`, `tag`, `ok`, `meta` (JSONB)
+
+**2. `eval_run` (Dimension table)**
+- Stores evaluation run metadata
+- Fields: `run_id`, `tag`, `started_at`, `finished_at`, `model`, `meta` (JSONB)
+
+**3. `eval_case_result` (Result table)**
+- Stores case-level result summaries
+- Fields: `run_id`, `case_id`, `f1`, `precision`, `recall`, `latency_ms`, `ok`, `meta` (JSONB)
+
+#### **JSONB Data Handling**
+
+TimescaleDB handles JSON data efficiently without chunking:
+
+```python
+# JSON data is stored directly in JSONB columns
+meta_data = {
+    "config": {"profile": "gold", "driver": "dspy_rag"},
+    "environment": {"EVAL_PROFILE": "gold", "DSPY_MODEL": "claude-3-haiku"},
+    "metrics": {"precision": 0.85, "recall": 0.78, "f1": 0.81}
+}
+
+# Automatically serialized to JSONB
+db_logger.log_eval_run(meta=meta_data)
+```
+
+**Benefits of JSONB:**
+- **No chunking required** - PostgreSQL handles large JSON objects efficiently
+- **Indexed queries** - Can create GIN indexes on JSONB fields
+- **Flexible schema** - Easy to add new fields without migrations
+- **Compression** - TimescaleDB compresses JSONB data automatically
+
+#### **Database Telemetry Usage**
+
+**Initialize Database Logger:**
+```python
+from src.utils.db_telemetry import create_db_telemetry_logger
+
+# Create logger with run ID
+db_logger = create_db_telemetry_logger("eval-run-20241201-001")
+
+# Use context manager for automatic connection handling
+with db_logger as logger:
+    # Log evaluation run
+    logger.log_eval_run(
+        tag="evaluation_gold",
+        model="claude-3-haiku",
+        meta={"profile": "gold", "total_cases": 100}
+    )
+    
+    # Log individual metrics
+    logger.log_evaluation_metrics(
+        case_id="case_001",
+        precision=0.85,
+        recall=0.78,
+        f1=0.81,
+        latency_ms=150.5,
+        additional_metrics={"faithfulness": 0.92}
+    )
+    
+    # Log retrieval metrics
+    logger.log_retrieval_metrics(
+        case_id="case_001",
+        query="What is the main topic?",
+        candidates_count=10,
+        latency_ms=50.2
+    )
+    
+    # Finish run
+    logger.finish_run()
+```
+
+#### **Querying Telemetry Data**
+
+**Time-series Queries:**
+```sql
+-- Get F1 scores over time
+SELECT time_bucket('1 hour', ts) as hour, 
+       avg(metric_value) as avg_f1
+FROM eval_event 
+WHERE metric_name = 'f1' 
+  AND ts > NOW() - INTERVAL '7 days'
+GROUP BY hour
+ORDER BY hour;
+
+-- Get precision by model
+SELECT model, 
+       avg(metric_value) as avg_precision,
+       count(*) as total_cases
+FROM eval_event 
+WHERE metric_name = 'precision' 
+  AND ts > NOW() - INTERVAL '24 hours'
+GROUP BY model;
+```
+
+**JSONB Queries:**
+```sql
+-- Query configuration data
+SELECT run_id, meta->'config'->>'profile' as profile
+FROM eval_run 
+WHERE meta->'config'->>'profile' = 'gold';
+
+-- Query environment variables
+SELECT run_id, meta->'environment' as env_vars
+FROM eval_run 
+WHERE meta->'environment'->>'EVAL_PROFILE' = 'gold';
+```
+
+#### **Performance Optimizations**
+
+**1. Compression Policy:**
+- Data compressed after 3 days
+- Compressed by `run_id` for efficient queries
+- Reduces storage by ~80%
+
+**2. Retention Policy:**
+- Data retained for 90 days
+- Automatic cleanup of old data
+- Configurable retention periods
+
+**3. Continuous Aggregates:**
+```sql
+-- Daily rollup view (auto-refreshed)
+SELECT day, tag, model,
+       count(*) FILTER (WHERE metric_name='f1' AND ok) as ok_cases,
+       avg(metric_value) FILTER (WHERE metric_name='f1') as f1_avg,
+       avg(metric_value) FILTER (WHERE metric_name='latency_ms') as p50_latency_ms
+FROM eval_daily
+WHERE day > NOW() - INTERVAL '30 days';
+```
+
+#### **Integration with Evaluation Scripts**
+
+The database telemetry is automatically integrated into evaluation scripts:
+
+```python
+# In clean_dspy_evaluator.py
+class CleanDSPyEvaluator:
+    def __init__(self, profile: str = "gold"):
+        # ... other initialization ...
+        
+        # Initialize database telemetry
+        self.db_telemetry = create_db_telemetry_logger(
+            self.config_data.get('run_id', f'eval-{datetime.now().strftime("%Y%m%d_%H%M%S")}')
+        )
+    
+    def run_evaluation(self, gold_file: str, **kwargs):
+        # ... evaluation logic ...
+        
+        # Log to database for each case
+        if self.db_telemetry:
+            with self.db_telemetry as db_logger:
+                db_logger.log_evaluation_metrics(
+                    case_id=case_id,
+                    precision=metrics["precision"],
+                    recall=metrics["recall"],
+                    f1=metrics["f1_score"],
+                    latency_ms=latency * 1000,
+                    additional_metrics=case_metadata
+                )
+```
+
+#### **Monitoring and Alerting**
+
+**Key Metrics to Monitor:**
+- **F1 Score Trends** - Track model performance over time
+- **Latency Percentiles** - Monitor response times
+- **Error Rates** - Track failed evaluations
+- **Resource Usage** - Monitor database and compute resources
+
+**Alerting Thresholds:**
+- F1 score drops below 0.60
+- Latency exceeds 5 seconds
+- Error rate exceeds 5%
+- Database connection failures
+
+#### **Data Export and Analysis**
+
+**Export to CSV:**
+```sql
+-- Export evaluation results
+COPY (
+    SELECT er.run_id, er.tag, er.started_at, er.finished_at,
+           ecr.case_id, ecr.f1, ecr.precision, ecr.recall, ecr.latency_ms
+    FROM eval_run er
+    JOIN eval_case_result ecr ON er.run_id = ecr.run_id
+    WHERE er.started_at > NOW() - INTERVAL '7 days'
+) TO '/tmp/evaluation_results.csv' WITH CSV HEADER;
+```
+
+**Real-time Dashboard Queries:**
+```sql
+-- Current evaluation status
+SELECT run_id, tag, 
+       started_at,
+       NOW() - started_at as duration,
+       (SELECT count(*) FROM eval_case_result WHERE run_id = er.run_id) as cases_completed
+FROM eval_run er
+WHERE finished_at IS NULL
+ORDER BY started_at DESC;
+```
 
 ## 🐛 **Debugging Effectiveness Analysis Framework**
 
@@ -6046,31 +6283,31 @@ memory_performance = {
 #### **Analysis Commands**
 ```bash
 # Analyze debugging effectiveness
-python3 scripts/analyze_debugging_effectiveness.py --session-id session_001 --full-analysis
+uv run python scripts/analyze_debugging_effectiveness.py --session-id session_001 --full-analysis
 
 # Track debugging patterns
-python3 scripts/track_debugging_patterns.py --technology bash_scripts --timeframe weekly
+uv run python scripts/track_debugging_patterns.py --technology bash_scripts --timeframe weekly
 
 # Measure pattern effectiveness
-python3 scripts/measure_pattern_effectiveness.py --pattern "I can see the issue" --metrics success_rate time_to_resolution
+uv run python scripts/measure_pattern_effectiveness.py --pattern "I can see the issue" --metrics success_rate time_to_resolution
 
 # Generate debugging repor
-python3 scripts/generate_debugging_report.py --session-id session_001 --output debugging_report.md
+uv run python scripts/generate_debugging_report.py --session-id session_001 --output debugging_report.md
 ```
 
 #### **Performance Monitoring Commands**
 ```bash
 # Monitor debugging performance
-python3 scripts/monitor_debugging_performance.py --real-time --output performance_report.md
+uv run python scripts/monitor_debugging_performance.py --real-time --output performance_report.md
 
 # Track memory system performance
-python3 scripts/track_memory_performance.py --metrics query_success relevance_score --timeframe daily
+uv run python scripts/track_memory_performance.py --metrics query_success relevance_score --timeframe daily
 
 # Analyze learning transfer
-python3 scripts/analyze_learning_transfer.py --technologies bash_scripts python --output transfer_report.md
+uv run python scripts/analyze_learning_transfer.py --technologies bash_scripts python --output transfer_report.md
 
 # Generate optimization recommendations
-python3 scripts/generate_optimization_recommendations.py --based-on debugging_analysis --output recommendations.md
+uv run python scripts/generate_optimization_recommendations.py --based-on debugging_analysis --output recommendations.md
 ```
 
 ### **Debugging Effectiveness Quality Gates**
@@ -6219,31 +6456,31 @@ class PerformanceAnalyticsFramework:
 #### **Real-Time Monitoring Commands**
 ```bash
 # Monitor system performance
-python3 scripts/monitor_performance.py --components all --metrics response_time,throughput --real-time
+uv run python scripts/monitor_performance.py --components all --metrics response_time,throughput --real-time
 
 # Collect performance data
-python3 scripts/collect_performance_data.py --timeframe 24h --output performance_data.json
+uv run python scripts/collect_performance_data.py --timeframe 24h --output performance_data.json
 
 # Generate performance alerts
-python3 scripts/generate_performance_alerts.py --thresholds alert_thresholds.yaml --output alerts.md
+uv run python scripts/generate_performance_alerts.py --thresholds alert_thresholds.yaml --output alerts.md
 
 # Monitor specific componen
-python3 scripts/monitor_component.py --component memory-system --metrics all --real-time
+uv run python scripts/monitor_component.py --component memory-system --metrics all --real-time
 ```
 
 #### **Performance Analytics Commands**
 ```bash
 # Analyze performance data
-python3 scripts/analyze_performance.py --data performance_data.json --config analysis_config.yaml
+uv run python scripts/analyze_performance.py --data performance_data.json --config analysis_config.yaml
 
 # Generate performance insights
-python3 scripts/generate_performance_insights.py --analytics-results analytics_results.json
+uv run python scripts/generate_performance_insights.py --analytics-results analytics_results.json
 
 # Generate performance recommendations
-python3 scripts/generate_performance_recommendations.py --insights insights.json --output recommendations.md
+uv run python scripts/generate_performance_recommendations.py --insights insights.json --output recommendations.md
 
 # Performance trend analysis
-python3 scripts/analyze_performance_trends.py --timeframe 7d --output trends_analysis.md
+uv run python scripts/analyze_performance_trends.py --timeframe 7d --output trends_analysis.md
 ```
 
 ### **Performance Monitoring Quality Gates**
@@ -6382,15 +6619,15 @@ print(f"   Session Usage: {json.dumps(status['session_usage'], indent=2)}")
 
 ```bash
 # Test the enhanced client independently
-python3 scripts/test_enhanced_bedrock.py
+uv run python scripts/test_enhanced_bedrock.py
 
 # Test with enhanced clien
 export BEDROCK_ENHANCED_MODE=1
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 
 # Run full evaluation to compare with baseline
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
-python3 scripts/compare_baseline_performance.py
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+uv run python scripts/compare_baseline_performance.py
 ```
 
 ## 🚀 **RAGChecker Pydantic Integration Migration**
@@ -6504,10 +6741,10 @@ print(f"Performance: {performance_summary}")
 
 ```python
 # Test that existing code still works
-python3 scripts/ragchecker_official_evaluation.py
+uv run python scripts/ragchecker_official_evaluation.py
 
 # Test new Pydantic models
-python3 -c "
+uv run python -c "
 from scripts.ragchecker_evaluation import RAGCheckerResul
 result = RAGCheckerResult(
     test_case_name='test',
@@ -6522,14 +6759,14 @@ print('✅ Pydantic integration working')
 "
 
 # Test performance optimization
-python3 -c "
+uv run python -c "
 from scripts.ragchecker_performance_optimizer import create_validation_optimizer
 optimizer = create_validation_optimizer()
 print('✅ Performance optimizer working')
 "
 
 # Test performance monitoring
-python3 -c "
+uv run python -c "
 from scripts.ragchecker_performance_monitor import create_performance_monitor
 monitor = create_performance_monitor()
 print('✅ Performance monitor working')
@@ -6576,7 +6813,7 @@ This SOP establishes a **canonical, locked evaluation system** for regression tr
 **Command (run every time):**
 ```bash
 source throttle_free_eval.sh
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
 ```
 
 **What this does:**
@@ -6587,7 +6824,7 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --s
 
 **Verify banner shows:**
 ```
-🔒 Loaded env from configs/stable_bedrock.env … lock=True
+🔒 Loaded env from 300_evals/configs/stable_bedrock.env … lock=True
 ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_ID=anthropic.claude-3-haiku-20240307-v1
 ```
 
@@ -6608,7 +6845,7 @@ ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_
 
 #### **📁 Stable Configuration**
 
-**File**: `configs/stable_bedrock.env`
+**File**: `300_evals/configs/stable_bedrock.env`
 - **Purpose**: Locked configuration for regression tracking
 - **Status**: DO NOT MODIFY without versioning
 - **Contains**: Proven throttle-free settings
@@ -6623,24 +6860,24 @@ ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_
 **Steps:**
 1. **Create versioned config:**
    ```bash
-   cp configs/stable_bedrock.env configs/stable_bedrock_YYYYMMDD.env
+   cp 300_evals/configs/stable_bedrock.env 300_evals/configs/stable_bedrock_YYYYMMDD.env
    ```
 
 2. **Update default (optional):**
    ```bash
    # Edit throttle_free_eval.sh to point to new config
-   export RAGCHECKER_ENV_FILE=configs/stable_bedrock_YYYYMMDD.env
+   export RAGCHECKER_ENV_FILE=300_evals/configs/stable_bedrock_YYYYMMDD.env
    ```
 
 3. **Run baseline setup:**
    ```bash
-   python3 scripts/baseline_version_manager.py --full-setup
+   uv run python scripts/baseline_version_manager.py --full-setup
    ```
 
 4. **Run stable eval and promote:**
    ```bash
    source throttle_free_eval.sh
-   python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
+   uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
    ```
 
 ### **📊 Results Management**
@@ -6681,7 +6918,7 @@ ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_
 **If throttled at all:**
 1. **Reduce rate limit:**
    ```bash
-   # Edit configs/stable_bedrock.env
+   # Edit 300_evals/configs/stable_bedrock.env
    export BEDROCK_MAX_RPS=0.06  # or 0.04
    ```
 
@@ -6693,20 +6930,20 @@ ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_CONCURRENCY=1, BEDROCK_MAX_RPS=0.15, MODEL_
 3. **Re-run and lock:**
    ```bash
    source throttle_free_eval.sh
-   python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
+   uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable
    ```
 
 #### **❌ Configuration Issues**
 
 **Missing stable config:**
 ```bash
-cp configs/stable_bedrock.env.template configs/stable_bedrock.env
+cp 300_evals/configs/stable_bedrock.env.template 300_evals/configs/stable_bedrock.env
 ```
 
 **Wrong environment:**
 ```bash
 # Verify banner shows correct settings
-# Check configs/stable_bedrock.env exists
+# Check 300_evals/configs/stable_bedrock.env exists
 # Ensure RAGCHECKER_LOCK_ENV=1
 ```
 
@@ -6757,14 +6994,14 @@ When under RED LINE enforcement and recall needs improvement while guarding prec
 ```bash
 # Apply recall tuning, run smoke test, then evaluate
 source throttle_free_eval.sh && recall_boost_apply &&
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable --lessons-mode advisory
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5 --stable --lessons-mode advisory
 
 # Revert tuning and re-check quickly
 source throttle_free_eval.sh && recall_boost_revert
 ```
 
 Details:
-- Script: `scripts/toggle_recall_boost.py` (apply/revert atomically; backups under `metrics/derived_configs/recall_boost_backups/`)
+- Script: `scripts/toggle_recall_boost.py` (apply/revert atomically; backups under `metrics/derived_300_evals/configs/recall_boost_backups/`)
 - Targets set: `candidates.final_limit=80`, `rerank.final_top_n=12`, `rerank.alpha=0.6`, `prefilter.min_bm25_score=0.05`, `prefilter.min_vector_score=0.65`
 - Guard: Abort changes if precision drops below your interim floor (e.g., ≥0.149) without ≥+0.03 recall gain.
 
@@ -6821,7 +7058,7 @@ The lessons engine consists of four core components that work together to:
 
 **Usage**:
 ```bash
-python3 scripts/lessons_extractor.py <run_json_path> [progress_jsonl_path] [out_jsonl]
+uv run python scripts/lessons_extractor.py <run_json_path> [progress_jsonl_path] [out_jsonl]
 ```
 
 **Example Lesson Generated**:
@@ -6851,7 +7088,7 @@ python3 scripts/lessons_extractor.py <run_json_path> [progress_jsonl_path] [out_
 
 **Usage**:
 ```bash
-python3 scripts/lessons_loader.py <base_env> <lessons_jsonl> [--mode advisory|apply] [--scope-level profile|dataset|global] [--window N]
+uv run python scripts/lessons_loader.py <base_env> <lessons_jsonl> [--mode advisory|apply] [--scope-level profile|dataset|global] [--window N]
 ```
 
 **Modes**:
@@ -6869,12 +7106,12 @@ python3 scripts/lessons_loader.py <base_env> <lessons_jsonl> [--mode advisory|ap
 
 **Usage**:
 ```bash
-python3 scripts/evolution_tracker.py
+uv run python scripts/evolution_tracker.py
 ```
 
 **Outputs**:
-- `configs/EVOLUTION.json`: Structured evolution data
-- `configs/EVOLUTION.md`: Human-readable evolution report
+- `300_evals/configs/EVOLUTION.json`: Structured evolution data
+- `300_evals/configs/EVOLUTION.md`: Human-readable evolution report
 
 #### **4. Quality Checker (`scripts/lessons_quality_check.py`)**
 
@@ -6888,7 +7125,7 @@ python3 scripts/evolution_tracker.py
 
 **Usage**:
 ```bash
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 ```
 
 ### **🔗 Integration with Evaluation System**
@@ -6898,7 +7135,7 @@ python3 scripts/lessons_quality_check.py
 The lessons engine is integrated into `ragchecker_official_evaluation.py` with new arguments:
 
 ```bash
-python3 scripts/ragchecker_official_evaluation.py
+uv run python scripts/ragchecker_official_evaluation.py
   --lessons-mode {off,advisory,apply}
   --lessons-scope {auto,dataset,profile,global}
   --lessons-window N
@@ -6965,13 +7202,13 @@ Next Evaluation Run
 metrics/
 ├── lessons/
 │   └── lessons.jsonl          # Stored lessons
-├── derived_configs/
+├── derived_300_evals/configs/
 │   ├── *_candidate.env        # Generated configurations
 │   └── *_decision_docket.md   # Decision documentation
 └── baseline_evaluations/
     └── *.json                 # Evaluation results with lessons metadata
 
-configs/
+300_evals/configs/
 ├── *.env                      # Base configurations
 ├── *.meta.yml                 # Configuration metadata
 ├── EVOLUTION.json             # Evolution tracking data
@@ -7021,7 +7258,7 @@ jq '.run_config.lessons' "$LATEST_RESULTS"
 
 ```bash
 # Run evaluation with lessons engine in advisory mode
-python3 scripts/ragchecker_official_evaluation.py
+uv run python scripts/ragchecker_official_evaluation.py
   --lessons-mode advisory
   --lessons-scope profile
   --lessons-window 5
@@ -7031,7 +7268,7 @@ python3 scripts/ragchecker_official_evaluation.py
 
 ```bash
 # Run evaluation with lessons engine in apply mode
-python3 scripts/ragchecker_official_evaluation.py
+uv run python scripts/ragchecker_official_evaluation.py
   --lessons-mode apply
   --lessons-scope profile
   --lessons-window 3
@@ -7041,10 +7278,10 @@ python3 scripts/ragchecker_official_evaluation.py
 
 ```bash
 # Check lessons system integrity
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 
 # Generate evolution tracking
-python3 scripts/evolution_tracker.py
+uv run python scripts/evolution_tracker.py
 ```
 
 ### **🛠️ Troubleshooting**
@@ -7060,13 +7297,13 @@ python3 scripts/evolution_tracker.py
 
 ```bash
 # Check lessons file validity
-python3 scripts/lessons_quality_check.py
+uv run python scripts/lessons_quality_check.py
 
 # Test lessons loader
-python3 scripts/lessons_loader.py configs/precision_elevated.env metrics/lessons/lessons.jsonl --mode advisory
+uv run python scripts/lessons_loader.py 300_evals/configs/precision_elevated.env metrics/lessons/lessons.jsonl --mode advisory
 
 # View evolution tracking
-cat configs/EVOLUTION.md
+cat 300_evals/configs/EVOLUTION.md
 ```
 
 ### **✅ Best Practices**
@@ -7081,7 +7318,7 @@ cat configs/EVOLUTION.md
 
 #### **Completed ✅**
 - ✅ **Pre-commit hooks**: Lessons quality check runs automatically on commit
-- ✅ **CI/CD integration**: Evolution tracking runs in CI workflows and produces `configs/EVOLUTION.md` regularly
+- ✅ **CI/CD integration**: Evolution tracking runs in CI workflows and produces `300_evals/configs/EVOLUTION.md` regularly
 - ✅ **Quality gate enforcement**: Conservative blocking logic implemented
 - ✅ **JSON-only output**: Loader outputs machine-readable JSON to stdout, logs to stderr
 
@@ -7139,10 +7376,10 @@ psql -d postgres -c "SELECT version();"
 psql -d ai_agency -c "\d+ document_chunks"
 
 # 2. Run schema migration if needed
-python3 scripts/migrate_schema.py
+uv run python scripts/migrate_schema.py
 
 # 3. Verify schema integrity
-python3 scripts/verify_schema.py
+uv run python scripts/verify_schema.py
 ```
 
 #### **3. Vector Extension Issues**
@@ -7199,7 +7436,7 @@ psql -d ai_agency -c "EXPLAIN ANALYZE SELECT * FROM document_chunks LIMIT 10;"
 #### **Health Check Commands**
 ```bash
 # Run comprehensive health check
-python3 scripts/healthcheck_db.py
+uv run python scripts/healthcheck_db.py
 
 # Check vector index status
 psql -d ai_agency -c "SELECT schemaname, tablename, indexname FROM pg_indexes WHERE indexdef LIKE '%vector%';"
@@ -7260,9 +7497,9 @@ make eval-mock    # Infra-only smoke
 #### **Profile Files**
 Each profile has a dedicated configuration file:
 
-- `configs/profiles/real.env` - Real evaluations
-- `configs/profiles/gold.env` - Real evaluations with gold cases
-- `configs/profiles/mock.env` - Mock evaluations
+- `300_evals/300_evals/configs/profiles/real.env` - Real evaluations
+- `300_evals/300_evals/configs/profiles/gold.env` - Real evaluations with gold cases
+- `300_evals/300_evals/configs/profiles/mock.env` - Mock evaluations
 
 #### **Configuration Resolution Order**
 1. **CLI flags** (highest precedence)
@@ -7329,9 +7566,9 @@ make test-profiles
 #### **Manual Testing**
 ```bash
 # Test each profile
-python3 scripts/lib/config_loader.py --profile real
-python3 scripts/lib/config_loader.py --profile gold
-python3 scripts/lib/config_loader.py --profile mock
+uv run python scripts/lib/config_loader.py --profile real
+uv run python scripts/lib/config_loader.py --profile gold
+uv run python scripts/lib/config_loader.py --profile mock
 ```
 
 ### **🚨 Common Issues & Solutions**
@@ -7404,13 +7641,13 @@ python3 scripts/lib/config_loader.py --profile mock
 
 #### **Check Current Configuration**
 ```bash
-python3 scripts/lib/config_loader.py --profile real
+uv run python scripts/lib/config_loader.py --profile real
 ```
 
 #### **Validate Profile Files**
 ```bash
 # Check if profile files exist
-ls -la configs/profiles/
+ls -la 300_evals/300_evals/configs/profiles/
 ```
 
 #### **Test Profile System**
@@ -7477,6 +7714,9 @@ feature = read_feature(jsonl_line)
 - **2024-12-31**: Added three-tier hierarchy guidelines and model-specific optimization strategies
 - **2024-12-31**: Added Migration Guidelines and Implementation Roadmap section with comprehensive migration plan
 - **2024-12-31**: Added Comprehensive Documentation Suite section with user guides, API documentation, best practices, troubleshooting guides, and practical examples
+- **2025-09-15**: Updated all command examples to use UV package management standards
+- **2025-09-15**: Aligned testing references with current UV standards and testing markers
+- **2025-09-15**: Updated dependency management commands to use uv sync instead of pip install
 
 ---
 

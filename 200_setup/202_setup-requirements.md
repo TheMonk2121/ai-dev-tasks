@@ -325,7 +325,7 @@ CREATE TABLE query_logs (
 
 ### **S-007: Python Environment Setup**
 
-🔥 **Status**: `setup-required`
+✅ **Status**: `setup-complete`
 
 - **Priority**: High
 - **Setup Required**: Python environment and dependencies
@@ -341,46 +341,6 @@ python3.12 --version
 # Install UV package manager (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Create virtual environment with Python 3.12 using UV
-uv venv --python 3.12
-source .venv/bin/activate
-
-# Install dependencies using UV (100-600x faster than pip)
-uv sync --extra dev
-```
-
-**macOS Users**: If you have Python 3.9 as default, install Python 3.12 via Homebrew:
-```bash
-brew install python@3.12
-# The system will automatically detect and use python3.12
-```
-
-**Note**: All tests run in the Python 3.12 virtual environment. Archived tests in `600_archives/` are marked as deprecated and excluded from test runs.
-
-## **System Dependencies**
-
-```bash
-# Ubuntu/Debian
-sudo apt-get update
-sudo apt-get install -y python3-pip python3-venv postgresql postgresql-contrib git curl
-
-# macOS
-brew install git curl python3 postgresql
-
-# Python packages (managed via UV)
-# All dependencies are now managed through pyproject.toml and UV
-# Run: uv sync --extra dev
-```
-
-## **UV Package Manager Setup**
-
-**Status**: ✅ **MIGRATED** - Project uses UV for 100-600x faster package management
-
-### **Quick Setup**:
-```bash
-# Install UV
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
 # Setup development environment
 uv venv --python 3.12
 uv sync --extra dev
@@ -392,13 +352,64 @@ uvt  # Run tests
 uvs  # System health check
 ```
 
-### **Key UV Features**:
+**macOS Users**: If you have Python 3.9 as default, install Python 3.12 via Homebrew:
+```bash
+brew install python@3.12
+# The system will automatically detect and use python3.12
+```
+
+**Note**: All tests run in the Python 3.12 virtual environment. Archived tests in `600_archives/` are marked as deprecated and excluded from test runs.
+
+#### **UV Package Management**
+
+**Status**: ✅ **MIGRATED** - Project uses UV for 100-600x faster package management
+
+**Key Features**:
 - **Performance**: 100-600x faster than pip
 - **Automation**: Team onboarding, performance monitoring
 - **Shell Aliases**: `uvd`, `uvt`, `uvl`, `uvf`, `uvs`, `uvp`
 - **CI/CD Integration**: All workflows updated
 
-See `UV_MIGRATION_COMPLETE.md` for complete documentation.
+**Environment Management**:
+- **Local (macOS)**: `UV_PROJECT_ENVIRONMENT=.venv`, includes dev extras
+- **Docker/CI (Linux)**: `UV_PROJECT_ENVIRONMENT=/opt/venv`, installs from `uv.lock` only
+- Use `uv sync --frozen` in CI (do not re-lock)
+- Use `uv sync --extra dev` for local development
+
+## **System Dependencies**
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install -y postgresql postgresql-contrib git curl
+
+# macOS
+brew install git curl python3 postgresql
+
+# Python packages (managed via UV)
+# All dependencies are now managed through pyproject.toml and UV
+# Run: uv sync --extra dev
+```
+
+## **Database Configuration**
+
+**Status**: ✅ **UPDATED** - Uses centralized DSN resolution
+
+### **Current Standards**:
+- Use `common.db_dsn.resolve_dsn()` for DSN resolution
+- Never read env vars directly for DSNs
+- Use idempotent DDL patterns (`IF NOT EXISTS`, `CREATE OR REPLACE FUNCTION`)
+- Target pgvector ≥ 0.8; prefer HNSW, fallback to IVFFlat
+
+### **Required Extensions**:
+- `vector` (pgvector) ≥ 0.8 — required for production
+- `pg_trgm` — recommended for text similarity
+- `pg_stat_statements` — required for performance visibility
+
+### **Configuration Management**:
+- Use `pydantic-settings` for typed configuration
+- Follow precedence: env vars → profile env → .env.local → defaults
+- Use profile-specific env files in `configs/`
 
 ## **S-008: Development Setup**
 

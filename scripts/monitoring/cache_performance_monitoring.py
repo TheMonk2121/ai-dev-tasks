@@ -10,10 +10,14 @@ from datetime import datetime
 from typing import Any, Optional, Union
 
 import psutil
-from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
-from scripts.ltst_memory_integration import LTSTIntegrationConfig, LTSTMemoryIntegration
-from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
-from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
+# FIXME: Update this import path after reorganization
+# from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
+# FIXME: Update this import path after reorganization
+# from scripts.ltst_memory_integration import LTSTIntegrationConfig, LTSTMemoryIntegration
+# FIXME: Update this import path after reorganization
+# from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
+# FIXME: Update this import path after reorganization
+# from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
 
 #!/usr/bin/env python3
 """

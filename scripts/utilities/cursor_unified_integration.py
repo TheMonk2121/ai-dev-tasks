@@ -10,8 +10,8 @@ import sys
 from typing import Any, cast
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-from common.db_dsn import resolve_dsn
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.db_dsn import resolve_dsn
 
 from .cursor_memory_integration import CursorMemoryIntegration
 
@@ -23,7 +23,7 @@ class CursorUnifiedIntegration:
     """Unified integration system for Cursor AI conversations."""
 
     def __init__(self, dsn: str | None = None) -> None:
-        self.dsn: str = dsn or resolve_dsn() or ""
+        self.dsn: str = dsn or resolve_dsn()
         self.capture: CursorRealtimeCapture = CursorRealtimeCapture(self.dsn)
         self.memory: CursorMemoryIntegration = CursorMemoryIntegration(self.dsn)
         self.auto_consolidate: bool = True

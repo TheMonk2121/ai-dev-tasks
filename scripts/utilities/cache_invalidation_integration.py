@@ -9,8 +9,10 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Optional, Union
 
-from scripts.cache_invalidation_system import CacheInvalidationSystem, InvalidationConfig
-from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
+# FIXME: Update this import path after reorganization
+# from scripts.cache_invalidation_system import CacheInvalidationSystem, InvalidationConfig
+# FIXME: Update this import path after reorganization
+# from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
 
 #!/usr/bin/env python3
 """

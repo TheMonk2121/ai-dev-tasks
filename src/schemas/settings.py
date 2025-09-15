@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
@@ -13,13 +12,13 @@ class EvaluationSettings(BaseSettings):
 
     # File paths
     gold_cases_path: str = Field(
-        default="300_evals/evals/data/gold/v1/gold_cases.jsonl", description="Path to gold cases JSONL file"
+        default="300_evals/datasets/gold_cases.jsonl", description="Path to gold cases JSONL file"
     )
     manifest_path: str = Field(
-        default="300_evals/evals/data/gold/v1/manifest.json", description="Path to evaluation manifest file"
+        default="300_evals/metrics/manifests/manifest.json", description="Path to evaluation manifest file"
     )
     results_output_dir: str = Field(
-        default="metrics/baseline_evaluations", description="Directory for evaluation results"
+        default="300_evals/metrics/baseline_evaluations", description="Directory for evaluation results"
     )
 
     # Validation settings
@@ -136,30 +135,35 @@ class EvaluationSettings(BaseSettings):
 
     @field_validator("known_tags", mode="before")
     @classmethod
-    def parse_known_tags(cls, v: str | list[str]) -> list[str]:
+    def parse_known_tags(cls, v: str | list[str] | None) -> list[str]:
         """Parse known_tags from string or list."""
-        if isinstance(v, str):
-            if v == "[]":
-                return []
-            # Try to parse as JSON array
-            import json
+        if v is None:
+            return []
 
-            try:
-                parsed = json.loads(v)
-                if isinstance(parsed, list):
-                    return [str(item) for item in parsed]
-                else:
-                    return [str(parsed)]
-            except json.JSONDecodeError:
-                # If not JSON, split by comma
-                return [tag.strip() for tag in v.split(",") if tag.strip()]
-        return v if isinstance(v, list) else [str(v)]
+        if isinstance(v, list):
+            return v
+
+        if v == "[]":
+            return []
+
+        # Try to parse as JSON array
+        import json
+
+        try:
+            parsed = json.loads(v)
+            if isinstance(parsed, list):
+                return [str(item) for item in parsed]
+            else:
+                return [str(parsed)]
+        except json.JSONDecodeError:
+            # If not JSON, split by comma
+            return [tag.strip() for tag in v.split(",") if tag.strip()]
 
     class Config:
-        env_file = ".env"
-        env_prefix = "EVAL_"
-        case_sensitive = False
-        extra = "ignore"
+        env_file: str = ".env"
+        env_prefix: str = "EVAL_"
+        case_sensitive: bool = False
+        extra: str = "ignore"
 
     def get_gold_cases_path(self) -> Path:
         """Get gold cases path as Path object."""

@@ -12,6 +12,8 @@ import numpy as np
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
+from common.embedding_validation import assert_embedding_dim, get_embedding_dim, suggest_dimension_fix
+
 from .rerank import mmr_rerank
 from .weights import load_weights
 
@@ -19,9 +21,16 @@ from .weights import load_weights
 def get_db_connection():
     """Get database connection from environment or default."""
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-    # Handle mock DSN for testing
-    if dsn.startswith("mock://"):
-        dsn = "postgresql://danieljacobs@localhost:5432/ai_agency"
+
+    # Strictly fail if DSN is a mock or empty
+    if not dsn or dsn.startswith("mock://"):
+        # ruff: noqa: RUF001
+        raise RuntimeError(
+            f"Invalid DSN detected: {dsn}. MUST use a real PostgreSQL connection string. "
+            "Set POSTGRES_DSN to a valid connection string. "  # ruff: noqa: RUF001
+            "Recommended: Use 300_evals/configs/profiles/real.env for real database connection."
+        )
+
     return psycopg2.connect(dsn, cursor_factory=RealDictCursor)
 
 
@@ -110,6 +119,26 @@ def run_fused_query(
     Returns:
         List of result dictionaries
     """
+    # Validate embedding dimensions before proceeding
+    dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+    if dsn.startswith("mock://"):
+        dsn = "postgresql://danieljacobs@localhost:5432/ai_agency"
+
+    current_dim = get_embedding_dim(dsn)
+    expected_dim = len(qvec)
+
+    # Use assert_embedding_dim for comprehensive validation
+    try:
+        assert_embedding_dim(dsn, expected_dim)
+    except RuntimeError as e:
+        # Optionally log the error or handle it as needed
+        logging.warning(str(e))
+        # Optionally suggest a dimension fix
+        suggestion = suggest_dimension_fix(current_dim, expected_dim)
+        raise RuntimeError(f"Embedding dimension validation failed: {suggestion}") from e
+    if current_dim > 0 and current_dim != expected_dim:
+        suggestion = suggest_dimension_fix(current_dim, expected_dim)
+        raise RuntimeError(f"Embedding dimension mismatch: {suggestion}")
 
     VEC = _vec_expr()
 
@@ -130,11 +159,11 @@ def run_fused_query(
         if (tag == "db_workflows" and adjacency_db)
         else "websearch_to_tsquery('simple', %(q_short)s)"
     )
-    sql = f"""
+    sql = """
     WITH
     q AS (
       SELECT
-        CASE WHEN %(q_short)s <> '' THEN {short_tsq} END  AS tsq_short,
+        CASE WHEN %(q_short)s <> '' THEN SHORT_TSQ_PLACEHOLDER END  AS tsq_short,
         CASE WHEN %(q_title)s <> '' THEN websearch_to_tsquery('simple', %(q_title)s) END  AS tsq_title,
         CASE WHEN %(q_bm25)s <> '' THEN websearch_to_tsquery('simple', %(q_bm25)s) END  AS tsq_bm25
     ),
@@ -174,7 +203,7 @@ def run_fused_query(
       COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)  AS s_short,
       COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)  AS s_title,
       COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)  AS s_bm25,
-      COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN {VEC} ELSE 0.0 END), 0.0) AS s_vec,
+      COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN VEC_PLACEHOLDER ELSE 0.0 END), 0.0) AS s_vec,
 
       (
         (CASE
@@ -206,7 +235,7 @@ def run_fused_query(
       + COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)
       + COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)
       + COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)
-      + (CASE WHEN %(has_vec)s THEN %(w_vec)s * ({VEC}) ELSE 0.0 END)
+      + (CASE WHEN %(has_vec)s THEN %(w_vec)s * (VEC_PLACEHOLDER) ELSE 0.0 END)
       )
       * LEAST(GREATEST(1.0 + (
           (CASE
@@ -223,16 +252,39 @@ def run_fused_query(
       AS score
 
     FROM base b, q
+    WHERE (b.file_path IS NULL OR b.file_path NOT LIKE '600_%%') AND char_length(b.content) >= %(min_chars)s
     ORDER BY score DESC NULLS LAST
     LIMIT %(limit)s;
     """
 
-    # Use larger pool for MMR reranking
-    pool_size = 60 if use_mmr else k
-
     # Default or YAML-derived weights if not provided
     if weights is None:
         weights = load_weights(tag=tag, file_path=weights_file)
+
+    # Use larger pool for MMR reranking
+    pool_size = 60 if use_mmr else k
+
+    # Determine minimum character length for retrieval
+    MIN_CHARS = int(os.getenv("RETRIEVER_MIN_CHARS", "140"))
+
+    # Relax minimum character length for very short queries
+    q_len = len(q_short.strip() or q_title.strip() or q_bm25.strip())
+    min_chars = MIN_CHARS if q_len >= 25 else int(os.getenv("RETRIEVER_MIN_CHARS_SHORT_QUERY", "80"))
+
+    # Modify SQL to include minimum character length filter
+    sql = sql.replace(
+        "WHERE b.file_path IS NULL OR b.file_path NOT LIKE '600_%%'",
+        "WHERE (b.file_path IS NULL OR b.file_path NOT LIKE '600_%%') AND char_length(b.content) >= %(min_chars)s",
+    )
+
+    # Ensure params is defined before adding min_chars
+    if "params" not in locals():
+        params = {}
+    params["min_chars"] = min_chars
+
+    # Replace placeholders with actual expressions
+    sql = sql.replace("VEC_PLACEHOLDER", VEC)
+    sql = sql.replace("SHORT_TSQ_PLACEHOLDER", short_tsq)
 
     # Cold-start boost: increase w_vec when query is lexically sparse
     if cold_start:
@@ -267,6 +319,7 @@ def run_fused_query(
         "fname_regex": fname_regex or "^$",
         "tag": tag or "",
         "limit": pool_size,
+        "min_chars": min_chars,  # Add min_chars to existing params
     }
 
     with get_db_connection() as conn:
@@ -277,11 +330,11 @@ def run_fused_query(
             except Exception as e:
                 if "path_tsv" in str(e).lower():
                     # Fallback: compute path_tsv on the fly
-                    fallback_sql = f"""
+                    fallback_sql = """
                     WITH
                     q AS (
                       SELECT
-                        CASE WHEN %(q_short)s <> '' THEN {short_tsq} END  AS tsq_short,
+                        CASE WHEN %(q_short)s <> '' THEN SHORT_TSQ_PLACEHOLDER END  AS tsq_short,
                         CASE WHEN %(q_title)s <> '' THEN websearch_to_tsquery('simple', %(q_title)s) END  AS tsq_title,
                         CASE WHEN %(q_bm25)s <> '' THEN websearch_to_tsquery('simple', %(q_bm25)s) END  AS tsq_bm25
                     ),
@@ -312,7 +365,7 @@ def run_fused_query(
                       COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)  AS s_short,
                       COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)  AS s_title,
                       COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)  AS s_bm25,
-                      COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN {VEC} ELSE 0.0 END), 0.0) AS s_vec,
+                      COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN VEC_PLACEHOLDER ELSE 0.0 END), 0.0) AS s_vec,
 
                       (
                         (CASE
@@ -344,7 +397,7 @@ def run_fused_query(
                       + COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)
                       + COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)
                       + COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)
-                      + (CASE WHEN %(has_vec)s THEN %(w_vec)s * ({VEC}) ELSE 0.0 END)
+                      + (CASE WHEN %(has_vec)s THEN %(w_vec)s * (VEC_PLACEHOLDER) ELSE 0.0 END)
                       )
                       * LEAST(GREATEST(1.0 + (
                           (CASE
@@ -369,6 +422,9 @@ def run_fused_query(
                     conn.rollback()
                     with get_db_connection() as conn2:
                         with conn2.cursor() as cur2:
+                            # Replace placeholders in fallback SQL too
+                            fallback_sql = fallback_sql.replace("VEC_PLACEHOLDER", VEC)
+                            fallback_sql = fallback_sql.replace("SHORT_TSQ_PLACEHOLDER", short_tsq)
                             cur2.execute(fallback_sql, params)
                             rows = [dict(row) for row in cur2.fetchall()]
                 else:
@@ -377,7 +433,7 @@ def run_fused_query(
     # Apply learned fusion head if enabled
     enabled = os.getenv("FUSION_HEAD_ENABLE", "0") == "1"
     ckpt = os.getenv("FUSION_HEAD_PATH", "")
-    spec_path = os.getenv("FUSION_FEATURE_SPEC", "configs/feature_spec_v1.json")
+    spec_path = os.getenv("FUSION_FEATURE_SPEC", "300_evals/configs/feature_spec_v1.json")
     hidden = int(os.getenv("FUSION_HIDDEN", "0"))
     device = os.getenv("FUSION_DEVICE", "cpu")
 

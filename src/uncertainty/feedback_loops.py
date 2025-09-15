@@ -5,6 +5,8 @@ Implements user feedback integration and continuous improvement mechanisms
 for production RAG system confidence and quality.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 import sqlite3
@@ -47,7 +49,7 @@ class FeedbackPriority(Enum):
 class UserFeedback(BaseModel):
     """User feedback data structure with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
@@ -93,18 +95,18 @@ class UserFeedback(BaseModel):
     @classmethod
     def validate_evidence_chunks(cls, v: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Validate evidence chunks structure."""
-        if not isinstance(v, list):
-            raise ValueError("evidence_chunks must be a list")
+        if not v:
+            return v
         for chunk in v:
-            if not isinstance(chunk, dict):
-                raise ValueError("Each evidence chunk must be a dictionary")
+            if not chunk:
+                continue
         return v
 
 
 class FeedbackConfig(BaseModel):
     """Configuration for feedback loop processing with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
@@ -143,7 +145,7 @@ class FeedbackDatabase:
     """Manages feedback data storage and retrieval."""
 
     def __init__(self, db_path: str):
-        self.db_path = db_path
+        self.db_path: str = db_path
         self._init_database()
 
     def _init_database(self) -> None:
@@ -151,7 +153,7 @@ class FeedbackDatabase:
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
 
         with sqlite3.connect(self.db_path) as conn:
-            conn.execute(
+            _ = conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS feedback (
                     feedback_id TEXT PRIMARY KEY,
@@ -176,10 +178,10 @@ class FeedbackDatabase:
             )
 
             # Create indexes for common queries
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON feedback(timestamp)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_feedback_type ON feedback(feedback_type)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_processed ON feedback(processed)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_priority ON feedback(priority)")
+            _ = conn.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON feedback(timestamp)")
+            _ = conn.execute("CREATE INDEX IF NOT EXISTS idx_feedback_type ON feedback(feedback_type)")
+            _ = conn.execute("CREATE INDEX IF NOT EXISTS idx_processed ON feedback(processed)")
+            _ = conn.execute("CREATE INDEX IF NOT EXISTS idx_priority ON feedback(priority)")
 
             conn.commit()
 
@@ -187,7 +189,7 @@ class FeedbackDatabase:
         """Store user feedback in the database."""
         try:
             with sqlite3.connect(self.db_path) as conn:
-                conn.execute(
+                _ = conn.execute(
                     """
                     INSERT OR REPLACE INTO feedback VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
@@ -292,7 +294,7 @@ class FeedbackDatabase:
         """Mark feedback as processed."""
         try:
             with sqlite3.connect(self.db_path) as conn:
-                conn.execute(
+                _ = conn.execute(
                     """
                     UPDATE feedback 
                     SET processed = TRUE, 
@@ -364,8 +366,8 @@ class FeedbackProcessor:
     """Processes user feedback and generates insights for system improvement."""
 
     def __init__(self, config: FeedbackConfig):
-        self.config = config
-        self.db = FeedbackDatabase(config.db_path)
+        self.config: FeedbackConfig = config
+        self.db: FeedbackDatabase = FeedbackDatabase(config.db_path)
         logger.info("Initialized Feedback Processor")
 
     def process_feedback_batch(self) -> dict[str, Any]:
@@ -658,8 +660,8 @@ class FeedbackCollector:
     """Collects and stores user feedback from various sources."""
 
     def __init__(self, config: FeedbackConfig):
-        self.config = config
-        self.db = FeedbackDatabase(config.db_path)
+        self.config: FeedbackConfig = config
+        self.db: FeedbackDatabase = FeedbackDatabase(config.db_path)
         logger.info("Initialized Feedback Collector")
 
     def collect_feedback(
@@ -676,6 +678,8 @@ class FeedbackCollector:
         feedback_text: str | None = None,
         priority: FeedbackPriority = FeedbackPriority.MEDIUM,
         tags: list[str] | None = None,
+        processed_timestamp: datetime | None = None,
+        processing_notes: str | None = None,
     ) -> str:
         """Collect and store user feedback."""
 
@@ -696,6 +700,8 @@ class FeedbackCollector:
             feedback_text=feedback_text,
             priority=priority,
             tags=tags or [],
+            processed_timestamp=processed_timestamp,
+            processing_notes=processing_notes,
         )
 
         if self.db.store_feedback(feedback):

@@ -7,7 +7,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  bash scripts/preflight_env_diff.sh --env-file configs/stable_bedrock.env
+  bash scripts/preflight_env_diff.sh --env-file 300_evals/configs/stable_bedrock.env
   bash scripts/preflight_env_diff.sh --script throttle_free_eval.sh
   bash scripts/preflight_env_diff.sh --profile stable
   bash scripts/preflight_env_diff.sh --profile throttle
@@ -44,7 +44,7 @@ fi
 # Resolve profile → actual file
 case "$mode:$target" in
   profile:stable)
-    mode="env-file"; target="configs/stable_bedrock.env" ;;
+    mode="env-file"; target="300_evals/configs/stable_bedrock.env" ;;
   profile:throttle)
     mode="script"; target="throttle_free_eval.sh" ;;
 esac

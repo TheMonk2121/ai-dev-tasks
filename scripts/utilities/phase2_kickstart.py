@@ -14,6 +14,7 @@ Phase-2 Kickstart System
 Safest path for DSPy compilation and deployment.
 """
 
+
 class Phase2KickstartSystem:
     """Phase-2 kickstart system for DSPy compilation."""
 
@@ -259,7 +260,7 @@ class Phase2KickstartSystem:
         """Prepare dev set for compilation."""
         try:
             # Check if dev set exists
-            dev_set_file = Path("datasets/dev.jsonl")
+            dev_set_file = Path("300_evals/datasets/dev.jsonl")
             if not dev_set_file.exists():
                 return {"success": False, "error": "Dev set file not found"}
 
@@ -290,7 +291,7 @@ class Phase2KickstartSystem:
         try:
             # Run DSPy compilation
             result = subprocess.run(
-                "python3 dspy_program.py --compile --trainset datasets/train.jsonl --valset datasets/dev.jsonl",
+                "python3 dspy_program.py --compile --trainset 300_evals/datasets/train.jsonl --valset 300_evals/datasets/dev.jsonl",
                 shell=True,
                 capture_output=True,
                 text=True,
@@ -403,6 +404,7 @@ class Phase2KickstartSystem:
         with open(self.kickstart_log_file, "a") as f:
             f.write(json.dumps(log_entry) + "\n")
 
+
 def main():
     """Main entry point for Phase-2 kickstart."""
     kickstart_system = Phase2KickstartSystem()
@@ -415,6 +417,7 @@ def main():
     else:
         print("\n⚠️ Phase-2 kickstart failed - Review issues")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -19,7 +19,7 @@ def find_files_with_duplicate_paths() -> list[str]:
         r"300_examples/300_examples/",
         r"400_guides/400_guides/",
         r"500_research/500_research/",
-        r"600_archives/600_archives/",
+        r"",
         r"docs/docs/",
         r"dspy-rag-system/docs/dspy-rag-system/docs/",
     ]
@@ -57,7 +57,7 @@ def fix_duplicate_paths(file_path: str) -> bool:
             (r"300_examples/300_examples/", "300_examples/"),
             (r"400_guides/400_guides/", "400_guides/"),
             (r"500_research/500_research/", "500_research/"),
-            (r"600_archives/600_archives/", "600_archives/"),
+            (r"", ""),
             (r"docs/docs/", "docs/"),
             (r"dspy-rag-system/docs/dspy-rag-system/docs/", "dspy-rag-system/docs/"),
         ]

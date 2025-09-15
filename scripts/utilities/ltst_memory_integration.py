@@ -8,9 +8,12 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Optional, Union
 
-from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
-from scripts.postgresql_cache_service import CacheConfig, CacheEntry, PostgreSQLCacheService
-from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
+# FIXME: Update this import path after reorganization
+# from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
+# FIXME: Update this import path after reorganization
+# from scripts.postgresql_cache_service import CacheConfig, CacheEntry, PostgreSQLCacheService
+# FIXME: Update this import path after reorganization
+# from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
 
 #!/usr/bin/env python3
 """

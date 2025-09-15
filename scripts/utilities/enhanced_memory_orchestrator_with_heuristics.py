@@ -5,7 +5,8 @@ import sys
 import time
 from pathlib import Path
 from typing import Any
-from scripts.enhanced_memory_orchestrator import EnhancedMemoryOrchestrator
+# FIXME: Update this import path after reorganization
+# from scripts.enhanced_memory_orchestrator import EnhancedMemoryOrchestrator
     from scripts.heuristics_pack_generator import HeuristicsPack, HeuristicsPackGenerator
 from typing import Any, Optional, Union
 #!/usr/bin/env python3

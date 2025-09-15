@@ -3,11 +3,10 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-import os
 import sqlite3
 import time
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -52,7 +51,7 @@ class AgentRole(Enum):
 class AgentMessage(BaseModel):
     """Data structure for agent messages with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
@@ -70,7 +69,7 @@ class AgentMessage(BaseModel):
 
     @field_validator("sender", "recipient")
     @classmethod
-    def validate_agent_ids(cls, v):
+    def validate_agent_ids(cls, v: str) -> str:
         """Validate agent identifiers."""
         if not v or not v.strip():
             raise ValueError("Agent identifier cannot be empty")
@@ -80,7 +79,7 @@ class AgentMessage(BaseModel):
 class AgentSession(BaseModel):
     """Data structure for agent communication sessions with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
@@ -96,12 +95,10 @@ class AgentSession(BaseModel):
 
     @field_validator("participants")
     @classmethod
-    def validate_participants(cls, v):
+    def validate_participants(cls, v: list[str]) -> list[str]:
         """Validate participant list."""
-        if not isinstance(v, list):
-            raise ValueError("Participants must be a list")
         for participant in v:
-            if not isinstance(participant, str) or not participant.strip():
+            if not participant.strip():
                 raise ValueError("All participants must be non-empty strings")
         return v
 
@@ -110,16 +107,16 @@ class CommunicationDatabase:
     """Database for storing communication data and session history."""
 
     def __init__(self, db_path: str = "agent_communication.db"):
-        self.db_path = db_path
+        self.db_path: str = db_path
         self._init_database()
 
-    def _init_database(self):
+    def _init_database(self) -> None:
         """Initialize the communication database."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
         # Create agent sessions table
-        cursor.execute(
+        _ = cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS agent_sessions (
                 id TEXT PRIMARY KEY,
@@ -133,7 +130,7 @@ class CommunicationDatabase:
         )
 
         # Create agent messages table
-        cursor.execute(
+        _ = cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS agent_messages (
                 id TEXT PRIMARY KEY,
@@ -151,12 +148,12 @@ class CommunicationDatabase:
         )
 
         # Create indexes
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_sessions_status ON agent_sessions(status)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_sessions_created ON agent_sessions(created_at)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_session ON agent_messages(session_id)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_sender ON agent_messages(sender)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_recipient ON agent_messages(recipient)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_timestamp ON agent_messages(timestamp)")
+        _ = cursor.execute("CREATE INDEX IF NOT EXISTS idx_sessions_status ON agent_sessions(status)")
+        _ = cursor.execute("CREATE INDEX IF NOT EXISTS idx_sessions_created ON agent_sessions(created_at)")
+        _ = cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_session ON agent_messages(session_id)")
+        _ = cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_sender ON agent_messages(sender)")
+        _ = cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_recipient ON agent_messages(recipient)")
+        _ = cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_timestamp ON agent_messages(timestamp)")
 
         conn.commit()
         conn.close()
@@ -167,7 +164,7 @@ class CommunicationDatabase:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
+        _ = cursor.execute(
             """
             INSERT OR REPLACE INTO agent_sessions
             (id, participants, context, status, created_at, updated_at)
@@ -192,7 +189,7 @@ class CommunicationDatabase:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
+        _ = cursor.execute(
             """
             INSERT INTO agent_messages
             (id, session_id, message_type, sender, recipient, content, metadata, timestamp, priority)
@@ -220,16 +217,16 @@ class AgentCommunicationManager:
     """Manages communication between agents."""
 
     def __init__(self):
-        self.database = CommunicationDatabase()
+        self.database: CommunicationDatabase = CommunicationDatabase()
         self.active_sessions: dict[str, AgentSession] = {}
-        self.agent_registry: dict[str, Any] = {}
+        self.agent_registry: dict[str, dict[str, Any]] = {}
         self.message_queue: list[AgentMessage] = []
         self.routing_rules: dict[str, list[str]] = {}
 
         # Initialize routing rules
         self._init_routing_rules()
 
-    def _init_routing_rules(self):
+    def _init_routing_rules(self) -> None:
         """Initialize message routing rules."""
         self.routing_rules = {
             "research": ["coordinator", "native_ai"],
@@ -339,7 +336,7 @@ class AgentCommunicationManager:
             return []
 
         session = self.active_sessions[session_id]
-        message_ids = []
+        message_ids: list[str] = []
 
         for participant in session.participants:
             if exclude_sender and participant == sender:
@@ -352,11 +349,11 @@ class AgentCommunicationManager:
 
         return message_ids
 
-    async def process_message_queue(self):
+    async def process_message_queue(self) -> None:
         """Process messages in the queue."""
         while self.message_queue:
             message = self.message_queue.pop(0)
-            await self.route_message(message)
+            _ = await self.route_message(message)
 
     async def get_session_messages(self, session_id: str, limit: int = 50) -> list[AgentMessage]:
         """Get messages for a session."""
@@ -366,9 +363,9 @@ class AgentCommunicationManager:
         session = self.active_sessions[session_id]
         return session.messages[-limit:] if session.messages else []
 
-    async def get_agent_status(self) -> dict[str, Any]:
+    async def get_agent_status(self) -> dict[str, dict[str, Any]]:
         """Get status of all registered agents."""
-        status = {}
+        status: dict[str, dict[str, Any]] = {}
         for agent_id, agent_info in self.agent_registry.items():
             status[agent_id] = {
                 "status": agent_info["status"],
@@ -382,14 +379,14 @@ class AgentCoordinator:
     """Coordinates communication between agents and manages workflows."""
 
     def __init__(self):
-        self.communication_manager = AgentCommunicationManager()
+        self.communication_manager: AgentCommunicationManager = AgentCommunicationManager()
         self.workflow_templates: dict[str, dict[str, Any]] = {}
         self.active_workflows: dict[str, dict[str, Any]] = {}
 
         # Initialize workflow templates
         self._init_workflow_templates()
 
-    def _init_workflow_templates(self):
+    def _init_workflow_templates(self) -> None:
         """Initialize workflow templates."""
         self.workflow_templates = {
             "code_review": {
@@ -473,7 +470,7 @@ class AgentCoordinator:
             "step": workflow["current_step"],
         }
 
-        await self.communication_manager.send_message(
+        _ = await self.communication_manager.send_message(
             session_id=workflow["session_id"],
             sender="coordinator",
             recipient=agent,
@@ -516,11 +513,11 @@ async def main():
 
     # Simulate agent registration
     class MockAgent:
-        def __init__(self, name):
-            self.name = name
-            self.messages = []
+        def __init__(self, name: str):
+            self.name: str = name
+            self.messages: list[AgentMessage] = []
 
-        async def process_message(self, message):
+        async def process_message(self, message: AgentMessage) -> None:
             self.messages.append(message)
             logger.info(f"Agent {self.name} received message: {message.content}")
 

@@ -13,7 +13,7 @@ elif [ -f "$REPO_ROOT/venv/bin/activate" ]; then
 fi
 
 # Optionally load a precision/recall env file produced by precision_push_final_config.py
-PRECISION_ENV_FILE=${PRECISION_ENV_FILE:-"$REPO_ROOT/configs/precision_push.env"}
+PRECISION_ENV_FILE=${PRECISION_ENV_FILE:-"$REPO_ROOT/300_evals/configs/precision_push.env"}
 if [ -f "$PRECISION_ENV_FILE" ]; then
   echo "🔧 Loading precision env file: $PRECISION_ENV_FILE"
   # Export all keys from the file safely

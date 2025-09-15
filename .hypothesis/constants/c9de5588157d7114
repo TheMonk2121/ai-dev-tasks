@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/../dspy_modules/reader/sentence_select.py
+# hypothesis_version: 6.138.15
+
+[0.0, 1e-06, 0.05, 0.1, 0.2, 0.35, 0.4, 1.0, 1.15, 4000, '"', '/', '[A-Za-z0-9_.-]{3,}', '[A-Za-z0-9_./-]+', '```', 'alter', 'bm25_text', 'canary', 'check', 'chunk_id', 'content', 'create', 'delete', 'deploy', 'drop', 'embedding_text', 'env', 'file_path', 'filename', 'flag', 'foreign', 'gin', 'gist', 'health', 'index', 'insert', 'ivfflat', 'materialized', 'meta_ops', 'ops_health', 'percentage', 'primary', 'r_score', 'rollout', 's_score', 'score', 'select', 'sentence', 'setup', 'shell', 'table', 'text_for_reader', 'to_tsvector', 'tsquery', 'update', 'using', 'using gin', 'using gist', 'using hnsw', 'using ivfflat', 'view', 'websearch_to_tsquery', 'zprofile', 'zshrc']

@@ -11,11 +11,11 @@ echo "🔧 Setting up evaluation environment variables..."
 # DSPy RAG System Path
 export DSPY_RAG_PATH="src"
 
-# Evaluation Driver (synthetic for testing, dspy_rag for real evaluations)
-export EVAL_DRIVER="synthetic"
+# Evaluation Driver (dspy_rag for real evaluations, synthetic only for testing)
+export EVAL_DRIVER="dspy_rag"
 
 # RAGChecker Configuration
-export RAGCHECKER_USE_REAL_RAG="0"
+export RAGCHECKER_USE_REAL_RAG="1"
 
 # Retrieval Configuration
 export RETR_TOPK_VEC="50"
@@ -28,19 +28,18 @@ export RERANK_ENABLE="0"
 # DATABASE CONFIGURATION
 # =============================================================================
 
-# PostgreSQL Database (use mock for testing, real for production)
-export POSTGRES_DSN="mock://test"
-# For real database: export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency"
+# PostgreSQL Database (real database for production)
+export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency"
 
 # Alternative database URL (some scripts use this)
-export DATABASE_URL="mock://test"
+export DATABASE_URL="postgresql://danieljacobs@localhost:5432/ai_agency"
 
 # =============================================================================
 # EVALUATION PROFILES
 # =============================================================================
 
 # Current evaluation profile
-export EVAL_PROFILE="mock"
+export EVAL_PROFILE="real"
 
 # Evaluation concurrency
 export EVAL_CONCURRENCY="3"

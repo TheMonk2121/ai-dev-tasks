@@ -12,10 +12,11 @@ Leakage Guard for Few-Shot ID Exclusion
 Prevents few-shot examples from appearing in evaluation sets
 """
 
+
 class LeakageGuard:
     """Guard against data leakage between few-shot and evaluation sets."""
 
-    def __init__(self, few_shot_pool_file: str = "datasets/few_shot_pool.jsonl"):
+    def __init__(self, few_shot_pool_file: str = "300_evals/datasets/few_shot_pool.jsonl"):
         self.few_shot_pool_file = few_shot_pool_file
         self.few_shot_ids: set[str] = set()
         self.eval_ids: set[str] = set()
@@ -122,6 +123,7 @@ class LeakageGuard:
         """Get list of evaluation IDs."""
         return list(self.eval_ids)
 
+
 def main():
     """Main entry point for leakage guard."""
 
@@ -130,7 +132,7 @@ def main():
     parser.add_argument("--eval-file", help="Evaluation file to validate")
     parser.add_argument("--source-file", help="Source file for creating few-shot pool")
     parser.add_argument("--pool-size", type=int, default=50, help="Size of few-shot pool")
-    parser.add_argument("--pool-file", default="datasets/few_shot_pool.jsonl", help="Few-shot pool file")
+    parser.add_argument("--pool-file", default="300_evals/datasets/few_shot_pool.jsonl", help="Few-shot pool file")
 
     args = parser.parse_args()
 
@@ -167,6 +169,7 @@ def main():
             return
 
         guard.assert_no_leakage(args.eval_file)
+
 
 if __name__ == "__main__":
     main()

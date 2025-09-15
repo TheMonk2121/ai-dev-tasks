@@ -2,7 +2,7 @@
 
 > TL;DR
 > - Use this PRD to define scope, gates, and eval targets for any evaluation/RAG change.
-> - Follow repo policies: uv-only execution, memory rehydration first, and RAGChecker baseline lock.
+> - Follow repo policies: uv-only execution, memory rehydration first, and evaluation standards.
 > - All success criteria must be reproducible in CI via `uv run` and existing Make targets.
 
 ---
@@ -239,8 +239,8 @@ SQL
 ```
 
 ### 3.2 Datasets and gold cases
-- Curated gold lives under: `evals/gold/v1/gold_cases.jsonl`.
-- Dev/adhoc sets (optional): `datasets/dev_gold.jsonl`.
+- Curated gold lives under: `300_evals/datasets/gold_cases.jsonl`.
+- Dev/adhoc sets (optional): `300_evals/datasets/dev_gold.jsonl`.
 - Every eval run computes and stores a dataset hash and run metadata (git SHA, profile, seed).
 - Any learned model must record the dataset hash used for training.
 
@@ -285,14 +285,6 @@ class EvalRunSummary(BaseModel):
 ---
 
 ## 4) CI/CD and Required Checks
-
-### 4.0 RAGChecker baseline enforcement
-- Baseline is locked; no regressions allowed. Improve recall without losing precision.
-- Verify on gold profile before merge:
-  ```bash
-  uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
-  ```
-- Results are stored under `metrics/baseline_evaluations/`; merges require metrics ≥ targets and ≥ current floor.
 
 ### 4.1 Required jobs on pull requests
 - Lint: `ruff` and `black --check` via `uv run`.

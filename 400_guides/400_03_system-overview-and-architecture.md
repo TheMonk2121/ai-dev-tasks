@@ -60,31 +60,28 @@ Provide a complete architecture map, core components, interfaces, and flows acro
 ### **Single Doorway System (Recommended)**
 ```bash
 # Generate a new backlog item and start the full workflow
-python3.12 scripts/single_doorway.py generate "I want to work on fixing a feature"
+uv run python scripts/single_doorway.py generate "I want to work on fixing a feature"
 
 # Continue an interrupted workflow
-python3.12 scripts/single_doorway.py continue B-XXX
+uv run python scripts/single_doorway.py continue B-XXX
 
 # Archive completed work
-python3.12 scripts/single_doorway.py archive B-XXX
+uv run python scripts/single_doorway.py archive B-XXX
 
 # Open files for a backlog item
-python3.12 scripts/single_doorway.py open B-XXX
+uv run python scripts/single_doorway.py open B-XXX
 ```
 
 **Note**: This system requires Python 3.12. If you're using Python 3.9, the system will automatically detect and use Python 3.12 if available via Homebrew. All tests run in the Python 3.12 virtual environment.
 
 ### **Traditional Setup**
 ```bash
-# Create and activate virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r dspy-rag-system/requirements.txt
+# Create and activate virtual environment with UV
+uv venv --python 3.12
+uv sync --extra dev
 
 # Start the system
-./dspy-rag-system/quick_start.sh
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "system startup"
 ```
 
 ## 🧱 Architecture Layers
@@ -210,7 +207,7 @@ The project uses a progressive disclosure documentation system with three levels
 
 #### **For File Management**
 1. **`400_guides/400_01_documentation-playbook.md`** → MANDATORY file analysis rules
-2. **`200_setup/200_naming-conventions.md`** → File placement and naming
+2. **`200_setup/400_guides/400_05_codebase-organization-patterns.md`** → File placement and naming
 3. **`400_guides/400_06_memory-and-context-systems.md`** → Documentation categorization
 
 ### **Cross-Reference System**
@@ -232,16 +229,16 @@ The project uses a progressive disclosure documentation system with three levels
 #### **Health Check Commands**
 ```bash
 # Check documentation health
-python3 scripts/documentation_health_check.py
+uv run python scripts/documentation_health_check.py
 
 # Validate cross-references
-python3 scripts/validate_cross_references.py
+uv run python scripts/validate_cross_references.py
 
 # Check for broken links
-python3 scripts/check_broken_links.py
+uv run python scripts/check_broken_links.py
 
 # Documentation coherence validation
-python3 scripts/doc_coherence_validator.py
+uv run python scripts/doc_coherence_validator.py
 ```
 
 #### **Documentation Quality Gates**
@@ -255,7 +252,7 @@ python3 scripts/doc_coherence_validator.py
 **Critical Policies**: See `100_memory/100_cursor-memory-context.md#critical-policies` for essential safety guidelines.
 
 - **File Safety**: Pre-edit analysis and protected file tiers
-- **Context Rehydration**: Entrypoints via `scripts/memory_up.sh`, memory scaffold, backlog
+- **Context Rehydration**: Entrypoints via `scripts/shell/utilities/memory_up.sh`, memory scaffold, backlog
 - **Enforcement Hooks**: Testing gates, DSPy assertions, CI validators
 - **Cross-Reference Integrity**: Architecture owns canonical links between 00-12 guides
 
@@ -284,12 +281,12 @@ See: `400_system-overview.md` (Architecture, Core Components, Testing Framework,
 
 - **Unified Memory Orchestrator**: Single command access to all memory systems
   - Automatic database startup via `brew services start postgresql@14`
-  - Automatic virtual environment activation and dependency setup
+  - Automatic virtual environment activation and dependency setup via UV
   - Health monitoring with progress indicators and timeout handling
   - Graceful degradation when database startup is slow
 - **Memory System Components**:
   - **LTST Memory System**: Database-backed conversation memory with session tracking
-  - **Cursor Memory**: Static documentation bundling via `memory_up.sh`
+  - **Cursor Memory**: Static documentation bundling via `scripts/shell/utilities/memory_up.sh`
   - **Go CLI Memory**: Fast startup (<1s) with lean hybrid approach
   - **Prime Cursor**: Enhanced Cursor integration with chat capabilities
 - **Context Store**: Postgres tables; vector store via PGVector
@@ -343,7 +340,7 @@ Policy Config → Weights → Thresholds → Alpha → MMR → Response
 
 See: `config/retrieval.yaml` for configuration, `scripts/test_retrieval_system.py` for testing, and individual component files in `src/retrieval/` for implementation details.
 
-**Command**: `python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "query"`
+**Command**: `uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "query"`
 
 See: `400_06_memory-and-context-systems.md` and `src/utils/memory_rehydrator.py`.
 
@@ -537,18 +534,18 @@ scripts/validate_config.py                      # Configuration validation
 **Quick Integration Commands**
 ```bash
 # Add technical artifacts to memory context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical artifacts integration patterns"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical artifacts integration patterns"
 
 # Update memory context with technical components
-./scripts/memory_up.sh
+./scripts/shell/utilities/memory_up.sh
 
 # Validate technical integration
-python3 scripts/validate_config.py
+uv run python scripts/validate_config.py
 ```
 
 **Memory Context Updates**
 ```bash
-# Update scripts/memory_up.sh to include technical artifacts
+# Update scripts/shell/utilities/memory_up.sh to include technical artifacts
 # Add technical components to MEMORY_CONTEXT
 MEMORY_CONTEXT+="### **Technical Artifacts**\n\n"
 MEMORY_CONTEXT+="$(get_file_summary \"100_memory/100_technical-artifacts-integration-guide.md\" 60)\n\n"
@@ -559,19 +556,19 @@ MEMORY_CONTEXT+="$(get_file_summary \"100_memory/100_technical-artifacts-integra
 **Coder Role Technical Context**
 ```bash
 # Get technical implementation context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical implementation patterns and code components"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical implementation patterns and code components"
 
 # Access specific technical artifacts
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "DSPy RAG system architecture and implementation"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "DSPy RAG system architecture and implementation"
 ```
 
 **Implementer Role Technical Context**
 ```bash
 # Get implementation workflow context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "development workflow and technical integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "development workflow and technical integration"
 
 # Access system architecture context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "system architecture and component integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "system architecture and component integration"
 ```
 
 #### **Technical Artifacts Status Tracking**
@@ -593,24 +590,24 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role implement
 #### **Troubleshooting Technical Integration**
 
 ##### **Common Issues**
-1. **Missing Technical Context**: Run `./scripts/memory_up.sh` to update memory context
+1. **Missing Technical Context**: Run `./scripts/shell/utilities/memory_up.sh` to update memory context
 2. **Role Access Issues**: Verify DSPy role communication patterns
-3. **Configuration Errors**: Run `python3 scripts/validate_config.py`
-4. **Performance Issues**: Check `python3 scripts/system_health_check.py`
+3. **Configuration Errors**: Run `uv run python scripts/validate_config.py`
+4. **Performance Issues**: Check `uv run python scripts/system_health_check.py`
 
 ##### **Debugging Commands**
 ```bash
 # Debug technical integration
-python3 scripts/debug_orchestration_health.py
+uv run python scripts/debug_orchestration_health.py
 
 # Check system health
-python3 scripts/system_health_check.py
+uv run python scripts/system_health_check.py
 
 # Validate configuration
-python3 scripts/validate_config.py
+uv run python scripts/validate_config.py
 
 # Monitor performance
-python3 scripts/performance_optimization.py
+uv run python scripts/performance_optimization.py
 ```
 
 ## 📚 References
@@ -689,17 +686,17 @@ role-specific configuration files      # Individual role configurations
 ##### **Unified Memory Orchestrator Integration**
 ```bash
 # Role-specific memory access
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
 ```
 
 ##### **Memory Context Alignment**
 ```bash
 # Role-specific memory context
 export POSTGRES_DSN="mock://test"
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status"
 ```
 
 #### **2. Role-Specific Context Patterns**
@@ -707,29 +704,29 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prim
 ##### **Planner Role Context**
 ```bash
 # Strategic planning context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "development priorities and roadmap"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "PRD creation and task generation"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "development priorities and roadmap"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "PRD creation and task generation"
 ```
 
 ##### **Implementer Role Context**
 ```bash
 # Implementation context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "development workflow and technical integration"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "system architecture and component integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "development workflow and technical integration"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "system architecture and component integration"
 ```
 
 ##### **Researcher Role Context**
 ```bash
 # Research context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "research methodology and evidence-based analysis"
-python3 scripts/unified_memory_orchestrator.py --scripts/unified_memory_orchestrator.py --systems cursor --role researcher "memory system optimization and performance analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "research methodology and evidence-based analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "memory system optimization and performance analysis"
 ```
 
 ##### **Coder Role Context**
 ```bash
 # Coding context
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "implementation patterns and code quality"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical troubleshooting and debugging"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "implementation patterns and code quality"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical troubleshooting and debugging"
 ```
 
 ### **Role System Commands**
@@ -737,31 +734,31 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "te
 #### **Role Management Commands**
 ```bash
 # List available roles
-python3 scripts/list_cursor_roles.py --system cursor
+uv run python scripts/list_cursor_roles.py --system cursor
 
 # Configure role alignment
-python3 scripts/configure_role_alignment.py --role planner --memory-system lts
+uv run python scripts/configure_role_alignment.py --role planner --memory-system lts
 
 # Validate role integration
-python3 scripts/validate_role_integration.py --role planner --full-check
+uv run python scripts/validate_role_integration.py --role planner --full-check
 
 # Test role functionality
-python3 scripts/test_role_functionality.py --role planner --test-scenario planning
+uv run python scripts/test_role_functionality.py --role planner --test-scenario planning
 ```
 
 #### **Role Performance Commands**
 ```bash
 # Measure role performance
-python3 scripts/measure_role_performance.py --role planner --metrics response_time accuracy
+uv run python scripts/measure_role_performance.py --role planner --metrics response_time accuracy
 
 # Optimize role configuration
-python3 scripts/optimize_role_configuration.py --role planner --target-metrics performance
+uv run python scripts/optimize_role_configuration.py --role planner --target-metrics performance
 
 # Generate role repor
-python3 scripts/generate_role_report.py --role planner --output role_report.md
+uv run python scripts/generate_role_report.py --role planner --output role_report.md
 
 # Monitor role health
-python3 scripts/monitor_role_health.py --role planner --real-time
+uv run python scripts/monitor_role_health.py --role planner --real-time
 ```
 
 ### **Role System Quality Gates**
@@ -1056,31 +1053,31 @@ class DeploymentManagementFramework:
 #### **System Integration Commands**
 ```bash
 # Integrate system components
-python3 scripts/integrate_components.py --pattern api_gateway --components components.yaml
+uv run python scripts/integrate_components.py --pattern api_gateway --components components.yaml
 
 # Validate integration
-python3 scripts/validate_integration.py --integration-id INT-001 --full-check
+uv run python scripts/validate_integration.py --integration-id INT-001 --full-check
 
 # Test component communication
-python3 scripts/test_component_communication.py --components all --output communication_test.md
+uv run python scripts/test_component_communication.py --components all --output communication_test.md
 
 # Generate integration repor
-python3 scripts/generate_integration_report.py --output integration_report.md
+uv run python scripts/generate_integration_report.py --output integration_report.md
 ```
 
 #### **Deployment Management Commands**
 ```bash
 # Deploy to environmen
-python3 scripts/deploy_system.py --environment staging --config deployment_config.yaml
+uv run python scripts/deploy_system.py --environment staging --config deployment_config.yaml
 
 # Validate deploymen
-python3 scripts/validate_deployment.py --environment staging --full-check
+uv run python scripts/validate_deployment.py --environment staging --full-check
 
 # Rollback deploymen
-python3 scripts/rollback_deployment.py --environment staging --version previous
+uv run python scripts/rollback_deployment.py --environment staging --version previous
 
 # Generate deployment repor
-python3 scripts/generate_deployment_report.py --environment all --output deployment_report.md
+uv run python scripts/generate_deployment_report.py --environment all --output deployment_report.md
 ```
 
 ### **Integration & Deployment Quality Gates**

@@ -316,7 +316,7 @@ Track overall progress and ensure gates are respected.
 - [ ] Performance validated (budget: [...])
 - [ ] Security reviewed
 - [ ] Resilience verified
-- [ ] Eval gates met on gold profile (RAGChecker baseline not regressed)
+- [ ] Eval gates met on gold profile (retrieval micro ≥ 0.85; macro ≥ 0.75; reader F1 ≥ 0.60 or waiver)
 - [ ] Docs updated
 ```
 

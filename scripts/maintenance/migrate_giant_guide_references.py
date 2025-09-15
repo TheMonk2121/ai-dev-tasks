@@ -128,7 +128,7 @@ class GiantGuideReferenceMigrator:
                 if file_path.is_file():
                     p = str(file_path)
                     # Skip non-project directories
-                    if any(skip in p for skip in ["/node_modules/", "/venv/", "/.venv/", "/.git/", "/600_archives/"]):
+                    if any(skip in p for skip in ["/node_modules/", "/venv/", "/.venv/", "/.git/", "/"]):
                         continue
                     files_to_update.append(p)
 

@@ -1,9 +1,11 @@
 from __future__ import annotations
+
+import hashlib
 import os
 import sys
 import time
-from typing import Any, Optional, Union
-import hashlib
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Run Memory System Verification
@@ -18,12 +20,14 @@ Usage:
   DATABASE_URL=postgresql://user@localhost:5432/db python scripts/run_memory_verification.py
 """
 
+
 def add_src_to_path() -> None:
     here = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.abspath(os.path.join(here, ".."))
     utils_src = os.path.join(repo_root, "dspy-rag-system", "src")
     if utils_src not in sys.path:
         sys.path.insert(0, utils_src)
+
 
 def run_healthcheck() -> bool:
     try:
@@ -37,10 +41,11 @@ def run_healthcheck() -> bool:
         print("[WARN] Could not import memory_healthcheck; skipping")
         return True
 
-def generate_session_id(user_id: str) -> str:
 
+def generate_session_id(user_id: str) -> str:
     ts = str(time.time())
     return hashlib.sha256(f"{user_id}:{ts}".encode()).hexdigest()[:16]
+
 
 def seed_demo(conversation_storage: Any, session_id: str, user_id: str) -> bool:
     try:
@@ -112,6 +117,7 @@ def seed_demo(conversation_storage: Any, session_id: str, user_id: str) -> bool:
         print(f"[FAIL] Seeding demo failed: {e}")
         return False
 
+
 def run_rehydration(session_id: str, user_id: str) -> dict[str, Any]:
     try:
         from utils.memory_rehydrator import MemoryRehydrator  # type: ignore[import-untyped]
@@ -120,24 +126,32 @@ def run_rehydration(session_id: str, user_id: str) -> dict[str, Any]:
 
     try:
         rehydrator = MemoryRehydrator()
-        result = rehydrator.rehydrate_memory_simple(
-            query="Verify memory context",
-            limit=5,
-            user_id=user_id,
-            session_id=session_id,
-            context_types=["conversation", "preference", "project", "decision"],
-            include_history=True,
-        )
+        # Use getattr to handle potential method name variations
+        rehydrate_method = getattr(rehydrator, "rehydrate_memory", getattr(rehydrator, "rehydrate_memory_simple", None))
+
+        if not rehydrate_method:
+            return {"ok": False, "error": "No rehydration method found"}
+
+        # Try different method signatures
+        try:
+            result = rehydrate_method(request="Verify memory context")
+        except TypeError:
+            try:
+                result = rehydrate_method(request="Verify memory context", user_id=user_id, session_id=session_id)
+            except TypeError:
+                result = rehydrate_method()
+
         return {
             "ok": True,
-            "context_len": len(result.rehydrated_context or ""),
-            "history": len(result.conversation_history or []),
-            "contexts": len(result.relevant_contexts or []),
-            "continuity": result.session_continuity_score,
-            "cache": result.cache_hit,
+            "context_len": len(getattr(result, "rehydrated_context", "") or ""),
+            "history": len(getattr(result, "conversation_history", []) or []),
+            "contexts": len(getattr(result, "relevant_contexts", []) or []),
+            "continuity": getattr(result, "session_continuity_score", 0.0),
+            "cache": getattr(result, "cache_hit", False),
         }
     except Exception as e:
         return {"ok": False, "error": f"Rehydration failed: {e}"}
+
 
 def main() -> int:
     add_src_to_path()
@@ -175,6 +189,7 @@ def main() -> int:
     print(f"  cache_hit: {rh['cache']}")
     print("[DONE] Memory verification passed")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -57,28 +57,28 @@ The memory rehydration system uses **Lean Hybrid with Kill-Switches** approach w
 ### **Memory Rehydration (Choose One)**
 ```bash
 # Standard memory rehydration
-./scripts/memory_up.sh
+./scripts/shell/utilities/memory_up.sh
 
 # With custom stability (lower = more diverse results)
-./scripts/memory_up.sh -q "current project status" -r planner
+./scripts/shell/utilities/memory_up.sh -q "current project status" -r planner
 
 # Minimal mode for debugging
-./scripts/memory_up.sh -q "memory context" -r researcher
+./scripts/shell/utilities/memory_up.sh -q "memory context" -r researcher
 ```
 
 ### **Role-Specific Memory Rehydration**
 ```bash
 # Planner role - strategic context
-./scripts/memory_up.sh -r planner "current project status"
+./scripts/shell/utilities/memory_up.sh -r planner "current project status"
 
 # Coder role - implementation context
-./scripts/memory_up.sh -r coder "implement authentication function"
+./scripts/shell/utilities/memory_up.sh -r coder "implement authentication function"
 
 # Researcher role - analysis context
-./scripts/memory_up.sh -r researcher "performance analysis"
+./scripts/shell/utilities/memory_up.sh -r researcher "performance analysis"
 
 # Implementer role - system context
-./scripts/memory_up.sh -r implementer "database optimization"
+./scripts/shell/utilities/memory_up.sh -r implementer "database optimization"
 ```
 
 ### **DSPy Role Communication & Memory Access**
@@ -87,22 +87,22 @@ The memory rehydration system uses **Lean Hybrid with Kill-Switches** approach w
 export POSTGRES_DSN="mock://test"
 
 # Access specific DSPy roles for context and insights
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
 
 # Full memory context with all systems
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 ### **Configuration Options**
 ```bash
 # Stability slider (0.0-1.0, default 0.6)
-./scripts/memory_up.sh -q "current project status" -r planner
+./scripts/shell/utilities/memory_up.sh -q "current project status" -r planner
 
 # Kill-switches for debugging
-./scripts/memory_up.sh -q "memory context" -r researcher
+./scripts/shell/utilities/memory_up.sh -q "memory context" -r researcher
 
 # Environment variables
 export REHYDRATE_STABILITY=0.6
@@ -140,8 +140,8 @@ export REHYDRATE_EXPAND_QUERY="auto"
 ## 🔄 **Context Management Workflow**
 
 ### **Session Start Workflow**
-1. **Rehydrate Memory**: Run `./scripts/memory_up.sh` or DSPy orchestrator
-2. **Check Current State**: Review `100_cursor-memory-context.md`
+1. **Rehydrate Memory**: Run `./scripts/shell/utilities/memory_up.sh` or DSPy orchestrator
+2. **Check Current State**: Review `100_memory/100_cursor-memory-context.md`
 3. **Verify Priorities**: Check `000_core/000_backlog.md`
 4. **Understand Architecture**: Review `400_guides/400_03_system-overview-and-architecture.md`
 5. **Continue Work**: Resume from where you left off
@@ -281,31 +281,31 @@ export REHYDRATE_EXPAND_QUERY="auto"
 ### **Memory Rehydration Example**
 ```bash
 # Get strategic context for planning
-./scripts/memory_up.sh -r planner "project roadmap and strategic planning"
+./scripts/shell/utilities/memory_up.sh -r planner "project roadmap and strategic planning"
 
 # Get implementation context
-./scripts/memory_up.sh -r implementer "system architecture and implementation patterns"
+./scripts/shell/utilities/memory_up.sh -r implementer "system architecture and implementation patterns"
 
 # Get coding context
-./scripts/memory_up.sh -r coder "coding standards and implementation details"
+./scripts/shell/utilities/memory_up.sh -r coder "coding standards and implementation details"
 
 # Get research context
-./scripts/memory_up.sh -r researcher "research findings and analysis patterns"
+./scripts/shell/utilities/memory_up.sh -r researcher "research findings and analysis patterns"
 ```
 
 ### **DSPy Role Communication Example**
 ```bash
 # Strategic planning with DSPy Planner
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "analyze current project status and recommend next priorities"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role planner "analyze current project status and recommend next priorities"
 
 # Technical implementation with DSPy Implementer
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "design implementation strategy for new feature"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role implementer "design implementation strategy for new feature"
 
 # Research analysis with DSPy Researcher
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "evaluate different AI frameworks for our use case"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role researcher "evaluate different AI frameworks for our use case"
 
 # Code development with DSPy Coder
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "implement authentication function with best practices"
+uv run python scripts/unified_memory_orchestrator.py --systems cursor --role coder "implement authentication function with best practices"
 ```
 
 ### **Context Management Example**
@@ -704,7 +704,8 @@ export CONTEXT_EXPANSION_MAX_DEPTH=3
 - **Memory Context**: `100_memory/100_cursor-memory-context.md`
 - **DSPy Development**: `100_memory/104_dspy-development-context.md`
 - **Unified Memory Orchestrator**: `scripts/unified_memory_orchestrator.py`
-- **Memory Rehydrator**: `scripts/memory_rehydrator.py`
+- **Memory Rehydrator**: `src/utils/memory_rehydrator.py`
+- **Memory Up Script**: `scripts/shell/utilities/memory_up.sh`
 
 ## 🔄 **Context Management & Optimization**
 

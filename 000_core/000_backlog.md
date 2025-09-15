@@ -2498,10 +2498,10 @@ This backlog is the **executable roadmap** for the AI development ecosystem. Eac
 - **Cross-references** to lessons learned in `100_memory/105_lessons-learned-context.md`
 - **Strategic alignment** with development roadmap maintained
 | B‑091 | Strict Anchor Enforcement (Phase 2) | 🔥 | 2 | todo | Enforce heading-based anchors; disallow non‑TLDR HTML
-anchors in core docs | Validator (--strict-anchors) + pre-commit/CI | 200_naming-conventions.md,
+anchors in core docs | Validator (--strict-anchors) + pre-commit/CI | 400_guides/400_05_codebase-organization-patterns.md,
 scripts/doc_coherence_validator.py |
 <!--score: {bv:5, tc:3, rr:4, le:3, effort:2,
-deps:["200_naming-conventions.md","scripts/doc_coherence_validator.py"]}-->
+deps:["400_guides/400_05_codebase-organization-patterns.md","scripts/doc_coherence_validator.py"]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Enable --strict-anchors in CI for core docs and update pre-commit to reflect policy -->
 <!-- est_hours: 2 -->
@@ -2784,7 +2784,7 @@ System |
 <!--score_total: 9.0-->
 <!--progress: Complete implementation with git snapshot system, rollback functionality, status monitoring, and proper error handling-->
 
-| B‑064 | Naming Convention Category Table | 🔧 | 0.5 | ✅ done | Add category table to 200_naming-conventions.md
+| B‑064 | Naming Convention Category Table | 🔧 | 0.5 | ✅ done | Add category table to 400_guides/400_05_codebase-organization-patterns.md
 clarifying current buckets | Category Documentation + Prefix Clarification + No Mass Renaming | B-060 Documentation
 Coherence Validation System |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-060"]}-->

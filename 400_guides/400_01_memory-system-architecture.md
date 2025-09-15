@@ -18,19 +18,19 @@
 **Step 1: Initialize the Memory System**
 ```bash
 # Start the memory system
-./scripts/memory_up.sh
+./scripts/shell/utilities/memory_up.sh
 
 # Verify it's working
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test memory system"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test memory system"
 ```
 
 **Step 2: Start Your First Session**
 ```bash
 # Begin a conversation with context awareness
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "help me understand this project"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "help me understand this project"
 
 # Enhanced session with multiple memory systems
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 **Step 3: Verify Context is Working**
@@ -180,7 +180,7 @@ When the memory system is working optimally, you should experience:
 #### **Scenario: "The AI forgot what we were working on"**
 **Solution**: Run memory rehydration to restore context
 ```bash
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
 ```
 
 #### **Scenario: "I want the AI to remember my coding preferences"**
@@ -870,7 +870,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
    - When understanding the overall development approach
    - When onboarding to the project
 
-7. **`200_naming-conventions.md`** - **IMPORTANT**
+7. **`400_guides/400_05_codebase-organization-patterns.md`** - **IMPORTANT**
    - When understanding file organization principles
    - When suggesting new file names or understanding existing ones
    - When understanding the three-digit prefix system
@@ -904,13 +904,13 @@ The Unified Memory Orchestrator now supports multiple memory systems with intell
 **Usage Examples:**
 ```bash
 # Basic memory orchestration
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
 
 # Enhanced multi-system analysis
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role researcher "comprehensive system analysis"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role researcher "comprehensive system analysis"
 
-# Role-specific context enhancemen
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "development assistance with full context"
+# Role-specific context enhancement
+uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "development assistance with full context"
 ```
 
 #### **Four-Slot Model**
@@ -950,7 +950,7 @@ The system now includes **entity-aware context expansion** that enhances semanti
 ### **MCP Memory Server Integration**
 
 #### **MCP Memory Server (Legacy - Replaced by Production Framework)**
-**Production-ready HTTP server providing MCP-compatible memory rehydration endpoints.**
+**⚠️ LEGACY SYSTEM**: This MCP server has been replaced by the production framework. Use the unified memory orchestrator instead.
 
 **Purpose**: Database-based memory rehydration for Cursor AI with automatic caching, monitoring, and performance optimization.
 
@@ -2017,7 +2017,7 @@ export DECISION_TRIGRAM_ENABLED=false
 
 **Command**:
 ```bash
-python scripts/memory_healthcheck.py
+uv run python 300_evals/scripts/evaluation/memory_healthcheck.py
 ```
 
 **Checks performed**:
@@ -2035,7 +2035,7 @@ python scripts/memory_healthcheck.py
 
 **Command**:
 ```bash
-DATABASE_URL=... python scripts/run_memory_verification.py
+DATABASE_URL=... uv run python scripts/utilities/run_memory_verification.py
 ```
 
 **What it does**:
@@ -2047,17 +2047,17 @@ DATABASE_URL=... python scripts/run_memory_verification.py
 
 ```bash
 # Run memory system healthcheck
-python3 scripts/memory_healthcheck.py
+uv run python 300_evals/scripts/evaluation/memory_healthcheck.py
 
 # Run memory verification with full output
-DATABASE_URL="postgresql://user:pass@localhost:5432/db" python3 scripts/run_memory_verification.py
+DATABASE_URL="postgresql://user:pass@localhost:5432/db" uv run python scripts/utilities/run_memory_verification.py
 
 # Check memory system status with unified orchestrator
-python3 scripts/unified_memory_orchestrator.py --systems ltst --role planner "memory system status"
+uv run python scripts/unified_memory_orchestrator.py --systems ltst --role planner "memory system status"
 
 # Monitor memory performance metrics
-python3 -c "
-from dspy_rag_system.src.utils.ltst_memory_integration import LTSTMemoryIntegration
+uv run python -c "
+from src.utils.ltst_memory_integration import LTSTMemoryIntegration
 ltst = LTSTMemoryIntegration()
 print(ltst.get_performance_metrics())
 "

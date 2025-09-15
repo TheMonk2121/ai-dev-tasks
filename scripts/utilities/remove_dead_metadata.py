@@ -34,7 +34,7 @@ SKIP_DIRS = {
     "__pycache__",
     "node_modules",
     ".pytest_cache",
-    "600_archives",  # Skip archives
+      # Skip archives
     ".mypy_cache",
     ".ruff_cache",
     "build",
@@ -53,7 +53,6 @@ PROCESS_EXTENSIONS = {
     ".txt",
 }
 
-
 def should_process_file(file_path: Path) -> bool:
     """Check if a file should be processed."""
     # Skip directories
@@ -71,7 +70,6 @@ def should_process_file(file_path: Path) -> bool:
 
     return True
 
-
 def remove_dead_metadata(content: str) -> tuple[str, int]:
     """Remove dead metadata patterns from content."""
     removed_count = 0
@@ -86,7 +84,6 @@ def remove_dead_metadata(content: str) -> tuple[str, int]:
     content = re.sub(r"\n\s*\n\s*\n", "\n\n", content)
 
     return content, removed_count
-
 
 def process_file(file_path: Path) -> tuple[bool, int]:
     """Process a single file and remove dead metadata."""
@@ -107,7 +104,6 @@ def process_file(file_path: Path) -> tuple[bool, int]:
     except Exception as e:
         print(f"❌ Error processing {file_path}: {e}")
         return False, 0
-
 
 def main():
     """Main function to remove dead metadata from all files.
@@ -152,7 +148,6 @@ def main():
         print(f"\n🎯 Successfully removed {total_headers_removed} dead metadata headers!")
     else:
         print("\n✨ No dead metadata headers found to remove.")
-
 
 if __name__ == "__main__":
     main()
