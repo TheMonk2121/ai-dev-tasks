@@ -27,7 +27,7 @@ def _safe_dsn() -> str:
 def test_resolve_dsn_picks_primary(primary: str, fallback: str):
     os.environ[CANON_ENV] = primary
     os.environ[FALLBACK_ENV] = fallback
-    chosen = resolve_dsn(strict=False, emit_warning=False)
+    chosen = resolve_dsn(strict=False)
     assert chosen == primary
     os.environ.pop(CANON_ENV, None)
     os.environ.pop(FALLBACK_ENV, None)
@@ -37,5 +37,5 @@ def test_resolve_dsn_picks_primary(primary: str, fallback: str):
 def test_resolve_dsn_none_when_unset():
     os.environ.pop(CANON_ENV, None)
     os.environ.pop(FALLBACK_ENV, None)
-    chosen = resolve_dsn(strict=False, emit_warning=False)
-    assert chosen is None
+    with pytest.raises(RuntimeError):
+        _ = resolve_dsn(strict=False)
