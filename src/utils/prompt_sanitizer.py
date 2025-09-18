@@ -7,7 +7,6 @@ Prompt Sanitization Utility
 Provides regex-based prompt sanitization with configurable block-list and optional whitelist.
 """
 
-import json
 import logging
 import os
 from typing import Any
@@ -26,7 +25,7 @@ def load_security_config() -> dict[str, Any]:
     try:
         from ..config import get_settings
 
-        settings = get_settings()
+        _ = get_settings()  # Load settings but don't use them yet
 
         return {
             "prompt_blocklist": ["{{", "}}", "<script>"],  # Could be added to settings if needed
@@ -45,13 +44,13 @@ def load_security_config() -> dict[str, Any]:
         }
 
 
-def sanitize_prompt(prompt: str, model_id: str | None = None) -> str:
+def sanitize_prompt(prompt: str, _model_id: str | None = None) -> str:
     """
     Sanitize user input to prevent injection attacks.
 
     Args:
         prompt: The input prompt to sanitize
-        model_id: Optional model ID for model-specific sanitization
+        _model_id: Optional model ID for model-specific sanitization (unused)
 
     Returns:
         Sanitized prompt string
@@ -59,7 +58,7 @@ def sanitize_prompt(prompt: str, model_id: str | None = None) -> str:
     Raises:
         SecurityError: If blocked patterns are detected
     """
-    if not prompt or not isinstance(prompt, str):
+    if not prompt:
         return prompt
 
     config = load_security_config()
@@ -97,7 +96,7 @@ def validate_file_path(file_path: str) -> bool:
     Returns:
         True if path is valid, False otherwise
     """
-    if not file_path or not isinstance(file_path, str):
+    if not file_path:
         return False
 
     # Check for path traversal attempts
@@ -184,7 +183,7 @@ def validate_file_extension(filename: str) -> bool:
 
 
 def sanitize_and_validate_input(
-    prompt: str, file_path: str | None = None, file_size_bytes: int | None = None, model_id: str | None = None
+    prompt: str, file_path: str | None = None, file_size_bytes: int | None = None, _model_id: str | None = None
 ) -> dict[str, Any]:
     """
     Comprehensive input sanitization and validation.
@@ -193,7 +192,7 @@ def sanitize_and_validate_input(
         prompt: The prompt to sanitize
         file_path: Optional file path to validate
         file_size_bytes: Optional file size to validate
-        model_id: Optional model ID for model-specific validation
+        _model_id: Optional model ID for model-specific validation (unused)
 
     Returns:
         Dictionary with validation results
@@ -201,7 +200,7 @@ def sanitize_and_validate_input(
     Raises:
         SecurityError: If any security violations are detected
     """
-    results = {
+    results: dict[str, Any] = {
         "prompt_sanitized": None,
         "file_path_valid": None,
         "file_size_valid": None,
@@ -211,7 +210,7 @@ def sanitize_and_validate_input(
 
     try:
         # Sanitize prompt
-        results["prompt_sanitized"] = sanitize_prompt(prompt, model_id)
+        results["prompt_sanitized"] = sanitize_prompt(prompt, _model_id)
     except SecurityError as e:
         results["overall_valid"] = False
         logger.error(f"Prompt sanitization failed: {e}")

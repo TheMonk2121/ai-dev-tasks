@@ -5,26 +5,24 @@ Implements configurable retry logic with exponential backoff.
 """
 
 import functools
-import json
 import logging
 import os
 import time
 from collections.abc import Callable
 from typing import Any
 
-# Optional psycopg2 import so this module works without DB deps
+# Optional psycopg import so this module works without DB deps
 try:  # pragma: no cover - guarded import
-    import psycopg2  # type: ignore
-
-    _PSYCOPG2_AVAILABLE = True
+    import psycopg  # type: ignore
+    _psycopg_available = True
 except Exception:  # pragma: no cover
-    _PSYCOPG2_AVAILABLE = False
+    _psycopg_available = False
 
-    class _Psycopg2Shim:  # type: ignore
+    class _PsycopgShim:  # type: ignore
         class OperationalError(Exception):
             pass
 
-    psycopg2 = _Psycopg2Shim()  # type: ignore
+    psycopg = _PsycopgShim()  # type: ignore
 
 from requests.exceptions import RequestException, Timeout
 
@@ -33,10 +31,9 @@ try:
     from .error_pattern_recognition import analyze_error_pattern, suggest_recovery_strategy
     from .hotfix_templates import generate_hotfix_template
     from .model_specific_handling import handle_model_error
-
-    ERROR_PATTERN_ANALYSIS_AVAILABLE = True
+    _error_pattern_analysis_available = True
 except ImportError:
-    ERROR_PATTERN_ANALYSIS_AVAILABLE = False
+    _error_pattern_analysis_available = False
 
 logger = logging.getLogger(__name__)
 
@@ -109,7 +106,7 @@ def load_error_policy() -> dict[str, Any]:
         }
 
 
-def get_llm_timeout(model_id: str = None) -> int:
+def get_llm_timeout(model_id: str | None = None) -> int:
     """Get LLM-specific timeout based on model type"""
     policy = load_error_policy()
 
@@ -152,7 +149,7 @@ def is_fatal_error(exception: Exception, fatal_errors: list[str]) -> bool:
 def retry(
     max_retries: int | None = None,
     backoff_factor: float | None = None,
-    timeout_seconds: int | None = None,
+    _timeout_seconds: int | None = None,  # Used in other decorators but not this one
     fatal_errors: list[str] | None = None,
     jitter: bool = True,
 ):
@@ -162,14 +159,14 @@ def retry(
     Args:
         max_retries: Maximum number of retry attempts
         backoff_factor: Exponential backoff multiplier
-        timeout_seconds: Timeout for each attempt
+        _timeout_seconds: Timeout for each attempt (unused in base retry)
         fatal_errors: List of error types that should not trigger retries
         jitter: Add random jitter to prevent thundering herd
     """
 
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             # Load default policy if not specified
             policy = load_error_policy()
             max_retries_actual = max_retries or policy["max_retries"]
@@ -185,7 +182,7 @@ def retry(
                     last_exception = e
 
                     # Analyze error pattern if available
-                    if ERROR_PATTERN_ANALYSIS_AVAILABLE:
+                    if _error_pattern_analysis_available:
                         try:
                             # Extract context from function and arguments
                             context = {
@@ -198,8 +195,7 @@ def retry(
 
                             if analysis.matched_patterns:
                                 logger.info(
-                                    f"Error pattern analysis: {len(analysis.matched_patterns)} patterns matched, "
-                                    f"severity: {analysis.severity_score:.2f}"
+                                    f"Error pattern analysis: {len(analysis.matched_patterns)} patterns matched, severity: {analysis.severity_score:.2f}"
                                 )
 
                                 # Log recovery suggestions
@@ -271,26 +267,26 @@ def retry(
 
 
 # Convenience functions for common retry scenarios
-def retry_http(func: Callable) -> Callable:
+def retry_http(func: Callable[..., Any]) -> Callable[..., Any]:
     """Retry decorator for HTTP requests"""
     return retry(
-        max_retries=3, backoff_factor=2.0, timeout_seconds=30, fatal_errors=["AuthenticationError", "DataStoreError"]
+        max_retries=3, backoff_factor=2.0, _timeout_seconds=30, fatal_errors=["AuthenticationError", "DataStoreError"]
     )(func)
 
 
-def retry_database(func: Callable) -> Callable:
+def retry_database(func: Callable[..., Any]) -> Callable[..., Any]:
     """Retry decorator for database operations"""
     return retry(
-        max_retries=3, backoff_factor=1.5, timeout_seconds=60, fatal_errors=["DataStoreError", "ConfigurationError"]
+        max_retries=3, backoff_factor=1.5, _timeout_seconds=60, fatal_errors=["DataStoreError", "ConfigurationError"]
     )(func)
 
 
-def retry_llm(func: Callable) -> Callable:
+def retry_llm(func: Callable[..., Any]) -> Callable[..., Any]:
     """Retry decorator for LLM API calls with model-specific timeouts"""
 
-    def decorator_with_model_timeout(func: Callable) -> Callable:
+    def decorator_with_model_timeout(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             # Try to extract model_id from kwargs or first argument
             model_id = kwargs.get("model_id") or kwargs.get("model")
             if not model_id and args:
@@ -301,13 +297,13 @@ def retry_llm(func: Callable) -> Callable:
                     model_id = args[0]
 
             # Get model-specific timeout
-            timeout = get_llm_timeout(model_id)
+            timeout = get_llm_timeout(model_id) if model_id else get_llm_timeout()
 
             # Use the retry decorator with model-specific timeout
             return retry(
                 max_retries=2,
                 backoff_factor=2.0,
-                timeout_seconds=timeout,
+                _timeout_seconds=timeout,
                 fatal_errors=["AuthenticationError", "ResourceBusyError"],
             )(func)(*args, **kwargs)
 
@@ -319,27 +315,27 @@ def retry_llm(func: Callable) -> Callable:
 def retry_with_timeout(timeout_seconds: int = 30):
     """Retry decorator with specific timeout"""
 
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             import signal
             
-            def timeout_handler(signum, frame):
+            def timeout_handler(_signum: int, _frame: Any) -> None:
                 raise TimeoutError(f"Function timed out after {timeout_seconds} seconds")
 
             # Set up timeout
             old_handler = signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(timeout_seconds)
+            _ = signal.alarm(timeout_seconds)
 
             try:
                 result = func(*args, **kwargs)
-                signal.alarm(0)  # Cancel timeout
+                _ = signal.alarm(0)  # Cancel timeout
                 return result
             except TimeoutError:
-                signal.alarm(0)
+                _ = signal.alarm(0)
                 raise
             finally:
-                signal.signal(signal.SIGALRM, old_handler)
+                _ = signal.signal(signal.SIGALRM, old_handler)
 
         return wrapper
 
@@ -347,11 +343,11 @@ def retry_with_timeout(timeout_seconds: int = 30):
 
 
 # Utility functions for error handling
-def handle_retryable_errors(func: Callable, *args, **kwargs) -> Any:
+def handle_retryable_errors(func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
     """Execute function with retry logic for retryable errors"""
     try:
         return func(*args, **kwargs)
-    except (Timeout, RequestException, psycopg2.OperationalError) as e:
+    except (Timeout, RequestException, psycopg.OperationalError) as e:
         logger.warning(f"Retryable error encountered: {e}")
         raise RetryableError(f"Retryable error: {e}") from e
     except Exception as e:

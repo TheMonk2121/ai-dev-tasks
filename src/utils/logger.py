@@ -83,13 +83,13 @@ def get_logger(name: str, level: str = "INFO", log_file: str | None = None) -> l
         if name in _logger_cache:
             return _logger_cache[name]
 
-        logger = logging.getLogger(name)
+        logger: Any = logging.getLogger(name)
         logger.setLevel(getattr(logging, level.upper()))
 
         # Only configure if not already configured
         if not logger.handlers:
             # Console handler
-            console_handler = logging.StreamHandler(sys.stdout)
+            console_handler: Any = logging.StreamHandler(sys.stdout)
             console_handler.setFormatter(StructuredFormatter())
             logger.addHandler(console_handler)
 
@@ -171,8 +171,8 @@ def configure_logging_from_env() -> logging.Logger:
     """Configure logging from environment variables"""
     import os
 
-    log_level = os.getenv("LOG_LEVEL", "INFO")
-    log_file = os.getenv("LOG_FILE")
+    log_level: Any = os.getenv("LOG_LEVEL", "INFO")
+    log_file: Any = os.getenv("LOG_FILE")
 
     # Set up root logger
     root_logger = get_logger("root", level=log_level, log_file=log_file)

@@ -21,10 +21,10 @@ import sys
 from contextlib import nullcontext
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -33,26 +33,39 @@ sys.path.insert(0, str(project_root))
 from src.common.db_dsn import resolve_dsn
 
 # Import Logfire for observability
+logfire_available = False
+logfire = None
+init_observability = None
 try:
     from scripts.monitoring.observability import get_logfire, init_observability
 
     logfire = get_logfire()
-    LOGFIRE_AVAILABLE = True
+    logfire_available = True
 except ImportError:
-    logfire = None
-    LOGFIRE_AVAILABLE = False
+    pass
+
+# Import psycopg2 for database operations
+psycopg2_available = False
+psycopg2 = None
+RealDictCursor = None
+try:
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+    psycopg2_available = True
+except ImportError:
+    pass
 
 
 class ConfigLogger:
     """Comprehensive configuration logging for evaluation runs."""
 
     def __init__(self, run_id: str | None = None):
-        self.run_id = run_id or f"config-{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self.run_id: str = run_id or f"config-{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         self.config_data: dict[str, Any] = {}
-        self.logfire_span = None
+        self.logfire_span: Any = None
 
         # Initialize Logfire if available
-        if LOGFIRE_AVAILABLE:
+        if logfire_available and init_observability and logfire:
             try:
                 init_observability(service="ai-dev-tasks")
                 self.logfire_span = logfire.span("config.capture", run_id=self.run_id)
@@ -76,7 +89,7 @@ class ConfigLogger:
             }
 
             # Log to Logfire
-            if LOGFIRE_AVAILABLE and logfire:
+            if logfire_available and logfire:
                 try:
                     logfire.info(
                         "config.captured",
@@ -151,7 +164,11 @@ class ConfigLogger:
 
     def _capture_database_config(self) -> dict[str, Any]:
         """Capture database configuration and connection details."""
-        db_config = {"dsn_configured": False, "connection_test": False, "extensions": [], "tables": [], "error": None}
+        db_config: dict[str, Any] = {"dsn_configured": False, "connection_test": False, "extensions": [], "tables": [], "error": None}
+
+        if not psycopg2_available or not psycopg2 or not RealDictCursor:
+            db_config["error"] = "psycopg2 not available"
+            return db_config
 
         try:
             dsn = resolve_dsn(strict=False)
@@ -276,6 +293,10 @@ class ConfigLogger:
 
     def log_to_database(self, dsn: str) -> None:
         """Log configuration to database (if eval tables exist)."""
+        if not psycopg2_available or not psycopg2 or not RealDictCursor:
+            print("Warning: psycopg2 not available, cannot log to database")
+            return
+
         try:
             with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
                 with conn.cursor() as cur:
@@ -288,7 +309,8 @@ class ConfigLogger:
                         )
                     """
                     )
-                    if not cur.fetchone()[0]:
+                    result = cur.fetchone()
+                    if not result or not result[0]:
                         return  # Skip if eval tables don't exist
 
                     # Insert config as metadata

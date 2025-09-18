@@ -24,8 +24,8 @@ class ArrayF32WithShape:
         Vector2D = ArrayF32WithShape((10, 20))  # 2D array with shape (10, 20)
     """
 
-    def __init__(self, shape: int | tuple[int, ...]):
-        self.shape = shape if isinstance(shape, tuple) else (shape,)
+    def __init__() -> Any:
+        self.shape: Any = shape if isinstance(shape, tuple) else (shape,)
 
     def __get_pydantic_core_schema__(self, source_type: type, handler: GetCoreSchemaHandler) -> CoreSchema:
         def validate_array(value: object) -> np.ndarray:
@@ -35,7 +35,7 @@ class ArrayF32WithShape:
             if value.dtype != np.float32:
                 # Convert to float32 if possible
                 try:
-                    value = value.astype(np.float32)
+                    value: Any = value.astype(np.float32)
                 except (ValueError, TypeError) as e:
                     raise ValueError(f"Cannot convert to float32: {e}")
 

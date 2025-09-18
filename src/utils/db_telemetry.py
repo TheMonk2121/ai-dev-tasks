@@ -11,13 +11,13 @@ from __future__ import annotations
 import json
 import os
 import sys
-from contextlib import nullcontext
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -30,43 +30,44 @@ try:
     from scripts.monitoring.observability import get_logfire, init_observability
 
     logfire = get_logfire()
-    LOGFIRE_AVAILABLE = True
+    _logfire_available = True
 except ImportError:
     logfire = None
-    LOGFIRE_AVAILABLE = False
+    _logfire_available = False
 
 
 class DatabaseTelemetryLogger:
     """Handles structured logging to TimescaleDB for evaluation telemetry."""
 
     def __init__(self, run_id: str, dsn: str | None = None):
-        self.run_id = run_id
+        self.run_id: Any = run_id
         self.dsn = dsn or resolve_dsn(strict=False)
-        self.connection = None
-        self.cursor = None
+        self.connection: Any = None
+        self.cursor: Any = None
 
         # Initialize Logfire if available
-        if LOGFIRE_AVAILABLE:
+        if _logfire_available:
             try:
                 init_observability(service="ai-dev-tasks")
                 self.logfire_span = logfire.span("db_telemetry", run_id=run_id)
             except Exception as e:
                 print(f"⚠️  Logfire initialization failed: {e}")
-                self.logfire_span = None
+                self.logfire_span: Any = None
         else:
-            self.logfire_span = None
+            self.logfire_span: Any = None
 
-    def __enter__(self):
+    def __enter__(self: Any):
         """Context manager entry."""
         try:
-            self.connection = psycopg2.connect(self.dsn, cursor_factory=RealDictCursor)
-            self.cursor = self.connection.cursor()
+            # Connection will be created on demand using Psycopg3Config
+            self.connection = None
+            self.cursor: Any = None
             return self
         except Exception as e:
             print(f"⚠️  Database connection failed: {e}")
             return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Context manager exit."""
         if self.cursor:
             self.cursor.close()
@@ -106,7 +107,7 @@ class DatabaseTelemetryLogger:
             self.connection.commit()
 
             # Log to Logfire
-            if LOGFIRE_AVAILABLE and logfire:
+            if _logfire_available and logfire:
                 logfire.info("db_telemetry.eval_run_logged", run_id=self.run_id, tag=tag, model=model)
 
             return True
@@ -221,7 +222,7 @@ class DatabaseTelemetryLogger:
             self.connection.commit()
 
             # Log to Logfire
-            if LOGFIRE_AVAILABLE and logfire:
+            if _logfire_available and logfire:
                 logfire.info("db_telemetry.config_logged", run_id=self.run_id, config_keys=list(config_data.keys()))
 
             return True
@@ -372,7 +373,7 @@ class DatabaseTelemetryLogger:
             self.connection.commit()
 
             # Log to Logfire
-            if LOGFIRE_AVAILABLE and logfire:
+            if _logfire_available and logfire:
                 logfire.info("db_telemetry.run_finished", run_id=self.run_id, finished_at=finished_at.isoformat())
 
             return True
@@ -401,7 +402,7 @@ if __name__ == "__main__":
 
         # Test configuration logging
         config_data = {"profile": "test", "driver": "test_driver", "database_connected": True}
-        success = db_logger.log_configuration(config_data)
+        success: Any = db_logger.log_configuration(config_data)
         print(f"Configuration logged: {success}")
 
         # Test evaluation metrics
@@ -429,7 +430,7 @@ if __name__ == "__main__":
         print(f"Reader metrics logged: {success}")
 
         # Finish run
-        success = db_logger.finish_run()
+        success: Any = db_logger.finish_run()
         print(f"Run finished: {success}")
 
     print("🎯 Database telemetry test completed!")
