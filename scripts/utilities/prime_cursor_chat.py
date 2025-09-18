@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -19,10 +19,8 @@ Examples:
     python3 scripts/prime_cursor_chat.py implementer "DSPy integration"
     python3 scripts/prime_cursor_chat.py researcher "performance analysis"
 """
-
-
-def run_memory_rehydrator() -> Any:
-    """Run the memory rehydrator adapter and return a text bundle"""
+def run_memory_rehydrator(role: str, task: str) -> Any:
+    """Run the memory rehydrator adapter and return a text bundle string."""
 
     try:
         # Ensure repository root is on sys.path for adapter import
@@ -48,23 +46,23 @@ def run_memory_rehydrator() -> Any:
             "=" * 80,
             "📊 BUNDLE METADATA",
             "=" * 80,
-            f"Processing Time: {bundle.meta.get('processing_time')}s",
-            f"Cache Hit: {bundle.meta.get('cache_hit')}",
-            f"Mode: {bundle.meta.get('mode')}",
+            f"Processing Time: {getattr(bundle, 'meta', {}).get('processing_time')}s",
+            f"Cache Hit: {getattr(bundle, 'meta', {}).get('cache_hit')}",
+            f"Mode: {getattr(bundle, 'meta', {}).get('mode')}",
         ]
 
-        return "\n".join(header) + (bundle.text or "") + "\n" + "\n".join(footer)
+        return "\n".join(header) + (getattr(bundle, 'text', '') or "") + "\n" + "\n".join(footer)
 
     except Exception as e:
         print(f"❌ Error: {e}")
         return None
 
 
-def format_for_cursor_chat(bundle_output: Any):
-    """Format the bundle output for easy copying into Cursor chat"""
+def format_for_cursor_chat(bundle_output: Any) -> str:
+    """Format the bundle output for easy copying into Cursor chat."""
 
     # Extract the bundle content (between the separator lines)
-    lines: Any = bundle_output.split("\n")
+    lines: list[str] = str(bundle_output).split("\n")
     bundle_start = None
     bundle_end = None
 
@@ -92,8 +90,8 @@ def format_for_cursor_chat(bundle_output: Any):
     return formatted
 
 
-def main() -> Any:
-    """Main function to prime Cursor chat with memory context"""
+def main() -> None:
+    """Main function to prime Cursor chat with memory context."""
 
     # Parse command line arguments
     role = "planner"

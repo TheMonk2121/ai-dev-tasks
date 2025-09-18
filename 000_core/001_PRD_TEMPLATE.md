@@ -19,7 +19,7 @@
 
 ```bash
 export POSTGRES_DSN="mock://test"
-uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/utilities/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 ## 1) Context and Goals
@@ -288,7 +288,7 @@ class EvalRunSummary(BaseModel):
 
 ### 4.1 Required jobs on pull requests
 - Lint: `ruff` and `black --check` via `uv run`.
-- Type check: `ruff check` via `uv run`.
+- Type check: `basedpyright` via `uv run`.
 - Tests: `pytest -q` with markers and budgets enforced.
 - Eval gates (gold profile only): retrieval micro ≥ [0.85], macro ≥ [0.75]; reader F1 ≥ [0.60] or explicit waiver.
 - Profile verifier: fails PR if `mock` profile is used on `main` or in required gates.
@@ -342,11 +342,11 @@ line-length = 100
 target-version = ["py312"]
 ```
 
-**Type checking (Ruff)**
-- Use **Ruff** for both linting and type checking.
+**Type checking (basedpyright)**
+- Use **basedpyright** for static type checking.
 - CI step should run:
-  - `uv run ruff check .`
-- Suggested base config in pyproject.toml:
+  - `uv run basedpyright`
+- Suggested base config lives in `pyproject.toml` and should align with repo rules (strict settings enabled).
 ```toml
 [tool.ruff]
 line-length = 120
@@ -473,7 +473,7 @@ settings.load_profile("ci")
   `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 - Run tests and type checks:
   `uv run pytest -q`
-  `uv run ruff check .`
+  `uv run basedpyright`
 - Lint/format:
   `uv run ruff check .`
   `uv run black --check .`

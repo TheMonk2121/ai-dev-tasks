@@ -346,7 +346,7 @@ class ConstitutionComplianceChecker:
         # Log to file for tracking
         log_entry = {"timestamp": datetime.now().isoformat(), "violation": violation}
 
-        log_file = "300_evals/metrics/logs/constitution_violations.jsonl"
+        log_file = "evals/metrics/logs/constitution_violations.jsonl"
         try:
             with open(log_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(log_entry) + "\n")

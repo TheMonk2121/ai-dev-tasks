@@ -17,7 +17,7 @@ pool: AsyncConnectionPool = AsyncConnectionPool(
     DB_DSN,
     min_size=1,
     max_size=10,
-    max_inactive_connection_lifetime=300,
+    max_idle=300,
 )
 
 

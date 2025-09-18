@@ -27,12 +27,13 @@ sys.path.insert(0, str(project_root))
 
 # Import after path modification
 
+
 class EpisodicMemorySystem:
     """Complete episodic memory system with all three phases."""
 
-    def __init__(self):
+    def __init__(self: Any):
         """Initialize the complete episodic memory system."""
-        self.orchestrator = EnhancedMemoryOrchestratorWithHeuristics()
+        self.orchestrator: Any = EnhancedMemoryOrchestratorWithHeuristics()
         print("🧠 Episodic Memory System initialized (all phases)")
 
     def get_enhanced_context(
@@ -106,9 +107,10 @@ class EpisodicMemorySystem:
         """Load heuristics pack from file."""
         return self.orchestrator.load_heuristics_pack(input_path)
 
-def main():
+
+def main() -> Any:
     """Main CLI interface for the complete episodic memory system."""
-    parser = argparse.ArgumentParser(description="Episodic Memory System - Complete Integration")
+    parser: Any = argparse.ArgumentParser(description="Episodic Memory System - Complete Integration")
 
     # Context enhancement
     parser.add_argument(
@@ -152,22 +154,22 @@ def main():
     parser.add_argument("--stats", action="store_true", help="Show system statistics")
     parser.add_argument("--test", action="store_true", help="Test the complete system")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Initialize system
     system = EpisodicMemorySystem()
 
     # Handle heuristics management
     if args.save_heuristics:
-        success = system.save_heuristics_pack(args.save_heuristics, args.agent)
+        success: Any = system.save_heuristics_pack(args.save_heuristics, args.agent)
         sys.exit(0 if success else 1)
 
     if args.load_heuristics:
-        success = system.load_heuristics_pack(args.load_heuristics)
+        success: Any = system.load_heuristics_pack(args.load_heuristics)
         sys.exit(0 if success else 1)
 
     if args.regenerate_heuristics:
-        success = system.regenerate_heuristics(args.agent)
+        success: Any = system.regenerate_heuristics(args.agent)
         sys.exit(0 if success else 1)
 
     # Handle task completion storage
@@ -187,7 +189,7 @@ def main():
 
     # Handle system statistics
     if args.stats:
-        stats = system.get_system_stats()
+        stats: Any = system.get_system_stats()
         if args.format == "json":
             print(json.dumps(stats, indent=2, default=str))
         else:
@@ -227,7 +229,7 @@ def main():
 
         # Test system prompt enhancement
         base_prompt = "You are a helpful AI assistant."
-        enhanced_prompt = system.enhance_system_prompt(base_prompt, test_query)
+        enhanced_prompt: Any = system.enhance_system_prompt(base_prompt, test_query)
 
         if enhanced_prompt != base_prompt:
             print("✅ System prompt enhancement test passed")
@@ -249,7 +251,7 @@ def main():
             print("❌ Task completion storage test failed")
 
         # Test heuristics regeneration
-        success = system.regenerate_heuristics("test_agent")
+        success: Any = system.regenerate_heuristics("test_agent")
         if success:
             print("✅ Heuristics regeneration test passed")
         else:
@@ -305,6 +307,7 @@ def main():
             for system_name, info in status.items():
                 status_icon = "✅" if info.get("active", False) else "❌"
                 print(f"   {status_icon} {system_name}: {info.get('status', 'unknown')}")
+
 
 if __name__ == "__main__":
     main()

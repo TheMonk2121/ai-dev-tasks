@@ -26,7 +26,7 @@ No emojis in work docs.
 
 ```bash
 export POSTGRES_DSN="mock://test"
-uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/utilities/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 ## 0.9 Stateless Agent Checklist (do these in order)
@@ -256,7 +256,7 @@ When a PRD is skipped (e.g., points < 5 **and** score_total ≥ 3.0), parse `000
 
 - Lint: `uv run ruff check .` (pyupgrade enabled via `select = ["UP", ...]` in pyproject)
 - Format: `uv run black --check .`
-- Types: `uv run ruff check .`
+- Types: `uv run basedpyright`
 - Tests: `uv run pytest -q` (markers available: unit, integration, smoke, e2e, property, slow, flaky)
 - Property tests: use Hypothesis; default profile loaded via `conftest.py`
 
@@ -273,7 +273,7 @@ When a PRD is skipped (e.g., points < 5 **and** score_total ≥ 3.0), parse `000
 - **Resilience**: simulate network/DB errors; verify retries/backoff and graceful failure.  
 - **Edge**: large payloads, unusual characters, empty inputs, corrupted state.
 
-Tests run via `uv run pytest -q`; type checks via `uv run ruff check .`.
+Tests run via `uv run pytest -q`; type checks via `uv run basedpyright`.
 
 ---
 
@@ -353,7 +353,7 @@ uv sync
 
 # Run tests and type checks
 uv run pytest -q
-uv run ruff check .
+uv run basedpyright
 
 # Lint/format
 uv run ruff check .

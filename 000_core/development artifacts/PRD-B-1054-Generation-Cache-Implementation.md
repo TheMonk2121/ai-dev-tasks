@@ -43,7 +43,7 @@ ai-dev-tasks/
 ### Local Developmen
 ```bash
 # Verify PostgreSQL connection
-python3 -c "import psycopg2; print('✅ PostgreSQL connection available!')"
+python3 -c "import psycopg; print('✅ PostgreSQL connection available!')"
 
 # Verify LTST memory system
 python3 scripts/unified_memory_orchestrator.py --systems ltst --role planner "test memory system"

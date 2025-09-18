@@ -247,9 +247,9 @@ def test_eval_settings_defaults():
         assert settings.EVAL_CONCURRENCY == 8
         assert settings.RAGCHECKER_USE_REAL_RAG == 1
 
-        assert settings.GOLD_CASES_PATH == "300_evals/datasets/dev_gold.jsonl"
-        assert settings.MANIFEST_PATH == "300_evals/metrics/manifests/manifest.json"
-        assert settings.RESULTS_OUTPUT_DIR == "300_evals/metrics/baseline_evaluations"
+        assert settings.GOLD_CASES_PATH == "evals/datasets/dev_gold.jsonl"
+        assert settings.MANIFEST_PATH == "evals/metrics/manifests/manifest.json"
+        assert settings.RESULTS_OUTPUT_DIR == "evals/metrics/baseline_evaluations"
 
         assert settings.VALIDATION_STRICT is True
         assert settings.ALLOW_MISSING_FILES is False

@@ -11,14 +11,12 @@ class EvaluationSettings(BaseSettings):
     """Configuration settings for evaluation system."""
 
     # File paths
-    gold_cases_path: str = Field(
-        default="300_evals/datasets/gold_cases.jsonl", description="Path to gold cases JSONL file"
-    )
+    gold_cases_path: str = Field(default="evals/datasets/gold_cases.jsonl", description="Path to gold cases JSONL file")
     manifest_path: str = Field(
-        default="300_evals/metrics/manifests/manifest.json", description="Path to evaluation manifest file"
+        default="evals/metrics/manifests/manifest.json", description="Path to evaluation manifest file"
     )
     results_output_dir: str = Field(
-        default="300_evals/metrics/baseline_evaluations", description="Directory for evaluation results"
+        default="evals/metrics/baseline_evaluations", description="Directory for evaluation results"
     )
 
     # Validation settings

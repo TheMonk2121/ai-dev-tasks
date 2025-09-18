@@ -88,7 +88,7 @@ python3 scripts/single_doorway.py generate "feature"
 ```
 
 **Required Dependencies**:
-- `psycopg2` - Database connectivity
+- `psycopg` - Database connectivity
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
@@ -176,7 +176,7 @@ python3 scripts/run_workflow.py generate "feature"
 ```
 
 **Required Dependencies**:
-- `psycopg2` - Database connectivity
+- `psycopg` - Database connectivity
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality

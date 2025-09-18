@@ -55,6 +55,37 @@ def main(argv: list[str] | None = None) -> int:
         # Keep going even if loader isn't available in this environment
         pass
 
+    # Profile-dispatch path: if --profile is provided (or EVAL_PROFILE is set), route to profile runner.
+    try:
+        profile_arg = None
+        if "--profile" in argv:
+            i = argv.index("--profile")
+            profile_arg = argv[i + 1] if i + 1 < len(argv) else None
+        if profile_arg is None:
+            profile_arg = os.environ.get("EVAL_PROFILE")
+        if profile_arg:
+            # Ensure repository root on sys.path for absolute imports
+            repo_root = Path(__file__).resolve().parents[2]
+            if str(repo_root) not in sys.path:
+                sys.path.insert(0, str(repo_root))
+            from scripts.evaluation.profiles import Profile
+            from scripts.evaluation.profiles import gold as _gold
+            from scripts.evaluation.profiles import mock as _mock
+            from scripts.evaluation.profiles import real as _real
+
+            registry: dict[str, Any] = {
+                Profile.GOLD.value: _gold.RUNNER,
+                Profile.REAL.value: _real.RUNNER,
+                Profile.MOCK.value: _mock.RUNNER,
+            }
+            runner = registry.get(str(profile_arg).lower())
+            if runner is None:
+                print(f"Unknown profile: {profile_arg}. Valid: gold, real, mock")
+                return 2
+            return int(runner.run(argv))
+    except Exception as e:
+        print(f"Warning: profile dispatch failed, falling back to SSOT path ({e})")
+
     # When invoked by the SSOT runner, we receive an --outdir argument.
     # In that case, run the official evaluator inline and write results there.
     if "--outdir" in argv:
@@ -73,10 +104,11 @@ def main(argv: list[str] | None = None) -> int:
         if str(repo_root) not in sys.path:
             sys.path.insert(0, str(repo_root))
 
-        # Use the clean DSPy evaluator
-        from scripts.evaluation.clean_dspy_evaluator import CleanDSPyEvaluator
+        # Use the DSPy evaluator (renamed from clean_dspy_evaluator)
+        from scripts.evaluation.dspy_evaluator import CleanDSPyEvaluator
 
-        evaluator = CleanDSPyEvaluator()
+        # Use a permissive type to allow attribute access without incomplete stubs
+        evaluator: Any = CleanDSPyEvaluator()
 
         # Run real evaluation with gold cases and DSPy RAG system
         try:
@@ -153,6 +185,7 @@ class OfficialRAGCheckerEvaluator:
 
     def __init__(self) -> None:
         # Lazy-load implementation to avoid importing heavy deps during import-only tests
+        # Underlying implementation instance, loaded lazily
         self._impl: Any | None = None
         # Provide direct attribute expected by tests without loading impl
         self.metrics_dir: Path = Path("metrics/baseline_evaluations")
@@ -169,7 +202,7 @@ class OfficialRAGCheckerEvaluator:
                 .SourceFileLoader("ragchecker_official_eval_impl", str(impl_path))
                 .load_module()
             )
-            self._impl: Any = getattr(module, "OfficialRAGCheckerEvaluator")()
+            self._impl = getattr(module, "OfficialRAGCheckerEvaluator")()
         except Exception as e:
             raise RuntimeError(f"Failed to load OfficialRAGCheckerEvaluator implementation: {e}")
 

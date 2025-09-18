@@ -11,10 +11,10 @@ from typing import Any, cast
 
 # Prefer absolute import from the vendored evals package
 try:
-    from evals.scripts.evaluation.clean_dspy_evaluator import (  # type: ignore[import]
+    from evals.scripts.evaluation.dspy_evaluator import (  # type: ignore[import]
         CleanDSPyEvaluator as _CleanDSPyEvaluator,
     )
-    from evals.scripts.evaluation.clean_dspy_evaluator import (
+    from evals.scripts.evaluation.dspy_evaluator import (
         main as _impl_main,
     )
 except Exception as _e:  # Fallback: re-raise with clearer context

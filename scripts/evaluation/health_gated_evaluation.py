@@ -109,7 +109,7 @@ class HealthGatedEvaluator:
             return
 
         # Check if evaluation cases exist
-        eval_cases_file = os.getenv("EVAL_CASES_FILE", "300_evals/datasets/eval_cases.jsonl")
+        eval_cases_file = os.getenv("EVAL_CASES_FILE", "evals/datasets/eval_cases.jsonl")
         if not os.path.exists(eval_cases_file):
             self.failed_checks.append(f"Evaluation cases file not found: {eval_cases_file}")
             return

@@ -29,7 +29,7 @@ CURRENT_STATUS = "DEVELOPMENT_PHASE"  # Will become "PRODUCTION_READY" when base
 
 def find_latest_evaluation() -> Path | None:
     """Find the latest RAGChecker evaluation file."""
-    metrics_dir = Path("300_evals/metrics/baseline_evaluations")
+    metrics_dir = Path("evals/metrics/baseline_evaluations")
     if not metrics_dir.exists():
         return None
 
@@ -85,7 +85,7 @@ def extract_metrics(data: dict) -> dict[str, float]:
 
 def find_latest_baseline_metrics() -> Path | None:
     """Find the latest baseline metrics file."""
-    metrics_dir = Path("300_evals/metrics/baseline_evaluations")
+    metrics_dir = Path("evals/metrics/baseline_evaluations")
     if not metrics_dir.exists():
         return None
 

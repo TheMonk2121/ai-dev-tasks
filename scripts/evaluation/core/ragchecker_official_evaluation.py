@@ -82,7 +82,8 @@ def main(argv: list[str] | None = None) -> int:
         try:
             # Run real evaluation with gold test cases
             results = evaluator.run_evaluation(
-                gold_file="300_evals/data/gold/v1/gold_cases.jsonl", limit=5  # Small test
+                gold_file="evals/data/gold/v1/gold_cases.jsonl",
+                limit=5,  # Small test
             )
         except Exception as e:
             print(f"⚠️ Real evaluation failed ({e})")

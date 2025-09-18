@@ -398,7 +398,7 @@ def run_fused_query(
             ORDER BY score DESC NULLS LAST
             LIMIT %(limit)s;
             """
-            
+
             with Psycopg3Config.get_cursor("retrieval") as cur2:
                 # Cast to LiteralString to satisfy psycopg3 typing requirements
                 _ = cur2.execute(cast("LiteralString", fallback_template), params)
@@ -409,7 +409,7 @@ def run_fused_query(
     # Apply learned fusion head if enabled
     enabled = os.getenv("FUSION_HEAD_ENABLE", "0") == "1"
     ckpt = os.getenv("FUSION_HEAD_PATH", "")
-    spec_path = os.getenv("FUSION_FEATURE_SPEC", "300_evals/configs/feature_spec_v1.json")
+    spec_path = os.getenv("FUSION_FEATURE_SPEC", "evals/configs/feature_spec_v1.json")
     hidden = int(os.getenv("FUSION_HIDDEN", "0"))
     device = os.getenv("FUSION_DEVICE", "cpu")
 

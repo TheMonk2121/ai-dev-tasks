@@ -28,7 +28,7 @@ class EvaluationSystemIntegration:
 
     def __init__(self) -> None:
         self.project_root: Path = project_root
-        self.metrics_dir: Path = Path("300_evals/metrics/integration")
+        self.metrics_dir: Path = Path("evals/metrics/integration")
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
 
         # System components
@@ -45,7 +45,7 @@ class EvaluationSystemIntegration:
             "postgres_dsn": os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency"),
             "eval_driver": os.getenv("EVAL_DRIVER", "synthetic"),
             "use_real_rag": os.getenv("RAGCHECKER_USE_REAL_RAG", "0") == "1",
-            "gold_file": os.getenv("GOLD_FILE", "300_evals/evals/data/gold/v1/gold_qna_assertions.json"),
+            "gold_file": os.getenv("GOLD_FILE", "evals/evals/data/gold/v1/gold_qna_assertions.json"),
             "chunk_size": 450,
             "overlap_ratio": 0.10,
             "embedding_dim": 384,
@@ -162,7 +162,6 @@ class EvaluationSystemIntegration:
 
         # Initialize RAGChecker Evaluator
         try:
-
             self.rag_evaluator = CleanRAGCheckerEvaluator()
             results["ragchecker_evaluator"] = "✅ Initialized"
             print("   ✅ RAGChecker Evaluator: Initialized")

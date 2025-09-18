@@ -7,34 +7,31 @@ import hashlib
 import os
 import sys
 from datetime import datetime
+from typing import Any
 
-import psycopg2
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 
-def get_db_connection():
+def get_db_connection() -> Any:
     """Get database connection."""
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-    from src.common.db_dsn import resolve_dsn
-
-    dsn = resolve_dsn()
-
     # Handle mock database case
-    if dsn and dsn.startswith("mock://"):
-        print("⚠️  Mock database detected - skipping real database operations")
-        return None
+    try:
+        with Psycopg3Config.get_cursor("default") as cur:
+            # Test connection
+            cur.execute("SELECT 1")
+            return cur
+    except Exception as e:
+        if "mock" in str(e).lower():
+            print("⚠️  Mock database detected - skipping real database operations")
+            return None
+        raise e
 
-    return psycopg2.connect(dsn)
 
-
-def test_simple_storage():
+def test_simple_storage() -> Any:
     """Test storing a simple conversation."""
     print("🧪 Testing simple conversation storage...")
-
-    conn = get_db_connection()
-
-    if conn is None:
-        print("⚠️  Skipping database test - no real database connection available")
-        return True
 
     # Test data
     session_id = f"test_session_{int(datetime.now().timestamp())}"
@@ -43,7 +40,7 @@ def test_simple_storage():
     test_response = "To implement user authentication in FastAPI with JWT tokens, you'll need to use libraries like python-jose and passlib."
 
     try:
-        with conn.cursor() as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
             # Create a session
             cur.execute(
                 """
@@ -77,7 +74,6 @@ def test_simple_storage():
                 (session_id, "message", "ai", test_response, response_hash, 1, datetime.now()),
             )
 
-            conn.commit()
             print(f"✅ Stored test conversation for session {session_id}")
 
             # Verify storage
@@ -89,8 +85,8 @@ def test_simple_storage():
                 (session_id,),
             )
 
-            result = cur.fetchone()
-            count = result[0] if result else 0
+            result: dict[str, Any] | None = cur.fetchone()
+            count = result["count"] if result else 0
             print(f"✅ Verified: {count} messages stored")
 
             # Show the stored data
@@ -104,36 +100,28 @@ def test_simple_storage():
                 (session_id,),
             )
 
-            messages = cur.fetchall()
+            messages: list[dict[str, Any]] = cur.fetchall()
             print("📝 Stored messages:")
-            for role, preview, _ in messages:
-                print(f"   {role}: {preview}...")
+            for row in messages:
+                print(f"   {row['role']}: {row['preview']}...")
 
             return True
 
     except Exception as e:
         print(f"❌ Error storing conversation: {e}")
         return False
-    finally:
-        conn.close()
 
 
-def check_current_data():
+def check_current_data() -> Any:
     """Check what's currently in the database."""
     print("🔍 Current database state:")
 
-    conn = get_db_connection()
-
-    if conn is None:
-        print("⚠️  Skipping database check - no real database connection available")
-        return
-
     try:
-        with conn.cursor() as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
             # Check conversation messages
             cur.execute("SELECT COUNT(*) FROM conversation_messages")
-            result = cur.fetchone()
-            msg_count = result[0] if result else 0
+            result: dict[str, Any] | None = cur.fetchone()
+            msg_count = result["count"] if result else 0
             print(f"   Total conversation messages: {msg_count}")
 
             # Check recent real messages (not test data)
@@ -146,30 +134,28 @@ def check_current_data():
                 LIMIT 5
             """
             )
-            recent = cur.fetchall()
+            recent: list[dict[str, Any]] = cur.fetchall()
             print("   Recent real messages:")
-            for role, preview, created_at in recent:
-                print(f"     {role}: {preview}... ({created_at})")
+            for row in recent:
+                print(f"     {row['role']}: {row['preview']}... ({row['created_at']})")
 
             # Check Atlas nodes
             cur.execute("SELECT COUNT(*) FROM atlas_node")
-            result = cur.fetchone()
-            node_count = result[0] if result else 0
+            result: dict[str, Any] | None = cur.fetchone()
+            node_count = result["count"] if result else 0
             print(f"   Atlas nodes: {node_count}")
 
             # Check if there are any real conversation turns
             cur.execute("SELECT COUNT(*) FROM atlas_conversation_turn")
-            result = cur.fetchone()
-            turn_count = result[0] if result else 0
+            result: dict[str, Any] | None = cur.fetchone()
+            turn_count = result["count"] if result else 0
             print(f"   Atlas conversation turns: {turn_count}")
 
     except Exception as e:
         print(f"❌ Error checking data: {e}")
-    finally:
-        conn.close()
 
 
-def main():
+def main() -> Any:
     """Run the test."""
     print("🚀 Simple Query Storage Test")
     print("=" * 40)

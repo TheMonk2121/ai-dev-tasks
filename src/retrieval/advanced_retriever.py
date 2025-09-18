@@ -290,6 +290,9 @@ class AdvancedRetriever:
         fusion_settings = FusionSettings.from_mapping(_as_mapping(config.get("fusion")))
         rerank_settings = RerankSettings.from_mapping(_as_mapping(config.get("rerank")))
 
+        # Mark intentionally unused params to satisfy linters without changing behavior
+        _ = (k, return_components)
+
         # Load weights
         if weights is None:
             weights = load_weights(tag, weights_file)
@@ -300,6 +303,11 @@ class AdvancedRetriever:
         vector_limit = candidates_limits.vector_limit
 
         try:
+            # If no embedding provided, generate one from available query text
+            if not qvec:
+                seed_query = q_short or q_title or q_bm25 or ""
+                qvec = _generate_query_embedding(seed_query)
+
             with get_db_connection() as conn:
                 with conn.cursor(row_factory=dict_row) as cur:
                     # Run BM25 query
@@ -359,7 +367,7 @@ class AdvancedRetriever:
                             try:
                                 with get_db_connection() as conn:
                                     with conn.cursor(row_factory=dict_row) as cur:
-                                        cur.execute(
+                                        _ = cur.execute(
                                             "SELECT embedding FROM document_chunks WHERE chunk_index = %s",
                                             (doc_id,),
                                         )
@@ -393,7 +401,7 @@ class AdvancedRetriever:
         cur: Cursor[DictRow],
         q_bm25: str,
         limit: int,
-    ) -> list[tuple[str, str, str, dict[str, Any], str, Any]]:
+    ) -> list[tuple[str, str, str, dict[str, Any], str, Any, float]]:
         """Run BM25 query and return results."""
         if not q_bm25:
             return []
@@ -435,7 +443,7 @@ class AdvancedRetriever:
         cur: Cursor[DictRow],
         qvec: list[float],
         limit: int,
-    ) -> list[tuple[str, str, str, dict[str, Any], str, Any]]:
+    ) -> list[tuple[str, str, str, dict[str, Any], str, Any, float]]:
         """Run vector similarity query and return results."""
         if not qvec:
             return []

@@ -121,7 +121,7 @@ class EvalManifestGenerator:
             "ingest_run_id": os.getenv("INGEST_RUN_ID", "unknown"),
             "chunk_variant": os.getenv("CHUNK_VARIANT", "default"),
             "dataset_version": os.getenv("DATASET_VERSION", "latest"),
-            "eval_cases_file": os.getenv("EVAL_CASES_FILE", "300_evals/datasets/eval_cases.jsonl"),
+            "eval_cases_file": os.getenv("EVAL_CASES_FILE", "evals/datasets/eval_cases.jsonl"),
             "data_checksum": self._get_data_checksum(),
         }
 
@@ -132,9 +132,7 @@ class EvalManifestGenerator:
             "use_real_rag": os.getenv("RAGCHECKER_USE_REAL_RAG", "1") == "1",
             "bypass_cli": os.getenv("RAGCHECKER_BYPASS_CLI", "1") == "1",
             "disable_embeddings": os.getenv("RAGCHECKER_DISABLE_EMBEDDINGS", "1") == "1",
-            "progress_log": os.getenv(
-                "RAGCHECKER_PROGRESS_LOG", "300_evals/metrics/baseline_evaluations/progress.jsonl"
-            ),
+            "progress_log": os.getenv("RAGCHECKER_PROGRESS_LOG", "evals/metrics/baseline_evaluations/progress.jsonl"),
             "save_candidates_max": int(os.getenv("SAVE_CANDIDATES_MAX", "20")),
             "snapshot_max_items": int(os.getenv("SNAPSHOT_MAX_ITEMS", "50")),
         }
@@ -205,7 +203,7 @@ class EvalManifestGenerator:
 
     def _get_data_checksum(self) -> str:
         """Get data checksum for reproducibility."""
-        eval_file: Any = os.getenv("EVAL_CASES_FILE", "300_evals/datasets/eval_cases.jsonl")
+        eval_file: Any = os.getenv("EVAL_CASES_FILE", "evals/datasets/eval_cases.jsonl")
         if os.path.exists(eval_file):
             with open(eval_file, "rb") as f:
                 return hashlib.sha256(f.read()).hexdigest()[:16]

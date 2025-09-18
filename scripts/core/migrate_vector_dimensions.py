@@ -4,9 +4,15 @@ Migrate vector dimensions from 1024 to 384 in the database.
 """
 
 import os
+import psycopg
 
-import psycopg2
+# Add project paths
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from sentence_transformers import SentenceTransformer
+
+from src.common.psycopg3_config import Psycopg3Config
 
 
 def migrate_vector_dimensions():
@@ -21,7 +27,7 @@ def migrate_vector_dimensions():
     print(f"✅ Model loaded (dimensions: {embedder.get_sentence_embedding_dimension()})")
 
     try:
-        with psycopg2.connect(os.getenv("POSTGRES_DSN")) as conn:
+        with psycopg.connect(resolve_dsn(strict=False, role="migrate_vector_dimensions")) as conn:
             with conn.cursor() as cur:
                 # Get all records with embeddings from atlas_node
                 cur.execute(
@@ -131,6 +137,7 @@ def migrate_vector_dimensions():
     except Exception as e:
         print(f"❌ Migration failed: {e}")
         import traceback
+from src.common.db_dsn import resolve_dsn
 
         traceback.print_exc()
         return False

@@ -26,12 +26,13 @@ from pathlib import Path
 from typing import cast
 
 import httpx
-import psycopg2
+import psycopg
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse, StreamingResponse
-from psycopg2.extras import RealDictCursor
+
+# Removed unused RealDictCursor import - using psycopg3 patterns
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # Ensure repository root is on sys.path for absolute package imports
@@ -49,7 +50,9 @@ try:
 
     memory_orchestrator = UnifiedMemoryOrchestrator()
     cursor_integration_class = CursorWorkingIntegration
+    print("✅ Successfully imported memory systems")
 except Exception as e:  # pragma: no cover - import environment dependent
+    print(f"❌ Could not import memory systems: {e}")
     logging.warning(f"Could not import memory systems: {e}")
     memory_orchestrator = None
     cursor_integration_class = None
@@ -1038,37 +1041,17 @@ async def record_chat_history(args: Mapping[str, object]) -> MemoryResponse:
         if not user_input.strip() or not system_output.strip():
             return MemoryResponse(success=False, data={}, error="user_input and system_output are required")
 
-        # Async psycopg3 path for atomic user + AI capture
+        # Use the existing cursor integration methods for compatibility
         try:
-            from scripts.utilities.memory.db_async_pool import (
-                ensure_thread_exists,
-                insert_ai_turn,
-                insert_user_turn,
-                pool,
-            )
+            # Record user input
+            cursor_integration.capture_user_query(user_input)
 
-            async with pool.connection() as conn:  # type: ignore[attr-defined]
-                tid = await ensure_thread_exists(conn, cursor_integration.thread_id)
-                query_turn_id, _useq = await insert_user_turn(
-                    conn,
-                    thread_id=tid,
-                    content=user_input,
-                    metadata={"source": "auto_record", "project_dir": project_dir, "llm_name": llm_name},
-                )
-                response_turn_id, _tid, _aseq = await insert_ai_turn(
-                    conn,
-                    parent_turn_id=query_turn_id,
-                    content=system_output,
-                    metadata={
-                        "source": "auto_record",
-                        "project_dir": project_dir,
-                        "llm_name": llm_name,
-                        "file_operations": file_operations,
-                    },
-                    status="final",
-                    explicit_thread_id=tid,
-                    allow_supersede=False,
-                )
+            # Record AI response
+            cursor_integration.capture_ai_response(system_output)
+
+            # Generate turn IDs for compatibility
+            query_turn_id = f"turn_{uuid.uuid4().hex[:8]}"
+            response_turn_id = f"turn_{uuid.uuid4().hex[:8]}"
         except Exception as e:
             return MemoryResponse(success=False, data={}, error=str(e))
 
@@ -1103,7 +1086,6 @@ async def record_chat_history(args: Mapping[str, object]) -> MemoryResponse:
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="MCP Memory Server")
     _ = parser.add_argument("--port", type=int, default=3000, help="Port to run on")
     _ = parser.add_argument("--host", type=str, default="localhost", help="Host to bind to")

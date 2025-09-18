@@ -364,7 +364,7 @@ class NightlySmokeEvaluator:
         """Test evaluation pipeline."""
         try:
             # Check if evaluation files exist
-            eval_cases_file = os.getenv("EVAL_CASES_FILE", "300_evals/datasets/eval_cases.jsonl")
+            eval_cases_file = os.getenv("EVAL_CASES_FILE", "evals/datasets/eval_cases.jsonl")
             if os.path.exists(eval_cases_file):
                 return {"status": "pass", "message": "Evaluation pipeline ready"}
             else:
@@ -376,7 +376,7 @@ class NightlySmokeEvaluator:
         """Test metrics collection."""
         try:
             # Check if metrics directory exists and is writable
-            metrics_dir = Path("300_evals/metrics/baseline_evaluations")
+            metrics_dir = Path("evals/metrics/baseline_evaluations")
             if metrics_dir.exists() and metrics_dir.is_dir():
                 return {"status": "pass", "message": "Metrics collection ready"}
             else:

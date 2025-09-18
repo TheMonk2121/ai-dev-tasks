@@ -4,8 +4,13 @@ Completely recreate the database schema with 384-dimensional vectors.
 """
 
 import os
+import psycopg
 
-import psycopg2
+# Add project paths
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 
 def recreate_database_schema():
@@ -15,7 +20,7 @@ def recreate_database_schema():
     print("=" * 60)
 
     try:
-        with psycopg2.connect(os.getenv("POSTGRES_DSN")) as conn:
+        with psycopg.connect(resolve_dsn(strict=False, role="recreate_database_schema")) as conn:
             with conn.cursor() as cur:
                 # Step 1: Drop ALL tables and views
                 print("\\n🗑️  Step 1: Dropping ALL tables and views...")
@@ -379,6 +384,7 @@ def recreate_database_schema():
     except Exception as e:
         print(f"❌ Schema recreation failed: {e}")
         import traceback
+from src.common.db_dsn import resolve_dsn
 
         traceback.print_exc()
         return False

@@ -260,7 +260,7 @@ class Phase2KickstartSystem:
         """Prepare dev set for compilation."""
         try:
             # Check if dev set exists
-            dev_set_file = Path("300_evals/datasets/dev.jsonl")
+            dev_set_file = Path("evals/datasets/dev.jsonl")
             if not dev_set_file.exists():
                 return {"success": False, "error": "Dev set file not found"}
 
@@ -291,7 +291,7 @@ class Phase2KickstartSystem:
         try:
             # Run DSPy compilation
             result = subprocess.run(
-                "python3 dspy_program.py --compile --trainset 300_evals/datasets/train.jsonl --valset 300_evals/datasets/dev.jsonl",
+                "python3 dspy_program.py --compile --trainset evals/datasets/train.jsonl --valset evals/datasets/dev.jsonl",
                 shell=True,
                 capture_output=True,
                 text=True,

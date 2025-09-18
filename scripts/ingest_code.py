@@ -10,7 +10,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 import psycopg
-from psycopg.extras import RealDictCursor, RealDictRow
+from psycopg.rows import dict_row
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -65,8 +65,8 @@ def main() -> int:
     inserted_symbols = 0
     inserted_chunks = 0
 
-    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
-        with conn.cursor() as cur:
+    with psycopg.connect(dsn) as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
             for fp in files:
                 try:
                     text = fp.read_text(encoding="utf-8", errors="ignore")
@@ -103,7 +103,7 @@ def main() -> int:
                         "{}",
                     ),
                 )
-                file_result: RealDictRow | None = cur.fetchone()
+                file_result = cur.fetchone()
                 if file_result is None:
                     raise RuntimeError("Failed to insert file record")
                 file_id = int(file_result["id"])
@@ -128,7 +128,7 @@ def main() -> int:
                         "{}",
                     ),
                 )
-                symbol_result: RealDictRow | None = cur.fetchone()
+                symbol_result = cur.fetchone()
                 if symbol_result is None:
                     raise RuntimeError("Failed to insert symbol record")
                 symbol_id = int(symbol_result["id"])

@@ -54,7 +54,7 @@ KEEP_PATTERNS = [
     "400_guides/",
     "000_core/",
     "scripts/data_processing/",
-    "300_evals/scripts/evaluation/",
+    "evals/scripts/evaluation/",
     "scripts/utilities/",
     "pyproject.toml",
     "README.md",

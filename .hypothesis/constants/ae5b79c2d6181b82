@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/settings.py
+# hypothesis_version: 6.138.15
+
+[100, 300, 500, 1000, 3600, '.env', 'bge-reranker-v2', 'default', 'ignore', 'llama3.1:8b', 'local', 'openai:gpt-4o-mini']

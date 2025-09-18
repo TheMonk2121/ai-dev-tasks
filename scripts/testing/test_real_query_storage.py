@@ -10,19 +10,30 @@ from collections.abc import Sequence
 from datetime import datetime
 from typing import cast
 
-import psycopg2
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 
-def get_db_connection():
+def get_db_connection() -> Any:
     """Get database connection."""
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
     from src.common.db_dsn import resolve_dsn
 
-    dsn = resolve_dsn()
-    return psycopg2.connect(dsn)
+    # Handle mock database case
+    try:
+        with Psycopg3Config.get_cursor("default") as cur:
+            # Test connection
+            cur.execute("SELECT 1")
+            return cur
+    except Exception as e:
+        if "mock" in str(e).lower():
+            print("⚠️  Mock database detected - skipping real database operations")
+            return None
+        raise e
 
 
-def test_conversation_storage():
+def test_conversation_storage() -> Any:
     """Test storing a conversation turn with proper schema."""
     print("🧪 Testing conversation storage...")
 
@@ -79,7 +90,7 @@ def test_conversation_storage():
                 (session_id,),
             )
 
-            row = cur.fetchone()
+            row: Any = cur.fetchone()
             count = int(cast(int, row[0])) if row is not None else 0
             print(f"✅ Verified: {count} messages stored")
 
@@ -92,7 +103,7 @@ def test_conversation_storage():
         conn.close()
 
 
-def test_atlas_storage():
+def test_atlas_storage() -> Any:
     """Test storing in Atlas system."""
     print("🧪 Testing Atlas storage...")
 
@@ -126,7 +137,7 @@ def test_atlas_storage():
         return False
 
 
-def test_memory_consolidation():
+def test_memory_consolidation() -> Any:
     """Test memory consolidation system."""
     print("🧪 Testing memory consolidation...")
 
@@ -173,7 +184,7 @@ def test_memory_consolidation():
         return False
 
 
-def check_current_storage():
+def check_current_storage() -> Any:
     """Check what's currently stored in the database."""
     print("🔍 Checking current storage...")
 
@@ -183,7 +194,7 @@ def check_current_storage():
         with conn.cursor() as cur:
             # Check conversation messages
             cur.execute("SELECT COUNT(*) FROM conversation_messages")
-            row = cur.fetchone()
+            row: Any = cur.fetchone()
             msg_count = int(cast(int, row[0])) if row is not None else 0
             print(f"   Conversation messages: {msg_count}")
 
@@ -196,7 +207,7 @@ def check_current_storage():
                 LIMIT 3
             """
             )
-            recent = cur.fetchall()
+            recent: Any = cur.fetchall()
             recent_typed = cast(Sequence[tuple[str, str, object]], recent)
             print("   Recent messages:")
             for role, preview, created_at in recent_typed:
@@ -204,13 +215,13 @@ def check_current_storage():
 
             # Check Atlas nodes
             cur.execute("SELECT COUNT(*) FROM atlas_node")
-            row = cur.fetchone()
+            row: Any = cur.fetchone()
             node_count = int(cast(int, row[0])) if row is not None else 0
             print(f"   Atlas nodes: {node_count}")
 
             # Check conv_chunks
             cur.execute("SELECT COUNT(*) FROM conv_chunks")
-            row = cur.fetchone()
+            row: Any = cur.fetchone()
             chunk_count = int(cast(int, row[0])) if row is not None else 0
             print(f"   Conversation chunks: {chunk_count}")
 
@@ -220,7 +231,7 @@ def check_current_storage():
         conn.close()
 
 
-def main():
+def main() -> Any:
     """Run all tests."""
     print("🚀 Testing Query Storage Systems")
     print("=" * 50)

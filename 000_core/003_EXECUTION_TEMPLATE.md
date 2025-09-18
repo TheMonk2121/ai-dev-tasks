@@ -19,7 +19,7 @@ This replaces ad‑hoc Python calls and emoji‑heavy formatting with the curren
 
 ```bash
 export POSTGRES_DSN="mock://test"
-uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+uv run python scripts/utilities/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 ## 0.9 Bootstrap (one‑command)
@@ -314,7 +314,7 @@ uv run ruff check .
 uv run black --check .
 
 # Type check
-uv run ruff check .
+uv run basedpyright
 
 # Tests
 uv run pytest -q -m "unit or smoke"

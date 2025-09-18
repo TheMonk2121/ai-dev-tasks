@@ -271,14 +271,14 @@ class AgentMemoryTrainer:
                 {
                     "step": 2,
                     "action": "Set environment variables",
-                    "command": "export POSTGRES_DSN='postgresql://...' && export GOLD_FILE='300_evals/evals/data/gold/v1/gold_cases.jsonl'",
+                    "command": "export POSTGRES_DSN='postgresql://...' && export GOLD_FILE='evals/evals/data/gold/v1/gold_cases.jsonl'",
                     "expected": "Environment set",
                     "troubleshooting": "Verify DSN and file paths",
                 },
                 {
                     "step": 3,
                     "action": "Run evaluation",
-                    "command": "uv run python 300_evals/scripts/evaluation/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable",
+                    "command": "uv run python evals/scripts/evaluation/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable",
                     "expected": "Real evaluation (not fallback)",
                     "troubleshooting": "Check for fallback mode warnings",
                 },
@@ -449,7 +449,7 @@ CURRENT SYSTEM STATUS:
 EVALUATION WORKFLOW:
 1. Check database population (SELECT COUNT(*) FROM document_chunks)
 2. Set environment variables (POSTGRES_DSN, GOLD_FILE)
-3. Run evaluation (uv run python 300_evals/scripts/evaluation/ragchecker_official_evaluation.py)
+3. Run evaluation (uv run python evals/scripts/evaluation/ragchecker_official_evaluation.py)
 4. Verify results (Precision ≥ 0.159, Recall ≥ 0.166)
 
 MEMORY SYSTEM USAGE:
