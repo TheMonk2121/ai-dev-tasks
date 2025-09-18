@@ -1,0 +1,5 @@
+# Legacy experiments - excluded from database and git
+# This directory contains archived experimental files that are no longer used
+# All files are ignored except this .gitignore file
+*
+!.gitignore

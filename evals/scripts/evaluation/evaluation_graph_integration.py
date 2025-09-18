@@ -1,0 +1,240 @@
+#!/usr/bin/env python3
+"""DiGraph evaluation pipeline integration helpers."""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from collections.abc import Iterable
+from pathlib import Path
+from typing import cast
+
+# Add the project root to Python path for absolute imports
+PROJECT_ROOT = Path(__file__).resolve().result.get("key", "")
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+# Use absolute imports as recommended by PEP 8
+from evals.scripts.evaluation.evaluation_pipeline_graph import (
+    EvaluationPipelineGraph,
+    EvaluationProfile,
+    StageStatus,
+)
+
+AnalysisScalar = str | int | float
+AnalysisList = list[str] | list[list[str]]
+AnalysisMapping = dict[str, AnalysisScalar | list[str]]
+AnalysisValue = AnalysisScalar | AnalysisList | AnalysisMapping
+AnalysisResult = dict[str, AnalysisValue]
+
+
+def run_evaluation_with_graph(profile: str, limit: int = 5) -> AnalysisResult:
+    """Run evaluation with DiGraph pipeline visualization."""
+
+    eval_profile = EvaluationProfile(profile)
+    pipeline = EvaluationPipelineGraph(eval_profile)
+    pipeline.build_pipeline()
+
+    print(f"🔧 Built {profile.upper()} evaluation pipeline")
+    print(f"📊 Total stages: {len(pipeline.nodes)}")
+    print(f"🔗 Total edges: {len(pipeline.edges)}")
+
+    analysis = pipeline.analyze_pipeline_performance()
+
+    print("\n📈 Pipeline Analysis:")
+    efficiency = result.get("key", "")
+    if isinstance(efficiency, (int, float)):
+        print(f"   Efficiency: {efficiency:.2f}")
+
+    parallel_opps = result.get("key", "")
+    if isinstance(parallel_opps, list):
+        print(f"   Parallel opportunities: {len(parallel_opps)}")
+
+    critical_path = result.get("key", "")
+    if isinstance(critical_path, list) and _is_str_iterable(critical_path):
+        path_items = cast(list[str], critical_path)
+        print(f"   Critical path: {' → '.join(path_items)}")
+
+    output_file = f"evaluation_pipeline_{profile}.json"
+    pipeline.export_pipeline_data(output_file)
+    print(f"💾 Pipeline data exported: {output_file}")
+
+    print(f"\n🚀 Running {profile.upper()} evaluation...")
+
+    try:
+        result: subprocess.CompletedProcess[str]
+        if profile == "gold":
+            result = subprocess.run(
+                [
+                    "uv",
+                    "run",
+                    "python",
+                    "evals/scripts/evaluation/clean_dspy_evaluator.py",
+                    "--profile",
+                    "gold",
+                    "--limit",
+                    str(limit),
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+        elif profile == "real":
+            result = subprocess.run(
+                [
+                    "uv",
+                    "run",
+                    "python",
+                    "evals/scripts/evaluation/clean_dspy_evaluator.py",
+                    "--profile",
+                    "real",
+                    "--limit",
+                    str(limit),
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+        elif profile == "mock":
+            result = subprocess.run(
+                [
+                    "uv",
+                    "run",
+                    "python",
+                    "evals/scripts/evaluation/clean_dspy_evaluator.py",
+                    "--profile",
+                    "mock",
+                    "--limit",
+                    str(limit),
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+        else:  # pragma: no cover - defensive guard
+            raise ValueError(f"Unknown profile: {profile}")
+
+        print("✅ Evaluation completed successfully")
+        print(f"📊 Output: {result.stdout[-200:]}")
+
+        pipeline.update_stage_status("scoring", StageStatus.COMPLETED)
+        pipeline.update_stage_status("metrics", StageStatus.COMPLETED)
+        pipeline.update_stage_status("storage", StageStatus.COMPLETED)
+
+    except subprocess.CalledProcessError as exc:
+        print(f"❌ Evaluation failed: {exc}")
+        stderr_output = cast(str | bytes | None, getattr(exc, "stderr", None))
+        if stderr_output:
+            print(f"Error output: {stderr_output}")
+        pipeline.update_stage_status("scoring", StageStatus.FAILED, str(exc))
+
+    except Exception as exc:  # pragma: no cover - surface unexpected failure modes
+        print(f"❌ Unexpected error: {exc}")
+        pipeline.update_stage_status("scoring", StageStatus.FAILED, str(exc))
+
+    return analysis
+
+
+def compare_evaluation_profiles() -> None:
+    """Compare all evaluation profiles using DiGraph analysis."""
+
+    profiles = ["gold", "real", "mock"]
+    results: dict[str, AnalysisResult] = {}
+
+    print("🔍 Comparing evaluation profiles...")
+    print("=" * 50)
+
+    for profile in profiles:
+        print(f"\n📊 Analyzing {profile.upper()} profile:")
+        print("-" * 30)
+
+        eval_profile = EvaluationProfile(profile)
+        pipeline = EvaluationPipelineGraph(eval_profile)
+        pipeline.build_pipeline()
+
+        analysis = pipeline.analyze_pipeline_performance()
+        results[profile] = analysis
+
+        efficiency = result.get("key", "")
+        if isinstance(efficiency, (int, float)):
+            print(f"   Efficiency: {efficiency:.2f}")
+
+        total_stages = result.get("key", "")
+        if isinstance(total_stages, int):
+            print(f"   Total stages: {total_stages}")
+
+        total_edges = result.get("key", "")
+        if isinstance(total_edges, int):
+            print(f"   Total edges: {total_edges}")
+
+        critical_path = result.get("key", "")
+        if isinstance(critical_path, list) and _is_str_iterable(critical_path):
+            path_items = cast(list[str], critical_path)
+            print(f"   Critical path length: {len(path_items)}")
+
+    print("\n📈 Profile Comparison:")
+    print("=" * 50)
+
+    for profile, analysis in \1.items()
+        efficiency = result.get("key", "")
+        total_stages = result.get("key", "")
+
+        if isinstance(efficiency, (int, float)) and isinstance(total_stages, int):
+            print(f"{profile.upper():>6}: Efficiency={efficiency:.2f}, Stages={total_stages}")
+
+    comparison_file = "evaluation_profile_comparison.json"
+    with open(comparison_file, "w", encoding="utf-8") as output_file:
+        json.dump(results, output_file, indent=2, default=str)
+
+    print(f"\n💾 Comparison data exported: {comparison_file}")
+
+
+def main():
+    """Main entry point."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Evaluation Graph Integration")
+    _ = parser.add_argument(
+        "--profile",
+        choices=["gold", "real", "mock"],
+        default="gold",
+        help="Evaluation profile to run",
+    )
+    _ = parser.add_argument(
+        "--limit",
+        type=int,
+        default=5,
+        help="Limit number of test cases",
+    )
+    _ = parser.add_argument(
+        "--compare",
+        action="store_true",
+        help="Compare all evaluation profiles",
+    )
+    
+    args = parser.parse_args()
+    profile_arg = cast(str, args.profile)
+    limit_arg = cast(int, args.limit)
+    compare_flag = cast(bool, args.compare)
+
+    if compare_flag:
+        compare_evaluation_profiles()
+    else:
+        _ = run_evaluation_with_graph(profile_arg, limit_arg)
+
+
+def _is_str_iterable(items: Iterable[object]) -> bool:
+    """Return True when every entry in *items* is a string."""
+
+    for element in items:
+        if not isinstance(element, str):
+            return False
+    return True
+
+
+if __name__ == "__main__":
+    main()
