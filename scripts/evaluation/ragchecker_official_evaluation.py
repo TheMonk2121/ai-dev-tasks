@@ -82,7 +82,8 @@ def main(argv: list[str] | None = None) -> int:
         try:
             # Run real evaluation with gold test cases
             results = evaluator.run_evaluation(
-                gold_file="300_evals/data/gold/v1/gold_cases.jsonl", limit=5  # Small test
+                gold_file="evals/data/gold/v1/gold_cases.jsonl",
+                limit=5,  # Small test
             )
         except Exception as e:
             print(f"⚠️ Real evaluation failed ({e})")
@@ -107,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
         repo_root = Path(__file__).resolve().parents[2]
         if str(repo_root) not in sys.path:
             sys.path.insert(0, str(repo_root))
-        from .tools.run import run as ssot_run
+        from evals_300.tools.run import run as ssot_run
     except Exception as e:
         print(f"Failed to import SSOT runner: {e}")
         return 3
