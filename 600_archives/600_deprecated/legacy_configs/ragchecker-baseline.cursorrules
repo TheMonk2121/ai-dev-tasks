@@ -1,0 +1,81 @@
+---
+applyIntelligently: true
+---
+
+# RAGChecker Baseline Rules
+
+<repo_specific_rule description="Critical operational principle that enforces RAGChecker performance baseline as an absolute floor for development">
+
+## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RAGChecker RED LINE BASELINE**
+
+**🚨 MANDATORY ENFORCEMENT**: The RAGChecker evaluation system has established a performance baseline that serves as an absolute floor. No new development can proceed until these targets are met.
+
+### **🎯 Current Baseline Status (September 2, 2025)**
+
+**System Status**: 🟢 **NEW BASELINE LOCKED** - Tuned Enhanced Configuration proven stable
+
+| Metric | Current | Target | Gap | Priority | Next Action |
+|--------|---------|--------|-----|----------|-------------|
+| **Precision** | 0.159 | ≥0.20 | -0.041 | 🟡 Medium | Continue gradual improvement |
+| **Recall** | 0.166 | ≥0.45 | -0.284 | 🔴 High | Primary focus area |
+| **F1 Score** | 0.159 | ≥0.22 | -0.061 | 🟡 Medium | Balanced improvement |
+| **Faithfulness** | TBD | ≥0.60 | TBD | 🔍 Unknown | Enable comprehensive metrics |
+
+### **🚨 RED LINE ENFORCEMENT RULES**
+
+1. **Current metrics are locked** as the absolute performance floor
+2. **No new features** until all targets are met
+3. **Build freeze** if any metric falls below current baseline
+4. **Focus**: Improve recall while maintaining precision ≥0.159
+5. **Success Criteria**: All metrics above targets for 2 consecutive runs
+
+### **📊 Progress Tracking & Baseline Management**
+
+**Where Results Are Stored**: `metrics/baseline_evaluations/`
+**How to Track Progress (updated paths)**:
+
+Gold (smoke):
+```bash
+env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold --limit 5
+```
+
+Gold (full):
+```bash
+env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold
+```
+
+Real:
+```bash
+env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile real
+```
+
+Mock:
+```bash
+UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile mock
+```
+**Baseline Lock**: Current metrics are the performance floor - no regression allowed
+
+> Deprecated: older instructions used `python3 scripts/ragchecker_official_evaluation.py` at a legacy path. Use the uv-based commands above.
+
+**🚨 CRITICAL**: Before implementing any new features, verify RAGChecker baseline compliance. See `400_guides/400_11_performance-optimization.md` for comprehensive optimization strategies.
+
+### **Implementation Requirements**
+
+- **Before any new feature development**: Verify current RAGChecker baseline compliance
+- **Performance regression prevention**: No changes that could reduce precision below 0.159
+- **Baseline improvement focus**: Prioritize recall improvement while maintaining precision
+- **Quality gates**: Implement performance validation before feature deployment
+- **Documentation**: Update performance metrics and progress tracking
+
+### **When This Rule Applies**
+
+- **New feature development**: Must verify baseline compliance first
+- **Performance optimization**: Must not regress below current baseline
+- **System changes**: Must maintain or improve RAGChecker metrics
+- **Code reviews**: Must include baseline compliance checks
+- **Deployment**: Must pass performance validation gates
+
+</repo_specific_rule>

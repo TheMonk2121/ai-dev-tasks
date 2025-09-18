@@ -40,3 +40,34 @@ This is the AI Dev Tasks project - a comprehensive AI development ecosystem with
 - MCP server for tool integration
 
 Always record conversations to maintain project context and enable memory rehydration.
+
+## Evaluation Commands (real, gold, mock)
+
+Use uv for all Python execution and unset ingest pinning vars for strict runs.
+
+Gold (smoke, limit=5):
+```bash
+env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold --limit 5
+```
+
+Gold (full):
+```bash
+env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold
+```
+
+Real:
+```bash
+env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile real
+```
+
+Mock:
+```bash
+UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile mock
+```
+
+Notes:
+- Repository-standard: `UV_PROJECT_ENVIRONMENT=.venv`
+- Prefer gold for PR gates; real for development; mock for fast plumbing tests
