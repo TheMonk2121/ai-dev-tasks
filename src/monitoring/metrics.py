@@ -16,11 +16,11 @@ from datetime import datetime
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
+    import psycopg
+    from psycopg.rows import dict_row
 except ImportError:
-    psycopg2 = None
-    RealDictCursor = None
+    psycopg = None
+    dict_row = None
 
 from typing import Any
 
@@ -40,12 +40,12 @@ def get_metrics() -> dict[str, Any]:
 def get_database_metrics() -> dict[str, Any]:
     """Get database performance metrics"""
     try:
-        if psycopg2 is None or RealDictCursor is None:
-            return {"error": "psycopg2 not available for database metrics"}
-            
+        if psycopg is None or dict_row is None:
+            return {"error": "psycopg (v3) not available for database metrics"}
+
         database_url = os.getenv("DATABASE_URL", "postgresql://localhost:5432/ai_agency")
-        conn = psycopg2.connect(database_url)
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        conn = psycopg.connect(database_url)
+        cursor = conn.cursor(row_factory=dict_row)
 
         metrics = {}
 

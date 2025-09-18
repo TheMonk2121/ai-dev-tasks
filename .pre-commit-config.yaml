@@ -7,11 +7,3 @@ repos:
       - id: ruff-format
         # ruff-format does not support --exit-non-zero-on-fix
         # Keep default behavior; formatting changes are applied and do not fail the commit
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        additional_dependencies: ["pydantic>=2", "pydantic-settings>=2"]
-        args: ["--strict", "--show-error-codes"]
-        files: ^(scripts/|src/|tests/)

@@ -7497,9 +7497,9 @@ make eval-mock    # Infra-only smoke
 #### **Profile Files**
 Each profile has a dedicated configuration file:
 
-- `300_evals/300_evals/configs/profiles/real.env` - Real evaluations
-- `300_evals/300_evals/configs/profiles/gold.env` - Real evaluations with gold cases
-- `300_evals/300_evals/configs/profiles/mock.env` - Mock evaluations
+- `evals/configs/profiles/real.env` - Real evaluations
+- `evals/configs/profiles/gold.env` - Real evaluations with gold cases
+- `evals/configs/profiles/mock.env` - Mock evaluations
 
 #### **Configuration Resolution Order**
 1. **CLI flags** (highest precedence)

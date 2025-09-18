@@ -44,15 +44,16 @@ try:
 except ImportError:
     pass
 
-# Import psycopg2 for database operations
-psycopg2_available = False
-psycopg2 = None
-RealDictCursor = None
+# Import psycopg (v3) for database operations
+psycopg_available = False
+psycopg = None
+dict_row = None
 try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
-    psycopg2_available = True
-except ImportError:
+    import psycopg
+    from psycopg.rows import dict_row
+
+    psycopg_available = True
+except Exception:
     pass
 
 
@@ -164,10 +165,16 @@ class ConfigLogger:
 
     def _capture_database_config(self) -> dict[str, Any]:
         """Capture database configuration and connection details."""
-        db_config: dict[str, Any] = {"dsn_configured": False, "connection_test": False, "extensions": [], "tables": [], "error": None}
+        db_config: dict[str, Any] = {
+            "dsn_configured": False,
+            "connection_test": False,
+            "extensions": [],
+            "tables": [],
+            "error": None,
+        }
 
-        if not psycopg2_available or not psycopg2 or not RealDictCursor:
-            db_config["error"] = "psycopg2 not available"
+        if not psycopg_available or not psycopg:
+            db_config["error"] = "psycopg (v3) not available"
             return db_config
 
         try:
@@ -175,8 +182,8 @@ class ConfigLogger:
             db_config["dsn_configured"] = True
 
             # Test connection and get info
-            with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
-                with conn.cursor() as cur:
+            with psycopg.connect(dsn) as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
                     # Test connection
                     cur.execute("SELECT 1")
                     db_config["connection_test"] = True
@@ -257,7 +264,7 @@ class ConfigLogger:
     def _capture_profile_configs(self) -> dict[str, Any]:
         """Capture profile-specific configurations."""
         profiles = {}
-        profile_dir = project_root / "300_evals" / "configs" / "profiles"
+        profile_dir = project_root / "evals" / "configs" / "profiles"
 
         if profile_dir.exists():
             for env_file in profile_dir.glob("*.env"):
@@ -293,13 +300,13 @@ class ConfigLogger:
 
     def log_to_database(self, dsn: str) -> None:
         """Log configuration to database (if eval tables exist)."""
-        if not psycopg2_available or not psycopg2 or not RealDictCursor:
-            print("Warning: psycopg2 not available, cannot log to database")
+        if not psycopg_available or not psycopg:
+            print("Warning: psycopg (v3) not available, cannot log to database")
             return
 
         try:
-            with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
-                with conn.cursor() as cur:
+            with psycopg.connect(dsn) as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
                     # Check if eval tables exist
                     cur.execute(
                         """
@@ -310,7 +317,7 @@ class ConfigLogger:
                     """
                     )
                     result = cur.fetchone()
-                    if not result or not result[0]:
+                    if not result or not result["exists"]:
                         return  # Skip if eval tables don't exist
 
                     # Insert config as metadata
