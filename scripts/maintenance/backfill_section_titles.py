@@ -1,11 +1,18 @@
 from __future__ import annotations
 
 import os
+import psycopg
 import re
 import sys
 
-import psycopg2
-import psycopg2.extras
+# Add project paths
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
+# Add project paths
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config.extras
 
 #!/usr/bin/env python3
 """
@@ -71,7 +78,7 @@ def main() -> int:
         print("❌ POSTGRES_DSN not set", file=sys.stderr)
         return 1
 
-    conn = psycopg2.connect(dsn)
+    conn = psycopg.connect(dsn)
     conn.autocommit = False
     cur = conn.cursor()
 

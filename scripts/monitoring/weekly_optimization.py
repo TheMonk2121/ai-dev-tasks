@@ -10,7 +10,7 @@ Weekly UV Optimization Script
 Automated weekly optimization tasks for UV environment.
 """
 
-def run_weekly_optimization():
+def run_weekly_optimization() -> Any:
     """Run weekly optimization tasks."""
     print(f"⚡ Weekly UV Optimization - {datetime.now().strftime('%Y-%m-%d')}")
 

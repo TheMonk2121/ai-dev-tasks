@@ -10,7 +10,7 @@ Daily UV Maintenance Script
 Automated daily maintenance tasks for UV environment.
 """
 
-def run_daily_maintenance():
+def run_daily_maintenance() -> Any:
     """Run daily maintenance tasks."""
     print(f"🔧 Daily UV Maintenance - {datetime.now().strftime('%Y-%m-%d')}")
 

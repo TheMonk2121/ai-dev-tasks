@@ -45,7 +45,7 @@ def init_observability(service: str = "ai-dev-tasks", environment: str | None = 
     # PydanticAI auto-instrumentation happens when you set Agent(..., instrument=...)
 
 
-def get_logfire():
+def get_logfire() -> Any:
     """Return the configured logfire module.
 
     Kept as a function to match existing imports in scripts that do:

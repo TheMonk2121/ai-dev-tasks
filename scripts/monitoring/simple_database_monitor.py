@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import json
 import os
+
+# Add project paths
+import sys
 import time
 from datetime import datetime
 from typing import Any, Optional, Union
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """
@@ -23,7 +28,7 @@ class SimpleDatabaseMonitor:
     def get_basic_stats(self) -> dict[str, Any]:
         """Get basic database statistics."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     # Database size
                     cur.execute("SELECT pg_size_pretty(pg_database_size(current_database())) as db_size")
@@ -64,7 +69,7 @@ class SimpleDatabaseMonitor:
     def test_query_performance(self) -> dict[str, Any]:
         """Test query performance with simple queries."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     results = {}
 
@@ -132,7 +137,7 @@ class SimpleDatabaseMonitor:
     def check_indexes(self) -> dict[str, Any]:
         """Check index usage and performance."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     # Get all indexes
                     cur.execute(
@@ -175,7 +180,7 @@ class SimpleDatabaseMonitor:
     def check_data_quality(self) -> dict[str, Any]:
         """Check data quality and integrity."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     results = {}
 

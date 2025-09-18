@@ -4,10 +4,12 @@ import os
 import sys
 from pathlib import Path
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
 
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from src.common.db_dsn import resolve_dsn
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """
@@ -30,7 +32,7 @@ class SchemaConsolidator:
     def get_table_schema(self, table_name: str, source_dsn: str) -> dict | None:
         """Get table schema from source database."""
         try:
-            with psycopg2.connect(source_dsn) as conn:
+            with psycopg.connect(source_dsn) as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     # Get column information
                     cur.execute(
@@ -88,7 +90,7 @@ class SchemaConsolidator:
     def table_exists(self, table_name: str) -> bool:
         """Check if table exists in target database."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -108,7 +110,7 @@ class SchemaConsolidator:
     def column_exists(self, table_name: str, column_name: str) -> bool:
         """Check if column exists in table."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -131,7 +133,7 @@ class SchemaConsolidator:
             return
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     for column in schema["columns"]:
                         col_name = column["column_name"]
@@ -171,7 +173,7 @@ class SchemaConsolidator:
             return
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Build CREATE TABLE statement
                     create_sql = f"CREATE TABLE {table_name} ("
@@ -227,7 +229,7 @@ class SchemaConsolidator:
         dspy_rag_dsn = "postgresql://danieljacobs@localhost:5432/dspy_rag"
 
         try:
-            with psycopg2.connect(dspy_rag_dsn) as conn:
+            with psycopg.connect(dspy_rag_dsn) as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -268,7 +270,7 @@ class SchemaConsolidator:
         print("\n🔍 Verifying schema consolidation...")
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Get table count
                     cur.execute(

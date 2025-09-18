@@ -5,7 +5,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-import psycopg2
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """
@@ -46,7 +50,7 @@ def enable_pg_stat_statements():
 
     # Check if already enabled
     try:
-        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
+        with psycopg.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT COUNT(*) FROM pg_stat_statements LIMIT 1;")
                 print("✅ pg_stat_statements is already enabled and working!")
@@ -124,7 +128,7 @@ def enable_pg_stat_statements():
 def create_extension():
     """Create the pg_stat_statements extension."""
     try:
-        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
+        with psycopg.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
             with conn.cursor() as cur:
                 cur.execute("CREATE EXTENSION IF NOT EXISTS pg_stat_statements;")
                 conn.commit()
@@ -137,7 +141,7 @@ def create_extension():
 def verify_working():
     """Verify pg_stat_statements is working."""
     try:
-        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
+        with psycopg.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT COUNT(*) FROM pg_stat_statements;")
                 result = cur.fetchone()

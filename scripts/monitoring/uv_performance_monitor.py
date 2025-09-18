@@ -19,10 +19,10 @@ It tracks installation times, cache hit rates, and dependency resolution perform
 class UVPerformanceMonitor:
     """Monitor UV performance metrics and provide optimization insights."""
 
-    def __init__(self):
-        self.metrics_file = Path("metrics/uv_performance.json")
+    def __init__(self: Any):
+        self.metrics_file: Any = Path("metrics/uv_performance.json")
         self.metrics_file.parent.mkdir(exist_ok=True)
-        self.metrics = self._load_metrics()
+        self.metrics: Any = self._load_metrics()
 
     def _load_metrics(self) -> dict:
         """Load existing performance metrics."""
@@ -41,14 +41,14 @@ class UVPerformanceMonitor:
             "optimization_recommendations": [],
         }
 
-    def _save_metrics(self):
+    def _save_metrics(self: Any):
         """Save metrics to file."""
         with open(self.metrics_file, "w") as f:
             json.dump(self.metrics, f, indent=2)
 
     def measure_install_time(self, packages: list[str] | None = None) -> float:
         """Measure UV installation time."""
-        start_time = time.time()
+        start_time: Any = time.time()
 
         try:
             if packages:
@@ -58,7 +58,7 @@ class UVPerformanceMonitor:
 
             subprocess.run(cmd, capture_output=True, text=True, check=True)
 
-            end_time = time.time()
+            end_time: Any = time.time()
             install_time = end_time - start_time
 
             # Record metrics
@@ -74,7 +74,7 @@ class UVPerformanceMonitor:
             return install_time
 
         except subprocess.CalledProcessError as e:
-            end_time = time.time()
+            end_time: Any = time.time()
             install_time = end_time - start_time
 
             self.metrics["install_times"].append(
@@ -91,12 +91,12 @@ class UVPerformanceMonitor:
 
     def measure_resolve_time(self) -> float:
         """Measure UV dependency resolution time."""
-        start_time = time.time()
+        start_time: Any = time.time()
 
         try:
             subprocess.run(["uv", "lock", "--dry-run"], capture_output=True, text=True, check=True)
 
-            end_time = time.time()
+            end_time: Any = time.time()
             resolve_time = end_time - start_time
 
             self.metrics["resolve_times"].append(
@@ -106,7 +106,7 @@ class UVPerformanceMonitor:
             return resolve_time
 
         except subprocess.CalledProcessError as e:
-            end_time = time.time()
+            end_time: Any = time.time()
             resolve_time = end_time - start_time
 
             self.metrics["resolve_times"].append(
@@ -119,7 +119,7 @@ class UVPerformanceMonitor:
         """Check UV cache status and statistics."""
         try:
             # Get cache info
-            result = subprocess.run(["uv", "cache", "info"], capture_output=True, text=True, check=True)
+            result: Any = subprocess.run(["uv", "cache", "info"], capture_output=True, text=True, check=True)
 
             cache_info = {"timestamp": datetime.now().isoformat(), "status": "available", "info": result.stdout}
 
@@ -139,7 +139,7 @@ class UVPerformanceMonitor:
     def count_packages(self) -> int:
         """Count total packages in the environment."""
         try:
-            result = subprocess.run(["uv", "pip", "list"], capture_output=True, text=True, check=True)
+            result: Any = subprocess.run(["uv", "pip", "list"], capture_output=True, text=True, check=True)
 
             # Count lines (excluding header)
             lines = result.stdout.strip().split("\n")
@@ -289,22 +289,22 @@ class UVPerformanceMonitor:
 
         print("\n" + "=" * 60)
 
-def main():
+def main() -> Any:
     """Main function."""
-    parser = argparse.ArgumentParser(description="Monitor UV performance metrics")
+    parser: Any = argparse.ArgumentParser(description="Monitor UV performance metrics")
     parser.add_argument("--install-only", action="store_true", help="Only measure installation time")
     parser.add_argument("--resolve-only", action="store_true", help="Only measure resolution time")
     parser.add_argument("--cache-only", action="store_true", help="Only check cache status")
     parser.add_argument("--packages", nargs="+", help="Specific packages to install for testing")
     parser.add_argument("--json", action="store_true", help="Output results as JSON")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     monitor = UVPerformanceMonitor()
 
     if args.install_only:
         try:
-            install_time = monitor.measure_install_time(args.packages)
+            install_time: Any = monitor.measure_install_time(args.packages)
             if args.json:
                 print(json.dumps({"install_time": install_time}))
             else:
@@ -315,7 +315,7 @@ def main():
 
     elif args.resolve_only:
         try:
-            resolve_time = monitor.measure_resolve_time()
+            resolve_time: Any = monitor.measure_resolve_time()
             if args.json:
                 print(json.dumps({"resolve_time": resolve_time}))
             else:
@@ -325,7 +325,7 @@ def main():
             sys.exit(1)
 
     elif args.cache_only:
-        cache_status = monitor.check_cache_status()
+        cache_status: Any = monitor.check_cache_status()
         if args.json:
             print(json.dumps(cache_status))
         else:
@@ -333,7 +333,7 @@ def main():
 
     else:
         # Full analysis
-        analysis = monitor.run_full_analysis()
+        analysis: Any = monitor.run_full_analysis()
 
         if args.json:
             print(json.dumps(analysis, indent=2))

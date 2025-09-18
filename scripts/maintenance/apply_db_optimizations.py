@@ -4,8 +4,11 @@ import os
 import sys
 from pathlib import Path
 
-import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """
@@ -21,7 +24,7 @@ def get_db_connection():
     """Get database connection from environment or default."""
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
     try:
-        conn = psycopg2.connect(dsn)
+        conn = psycopg.connect(dsn)
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         return conn
     except Exception as e:

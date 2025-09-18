@@ -1,6 +1,7 @@
 from __future__ import annotations
 import json
 import os
+import psycopg
 import sys
 import time
 from datetime import datetime
@@ -8,7 +9,10 @@ from typing import Any
     from monitoring.health_endpoints import HealthEndpointManager
     from monitoring.metrics import get_metrics
     from monitoring.production_monitor import ProductionMonitor
-import psycopg2
+# Add project paths
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 import subprocess
 import argparse
 from typing import Any, Optional, Union
@@ -80,7 +84,7 @@ class SystemMonitor:
 
             start_time = time.time()
 
-            with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
+            with psycopg.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
                 with conn.cursor() as cursor:
                     # Get basic counts
                     cursor.execute("SELECT COUNT(*) FROM documents")

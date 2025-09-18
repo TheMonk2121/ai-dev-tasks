@@ -12,7 +12,11 @@ from datetime import datetime
 from typing import Any, Optional, Union
 
 import psutil
-import psycopg2
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """
@@ -75,7 +79,7 @@ class DatabaseHealthMonitor:
 
         try:
             # Test connection establishment time
-            conn = psycopg2.connect(self.database_url)
+            conn = psycopg.connect(self.database_url)
             connection_time = (time.time() - start_time) * 1000
 
             # Get connection count
@@ -109,7 +113,7 @@ class DatabaseHealthMonitor:
 
             # Test query response time
             query_start = time.time()
-            conn = psycopg2.connect(self.database_url)
+            conn = psycopg.connect(self.database_url)
             with conn.cursor() as cursor:
                 cursor.execute("SELECT 1")
                 cursor.fetchone()

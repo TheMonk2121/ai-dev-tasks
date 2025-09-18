@@ -1,8 +1,12 @@
 from __future__ import annotations
 import os
+import psycopg
 import sys
 from pathlib import Path
-import psycopg2
+# Add project paths
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 #!/usr/bin/env python3
 """
 Backfill file_path on document_chunks and add slug/identifier columns and indexes.
@@ -17,7 +21,7 @@ def main() -> int:
         return 1
 
     try:
-        conn = psycopg2.connect(dsn)
+        conn = psycopg.connect(dsn)
         conn.autocommit = True
     except Exception as e:
         print(f"❌ Failed to connect to database: {e}")

@@ -48,7 +48,7 @@ def main() -> int:
         if not candidates:
             raise ValueError("no JSON payload with system_health found")
         payload = candidates[-1]
-        report = json.loads(payload)
+        report: Any = json.loads(payload)
     except Exception as e:
         print(f"health_gate: failed to parse JSON: {e}", file=sys.stderr)
         return 3

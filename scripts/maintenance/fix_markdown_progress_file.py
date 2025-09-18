@@ -9,7 +9,7 @@ Fix markdown issues in the 400_markdown-cleanup-progress.md file.
 Addresses MD022 (heading spacing), MD032 (list spacing), and MD029 (ordered list prefix).
 """
 
-def fix_markdown_progress_file():
+def fix_markdown_progress_file() -> Any:
     """Fix markdown issues in the progress file."""
     file_path = "400_markdown-cleanup-progress.md"
 
@@ -18,7 +18,7 @@ def fix_markdown_progress_file():
         return False
 
     with open(file_path, encoding="utf-8") as f:
-        content = f.read()
+        content: Any = f.read()
 
     original_content = content
 
@@ -34,7 +34,7 @@ def fix_markdown_progress_file():
 
     # Fix MD029: Fix ordered list numbering
     # Find all ordered lists and renumber them properly
-    lines = content.split("\n")
+    lines: Any = content.split("\n")
     fixed_lines = []
     in_ordered_list = False
     list_counter = 1

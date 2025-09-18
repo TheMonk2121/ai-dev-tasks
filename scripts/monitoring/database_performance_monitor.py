@@ -2,12 +2,18 @@ from __future__ import annotations
 
 import json
 import os
+
+# Add project paths
+import sys
 import time
 from datetime import datetime
 from typing import Any, Optional, Union
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import DictRow
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """
@@ -17,15 +23,14 @@ Database Performance Monitor - Comprehensive monitoring for the consolidated ai_
 class DatabasePerformanceMonitor:
     """Monitor database performance metrics and health."""
 
-    def __init__(self, dsn: str):
-        self.dsn = dsn
-        self.metrics = {}
+    def __init__(self, role: str = "default"):
+        self.role = role
+        self.metrics: Any = {}
 
     def get_connection_stats(self) -> dict[str, Any]:
         """Get connection and activity statistics."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            with Psycopg3Config.get_cursor(self.role) as cur:
                     # Connection stats
                     cur.execute(
                         """
@@ -37,7 +42,7 @@ class DatabasePerformanceMonitor:
                         WHERE datname = current_database()
                     """
                     )
-                    conn_stats = cur.fetchone()
+                    conn_stats: dict[str, Any] | None = cur.fetchone()
 
                     # Database size
                     cur.execute(
@@ -46,7 +51,7 @@ class DatabasePerformanceMonitor:
                                pg_database_size(current_database()) as db_size_bytes
                     """
                     )
-                    size_stats = cur.fetchone()
+                    size_stats: dict[str, Any] | None = cur.fetchone()
 
                     return {
                         "connections": dict(conn_stats) if conn_stats else {},
@@ -58,8 +63,7 @@ class DatabasePerformanceMonitor:
     def get_table_stats(self) -> dict[str, Any]:
         """Get table statistics and sizes."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            with Psycopg3Config.get_cursor(self.role) as cur:
                     # Table sizes and row counts
                     cur.execute(
                         """
@@ -79,7 +83,7 @@ class DatabasePerformanceMonitor:
                         ORDER BY n_live_tup DESC
                     """
                     )
-                    table_stats = cur.fetchall()
+                    table_stats: Any = cur.fetchall()
 
                     # Table sizes
                     cur.execute(
@@ -94,7 +98,7 @@ class DatabasePerformanceMonitor:
                         ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
                     """
                     )
-                    size_stats = cur.fetchall()
+                    size_stats: Any = cur.fetchall()
 
                     return {
                         "table_activity": [dict(row) for row in table_stats],
@@ -106,8 +110,7 @@ class DatabasePerformanceMonitor:
     def get_index_stats(self) -> dict[str, Any]:
         """Get index usage and performance statistics."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            with Psycopg3Config.get_cursor(self.role) as cur:
                     # Index usage stats
                     cur.execute(
                         """
@@ -123,7 +126,7 @@ class DatabasePerformanceMonitor:
                         ORDER BY idx_scan DESC
                     """
                     )
-                    index_stats = cur.fetchall()
+                    index_stats: Any = cur.fetchall()
 
                     # Unused indexes
                     cur.execute(
@@ -138,7 +141,7 @@ class DatabasePerformanceMonitor:
                         ORDER BY pg_relation_size(indexrelid) DESC
                     """
                     )
-                    unused_indexes = cur.fetchall()
+                    unused_indexes: Any = cur.fetchall()
 
                     return {
                         "index_usage": [dict(row) for row in index_stats],
@@ -150,8 +153,7 @@ class DatabasePerformanceMonitor:
     def get_query_performance(self) -> dict[str, Any]:
         """Get query performance statistics."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            with Psycopg3Config.get_cursor(self.role) as cur:
                     # Check if pg_stat_statements is available
                     cur.execute(
                         """
@@ -161,7 +163,7 @@ class DatabasePerformanceMonitor:
                         )
                     """
                     )
-                    result = cur.fetchone()
+                    result: dict[str, Any] | None = cur.fetchone()
                     has_pg_stat_statements = result["exists"] if result else False
 
                     if not has_pg_stat_statements:
@@ -182,7 +184,7 @@ class DatabasePerformanceMonitor:
                         LIMIT 10
                     """
                     )
-                    slow_queries = cur.fetchall()
+                    slow_queries: Any = cur.fetchall()
 
                     # Query frequency
                     cur.execute(
@@ -197,7 +199,7 @@ class DatabasePerformanceMonitor:
                         LIMIT 10
                     """
                     )
-                    frequent_queries = cur.fetchall()
+                    frequent_queries: Any = cur.fetchall()
 
                     return {
                         "slow_queries": [dict(row) for row in slow_queries],
@@ -209,8 +211,7 @@ class DatabasePerformanceMonitor:
     def get_memory_stats(self) -> dict[str, Any]:
         """Get memory and cache statistics."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            with Psycopg3Config.get_cursor(self.role) as cur:
                     # Buffer cache stats
                     cur.execute(
                         """
@@ -231,7 +232,7 @@ class DatabasePerformanceMonitor:
                         WHERE name = 'effective_cache_size'
                     """
                     )
-                    cache_stats = cur.fetchall()
+                    cache_stats: Any = cur.fetchall()
 
                     # Cache hit ratios
                     cur.execute(
@@ -245,7 +246,7 @@ class DatabasePerformanceMonitor:
                         WHERE datname = current_database()
                     """
                     )
-                    hit_ratio = cur.fetchone()
+                    hit_ratio: dict[str, Any] | None = cur.fetchone()
 
                     return {
                         "cache_settings": [dict(row) for row in cache_stats],
@@ -257,8 +258,7 @@ class DatabasePerformanceMonitor:
     def get_locks_and_waits(self) -> dict[str, Any]:
         """Get lock and wait statistics."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            with Psycopg3Config.get_cursor(self.role) as cur:
                     # Current locks
                     cur.execute(
                         """
@@ -271,7 +271,7 @@ class DatabasePerformanceMonitor:
                         ORDER BY lock_count DESC
                     """
                     )
-                    lock_stats = cur.fetchall()
+                    lock_stats: Any = cur.fetchall()
 
                     # Long running queries
                     cur.execute(
@@ -287,7 +287,7 @@ class DatabasePerformanceMonitor:
                         ORDER BY duration DESC
                     """
                     )
-                    long_queries = cur.fetchall()
+                    long_queries: Any = cur.fetchall()
 
                     return {
                         "locks": [dict(row) for row in lock_stats],
@@ -299,19 +299,19 @@ class DatabasePerformanceMonitor:
     def run_performance_test(self) -> dict[str, Any]:
         """Run a simple performance test."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Test query performance
-                    start_time = time.time()
+                    start_time: Any = time.time()
 
                     # Test 1: Simple count query
                     cur.execute("SELECT COUNT(*) FROM conversation_context")
-                    result = cur.fetchone()
-                    count_result = result[0] if result else 0
+                    result: dict[str, Any] | None = cur.fetchone()
+                    count_result = result["count"] if result else 0
                     count_time = time.time() - start_time
 
                     # Test 2: Complex query with joins
-                    start_time = time.time()
+                    start_time: Any = time.time()
                     cur.execute(
                         """
                         SELECT 
@@ -324,11 +324,11 @@ class DatabasePerformanceMonitor:
                         ORDER BY record_count DESC
                     """
                     )
-                    complex_result = cur.fetchall()
+                    complex_result: Any = cur.fetchall()
                     complex_time = time.time() - start_time
 
                     # Test 3: JSONB query performance
-                    start_time = time.time()
+                    start_time: Any = time.time()
                     cur.execute(
                         """
                         SELECT COUNT(*) 
@@ -336,8 +336,8 @@ class DatabasePerformanceMonitor:
                         WHERE entities ? 'python'
                     """
                     )
-                    result = cur.fetchone()
-                    jsonb_result = result[0] if result else 0
+                    result: dict[str, Any] | None = cur.fetchone()
+                    jsonb_result = result["count"] if result else 0
                     jsonb_time = time.time() - start_time
 
                     return {
@@ -369,7 +369,7 @@ class DatabasePerformanceMonitor:
 
         return report
 
-    def print_summary(self, report: dict[str, Any]):
+    def print_summary() -> Any:
         """Print a human-readable summary."""
         print("\n📊 DATABASE PERFORMANCE SUMMARY")
         print("=" * 60)
@@ -433,7 +433,7 @@ class DatabasePerformanceMonitor:
         except Exception as e:
             print(f"❌ Error saving report: {e}")
 
-def main():
+def main() -> Any:
     """Main monitoring function."""
     print("🔍 Database Performance Monitor")
     print("=" * 60)
@@ -446,7 +446,7 @@ def main():
     monitor = DatabasePerformanceMonitor(dsn)
 
     # Generate report
-    report = monitor.generate_report()
+    report: Any = monitor.generate_report()
 
     # Print summary
     monitor.print_summary(report)
