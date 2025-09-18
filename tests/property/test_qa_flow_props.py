@@ -22,7 +22,7 @@ except Exception:
 @pytest.mark.prop
 @given(st.text(min_size=1, max_size=50))
 @settings(max_examples=10, deadline=200)
-def test_start_routes_short_to_end(q):
+def test_start_routes_short_to_end(q: Any):
     if SKIP_QA:
         pytest.skip("QA flow dependencies unavailable; skipping")
     s = Start()  # type: ignore[assignment]

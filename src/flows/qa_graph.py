@@ -53,6 +53,7 @@ class Draft(Node[FlowState, Literal["End"]]):
 
     async def call(self, state: FlowState) -> type[End]:
         import httpx
+
         async with httpx.AsyncClient() as client:
             deps = Deps(http_client=client)
             qa = await run_agent(state.question, deps=deps)
