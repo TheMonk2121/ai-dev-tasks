@@ -51,7 +51,7 @@ def should_trigger(backlog_id: str | None) -> bool:
     if not backlog_id:
         return False
     state = _load_state()
-    last_ts = state.get(backlog_id, 0)
+    last_ts: Any = state.get(backlog_id, 0)
     window_sec = max(get_debounce_minutes(), 0) * 60
     return (_now_ts() - last_ts) >= window_sec
 
@@ -78,7 +78,7 @@ def rehydrate_with_debounce(
             "-r",
             role,
         ]
-        result = subprocess.run(cmd, check=False)
+        result: Any = subprocess.run(cmd, check=False)
         ok = result.returncode == 0
         return ok
     finally:

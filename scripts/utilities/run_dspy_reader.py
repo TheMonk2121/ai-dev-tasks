@@ -15,12 +15,12 @@ from dspy_modules.dspy_reader_program import RAGAnswer, _lm
 if __name__ == "__main__":
     payload = json.loads(sys.stdin.read())
     query = payload["query"]
-    tag = payload.get("tag", "rag_qa_single")
+    tag: Any = payload.get("tag", "rag_qa_single")
 
     # Load compiled if present; else run vanilla program
     dspy.settings.configure(lm=_lm())
     try:
-        prog = dspy.load("artifacts/dspy/rag_answer_compiled.json")
+        prog: Any = dspy.load("artifacts/dspy/rag_answer_compiled.json")
     except Exception:
         prog = RAGAnswer()
 

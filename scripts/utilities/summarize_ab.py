@@ -54,8 +54,8 @@ def main() -> None:
     ]
 
     for key, label in metrics:
-        b_val = base.get(key, 0.0)
-        v_val = var.get(key, 0.0)
+        b_val: Any = base.get(key, 0.0)
+        v_val: Any = var.get(key, 0.0)
 
         if isinstance(b_val, int | float) and isinstance(v_val, int | float):
             delta = pct(b_val, v_val)
@@ -79,8 +79,8 @@ def main() -> None:
             (var.get("recall_at_10", 0) - base.get("recall_at_10", 0)) / base.get("recall_at_10", 1)
         ) * 100
 
-    avg_tokens = var.get("avg_tokens", 0)
-    expansion_latency = var.get("expansion_latency_ms", 0)
+    avg_tokens: Any = var.get("avg_tokens", 0)
+    expansion_latency: Any = var.get("expansion_latency_ms", 0)
 
     success_criteria = [
         var.get("recall_at_10", 0) >= 0.8,

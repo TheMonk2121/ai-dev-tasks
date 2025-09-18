@@ -33,7 +33,7 @@ def smoke_ollama(model: str | None, mode: str) -> int:
     try:
         with create_client(timeout_seconds=5.0) as client:
             resp = get_with_backoff(client, f"{base_url}/api/tags")
-            data = resp.json()
+            data: Any = resp.json()
             models = [m.get("name", "") for m in data.get("models", [])]
             ok = bool(models)
             details = {"provider": "ollama", "endpoint": f"{base_url}/api/tags", "models": models[:10]}
@@ -67,11 +67,11 @@ def smoke_bedrock(model: str | None, mode: str) -> int:
     # Live mode: attempt a minimal invoke if boto3 is available
     try:
 
-        region = os.getenv("AWS_REGION")
+        region: Any = os.getenv("AWS_REGION")
         if not region or not model:
             _print_result(False, {"provider": "bedrock", "error": "Missing AWS_REGION or model id"})
             return 2
-        client = boto3.client("bedrock-runtime", region_name=region)
+        client: Any = boto3.client("bedrock-runtime", region_name=region)
         # Minimal Anthropic-style request body; model-specific schema may vary
         body = json.dumps(
             {
@@ -80,7 +80,7 @@ def smoke_bedrock(model: str | None, mode: str) -> int:
                 "messages": [{"role": "user", "content": [{"type": "text", "text": "ping"}]}],
             }
         )
-        resp = client.invoke_model(modelId=model, body=body)
+        resp: Any = client.invoke_model(modelId=model, body=body)
         ok = resp.get("ResponseMetadata", {}).get("HTTPStatusCode") == 200
         _print_result(ok, {"provider": "bedrock", "mode": "live", "status": resp.get("ResponseMetadata", {})})
         return 0 if ok else 2
@@ -97,7 +97,7 @@ def main() -> int:
     parser.add_argument("--provider", required=True, choices=["ollama", "bedrock"], help="Provider to check")
     parser.add_argument("--model", required=False, help="Model id/name to verify")
     parser.add_argument("--mode", default="meta", choices=["meta", "live"], help="Check mode")
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     if args.provider == "ollama":
         return smoke_ollama(args.model, args.mode)

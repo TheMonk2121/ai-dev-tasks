@@ -101,7 +101,7 @@ def push_changes() -> bool:
         print(f"❌ Error getting current branch: {stderr}")
         return False
 
-    current_branch = stdout.strip()
+    current_branch: Any = stdout.strip()
 
     # Push to remote
     exit_code, stdout, stderr = run_git_command(["push", "origin", current_branch])
@@ -181,14 +181,14 @@ def display_changes_summary() -> str:
 
     return "\n".join(summary)
 
-def main():
+def main() -> Any:
     """Main function"""
-    parser = argparse.ArgumentParser(description="Auto-Push Prompt for Repo Maintenance")
+    parser: Any = argparse.ArgumentParser(description="Auto-Push Prompt for Repo Maintenance")
     parser.add_argument("--force", action="store_true", help="Skip confirmation prompts")
     parser.add_argument("--message", type=str, help="Custom commit message")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be done without doing it")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     print("🔍 Auto-Push Prompt for Repo Maintenance")
     print("=" * 50)

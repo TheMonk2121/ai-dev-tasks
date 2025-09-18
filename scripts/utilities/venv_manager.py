@@ -13,16 +13,17 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 
 class VenvManager:
     """Manages virtual environment activation and validation."""
 
-    def __init__(self, project_root: Path | None = None):
-        self.project_root = project_root or Path.cwd()
-        self.venv_path = self.project_root / ".venv"
-        self.venv_python = self.venv_path / "bin" / "python"
-        self.venv_activate = self.venv_path / "bin" / "activate"
+    def __init__(self, project_root: Path | None = None) -> None:
+        self.project_root: Path = project_root or Path.cwd()
+        self.venv_path: Path = self.project_root / ".venv"
+        self.venv_python: Path = self.venv_path / "bin" / "python"
+        self.venv_activate: Path = self.venv_path / "bin" / "activate"
 
     def is_venv_active(self) -> bool:
         """Check if the project virtual environment is currently active."""
@@ -48,7 +49,7 @@ class VenvManager:
         """Validate that required dependencies are installed in the venv.
 
         Runtime vs dev mode controlled by env:
-        - VENV_VALIDATE_MINIMAL=1 → only runtime deps (psycopg2,dspy)
+        - VENV_VALIDATE_MINIMAL=1 → only runtime deps (psycopg,dspy)
         - VENV_REQUIRED_PACKAGES overrides as comma-separated list
         """
         if os.environ.get("VENV_DISABLE_IMPORT_CHECK", "0") == "1":
@@ -59,7 +60,7 @@ class VenvManager:
             required_packages = [p.strip() for p in override.split(",") if p.strip()]
         else:
             minimal = os.environ.get("VENV_VALIDATE_MINIMAL", "0") == "1"
-            required_packages = ["psycopg2", "dspy"] if minimal else ["psycopg2", "dspy", "pytest", "ruff"]
+            required_packages = ["psycopg", "dspy"] if minimal else ["psycopg", "dspy", "pytest", "ruff"]
 
         missing_packages: list[str] = []
         for package in required_packages:
@@ -94,7 +95,7 @@ class VenvManager:
         print(f"✅ Activated virtual environment: {self.venv_path}")
         return True
 
-    def run_in_venv(self, command: list[str], capture_output: bool = False) -> subprocess.CompletedProcess:
+    def run_in_venv(self, command: list[str], capture_output: bool = False) -> subprocess.CompletedProcess[str] | subprocess.CompletedProcess[bytes]:
         """Run a command using the venv Python."""
         if not self.venv_exists():
             raise RuntimeError(f"Virtual environment not found at {self.venv_path}")
@@ -133,7 +134,7 @@ class VenvManager:
         print("✅ Virtual environment is active and ready")
         return True
 
-    def get_venv_info(self) -> dict:
+    def get_venv_info(self) -> dict[str, Any]:
         """Get information about the virtual environment."""
         return {
             "venv_path": str(self.venv_path),
@@ -160,10 +161,10 @@ if __name__ == "__main__":
     # CLI interface for venv management
     import argparse
     parser = argparse.ArgumentParser(description="Virtual Environment Manager")
-    parser.add_argument("--check", action="store_true", help="Check venv status")
-    parser.add_argument("--activate", action="store_true", help="Activate venv")
-    parser.add_argument("--info", action="store_true", help="Show venv information")
-    parser.add_argument("--validate", action="store_true", help="Validate dependencies")
+    _ = parser.add_argument("--check", action="store_true", help="Check venv status")
+    _ = parser.add_argument("--activate", action="store_true", help="Activate venv")
+    _ = parser.add_argument("--info", action="store_true", help="Show venv information")
+    _ = parser.add_argument("--validate", action="store_true", help="Validate dependencies")
 
     args = parser.parse_args()
 

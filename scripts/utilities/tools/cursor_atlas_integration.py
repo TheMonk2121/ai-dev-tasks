@@ -12,7 +12,11 @@ import time
 from datetime import datetime, timedelta
 from typing import Any
 
-import psycopg2
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 # Add src to path for memory consolidation
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
@@ -26,6 +30,7 @@ except ImportError:
     # Fallback for when running as script
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
     from memory_graphs.consolidate import run as consolidate_memory
+from src.common.db_dsn import resolve_dsn
 
 
 class CursorAtlasIntegration:
@@ -33,7 +38,7 @@ class CursorAtlasIntegration:
 
     def __init__(self, dsn: str | None = None) -> None:
         resolved_dsn = (
-            dsn or os.getenv("POSTGRES_DSN") or os.getenv("DATABASE_URL") or "postgresql://localhost:5432/ai_agency"
+            dsn or resolve_dsn(strict=False, role="cursor_atlas_integration") or resolve_dsn(strict=False, role="cursor_atlas_integration") or "postgresql://localhost:5432/ai_agency"
         )
         self.atlas: AtlasGraphStorage = AtlasGraphStorage(resolved_dsn)
         self.session_id: str = self._get_or_create_session_id()
@@ -131,7 +136,7 @@ class CursorAtlasIntegration:
         """Store memory consolidation results in the database."""
         consolidation_id = f"consolidation_{int(time.time())}_{hashlib.md5(str(time.time()).encode()).hexdigest()[:8]}"
 
-        with psycopg2.connect(self.atlas.dsn) as conn:
+        with psycopg.connect(self.atlas.dsn) as conn:
             with conn.cursor() as cur:
                 # Store consolidation summary
                 cur.execute(
@@ -206,7 +211,7 @@ class CursorAtlasIntegration:
 
     def _ensure_concept_node_exists(self, concept_id: str, concept_name: str) -> None:
         """Ensure a concept node exists in the Atlas graph."""
-        with psycopg2.connect(self.atlas.dsn) as conn:
+        with psycopg.connect(self.atlas.dsn) as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """

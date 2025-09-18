@@ -12,11 +12,11 @@ Automates the process of dispersing research findings to appropriate documentati
 """
 
 class ResearchDispersalAutomation:
-    def __init__(self):
-        self.research_file = "docs/research/papers/documentation-context-management-papers.md"
+    def __init__(self: Any):
+        self.research_file: Any = "docs/research/papers/documentation-context-management-papers.md"
 
         # Map research sections to 500_ research files
-        self.research_buckets = {
+        self.research_buckets: Any = {
             "academic_research": {
                 "target_file": "500_research-analysis-summary.md",
                 "section_title": "Documentation Context Management Research Summary",
@@ -40,7 +40,7 @@ class ResearchDispersalAutomation:
         }
 
         # Map to anchor files for implementation
-        self.anchor_file_updates = {
+        self.anchor_file_updates: Any = {
             "400_file-analysis-guide.md": {
                 "section": "Research-Based Analysis Enhancements",
                 "insert_after": "## 🛡️ **Safety Mechanisms**",
@@ -98,11 +98,11 @@ class ResearchDispersalAutomation:
 
         try:
             with open(file_path, encoding="utf-8") as f:
-                content = f.read()
+                content: Any = f.read()
 
             # Find insertion point
-            insert_pattern = re.escape(insert_after)
-            match = re.search(insert_pattern, content)
+            insert_pattern: Any = re.escape(insert_after)
+            match: Any = re.search(insert_pattern, content)
 
             if not match:
                 print(f"❌ Could not find insertion point '{insert_after}' in {file_path}")
@@ -122,7 +122,7 @@ class ResearchDispersalAutomation:
 """
 
             # Insert new section
-            insert_pos = match.end()
+            insert_pos: Any = match.end()
             updated_content = content[:insert_pos] + new_section + content[insert_pos:]
 
             # Write updated content
@@ -144,11 +144,11 @@ class ResearchDispersalAutomation:
 
         try:
             with open(file_path, encoding="utf-8") as f:
-                content = f.read()
+                content: Any = f.read()
 
             # Find insertion point
-            insert_pattern = re.escape(insert_after)
-            match = re.search(insert_pattern, content)
+            insert_pattern: Any = re.escape(insert_after)
+            match: Any = re.search(insert_pattern, content)
 
             if not match:
                 print(f"❌ Could not find insertion point '{insert_after}' in {file_path}")
@@ -168,7 +168,7 @@ class ResearchDispersalAutomation:
 """
 
             # Insert new section
-            insert_pos = match.end()
+            insert_pos: Any = match.end()
             updated_content = content[:insert_pos] + new_section + content[insert_pos:]
 
             # Write updated content
@@ -187,7 +187,7 @@ class ResearchDispersalAutomation:
         backlog_items = []
 
         # Extract key findings for backlog items
-        findings = self.extract_key_findings(research_content)
+        findings: Any = self.extract_key_findings(research_content)
 
         for i, finding in enumerate(findings[:3]):  # Top 3 findings
             item_id = f"B-{85 + i:03d}"
@@ -214,7 +214,7 @@ class ResearchDispersalAutomation:
             r"## 🔧 \*\*Implementation Recommendations\*\*(.*?)(?=## |$)", research_content, re.DOTALL
         )
         if impl_section:
-            content = impl_section.group(1)
+            content: Any = impl_section.group(1)
 
             # Extract subsections
             subsections = re.findall(r"### \*\*(.*?)\*\*(.*?)(?=### |$)", content, re.DOTALL)
@@ -244,7 +244,7 @@ Backlog Update Script - Generated from Research Findings
 Adds new backlog items based on documentation context management research
 \"\"\"
 
-def add_backlog_items():
+def add_backlog_items() -> Any:
     \"\"\"Add new backlog items to 000_backlog.md\"\"\"
 
     # New backlog items to add
@@ -252,19 +252,19 @@ def add_backlog_items():
 
     # Read current backlog
     with open('000_backlog.md', 'r', encoding='utf-8') as f:
-        content = f.read()
+        content: Any = f.read()
 
     # Find the main backlog table
     table_pattern = r'(\\| B‑\\d+ \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\|\\n)'
-    match = re.search(table_pattern, content, re.DOTALL)
+    match: Any = re.search(table_pattern, content, re.DOTALL)
 
     if match:
         # Insert new items before the match
-        insert_pos = match.start()
+        insert_pos: Any = match.start()
 
         # Create new backlog entries
         new_entries = []
-        for item in new_items:
+        for item: Any in new_items:
             entry = (
                 f"| {{item['id']}} | {{item['title']}} | {{item['priority']}} | {{item['points']}} | "
                 f"todo | {{item['description']}} | Research-based implementation | "
@@ -305,7 +305,7 @@ if __name__ == "__main__":
         print("=" * 40)
 
         # Extract research sections
-        sections = self.extract_research_sections(research_content)
+        sections: Any = self.extract_research_sections(research_content)
 
         # Update 500_ research files (store whole, extract to buckets)
         print("\n📚 UPDATING 500_ RESEARCH BUCKETS:")
@@ -335,11 +335,11 @@ if __name__ == "__main__":
                     results["success"] = False
 
         # Create backlog items
-        backlog_items = self.create_backlog_items(research_content)
+        backlog_items: Any = self.create_backlog_items(research_content)
         results["backlog_items"] = backlog_items
 
         # Create backlog update script
-        script_content = self.create_backlog_update_script(backlog_items)
+        script_content: Any = self.create_backlog_update_script(backlog_items)
         script_path = "scripts/update_backlog_from_research.py"
 
         try:
@@ -353,7 +353,7 @@ if __name__ == "__main__":
 
         # Create summary report
         summary_path = "RESEARCH_DISPERSAL_SUMMARY.md"
-        summary_content = self.create_summary_report(results, sections)
+        summary_content: Any = self.create_summary_report(results, sections)
 
         try:
             with open(summary_path, "w", encoding="utf-8") as f:
@@ -413,7 +413,7 @@ if __name__ == "__main__":
 *Generated by Research Dispersal Automation*
 """
 
-def main():
+def main() -> Any:
     """Main function for testing"""
     automation = ResearchDispersalAutomation()
 

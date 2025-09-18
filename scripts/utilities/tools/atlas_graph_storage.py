@@ -7,13 +7,18 @@ Graph-backed storage that preserves connections between conversations, decisions
 import hashlib
 import json
 import os
+
+# Add project paths
+import sys
 import time
 from datetime import datetime, timedelta
 from typing import Any, cast
 
 import numpy as np
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from sentence_transformers import SentenceTransformer
 
 # Type alias for database cursor
@@ -39,14 +44,14 @@ class AtlasGraphStorage:
         """Store a conversation turn as a graph node with connections."""
         turn_id = f"conv_{session_id}_{int(time.time())}"
 
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
                 # Create conversation node
                 embedding = self.get_embedding(content)
                 metadata = metadata or {}
                 metadata.update({"role": role, "session_id": session_id, "turn_id": turn_id})
 
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO atlas_node (node_id, node_type, title, content, metadata, embedding, expires_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -219,10 +224,10 @@ class AtlasGraphStorage:
 
     def get_conversation_graph(self, session_id: str) -> dict[str, Any]:
         """Get the conversation graph for a session."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get all nodes for this session
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT n.*, e.edge_type, e.target_node_id, e.evidence
                     FROM atlas_node n
@@ -262,12 +267,12 @@ class AtlasGraphStorage:
 
     def search_related_conversations(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
         """Search for related conversations using graph traversal."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 query_embedding = self.get_embedding(query)
 
                 # Search for similar nodes
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT n.*, 
                            (n.embedding <=> %s::vector) as distance
@@ -300,10 +305,10 @@ def main() -> None:
     storage = AtlasGraphStorage()
 
     # Create related nodes first
-    with psycopg2.connect(storage.dsn) as conn:
+    with psycopg.connect(storage.dsn) as conn:
         with conn.cursor() as cur:
             # Create atlas_system node
-            cur.execute(
+            _ = cur.execute(
                 """
                 INSERT INTO atlas_node (node_id, node_type, title, content, metadata, embedding, expires_at)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -321,7 +326,7 @@ def main() -> None:
             )
 
             # Create graph_storage node
-            cur.execute(
+            _ = cur.execute(
                 """
                 INSERT INTO atlas_node (node_id, node_type, title, content, metadata, embedding, expires_at)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)

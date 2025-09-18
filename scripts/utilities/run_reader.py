@@ -13,7 +13,7 @@ def mock_reader(query: str, context: str, tag: str, case_id: str) -> str:
     """
     Mock reader that returns answers based on query patterns.
     """
-    query_lower = query.lower()
+    query_lower: Any = query.lower()
 
     # Pattern matching for known queries
     if "dspy" in query_lower and "framework" in query_lower:
@@ -28,7 +28,7 @@ def mock_reader(query: str, context: str, tag: str, case_id: str) -> str:
     # Generic fallback based on context
     if context and context.strip():
         # Look for key phrases in context
-        context_lower = context.lower()
+        context_lower: Any = context.lower()
 
         if "framework" in context_lower and "optimization" in context_lower:
             return "a framework for declarative optimization of prompts and programs"
@@ -42,16 +42,16 @@ def mock_reader(query: str, context: str, tag: str, case_id: str) -> str:
     # Final fallback
     return f"Based on the context, this appears to be related to {tag}."
 
-def main():
+def main() -> Any:
     """Main entry point for the reader script."""
     try:
         # Read input from stdin
         input_data = json.loads(sys.stdin.read())
 
-        query = input_data.get("query", "")
-        context = input_data.get("context", "")
-        tag = input_data.get("tag", "")
-        case_id = input_data.get("case_id", "")
+        query: Any = input_data.get("query", "")
+        context: Any = input_data.get("context", "")
+        tag: Any = input_data.get("tag", "")
+        case_id: Any = input_data.get("case_id", "")
 
         # Generate answer
         answer = mock_reader(query, context, tag, case_id)

@@ -21,7 +21,7 @@ Examples:
 """
 
 
-def run_memory_rehydrator(role="planner", task="current project status and core documentation"):
+def run_memory_rehydrator() -> Any:
     """Run the memory rehydrator adapter and return a text bundle"""
 
     try:
@@ -60,11 +60,11 @@ def run_memory_rehydrator(role="planner", task="current project status and core 
         return None
 
 
-def format_for_cursor_chat(bundle_output):
+def format_for_cursor_chat(bundle_output: Any):
     """Format the bundle output for easy copying into Cursor chat"""
 
     # Extract the bundle content (between the separator lines)
-    lines = bundle_output.split("\n")
+    lines: Any = bundle_output.split("\n")
     bundle_start = None
     bundle_end = None
 
@@ -92,7 +92,7 @@ def format_for_cursor_chat(bundle_output):
     return formatted
 
 
-def main():
+def main() -> Any:
     """Main function to prime Cursor chat with memory context"""
 
     # Parse command line arguments

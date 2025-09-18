@@ -7,12 +7,19 @@ Implements semantic chunking with overlap and context preservation
 import json
 import os
 import re
+
+# Add project paths
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
 
-import psycopg2
+import psycopg
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from sentence_transformers import SentenceTransformer
+
+from src.common.psycopg3_config import Psycopg3Config
 
 
 @dataclass
@@ -296,7 +303,7 @@ class AtlasEnhancedChunking:
         total_chunks: int = 1,
     ) -> None:
         """Create a chunk node in the Atlas graph."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
                 # Get embedding for chunk
                 embedding = self.embedder.encode(content)

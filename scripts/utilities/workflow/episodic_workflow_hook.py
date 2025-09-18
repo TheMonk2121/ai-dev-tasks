@@ -26,9 +26,9 @@ sys.path.insert(0, str(project_root))
 class EpisodicWorkflowHook:
     """Simple hook for injecting episodic context into workflows."""
 
-    def __init__(self):
+    def __init__(self: Any):
         """Initialize the hook."""
-        self.injector = DynamicFewShotInjector()
+        self.injector: Any = DynamicFewShotInjector()
         print("🧠 Episodic Workflow Hook initialized")
 
     def enhance_query(self, query: str, method: str = "guidance") -> str:
@@ -61,13 +61,13 @@ class EpisodicWorkflowHook:
         """Get episodic context for a task."""
         return self.injector.episodic_integration.get_context_for_task(task_description, agent)
 
-def main():
+def main() -> Any:
     """Main CLI interface."""
-    parser = argparse.ArgumentParser(description="Episodic Workflow Hook")
-    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+    parser: Any = argparse.ArgumentParser(description="Episodic Workflow Hook")
+    subparsers: Any = parser.add_subparsers(dest="command", help="Available commands")
 
     # Enhance query command
-    enhance_parser = subparsers.add_parser("enhance", help="Enhance query with episodic context")
+    enhance_parser: Any = subparsers.add_parser("enhance", help="Enhance query with episodic context")
     enhance_parser.add_argument("--query", required=True, help="Query to enhance")
     enhance_parser.add_argument(
         "--method", choices=["few_shot", "guidance", "compact"], default="guidance", help="Enhancement method"
@@ -75,13 +75,13 @@ def main():
     enhance_parser.add_argument("--format", choices=["json", "text"], default="text", help="Output format")
 
     # Enhance prompt command
-    prompt_parser = subparsers.add_parser("enhance-prompt", help="Enhance system prompt")
+    prompt_parser: Any = subparsers.add_parser("enhance-prompt", help="Enhance system prompt")
     prompt_parser.add_argument("--prompt", required=True, help="System prompt to enhance")
     prompt_parser.add_argument("--task", required=True, help="Current task description")
     prompt_parser.add_argument("--format", choices=["json", "text"], default="text", help="Output format")
 
     # Store completion command
-    store_parser = subparsers.add_parser("store", help="Store task completion")
+    store_parser: Any = subparsers.add_parser("store", help="Store task completion")
     store_parser.add_argument("--task-description", required=True, help="Task description")
     store_parser.add_argument("--input-text", required=True, help="Input text")
     store_parser.add_argument("--output-text", required=True, help="Output text")
@@ -89,7 +89,7 @@ def main():
     store_parser.add_argument("--task-type", default="general", help="Task type")
 
     # Get context command
-    context_parser = subparsers.add_parser("context", help="Get episodic context for task")
+    context_parser: Any = subparsers.add_parser("context", help="Get episodic context for task")
     context_parser.add_argument("--task", required=True, help="Task description")
     context_parser.add_argument("--agent", default="cursor_ai", help="Agent name")
     context_parser.add_argument("--format", choices=["json", "text"], default="text", help="Output format")
@@ -97,12 +97,12 @@ def main():
     # Test command
     subparsers.add_parser("test", help="Test the hook")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     hook = EpisodicWorkflowHook()
 
     if args.command == "enhance":
-        enhanced_query = hook.enhance_query(args.query, args.method)
+        enhanced_query: Any = hook.enhance_query(args.query, args.method)
 
         if args.format == "json":
             result = {"original_query": args.query, "enhanced_query": enhanced_query, "method": args.method}
@@ -112,7 +112,7 @@ def main():
             print(enhanced_query)
 
     elif args.command == "enhance-prompt":
-        enhanced_prompt = hook.enhance_system_prompt(args.prompt, args.task)
+        enhanced_prompt: Any = hook.enhance_system_prompt(args.prompt, args.task)
 
         if args.format == "json":
             result = {"original_prompt": args.prompt, "enhanced_prompt": enhanced_prompt, "task": args.task}
@@ -137,7 +137,7 @@ def main():
             sys.exit(1)
 
     elif args.command == "context":
-        context = hook.get_context_for_task(args.task, args.agent)
+        context: Any = hook.get_context_for_task(args.task, args.agent)
 
         if args.format == "json":
             print(json.dumps(context, indent=2, default=str))
@@ -156,7 +156,7 @@ def main():
 
         # Test query enhancement
         test_query = "implement error handling for database connections"
-        enhanced = hook.enhance_query(test_query, "guidance")
+        enhanced: Any = hook.enhance_query(test_query, "guidance")
 
         if enhanced != test_query:
             print("✅ Query enhancement test passed")
@@ -165,7 +165,7 @@ def main():
 
         # Test prompt enhancement
         base_prompt = "You are a helpful AI assistant."
-        enhanced_prompt = hook.enhance_system_prompt(base_prompt, test_query)
+        enhanced_prompt: Any = hook.enhance_system_prompt(base_prompt, test_query)
 
         if enhanced_prompt != base_prompt:
             print("✅ Prompt enhancement test passed")
@@ -173,7 +173,7 @@ def main():
             print("⚠️  No prompt enhancement applied")
 
         # Test context retrieval
-        context = hook.get_context_for_task(test_query)
+        context: Any = hook.get_context_for_task(test_query)
         if context:
             print("✅ Context retrieval test passed")
         else:

@@ -10,8 +10,14 @@ from datetime import datetime
 from typing import Any, Optional, Union
 
 import psutil
-import psycopg2
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 import requests
+
+from src.common.db_dsn import resolve_dsn
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """
@@ -74,7 +80,7 @@ class UpgradeValidator:
         """
         try:
             # Test database connectivity
-            conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+            conn = psycopg.connect(resolve_dsn(strict=False, role="upgrade_validation"))
             cursor = conn.cursor()
 
             # Test basic query
@@ -430,7 +436,7 @@ class UpgradeValidator:
         """
         try:
             # Test new database columns if they were added
-            conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+            conn = psycopg.connect(resolve_dsn(strict=False, role="upgrade_validation"))
             cursor = conn.cursor()
 
             # Check for new columns

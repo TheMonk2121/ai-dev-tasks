@@ -16,7 +16,7 @@ Complete setup including schema creation and real data ingestion.
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-def main():
+def main() -> Any:
     """Main setup process."""
     print("🚀 Production Database Setup for Evaluation System")
     print("=" * 60)
@@ -44,27 +44,27 @@ def main():
 
     # Step 1: Set up database schema
     print("\n🔧 Step 1: Setting up database schema...")
-    schema_result = os.system("uv run python scripts/setup_database_schema.py")
+    schema_result: Any = os.system("uv run python scripts/setup_database_schema.py")
     if schema_result != 0:
         print("❌ Database schema setup failed")
         return 1
 
     # Step 2: Ingest real data
     print("\n📚 Step 2: Ingesting real project data...")
-    ingest_result = os.system("uv run python scripts/ingest_real_data.py")
+    ingest_result: Any = os.system("uv run python scripts/ingest_real_data.py")
     if ingest_result != 0:
         print("❌ Data ingestion failed")
         return 1
 
     # Step 3: Update environment for production
     print("\n⚙️  Step 3: Updating environment for production...")
-    update_env_result = os.system("uv run python scripts/update_production_env.py")
+    update_env_result: Any = os.system("uv run python scripts/update_production_env.py")
     if update_env_result != 0:
         print("⚠️  Environment update failed, but continuing...")
 
     # Step 4: Verify everything is working
     print("\n🔍 Step 4: Verifying production setup...")
-    verify_result = os.system("uv run python scripts/health_gated_evaluation.py --check-only")
+    verify_result: Any = os.system("uv run python scripts/health_gated_evaluation.py --check-only")
     if verify_result != 0:
         print("❌ Health check failed")
         return 1

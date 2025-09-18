@@ -3,13 +3,17 @@ from __future__ import annotations
 import os
 import sys
 
-import psycopg2
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 
 def _conn():
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-    return psycopg2.connect(dsn)
+    return psycopg.connect(dsn)
 
 def _timescale_version(cur) -> tuple[int, int, int] | None:
     cur.execute("SELECT extversion FROM pg_extension WHERE extname='timescaledb'")

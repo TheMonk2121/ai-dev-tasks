@@ -4,17 +4,20 @@ import hashlib
 import os
 import sys
 from pathlib import Path
-from typing import Any, Optional, Union, cast
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 #!/usr/bin/env python3
 """
 Manually index the retriever files that the documentation_indexer can't handle.
 """
 
-def get_file_content(file_path):
+def get_file_content(file_path: str | Path) -> str | None:
     """Read file content"""
     try:
         with open(file_path, encoding="utf-8") as f:
@@ -23,7 +26,7 @@ def get_file_content(file_path):
         print(f"Error reading {file_path}: {e}")
         return None
 
-def split_python_content(content, max_chunk_size=900):
+def split_python_content(content: str, max_chunk_size: int = 900) -> list[dict[str, Any]]:
     """Split Python content into function/class-aware chunks"""
     chunks = []
     lines = content.splitlines()
@@ -53,7 +56,7 @@ def split_python_content(content, max_chunk_size=900):
 
     return chunks or [{"content": content, "start_line": 1, "end_line": len(lines)}]
 
-def index_file(file_path, dsn):
+def index_file(file_path: Path, dsn: str) -> bool:
     """Index a single file"""
     content = get_file_content(file_path)
     if not content:
@@ -69,10 +72,10 @@ def index_file(file_path, dsn):
     chunks = split_python_content(content)
 
     try:
-        with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
-            with conn.cursor() as cur:
+        with psycopg.connect(dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Insert document
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO documents (filename, file_path, file_type, file_size, chunk_count, status, content_sha)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -84,30 +87,30 @@ def index_file(file_path, dsn):
                 result_raw = cur.fetchone()
                 document_id: int
                 if result_raw is not None:
-                    row_dict = cast(dict[str, Any], result_raw)
+                    row_dict = result_raw  # DictRow is already dict-like
                     if "id" in row_dict:
-                        document_id = int(row_dict["id"])  # RealDictCursor returns a dict-like row
+                        document_id = int(row_dict["id"])
                     else:
                         # Get existing document ID
-                        cur.execute("SELECT id FROM documents WHERE content_sha = %s", (content_sha,))
+                        _ = cur.execute("SELECT id FROM documents WHERE content_sha = %s", (content_sha,))
                         row2_raw = cur.fetchone()
                         if row2_raw is None:
                             raise RuntimeError("Failed to retrieve document id after insert/select")
-                        row2 = cast(dict[str, Any], row2_raw)
-                        document_id = int(row2["id"])  # type: ignore[reportUnknownArgumentType]
+                        row2 = row2_raw  # DictRow is already dict-like
+                        document_id = int(row2["id"])
                 else:
                     # Get existing document ID
-                    cur.execute("SELECT id FROM documents WHERE content_sha = %s", (content_sha,))
+                    _ = cur.execute("SELECT id FROM documents WHERE content_sha = %s", (content_sha,))
                     row3_raw = cur.fetchone()
                     if row3_raw is None:
                         raise RuntimeError("Failed to retrieve document id after insert/select")
-                    row3 = cast(dict[str, Any], row3_raw)
-                    document_id = int(row3["id"])  # type: ignore[reportUnknownArgumentType]
+                    row3 = row3_raw  # DictRow is already dict-like
+                    document_id = int(row3["id"])
 
                 # Insert chunks
                 for i, chunk in enumerate(chunks):
                     chunk_content = chunk["content"]
-                    cur.execute(
+                    _ = cur.execute(
                         """
                         INSERT INTO document_chunks (
                             document_id, chunk_index, file_path, line_start, line_end, content,
@@ -139,7 +142,7 @@ def index_file(file_path, dsn):
         print(f"❌ Error indexing {file_path}: {e}")
         return False
 
-def main():
+def main() -> None:
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
     retriever_dir = Path("src/dspy_modules/retriever")
 

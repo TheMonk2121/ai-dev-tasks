@@ -6,15 +6,19 @@ Manages multiple concurrent chat threads with proper session isolation and cross
 
 import json
 import os
+import sys
 import time
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
 from sentence_transformers import SentenceTransformer
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 
 @dataclass
@@ -44,16 +48,16 @@ class CrossThreadPattern:
 class AtlasThreadManager:
     """Manages multiple chat threads and cross-thread analysis."""
     
-    def __init__(self, dsn: str = None):
-        self.dsn = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-        self.embedder = SentenceTransformer("BAAI/bge-large-en-v1.5")
-        self.embedding_dim = 1024
+    def __init__(self, dsn: str | None = None) -> None:
+        self.dsn: str = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        self.embedder: SentenceTransformer = SentenceTransformer("BAAI/bge-large-en-v1.5")
+        self.embedding_dim: int = 1024
         
         # Thread management
-        self.active_threads = {}  # thread_id -> ChatThread
-        self.thread_relationships = {}  # thread_id -> [related_thread_ids]
+        self.active_threads: dict[str, ChatThread] = {}  # thread_id -> ChatThread
+        self.thread_relationships: dict[str, list[str]] = {}  # thread_id -> [related_thread_ids]
     
-    def create_thread(self, title: str = None, metadata: dict = None) -> ChatThread:
+    def create_thread(self, title: str | None = None, metadata: dict[str, Any] | None = None) -> ChatThread:
         """Create a new chat thread."""
         thread_id = f"thread_{int(time.time())}_{uuid.uuid4().hex[:8]}"
         session_id = f"session_{thread_id}"
@@ -89,7 +93,7 @@ class AtlasThreadManager:
         return self.create_thread(title=f"Thread: {thread_identifier}")
     
     def add_conversation_turn(self, thread_id: str, role: str, content: str, 
-                            metadata: dict = None) -> str:
+                            metadata: dict[str, Any] | None = None) -> str:
         """Add a conversation turn to a specific thread."""
         thread = self.get_or_create_thread(thread_id)
         
@@ -106,11 +110,11 @@ class AtlasThreadManager:
         return turn_id
     
     def _store_conversation_turn(self, thread: ChatThread, role: str, content: str, 
-                               metadata: dict = None) -> str:
+                               metadata: dict[str, Any] | None = None) -> str:
         """Store conversation turn with thread context."""
         turn_id = f"turn_{thread.thread_id}_{int(time.time())}"
         
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
                 # Enhanced metadata with thread context
                 enhanced_metadata = {
@@ -127,7 +131,7 @@ class AtlasThreadManager:
                 embedding = self.embedder.encode(content)
                 
                 # Store in atlas_node
-                cur.execute("""
+                _ = cur.execute("""
                     INSERT INTO atlas_node (node_id, node_type, title, content, metadata, embedding, expires_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (node_id) DO UPDATE SET
@@ -151,9 +155,9 @@ class AtlasThreadManager:
     
     def _store_thread_metadata(self, thread: ChatThread):
         """Store thread metadata in database."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                _ = cur.execute("""
                     INSERT INTO atlas_node (node_id, node_type, title, content, metadata, embedding, expires_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (node_id) DO UPDATE SET
@@ -180,9 +184,9 @@ class AtlasThreadManager:
     
     def _find_thread_by_identifier(self, identifier: str) -> ChatThread | None:
         """Find thread by various identifiers."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute("""
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
+                _ = cur.execute("""
                     SELECT node_id, title, metadata, created_at
                     FROM atlas_node 
                     WHERE node_type = 'thread'
@@ -208,9 +212,9 @@ class AtlasThreadManager:
     
     def _update_thread_activity(self, thread: ChatThread):
         """Update thread activity timestamp."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                _ = cur.execute("""
                     UPDATE atlas_node 
                     SET metadata = jsonb_set(metadata, '{last_activity}', %s)
                     WHERE node_id = %s
@@ -223,9 +227,9 @@ class AtlasThreadManager:
     
     def get_thread_timeline(self, thread_id: str) -> list[dict[str, Any]]:
         """Get timeline of conversation turns in a thread."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute("""
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
+                _ = cur.execute("""
                     SELECT node_id, content, metadata, created_at
                     FROM atlas_node 
                     WHERE metadata->>'thread_id' = %s 
@@ -250,10 +254,10 @@ class AtlasThreadManager:
         """Analyze patterns across all threads."""
         patterns = []
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get all query-reply pairs across threads
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT 
                         q.metadata->>'thread_id' as thread_id,
                         q.content as query_content,
@@ -336,10 +340,10 @@ class AtlasThreadManager:
     
     def get_thread_relationships(self, thread_id: str) -> list[dict[str, Any]]:
         """Get relationships between threads."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Find threads that share similar topics or patterns
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT DISTINCT 
                         t2.metadata->>'thread_id' as related_thread_id,
                         t2.title as related_title,
@@ -380,11 +384,11 @@ def main():
     print(f"✅ Created threads: {thread1.thread_id}, {thread2.thread_id}")
     
     # Add conversation turns
-    manager.add_conversation_turn(thread1.thread_id, "user", "How can we improve RAGChecker precision?")
-    manager.add_conversation_turn(thread1.thread_id, "assistant", "Here are several strategies to improve precision...")
+    _ = manager.add_conversation_turn(thread1.thread_id, "user", "How can we improve RAGChecker precision?")
+    _ = manager.add_conversation_turn(thread1.thread_id, "assistant", "Here are several strategies to improve precision...")
     
-    manager.add_conversation_turn(thread2.thread_id, "user", "I want to implement graph storage for conversations")
-    manager.add_conversation_turn(thread2.thread_id, "assistant", "Great idea! Let me show you how to implement Atlas...")
+    _ = manager.add_conversation_turn(thread2.thread_id, "user", "I want to implement graph storage for conversations")
+    _ = manager.add_conversation_turn(thread2.thread_id, "assistant", "Great idea! Let me show you how to implement Atlas...")
     
     # Get timelines
     timeline1 = manager.get_thread_timeline(thread1.thread_id)

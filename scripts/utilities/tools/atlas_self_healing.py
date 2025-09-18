@@ -4,17 +4,20 @@ Atlas Self-Healing Navigation System
 Detects and repairs broken references, citations, and connections
 """
 
-import hashlib
 import json
 import os
+
+# Add project paths
+import sys
 import time
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
-import numpy as np
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from sentence_transformers import SentenceTransformer
 
 
@@ -31,19 +34,19 @@ class CitationState(Enum):
 class SelfHealingNavigator:
     """Self-healing navigation system for Atlas graph."""
 
-    def __init__(self, dsn: str = None):
-        self.dsn = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-        self.embedder = SentenceTransformer("BAAI/bge-large-en-v1.5")
-        self.embedding_dim = 1024
+    def __init__(self, dsn: str | None = None) -> None:
+        self.dsn: str = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        self.embedder: SentenceTransformer = SentenceTransformer("BAAI/bge-large-en-v1.5")
+        self.embedding_dim: int = 1024
 
     def detect_broken_references(self) -> list[dict[str, Any]]:
         """Detect broken references in the Atlas graph."""
         broken_refs = []
 
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Find edges pointing to non-existent nodes
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT e.*, n1.title as source_title, n1.node_type as source_type
                     FROM atlas_edge e
@@ -68,7 +71,7 @@ class SelfHealingNavigator:
                     )
 
                 # Find nodes with no connections (orphaned)
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT n.*
                     FROM atlas_node n
@@ -91,7 +94,7 @@ class SelfHealingNavigator:
                     )
 
                 # Find edges with low confidence
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT e.*, n1.title as source_title, n2.title as target_title
                     FROM atlas_edge e
@@ -120,7 +123,7 @@ class SelfHealingNavigator:
 
     def repair_broken_references(self, broken_refs: list[dict[str, Any]]) -> dict[str, Any]:
         """Repair broken references using various strategies."""
-        repair_results = {"repaired": 0, "failed": 0, "skipped": 0, "repairs": []}
+        repair_results: dict[str, Any] = {"repaired": 0, "failed": 0, "skipped": 0, "repairs": []}
 
         for ref in broken_refs:
             try:
@@ -136,15 +139,15 @@ class SelfHealingNavigator:
                 repair_results["repairs"].append({"reference": ref, "repair": repair})
 
                 if repair["status"] == "repaired":
-                    repair_results["repaired"] += 1
+                    repair_results["repaired"] = repair_results["repaired"] + 1
                 elif repair["status"] == "failed":
-                    repair_results["failed"] += 1
+                    repair_results["failed"] = repair_results["failed"] + 1
                 else:
-                    repair_results["skipped"] += 1
+                    repair_results["skipped"] = repair_results["skipped"] + 1
 
             except Exception as e:
                 repair_results["repairs"].append({"reference": ref, "repair": {"status": "failed", "error": str(e)}})
-                repair_results["failed"] += 1
+                repair_results["failed"] = repair_results["failed"] + 1
 
         return repair_results
 
@@ -158,9 +161,9 @@ class SelfHealingNavigator:
                 # Update the edge to point to the most similar node
                 best_match = similar_nodes[0]
 
-                with psycopg2.connect(self.dsn) as conn:
+                with psycopg.connect(self.dsn) as conn:
                     with conn.cursor() as cur:
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             UPDATE atlas_edge 
                             SET target_node_id = %s, 
@@ -188,9 +191,9 @@ class SelfHealingNavigator:
                 placeholder_id = f"placeholder_{ref['target_node']}_{int(time.time())}"
                 self._create_placeholder_node(placeholder_id, ref["target_node"])
 
-                with psycopg2.connect(self.dsn) as conn:
+                with psycopg.connect(self.dsn) as conn:
                     with conn.cursor() as cur:
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             UPDATE atlas_edge 
                             SET target_node_id = %s,
@@ -220,10 +223,10 @@ class SelfHealingNavigator:
                 # Create connections to similar nodes
                 connections_created = 0
 
-                with psycopg2.connect(self.dsn) as conn:
+                with psycopg.connect(self.dsn) as conn:
                     with conn.cursor() as cur:
                         for similar in similar_nodes[:3]:  # Connect to top 3 similar nodes
-                            cur.execute(
+                            _ = cur.execute(
                                 """
                                 INSERT INTO atlas_edge (source_node_id, target_node_id, edge_type, evidence, weight)
                                 VALUES (%s, %s, %s, %s, %s)
@@ -237,7 +240,7 @@ class SelfHealingNavigator:
                                     similar["similarity"],
                                 ),
                             )
-                            connections_created += 1
+                            connections_created = connections_created + 1
                         conn.commit()
 
                 return {
@@ -256,17 +259,17 @@ class SelfHealingNavigator:
         try:
             # If weight is very low, remove the edge
             if ref["weight"] < 0.1:
-                with psycopg2.connect(self.dsn) as conn:
+                with psycopg.connect(self.dsn) as conn:
                     with conn.cursor() as cur:
-                        cur.execute("DELETE FROM atlas_edge WHERE edge_id = %s", (ref["edge_id"],))
+                        _ = cur.execute("DELETE FROM atlas_edge WHERE edge_id = %s", (ref["edge_id"],))
                         conn.commit()
 
                 return {"status": "repaired", "action": "removed_low_confidence_edge", "method": "edge_removal"}
             else:
                 # Strengthen the edge by updating evidence
-                with psycopg2.connect(self.dsn) as conn:
+                with psycopg.connect(self.dsn) as conn:
                     with conn.cursor() as cur:
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             UPDATE atlas_edge 
                             SET evidence = %s,
@@ -296,9 +299,9 @@ class SelfHealingNavigator:
         try:
             query_embedding = self.embedder.encode(query)
 
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    cur.execute(
+            with psycopg.connect(self.dsn) as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
+                    _ = cur.execute(
                         """
                         SELECT n.*, 
                                (n.embedding <=> %s::vector) as distance,
@@ -331,9 +334,9 @@ class SelfHealingNavigator:
 
     def _create_placeholder_node(self, node_id: str, original_id: str):
         """Create a placeholder node for missing references."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO atlas_node (node_id, node_type, title, content, metadata, embedding, expires_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -362,18 +365,21 @@ class SelfHealingNavigator:
             low_severity = [r for r in broken_refs if r["severity"] == "low"]
 
             # Get graph statistics
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    cur.execute("SELECT COUNT(*) as total_nodes FROM atlas_node")
-                    total_nodes = cur.fetchone()["total_nodes"]
+            with psycopg.connect(self.dsn) as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
+                    _ = cur.execute("SELECT COUNT(*) as total_nodes FROM atlas_node")
+                    row = cur.fetchone()
+                    total_nodes = row["total_nodes"] if row else 0
 
-                    cur.execute("SELECT COUNT(*) as total_edges FROM atlas_edge")
-                    total_edges = cur.fetchone()["total_edges"]
+                    _ = cur.execute("SELECT COUNT(*) as total_edges FROM atlas_edge")
+                    row = cur.fetchone()
+                    total_edges = row["total_edges"] if row else 0
 
-                    cur.execute("SELECT AVG(weight) as avg_weight FROM atlas_edge")
-                    avg_weight = cur.fetchone()["avg_weight"] or 0
+                    _ = cur.execute("SELECT AVG(weight) as avg_weight FROM atlas_edge")
+                    row = cur.fetchone()
+                    avg_weight = row["avg_weight"] if row else 0
 
-                    cur.execute(
+                    _ = cur.execute(
                         """
                         SELECT COUNT(*) as orphaned_count
                         FROM atlas_node n
@@ -383,7 +389,8 @@ class SelfHealingNavigator:
                         AND n.node_type != 'concept'
                     """
                     )
-                    orphaned_count = cur.fetchone()["orphaned_count"]
+                    row = cur.fetchone()
+                    orphaned_count = row["orphaned_count"] if row else 0
 
             return {
                 "total_nodes": total_nodes,

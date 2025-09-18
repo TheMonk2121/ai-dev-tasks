@@ -16,7 +16,7 @@ Updates environment variables to use real database instead of mock.
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-def update_environment_for_production():
+def update_environment_for_production() -> Any:
     """Update environment variables for production database use."""
     print("⚙️  Updating environment for production database...")
 
@@ -62,7 +62,7 @@ def update_environment_for_production():
 
     return 0
 
-def main():
+def main() -> Any:
     """Main entry point."""
     return update_environment_for_production()
 

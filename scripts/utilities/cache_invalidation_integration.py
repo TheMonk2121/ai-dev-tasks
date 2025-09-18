@@ -114,8 +114,8 @@ class CacheInvalidationIntegration:
 
     def __init__(self, config: IntegrationConfig | None = None):
         """Initialize cache invalidation integration"""
-        self.config = config or IntegrationConfig()
-        self.metrics = IntegrationMetrics()
+        self.config: Any = config or IntegrationConfig()
+        self.metrics: Any = IntegrationMetrics()
 
         # Initialize systems
         self.cache_service: PostgreSQLCacheService | None = None
@@ -123,7 +123,7 @@ class CacheInvalidationIntegration:
 
         # Background task management
         self.cleanup_task: asyncio.Task | None = None
-        self.running = False
+        self.running: Any = False
 
         logger.info("Cache Invalidation Integration initialized")
 
@@ -156,8 +156,8 @@ class CacheInvalidationIntegration:
     async def _start_background_cleanup(self):
         """Start background cleanup task"""
         try:
-            self.running = True
-            self.cleanup_task = asyncio.create_task(self._background_cleanup_loop())
+            self.running: Any = True
+            self.cleanup_task: Any = asyncio.create_task(self._background_cleanup_loop())
             logger.info("Background cleanup task started")
         except Exception as e:
             logger.error(f"Failed to start background cleanup: {e}")
@@ -188,7 +188,7 @@ class CacheInvalidationIntegration:
     async def perform_comprehensive_cleanup(self):
         """Perform comprehensive cache cleanup using all invalidation strategies"""
         try:
-            start_time = time.time()
+            start_time: Any = time.time()
             logger.info("Starting comprehensive cache cleanup")
 
             # Get initial cache statistics
@@ -312,7 +312,7 @@ class CacheInvalidationIntegration:
                 logger.warning(alert)
 
             # Check cache size
-            cache_size_mb = self._extract_cache_size_mb(cache_stats)
+            cache_size_mb: Any = self._extract_cache_size_mb(cache_stats)
             if cache_size_mb > self.config.max_cache_size_mb:
                 alert = f"Cache size exceeded threshold: {cache_size_mb:.2f}MB > {self.config.max_cache_size_mb:.2f}MB"
                 self.metrics.performance_alerts.append(alert)
@@ -324,7 +324,7 @@ class CacheInvalidationIntegration:
     def _extract_cache_size_mb(self, stats: dict[str, Any]) -> float:
         """Extract cache size in MB from statistics"""
         try:
-            table_size_str = stats.get("table_size", "0 bytes")
+            table_size_str: Any = stats.get("table_size", "0 bytes")
             # Parse size string like "128 kB" or "1.2 MB"
             if "MB" in table_size_str:
                 return float(table_size_str.replace(" MB", ""))
@@ -389,7 +389,7 @@ class CacheInvalidationIntegration:
             logger.info("Closing Cache Invalidation Integration")
 
             # Stop background cleanup
-            self.running = False
+            self.running: Any = False
             if self.cleanup_task and not self.cleanup_task.done():
                 self.cleanup_task.cancel()
                 try:

@@ -1,10 +1,16 @@
 from __future__ import annotations
+
 import argparse
 import importlib.util
 import os
 import sys
-import psycopg2
-from psycopg2.extras import RealDictCursor
+
+import psycopg
+from psycopg.rows import dict_row
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+
 #!/usr/bin/env python3
 """
 Setup AI Models (Cursor-native safe checks)
@@ -55,13 +61,13 @@ def _check_imports(module_names: list[str]) -> tuple[bool, list[str]]:
 def _check_db_connection(dsn: str, check_pgvector: bool = True) -> tuple[bool, str]:
     try:
 
-        conn = psycopg2.connect(dsn)
+        conn = psycopg.connect(dsn)
         try:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute("SELECT 1")
+            with conn.cursor(row_factory=dict_row) as cur:
+                _ = cur.execute("SELECT 1")
                 _ = cur.fetchone()
                 if check_pgvector:
-                    cur.execute("SELECT 1 FROM pg_extension WHERE extname='vector'")
+                    _ = cur.execute("SELECT 1 FROM pg_extension WHERE extname='vector'")
                     has_vector = cur.fetchone() is not None
                     if not has_vector:
                         return False, "pgvector extension not found (CREATE EXTENSION vector)"
@@ -73,8 +79,8 @@ def _check_db_connection(dsn: str, check_pgvector: bool = True) -> tuple[bool, s
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Setup validator for Cursor-native AI models")
-    parser.add_argument("--dsn", default=os.getenv("POSTGRES_DSN", ""), help="PostgreSQL DSN for optional checks")
-    parser.add_argument("--check-db", action="store_true", help="Attempt DB connection and pgvector check")
+    _ = parser.add_argument("--dsn", default=os.getenv("POSTGRES_DSN", ""), help="PostgreSQL DSN for optional checks")
+    _ = parser.add_argument("--check-db", action="store_true", help="Attempt DB connection and pgvector check")
     args = parser.parse_args()
 
     overall_ok = True

@@ -16,32 +16,35 @@ from __future__ import annotations
 
 import json
 import os
-import time
-from pathlib import Path
-from typing import Any, Optional
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+import sys
+from typing import Any
+
+import psycopg
+from psycopg.rows import dict_row
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class EvaluationSystemStatus(BaseModel):
     """Current evaluation system status and metrics with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
     )
 
     # RAGChecker Baseline (September 2, 2025)
-    current_baseline: dict[str, float] = Field(
+    current_baseline: dict[str, float | int] = Field(
         default_factory=lambda: {"precision": 0.159, "recall": 0.166, "f1_score": 0.159, "faithfulness": 0.0},  # TBD
         description="Current baseline metrics",
     )
 
     # Target Metrics
-    target_metrics: dict[str, float] = Field(
+    target_metrics: dict[str, float | int] = Field(
         default_factory=lambda: {"precision": 0.20, "recall": 0.45, "f1_score": 0.22, "faithfulness": 0.60},
         description="Target metrics to achieve",
     )
@@ -64,12 +67,10 @@ class EvaluationSystemStatus(BaseModel):
 
     @field_validator("current_baseline", "target_metrics")
     @classmethod
-    def validate_metrics(cls, v):
+    def validate_metrics(cls, v: dict[str, float | int]) -> dict[str, float | int]:
         """Validate metrics are within valid ranges."""
         for key, value in v.items():
-            if not isinstance(value, (int, float)):
-                raise ValueError(f"Metric {key} must be numeric")
-            if not 0.0 <= value <= 1.0:
+            if not 0.0 <= float(value) <= 1.0:
                 raise ValueError(f"Metric {key} must be between 0.0 and 1.0")
         return v
 
@@ -77,7 +78,7 @@ class EvaluationSystemStatus(BaseModel):
 class EvaluationWorkflow(BaseModel):
     """Step-by-step evaluation execution workflow with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
@@ -90,7 +91,7 @@ class EvaluationWorkflow(BaseModel):
 
     @field_validator("workflow_name")
     @classmethod
-    def validate_workflow_name(cls, v):
+    def validate_workflow_name(cls, v: str) -> str:
         """Validate workflow name is not empty."""
         if not v or not v.strip():
             raise ValueError("Workflow name cannot be empty")
@@ -98,7 +99,7 @@ class EvaluationWorkflow(BaseModel):
 
     @field_validator("steps", "success_criteria")
     @classmethod
-    def validate_non_empty_lists(cls, v):
+    def validate_non_empty_lists(cls, v: list[Any]) -> list[Any]:
         """Validate that required lists are not empty."""
         if not v:
             raise ValueError("List cannot be empty")
@@ -108,7 +109,7 @@ class EvaluationWorkflow(BaseModel):
 class MemorySystemKnowledge(BaseModel):
     """Memory system usage and optimization knowledge with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
@@ -174,7 +175,7 @@ class MemorySystemKnowledge(BaseModel):
 class LessonsLearned(BaseModel):
     """Historical insights and lessons learned with Pydantic validation."""
 
-    model_config = ConfigDict(
+    model_config: ConfigDict = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
@@ -230,7 +231,7 @@ class LessonsLearned(BaseModel):
 
     @field_validator("evaluation_lessons", "memory_lessons")
     @classmethod
-    def validate_lessons(cls, v):
+    def validate_lessons(cls, v: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Validate lesson structure."""
         for lesson in v:
             required_fields = ["lesson", "impact", "solution", "status"]
@@ -245,11 +246,11 @@ class LessonsLearned(BaseModel):
 class AgentMemoryTrainer:
     """Trains agents on evaluation system and memory usage"""
 
-    def __init__(self, dsn: str):
-        self.dsn = dsn
-        self.eval_status = EvaluationSystemStatus()
-        self.memory_knowledge = MemorySystemKnowledge()
-        self.lessons_learned = LessonsLearned()
+    def __init__(self, dsn: str) -> None:
+        self.dsn: str = dsn
+        self.eval_status: EvaluationSystemStatus = EvaluationSystemStatus()
+        self.memory_knowledge: MemorySystemKnowledge = MemorySystemKnowledge()
+        self.lessons_learned: LessonsLearned = LessonsLearned()
 
     def create_evaluation_workflows(self) -> dict[str, EvaluationWorkflow]:
         """Create comprehensive evaluation workflows for agent training"""
@@ -406,11 +407,11 @@ class AgentMemoryTrainer:
         """Store agent knowledge in database for memory system integration"""
 
         try:
-            conn = psycopg2.connect(self.dsn)
-            cur = conn.cursor(cursor_factory=RealDictCursor)
+            conn = psycopg.connect(self.dsn)
+            cur = conn.cursor(row_factory=dict_row)
 
             # Create agent knowledge table if not exists
-            cur.execute(
+            _ = cur.execute(
                 """
                 CREATE TABLE IF NOT EXISTS agent_knowledge_base (
                     id SERIAL PRIMARY KEY,
@@ -423,7 +424,7 @@ class AgentMemoryTrainer:
             )
 
             # Store knowledge base
-            cur.execute(
+            _ = cur.execute(
                 """
                 INSERT INTO agent_knowledge_base (knowledge_type, knowledge_data)
                 VALUES (%s, %s)
@@ -471,7 +472,7 @@ LESSONS LEARNED:
             """.strip()
 
             # Store in conv_chunks for 48-hour hot memory
-            cur.execute(
+            _ = cur.execute(
                 """
                 INSERT INTO conv_chunks (session_id, chunk_text, embedding, entities, salience_score, created_at)
                 VALUES (%s, %s, %s, %s, %s, %s)

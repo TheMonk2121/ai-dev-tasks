@@ -8,14 +8,19 @@ Following established chunking and embedding guidelines
 import json
 import os
 import re
+
+# Add project paths
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, cast
 
 import numpy as np
-import psycopg2
-from psycopg2.extensions import cursor
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg import Cursor
+from psycopg.rows import dict_row
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from sentence_transformers import SentenceTransformer
 
 # Use your established configuration
@@ -57,10 +62,10 @@ class AtlasQueryReplyExtractor:
         """Extract query-reply pairs from a conversation session."""
         pairs = []
 
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get conversation turns in order
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT node_id, content, metadata, created_at
                     FROM atlas_node 
@@ -202,7 +207,7 @@ class AtlasQueryReplyExtractor:
 
     def store_query_reply_relationships(self, pairs: list[QueryReplyPair]) -> None:
         """Store query-reply relationships in the Atlas graph."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
                 for pair in pairs:
                     # Store query-reply relationship edge
@@ -217,9 +222,9 @@ class AtlasQueryReplyExtractor:
 
                 conn.commit()
 
-    def _create_query_reply_edge(self, cur: cursor, pair: QueryReplyPair) -> None:
+    def _create_query_reply_edge(self, cur: Cursor[Any], pair: QueryReplyPair) -> None:
         """Create the main query-reply relationship edge."""
-        cur.execute(
+        _ = cur.execute(
             """
             INSERT INTO atlas_edge (source_node_id, target_node_id, edge_type, evidence, weight)
             VALUES (%s, %s, %s, %s, %s)
@@ -236,7 +241,7 @@ class AtlasQueryReplyExtractor:
             ),
         )
 
-    def _create_topic_connections(self, cur: cursor, pair: QueryReplyPair) -> None:
+    def _create_topic_connections(self, cur: Cursor[Any], pair: QueryReplyPair) -> None:
         """Create connections to semantic topics."""
         for topic in pair.semantic_topics:
             # Ensure topic node exists
@@ -263,7 +268,7 @@ class AtlasQueryReplyExtractor:
                 (pair.reply_id, topic_id, "addresses_topic", f"Reply addresses topic: {topic}", 0.9),
             )
 
-    def _ensure_topic_node_exists(self, cur: cursor, topic_id: str, topic_name: str) -> None:
+    def _ensure_topic_node_exists(self, cur: Cursor[Any], topic_id: str, topic_name: str) -> None:
         """Ensure a topic node exists in the graph."""
         cur.execute(
             """
@@ -286,7 +291,7 @@ class AtlasQueryReplyExtractor:
         """Determine if content should be chunked based on your guidelines."""
         return len(content) > self.chunk_size
 
-    def _create_chunked_content(self, cur: cursor, pair: QueryReplyPair) -> None:
+    def _create_chunked_content(self, cur: Cursor[Any], pair: QueryReplyPair) -> None:
         """Create chunked versions of long content following your guidelines."""
         # Chunk query if needed
         if self._should_chunk_content(pair.query_content):
@@ -297,7 +302,7 @@ class AtlasQueryReplyExtractor:
             self._chunk_and_store_content(cur, pair.reply_id, pair.reply_content, "reply_chunk", pair.reply_embedding)
 
     def _chunk_and_store_content(
-        self, cur: cursor, parent_id: str, content: str, chunk_type: str, _parent_embedding: list[float]
+        self, cur: Cursor[Any], parent_id: str, content: str, chunk_type: str, _parent_embedding: list[float]
     ) -> None:
         """Chunk content following your established guidelines."""
         chunks = self._chunk_content_semantic(content)
@@ -417,10 +422,10 @@ class AtlasQueryReplyExtractor:
 
     def get_query_reply_graph(self, session_id: str) -> dict[str, Any]:
         """Get the query-reply graph for a session."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get query-reply pairs
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT q.node_id as query_id, q.content as query_content,
                            r.node_id as reply_id, r.content as reply_content,
@@ -449,7 +454,7 @@ class AtlasQueryReplyExtractor:
                     )
 
                 # Get topic connections
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT DISTINCT t.node_id as topic_id, t.title as topic_name
                     FROM atlas_node t

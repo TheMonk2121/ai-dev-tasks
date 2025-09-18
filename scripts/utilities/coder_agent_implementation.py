@@ -89,14 +89,14 @@ class RefactoringSuggestion:
 class CoderDatabase:
     """Database for storing code analysis data and cache."""
 
-    def __init__(self, db_path: str = "coder_agent.db"):
-        self.db_path = db_path
+    def __init__() -> Any:
+        self.db_path: Any = db_path
         self._init_database()
 
-    def _init_database(self):
+    def _init_database(self: Any):
         """Initialize the coder database."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        conn: Any = sqlite3.connect(self.db_path)
+        cursor: Any = conn.cursor()
 
         # Create code analysis table
         cursor.execute(
@@ -147,8 +147,8 @@ class CoderDatabase:
 
     def store_analysis(self, analysis: CodeAnalysis) -> str:
         """Store code analysis in database."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        conn: Any = sqlite3.connect(self.db_path)
+        cursor: Any = conn.cursor()
 
         cursor.execute(
             """
@@ -179,8 +179,8 @@ class CoderDatabase:
 
     def get_analysis(self, analysis_id: str) -> CodeAnalysis | None:
         """Get code analysis by ID."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        conn: Any = sqlite3.connect(self.db_path)
+        cursor: Any = conn.cursor()
 
         cursor.execute(
             """
@@ -191,7 +191,7 @@ class CoderDatabase:
             (analysis_id,),
         )
 
-        row = cursor.fetchone()
+        row: Any = cursor.fetchone()
         conn.close()
 
         if row:
@@ -218,23 +218,23 @@ class CoderDatabase:
 class CoderAgent:
     """Specialized agent for coding best practices and code quality improvements."""
 
-    def __init__(self):
-        self.name = "Coder Agent"
-        self.capabilities = [
+    def __init__(self: Any):
+        self.name: Any = "Coder Agent"
+        self.capabilities: Any = [
             "code_quality_assessment",
             "performance_analysis",
             "security_analysis",
             "refactoring_suggestions",
             "best_practices_validation",
         ]
-        self.database = CoderDatabase()
+        self.database: Any = CoderDatabase()
         self.analysis_cache: dict[str, CodeAnalysis] = {}
-        self.usage_count = 0
-        self.error_count = 0
-        self.last_used = time.time()
+        self.usage_count: Any = 0
+        self.error_count: Any = 0
+        self.last_used: Any = time.time()
 
         # Language-specific patterns and rules
-        self.language_patterns = {
+        self.language_patterns: Any = {
             "python": {
                 "file_extension": r"\.py$",
                 "complexity_patterns": [
@@ -275,15 +275,15 @@ class CoderAgent:
 
     async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process coding request."""
-        start_time = time.time()
+        start_time: Any = time.time()
 
         try:
-            file_path = request.get("file_path", "")
-            code_content = request.get("code_content", "")
-            analysis_type = request.get("analysis_type", "comprehensive")
+            file_path: Any = request.get("file_path", "")
+            code_content: Any = request.get("code_content", "")
+            analysis_type: Any = request.get("analysis_type", "comprehensive")
 
             # Check cache first
-            cache_key = self._generate_cache_key(file_path, code_content, analysis_type)
+            cache_key: Any = self._generate_cache_key(file_path, code_content, analysis_type)
             if cache_key in self.analysis_cache:
                 cached_analysis = self.analysis_cache[cache_key]
                 if time.time() - cached_analysis.timestamp < 1800:  # 30 min cache
@@ -301,9 +301,9 @@ class CoderAgent:
 
             processing_time = time.time() - start_time
             self.usage_count += 1
-            self.last_used = time.time()
+            self.last_used: Any = time.time()
 
-            response = self._format_analysis_response(analysis)
+            response: Any = self._format_analysis_response(analysis)
             response["processing_time"] = processing_time
 
             return response
@@ -346,7 +346,7 @@ class CoderAgent:
             await asyncio.sleep(0.2)
 
         # Detect language
-        language = self._detect_language(file_path)
+        language: Any = self._detect_language(file_path)
 
         # Perform analysis based on type
         if analysis_type == "quality":
@@ -370,7 +370,7 @@ class CoderAgent:
         best_practices = []
 
         # Check for common quality issues
-        lines = code_content.split("\n")
+        lines: Any = code_content.split("\n")
         for i, line in enumerate(lines, 1):
             # Check for TODO/FIXME comments
             if re.search(r"TODO|FIXME", line, re.IGNORECASE):
@@ -452,7 +452,7 @@ class CoderAgent:
         best_practices = []
 
         # Check for performance issues
-        lines = code_content.split("\n")
+        lines: Any = code_content.split("\n")
         for i, line in enumerate(lines, 1):
             # Check for inefficient patterns
             if re.search(r"for.*for", line):  # Nested loops
@@ -515,7 +515,7 @@ class CoderAgent:
         best_practices = []
 
         # Check for security issues
-        lines = code_content.split("\n")
+        lines: Any = code_content.split("\n")
         for i, line in enumerate(lines, 1):
             # Check for dangerous functions
             if re.search(r"eval\(|exec\(", line):
@@ -682,7 +682,7 @@ async def main():
         {
             "file_path": "example.py",
             "code_content": """
-def calculate_fibonacci(n):
+def calculate_fibonacci(n: Any):
     if n <= 1:
         return n
     return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
@@ -699,16 +699,16 @@ for i in range(10):
         {
             "file_path": "performance_example.py",
             "code_content": """
-def inefficient_string_builder():
+def inefficient_string_builder() -> Any:
     result = ""
-    for i in range(1000):
+    for i: Any in range(1000):
         result += str(i)  # Inefficient string concatenation
     return result
 
-def nested_loops():
-    for i in range(100):
-        for j in range(100):
-            for k in range(100):
+def nested_loops() -> Any:
+    for i: Any in range(100):
+        for j: Any in range(100):
+            for k: Any in range(100):
                 pass  # Triple nested loop
 """,
             "analysis_type": "performance",
@@ -717,11 +717,11 @@ def nested_loops():
             "file_path": "security_example.py",
             "code_content": """
 
-def unsafe_query(user_input):
+def unsafe_query(user_input: Any):
     query = f"SELECT * FROM users WHERE name = '{user_input}'"
     return eval(query)  # Dangerous eval usage
 
-def unsafe_exec(code):
+def unsafe_exec(code: Any):
     exec(code)  # Dangerous exec usage
 """,
             "analysis_type": "security",
@@ -748,7 +748,7 @@ def unsafe_exec(code):
 
     # Print agent status
     print("\n--- Agent Status ---")
-    status = agent.get_status()
+    status: Any = agent.get_status()
     print(json.dumps(status, indent=2))
 
 if __name__ == "__main__":

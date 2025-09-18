@@ -45,7 +45,7 @@ def should_create_prd(context: dict[str, Any]) -> bool:
     """Determine if PRD creation is needed based on context."""
     # Simple heuristic: if priority is HIGH/CRITICAL and description is detailed
     priority = context.get("priority", "").lower()
-    description = context.get("what", "")
+    description: Any = context.get("what", "")
 
     return ("high" in priority or "critical" in priority) and len(description) > 50
 
@@ -72,8 +72,8 @@ def generate_prd_if_needed(backlog_id: str, context: dict[str, Any]) -> str | No
 
 def create_execution_plan(backlog_id: str, context: dict[str, Any], prd_path: str | None) -> dict[str, Any]:
     """Create execution plan with next steps."""
-    next_action = context.get("next", "")
-    priority = context.get("priority", "")
+    next_action: Any = context.get("next", "")
+    priority: Any = context.get("priority", "")
 
     # Determine execution approach
     if prd_path:
@@ -109,9 +109,9 @@ def create_execution_plan(backlog_id: str, context: dict[str, Any], prd_path: st
 def format_execution_output(context: dict[str, Any], execution_plan: dict[str, Any]) -> str:
     """Format clean execution output for immediate use."""
     backlog_id = execution_plan["backlog_id"]
-    title = context.get("title", "")
-    what = context.get("what", "")
-    where = context.get("where", "")
+    title: Any = context.get("title", "")
+    what: Any = context.get("what", "")
+    where: Any = context.get("where", "")
     priority = context.get("priority", "").replace("🔥 **HIGH** - ", "").replace("🔥 **CRITICAL** - ", "")
 
     output = f"""
@@ -170,7 +170,7 @@ Examples:
     ap.add_argument("--execute", action="store_true", help="Full execution setup")
     ap.add_argument("--preview", action="store_true", help="Preview execution plan")
     ap.add_argument("--context-only", action="store_true", help="Just show context bundle")
-    args = ap.parse_args()
+    args: Any = ap.parse_args()
 
     # Step 1: Extract context
     print(f"🔄 Extracting context for {args.backlog_id}...")
@@ -178,10 +178,10 @@ Examples:
 
     if args.context_only:
         # Just show clean context for pickup
-        title = context.get("title", "")
-        what = context.get("what", "")
-        where = context.get("where", "")
-        next_action = context.get("next", "")
+        title: Any = context.get("title", "")
+        what: Any = context.get("what", "")
+        where: Any = context.get("where", "")
+        next_action: Any = context.get("next", "")
 
         print(
             f"""

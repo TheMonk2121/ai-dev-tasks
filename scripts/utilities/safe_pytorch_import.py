@@ -13,7 +13,7 @@ inspect module compatibility issue by patching the problematic inspect
 functions before PyTorch imports.
 """
 
-def patch_inspect_for_pytorch():
+def patch_inspect_for_pytorch() -> Any:
     """Patch inspect module functions to handle PyTorch custom ops safely."""
     # Store original functions BEFORE patching
     original_functions = {
@@ -33,7 +33,7 @@ def patch_inspect_for_pytorch():
                 # This is the specific PyTorch 2.8.0 + Python 3.12 issue
                 # Create a minimal frame info object using the current frame as fallback
                 try:
-                    current_frame = inspect.currentframe()
+                    current_frame: Any = inspect.currentframe()
                     if current_frame:
                         return inspect.FrameInfo(
                             frame=current_frame,
@@ -48,12 +48,12 @@ def patch_inspect_for_pytorch():
 
                 # If all else fails, return a simple tuple-like object
                 class MockFrameInfo:
-                    def __init__(self):
-                        self.filename = "<pytorch_custom_op>"
-                        self.lineno = 0
-                        self.function = "<custom_op>"
-                        self.code_context = None
-                        self.index = 0
+                    def __init__(self: Any):
+                        self.filename: Any = "<pytorch_custom_op>"
+                        self.lineno: Any = 0
+                        self.function: Any = "<custom_op>"
+                        self.code_context: Any = None
+                        self.index: Any = 0
 
                 return MockFrameInfo()
             raise

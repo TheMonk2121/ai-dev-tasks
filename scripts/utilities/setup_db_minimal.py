@@ -69,7 +69,7 @@ def ensure_performance_helpers() -> None:
         conn.commit()
 
 def main() -> None:
-    dsn = os.getenv("DATABASE_URL", "")
+    dsn: Any = os.getenv("DATABASE_URL", "")
     # High-impact retrieval indexes
     ensure_retrieval_schema()
     # Core decision/supersedence setup

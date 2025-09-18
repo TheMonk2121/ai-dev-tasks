@@ -16,7 +16,7 @@ for backward compatibility with tools that still expect requirements.txt files.
 def run_command(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
     """Run a command and return the result."""
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=check)
+        result: Any = subprocess.run(cmd, capture_output=True, text=True, check=check)
         return result
     except subprocess.CalledProcessError as e:
         print(f"❌ Command failed: {' '.join(cmd)}")
@@ -88,9 +88,9 @@ def export_lock_to_requirements(output_file: str = "requirements-lock.txt") -> N
 
     print(f"✅ Locked requirements exported to {output_file}")
 
-def main():
+def main() -> Any:
     """Main function."""
-    parser = argparse.ArgumentParser(description="Export dependencies from pyproject.toml to requirements.txt format")
+    parser: Any = argparse.ArgumentParser(description="Export dependencies from pyproject.toml to requirements.txt format")
     parser.add_argument(
         "--output", "-o", default="requirements.txt", help="Output file name (default: requirements.txt)"
     )
@@ -98,7 +98,7 @@ def main():
     parser.add_argument("--lock", "-l", action="store_true", help="Export from uv.lock (locked versions)")
     parser.add_argument("--preview", "-p", action="store_true", help="Show preview without writing file")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     if args.preview:
         print("📋 Preview mode - showing what would be exported:")

@@ -9,10 +9,10 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 #!/usr/bin/env python3
 """
@@ -31,11 +31,20 @@ This script implements cache invalidation mechanisms including:
 # Add project root to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Import database utilities
+try:
+    from psycopg.rows import dict_row
+
+    from src.common.psycopg3_config import Psycopg3Config
+except ImportError:
+    # Fallback for development/testing
+    dict_row = Any
+
 # Database configuration - simplified for this script
-def get_database_url():
+def get_database_url() -> Any:
     return os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
 
-def validate_database_config():
+def validate_database_config() -> Any:
     database_url = get_database_url()
     return database_url.startswith("postgresql://")
 
@@ -71,19 +80,19 @@ class CacheInvalidationSystem:
 
     def __init__(self, database_url: str | None = None, config: InvalidationConfig | None = None):
         """Initialize cache invalidation system"""
-        self.database_url = database_url or get_database_url()
-        self.config = config or InvalidationConfig()
-        self.connection = None
-        self.cursor = None
-        self.running = False
-        self.cleanup_thread = None
+        self.database_url: str = database_url or get_database_url()
+        self.config: InvalidationConfig = config or InvalidationConfig()
+        self.connection: Any = None
+        self.cursor: Any = None
+        self.is_running: bool = False
+        self.cleanup_thread: threading.Thread | None = None
 
         # Validate database configuration
         if not validate_database_config():
             raise ValueError("Invalid database configuration")
 
         # Initialize statistics
-        self.stats = {
+        self.stats: Any = {
             "total_invalidations": 0,
             "ttl_invalidations": 0,
             "similarity_invalidations": 0,
@@ -93,26 +102,30 @@ class CacheInvalidationSystem:
             "cache_size_mb": 0,
         }
 
-    def __enter__(self):
+    def __enter__(self: Any):
         """Context manager entry"""
         self.connect()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: Any) -> None:
         """Context manager exit with cleanup"""
         self.disconnect()
 
-    def connect(self):
+    def connect(self) -> None:
         """Establish database connection"""
         try:
-            self.connection = psycopg2.connect(self.database_url)
-            self.cursor = self.connection.cursor(cursor_factory=RealDictCursor)
-            logger.info("Database connection established successfully")
+            # Use Psycopg3Config for proper connection management
+            config = Psycopg3Config()
+            self.connection = config.get_connection()
+            if self.connection:
+                logger.info("Database connection established successfully")
+            else:
+                raise ConnectionError("Failed to establish database connection")
         except Exception as e:
             logger.error(f"Failed to connect to database: {e}")
             raise
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         """Close database connection"""
         if self.cursor:
             self.cursor.close()
@@ -122,43 +135,48 @@ class CacheInvalidationSystem:
 
     def get_cache_statistics(self) -> dict[str, Any]:
         """Get current cache statistics"""
+        if not self.connection:
+            logger.error("No database connection available")
+            return {}
+            
         try:
-            # Get total cache entries
-            self.cursor.execute(
+            with self.connection.cursor(row_factory=dict_row) as cur:
+                # Get total cache entries
+                cur.execute(
+                    """
+                    SELECT
+                        COUNT(*) as total_entries,
+                        COUNT(*) FILTER (WHERE cache_hit = TRUE) as cache_hits,
+                        COUNT(*) FILTER (WHERE cache_hit = FALSE) as cache_misses,
+                        AVG(similarity_score) as avg_similarity,
+                        MIN(last_verified) as oldest_verification,
+                        MAX(last_verified) as newest_verification
+                    FROM episodic_logs;
                 """
-                SELECT
-                    COUNT(*) as total_entries,
-                    COUNT(*) FILTER (WHERE cache_hit = TRUE) as cache_hits,
-                    COUNT(*) FILTER (WHERE cache_hit = FALSE) as cache_misses,
-                    AVG(similarity_score) as avg_similarity,
-                    MIN(last_verified) as oldest_verification,
-                    MAX(last_verified) as newest_verification
-                FROM episodic_logs;
-            """
-            )
+                )
 
-            stats = self.cursor.fetchone()
+                stats = cur.fetchone()
 
-            # Get table size
-            self.cursor.execute(
+                # Get table size
+                cur.execute(
+                    """
+                    SELECT pg_size_pretty(pg_total_relation_size('episodic_logs')) as table_size
+                    FROM pg_class WHERE relname = 'episodic_logs';
                 """
-                SELECT pg_size_pretty(pg_total_relation_size('episodic_logs')) as table_size
-                FROM pg_class WHERE relname = 'episodic_logs';
-            """
-            )
+                )
 
-            size_info = self.cursor.fetchone()
+                size_info = cur.fetchone()
 
-            return {
-                "total_entries": stats["total_entries"] if stats else 0,
-                "cache_hits": stats["cache_hits"] if stats else 0,
-                "cache_misses": stats["cache_misses"] if stats else 0,
-                "avg_similarity": float(stats["avg_similarity"]) if stats and stats["avg_similarity"] else 0.0,
-                "oldest_verification": stats["oldest_verification"] if stats else None,
-                "newest_verification": stats["newest_verification"] if stats else None,
-                "table_size": size_info["table_size"] if size_info else "Unknown",
-                "system_stats": self.stats,
-            }
+                return {
+                    "total_entries": stats["total_entries"] if stats else 0,
+                    "cache_hits": stats["cache_hits"] if stats else 0,
+                    "cache_misses": stats["cache_misses"] if stats else 0,
+                    "avg_similarity": float(stats["avg_similarity"]) if stats and stats["avg_similarity"] else 0.0,
+                    "oldest_verification": stats["oldest_verification"] if stats else None,
+                    "newest_verification": stats["newest_verification"] if stats else None,
+                    "table_size": size_info["table_size"] if size_info else "Unknown",
+                    "system_stats": self.stats,
+                }
 
         except Exception as e:
             logger.error(f"Error getting cache statistics: {e}")
@@ -166,208 +184,232 @@ class CacheInvalidationSystem:
 
     def invalidate_by_ttl(self) -> int:
         """Invalidate cache entries based on TTL"""
+        if not self.connection:
+            logger.error("No database connection available")
+            return 0
+            
         try:
             ttl_cutoff = datetime.now() - timedelta(hours=self.config.ttl_hours)
 
-            # Find entries to invalidate
-            self.cursor.execute(
-                """
-                SELECT id, last_verified, similarity_score
-                FROM episodic_logs
-                WHERE cache_hit = TRUE
-                AND last_verified < %s
-                ORDER BY last_verified ASC;
-            """,
-                (ttl_cutoff,),
-            )
+            with self.connection.cursor(row_factory=dict_row) as cur:
+                # Find entries to invalidate
+                cur.execute(
+                    """
+                    SELECT id, last_verified, similarity_score
+                    FROM episodic_logs
+                    WHERE cache_hit = TRUE
+                    AND last_verified < %s
+                    ORDER BY last_verified ASC;
+                """,
+                    (ttl_cutoff,),
+                )
 
-            expired_entries = self.cursor.fetchall()
+                expired_entries = cur.fetchall()
 
-            if not expired_entries:
-                logger.info("No TTL-expired entries found")
-                return 0
+                if not expired_entries:
+                    logger.info("No TTL-expired entries found")
+                    return 0
 
-            # Invalidate expired entries
-            expired_ids = [entry["id"] for entry in expired_entries]
-            self.cursor.execute(
-                """
-                UPDATE episodic_logs
-                SET cache_hit = FALSE,
-                    similarity_score = 0.0,
-                    last_verified = NOW()
-                WHERE id = ANY(%s);
-            """,
-                (expired_ids,),
-            )
+                # Invalidate expired entries
+                expired_ids = [entry["id"] for entry in expired_entries]
+                cur.execute(
+                    """
+                    UPDATE episodic_logs
+                    SET cache_hit = FALSE,
+                        similarity_score = 0.0,
+                        last_verified = NOW()
+                    WHERE id = ANY(%s);
+                """,
+                    (expired_ids,),
+                )
 
-            invalidated_count = self.cursor.rowcount
-            self.connection.commit()
+                invalidated_count = cur.rowcount
+                self.connection.commit()
 
-            # Update statistics
-            self.stats["ttl_invalidations"] += invalidated_count
-            self.stats["total_invalidations"] += invalidated_count
+                # Update statistics
+                self.stats["ttl_invalidations"] += invalidated_count
+                self.stats["total_invalidations"] += invalidated_count
 
-            logger.info(f"TTL invalidation: {invalidated_count} entries expired and invalidated")
-            return invalidated_count
+                logger.info(f"TTL invalidation: {invalidated_count} entries expired and invalidated")
+                return invalidated_count
 
         except Exception as e:
             logger.error(f"Error during TTL invalidation: {e}")
-            self.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             return 0
 
     def invalidate_by_similarity_threshold(self, threshold: float | None = None) -> int:
         """Invalidate cache entries below similarity threshold"""
+        if not self.connection:
+            logger.error("No database connection available")
+            return 0
+            
         try:
             similarity_threshold = threshold or self.config.similarity_threshold
 
-            # Find entries below threshold
-            self.cursor.execute(
-                """
-                SELECT id, similarity_score, last_verified
-                FROM episodic_logs
-                WHERE cache_hit = TRUE
-                AND similarity_score < %s
-                ORDER BY similarity_score ASC;
-            """,
-                (similarity_threshold,),
-            )
+            with self.connection.cursor(row_factory=dict_row) as cur:
+                # Find entries below threshold
+                cur.execute(
+                    """
+                    SELECT id, similarity_score, last_verified
+                    FROM episodic_logs
+                    WHERE cache_hit = TRUE
+                    AND similarity_score < %s
+                    ORDER BY similarity_score ASC;
+                """,
+                    (similarity_threshold,),
+                )
 
-            low_similarity_entries = self.cursor.fetchall()
+                low_similarity_entries = cur.fetchall()
 
-            if not low_similarity_entries:
-                logger.info(f"No entries below similarity threshold {similarity_threshold}")
-                return 0
+                if not low_similarity_entries:
+                    logger.info(f"No entries below similarity threshold {similarity_threshold}")
+                    return 0
 
-            # Invalidate low similarity entries
-            low_similarity_ids = [entry["id"] for entry in low_similarity_entries]
-            self.cursor.execute(
-                """
-                UPDATE episodic_logs
-                SET cache_hit = FALSE,
-                    similarity_score = 0.0,
-                    last_verified = NOW()
-                WHERE id = ANY(%s);
-            """,
-                (low_similarity_ids,),
-            )
+                # Invalidate low similarity entries
+                low_similarity_ids = [entry["id"] for entry in low_similarity_entries]
+                cur.execute(
+                    """
+                    UPDATE episodic_logs
+                    SET cache_hit = FALSE,
+                        similarity_score = 0.0,
+                        last_verified = NOW()
+                    WHERE id = ANY(%s);
+                """,
+                    (low_similarity_ids,),
+                )
 
-            invalidated_count = self.cursor.rowcount
-            self.connection.commit()
+                invalidated_count = cur.rowcount
+                self.connection.commit()
 
-            # Update statistics
-            self.stats["similarity_invalidations"] += invalidated_count
-            self.stats["total_invalidations"] += invalidated_count
+                # Update statistics
+                self.stats["similarity_invalidations"] += invalidated_count
+                self.stats["total_invalidations"] += invalidated_count
 
-            logger.info(f"Similarity invalidation: {invalidated_count} entries below threshold {similarity_threshold}")
-            return invalidated_count
+                logger.info(f"Similarity invalidation: {invalidated_count} entries below threshold {similarity_threshold}")
+                return invalidated_count
 
         except Exception as e:
             logger.error(f"Error during similarity invalidation: {e}")
-            self.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             return 0
 
     def invalidate_by_frequency(self, min_verification_age_hours: int = 1) -> int:
         """Invalidate cache entries based on verification frequency"""
+        if not self.connection:
+            logger.error("No database connection available")
+            return 0
+            
         try:
             frequency_cutoff = datetime.now() - timedelta(hours=min_verification_age_hours)
 
-            # Find entries that haven't been verified recently
-            self.cursor.execute(
-                """
-                SELECT id, last_verified, similarity_score
-                FROM episodic_logs
-                WHERE cache_hit = TRUE
-                AND last_verified < %s
-                AND similarity_score < 0.8
-                ORDER BY last_verified ASC;
-            """,
-                (frequency_cutoff,),
-            )
+            with self.connection.cursor(row_factory=dict_row) as cur:
+                # Find entries that haven't been verified recently
+                cur.execute(
+                    """
+                    SELECT id, last_verified, similarity_score
+                    FROM episodic_logs
+                    WHERE cache_hit = TRUE
+                    AND last_verified < %s
+                    AND similarity_score < 0.8
+                    ORDER BY last_verified ASC;
+                """,
+                    (frequency_cutoff,),
+                )
 
-            frequency_entries = self.cursor.fetchall()
+                frequency_entries = cur.fetchall()
 
-            if not frequency_entries:
-                logger.info("No frequency-based invalidation entries found")
-                return 0
+                if not frequency_entries:
+                    logger.info("No frequency-based invalidation entries found")
+                    return 0
 
-            # Invalidate frequency-based entries
-            frequency_ids = [entry["id"] for entry in frequency_entries]
-            self.cursor.execute(
-                """
-                UPDATE episodic_logs
-                SET cache_hit = FALSE,
-                    similarity_score = 0.0,
-                    last_verified = NOW()
-                WHERE id = ANY(%s);
-            """,
-                (frequency_ids,),
-            )
+                # Invalidate frequency-based entries
+                frequency_ids = [entry["id"] for entry in frequency_entries]
+                cur.execute(
+                    """
+                    UPDATE episodic_logs
+                    SET cache_hit = FALSE,
+                        similarity_score = 0.0,
+                        last_verified = NOW()
+                    WHERE id = ANY(%s);
+                """,
+                    (frequency_ids,),
+                )
 
-            invalidated_count = self.cursor.rowcount
-            self.connection.commit()
+                invalidated_count = cur.rowcount
+                self.connection.commit()
 
-            # Update statistics
-            self.stats["frequency_invalidations"] += invalidated_count
-            self.stats["total_invalidations"] += invalidated_count
+                # Update statistics
+                self.stats["frequency_invalidations"] += invalidated_count
+                self.stats["total_invalidations"] += invalidated_count
 
-            logger.info(f"Frequency invalidation: {invalidated_count} entries invalidated")
-            return invalidated_count
+                logger.info(f"Frequency invalidation: {invalidated_count} entries invalidated")
+                return invalidated_count
 
         except Exception as e:
             logger.error(f"Error during frequency invalidation: {e}")
-            self.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             return 0
 
     def manual_invalidation(self, entry_ids: list[int]) -> int:
         """Manually invalidate specific cache entries"""
+        if not self.connection:
+            logger.error("No database connection available")
+            return 0
+            
         try:
             if not entry_ids:
                 logger.info("No entry IDs provided for manual invalidation")
                 return 0
 
-            # Invalidate specified entries
-            self.cursor.execute(
-                """
-                UPDATE episodic_logs
-                SET cache_hit = FALSE,
-                    similarity_score = 0.0,
-                    last_verified = NOW()
-                WHERE id = ANY(%s);
-            """,
-                (entry_ids,),
-            )
+            with self.connection.cursor(row_factory=dict_row) as cur:
+                # Invalidate specified entries
+                cur.execute(
+                    """
+                    UPDATE episodic_logs
+                    SET cache_hit = FALSE,
+                        similarity_score = 0.0,
+                        last_verified = NOW()
+                    WHERE id = ANY(%s);
+                """,
+                    (entry_ids,),
+                )
 
-            invalidated_count = self.cursor.rowcount
-            self.connection.commit()
+                invalidated_count = cur.rowcount
+                self.connection.commit()
 
-            # Update statistics
-            self.stats["manual_invalidations"] += invalidated_count
-            self.stats["total_invalidations"] += invalidated_count
+                # Update statistics
+                self.stats["manual_invalidations"] += invalidated_count
+                self.stats["total_invalidations"] += invalidated_count
 
-            logger.info(f"Manual invalidation: {invalidated_count} entries invalidated")
-            return invalidated_count
+                logger.info(f"Manual invalidation: {invalidated_count} entries invalidated")
+                return invalidated_count
 
         except Exception as e:
             logger.error(f"Error during manual invalidation: {e}")
-            self.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             return 0
 
     def cleanup_cache(self) -> dict[str, Any]:
         """Perform comprehensive cache cleanup"""
         try:
             logger.info("Starting comprehensive cache cleanup")
-            cleanup_start = datetime.now()
+            cleanup_start: Any = datetime.now()
 
             # Get initial statistics
-            initial_stats = self.get_cache_statistics()
+            initial_stats: Any = self.get_cache_statistics()
 
             # Perform all invalidation strategies
-            ttl_count = self.invalidate_by_ttl()
-            similarity_count = self.invalidate_by_similarity_threshold()
-            frequency_count = self.invalidate_by_frequency()
+            ttl_count: Any = self.invalidate_by_ttl()
+            similarity_count: Any = self.invalidate_by_similarity_threshold()
+            frequency_count: Any = self.invalidate_by_frequency()
 
             # Get final statistics
-            final_stats = self.get_cache_statistics()
+            final_stats: Any = self.get_cache_statistics()
 
             # Calculate cleanup metrics
             cleanup_duration = datetime.now() - cleanup_start
@@ -399,38 +441,38 @@ class CacheInvalidationSystem:
 
     def _calculate_cache_hit_rate(self, stats: dict[str, Any]) -> float:
         """Calculate cache hit rate from statistics"""
-        total_entries = stats.get("total_entries", 0)
-        cache_hits = stats.get("cache_hits", 0)
+        total_entries: Any = stats.get("total_entries", 0)
+        cache_hits: Any = stats.get("cache_hits", 0)
 
         if total_entries == 0:
             return 0.0
 
         return (cache_hits / total_entries) * 100.0
 
-    def start_background_cleanup(self):
+    def start_background_cleanup(self) -> None:
         """Start background cleanup thread"""
-        if self.running:
+        if self.is_running:
             logger.warning("Background cleanup already running")
             return
 
-        self.running = True
+        self.is_running = True
         self.cleanup_thread = threading.Thread(target=self._background_cleanup_loop, daemon=True)
         self.cleanup_thread.start()
         logger.info("Background cleanup thread started")
 
-    def stop_background_cleanup(self):
+    def stop_background_cleanup(self) -> None:
         """Stop background cleanup thread"""
-        self.running = False
+        self.is_running = False
         if self.cleanup_thread:
             self.cleanup_thread.join(timeout=5)
             logger.info("Background cleanup thread stopped")
 
-    def _background_cleanup_loop(self):
+    def _background_cleanup_loop(self) -> None:
         """Background cleanup loop"""
-        while self.running:
+        while self.is_running:
             try:
                 logger.info("Running scheduled cache cleanup")
-                self.cleanup_cache()
+                _ = self.cleanup_cache()
 
                 # Wait for next cleanup interval
                 time.sleep(self.config.cleanup_interval_minutes * 60)
@@ -442,7 +484,7 @@ class CacheInvalidationSystem:
     def get_invalidation_report(self) -> dict[str, Any]:
         """Generate comprehensive invalidation report"""
         try:
-            current_stats = self.get_cache_statistics()
+            current_stats: Any = self.get_cache_statistics()
 
             report = {
                 "timestamp": datetime.now().isoformat(),
@@ -467,7 +509,7 @@ class CacheInvalidationSystem:
         """Generate recommendations based on current cache statistics"""
         recommendations = []
 
-        cache_hit_rate = self._calculate_cache_hit_rate(stats)
+        cache_hit_rate: Any = self._calculate_cache_hit_rate(stats)
 
         if cache_hit_rate < 50:
             recommendations.append("Cache hit rate is low. Consider adjusting similarity threshold or TTL.")
@@ -483,7 +525,7 @@ class CacheInvalidationSystem:
 
         return recommendations
 
-def main():
+def main() -> Any:
     """Main function to test cache invalidation system"""
     try:
         # Create configuration
@@ -501,27 +543,27 @@ def main():
             logger.info("Testing Cache Invalidation System")
 
             # Get initial statistics
-            initial_stats = invalidation_system.get_cache_statistics()
+            initial_stats: Any = invalidation_system.get_cache_statistics()
             logger.info(f"Initial cache statistics: {initial_stats}")
 
             # Test TTL invalidation
-            ttl_count = invalidation_system.invalidate_by_ttl()
+            ttl_count: Any = invalidation_system.invalidate_by_ttl()
             logger.info(f"TTL invalidation result: {ttl_count} entries")
 
             # Test similarity invalidation
-            similarity_count = invalidation_system.invalidate_by_similarity_threshold(0.8)
+            similarity_count: Any = invalidation_system.invalidate_by_similarity_threshold(0.8)
             logger.info(f"Similarity invalidation result: {similarity_count} entries")
 
             # Test frequency invalidation
-            frequency_count = invalidation_system.invalidate_by_frequency(2)
+            frequency_count: Any = invalidation_system.invalidate_by_frequency(2)
             logger.info(f"Frequency invalidation result: {frequency_count} entries")
 
             # Get final statistics
-            final_stats = invalidation_system.get_cache_statistics()
+            final_stats: Any = invalidation_system.get_cache_statistics()
             logger.info(f"Final cache statistics: {final_stats}")
 
             # Generate report
-            report = invalidation_system.get_invalidation_report()
+            report: Any = invalidation_system.get_invalidation_report()
             logger.info(f"Invalidation report: {json.dumps(report, indent=2, default=str)}")
 
             logger.info("Cache invalidation system test completed successfully")

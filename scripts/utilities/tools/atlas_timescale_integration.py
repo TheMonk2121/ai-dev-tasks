@@ -4,15 +4,19 @@ Atlas TimescaleDB Integration
 Time-series analysis for conversation patterns and cross-thread relationships
 """
 
-import json
 import os
+
+# Add project paths
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from sentence_transformers import SentenceTransformer
 
 
@@ -43,22 +47,22 @@ class CrossThreadInsight:
 class AtlasTimescaleIntegration:
     """TimescaleDB integration for conversation time-series analysis."""
     
-    def __init__(self, dsn: str = None):
-        self.dsn = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-        self.embedder = SentenceTransformer("BAAI/bge-large-en-v1.5")
+    def __init__(self, dsn: str | None = None):
+        self.dsn: str = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        self.embedder: SentenceTransformer = SentenceTransformer("BAAI/bge-large-en-v1.5")
         
         # Ensure TimescaleDB extension and hypertables
         self._setup_timescale_tables()
     
     def _setup_timescale_tables(self):
         """Set up TimescaleDB hypertables for time-series analysis."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
                 # Enable TimescaleDB extension
-                cur.execute("CREATE EXTENSION IF NOT EXISTS timescaledb;")
+                _ = cur.execute("CREATE EXTENSION IF NOT EXISTS timescaledb;")
                 
                 # Create conversation_metrics hypertable
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE TABLE IF NOT EXISTS conversation_metrics (
                         timestamp TIMESTAMPTZ NOT NULL,
                         thread_id TEXT NOT NULL,
@@ -73,12 +77,12 @@ class AtlasTimescaleIntegration:
                 
                 # Convert to hypertable if not already
                 try:
-                    cur.execute("SELECT create_hypertable('conversation_metrics', 'timestamp', if_not_exists => TRUE);")
-                except psycopg2.errors.DuplicateTable:
+                    _ = cur.execute("SELECT create_hypertable('conversation_metrics', 'timestamp', if_not_exists => TRUE);")
+                except psycopg.errors.DuplicateTable:
                     pass  # Already a hypertable
                 
                 # Create cross_thread_insights table
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE TABLE IF NOT EXISTS cross_thread_insights (
                         timestamp TIMESTAMPTZ NOT NULL,
                         insight_id TEXT NOT NULL,
@@ -92,17 +96,17 @@ class AtlasTimescaleIntegration:
                 
                 # Convert to hypertable
                 try:
-                    cur.execute("SELECT create_hypertable('cross_thread_insights', 'timestamp', if_not_exists => TRUE);")
-                except psycopg2.errors.DuplicateTable:
+                    _ = cur.execute("SELECT create_hypertable('cross_thread_insights', 'timestamp', if_not_exists => TRUE);")
+                except psycopg.errors.DuplicateTable:
                     pass
                 
                 # Create indexes for efficient querying
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE INDEX IF NOT EXISTS idx_conversation_metrics_thread_time 
                     ON conversation_metrics (thread_id, timestamp DESC);
                 """)
                 
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE INDEX IF NOT EXISTS idx_cross_thread_insights_type_time 
                     ON cross_thread_insights (pattern_type, timestamp DESC);
                 """)
@@ -114,10 +118,10 @@ class AtlasTimescaleIntegration:
         end_time = datetime.now()
         start_time = end_time - timedelta(seconds=time_window)
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get conversation data for time window
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT 
                         COUNT(CASE WHEN metadata->>'role' = 'user' THEN 1 END) as query_count,
                         COUNT(CASE WHEN metadata->>'role' = 'assistant' THEN 1 END) as reply_count,
@@ -137,7 +141,7 @@ class AtlasTimescaleIntegration:
                 metrics_row = cur.fetchone()
                 
                 # Calculate topic diversity
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT DISTINCT 
                         UNNEST(STRING_TO_ARRAY(LOWER(content), ' ')) as word
                     FROM atlas_node 
@@ -150,21 +154,21 @@ class AtlasTimescaleIntegration:
                 topic_diversity = len(set(words)) / max(len(words), 1)
                 
                 # Calculate engagement score (queries per hour)
-                query_count = metrics_row['query_count'] or 0
+                query_count = (metrics_row['query_count'] if metrics_row else 0) or 0
                 engagement_score = query_count / (time_window / 3600.0)
                 
                 metrics = ConversationMetrics(
                     timestamp=end_time,
                     thread_id=thread_id,
                     query_count=query_count,
-                    reply_count=metrics_row['reply_count'] or 0,
-                    avg_response_time=float(metrics_row['avg_response_time'] or 0.0),
+                    reply_count=(metrics_row['reply_count'] if metrics_row else 0) or 0,
+                    avg_response_time=float((metrics_row['avg_response_time'] if metrics_row else 0.0) or 0.0),
                     topic_diversity=topic_diversity,
                     engagement_score=engagement_score
                 )
                 
                 # Store metrics
-                cur.execute("""
+                _ = cur.execute("""
                     INSERT INTO conversation_metrics 
                     (timestamp, thread_id, query_count, reply_count, avg_response_time, topic_diversity, engagement_score)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -189,10 +193,10 @@ class AtlasTimescaleIntegration:
         
         insights = []
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Find threads with similar query patterns
-                cur.execute("""
+                _ = cur.execute("""
                     WITH thread_queries AS (
                         SELECT 
                             metadata->>'thread_id' as thread_id,
@@ -236,7 +240,7 @@ class AtlasTimescaleIntegration:
                     insights.append(insight)
                 
                 # Find temporal patterns (queries at similar times)
-                cur.execute("""
+                _ = cur.execute("""
                     WITH hourly_activity AS (
                         SELECT 
                             metadata->>'thread_id' as thread_id,
@@ -281,7 +285,7 @@ class AtlasTimescaleIntegration:
                 
                 # Store insights
                 for insight in insights:
-                    cur.execute("""
+                    _ = cur.execute("""
                         INSERT INTO cross_thread_insights 
                         (timestamp, insight_id, pattern_type, description, confidence, affected_threads)
                         VALUES (%s, %s, %s, %s, %s, %s)
@@ -303,9 +307,9 @@ class AtlasTimescaleIntegration:
         end_time = datetime.now()
         start_time = end_time - timedelta(hours=hours)
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute("""
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
+                _ = cur.execute("""
                     SELECT 
                         time_bucket('1 hour', timestamp) as hour_bucket,
                         AVG(query_count) as avg_queries,
@@ -336,10 +340,10 @@ class AtlasTimescaleIntegration:
         end_time = datetime.now()
         start_time = end_time - timedelta(hours=hours)
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get total activity
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT 
                         COUNT(DISTINCT thread_id) as active_threads,
                         SUM(query_count) as total_queries,
@@ -352,7 +356,7 @@ class AtlasTimescaleIntegration:
                 activity = cur.fetchone()
                 
                 # Get top insights
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT 
                         pattern_type,
                         description,
@@ -368,10 +372,10 @@ class AtlasTimescaleIntegration:
                 
                 return {
                     "time_window": f"{hours} hours",
-                    "active_threads": activity['active_threads'] or 0,
-                    "total_queries": activity['total_queries'] or 0,
-                    "total_replies": activity['total_replies'] or 0,
-                    "avg_engagement": float(activity['avg_engagement'] or 0.0),
+                    "active_threads": (activity['active_threads'] if activity else 0) or 0,
+                    "total_queries": (activity['total_queries'] if activity else 0) or 0,
+                    "total_replies": (activity['total_replies'] if activity else 0) or 0,
+                    "avg_engagement": float((activity['avg_engagement'] if activity else 0.0) or 0.0),
                     "top_insights": insights
                 }
 

@@ -7,11 +7,16 @@ Following your established chunking/embedding guidelines
 
 import json
 import os
+
+# Add project paths
+import sys
 from typing import Any, cast
 
 import numpy as np
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from sentence_transformers import SentenceTransformer
 
 
@@ -32,10 +37,10 @@ class AtlasSimpleExtractor:
     def extract_queries_and_replies(self, session_id: str) -> dict[str, Any]:
         """Extract your queries and my replies with connecting vector space."""
 
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get all conversation turns
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT node_id, content, metadata, created_at
                     FROM atlas_node 

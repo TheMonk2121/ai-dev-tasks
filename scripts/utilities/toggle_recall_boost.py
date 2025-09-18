@@ -128,9 +128,9 @@ def revert() -> None:
     print("➡️  Next: run smoke test, then full eval.")
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Toggle recall_boost settings safely")
+    p: Any = argparse.ArgumentParser(description="Toggle recall_boost settings safely")
     p.add_argument("action", choices=["apply", "revert"], help="apply or revert recall_boost changes")
-    args = p.parse_args()
+    args: Any = p.parse_args()
 
     if args.action == "apply":
         apply()

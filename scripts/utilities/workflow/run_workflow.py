@@ -11,7 +11,7 @@ Workflow Runner
 Simple wrapper that ensures the virtual environment is active and runs the workflow.
 """
 
-def main():
+def main() -> Any:
     """Run the workflow with venv management."""
 
     # Ensure we're in the project root

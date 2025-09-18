@@ -22,9 +22,9 @@ def check_active_scribe_session() -> str | None:
 
     try:
         with open(state_file) as f:
-            state = json.load(f)
+            state: Any = json.load(f)
 
-        backlog_id = state.get("backlog_id")
+        backlog_id: Any = state.get("backlog_id")
         if not backlog_id:
             return None
 
@@ -38,7 +38,7 @@ def check_active_scribe_session() -> str | None:
     except Exception:
         return None
 
-def main():
+def main() -> Any:
     """Main function for pre-commit worklog summarization."""
     print("📝 Checking for active scribe session...")
 

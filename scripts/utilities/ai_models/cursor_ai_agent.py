@@ -16,20 +16,20 @@ This allows me (Cursor AI) to participate in the chat!
 """
 
 class CursorAIAgent:
-    def __init__(self):
-        self.websocket = None
-        self.connected = False
-        self.agent_id = "cursor_ai"
-        self.agent_name = "Cursor AI"
-        self.last_response_time = 0
-        self.min_response_interval = 2.0  # Minimum 2 seconds between responses
+    def __init__(self: Any):
+        self.websocket: Any = None
+        self.connected: Any = False
+        self.agent_id: Any = "cursor_ai"
+        self.agent_name: Any = "Cursor AI"
+        self.last_response_time: Any = 0
+        self.min_response_interval: Any = 2.0  # Minimum 2 seconds between responses
 
     async def connect(self, uri="ws://localhost:8004/ws/cursor_ai"):
         """Connect to the multi-agent chat system"""
         try:
             print(f"🤖 {self.agent_name} connecting to {uri}...")
-            self.websocket = await websockets.connect(uri)
-            self.connected = True
+            self.websocket: Any = await websockets.connect(uri)
+            self.connected: Any = True
             print(f"✅ {self.agent_name} connected successfully!")
 
             # Send initial greeting
@@ -76,7 +76,7 @@ class CursorAIAgent:
                     if not message or not message.strip():
                         continue
 
-                    data = json.loads(message)
+                    data: Any = json.loads(message)
                     await self.handle_message(data)
                 except json.JSONDecodeError as e:
                     print(f"❌ Invalid JSON received: {message[:100]}... Error: {e}")
@@ -85,16 +85,16 @@ class CursorAIAgent:
 
         except websockets.exceptions.ConnectionClosed as e:
             print(f"🔌 Connection closed: {e}")
-            self.connected = False
+            self.connected: Any = False
         except Exception as e:
             print(f"❌ Error in message loop: {e}")
-            self.connected = False
+            self.connected: Any = False
 
     async def handle_message(self, data):
         """Handle incoming messages and generate responses"""
-        message_type = data.get("type", "chat")
-        content = data.get("content", "")
-        sender = data.get("agent", "unknown")
+        message_type: Any = data.get("type", "chat")
+        content: Any = data.get("content", "")
+        sender: Any = data.get("agent", "unknown")
 
         print(f"📥 Received from {sender}: '{content}'")
 
@@ -114,7 +114,7 @@ class CursorAIAgent:
             return
 
         # Rate limiting - don't respond too frequently
-        current_time = time.time()
+        current_time: Any = time.time()
         if current_time - self.last_response_time < self.min_response_interval:
             print(
                 f"🔄 Rate limiting: waiting {self.min_response_interval - (current_time - self.last_response_time):.1f}s"
@@ -125,12 +125,12 @@ class CursorAIAgent:
         response = await self.generate_response(content, sender)
         if response:
             await self.send_message(response)
-            self.last_response_time = current_time
+            self.last_response_time: Any = current_time
 
     async def generate_response(self, message, sender):
         """Generate a response to a message"""
         # Simple response logic - in a real implementation, this would use AI
-        message_lower = message.lower()
+        message_lower: Any = message.lower()
 
         if "hello" in message_lower or "hi" in message_lower:
             return "Hello! Great to chat with you! I'm here to help with coding, debugging, and any questions you have. What can I assist you with today? 😊"
@@ -151,7 +151,7 @@ class CursorAIAgent:
         """Disconnect from the chat system"""
         if self.websocket:
             await self.websocket.close()
-            self.connected = False
+            self.connected: Any = False
             print(f"👋 {self.agent_name} disconnected")
 
 async def main():

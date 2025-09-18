@@ -6,6 +6,9 @@ Complete implementation for multi-thread chat management with graph relationship
 
 import json
 import os
+
+# Add project paths
+import sys
 import time
 import uuid
 from dataclasses import dataclass
@@ -14,8 +17,10 @@ from enum import Enum
 from typing import Any, cast
 
 import numpy as np
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from sentence_transformers import SentenceTransformer
 
 
@@ -103,30 +108,30 @@ class AtlasCompleteGraphSystem:
         """Set up the complete graph database schema."""
         # Enable TimescaleDB extension
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
-                    cur.execute("CREATE EXTENSION IF NOT EXISTS timescaledb;")
+                    _ = cur.execute("CREATE EXTENSION IF NOT EXISTS timescaledb;")
                     conn.commit()
                     print("✅ TimescaleDB enabled")
-        except psycopg2.errors.FeatureNotSupported:
+        except psycopg.errors.FeatureNotSupported:
             print("⚠️ TimescaleDB not available, using regular PostgreSQL")
 
         # Enable pgvector extension
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
-                    cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+                    _ = cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
                     conn.commit()
                     print("✅ pgvector enabled")
-        except psycopg2.errors.FeatureNotSupported:
+        except psycopg.errors.FeatureNotSupported:
             print("⚠️ pgvector not available, using float arrays")
 
         # Create tables
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
 
                 # 1. Thread management table
-                cur.execute(
+                _ = cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS atlas_thread (
                         thread_id TEXT PRIMARY KEY,
@@ -143,7 +148,7 @@ class AtlasCompleteGraphSystem:
                 )
 
                 # 2. Conversation turns table (extends existing atlas_node)
-                cur.execute(
+                _ = cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS atlas_conversation_turn (
                         turn_id TEXT PRIMARY KEY,
@@ -160,7 +165,7 @@ class AtlasCompleteGraphSystem:
                 )
 
                 # 3. Query-Response relationships table
-                cur.execute(
+                _ = cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS atlas_query_response_relationship (
                         relationship_id TEXT PRIMARY KEY,
@@ -182,7 +187,7 @@ class AtlasCompleteGraphSystem:
                 )
 
                 # 4. Cross-thread insights table
-                cur.execute(
+                _ = cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS atlas_cross_thread_insight (
                         insight_id TEXT PRIMARY KEY,
@@ -198,7 +203,7 @@ class AtlasCompleteGraphSystem:
                 )
 
                 # 5. Thread relationships table
-                cur.execute(
+                _ = cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS atlas_thread_relationship (
                         relationship_id TEXT PRIMARY KEY,
@@ -221,63 +226,63 @@ class AtlasCompleteGraphSystem:
 
         # Create TimescaleDB hypertables in separate connection
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
-                    cur.execute(
+                    _ = cur.execute(
                         "SELECT create_hypertable('atlas_conversation_turn', 'timestamp', if_not_exists => TRUE);"
                     )
-                    cur.execute(
+                    _ = cur.execute(
                         "SELECT create_hypertable('atlas_query_response_relationship', 'created_at', if_not_exists => TRUE);"
                     )
-                    cur.execute(
+                    _ = cur.execute(
                         "SELECT create_hypertable('atlas_cross_thread_insight', 'created_at', if_not_exists => TRUE);"
                     )
-                    cur.execute(
+                    _ = cur.execute(
                         "SELECT create_hypertable('atlas_thread_relationship', 'created_at', if_not_exists => TRUE);"
                     )
                     conn.commit()
                     print("✅ TimescaleDB hypertables created")
-        except (psycopg2.errors.FeatureNotSupported, psycopg2.errors.UndefinedFunction):
+        except (psycopg.errors.FeatureNotSupported, psycopg.errors.UndefinedFunction):
             print("⚠️ TimescaleDB hypertables not available")
 
         # Create indexes in separate connection
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_thread_session ON atlas_thread (session_id, created_at DESC);"
                 )
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_thread_status ON atlas_thread (status, last_activity DESC);"
                 )
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_conversation_thread ON atlas_conversation_turn (thread_id, timestamp DESC);"
                 )
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_conversation_role ON atlas_conversation_turn (role, timestamp DESC);"
                 )
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_relationship_thread ON atlas_query_response_relationship (thread_id, created_at DESC);"
                 )
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_relationship_similarity ON atlas_query_response_relationship (similarity_score DESC);"
                 )
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_insight_type ON atlas_cross_thread_insight (insight_type, confidence DESC);"
                 )
-                cur.execute(
+                _ = cur.execute(
                     "CREATE INDEX IF NOT EXISTS idx_thread_rel_source ON atlas_thread_relationship (source_thread_id, relationship_type);"
                 )
 
                 # Create vector indexes
                 try:
-                    cur.execute(
+                    _ = cur.execute(
                         "CREATE INDEX IF NOT EXISTS idx_thread_embedding ON atlas_thread USING hnsw (embedding vector_cosine_ops);"
                     )
-                    cur.execute(
+                    _ = cur.execute(
                         "CREATE INDEX IF NOT EXISTS idx_conversation_embedding ON atlas_conversation_turn USING hnsw (embedding vector_cosine_ops);"
                     )
                     print("✅ Vector indexes created")
-                except (psycopg2.errors.FeatureNotSupported, psycopg2.errors.DatatypeMismatch):
+                except (psycopg.errors.FeatureNotSupported, psycopg.errors.DatatypeMismatch):
                     print("⚠️ Vector indexes not available")
 
                 conn.commit()
@@ -300,9 +305,9 @@ class AtlasCompleteGraphSystem:
         thread_embedding_array = self.embedder.encode(title)
         thread_embedding = cast(list[float], thread_embedding_array.tolist())
 
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO atlas_thread (thread_id, session_id, tab_id, title, status, embedding, metadata)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -361,10 +366,10 @@ class AtlasCompleteGraphSystem:
             **(metadata or {}),
         }
 
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
                 # Store conversation turn
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO atlas_conversation_turn 
                     (turn_id, thread_id, role, content, timestamp, embedding, metadata)
@@ -378,7 +383,7 @@ class AtlasCompleteGraphSystem:
                 )
 
                 # Update thread activity
-                cur.execute(
+                _ = cur.execute(
                     """
                     UPDATE atlas_thread 
                     SET last_activity = NOW()
@@ -403,10 +408,10 @@ class AtlasCompleteGraphSystem:
         """Analyze relationships between queries and responses in a thread."""
         relationships = []
 
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get conversation turns in chronological order
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT turn_id, role, content, timestamp
                     FROM atlas_conversation_turn
@@ -545,9 +550,9 @@ class AtlasCompleteGraphSystem:
 
     def _store_query_response_relationship(self, relationship: QueryResponseRelationship) -> None:
         """Store query-response relationship in database."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO atlas_query_response_relationship 
                     (relationship_id, query_id, response_id, thread_id, similarity_score, 
@@ -578,10 +583,10 @@ class AtlasCompleteGraphSystem:
         end_time = datetime.now(UTC)
         start_time = end_time - timedelta(hours=time_window_hours)
 
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Find threads with similar topics
-                cur.execute(
+                _ = cur.execute(
                     """
                     WITH thread_topics AS (
                         SELECT 
@@ -630,7 +635,7 @@ class AtlasCompleteGraphSystem:
                     insights.append(insight)
 
                 # Find temporal patterns
-                cur.execute(
+                _ = cur.execute(
                     """
                     WITH hourly_activity AS (
                         SELECT 
@@ -682,9 +687,9 @@ class AtlasCompleteGraphSystem:
 
     def _store_cross_thread_insight(self, insight: CrossThreadInsight) -> None:
         """Store cross-thread insight in database."""
-        with psycopg2.connect(self.dsn) as conn:
+        with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO atlas_cross_thread_insight 
                     (insight_id, insight_type, description, confidence, 
@@ -708,17 +713,17 @@ class AtlasCompleteGraphSystem:
 
     def get_thread_summary(self, thread_id: str) -> dict[str, Any]:
         """Get comprehensive summary of a thread."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get thread info
-                cur.execute("SELECT * FROM atlas_thread WHERE thread_id = %s", (thread_id,))
+                _ = cur.execute("SELECT * FROM atlas_thread WHERE thread_id = %s", (thread_id,))
                 thread_info = cur.fetchone()
 
                 if not thread_info:
                     return {"error": "Thread not found"}
 
                 # Get conversation stats
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT 
                         COUNT(*) as total_turns,
@@ -747,7 +752,7 @@ class AtlasCompleteGraphSystem:
                     conv_stats = dict(conv_stats_row)
 
                 # Get relationship stats
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT 
                         COUNT(*) as total_relationships,
@@ -760,7 +765,7 @@ class AtlasCompleteGraphSystem:
                 )
 
                 # Get topics separately
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT DISTINCT UNNEST(topic_tags) as topic
                     FROM atlas_query_response_relationship
@@ -804,10 +809,10 @@ class AtlasCompleteGraphSystem:
 
     def get_session_dashboard(self, session_id: str) -> dict[str, Any]:
         """Get dashboard view of all threads in a session."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Get all threads in session
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT thread_id, title, status, created_at, last_activity
                     FROM atlas_thread
@@ -820,7 +825,7 @@ class AtlasCompleteGraphSystem:
                 threads = [dict(row) for row in cur.fetchall()]
 
                 # Get session stats
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT 
                         COUNT(DISTINCT ct.thread_id) as total_threads,
@@ -842,7 +847,7 @@ class AtlasCompleteGraphSystem:
                     session_stats = dict(session_stats_row)
 
                 # Get recent insights
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT insight_type, description, confidence, created_at
                     FROM atlas_cross_thread_insight

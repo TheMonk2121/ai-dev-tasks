@@ -38,12 +38,12 @@ def _load(path: str) -> dict[str, Any] | None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate ABP and Baseline Manifest")
-    _ = parser.add_argument("--profile", required=True)
-    _ = parser.add_argument("--max-age-days", type=int, default=2)
-    _ = parser.add_argument("--ci-mode", action="store_true", help="Print GitHub Actions warnings instead of failing")
+    parser: Any = argparse.ArgumentParser(description="Validate ABP and Baseline Manifest")
+    _: Any = parser.add_argument("--profile", required=True)
+    _: Any = parser.add_argument("--max-age-days", type=int, default=2)
+    _: Any = parser.add_argument("--ci-mode", action="store_true", help="Print GitHub Actions warnings instead of failing")
     _ = parser.add_argument("--strict", action="store_true", help="Treat warnings as errors (fail on stale/missing)")
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Check baseline manifest
     manifest = os.path.join("config", "baselines", f"{args.profile}.json")

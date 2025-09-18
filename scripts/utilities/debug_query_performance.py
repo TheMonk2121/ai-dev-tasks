@@ -1,20 +1,22 @@
 from __future__ import annotations
 
 import os
+import sys
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 #!/usr/bin/env python3
 """Debug query performance issues"""
 
-def debug_query_performance():
+def debug_query_performance() -> Any:
     try:
-        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Check if pg_stat_statements is available
                 print("1. Checking pg_stat_statements availability...")
-                cur.execute(
+                _ = cur.execute(
                     """
 
                     SELECT EXISTS (
@@ -23,7 +25,7 @@ def debug_query_performance():
                     )
                 """
                 )
-                result = cur.fetchone()
+                result: Any = cur.fetchone()
                 print(f"   Query result: {result}")
                 has_pg_stat_statements = result["exists"] if result else False
                 print(f"   pg_stat_statements available: {has_pg_stat_statements}")
@@ -33,7 +35,7 @@ def debug_query_performance():
 
                 # Test slow queries
                 print("2. Testing slow queries...")
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT 
                         query,
@@ -47,12 +49,12 @@ def debug_query_performance():
                     LIMIT 10
                 """
                 )
-                slow_queries = cur.fetchall()
+                slow_queries: Any = cur.fetchall()
                 print(f"   Slow queries: {len(slow_queries)} rows")
 
                 # Test frequent queries
                 print("3. Testing frequent queries...")
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT 
                         query,
@@ -64,7 +66,7 @@ def debug_query_performance():
                     LIMIT 10
                 """
                 )
-                frequent_queries = cur.fetchall()
+                frequent_queries: Any = cur.fetchall()
                 print(f"   Frequent queries: {len(frequent_queries)} rows")
 
                 return {

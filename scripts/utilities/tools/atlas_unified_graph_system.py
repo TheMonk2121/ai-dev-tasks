@@ -6,15 +6,18 @@ Complete graph database for query-response relationships, cross-thread analysis,
 
 import json
 import os
+import sys
 import time
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
 from sentence_transformers import SentenceTransformer
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 
 @dataclass
@@ -60,34 +63,35 @@ class CrossThreadInsight:
 class AtlasUnifiedGraphSystem:
     """Unified graph system for comprehensive conversation analysis."""
     
-    def __init__(self, dsn: str = None):
-        self.dsn = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-        self.embedder = SentenceTransformer("all-MiniLM-L6-v2")
-        self.embedding_dim = 384
+    def __init__(self, dsn: str | None = None):
+        self.dsn: str = dsn or os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        self.embedder: SentenceTransformer = SentenceTransformer("all-MiniLM-L6-v2")
+        self.embedding_dim: int = 384
         
         # Initialize graph schema
         self._setup_unified_graph_schema()
     
     def _setup_unified_graph_schema(self):
         """Set up the unified graph database schema."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor() as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Enable required extensions
                 try:
-                    cur.execute("CREATE EXTENSION IF NOT EXISTS timescaledb;")
-                except psycopg2.errors.FeatureNotSupported:
-                    print("⚠️ TimescaleDB not available, using regular PostgreSQL tables")
-                    conn.rollback()
+                    _ = cur.execute("CREATE EXTENSION IF NOT EXISTS timescaledb;")
+                except Exception as e:
+                    if "FeatureNotSupported" in str(e):
+                        print("⚠️ TimescaleDB not available, using regular PostgreSQL tables")
+                        # Note: Using cursor context, no explicit rollback needed
                 
                 try:
-                    cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
-                except psycopg2.errors.FeatureNotSupported:
-                    print("⚠️ pgvector not available, using regular float arrays")
-                    conn.rollback()
+                    _ = cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+                except Exception as e:
+                    if "FeatureNotSupported" in str(e):
+                        print("⚠️ pgvector not available, using regular float arrays")
+                        # Note: Using cursor context, no explicit rollback needed
                 
                 # Core conversation nodes (already exists from previous setup)
                 # Thread nodes
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE TABLE IF NOT EXISTS atlas_thread (
                         thread_id TEXT PRIMARY KEY,
                         session_id TEXT NOT NULL,
@@ -101,7 +105,7 @@ class AtlasUnifiedGraphSystem:
                 """)
                 
                 # Query-Response relationships
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE TABLE IF NOT EXISTS atlas_query_response_relationship (
                         relationship_id TEXT PRIMARY KEY,
                         query_id TEXT NOT NULL,
@@ -122,7 +126,7 @@ class AtlasUnifiedGraphSystem:
                 """)
                 
                 # Thread patterns
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE TABLE IF NOT EXISTS atlas_thread_pattern (
                         pattern_id TEXT PRIMARY KEY,
                         thread_id TEXT NOT NULL,
@@ -139,7 +143,7 @@ class AtlasUnifiedGraphSystem:
                 """)
                 
                 # Cross-thread insights
-                cur.execute("""
+                _ = cur.execute("""
                     CREATE TABLE IF NOT EXISTS atlas_cross_thread_insight (
                         insight_id TEXT PRIMARY KEY,
                         insight_type TEXT NOT NULL,
@@ -155,63 +159,66 @@ class AtlasUnifiedGraphSystem:
                 # Create TimescaleDB hypertables for time-series data (if available)
                 # Check if TimescaleDB is available first
                 try:
-                    cur.execute("SELECT 1 FROM pg_extension WHERE extname = 'timescaledb';")
+                    _ = cur.execute("SELECT 1 FROM pg_extension WHERE extname = 'timescaledb';")
                     has_timescale = cur.fetchone() is not None
                 except:
                     has_timescale = False
                 
                 if has_timescale:
                     try:
-                        cur.execute("SELECT create_hypertable('atlas_query_response_relationship', 'created_at', if_not_exists => TRUE);")
-                    except (psycopg2.errors.DuplicateTable, psycopg2.errors.UndefinedFunction):
-                        pass
+                        _ = cur.execute("SELECT create_hypertable('atlas_query_response_relationship', 'created_at', if_not_exists => TRUE);")
+                    except Exception as e:
+                        if "DuplicateTable" in str(e) or "UndefinedFunction" in str(e):
+                            pass
                     
                     try:
-                        cur.execute("SELECT create_hypertable('atlas_thread_pattern', 'first_seen', if_not_exists => TRUE);")
-                    except (psycopg2.errors.DuplicateTable, psycopg2.errors.UndefinedFunction):
-                        pass
+                        _ = cur.execute("SELECT create_hypertable('atlas_thread_pattern', 'first_seen', if_not_exists => TRUE);")
+                    except Exception as e:
+                        if "DuplicateTable" in str(e) or "UndefinedFunction" in str(e):
+                            pass
                     
                     try:
-                        cur.execute("SELECT create_hypertable('atlas_cross_thread_insight', 'created_at', if_not_exists => TRUE);")
-                    except (psycopg2.errors.DuplicateTable, psycopg2.errors.UndefinedFunction):
-                        pass
+                        _ = cur.execute("SELECT create_hypertable('atlas_cross_thread_insight', 'created_at', if_not_exists => TRUE);")
+                    except Exception as e:
+                        if "DuplicateTable" in str(e) or "UndefinedFunction" in str(e):
+                            pass
                 
                 # Create indexes for efficient querying
-                cur.execute("CREATE INDEX IF NOT EXISTS idx_query_response_thread ON atlas_query_response_relationship (thread_id, created_at DESC);")
-                cur.execute("CREATE INDEX IF NOT EXISTS idx_query_response_similarity ON atlas_query_response_relationship (similarity_score DESC);")
-                cur.execute("CREATE INDEX IF NOT EXISTS idx_thread_pattern_type ON atlas_thread_pattern (pattern_type, confidence DESC);")
-                cur.execute("CREATE INDEX IF NOT EXISTS idx_cross_thread_type ON atlas_cross_thread_insight (insight_type, confidence DESC);")
+                _ = cur.execute("CREATE INDEX IF NOT EXISTS idx_query_response_thread ON atlas_query_response_relationship (thread_id, created_at DESC);")
+                _ = cur.execute("CREATE INDEX IF NOT EXISTS idx_query_response_similarity ON atlas_query_response_relationship (similarity_score DESC);")
+                _ = cur.execute("CREATE INDEX IF NOT EXISTS idx_thread_pattern_type ON atlas_thread_pattern (pattern_type, confidence DESC);")
+                _ = cur.execute("CREATE INDEX IF NOT EXISTS idx_cross_thread_type ON atlas_cross_thread_insight (insight_type, confidence DESC);")
                 
                 # Create vector indexes (if pgvector available)
                 try:
                     # Check if pgvector is available
-                    cur.execute("SELECT 1 FROM pg_type WHERE typname = 'vector';")
+                    _ = cur.execute("SELECT 1 FROM pg_type WHERE typname = 'vector';")
                     has_vector = cur.fetchone() is not None
                     
                     if has_vector:
-                        cur.execute("CREATE INDEX IF NOT EXISTS idx_atlas_thread_embedding ON atlas_thread USING hnsw (embedding vector_cosine_ops);")
+                        _ = cur.execute("CREATE INDEX IF NOT EXISTS idx_atlas_thread_embedding ON atlas_thread USING hnsw (embedding vector_cosine_ops);")
                     else:
                         # Fallback to regular index
-                        cur.execute("CREATE INDEX IF NOT EXISTS idx_atlas_thread_embedding ON atlas_thread USING gin (embedding);")
-                except (psycopg2.errors.FeatureNotSupported, psycopg2.errors.DatatypeMismatch):
-                    # Rollback and try fallback
-                    conn.rollback()
-                    cur.execute("CREATE INDEX IF NOT EXISTS idx_atlas_thread_embedding ON atlas_thread USING gin (embedding);")
+                        _ = cur.execute("CREATE INDEX IF NOT EXISTS idx_atlas_thread_embedding ON atlas_thread USING gin (embedding);")
+                except Exception as e:
+                    if "FeatureNotSupported" in str(e) or "DatatypeMismatch" in str(e):
+                        # Rollback and try fallback
+                        # Note: Using cursor context, no explicit rollback needed
+                        _ = cur.execute("CREATE INDEX IF NOT EXISTS idx_atlas_thread_embedding ON atlas_thread USING gin (embedding);")
                 
-                conn.commit()
+                # Note: Using cursor context, no explicit commit needed
     
-    def create_thread(self, title: str, session_id: str = None, metadata: dict = None) -> str:
+    def create_thread(self, title: str, session_id: str | None = None, metadata: dict[str, Any] | None = None) -> str:
         """Create a new conversation thread."""
         thread_id = f"thread_{int(time.time())}_{uuid.uuid4().hex[:8]}"
         if not session_id:
             session_id = f"session_{thread_id}"
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor() as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Create thread embedding
                 thread_embedding = self.embedder.encode(title)
                 
-                cur.execute("""
+                _ = cur.execute("""
                     INSERT INTO atlas_thread (thread_id, session_id, title, metadata, embedding)
                     VALUES (%s, %s, %s, %s, %s)
                     ON CONFLICT (thread_id) DO UPDATE SET
@@ -224,17 +231,16 @@ class AtlasUnifiedGraphSystem:
                     json.dumps(metadata or {}),
                     thread_embedding.tolist()
                 ))
-                conn.commit()
+                # Note: Using cursor context, no explicit commit needed
         
         return thread_id
     
     def add_conversation_turn(self, thread_id: str, role: str, content: str, 
-                            metadata: dict = None) -> str:
+                            metadata: dict[str, Any] | None = None) -> str:
         """Add a conversation turn to a thread."""
         turn_id = f"turn_{thread_id}_{int(time.time())}_{uuid.uuid4().hex[:8]}"
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor() as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Enhanced metadata
                 enhanced_metadata = {
                     "role": role,
@@ -248,7 +254,7 @@ class AtlasUnifiedGraphSystem:
                 embedding = self.embedder.encode(content)
                 
                 # Store in atlas_node
-                cur.execute("""
+                _ = cur.execute("""
                     INSERT INTO atlas_node (node_id, node_type, title, content, metadata, embedding, expires_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (node_id) DO UPDATE SET
@@ -267,13 +273,13 @@ class AtlasUnifiedGraphSystem:
                 ))
                 
                 # Update thread activity
-                cur.execute("""
+                _ = cur.execute("""
                     UPDATE atlas_thread 
                     SET last_activity = NOW()
                     WHERE thread_id = %s
                 """, (thread_id,))
                 
-                conn.commit()
+                # Note: Using cursor context, no explicit commit needed
         
         return turn_id
     
@@ -281,10 +287,9 @@ class AtlasUnifiedGraphSystem:
         """Analyze relationships between queries and responses in a thread."""
         relationships = []
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Get all conversation turns in the thread
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT node_id, content, metadata, created_at
                     FROM atlas_node 
                     WHERE metadata->>'thread_id' = %s 
@@ -342,7 +347,7 @@ class AtlasUnifiedGraphSystem:
         
         return relationships
     
-    def _cosine_similarity(self, vec1, vec2) -> float:
+    def _cosine_similarity(self, vec1: list[float], vec2: list[float]) -> float:
         """Calculate cosine similarity between two vectors."""
         import numpy as np
         
@@ -394,9 +399,8 @@ class AtlasUnifiedGraphSystem:
     
     def _store_query_response_relationship(self, relationship: QueryResponseRelationship):
         """Store query-response relationship in database."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor() as cur:
-                cur.execute("""
+        with Psycopg3Config.get_cursor("default") as cur:
+                _ = cur.execute("""
                     INSERT INTO atlas_query_response_relationship 
                     (relationship_id, query_id, response_id, thread_id, session_id, 
                      similarity_score, response_time, topic_tags, relationship_type, created_at)
@@ -417,16 +421,15 @@ class AtlasUnifiedGraphSystem:
                     relationship.relationship_type,
                     relationship.created_at
                 ))
-                conn.commit()
+                # Note: Using cursor context, no explicit commit needed
     
     def discover_thread_patterns(self, thread_id: str) -> list[ThreadPattern]:
         """Discover patterns within a thread."""
         patterns = []
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Get all relationships for this thread
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT * FROM atlas_query_response_relationship
                     WHERE thread_id = %s
                     ORDER BY created_at
@@ -441,7 +444,7 @@ class AtlasUnifiedGraphSystem:
                 question_types = {}
                 for rel in relationships:
                     # Get the query content
-                    cur.execute("SELECT content FROM atlas_node WHERE node_id = %s", (rel['query_id'],))
+                    _ = cur.execute("SELECT content FROM atlas_node WHERE node_id = %s", (rel['query_id'],))
                     query_row = cur.fetchone()
                     if query_row:
                         query_type = self._classify_question_type(query_row['content'])
@@ -506,9 +509,8 @@ class AtlasUnifiedGraphSystem:
     
     def _store_thread_pattern(self, pattern: ThreadPattern):
         """Store thread pattern in database."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor() as cur:
-                cur.execute("""
+        with Psycopg3Config.get_cursor("default") as cur:
+                _ = cur.execute("""
                     INSERT INTO atlas_thread_pattern 
                     (pattern_id, thread_id, pattern_type, description, confidence, 
                      frequency, first_seen, last_seen)
@@ -527,7 +529,7 @@ class AtlasUnifiedGraphSystem:
                     pattern.first_seen,
                     pattern.last_seen
                 ))
-                conn.commit()
+                # Note: Using cursor context, no explicit commit needed
     
     def analyze_cross_thread_insights(self, time_window_hours: int = 24) -> list[CrossThreadInsight]:
         """Analyze insights across multiple threads."""
@@ -535,10 +537,9 @@ class AtlasUnifiedGraphSystem:
         end_time = datetime.now()
         start_time = end_time - timedelta(hours=time_window_hours)
         
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Find similar threads based on topic tags
-                cur.execute("""
+                _ = cur.execute("""
                     WITH thread_topics AS (
                         SELECT 
                             thread_id,
@@ -584,7 +585,7 @@ class AtlasUnifiedGraphSystem:
                     insights.append(insight)
                 
                 # Find temporal patterns
-                cur.execute("""
+                _ = cur.execute("""
                     WITH hourly_activity AS (
                         SELECT 
                             thread_id,
@@ -633,9 +634,8 @@ class AtlasUnifiedGraphSystem:
     
     def _store_cross_thread_insight(self, insight: CrossThreadInsight):
         """Store cross-thread insight in database."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor() as cur:
-                cur.execute("""
+        with Psycopg3Config.get_cursor("default") as cur:
+                _ = cur.execute("""
                     INSERT INTO atlas_cross_thread_insight 
                     (insight_id, insight_type, description, confidence, 
                      affected_threads, supporting_evidence, created_at)
@@ -652,21 +652,20 @@ class AtlasUnifiedGraphSystem:
                     json.dumps(insight.supporting_evidence),
                     insight.created_at
                 ))
-                conn.commit()
+                # Note: Using cursor context, no explicit commit needed
     
     def get_thread_summary(self, thread_id: str) -> dict[str, Any]:
         """Get comprehensive summary of a thread."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Get thread info
-                cur.execute("SELECT * FROM atlas_thread WHERE thread_id = %s", (thread_id,))
+                _ = cur.execute("SELECT * FROM atlas_thread WHERE thread_id = %s", (thread_id,))
                 thread_info = cur.fetchone()
                 
                 if not thread_info:
                     return {"error": "Thread not found"}
                 
                 # Get relationship stats
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT 
                         COUNT(*) as total_relationships,
                         AVG(similarity_score) as avg_similarity,
@@ -679,7 +678,7 @@ class AtlasUnifiedGraphSystem:
                 rel_stats = cur.fetchone()
                 
                 # Get patterns
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT pattern_type, description, confidence, frequency
                     FROM atlas_thread_pattern
                     WHERE thread_id = %s
@@ -695,28 +694,28 @@ class AtlasUnifiedGraphSystem:
                     "created_at": thread_info['created_at'],
                     "last_activity": thread_info['last_activity'],
                     "relationships": {
-                        "total": rel_stats['total_relationships'] or 0,
-                        "avg_similarity": float(rel_stats['avg_similarity'] or 0.0),
-                        "avg_response_time": float(rel_stats['avg_response_time'] or 0.0),
-                        "topics": rel_stats['all_topics'] or []
+                        "total": rel_stats['total_relationships'] if rel_stats else 0,
+                        "avg_similarity": float(rel_stats['avg_similarity']) if rel_stats and rel_stats['avg_similarity'] is not None else 0.0,
+                        "avg_response_time": float(rel_stats['avg_response_time']) if rel_stats and rel_stats['avg_response_time'] is not None else 0.0,
+                        "topics": rel_stats['all_topics'] if rel_stats and rel_stats['all_topics'] is not None else []
                     },
                     "patterns": patterns
                 }
     
     def get_cross_thread_dashboard(self) -> dict[str, Any]:
         """Get dashboard view of cross-thread insights."""
-        with psycopg2.connect(self.dsn) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
                 # Get active threads
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT COUNT(*) as active_threads
                     FROM atlas_thread
                     WHERE status = 'active'
                 """)
-                active_threads = cur.fetchone()['active_threads']
+                active_threads_result = cur.fetchone()
+                active_threads = active_threads_result['active_threads'] if active_threads_result else 0
                 
                 # Get recent insights
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT insight_type, description, confidence, created_at
                     FROM atlas_cross_thread_insight
                     WHERE created_at > NOW() - INTERVAL '24 hours'
@@ -727,7 +726,7 @@ class AtlasUnifiedGraphSystem:
                 recent_insights = [dict(row) for row in cur.fetchall()]
                 
                 # Get topic distribution
-                cur.execute("""
+                _ = cur.execute("""
                     SELECT 
                         UNNEST(topic_tags) as topic,
                         COUNT(*) as frequency
@@ -761,11 +760,11 @@ def main():
     print(f"✅ Created threads: {thread1}, {thread2}")
     
     # Add conversation turns
-    system.add_conversation_turn(thread1, "user", "How can we improve RAGChecker precision?")
-    system.add_conversation_turn(thread1, "assistant", "Here are several strategies to improve precision...")
+    _ = system.add_conversation_turn(thread1, "user", "How can we improve RAGChecker precision?")
+    _ = system.add_conversation_turn(thread1, "assistant", "Here are several strategies to improve precision...")
     
-    system.add_conversation_turn(thread2, "user", "I want to implement graph storage for conversations")
-    system.add_conversation_turn(thread2, "assistant", "Great idea! Let me show you how to implement Atlas...")
+    _ = system.add_conversation_turn(thread2, "user", "I want to implement graph storage for conversations")
+    _ = system.add_conversation_turn(thread2, "assistant", "Great idea! Let me show you how to implement Atlas...")
     
     # Analyze relationships
     relationships1 = system.analyze_query_response_relationships(thread1)

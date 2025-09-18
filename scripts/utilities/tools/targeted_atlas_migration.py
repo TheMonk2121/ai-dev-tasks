@@ -4,8 +4,15 @@ Targeted Atlas migration: Add embeddings to content-based tables, remove from st
 """
 
 import os
+import sys
 
-import psycopg2
+import psycopg
+from psycopg import sql
+
+# Add project paths
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+from src.common.db_dsn import resolve_dsn
 
 
 def targeted_atlas_migration():
@@ -46,7 +53,7 @@ def targeted_atlas_migration():
     ]
 
     try:
-        with psycopg2.connect(os.getenv("POSTGRES_DSN")) as conn:
+        with psycopg.connect(resolve_dsn(strict=False, role="targeted_atlas_migration")) as conn:
             with conn.cursor() as cur:
                 # Step 1: Handle content-based tables (add/ensure embeddings)
                 print("\\n🔧 Step 1: Configuring content-based tables for embeddings...")
@@ -57,7 +64,7 @@ def targeted_atlas_migration():
 
                     try:
                         # Check if table exists
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             SELECT EXISTS (
                                 SELECT FROM information_schema.tables 
@@ -74,7 +81,7 @@ def targeted_atlas_migration():
                             continue
 
                         # Check current embedding column
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             SELECT column_name, data_type, is_nullable
                             FROM information_schema.columns 
@@ -96,36 +103,56 @@ def targeted_atlas_migration():
                                 print(f"   🔄 {table_name}: Updating to vector(384)...")
 
                                 # Clear existing embeddings
-                                cur.execute(f"UPDATE {table_name} SET embedding = NULL WHERE embedding IS NOT NULL")
+                                _ = cur.execute(
+                                    sql.SQL("UPDATE {} SET embedding = NULL WHERE embedding IS NOT NULL").format(
+                                        sql.Identifier(str(table_name))
+                                    )
+                                )
                                 cleared = cur.rowcount
                                 print(f"      Cleared {cleared} existing embeddings")
 
                                 # Update column type
-                                cur.execute(f"ALTER TABLE {table_name} ALTER COLUMN embedding TYPE vector(384)")
+                                _ = cur.execute(
+                                    sql.SQL("ALTER TABLE {} ALTER COLUMN embedding TYPE vector(384)").format(
+                                        sql.Identifier(str(table_name))
+                                    )
+                                )
                                 print("      ✅ Updated to vector(384)")
 
                                 # Create/update index
-                                cur.execute(f"DROP INDEX IF EXISTS {table_name}_embedding_idx")
-                                cur.execute(
-                                    f"""
-                                    CREATE INDEX IF NOT EXISTS {table_name}_embedding_idx 
-                                    ON {table_name} USING hnsw (embedding vector_cosine_ops)
-                                """
+                                _ = cur.execute(
+                                    sql.SQL("DROP INDEX IF EXISTS {}").format(
+                                        sql.Identifier(str(f"{table_name}_embedding_idx"))
+                                    )
+                                )
+                                _ = cur.execute(
+                                    sql.SQL(
+                                        "CREATE INDEX IF NOT EXISTS {} ON {} USING hnsw (embedding vector_cosine_ops)"
+                                    ).format(
+                                        sql.Identifier(str(f"{table_name}_embedding_idx")),
+                                        sql.Identifier(str(table_name))
+                                    )
                                 )
                                 print("      ✅ Created HNSW vector index")
                         else:
                             print(f"   ➕ {table_name}: Adding embedding column...")
 
                             # Add embedding column
-                            cur.execute(f"ALTER TABLE {table_name} ADD COLUMN embedding vector(384)")
+                            _ = cur.execute(
+                                sql.SQL("ALTER TABLE {} ADD COLUMN embedding vector(384)").format(
+                                    sql.Identifier(str(table_name))
+                                )
+                            )
                             print("      ✅ Added vector(384) column")
 
                             # Create index
-                            cur.execute(
-                                f"""
-                                CREATE INDEX IF NOT EXISTS {table_name}_embedding_idx 
-                                ON {table_name} USING hnsw (embedding vector_cosine_ops)
-                            """
+                            _ = cur.execute(
+                                sql.SQL(
+                                    "CREATE INDEX IF NOT EXISTS {} ON {} USING hnsw (embedding vector_cosine_ops)"
+                                ).format(
+                                    sql.Identifier(str(f"{table_name}_embedding_idx")),
+                                    sql.Identifier(str(table_name))
+                                )
                             )
                             print("      ✅ Created HNSW vector index")
 
@@ -133,7 +160,7 @@ def targeted_atlas_migration():
                         test_vector = [0.1] * 384
                         try:
                             if table_name == "atlas_node":
-                                cur.execute(
+                                _ = cur.execute(
                                     """
                                     INSERT INTO atlas_node (node_id, node_type, title, content, embedding, expires_at)
                                     VALUES (%s, %s, %s, %s, %s, %s)
@@ -148,7 +175,7 @@ def targeted_atlas_migration():
                                     ),
                                 )
                             elif table_name == "atlas_conversation_turn":
-                                cur.execute(
+                                _ = cur.execute(
                                     """
                                     INSERT INTO atlas_conversation_turn (turn_id, thread_id, role, content, embedding, timestamp)
                                     VALUES (%s, %s, %s, %s, %s, %s)
@@ -163,7 +190,7 @@ def targeted_atlas_migration():
                                     ),
                                 )
                             elif table_name == "atlas_thread":
-                                cur.execute(
+                                _ = cur.execute(
                                     """
                                     INSERT INTO atlas_thread (thread_id, session_id, title, embedding)
                                     VALUES (%s, %s, %s, %s)
@@ -172,8 +199,10 @@ def targeted_atlas_migration():
                                 )
 
                             # Clean up test data
-                            cur.execute(
-                                f"DELETE FROM {table_name} WHERE node_id = %s OR turn_id = %s OR thread_id = %s",
+                            _ = cur.execute(
+                                sql.SQL("DELETE FROM {} WHERE node_id = %s OR turn_id = %s OR thread_id = %s").format(
+                                    sql.Identifier(str(table_name))
+                                ),
                                 ("test_384_atlas", "test_turn", "test_thread"),
                             )
                             conn.commit()
@@ -195,7 +224,7 @@ def targeted_atlas_migration():
 
                     try:
                         # Check if table exists
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             SELECT EXISTS (
                                 SELECT FROM information_schema.tables 
@@ -212,7 +241,7 @@ def targeted_atlas_migration():
                             continue
 
                         # Check if embedding column exists
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             SELECT column_name, data_type
                             FROM information_schema.columns 
@@ -227,12 +256,24 @@ def targeted_atlas_migration():
                             print(f"   🗑️  {table_name}: Removing embedding column...")
 
                             # Drop embedding column
-                            cur.execute(f"ALTER TABLE {table_name} DROP COLUMN IF EXISTS embedding")
+                            _ = cur.execute(
+                                sql.SQL("ALTER TABLE {} DROP COLUMN IF EXISTS embedding").format(
+                                    sql.Identifier(str(table_name))
+                                )
+                            )
                             print("      ✅ Removed embedding column")
 
                             # Drop any embedding indexes
-                            cur.execute(f"DROP INDEX IF EXISTS {table_name}_embedding_idx")
-                            cur.execute(f"DROP INDEX IF EXISTS {table_name}_embedding_hnsw_idx")
+                            _ = cur.execute(
+                                sql.SQL("DROP INDEX IF EXISTS {}").format(
+                                    sql.Identifier(str(f"{table_name}_embedding_idx"))
+                                )
+                            )
+                            _ = cur.execute(
+                                sql.SQL("DROP INDEX IF EXISTS {}").format(
+                                    sql.Identifier(str(f"{table_name}_embedding_hnsw_idx"))
+                                )
+                            )
                             print("      ✅ Removed embedding indexes")
                         else:
                             print(f"   ✅ {table_name}: No embedding column (already correct)")
@@ -249,7 +290,7 @@ def targeted_atlas_migration():
                     table_name = table["name"]
                     try:
                         # Check if table exists
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             SELECT EXISTS (
                                 SELECT FROM information_schema.tables 
@@ -266,7 +307,7 @@ def targeted_atlas_migration():
                             continue
 
                         # Check embedding column
-                        cur.execute(
+                        _ = cur.execute(
                             """
                             SELECT column_name, data_type, is_nullable
                             FROM information_schema.columns 
@@ -315,7 +356,6 @@ def targeted_atlas_migration():
     except Exception as e:
         print(f"❌ Targeted Atlas migration failed: {e}")
         import traceback
-
         traceback.print_exc()
         return False
 

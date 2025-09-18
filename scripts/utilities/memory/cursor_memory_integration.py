@@ -9,14 +9,14 @@ import os
 import sys
 import time
 from datetime import datetime
+from typing import Any
 
-import psycopg2
-from psycopg2.extensions import connection as PGConnection
-from psycopg2.extensions import cursor as PGCursor
+from psycopg.rows import DictRow
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from src.common.db_dsn import resolve_dsn
+from src.common.psycopg3_config import Psycopg3Config
 
 # Set environment variable for memory graph
 os.environ["APP_USE_MEMORY_GRAPH"] = "true"
@@ -30,10 +30,8 @@ from memory_graphs.consolidate import run as consolidate_memory
 class CursorMemoryIntegration:
     """Memory consolidation integration for Cursor conversations."""
 
-    def __init__(self, dsn: str | None = None):
-        # Resolve and coerce DSN to a non-None string for type safety
-        resolved = dsn if dsn is not None else resolve_dsn()
-        self.dsn: str = resolved
+    def __init__(self, role: str = "default"):
+        self.role = role
         print("🧠 Memory Integration initialized")
 
     def process_conversation_turns(self, thread_id: str, session_id: str) -> dict[str, object]:
@@ -41,85 +39,89 @@ class CursorMemoryIntegration:
         print(f"🔄 Processing conversation turns for thread {thread_id}")
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Get conversation turns
-                    cur.execute(
-                        """
-                        SELECT turn_id, role, content, timestamp, metadata
-                        FROM atlas_conversation_turn 
-                        WHERE thread_id = %s
-                        ORDER BY timestamp
-                    """,
-                        (thread_id,),
-                    )
+            with Psycopg3Config.get_cursor(self.role) as cur:
+                # Get conversation turns
+                cur.execute(
+                    """
+                    SELECT turn_id, role, content, timestamp, metadata
+                    FROM atlas_conversation_turn 
+                    WHERE thread_id = %s
+                    ORDER BY timestamp
+                """,
+                    (thread_id,),
+                )
 
-                    turns_data = cur.fetchall()
+                turns_data: list[dict[str, Any]] = cur.fetchall()
 
-                    if not turns_data:
-                        print("⚠️  No conversation turns found")
-                        return {}
+                if not turns_data:
+                    print("⚠️  No conversation turns found")
+                    return {}
 
-                    # Convert to format expected by memory consolidation
-                    turns: list[dict[str, object]] = []
-                    for turn_id, role, content, timestamp, metadata in turns_data:
-                        # Normalize metadata to a dictionary
-                        meta: dict[str, object] = {}
-                        if metadata:
-                            if isinstance(metadata, (bytes | bytearray)):
-                                try:
-                                    meta = json.loads(metadata.decode("utf-8", "ignore"))
-                                except Exception:
-                                    meta = {}
-                            elif isinstance(metadata, str):
-                                try:
-                                    meta = json.loads(metadata)
-                                except Exception:
-                                    meta = {}
-                            elif isinstance(metadata, dict):
-                                meta = metadata
+                # Convert to format expected by memory consolidation
+                turns: list[dict[str, object]] = []
+                for row in turns_data:
+                    turn_id = row["turn_id"]
+                    role = row["role"]
+                    content = row["content"]
+                    timestamp = row["timestamp"]
+                    metadata = row["metadata"]
+                    # Normalize metadata to a dictionary
+                    meta: dict[str, object] = {}
+                    if metadata:
+                        if isinstance(metadata, (bytes | bytearray)):
+                            try:
+                                meta = json.loads(metadata.decode("utf-8", "ignore"))
+                            except Exception:
+                                meta = {}
+                        elif isinstance(metadata, str):
+                            try:
+                                meta: Any = json.loads(metadata)
+                            except Exception:
+                                meta = {}
+                        elif isinstance(metadata, dict):
+                            meta = metadata
 
-                        turn: dict[str, object] = {
-                            "turn_id": turn_id,
-                            "role": role,
-                            "content": content,
-                            "timestamp": timestamp.isoformat() if timestamp else datetime.now().isoformat(),
-                            "metadata": meta,
-                        }
-                        turns.append(turn)
+                    turn: dict[str, object] = {
+                        "turn_id": turn_id,
+                        "role": role,
+                        "content": content,
+                        "timestamp": timestamp.isoformat() if timestamp else datetime.now().isoformat(),
+                        "metadata": meta,
+                    }
+                    turns.append(turn)
 
-                    print(f"📝 Processing {len(turns)} conversation turns...")
+                print(f"📝 Processing {len(turns)} conversation turns...")
 
-                    # Run memory consolidation
-                    result = consolidate_memory(turns)
+                # Run memory consolidation
+                result = consolidate_memory(turns)
 
-                    if result:
-                        # Store consolidation results
-                        self._store_consolidation_results(conn, cur, thread_id, session_id, result)
+                if result:
+                    # Store consolidation results
+                    self._store_consolidation_results(cur, thread_id, session_id, result)
 
-                        summary_text = getattr(result, "summary", "")
-                        facts_list = getattr(result, "facts", [])
-                        entities_list = getattr(result, "entities", [])
-                        links_list = getattr(result, "entity_links", [])
-                        processing_meta = getattr(result, "processing_metadata", {})
+                    summary_text = getattr(result, "summary", "")
+                    facts_list = getattr(result, "facts", [])
+                    entities_list = getattr(result, "entities", [])
+                    links_list = getattr(result, "entity_links", [])
+                    processing_meta = getattr(result, "processing_metadata", {})
 
-                        print("✅ Memory consolidation completed")
-                        print(f"   Summary: {summary_text[:100]}...")
-                        print(f"   Facts extracted: {len(facts_list)}")
-                        print(f"   Entities found: {len(entities_list)}")
-                        print(f"   Entity links: {len(links_list)}")
+                    print("✅ Memory consolidation completed")
+                    print(f"   Summary: {summary_text[:100]}...")
+                    print(f"   Facts extracted: {len(facts_list)}")
+                    print(f"   Entities found: {len(entities_list)}")
+                    print(f"   Entity links: {len(links_list)}")
 
-                        return {
-                            "success": True,
-                            "summary": summary_text,
-                            "facts_count": len(facts_list),
-                            "entities_count": len(entities_list),
-                            "entity_links_count": len(links_list),
-                            "processing_metadata": processing_meta,
-                        }
-                    else:
-                        print("❌ Memory consolidation failed")
-                        return {"success": False, "error": "Consolidation failed"}
+                    return {
+                        "success": True,
+                        "summary": summary_text,
+                        "facts_count": len(facts_list),
+                        "entities_count": len(entities_list),
+                        "entity_links_count": len(links_list),
+                        "processing_metadata": processing_meta,
+                    }
+                else:
+                    print("❌ Memory consolidation failed")
+                    return {"success": False, "error": "Consolidation failed"}
 
         except Exception as e:
             print(f"❌ Error processing conversation turns: {e}")
@@ -127,8 +129,7 @@ class CursorMemoryIntegration:
 
     def _store_consolidation_results(
         self,
-        conn: PGConnection,
-        cur: PGCursor,
+        cur: Any,
         thread_id: str,
         session_id: str,
         result: ConsolidationResult,
@@ -275,7 +276,6 @@ class CursorMemoryIntegration:
                     ),
                 )
 
-            conn.commit()
             print("✅ Consolidation results stored in database")
 
         except Exception as e:
@@ -285,90 +285,89 @@ class CursorMemoryIntegration:
     def get_thread_insights(self, thread_id: str) -> dict[str, object]:
         """Get insights for a specific thread."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Get thread info
-                    cur.execute(
-                        """
-                        SELECT title, content, metadata, created_at, last_activity
-                        FROM atlas_thread 
-                        WHERE thread_id = %s
-                    """,
-                        (thread_id,),
-                    )
+            with Psycopg3Config.get_cursor(self.role) as cur:
+                # Get thread info
+                cur.execute(
+                    """
+                    SELECT title, content, metadata, created_at, last_activity
+                    FROM atlas_thread 
+                    WHERE thread_id = %s
+                """,
+                    (thread_id,),
+                )
 
-                    row = cur.fetchone()
-                    if not row:
-                        return {"error": "Thread not found"}
-                    title = row[0]
-                    content = row[1]
-                    _metadata = row[2]
-                    created_at = row[3]
-                    last_activity = row[4]
+                row: dict[str, Any] | None = cur.fetchone()
+                if not row:
+                    return {"error": "Thread not found"}
+                title = row["title"]
+                content = row["content"]
+                _metadata = row["metadata"]
+                created_at = row["created_at"]
+                last_activity = row["last_activity"]
 
-                    # Get conversation turns count
-                    cur.execute(
-                        """
-                        SELECT COUNT(*) FROM atlas_conversation_turn 
-                        WHERE thread_id = %s
-                    """,
-                        (thread_id,),
-                    )
-                    rc = cur.fetchone()
-                    turns_count = int(rc[0]) if rc is not None else 0
+                # Get conversation turns count
+                cur.execute(
+                    """
+                    SELECT COUNT(*) FROM atlas_conversation_turn 
+                    WHERE thread_id = %s
+                """,
+                    (thread_id,),
+                )
+                rc: dict[str, Any] | None = cur.fetchone()
+                turns_count = int(rc["count"]) if rc is not None else 0
 
-                    # Get facts count
-                    cur.execute(
-                        """
-                        SELECT COUNT(*) FROM atlas_node 
-                        WHERE node_type = 'fact' AND metadata->>'thread_id' = %s
-                    """,
-                        (thread_id,),
-                    )
-                    rc = cur.fetchone()
-                    facts_count = int(rc[0]) if rc is not None else 0
+                # Get facts count
+                cur.execute(
+                    """
+                    SELECT COUNT(*) FROM atlas_node 
+                    WHERE node_type = 'fact' AND metadata->>'thread_id' = %s
+                """,
+                    (thread_id,),
+                )
+                rc: dict[str, Any] | None = cur.fetchone()
+                facts_count = int(rc["count"]) if rc is not None else 0
 
-                    # Get entities count
-                    cur.execute(
-                        """
-                        SELECT COUNT(*) FROM atlas_node 
-                        WHERE node_type = 'entity' AND metadata->>'thread_id' = %s
-                    """,
-                        (thread_id,),
-                    )
-                    rc = cur.fetchone()
-                    entities_count = int(rc[0]) if rc is not None else 0
+                # Get entities count
+                cur.execute(
+                    """
+                    SELECT COUNT(*) FROM atlas_node 
+                    WHERE node_type = 'entity' AND metadata->>'thread_id' = %s
+                """,
+                    (thread_id,),
+                )
+                rc: dict[str, Any] | None = cur.fetchone()
+                entities_count = int(rc["count"]) if rc is not None else 0
 
-                    # Get summary
-                    cur.execute(
-                        """
-                        SELECT content FROM atlas_node 
-                        WHERE node_type = 'conversation_summary' AND metadata->>'thread_id' = %s
-                        ORDER BY created_at DESC LIMIT 1
-                    """,
-                        (thread_id,),
-                    )
-                    summary_data = cur.fetchone()
-                    summary = summary_data[0] if summary_data else None
+                # Get summary
+                cur.execute(
+                    """
+                    SELECT content FROM atlas_node 
+                    WHERE node_type = 'conversation_summary' AND metadata->>'thread_id' = %s
+                    ORDER BY created_at DESC LIMIT 1
+                """,
+                    (thread_id,),
+                )
+                summary_data: dict[str, Any] | None = cur.fetchone()
+                summary = summary_data["content"] if summary_data else None
 
-                    return {
-                        "thread_id": thread_id,
-                        "title": title,
-                        "content": content,
-                        "turns_count": turns_count,
-                        "facts_count": facts_count,
-                        "entities_count": entities_count,
-                        "summary": summary,
-                        "created_at": created_at.isoformat() if created_at else None,
-                        "last_activity": last_activity.isoformat() if last_activity else None,
-                    }
+                return {
+                    "thread_id": thread_id,
+                    "title": title,
+                    "content": content,
+                    "turns_count": turns_count,
+                    "facts_count": facts_count,
+                    "entities_count": entities_count,
+                    "summary": summary,
+                    "created_at": created_at.isoformat() if created_at else None,
+                    "last_activity": last_activity.isoformat() if last_activity else None,
+                }
 
         except Exception as e:
             print(f"❌ Error getting thread insights: {e}")
             return {"error": str(e)}
 
 
-def main():
+def main() -> Any:
     """Test the memory integration system."""
     print("🧠 Testing Memory Integration System")
     print("=" * 50)
@@ -383,7 +382,7 @@ def main():
     print(f"📝 Testing memory consolidation for thread {test_thread_id}")
 
     # Process conversation turns
-    result = memory.process_conversation_turns(test_thread_id, test_session_id)
+    result: Any = memory.process_conversation_turns(test_thread_id, test_session_id)
 
     if result.get("success"):
         print("✅ Memory consolidation successful")
