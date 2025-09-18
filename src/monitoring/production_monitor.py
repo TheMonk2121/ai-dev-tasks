@@ -9,10 +9,9 @@ Provides production monitoring capabilities including:
 """
 
 import json
-import os
 import time
 from datetime import datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
 from .health_endpoints import HealthEndpointManager
 from .metrics import get_metrics, get_performance_summary
@@ -22,14 +21,14 @@ class ProductionMonitor:
     """Production monitoring for AI development tasks"""
 
     def __init__(self):
-        self.health_manager = HealthEndpointManager()
-        self.alert_thresholds = {
+        self.health_manager: HealthEndpointManager = HealthEndpointManager()
+        self.alert_thresholds: dict[str, float] = {
             "memory_usage_percent": 80.0,
             "disk_usage_percent": 90.0,
             "database_response_time": 5.0,
         }
-        self.alerts = []
-        self.monitoring_start_time = datetime.now()
+        self.alerts: list[dict[str, Any]] = []
+        self.monitoring_start_time: datetime = datetime.now()
 
     def get_production_status(self) -> dict[str, Any]:
         """Get current production status"""
@@ -205,8 +204,8 @@ class ProductionMonitor:
                 status = self.get_production_status()
                 print(
                     f"[{datetime.now().strftime('%H:%M:%S')}] Status: {status['overall_status']} | "
-                    f"Alerts: {status['active_alerts']} | "
-                    f"Uptime: {status['uptime']}"
+                    + f"Alerts: {status['active_alerts']} | "
+                    + f"Uptime: {status['uptime']}"
                 )
 
                 # Print new alerts
@@ -216,7 +215,7 @@ class ProductionMonitor:
                 # Save periodic report
                 if len(self.alerts) > 0 and len(self.alerts) % 10 == 0:
                     report_file = f"monitoring_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-                    self.save_monitoring_report(report_file)
+                    _ = self.save_monitoring_report(report_file)
                     print(f"  📊 Report saved: {report_file}")
 
                 time.sleep(interval_seconds)

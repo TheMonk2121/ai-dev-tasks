@@ -8,15 +8,21 @@ Collects and analyzes system metrics including:
 - System resource utilization
 """
 
-import json
 import os
-import subprocess
-import time
-from datetime import datetime, timedelta
-from typing import Any, Optional
+import sys
+from datetime import datetime
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+
+try:
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+except ImportError:
+    psycopg2 = None
+    RealDictCursor = None
+
+from typing import Any
 
 
 def get_metrics() -> dict[str, Any]:
@@ -34,6 +40,9 @@ def get_metrics() -> dict[str, Any]:
 def get_database_metrics() -> dict[str, Any]:
     """Get database performance metrics"""
     try:
+        if psycopg2 is None or RealDictCursor is None:
+            return {"error": "psycopg2 not available for database metrics"}
+            
         database_url = os.getenv("DATABASE_URL", "postgresql://localhost:5432/ai_agency")
         conn = psycopg2.connect(database_url)
         cursor = conn.cursor(cursor_factory=RealDictCursor)
@@ -185,7 +194,7 @@ def get_rag_metrics() -> dict[str, Any]:
         if os.path.exists(".hypothesis/examples/"):
             try:
                 example_files = []
-                for root, dirs, files in os.walk(".hypothesis/examples/"):
+                for _root, _dirs, files in os.walk(".hypothesis/examples/"):
                     example_files.extend(files)
                 metrics["hypothesis_examples_count"] = len(example_files)
             except Exception:
@@ -244,7 +253,7 @@ def get_performance_summary() -> dict[str, Any]:
     """Get performance summary for monitoring dashboard"""
     metrics = get_metrics()
 
-    summary = {
+    summary: dict[str, Any] = {
         "timestamp": metrics["timestamp"],
         "status": "healthy",
         "alerts": [],
@@ -256,25 +265,29 @@ def get_performance_summary() -> dict[str, Any]:
         summary["status"] = "unhealthy"
         summary["alerts"].append(f"Database error: {metrics['database_metrics']['error']}")
     else:
-        summary["key_metrics"]["database_size"] = metrics["database_metrics"].get("database_size", "unknown")
+        db_metrics = metrics["database_metrics"]
+        if isinstance(db_metrics, dict):
+            summary["key_metrics"]["database_size"] = db_metrics.get("database_size", "unknown")
 
     # Check system resources
     if "error" not in metrics["system_metrics"]:
-        memory_percent = metrics["system_metrics"]["memory"]["percent_used"]
-        disk_percent = metrics["system_metrics"]["disk"]["percent_used"]
+        system_metrics = metrics["system_metrics"]
+        if isinstance(system_metrics, dict) and "memory" in system_metrics and "disk" in system_metrics:
+            memory_percent = system_metrics["memory"]["percent_used"]
+            disk_percent = system_metrics["disk"]["percent_used"]
 
-        if memory_percent > 80:
-            summary["alerts"].append(f"High memory usage: {memory_percent:.1f}%")
-            if summary["status"] == "healthy":
-                summary["status"] = "degraded"
+            if memory_percent > 80:
+                summary["alerts"].append(f"High memory usage: {memory_percent:.1f}%")
+                if summary["status"] == "healthy":
+                    summary["status"] = "degraded"
 
-        if disk_percent > 90:
-            summary["alerts"].append(f"High disk usage: {disk_percent:.1f}%")
-            if summary["status"] == "healthy":
-                summary["status"] = "degraded"
+            if disk_percent > 90:
+                summary["alerts"].append(f"High disk usage: {disk_percent:.1f}%")
+                if summary["status"] == "healthy":
+                    summary["status"] = "degraded"
 
-        summary["key_metrics"]["memory_usage"] = f"{memory_percent:.1f}%"
-        summary["key_metrics"]["disk_usage"] = f"{disk_percent:.1f}%"
+            summary["key_metrics"]["memory_usage"] = f"{memory_percent:.1f}%"
+            summary["key_metrics"]["disk_usage"] = f"{disk_percent:.1f}%"
 
     # Check RAG system
     if "error" in metrics["rag_metrics"]:
@@ -282,7 +295,9 @@ def get_performance_summary() -> dict[str, Any]:
         if summary["status"] == "healthy":
             summary["status"] = "degraded"
     else:
-        edge_cases = metrics["rag_metrics"].get("edge_cases_count", 0)
-        summary["key_metrics"]["edge_cases"] = edge_cases
+        rag_metrics = metrics["rag_metrics"]
+        if isinstance(rag_metrics, dict):
+            edge_cases = rag_metrics.get("edge_cases_count", 0)
+            summary["key_metrics"]["edge_cases"] = edge_cases
 
     return summary

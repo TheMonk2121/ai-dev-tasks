@@ -8,17 +8,18 @@ as evaluation_metrics table. Integrates with existing monitoring system.
 import json
 import os
 import sqlite3
-import uuid
+import sys
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
-try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-    PSYCOPG2_AVAILABLE = True
-except ImportError:
-    PSYCOPG2_AVAILABLE = False
+from psycopg.rows import dict_row
+
+from src.common.psycopg3_config import get_db_connection
+
+PSYCOPG_AVAILABLE = True
 
 
 class MaintenanceMetricsDB:
@@ -26,18 +27,19 @@ class MaintenanceMetricsDB:
 
     def __init__(self, database_url: str | None = None):
         """Initialize with database connection."""
-        self.database_url = database_url or os.getenv("POSTGRES_DSN") or os.getenv("DATABASE_URL")
-        if not self.database_url:
+        url = database_url or os.getenv("POSTGRES_DSN") or os.getenv("DATABASE_URL")
+        if not url:
             raise ValueError("Database URL required (POSTGRES_DSN or DATABASE_URL)")
+        self.database_url: str = url
 
         # Determine database type
-        self.is_sqlite = (
+        self.is_sqlite: bool = (
             self.database_url == ":memory:"
             or self.database_url.startswith("sqlite://")
             or self.database_url.endswith(".db")
             or "/tmp/" in self.database_url
         )
-        self.is_postgres = not self.is_sqlite and PSYCOPG2_AVAILABLE
+        self.is_postgres: bool = not self.is_sqlite and PSYCOPG_AVAILABLE
 
     def store_maintenance_session(
         self,
@@ -138,8 +140,6 @@ class MaintenanceMetricsDB:
 
     def _get_history_sqlite(self, maintenance_type: str | None, days: int, limit: int) -> list[dict[str, Any]]:
         """Get maintenance history from SQLite database."""
-        if self.database_url is None:
-            raise ValueError("Database URL is None")
         with sqlite3.connect(self.database_url) as conn:
             conn.row_factory = sqlite3.Row
             cur = conn.cursor()
@@ -163,7 +163,7 @@ class MaintenanceMetricsDB:
             query += " ORDER BY ts DESC LIMIT ?"
             params.append(limit)
 
-            cur.execute(query, params)
+            _ = cur.execute(query, params)
             rows = [dict(row) for row in cur.fetchall()]
 
             # Parse JSON fields
@@ -183,8 +183,9 @@ class MaintenanceMetricsDB:
 
     def _get_history_postgres(self, maintenance_type: str | None, days: int, limit: int) -> list[dict[str, Any]]:
         """Get maintenance history from PostgreSQL database."""
-        with psycopg2.connect(self.database_url) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        conn = get_db_connection()
+        try:
+            with conn.cursor(row_factory=dict_row) as cur:
                 query = """
                 SELECT ts, session_id, maintenance_type, status, files_removed,
                        directories_removed, bytes_freed, duration_seconds, error_count,
@@ -201,8 +202,10 @@ class MaintenanceMetricsDB:
                 query += " ORDER BY ts DESC LIMIT %s"
                 params.append(limit)
 
-                cur.execute(query, params)
+                _ = cur.execute(query, params)
                 return [dict(row) for row in cur.fetchall()]
+        finally:
+            conn.close()
 
     def _store_sqlite(
         self,
@@ -219,15 +222,13 @@ class MaintenanceMetricsDB:
         git_sha: str | None,
     ) -> bool:
         """Store maintenance session in SQLite database."""
-        if self.database_url is None:
-            raise ValueError("Database URL is None")
         with sqlite3.connect(self.database_url) as conn:
             cur = conn.cursor()
             # Create table if it doesn't exist
             self._ensure_sqlite_table_exists(cur)
 
             # Insert maintenance metrics
-            cur.execute(
+            _ = cur.execute(
                 """
                 INSERT INTO maintenance_metrics
                 (ts, session_id, maintenance_type, status, files_removed, 
@@ -268,13 +269,14 @@ class MaintenanceMetricsDB:
         git_sha: str | None,
     ) -> bool:
         """Store maintenance session in PostgreSQL database."""
-        with psycopg2.connect(self.database_url) as conn:
+        conn = get_db_connection()
+        try:
             with conn.cursor() as cur:
                 # Create table if it doesn't exist
                 self._ensure_table_exists(cur)
 
                 # Insert maintenance metrics
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO maintenance_metrics
                     (ts, session_id, maintenance_type, status, files_removed, 
@@ -299,6 +301,8 @@ class MaintenanceMetricsDB:
                 )
                 conn.commit()
                 return True
+        finally:
+            conn.close()
 
     def get_maintenance_summary(self, days: int = 30) -> dict[str, Any]:
         """
@@ -325,8 +329,6 @@ class MaintenanceMetricsDB:
 
     def _get_summary_sqlite(self, days: int) -> dict[str, Any]:
         """Get maintenance summary from SQLite database."""
-        if self.database_url is None:
-            raise ValueError("Database URL is None")
         with sqlite3.connect(self.database_url) as conn:
             conn.row_factory = sqlite3.Row
             cur = conn.cursor()
@@ -334,7 +336,7 @@ class MaintenanceMetricsDB:
             # Ensure table exists
             self._ensure_sqlite_table_exists(cur)
 
-            cur.execute(
+            _ = cur.execute(
                 f"""
                 SELECT 
                     maintenance_type,
@@ -369,9 +371,10 @@ class MaintenanceMetricsDB:
 
     def _get_summary_postgres(self, days: int) -> dict[str, Any]:
         """Get maintenance summary from PostgreSQL database."""
-        with psycopg2.connect(self.database_url) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute(
+        conn = get_db_connection()
+        try:
+            with conn.cursor(row_factory=dict_row) as cur:
+                _ = cur.execute(
                     """
                     SELECT 
                         maintenance_type,
@@ -404,6 +407,8 @@ class MaintenanceMetricsDB:
                     "by_type": results,
                     "timestamp": datetime.now().isoformat(),
                 }
+        finally:
+            conn.close()
 
     def _ensure_sqlite_table_exists(self, cur: Any) -> None:
         """Ensure maintenance_metrics table exists in SQLite with proper structure."""

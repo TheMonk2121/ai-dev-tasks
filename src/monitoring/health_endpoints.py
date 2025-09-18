@@ -8,23 +8,25 @@ Manages health checks for various system components including:
 - External service dependencies
 """
 
-import json
 import os
-import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+
+from psycopg.rows import dict_row
+
+from src.common.psycopg3_config import get_db_connection
 
 
 class HealthEndpointManager:
     """Manages health checks for system components"""
 
     def __init__(self) -> None:
-        self.database_url = os.getenv("DATABASE_URL", "postgresql://localhost:5432/ai_agency")
-        self.health_thresholds = {
+        self.database_url: str = os.getenv("DATABASE_URL", "postgresql://localhost:5432/ai_agency")
+        self.health_thresholds: dict[str, float] = {
             "database_response_time": 5.0,  # seconds
             "memory_usage_percent": 80.0,  # percentage
             "disk_usage_percent": 90.0,  # percentage
@@ -80,35 +82,34 @@ class HealthEndpointManager:
         """Check database connectivity and performance"""
         try:
             start_time = datetime.now()
-            conn = psycopg2.connect(self.database_url)
-            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            conn = get_db_connection()
 
-            # Test basic connectivity
-            cursor.execute("SELECT 1")
-            cursor.fetchone()
+            with conn.cursor(row_factory=dict_row) as cursor:
+                # Test basic connectivity
+                _ = cursor.execute("SELECT 1")
+                _ = cursor.fetchone()
 
-            # Check if pg_stat_statements is enabled
-            cursor.execute(
+                # Check if pg_stat_statements is enabled
+                _ = cursor.execute(
+                    """
+                    SELECT EXISTS(
+                        SELECT 1 FROM pg_extension 
+                        WHERE extname = 'pg_stat_statements'
+                    ) as exists
                 """
-                SELECT EXISTS(
-                    SELECT 1 FROM pg_extension 
-                    WHERE extname = 'pg_stat_statements'
-                ) as exists
-            """
-            )
-            result = cursor.fetchone()
-            pg_stat_enabled = result["exists"] if result else False
+                )
+                result = cursor.fetchone()
+                pg_stat_enabled = result["exists"] if result else False
 
-            # Get database size
-            cursor.execute(
+                # Get database size
+                _ = cursor.execute(
+                    """
+                    SELECT pg_size_pretty(pg_database_size(current_database())) as size
                 """
-                SELECT pg_size_pretty(pg_database_size(current_database())) as size
-            """
-            )
-            result = cursor.fetchone()
-            db_size = result["size"] if result else "unknown"
+                )
+                result = cursor.fetchone()
+                db_size = result["size"] if result else "unknown"
 
-            cursor.close()
             conn.close()
 
             response_time = (datetime.now() - start_time).total_seconds()

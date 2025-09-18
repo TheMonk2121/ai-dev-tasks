@@ -15,7 +15,7 @@ raise informative errors only when used.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Protocol, override
 
 
 class TokenCounter(Protocol):
@@ -25,10 +25,11 @@ class TokenCounter(Protocol):
 @dataclass
 class _OpenAIBPE(TokenCounter):
     model_name: str
+    _enc: Any = None
 
     def __post_init__(self) -> None:
         try:
-import tiktoken  # type: ignore
+            import tiktoken  # type: ignore
         except Exception as exc:  # pragma: no cover - optional dep
             raise RuntimeError("tiktoken is required for openai_bpe token counting") from exc
         # Prefer model-specific encoding; fallback to cl100k_base
@@ -37,6 +38,7 @@ import tiktoken  # type: ignore
         except Exception:
             self._enc = tiktoken.get_encoding("cl100k_base")
 
+    @override
     def count(self, text: str) -> int:
         return len(self._enc.encode(text))
 
@@ -45,6 +47,7 @@ import tiktoken  # type: ignore
 class _LlamaCpp(TokenCounter):
     model_name: str
     model_path: str | None = None
+    _llm: Any = None
 
     def __post_init__(self) -> None:
         try:
@@ -56,6 +59,7 @@ class _LlamaCpp(TokenCounter):
             raise RuntimeError("model_path is required for llama_cpp counter")
         self._llm = Llama(model_path=self.model_path, n_ctx=32, vocab_only=True)
 
+    @override
     def count(self, text: str) -> int:
         return len(self._llm.tokenize(text.encode("utf-8")))
 
@@ -63,6 +67,8 @@ class _LlamaCpp(TokenCounter):
 @dataclass
 class _HFFast(TokenCounter):
     model_name: str
+    _Tokenizer: Any = None
+    _tok: Any = None
 
     def __post_init__(self) -> None:
         try:
@@ -72,12 +78,13 @@ class _HFFast(TokenCounter):
         self._Tokenizer = Tokenizer  # save ref
         self._tok = self._Tokenizer.from_pretrained(self.model_name)
 
+    @override
     def count(self, text: str) -> int:
         return len(self._tok.encode(text).ids)
 
 
 def make_counter(model_family: str, model_name: str, *, model_path: str | None = None) -> TokenCounter:
-    family = model_family.lower()
+    family: Any = model_family.lower()
     if family == "openai_bpe":
         return _OpenAIBPE(model_name)
     if family == "llama_cpp":

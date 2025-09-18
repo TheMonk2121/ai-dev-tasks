@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import os
-import sys
 import unicodedata
 from dataclasses import dataclass
-from typing import Any, Optional, Protocol, Union
+from typing import Protocol
 
 from .character_tokenizer import CharacterTokenizer, make_character_tokenizer
 
@@ -309,7 +307,7 @@ def make_script_aware_tokenizer(
     normalize_unicode: bool = True,
     include_whitespace: bool = True,
     include_control_chars: bool = False,
-) -> ScriptAwareTokenizer:
+) -> ScriptBoundaryTokenizer:
     """
     Create a script-aware tokenizer.
 
