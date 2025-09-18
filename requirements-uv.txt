@@ -1194,7 +1194,6 @@ psutil==7.0.0 \
     #   ai-dev-tasks
     #   memory-profiler
     #   safety
-psycopg2-binary==2.9.7 \
     --hash=sha256:1b918f64a51ffe19cd2e230b3240ba481330ce1d4b7875ae67305bd1d37b041c
     # via ai-dev-tasks
 py-serializable==2.1.0 \

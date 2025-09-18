@@ -21,10 +21,8 @@ source = { editable = "." }
 dependencies = [
     { name = "asyncpg" },
     { name = "bandit" },
-    { name = "black" },
     { name = "boto3" },
     { name = "click" },
-    { name = "commitizen" },
     { name = "coverage" },
     { name = "dspy" },
     { name = "fastapi" },
@@ -33,13 +31,10 @@ dependencies = [
     { name = "httpx" },
     { name = "huggingface-hub" },
     { name = "hypothesis" },
-    { name = "isort" },
     { name = "jinja2" },
     { name = "keyring" },
     { name = "logfire", extra = ["fastapi", "sqlalchemy"] },
     { name = "markdown" },
-    { name = "mccabe" },
-    { name = "memory-profiler" },
     { name = "numpy" },
     { name = "openai" },
     { name = "opentelemetry-api" },
@@ -49,7 +44,6 @@ dependencies = [
     { name = "opentelemetry-instrumentation-jinja2" },
     { name = "opentelemetry-instrumentation-logging" },
     { name = "opentelemetry-instrumentation-psycopg" },
-    { name = "opentelemetry-instrumentation-psycopg2" },
     { name = "opentelemetry-instrumentation-requests" },
     { name = "opentelemetry-instrumentation-sqlite3" },
     { name = "opentelemetry-instrumentation-urllib" },
@@ -58,11 +52,8 @@ dependencies = [
     { name = "pgvector" },
     { name = "pip-audit" },
     { name = "pipdeptree" },
-    { name = "pre-commit" },
     { name = "psutil" },
     { name = "psycopg", extra = ["binary", "pool"] },
-    { name = "psycopg2-binary" },
-    { name = "py-spy" },
     { name = "pycycle" },
     { name = "pydantic" },
     { name = "pydantic-ai" },
@@ -70,14 +61,11 @@ dependencies = [
     { name = "pydantic-graph" },
     { name = "pydantic-settings" },
     { name = "pymupdf" },
-    { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-xdist" },
     { name = "python-dotenv" },
     { name = "python-socketio" },
-    { name = "radon" },
     { name = "requests" },
-    { name = "ruff" },
     { name = "safety" },
     { name = "sentence-transformers" },
     { name = "tiktoken" },
@@ -113,7 +101,6 @@ dev = [
     { name = "types-boto3" },
     { name = "types-flask" },
     { name = "types-jinja2" },
-    { name = "types-psycopg2" },
     { name = "types-pyyaml" },
     { name = "types-requests" },
     { name = "types-setuptools" },
@@ -143,11 +130,9 @@ requires-dist = [
     { name = "asyncpg", specifier = ">=0.30.0" },
     { name = "bandit", specifier = ">=1.7.5" },
     { name = "bandit", marker = "extra == 'security'", specifier = ">=1.7.5" },
-    { name = "black", specifier = ">=23.0.0" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
     { name = "boto3", specifier = ">=1.40.25" },
     { name = "click", specifier = ">=8.0.0" },
-    { name = "commitizen", specifier = ">=3.0.0" },
     { name = "commitizen", marker = "extra == 'dev'", specifier = ">=3.12.0" },
     { name = "coverage", specifier = ">=7.10.6" },
     { name = "datasketch", marker = "extra == 'dev'", specifier = ">=1.6.5" },
@@ -160,15 +145,12 @@ requires-dist = [
     { name = "huggingface-hub", specifier = ">=0.30.0" },
     { name = "huggingface-hub", marker = "extra == 'ml'", specifier = ">=0.30.0" },
     { name = "hypothesis", specifier = ">=6.135.24,<6.140.0" },
-    { name = "isort", specifier = ">=5.12.0" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=5.12.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "keyring", specifier = ">=24.0.0" },
     { name = "logfire", extras = ["fastapi", "sqlalchemy"], specifier = ">=4.4.0" },
     { name = "markdown", specifier = ">=3.4.0" },
-    { name = "mccabe", specifier = ">=0.7.0" },
     { name = "mccabe", marker = "extra == 'dev'", specifier = ">=0.7.0" },
-    { name = "memory-profiler", specifier = ">=0.60.0" },
     { name = "memory-profiler", marker = "extra == 'dev'", specifier = ">=0.60.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.18.1" },
     { name = "numpy", specifier = ">=1.24.0" },
@@ -180,7 +162,6 @@ requires-dist = [
     { name = "opentelemetry-instrumentation-jinja2", specifier = ">=0.57b0" },
     { name = "opentelemetry-instrumentation-logging", specifier = ">=0.40b0" },
     { name = "opentelemetry-instrumentation-psycopg", specifier = ">=0.57b0" },
-    { name = "opentelemetry-instrumentation-psycopg2", specifier = ">=0.57b0" },
     { name = "opentelemetry-instrumentation-requests", specifier = ">=0.40b0" },
     { name = "opentelemetry-instrumentation-sqlite3", specifier = ">=0.57b0" },
     { name = "opentelemetry-instrumentation-urllib", specifier = ">=0.57b0" },
@@ -190,12 +171,9 @@ requires-dist = [
     { name = "pip-audit", specifier = ">=2.6.0" },
     { name = "pip-audit", marker = "extra == 'security'", specifier = ">=2.6.0" },
     { name = "pipdeptree", specifier = ">=2.0.0" },
-    { name = "pre-commit", specifier = ">=3.0.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.0.0" },
     { name = "psutil", specifier = ">=5.9.0" },
     { name = "psycopg", extras = ["binary", "pool"], specifier = ">=3.2" },
-    { name = "psycopg2-binary", specifier = "==2.9.7" },
-    { name = "py-spy", specifier = ">=0.3.0" },
     { name = "py-spy", marker = "extra == 'dev'", specifier = ">=0.3.0" },
     { name = "pycycle", specifier = ">=0.0.8" },
     { name = "pydantic", specifier = ">=2.0.0" },
@@ -204,7 +182,6 @@ requires-dist = [
     { name = "pydantic-graph", specifier = ">=0.2" },
     { name = "pydantic-settings", specifier = ">=2.0.0" },
     { name = "pymupdf", specifier = "==1.23.8" },
-    { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.3" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.0" },
     { name = "pytest-cov", specifier = ">=6.2.1" },
@@ -215,10 +192,8 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "python-socketio", specifier = "==5.8.0" },
     { name = "pyupgrade", marker = "extra == 'dev'", specifier = ">=3.20.0" },
-    { name = "radon", specifier = ">=5.1.0" },
     { name = "radon", marker = "extra == 'dev'", specifier = ">=5.1.0" },
     { name = "requests", specifier = ">=2.31.0" },
-    { name = "ruff", specifier = ">=0.1.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
     { name = "safety", specifier = ">=2.3.0" },
     { name = "safety", marker = "extra == 'security'", specifier = ">=2.3.0" },
@@ -236,7 +211,6 @@ requires-dist = [
     { name = "types-boto3", marker = "extra == 'dev'", specifier = ">=1.40.29" },
     { name = "types-flask", marker = "extra == 'dev'", specifier = ">=1.1.6" },
     { name = "types-jinja2", marker = "extra == 'dev'", specifier = ">=2.11.9" },
-    { name = "types-psycopg2", marker = "extra == 'dev'", specifier = ">=2.9.21" },
     { name = "types-pyyaml", marker = "extra == 'dev'", specifier = ">=6.0.12" },
     { name = "types-requests", marker = "extra == 'dev'", specifier = ">=2.31.0" },
     { name = "types-setuptools", marker = "extra == 'dev'", specifier = ">=80.9.0" },
@@ -2710,20 +2684,6 @@ wheels = [
 ]
 
 [[package]]
-name = "opentelemetry-instrumentation-psycopg2"
-version = "0.57b0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-instrumentation-dbapi" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/a8/66/f2004cde131663810e62b47bb48b684660632876f120c6b1d400a04ccb06/opentelemetry_instrumentation_psycopg2-0.57b0.tar.gz", hash = "sha256:4e9d05d661c50985f0a5d7f090a7f399d453b467c9912c7611fcef693d15b038", size = 10722, upload-time = "2025-07-29T15:43:05.644Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/40/00f9c1334fb0c9d74c99d37c4a730cbe6dc941eea5fae6f9bc36e5a53d19/opentelemetry_instrumentation_psycopg2-0.57b0-py3-none-any.whl", hash = "sha256:94fdde02b7451c8e85d43b4b9dd13a34fee96ffd43324d1b3567f47d2903b99f", size = 10721, upload-time = "2025-07-29T15:42:15.698Z" },
-]
-
-[[package]]
 name = "opentelemetry-instrumentation-requests"
 version = "0.57b0"
 source = { registry = "https://pypi.org/simple" }
@@ -3305,12 +3265,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/cf/13/1e7850bb2c69a6326
 wheels = [
     { url = "https://files.pythonhosted.org/packages/47/fd/4feb52a55c1a4bd748f2acaed1903ab54a723c47f6d0242780f4d97104d4/psycopg_pool-3.2.6-py3-none-any.whl", hash = "sha256:5887318a9f6af906d041a0b1dc1c60f8f0dda8340c2572b74e10907b51ed5da7", size = 38252, upload-time = "2025-02-26T12:03:45.073Z" },
 ]
-
-[[package]]
-name = "psycopg2-binary"
-version = "2.9.7"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/45/f4/4da1e7f836de4fa3ddb294bb1d4c08daa5cd7b261a6b9a5b50a653a1a29f/psycopg2-binary-2.9.7.tar.gz", hash = "sha256:1b918f64a51ffe19cd2e230b3240ba481330ce1d4b7875ae67305bd1d37b041c", size = 383573, upload-time = "2023-08-05T10:39:32.036Z" }
 
 [[package]]
 name = "py-serializable"
@@ -4868,15 +4822,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/61/68/0c7144be5c6dc16538e79458839fc914ea494481c7e64566de4ecc0c3682/types_protobuf-6.30.2.20250822.tar.gz", hash = "sha256:faacbbe87bd8cba4472361c0bd86f49296bd36f7761e25d8ada4f64767c1bde9", size = 62379, upload-time = "2025-08-22T03:01:56.572Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/52/64/b926a6355993f712d7828772e42b9ae942f2d306d25072329805c374e729/types_protobuf-6.30.2.20250822-py3-none-any.whl", hash = "sha256:5584c39f7e36104b5f8bdfd31815fa1d5b7b3455a79ddddc097b62320f4b1841", size = 76523, upload-time = "2025-08-22T03:01:55.157Z" },
-]
-
-[[package]]
-name = "types-psycopg2"
-version = "2.9.21.20250809"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/17/d0/66f3f04bab48bfdb2c8b795b2b3e75eb20c7d1fb0516916db3be6aa4a683/types_psycopg2-2.9.21.20250809.tar.gz", hash = "sha256:b7c2cbdcf7c0bd16240f59ba694347329b0463e43398de69784ea4dee45f3c6d", size = 26539, upload-time = "2025-08-09T03:14:54.711Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/7b/98/182497602921c47fadc8470d51a32e5c75343c8931c0b572a5c4ae3b948b/types_psycopg2-2.9.21.20250809-py3-none-any.whl", hash = "sha256:59b7b0ed56dcae9efae62b8373497274fc1a0484bdc5135cdacbe5a8f44e1d7b", size = 24824, upload-time = "2025-08-09T03:14:53.908Z" },
 ]
 
 [[package]]

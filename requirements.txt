@@ -44,7 +44,6 @@ torch==2.3.0            # PyTorch for neural networks and tensor operations
 torchvision>=0.23.0     # Computer vision utilities for PyTorch
 
 # Database dependencies
-psycopg2-binary==2.9.9
 pgvector==0.2.5
 
 # Document processing
