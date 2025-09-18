@@ -150,7 +150,7 @@ class EvaluationSettings(BaseSettings):
         import json
 
         try:
-            parsed = json.loads(v)
+            parsed: Any = json.loads(v)
             if isinstance(parsed, list):
                 return [str(item) for item in parsed]
             else:

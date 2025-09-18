@@ -41,24 +41,24 @@ def _canonicalize(
     q = dict(parse_qsl(u.query, keep_blank_values=True))
 
     # Defaults (only if absent)
-    _ = q.setdefault("application_name", f"{app}:{role}")
+    _: Any = q.setdefault("application_name", f"{app}:{role}")
 
     # connect_timeout: fast-fail for local dev (seconds)
     _ = q.setdefault("connect_timeout", os.getenv("PG_CONNECT_TIMEOUT", "3"))
 
     # target_session_attrs: pgBouncer-aware default
     default_tsa = "any" if is_pgbouncer else "read-write"
-    _ = q.setdefault("target_session_attrs", default_tsa)
+    _: Any = q.setdefault("target_session_attrs", default_tsa)
 
     # sslmode policy
     # - Unix sockets do not use TLS
     # - Remote DSN allowed: escalate to 'require' if none provided
     # - Else: local default comes from PG_SSLMODE or 'prefer'
     if not is_unix_socket:
-        default_ssl = os.getenv("PG_SSLMODE", "prefer")
+        default_ssl: Any = os.getenv("PG_SSLMODE", "prefer")
         if is_remote and os.getenv("ALLOW_REMOTE_DSN", "0") == "1":
             default_ssl = "require"
-        _ = q.setdefault("sslmode", default_ssl)
+        _: Any = q.setdefault("sslmode", default_ssl)
 
     q_str = urlencode(sorted(q.items()))
     scheme = u.scheme or "postgresql"

@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, override
 
 import yaml
 from pydantic import Field
@@ -25,8 +25,9 @@ class YamlSource(PydanticBaseSettingsSource):
 
     def __init__(self, settings_cls: type[BaseSettings], path: Path) -> None:
         super().__init__(settings_cls)
-        self.path = path
+        self.path: Path = path
 
+    @override
     def __call__(self) -> dict[str, Any]:
         """Load configuration from YAML file."""
         if not self.path.exists():
@@ -40,6 +41,7 @@ class YamlSource(PydanticBaseSettingsSource):
             print(f"Warning: Could not load YAML config from {self.path}: {e}")
             return {}
 
+    @override
     def get_field_value(self, field_info: Any, field_name: str) -> tuple[Any, str, bool]:
         """Get field value from YAML source."""
         data = self()
@@ -87,7 +89,7 @@ class Settings(BaseSettings):
     dev: Development = Field(default_factory=lambda: Development(), description="Development configuration")
 
     # ---- Pydantic Settings Configuration ----
-    model_config = SettingsConfigDict(
+    model_config: SettingsConfigDict = SettingsConfigDict(
         env_prefix="APP_",
         env_file=".env",
         env_nested_delimiter="__",
@@ -98,6 +100,7 @@ class Settings(BaseSettings):
     )
 
     @classmethod
+    @override
     def settings_customise_sources(
         cls,
         settings_cls: type[BaseSettings],
@@ -108,7 +111,7 @@ class Settings(BaseSettings):
     ) -> tuple[PydanticBaseSettingsSource, ...]:
         """Customize settings sources with clear precedence order."""
         # Determine environment-specific YAML file
-        env = os.getenv("APP_ENV", "dev")
+        env: Any = os.getenv("APP_ENV", "dev")
         base_path = Path("configs/base.yaml")
         env_path = Path(f"configs/{env}.yaml")
 

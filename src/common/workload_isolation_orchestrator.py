@@ -113,16 +113,10 @@ class WorkloadIsolationOrchestrator:
         """Verify database connectivity after GUC changes."""
         try:
             # Simple connectivity test
-    import psycopg2
-            conn = psycopg2.connect(self.guc_manager.dsn)
-            cur = conn.cursor()
-
-            # Test basic query
-            cur.execute("SELECT 1")
-            result = cur.fetchone()
-
-            cur.close()
-            conn.close()
+            with Psycopg3Config.get_cursor("default") as cur:
+                # Test basic query
+                cur.execute("SELECT 1")
+                result = cur.fetchone()
 
             # Ensure result exists and has expected value
             if result is None:

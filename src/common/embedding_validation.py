@@ -4,7 +4,11 @@ Embedding dimension validation utilities.
 Prevents silent failures from dimension mismatches between DB and model.
 """
 
-import psycopg2
+# Add project paths
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 
 def _pg_vector_dim(dsn: str, table: str = "document_chunks", column: str = "embedding") -> int:
@@ -19,7 +23,7 @@ def _pg_vector_dim(dsn: str, table: str = "document_chunks", column: str = "embe
         Vector dimension, or -1 if not found
     """
     try:
-        with psycopg2.connect(dsn) as conn, conn.cursor() as cur:
+        with Psycopg3Config.get_cursor("default") as cur:
             # atttypmod directly contains the dimension for vector columns
             q = """
             SELECT a.atttypmod AS dim
@@ -29,7 +33,7 @@ def _pg_vector_dim(dsn: str, table: str = "document_chunks", column: str = "embe
             WHERE c.relname = %s AND a.attname = %s AND n.nspname = ANY (current_schemas(true));
             """
             cur.execute(q, (table, column))
-            row = cur.fetchone()
+            row: Any = cur.fetchone()
             return int(row[0]) if row and row[0] else -1
     except Exception as e:
         print(f"Warning: Could not determine vector dimension: {e}")

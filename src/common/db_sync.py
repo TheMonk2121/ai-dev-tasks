@@ -1,17 +1,21 @@
-import psycopg2
-from psycopg2.extras import RealDictCursor
+"""
+Database connection utilities using psycopg3.
 
-from .db_dsn import resolve_dsn
+This module provides database connection functionality using the project's
+standardized psycopg3 configuration.
+"""
+
+from .psycopg3_config import connect as _psycopg3_connect
 
 
-def connect(role: str = "default"):
+def connect(role: str | None = None):
     """
-    Create a psycopg2 database connection with resolved DSN.
+    Create a psycopg3 database connection with resolved DSN.
 
     Args:
         role: Application role for connection tagging
 
     Returns:
-        psycopg2 database connection
+        psycopg3 database connection
     """
-    return psycopg2.connect(resolve_dsn(role=role), cursor_factory=RealDictCursor)
+    return _psycopg3_connect(role or "default")
