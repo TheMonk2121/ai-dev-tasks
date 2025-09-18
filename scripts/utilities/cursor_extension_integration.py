@@ -26,9 +26,9 @@ class CursorExtensionAPI:
     def __init__(self, dsn: str | None = None) -> None:
         resolved_dsn = resolve_dsn()
         if dsn is not None:
-            self.dsn = dsn
+            self.dsn: Any = dsn
         else:
-            self.dsn = resolved_dsn
+            self.dsn: Any = resolved_dsn
         self.session_file: str = os.path.expanduser("~/.cursor_active_session.json")
         self.current_integration: CursorWorkingIntegration | None = None
         self._load_active_session()
@@ -38,11 +38,11 @@ class CursorExtensionAPI:
         try:
             if os.path.exists(self.session_file):
                 with open(self.session_file) as f:
-                    session_data = json.load(f)
+                    session_data: Any = json.load(f)
 
                 if session_data.get("active", False):
                     # Recreate integration with existing session
-                    self.current_integration = CursorWorkingIntegration(self.dsn)
+                    self.current_integration: Any = CursorWorkingIntegration(self.dsn)
                     self.current_integration.session_id = session_data["session_id"]
                     self.current_integration.thread_id = session_data["thread_id"]
         except Exception as e:
@@ -72,7 +72,7 @@ class CursorExtensionAPI:
         """Start a new conversation session."""
         try:
             # Initialize new integration
-            self.current_integration = CursorWorkingIntegration(self.dsn)
+            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
 
             # Save session
             self._save_active_session()
@@ -91,7 +91,7 @@ class CursorExtensionAPI:
         try:
             if not self.current_integration:
                 # Auto-start session if none exists
-                result = self.start_session()
+                result: Any = self.start_session()
                 if not result["success"]:
                     return result
 
@@ -145,7 +145,7 @@ class CursorExtensionAPI:
             self.current_integration.close_session()
 
             # Clear current integration
-            self.current_integration = None
+            self.current_integration: Any = None
             self._save_active_session()
 
             return {"success": True, "final_stats": stats, "message": "Session ended successfully"}
@@ -157,32 +157,32 @@ def main() -> None:
     """Main function for testing."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Cursor Extension Integration API")
-    _ = parser.add_argument("--start", action="store_true", help="Start new session")
-    _ = parser.add_argument("--query", type=str, help="Capture a query")
-    _ = parser.add_argument("--response", type=str, help="Capture a response")
-    _ = parser.add_argument("--stats", action="store_true", help="Get session stats")
-    _ = parser.add_argument("--end", action="store_true", help="End current session")
+    parser: Any = argparse.ArgumentParser(description="Cursor Extension Integration API")
+    _: Any = parser.add_argument("--start", action="store_true", help="Start new session")
+    _: Any = parser.add_argument("--query", type=str, help="Capture a query")
+    _: Any = parser.add_argument("--response", type=str, help="Capture a response")
+    _: Any = parser.add_argument("--stats", action="store_true", help="Get session stats")
+    _: Any = parser.add_argument("--end", action="store_true", help="End current session")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Initialize API
     api = CursorExtensionAPI()
 
     if args.start:
-        result = api.start_session()
+        result: Any = api.start_session()
         print(json.dumps(result, indent=2))
     elif args.query:
-        result = api.capture_query(args.query)
+        result: Any = api.capture_query(args.query)
         print(json.dumps(result, indent=2))
     elif args.response:
-        result = api.capture_response(args.response)
+        result: Any = api.capture_response(args.response)
         print(json.dumps(result, indent=2))
     elif args.stats:
-        result = api.get_session_stats()
+        result: Any = api.get_session_stats()
         print(json.dumps(result, indent=2))
     elif args.end:
-        result = api.end_session()
+        result: Any = api.end_session()
         print(json.dumps(result, indent=2))
     else:
         print("Usage: python cursor_extension_integration.py --start|--query 'text'|--response 'text'|--stats|--end")

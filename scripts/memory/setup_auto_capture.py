@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 
-def create_cursor_commands():
+def create_cursor_commands() -> Any:
     """Create Cursor command scripts."""
     scripts_dir = Path.home() / ".cursor_commands"
     scripts_dir.mkdir(exist_ok=True)
@@ -60,7 +60,7 @@ from cursor_auto_capture import CursorAutoCapture
 
 auto_capture = CursorAutoCapture()
 if auto_capture.capture_active:
-    stats = auto_capture.get_session_stats()
+    stats: Any = auto_capture.get_session_stats()
     print(f"🟢 Capture ACTIVE - Session: {stats.get('session_id', 'Unknown')}")
     print(f"   Messages: {stats.get('message_count', 0)}")
 else:
@@ -73,7 +73,7 @@ else:
     return scripts_dir
 
 
-def create_cursor_extension():
+def create_cursor_extension() -> Any:
     """Create a simple Cursor extension for conversation capture."""
     extension_dir = Path.home() / ".cursor" / "extensions" / "conversation-capture"
     extension_dir.mkdir(parents=True, exist_ok=True)
@@ -166,7 +166,7 @@ module.exports = {
     return extension_dir
 
 
-def create_shell_aliases():
+def create_shell_aliases() -> Any:
     """Create shell aliases for easy access."""
     aliases = """
 # Cursor Conversation Capture Aliases
@@ -190,7 +190,7 @@ alias cursor-capture-status="python3 ~/.cursor_commands/status_capture.py"
         print("✅ Added aliases to .bashrc")
 
 
-def main():
+def main() -> Any:
     """Main setup function."""
     print("🚀 Setting up Automatic Cursor Conversation Capture")
     print("=" * 60)

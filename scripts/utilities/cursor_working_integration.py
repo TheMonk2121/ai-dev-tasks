@@ -12,8 +12,11 @@ import time
 import uuid
 from datetime import datetime
 
+import psycopg
+
 # from typing import Any  # Unused import removed
-import psycopg2
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from sentence_transformers import SentenceTransformer
 
 # Add project paths
@@ -47,7 +50,7 @@ class CursorWorkingIntegration:
             return
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Create session
                     cur.execute(
@@ -103,7 +106,7 @@ class CursorWorkingIntegration:
     def _ensure_thread_exists(self, thread_id: str) -> bool:
         """Ensure a thread exists in the database, creating it if necessary."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Check if thread exists
                     cur.execute("SELECT thread_id FROM atlas_thread WHERE thread_id = %s", (thread_id,))
@@ -153,7 +156,7 @@ class CursorWorkingIntegration:
             return turn_id
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Start transaction for atomicity
                     cur.execute("BEGIN")
@@ -310,7 +313,7 @@ class CursorWorkingIntegration:
         print(f"🤖 Capturing AI response: {response[:50]}...")
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Start transaction for atomicity
                     cur.execute("BEGIN")
@@ -492,7 +495,7 @@ class CursorWorkingIntegration:
             }
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Get message count from atlas_conversation_turn table
                     cur.execute(
@@ -535,7 +538,7 @@ class CursorWorkingIntegration:
     def get_recent_conversation(self, limit: int = 10) -> list[dict[str, object]]:
         """Get recent conversation turns."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -593,7 +596,7 @@ class CursorWorkingIntegration:
     def close_session(self) -> None:
         """Close the current session."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
+            with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
                     # Update session status
                     cur.execute(

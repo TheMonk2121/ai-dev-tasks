@@ -38,17 +38,17 @@ except ImportError as e:
 class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
     """Enhanced memory orchestrator with heuristics pack integration."""
 
-    def __init__(self):
+    def __init__(self: Any):
         """Initialize the orchestrator with heuristics."""
         super().__init__()
 
         if HEURISTICS_AVAILABLE:
-            self.heuristics_generator = HeuristicsPackGenerator()
-            self.current_heuristics_pack = None
+            self.heuristics_generator: Any = HeuristicsPackGenerator()
+            self.current_heuristics_pack: Any = None
             print("🧠 Heuristics pack integration enabled")
         else:
-            self.heuristics_generator = None
-            self.current_heuristics_pack = None
+            self.heuristics_generator: Any = None
+            self.current_heuristics_pack: Any = None
             print("⚠️  Heuristics pack integration disabled")
 
     def get_enhanced_context_with_heuristics(
@@ -62,7 +62,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
         regenerate_heuristics: bool = False,
     ) -> dict[str, Any]:
         """Get enhanced context with both episodic memory and heuristics pack."""
-        start_time = time.time()
+        start_time: Any = time.time()
 
         # Get base enhanced context
         enhanced_context = self.get_enhanced_context(
@@ -75,7 +75,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
         try:
             # Generate or update heuristics pack if needed
             if regenerate_heuristics or self.current_heuristics_pack is None:
-                self.current_heuristics_pack = self.heuristics_generator.generate_heuristics_pack("cursor_ai")
+                self.current_heuristics_pack: Any = self.heuristics_generator.generate_heuristics_pack("cursor_ai")
                 print(f"🧠 Generated heuristics pack: {len(self.current_heuristics_pack.heuristics)} heuristics")
 
             # Add heuristics to the context
@@ -123,7 +123,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
     ) -> str:
         """Enhance a system prompt with both episodic context and heuristics pack."""
         # Start with episodic enhancement
-        enhanced_prompt = self.enhance_system_prompt_with_episodic(base_prompt, current_task, agent)
+        enhanced_prompt: Any = self.enhance_system_prompt_with_episodic(base_prompt, current_task, agent)
 
         if not self.heuristics_generator:
             return enhanced_prompt
@@ -131,7 +131,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
         try:
             # Generate or update heuristics pack if needed
             if regenerate_heuristics or self.current_heuristics_pack is None:
-                self.current_heuristics_pack = self.heuristics_generator.generate_heuristics_pack(agent)
+                self.current_heuristics_pack: Any = self.heuristics_generator.generate_heuristics_pack(agent)
 
             # Add heuristics to the prompt
             heuristics_section = self.heuristics_generator.format_heuristics_pack(
@@ -155,7 +155,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
             return None
 
         try:
-            self.current_heuristics_pack = self.heuristics_generator.generate_heuristics_pack(agent)
+            self.current_heuristics_pack: Any = self.heuristics_generator.generate_heuristics_pack(agent)
             print(
                 f"✅ Regenerated heuristics pack for {agent}: {len(self.current_heuristics_pack.heuristics)} heuristics"
             )
@@ -180,7 +180,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
             return False
 
         try:
-            self.current_heuristics_pack = self.heuristics_generator.load_heuristics_pack(input_path)
+            self.current_heuristics_pack: Any = self.heuristics_generator.load_heuristics_pack(input_path)
             if self.current_heuristics_pack:
                 print(f"✅ Loaded heuristics pack v{self.current_heuristics_pack.version}")
                 return True
@@ -207,9 +207,9 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
         }
 
 
-def main():
+def main() -> Any:
     """Main CLI interface for enhanced memory orchestrator with heuristics."""
-    parser = argparse.ArgumentParser(description="Enhanced Memory Orchestrator with Heuristics Pack")
+    parser: Any = argparse.ArgumentParser(description="Enhanced Memory Orchestrator with Heuristics Pack")
 
     # Base orchestrator arguments
     parser.add_argument(
@@ -259,22 +259,22 @@ def main():
     # Testing
     parser.add_argument("--test", action="store_true", help="Test the orchestrator with heuristics")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Initialize orchestrator
     orchestrator = EnhancedMemoryOrchestratorWithHeuristics()
 
     # Handle heuristics-specific commands
     if args.save_heuristics:
-        success = orchestrator.save_heuristics_pack(args.save_heuristics, args.agent)
+        success: Any = orchestrator.save_heuristics_pack(args.save_heuristics, args.agent)
         sys.exit(0 if success else 1)
 
     if args.load_heuristics:
-        success = orchestrator.load_heuristics_pack(args.load_heuristics)
+        success: Any = orchestrator.load_heuristics_pack(args.load_heuristics)
         sys.exit(0 if success else 1)
 
     if args.heuristics_stats:
-        stats = orchestrator.get_heuristics_stats()
+        stats: Any = orchestrator.get_heuristics_stats()
         if args.format == "json":
             print(json.dumps(stats, indent=2, default=str))
         else:
@@ -303,7 +303,7 @@ def main():
         print("🧪 Testing Enhanced Memory Orchestrator with Heuristics...")
 
         # Test heuristics generation
-        pack = orchestrator.regenerate_heuristics_pack(args.agent)
+        pack: Any = orchestrator.regenerate_heuristics_pack(args.agent)
         if pack and pack.heuristics:
             print(f"✅ Heuristics generation test passed: {len(pack.heuristics)} heuristics")
         else:

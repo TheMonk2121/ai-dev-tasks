@@ -156,16 +156,16 @@ class CursorMCPCapture:
 
 def main() -> None:
     """Main function for command-line usage."""
-    parser = argparse.ArgumentParser(description="Cursor MCP Capture Integration")
+    parser: Any = argparse.ArgumentParser(description="Cursor MCP Capture Integration")
     _ = parser.add_argument(
         "--capture-turn", nargs=2, metavar=("QUERY", "RESPONSE"), help="Capture a complete conversation turn"
     )
-    _ = parser.add_argument("--capture-query", metavar="QUERY", help="Capture only a user query")
-    _ = parser.add_argument("--capture-response", metavar="RESPONSE", help="Capture only an AI response")
-    _ = parser.add_argument("--query-turn-id", metavar="TURN_ID", help="Query turn ID for response capture")
-    _ = parser.add_argument("--metadata", metavar="JSON", help="Metadata as JSON string")
-    _ = parser.add_argument("--stats", action="store_true", help="Get session statistics")
-    _ = parser.add_argument("--close", action="store_true", help="Close current session")
+    _: Any = parser.add_argument("--capture-query", metavar="QUERY", help="Capture only a user query")
+    _: Any = parser.add_argument("--capture-response", metavar="RESPONSE", help="Capture only an AI response")
+    _: Any = parser.add_argument("--query-turn-id", metavar="TURN_ID", help="Query turn ID for response capture")
+    _: Any = parser.add_argument("--metadata", metavar="JSON", help="Metadata as JSON string")
+    _: Any = parser.add_argument("--stats", action="store_true", help="Get session statistics")
+    _: Any = parser.add_argument("--close", action="store_true", help="Close current session")
 
     args = parser.parse_args(namespace=TypedArgs())
 
@@ -179,25 +179,25 @@ def main() -> None:
             turn_metadata: dict[str, str | int | float | bool | None] = (
                 json.loads(args.metadata) if args.metadata else {}
             )
-            result = capture.capture_conversation_turn(query, response, turn_metadata)
+            result: Any = capture.capture_conversation_turn(query, response, turn_metadata)
             print(json.dumps(result, indent=2))
 
         elif args.capture_query:
             query_metadata: dict[str, str | int | float | bool | None] = (
                 json.loads(args.metadata) if args.metadata else {}
             )
-            result = capture.capture_user_query_only(args.capture_query, query_metadata)
+            result: Any = capture.capture_user_query_only(args.capture_query, query_metadata)
             print(json.dumps(result, indent=2))
 
         elif args.capture_response:
             response_metadata: dict[str, str | int | float | bool | None] = (
                 json.loads(args.metadata) if args.metadata else {}
             )
-            result = capture.capture_ai_response_only(args.capture_response, args.query_turn_id, response_metadata)
+            result: Any = capture.capture_ai_response_only(args.capture_response, args.query_turn_id, response_metadata)
             print(json.dumps(result, indent=2))
 
         elif args.stats:
-            result = capture.get_session_stats()
+            result: Any = capture.get_session_stats()
             print(json.dumps(result, indent=2))
 
         elif args.close:

@@ -11,9 +11,13 @@ import sys
 import time
 import uuid
 from datetime import datetime
+from typing import Any
 
-import psycopg2
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from sentence_transformers import SentenceTransformer
+
+from src.common.psycopg3_config import Psycopg3Config
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -45,54 +49,53 @@ class CursorRealtimeCapture:
     def _init_database(self) -> None:
         """Initialize database connection and create session."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Create session
-                    cur.execute(
-                        """
-                        INSERT INTO conversation_sessions 
-                        (session_id, user_id, session_name, session_type, status, created_at, last_activity, metadata)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (session_id) DO UPDATE SET
-                            last_activity = EXCLUDED.last_activity,
-                            updated_at = CURRENT_TIMESTAMP
-                    """,
-                        (
-                            self.session_id,
-                            "cursor_user",
-                            f"Cursor Session {datetime.now().strftime('%Y-%m-%d %H:%M')}",
-                            "cursor_ai",
-                            "active",
-                            datetime.now(),
-                            datetime.now(),
-                            json.dumps({"capture_type": "realtime", "thread_id": self.thread_id}),
-                        ),
-                    )
+            with Psycopg3Config.get_cursor("default") as cur:
+                # Create session
+                _ = cur.execute(
+                    """
+                    INSERT INTO conversation_sessions 
+                    (session_id, user_id, session_name, session_type, status, created_at, last_activity, metadata)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (session_id) DO UPDATE SET
+                        last_activity = EXCLUDED.last_activity,
+                        updated_at = CURRENT_TIMESTAMP
+                """,
+                    (
+                        self.session_id,
+                        "cursor_user",
+                        f"Cursor Session {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+                        "cursor_ai",
+                        "active",
+                        datetime.now(),
+                        datetime.now(),
+                        json.dumps({"capture_type": "realtime", "thread_id": self.thread_id}),
+                    ),
+                )
 
-                    # Create thread
-                    cur.execute(
-                        """
-                        INSERT INTO atlas_thread 
-                        (thread_id, session_id, tab_id, title, status, embedding, metadata, created_at, last_activity)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (thread_id) DO UPDATE SET
-                            last_activity = EXCLUDED.last_activity
-                    """,
-                        (
-                            self.thread_id,
-                            self.session_id,
-                            "cursor_tab",
-                            f"Cursor Conversation {datetime.now().strftime('%H:%M')}",
-                            "active",
-                            self.embedder.encode("").tolist(),
-                            json.dumps({"capture_type": "realtime", "session_id": self.session_id}),
-                            datetime.now(),
-                            datetime.now(),
-                        ),
-                    )
+                # Create thread
+                _ = cur.execute(
+                    """
+                    INSERT INTO atlas_thread 
+                    (thread_id, session_id, tab_id, title, status, embedding, metadata, created_at, last_activity)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (thread_id) DO UPDATE SET
+                        last_activity = EXCLUDED.last_activity
+                """,
+                    (
+                        self.thread_id,
+                        self.session_id,
+                        "cursor_tab",
+                        f"Cursor Conversation {datetime.now().strftime('%H:%M')}",
+                        "active",
+                        self.embedder.encode("").tolist(),
+                        json.dumps({"capture_type": "realtime", "session_id": self.session_id}),
+                        datetime.now(),
+                        datetime.now(),
+                    ),
+                )
 
-                    conn.commit()
-                    print(f"✅ Database initialized for session {self.session_id}")
+                cur.connection.commit()
+                print(f"✅ Database initialized for session {self.session_id}")
 
         except Exception as e:
             print(f"❌ Database initialization failed: {e}")
@@ -103,123 +106,122 @@ class CursorRealtimeCapture:
         print(f"📝 Capturing user query: {query[:50]}...")
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Generate turn ID
-                    turn_id = f"turn_{self.thread_id}_{int(time.time())}_{uuid.uuid4().hex[:8]}"
+            with Psycopg3Config.get_cursor("default") as cur:
+                # Generate turn ID
+                turn_id = f"turn_{self.thread_id}_{int(time.time())}_{uuid.uuid4().hex[:8]}"
 
-                    # Create content hash
-                    content_hash = hashlib.sha256(query.encode()).hexdigest()
+                # Create content hash
+                content_hash = hashlib.sha256(query.encode()).hexdigest()
 
-                    # Generate embedding
-                    embedding = self.embedder.encode(query).tolist()
+                # Generate embedding
+                embedding = self.embedder.encode(query).tolist()
 
-                    # Enhanced metadata
-                    enhanced_metadata = {
-                        "role": "user",
-                        "turn_id": turn_id,
-                        "thread_id": self.thread_id,
-                        "session_id": self.session_id,
-                        "timestamp": datetime.now().isoformat(),
-                        "content_length": len(query),
-                        "word_count": len(query.split()),
-                        "capture_type": "realtime",
-                        **(metadata or {}),
-                    }
+                # Enhanced metadata
+                enhanced_metadata = {
+                    "role": "user",
+                    "turn_id": turn_id,
+                    "thread_id": self.thread_id,
+                    "session_id": self.session_id,
+                    "timestamp": datetime.now().isoformat(),
+                    "content_length": len(query),
+                    "word_count": len(query.split()),
+                    "capture_type": "realtime",
+                    **(metadata or {}),
+                }
 
-                    # Store in conversation_messages
-                    cur.execute(
-                        """
-                        INSERT INTO conversation_messages 
-                        (session_id, message_type, role, content, content_hash, message_index, 
-                         metadata, embedding, created_at)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """,
-                        (
-                            self.session_id,
-                            "message",
-                            "human",
-                            query,
-                            content_hash,
-                            self.message_index,
-                            json.dumps(enhanced_metadata),
-                            embedding,
-                            datetime.now(),
-                        ),
-                    )
+                # Store in conversation_messages
+                _ = cur.execute(
+                    """
+                    INSERT INTO conversation_messages 
+                    (session_id, message_type, role, content, content_hash, message_index, 
+                     metadata, embedding, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                    (
+                        self.session_id,
+                        "message",
+                        "human",
+                        query,
+                        content_hash,
+                        self.message_index,
+                        json.dumps(enhanced_metadata),
+                        embedding,
+                        datetime.now(),
+                    ),
+                )
 
-                    # Store in atlas_conversation_turn
-                    cur.execute(
-                        """
-                        INSERT INTO atlas_conversation_turn 
-                        (turn_id, thread_id, role, content, timestamp, embedding, metadata)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (turn_id) DO UPDATE SET
-                            content = EXCLUDED.content,
-                            embedding = EXCLUDED.embedding,
-                            metadata = EXCLUDED.metadata
-                    """,
-                        (
-                            turn_id,
-                            self.thread_id,
-                            "user",
-                            query,
-                            datetime.now(),
-                            embedding,
-                            json.dumps(enhanced_metadata),
-                        ),
-                    )
+                # Store in atlas_conversation_turn
+                _ = cur.execute(
+                    """
+                    INSERT INTO atlas_conversation_turn 
+                    (turn_id, thread_id, role, content, timestamp, embedding, metadata)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (turn_id) DO UPDATE SET
+                        content = EXCLUDED.content,
+                        embedding = EXCLUDED.embedding,
+                        metadata = EXCLUDED.metadata
+                """,
+                    (
+                        turn_id,
+                        self.thread_id,
+                        "user",
+                        query,
+                        datetime.now(),
+                        embedding,
+                        json.dumps(enhanced_metadata),
+                    ),
+                )
 
-                    # Store in atlas_node
-                    cur.execute(
-                        """
-                        INSERT INTO atlas_node 
-                        (node_id, node_type, title, content, embedding, metadata, created_at, updated_at, session_id)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (node_id) DO UPDATE SET
-                            content = EXCLUDED.content,
-                            embedding = EXCLUDED.embedding,
-                            metadata = EXCLUDED.metadata,
-                            updated_at = EXCLUDED.updated_at
-                    """,
-                        (
-                            turn_id,
-                            "conversation",
-                            f"User Query: {query[:50]}...",
-                            query,
-                            embedding,
-                            json.dumps(enhanced_metadata),
-                            datetime.now(),
-                            datetime.now(),
-                            self.session_id,
-                        ),
-                    )
+                # Store in atlas_node
+                _ = cur.execute(
+                    """
+                    INSERT INTO atlas_node 
+                    (node_id, node_type, title, content, embedding, metadata, created_at, updated_at, session_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (node_id) DO UPDATE SET
+                        content = EXCLUDED.content,
+                        embedding = EXCLUDED.embedding,
+                        metadata = EXCLUDED.metadata,
+                        updated_at = EXCLUDED.updated_at
+                """,
+                    (
+                        turn_id,
+                        "conversation",
+                        f"User Query: {query[:50]}...",
+                        query,
+                        embedding,
+                        json.dumps(enhanced_metadata),
+                        datetime.now(),
+                        datetime.now(),
+                        self.session_id,
+                    ),
+                )
 
-                    # Update thread activity
-                    cur.execute(
-                        """
-                        UPDATE atlas_thread 
-                        SET last_activity = NOW()
-                        WHERE thread_id = %s
-                    """,
-                        (self.thread_id,),
-                    )
+                # Update thread activity
+                _ = cur.execute(
+                    """
+                    UPDATE atlas_thread 
+                    SET last_activity = NOW()
+                    WHERE thread_id = %s
+                """,
+                    (self.thread_id,),
+                )
 
-                    # Update session activity
-                    cur.execute(
-                        """
-                        UPDATE conversation_sessions 
-                        SET last_activity = NOW(), session_length = session_length + 1
-                        WHERE session_id = %s
-                    """,
-                        (self.session_id,),
-                    )
+                # Update session activity
+                _ = cur.execute(
+                    """
+                    UPDATE conversation_sessions 
+                    SET last_activity = NOW(), session_length = session_length + 1
+                    WHERE session_id = %s
+                """,
+                    (self.session_id,),
+                )
 
-                    conn.commit()
-                    self.message_index += 1
+                cur.connection.commit()
+                self.message_index += 1
 
-                    print(f"✅ User query captured: {turn_id}")
-                    return turn_id
+                print(f"✅ User query captured: {turn_id}")
+                return turn_id
 
         except Exception as e:
             print(f"❌ Error capturing user query: {e}")
@@ -235,144 +237,143 @@ class CursorRealtimeCapture:
         print(f"🤖 Capturing AI response: {response[:50]}...")
 
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Generate turn ID
-                    turn_id = f"turn_{self.thread_id}_{int(time.time())}_{uuid.uuid4().hex[:8]}"
+            with Psycopg3Config.get_cursor("default") as cur:
+                # Generate turn ID
+                turn_id = f"turn_{self.thread_id}_{int(time.time())}_{uuid.uuid4().hex[:8]}"
 
-                    # Create content hash
-                    content_hash = hashlib.sha256(response.encode()).hexdigest()
+                # Create content hash
+                content_hash = hashlib.sha256(response.encode()).hexdigest()
 
-                    # Generate embedding
-                    embedding = self.embedder.encode(response).tolist()
+                # Generate embedding
+                embedding = self.embedder.encode(response).tolist()
 
-                    # Enhanced metadata
-                    enhanced_metadata = {
-                        "role": "assistant",
-                        "turn_id": turn_id,
-                        "thread_id": self.thread_id,
-                        "session_id": self.session_id,
-                        "timestamp": datetime.now().isoformat(),
-                        "content_length": len(response),
-                        "word_count": len(response.split()),
-                        "capture_type": "realtime",
-                        "parent_turn_id": query_turn_id,
-                        **(metadata or {}),
-                    }
+                # Enhanced metadata
+                enhanced_metadata = {
+                    "role": "assistant",
+                    "turn_id": turn_id,
+                    "thread_id": self.thread_id,
+                    "session_id": self.session_id,
+                    "timestamp": datetime.now().isoformat(),
+                    "content_length": len(response),
+                    "word_count": len(response.split()),
+                    "capture_type": "realtime",
+                    "parent_turn_id": query_turn_id,
+                    **(metadata or {}),
+                }
 
-                    # Store in conversation_messages
-                    cur.execute(
+                # Store in conversation_messages
+                _ = cur.execute(
+                    """
+                    INSERT INTO conversation_messages 
+                    (session_id, message_type, role, content, content_hash, message_index, 
+                     metadata, embedding, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                    (
+                        self.session_id,
+                        "message",
+                        "ai",
+                        response,
+                        content_hash,
+                        self.message_index,
+                        json.dumps(enhanced_metadata),
+                        embedding,
+                        datetime.now(),
+                    ),
+                )
+
+                # Store in atlas_conversation_turn
+                _ = cur.execute(
+                    """
+                    INSERT INTO atlas_conversation_turn 
+                    (turn_id, thread_id, role, content, timestamp, embedding, metadata)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (turn_id) DO UPDATE SET
+                        content = EXCLUDED.content,
+                        embedding = EXCLUDED.embedding,
+                        metadata = EXCLUDED.metadata
+                """,
+                    (
+                        turn_id,
+                        self.thread_id,
+                        "assistant",
+                        response,
+                        datetime.now(),
+                        embedding,
+                        json.dumps(enhanced_metadata),
+                    ),
+                )
+
+                # Store in atlas_node
+                _ = cur.execute(
+                    """
+                    INSERT INTO atlas_node 
+                    (node_id, node_type, title, content, embedding, metadata, created_at, updated_at, session_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (node_id) DO UPDATE SET
+                        content = EXCLUDED.content,
+                        embedding = EXCLUDED.embedding,
+                        metadata = EXCLUDED.metadata,
+                        updated_at = EXCLUDED.updated_at
+                """,
+                    (
+                        turn_id,
+                        "conversation",
+                        f"AI Response: {response[:50]}...",
+                        response,
+                        embedding,
+                        json.dumps(enhanced_metadata),
+                        datetime.now(),
+                        datetime.now(),
+                        self.session_id,
+                    ),
+                )
+
+                # Create edge between query and response
+                if query_turn_id:
+                    _ = cur.execute(
                         """
-                        INSERT INTO conversation_messages 
-                        (session_id, message_type, role, content, content_hash, message_index, 
-                         metadata, embedding, created_at)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """,
-                        (
-                            self.session_id,
-                            "message",
-                            "ai",
-                            response,
-                            content_hash,
-                            self.message_index,
-                            json.dumps(enhanced_metadata),
-                            embedding,
-                            datetime.now(),
-                        ),
-                    )
-
-                    # Store in atlas_conversation_turn
-                    cur.execute(
-                        """
-                        INSERT INTO atlas_conversation_turn 
-                        (turn_id, thread_id, role, content, timestamp, embedding, metadata)
+                        INSERT INTO atlas_edge 
+                        (edge_id, source_node_id, target_node_id, edge_type, weight, metadata, created_at)
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (turn_id) DO UPDATE SET
-                            content = EXCLUDED.content,
-                            embedding = EXCLUDED.embedding,
-                            metadata = EXCLUDED.metadata
+                        ON CONFLICT (edge_id) DO NOTHING
                     """,
                         (
+                            f"edge_{query_turn_id}_{turn_id}",
+                            query_turn_id,
                             turn_id,
-                            self.thread_id,
-                            "assistant",
-                            response,
+                            "responds_to",
+                            1.0,
+                            json.dumps({"relationship": "query_response", "capture_type": "realtime"}),
                             datetime.now(),
-                            embedding,
-                            json.dumps(enhanced_metadata),
                         ),
                     )
 
-                    # Store in atlas_node
-                    cur.execute(
-                        """
-                        INSERT INTO atlas_node 
-                        (node_id, node_type, title, content, embedding, metadata, created_at, updated_at, session_id)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (node_id) DO UPDATE SET
-                            content = EXCLUDED.content,
-                            embedding = EXCLUDED.embedding,
-                            metadata = EXCLUDED.metadata,
-                            updated_at = EXCLUDED.updated_at
-                    """,
-                        (
-                            turn_id,
-                            "conversation",
-                            f"AI Response: {response[:50]}...",
-                            response,
-                            embedding,
-                            json.dumps(enhanced_metadata),
-                            datetime.now(),
-                            datetime.now(),
-                            self.session_id,
-                        ),
-                    )
+                # Update thread activity
+                _ = cur.execute(
+                    """
+                    UPDATE atlas_thread 
+                    SET last_activity = NOW()
+                    WHERE thread_id = %s
+                """,
+                    (self.thread_id,),
+                )
 
-                    # Create edge between query and response
-                    if query_turn_id:
-                        cur.execute(
-                            """
-                            INSERT INTO atlas_edge 
-                            (edge_id, source_node_id, target_node_id, edge_type, weight, metadata, created_at)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s)
-                            ON CONFLICT (edge_id) DO NOTHING
-                        """,
-                            (
-                                f"edge_{query_turn_id}_{turn_id}",
-                                query_turn_id,
-                                turn_id,
-                                "responds_to",
-                                1.0,
-                                json.dumps({"relationship": "query_response", "capture_type": "realtime"}),
-                                datetime.now(),
-                            ),
-                        )
+                # Update session activity
+                _ = cur.execute(
+                    """
+                    UPDATE conversation_sessions 
+                    SET last_activity = NOW(), session_length = session_length + 1
+                    WHERE session_id = %s
+                """,
+                    (self.session_id,),
+                )
 
-                    # Update thread activity
-                    cur.execute(
-                        """
-                        UPDATE atlas_thread 
-                        SET last_activity = NOW()
-                        WHERE thread_id = %s
-                    """,
-                        (self.thread_id,),
-                    )
+                cur.connection.commit()
+                self.message_index += 1
 
-                    # Update session activity
-                    cur.execute(
-                        """
-                        UPDATE conversation_sessions 
-                        SET last_activity = NOW(), session_length = session_length + 1
-                        WHERE session_id = %s
-                    """,
-                        (self.session_id,),
-                    )
-
-                    conn.commit()
-                    self.message_index += 1
-
-                    print(f"✅ AI response captured: {turn_id}")
-                    return turn_id
+                print(f"✅ AI response captured: {turn_id}")
+                return turn_id
 
         except Exception as e:
             print(f"❌ Error capturing AI response: {e}")
@@ -393,77 +394,75 @@ class CursorRealtimeCapture:
     def get_session_stats(self) -> dict[str, JSONValue]:
         """Get current session statistics."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Get message count
-                    cur.execute(
-                        """
-                        SELECT COUNT(*) FROM conversation_messages 
-                        WHERE session_id = %s
-                    """,
-                        (self.session_id,),
-                    )
-                    row = cur.fetchone()
-                    message_count = row[0] if row is not None else 0
+            with Psycopg3Config.get_cursor("default") as cur:
+                # Get message count
+                _ = cur.execute(
+                    """
+                    SELECT COUNT(*) FROM conversation_messages 
+                    WHERE session_id = %s
+                """,
+                    (self.session_id,),
+                )
+                message_row: Any = cur.fetchone()
+                message_count = message_row[0] if message_row is not None else 0
 
-                    # Get turn count
-                    cur.execute(
-                        """
-                        SELECT COUNT(*) FROM atlas_conversation_turn 
-                        WHERE thread_id = %s
-                    """,
-                        (self.thread_id,),
-                    )
-                    row = cur.fetchone()
-                    turn_count = row[0] if row is not None else 0
+                # Get turn count
+                _ = cur.execute(
+                    """
+                    SELECT COUNT(*) FROM atlas_conversation_turn 
+                    WHERE thread_id = %s
+                """,
+                    (self.thread_id,),
+                )
+                turn_row: Any = cur.fetchone()
+                turn_count = turn_row[0] if turn_row is not None else 0
 
-                    # Get node count
-                    cur.execute(
-                        """
-                        SELECT COUNT(*) FROM atlas_node 
-                        WHERE session_id = %s
-                    """,
-                        (self.session_id,),
-                    )
-                    row = cur.fetchone()
-                    node_count = row[0] if row is not None else 0
+                # Get node count
+                _ = cur.execute(
+                    """
+                    SELECT COUNT(*) FROM atlas_node 
+                    WHERE session_id = %s
+                """,
+                    (self.session_id,),
+                )
+                node_row: Any = cur.fetchone()
+                node_count = node_row[0] if node_row is not None else 0
 
-                    return {
-                        "session_id": self.session_id,
-                        "thread_id": self.thread_id,
-                        "message_count": message_count,
-                        "turn_count": turn_count,
-                        "node_count": node_count,
-                        "message_index": self.message_index,
-                    }
+                return {
+                    "session_id": self.session_id,
+                    "thread_id": self.thread_id,
+                    "message_count": message_count,
+                    "turn_count": turn_count,
+                    "node_count": node_count,
+                    "message_index": self.message_index,
+                }
 
         except Exception as e:
             print(f"❌ Error getting session stats: {e}")
             return {}
 
-    def close_session(self):
+    def close_session(self) -> None:
         """Close the current session."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Update session status
-                    cur.execute(
-                        """
-                        UPDATE conversation_sessions 
-                        SET status = 'closed', last_activity = NOW()
-                        WHERE session_id = %s
-                    """,
-                        (self.session_id,),
-                    )
+            with Psycopg3Config.get_cursor("default") as cur:
+                # Update session status
+                _ = cur.execute(
+                    """
+                    UPDATE conversation_sessions 
+                    SET status = 'closed', last_activity = NOW()
+                    WHERE session_id = %s
+                """,
+                    (self.session_id,),
+                )
 
-                    conn.commit()
-                    print(f"✅ Session {self.session_id} closed")
+                cur.connection.commit()
+                print(f"✅ Session {self.session_id} closed")
 
         except Exception as e:
             print(f"❌ Error closing session: {e}")
 
 
-def main():
+def main() -> None:
     """Test the real-time capture system."""
     print("🚀 Testing Cursor Realtime Capture System")
     print("=" * 50)

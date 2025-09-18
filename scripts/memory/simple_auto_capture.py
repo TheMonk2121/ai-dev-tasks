@@ -30,7 +30,7 @@ class SimpleAutoCapture:
         print("🚀 Simple Auto Capture System")
         print("=" * 40)
 
-    def start_capture(self):
+    def start_capture(self: Any):
         """Start automatic conversation capture."""
         if self.capture_active:
             print("⚠️  Capture already active")
@@ -40,8 +40,8 @@ class SimpleAutoCapture:
             print("🎯 Starting conversation capture...")
 
             # Initialize new integration
-            self.current_integration = CursorWorkingIntegration(self.dsn)
-            self.capture_active = True
+            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+            self.capture_active: Any = True
 
             # Save session info
             self._save_session()
@@ -57,7 +57,7 @@ class SimpleAutoCapture:
             print(f"❌ Error starting capture: {e}")
             return False
 
-    def stop_capture(self):
+    def stop_capture(self: Any):
         """Stop automatic conversation capture."""
         if not self.capture_active:
             print("⚠️  No active capture to stop")
@@ -76,8 +76,8 @@ class SimpleAutoCapture:
                 # Close session
                 self.current_integration.close_session()
 
-            self.capture_active = False
-            self.current_integration = None
+            self.capture_active: Any = False
+            self.current_integration: Any = None
 
             # Clear session file
             self._clear_session()
@@ -160,13 +160,13 @@ def main() -> None:
     """Main function."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Simple Auto Capture System")
-    _ = parser.add_argument("--start", action="store_true", help="Start capture")
-    _ = parser.add_argument("--stop", action="store_true", help="Stop capture")
-    _ = parser.add_argument("--status", action="store_true", help="Show status")
-    _ = parser.add_argument("--test", action="store_true", help="Run test capture")
+    parser: Any = argparse.ArgumentParser(description="Simple Auto Capture System")
+    _: Any = parser.add_argument("--start", action="store_true", help="Start capture")
+    _: Any = parser.add_argument("--stop", action="store_true", help="Stop capture")
+    _: Any = parser.add_argument("--status", action="store_true", help="Show status")
+    _: Any = parser.add_argument("--test", action="store_true", help="Run test capture")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Initialize auto capture
     auto_capture = SimpleAutoCapture()
@@ -177,7 +177,7 @@ def main() -> None:
     test: bool = getattr(args, "test", False)
 
     if start:
-        success = auto_capture.start_capture()
+        success: Any = auto_capture.start_capture()
         if success:
             print("\n💡 To capture conversations, call:")
             print("   auto_capture.capture_query('your question')")
@@ -185,22 +185,22 @@ def main() -> None:
         sys.exit(0 if success else 1)
 
     elif stop:
-        success = auto_capture.stop_capture()
+        success: Any = auto_capture.stop_capture()
         sys.exit(0 if success else 1)
 
     elif status:
-        status_data = auto_capture.get_status()
+        status_data: Any = auto_capture.get_status()
         if status_data.get("active", False):
             print("🟢 Capture is ACTIVE")
             print(f"   Session: {status_data.get('session_id', 'Unknown')}")
             print(f"   Thread: {status_data.get('thread_id', 'Unknown')}")
-            stats = status_data.get("stats", {})
+            stats: Any = status_data.get("stats", {})
             if isinstance(stats, dict):
                 for key, value in stats.items():
                     print(f"   {key}: {value}")
         else:
             print("🔴 Capture is INACTIVE")
-            error = status_data.get("error")
+            error: Any = status_data.get("error")
             if error:
                 print(f"   Error: {error}")
         sys.exit(0)
@@ -229,7 +229,7 @@ def main() -> None:
                 print("✅ Test capture successful!")
 
                 # Show status
-                status = auto_capture.get_status()
+                status: Any = auto_capture.get_status()
                 print(f"📊 Status: {status}")
             else:
                 print("❌ Failed to capture response")
@@ -237,7 +237,7 @@ def main() -> None:
             print("❌ Failed to capture query")
 
         # Stop capture
-        _ = auto_capture.stop_capture()
+        _: Any = auto_capture.stop_capture()
         sys.exit(0)
 
     else:

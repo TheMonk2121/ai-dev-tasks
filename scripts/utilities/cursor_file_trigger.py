@@ -39,7 +39,7 @@ class CursorFileTrigger:
             print("🎯 Starting new conversation session...")
 
             # Initialize integration
-            self.current_integration = CursorWorkingIntegration(self.dsn)
+            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
 
             # Save session info
             session_data = {
@@ -71,7 +71,7 @@ class CursorFileTrigger:
 
             if not self.current_integration:
                 print("⚠️  No active session, starting new one...")
-                _ = self.start_session()
+                _: Any = self.start_session()
 
             # Capture query
             turn_id = self.current_integration.capture_user_query(query, metadata)
@@ -100,7 +100,7 @@ class CursorFileTrigger:
 
             if not self.current_integration:
                 print("⚠️  No active session, starting new one...")
-                _ = self.start_session()
+                _: Any = self.start_session()
 
             # Capture response
             turn_id = self.current_integration.capture_ai_response(response, query_turn_id, metadata)
@@ -130,7 +130,7 @@ class CursorFileTrigger:
 
             # Close session
             self.current_integration.close_session()
-            self.current_integration = None
+            self.current_integration: Any = None
 
             # Clear session file
             if self.session_file.exists():
@@ -148,11 +148,11 @@ class CursorFileTrigger:
         try:
             if self.session_file.exists():
                 with open(self.session_file) as f:
-                    session_data = json.load(f)
+                    session_data: Any = json.load(f)
 
                 if session_data.get("active", False):  # type: ignore[arg-type]
                     # Recreate integration with existing session
-                    self.current_integration = CursorWorkingIntegration(self.dsn)
+                    self.current_integration: Any = CursorWorkingIntegration(self.dsn)
                     self.current_integration.session_id = str(session_data.get("session_id", ""))
                     self.current_integration.thread_id = str(session_data.get("thread_id", ""))
                     print(f"📂 Loaded session: {session_data['session_id']}")
@@ -204,15 +204,15 @@ def main() -> None:
     """Main function."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Cursor File Trigger System")
-    _ = parser.add_argument("--start", action="store_true", help="Start new session")
-    _ = parser.add_argument("--query", type=str, help="Capture a query")
-    _ = parser.add_argument("--response", type=str, help="Capture a response")
-    _ = parser.add_argument("--end", action="store_true", help="End current session")
-    _ = parser.add_argument("--status", action="store_true", help="Show status")
-    _ = parser.add_argument("--test", action="store_true", help="Run test")
+    parser: Any = argparse.ArgumentParser(description="Cursor File Trigger System")
+    _: Any = parser.add_argument("--start", action="store_true", help="Start new session")
+    _: Any = parser.add_argument("--query", type=str, help="Capture a query")
+    _: Any = parser.add_argument("--response", type=str, help="Capture a response")
+    _: Any = parser.add_argument("--end", action="store_true", help="End current session")
+    _: Any = parser.add_argument("--status", action="store_true", help="Show status")
+    _: Any = parser.add_argument("--test", action="store_true", help="Run test")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     trigger = CursorFileTrigger()
 
@@ -224,26 +224,26 @@ def main() -> None:
     test: bool = getattr(args, "test", False)
 
     if start:
-        success = trigger.start_session()
+        success: Any = trigger.start_session()
         sys.exit(0 if success else 1)
     elif query:
-        turn_id = trigger.capture_query(query)
+        turn_id: Any = trigger.capture_query(query)
         sys.exit(0 if turn_id else 1)
     elif response:
-        turn_id = trigger.capture_response(response)
+        turn_id: Any = trigger.capture_response(response)
         sys.exit(0 if turn_id else 1)
     elif end:
-        success = trigger.end_session()
+        success: Any = trigger.end_session()
         sys.exit(0 if success else 1)
     elif status:
-        status_data = trigger.get_status()
+        status_data: Any = trigger.get_status()
         if status_data.get("active", False):
             print("🟢 Session is ACTIVE")
             print(f"   Session: {status_data.get('session_id', 'Unknown')}")
             print(f"   Thread: {status_data.get('thread_id', 'Unknown')}")
         else:
             print("🔴 Session is INACTIVE")
-            message = status_data.get("message")
+            message: Any = status_data.get("message")
             if message:
                 print(f"   {message}")
         sys.exit(0)
@@ -269,7 +269,7 @@ def main() -> None:
             print("❌ Failed to capture query")
 
         # End session
-        _ = trigger.end_session()
+        _: Any = trigger.end_session()
         sys.exit(0)
     else:
         print("Usage: python cursor_file_trigger.py --start|--query 'text'|--response 'text'|--end|--status|--test")

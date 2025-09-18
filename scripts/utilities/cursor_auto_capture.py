@@ -10,6 +10,7 @@ import signal
 import sys
 from datetime import datetime
 from types import FrameType
+from typing import Any
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -35,15 +36,15 @@ class CursorAutoCapture:
         self._load_session()
 
         # Set up signal handlers for graceful shutdown
-        _ = signal.signal(signal.SIGINT, self._signal_handler)
-        _ = signal.signal(signal.SIGTERM, self._signal_handler)
+        _: Any = signal.signal(signal.SIGINT, self._signal_handler)
+        _: Any = signal.signal(signal.SIGTERM, self._signal_handler)
 
     def _load_session(self) -> None:
         """Load existing session from file."""
         try:
             if os.path.exists(self.session_file):
                 with open(self.session_file) as f:
-                    session_data = json.load(f)
+                    session_data: Any = json.load(f)
 
                 if session_data.get("active", False):  # type: ignore[arg-type]
                     session_id = str(session_data.get("session_id", ""))
@@ -192,7 +193,7 @@ class CursorAutoCapture:
                         print(f"✅ Captured: {query[:50]}...")
 
                         # Show stats
-                        stats = self.get_session_stats()
+                        stats: Any = self.get_session_stats()
                         print(f"   Messages: {stats.get('message_count', 0)}")
 
         except KeyboardInterrupt:
@@ -205,13 +206,13 @@ def main() -> None:
     """Main function."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Cursor Auto Capture System")
-    _ = parser.add_argument("--start", action="store_true", help="Start auto capture")
-    _ = parser.add_argument("--stop", action="store_true", help="Stop auto capture")
-    _ = parser.add_argument("--status", action="store_true", help="Show status")
-    _ = parser.add_argument("--interactive", action="store_true", help="Run in interactive mode")
+    parser: Any = argparse.ArgumentParser(description="Cursor Auto Capture System")
+    _: Any = parser.add_argument("--start", action="store_true", help="Start auto capture")
+    _: Any = parser.add_argument("--stop", action="store_true", help="Stop auto capture")
+    _: Any = parser.add_argument("--status", action="store_true", help="Show status")
+    _: Any = parser.add_argument("--interactive", action="store_true", help="Run in interactive mode")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Initialize auto capture
     auto_capture = CursorAutoCapture()
@@ -227,7 +228,7 @@ def main() -> None:
         auto_capture.stop_capture()
     elif status:
         if auto_capture.capture_active:
-            stats = auto_capture.get_session_stats()
+            stats: Any = auto_capture.get_session_stats()
             print("🟢 Auto capture is ACTIVE")
             print(f"   Session: {stats.get('session_id', 'Unknown')}")
             print(f"   Messages: {stats.get('message_count', 0)}")

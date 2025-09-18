@@ -11,11 +11,12 @@ from typing import Any, cast
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from psycopg.rows import dict_row
+
 from src.common.db_dsn import resolve_dsn
+from src.common.psycopg3_config import Psycopg3Config
 
 from .cursor_memory_integration import CursorMemoryIntegration
-
-# Import our systems
 from .cursor_realtime_capture import CursorRealtimeCapture
 
 
@@ -109,10 +110,9 @@ class CursorUnifiedIntegration:
     def get_recent_conversation(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent conversation turns."""
         try:
-            import psycopg2
-
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
+            config = Psycopg3Config()
+            with config.get_connection() as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
                     cur.execute(
                         """
                         SELECT role, content, created_at, metadata
@@ -126,7 +126,11 @@ class CursorUnifiedIntegration:
 
                     turns = []
                     for row in cur.fetchall():
-                        role, content, created_at, metadata = row
+                        role = row.get("role")
+                        content = row.get("content")
+                        created_at = row.get("created_at")
+                        metadata = row.get("metadata")
+                        
                         role_str = cast(str, role) if role is not None else ""
                         content_str = cast(str, content) if content is not None else ""
 
@@ -159,14 +163,14 @@ class CursorUnifiedIntegration:
     def search_conversation(self, query: str, limit: int = 5) -> list[dict[str, Any]]:
         """Search conversation history using vector similarity."""
         try:
-            import psycopg2
             from sentence_transformers import SentenceTransformer
 
             embedder = SentenceTransformer("all-MiniLM-L6-v2")
             query_embedding = embedder.encode(query).tolist()
 
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
+            config = Psycopg3Config()
+            with config.get_connection() as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
                     cur.execute(
                         """
                         SELECT role, content, created_at, 
@@ -181,7 +185,11 @@ class CursorUnifiedIntegration:
 
                     results = []
                     for row in cur.fetchall():
-                        role, content, created_at, similarity = row
+                        role = row.get("role")
+                        content = row.get("content")
+                        created_at = row.get("created_at")
+                        similarity = row.get("similarity")
+                        
                         role_str = cast(str, role) if role is not None else ""
                         content_str = cast(str, content) if content is not None else ""
 

@@ -95,9 +95,9 @@ class CursorQueryStorage:
         """Retrieve recent queries from conv_chunks."""
         try:
             with Psycopg3Config.get_cursor("default") as _:
-                    if session_id:
-                        _.execute(
-                            """
+                if session_id:
+                    _.execute(
+                        """
                             SELECT id, session_id, chunk_text, salience_score, 
                                    created_at, expires_at, is_pinned
                             FROM conv_chunks 
@@ -105,11 +105,11 @@ class CursorQueryStorage:
                             ORDER BY created_at DESC 
                             LIMIT %s
                         """,
-                            (session_id, limit),
-                        )
-                    else:
-                        _.execute(
-                            """
+                        (session_id, limit),
+                    )
+                else:
+                    _.execute(
+                        """
                             SELECT id, session_id, chunk_text, salience_score, 
                                    created_at, expires_at, is_pinned
                             FROM conv_chunks 
@@ -117,11 +117,11 @@ class CursorQueryStorage:
                             ORDER BY created_at DESC 
                             LIMIT %s
                         """,
-                            (limit,),
-                        )
+                        (limit,),
+                    )
 
-                    results: Any = _.fetchall()
-                    return [dict(row) for row in results]
+                results: Any = _.fetchall()
+                return [dict(row) for row in results]
 
         except Exception as e:
             print(f"❌ Error retrieving queries: {e}")

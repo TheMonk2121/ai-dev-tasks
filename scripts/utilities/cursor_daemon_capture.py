@@ -27,9 +27,9 @@ class CursorDaemonCapture:
     def __init__(self, dsn_param: str | None = None) -> None:
         resolved_dsn = resolve_dsn()
         if dsn_param is not None:
-            self.dsn = dsn_param
+            self.dsn: Any = dsn_param
         else:
-            self.dsn = resolved_dsn
+            self.dsn: Any = resolved_dsn
         self.pid_file: str = os.path.expanduser("~/.cursor_capture_daemon.pid")
         self.session_file: str = os.path.expanduser("~/.cursor_active_session.json")
         self.log_file: str = os.path.expanduser("~/.cursor_capture.log")
@@ -106,7 +106,7 @@ class CursorDaemonCapture:
             if os.path.exists(self.pid_file):
                 os.remove(self.pid_file)
 
-            self.running = False
+            self.running: Any = False
             print("✅ Daemon stopped")
             return True
 
@@ -134,7 +134,7 @@ class CursorDaemonCapture:
 
     def _daemon_loop(self) -> None:
         """Main daemon loop."""
-        self.running = True
+        self.running: Any = True
         self._log("Daemon started")
 
         try:
@@ -146,7 +146,7 @@ class CursorDaemonCapture:
         except Exception as e:
             self._log(f"Daemon error: {e}")
         finally:
-            self.running = False
+            self.running: Any = False
             self._log("Daemon stopped")
 
     def _check_for_conversations(self) -> None:
@@ -155,7 +155,7 @@ class CursorDaemonCapture:
             # This is where you would implement the actual conversation detection
             # For now, we'll just maintain the session
             if not self.current_integration:
-                self.current_integration = CursorWorkingIntegration(self.dsn)
+                self.current_integration: Any = CursorWorkingIntegration(self.dsn)
                 self._log(f"New session started: {self.current_integration.session_id}")
 
         except Exception as e:
@@ -168,7 +168,7 @@ class CursorDaemonCapture:
 
         try:
             with open(self.log_file, "a") as f:
-                _ = f.write(log_entry)
+                _: Any = f.write(log_entry)
         except Exception:
             pass  # Ignore log errors
 
@@ -177,7 +177,7 @@ class CursorDaemonCapture:
     ) -> str | None:
         """Capture a user query."""
         if not self.current_integration:
-            self.current_integration = CursorWorkingIntegration(self.dsn)
+            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
 
         try:
             turn_id = self.current_integration.capture_user_query(query, metadata or {})
@@ -195,7 +195,7 @@ class CursorDaemonCapture:
     ) -> str | None:
         """Capture an AI response."""
         if not self.current_integration:
-            self.current_integration = CursorWorkingIntegration(self.dsn)
+            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
 
         try:
             turn_id = self.current_integration.capture_ai_response(response, query_turn_id, metadata or {})
@@ -229,29 +229,29 @@ def main() -> None:
     """Main function."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Cursor Daemon Capture System")
-    _ = parser.add_argument("--start", action="store_true", help="Start daemon")
-    _ = parser.add_argument("--stop", action="store_true", help="Stop daemon")
-    _ = parser.add_argument("--status", action="store_true", help="Show status")
-    _ = parser.add_argument("--restart", action="store_true", help="Restart daemon")
+    parser: Any = argparse.ArgumentParser(description="Cursor Daemon Capture System")
+    _: Any = parser.add_argument("--start", action="store_true", help="Start daemon")
+    _: Any = parser.add_argument("--stop", action="store_true", help="Stop daemon")
+    _: Any = parser.add_argument("--status", action="store_true", help="Show status")
+    _: Any = parser.add_argument("--restart", action="store_true", help="Restart daemon")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     daemon = CursorDaemonCapture()
 
     if getattr(args, "start", False):
-        success = daemon.start_daemon()
+        success: Any = daemon.start_daemon()
         sys.exit(0 if success else 1)
     elif getattr(args, "stop", False):
-        success = daemon.stop_daemon()
+        success: Any = daemon.stop_daemon()
         sys.exit(0 if success else 1)
     elif getattr(args, "restart", False):
-        _ = daemon.stop_daemon()
+        _: Any = daemon.stop_daemon()
         time.sleep(2)
-        success = daemon.start_daemon()
+        success: Any = daemon.start_daemon()
         sys.exit(0 if success else 1)
     elif getattr(args, "status", False):
-        status = daemon.get_status()
+        status: Any = daemon.get_status()
         if status["running"]:
             print("🟢 Daemon is RUNNING")
             if "session_id" in status:
