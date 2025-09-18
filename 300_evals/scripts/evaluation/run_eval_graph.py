@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import argparse
 import json
-from pathlib import Path
-from src.graphs.eval_graph import build_graph
-from src.graphs.persistence_pg import PgStatePersistence
 import os
+from pathlib import Path
+
+from graphs.persistence_graph import PgStatePersistence
+from src.graphs.eval_graph import build_graph
+
 #!/usr/bin/env python3
 
 def main() -> None:

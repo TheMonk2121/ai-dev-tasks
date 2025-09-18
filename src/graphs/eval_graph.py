@@ -12,16 +12,17 @@ else:
     class Graph:  # type: ignore
         def __init__(self, nodes: list[Node]) -> None:  # type: ignore
             self.nodes = nodes
-        
+
         def mermaid(self) -> str:
             return "# Graph not available"
-    
+
     class Node:  # type: ignore
         def __init__(self, *_args: Any, **_kwargs: Any) -> None:
             pass
-        
+
         def run(self, *_args: Any, **_kwargs: Any) -> Any:
             raise NotImplementedError("Node.run must be implemented by subclasses")
+
 
 from src.schemas.eval import CaseResult, ContextChunk, RetrievalCandidate
 
@@ -34,11 +35,12 @@ class LoadCases(Node):  # type: ignore  # returns list of raw case dicts
         # Convert GoldCase models to plain dicts for downstream simplicity
         return [c.model_dump() for c in cases]
 
+
 class Retrieve(Node):  # type: ignore
     def run(self, question: str) -> list[RetrievalCandidate]:
         # Use RAG pipeline module directly
         import os
-        
+
         from dspy_modules.rag_pipeline import RAGPipeline
 
         db_connection = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
@@ -46,6 +48,7 @@ class Retrieve(Node):  # type: ignore
         _ = rp.answer(question)
         snapshot = getattr(rp.rag_module, "_last_retrieval_candidates_dto", [])
         return list(snapshot)
+
 
 class Score(Node):  # type: ignore
     def run(
@@ -61,6 +64,7 @@ class Score(Node):  # type: ignore
         precision = recall = f1 = 0.0
         try:
             from src.evaluation.ragchecker_evaluator import CleanRAGCheckerEvaluator
+
             ev = CleanRAGCheckerEvaluator()
             precision = ev._calculate_precision("", "", query)
             recall = ev._calculate_recall("", "")
@@ -70,9 +74,7 @@ class Score(Node):  # type: ignore
             pass
 
         # Convert candidates to ContextChunk list for schema compatibility
-        retrieved_context = [
-            ContextChunk(source_id=c.doc_id, text=c.chunk) for c in candidates[:12]
-        ]
+        retrieved_context = [ContextChunk(source_id=c.doc_id, text=c.chunk) for c in candidates[:12]]
 
         return CaseResult(
             case_id=case_id,
@@ -86,9 +88,11 @@ class Score(Node):  # type: ignore
             f1=f1,
         )
 
+
 def build_graph() -> Any:
     g = Graph(nodes=[LoadCases(), Retrieve(), Score()])  # type: ignore
     return g
+
 
 def export_mermaid(path: str = "docs/graphs/eval_graph.mmd") -> None:
     try:
