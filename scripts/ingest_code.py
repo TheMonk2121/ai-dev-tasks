@@ -78,7 +78,7 @@ def main() -> int:
                 fhash = sha256_bytes(text.encode("utf-8"))
 
                 # Upsert code_files (unique by (repo_rel_path, git_commit))
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO code_files (repo_rel_path, language, git_commit, commit_time, content_hash,
                                             is_test, is_vendor, is_generated, parse_status, meta)
@@ -110,7 +110,7 @@ def main() -> int:
                 inserted_files += 1
 
                 # Insert a module-level symbol row (simple first slice)
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO code_symbols (file_id, symbol_type, symbol_name, span_start, span_end, signature, docstring, doc_hash, meta)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -136,7 +136,7 @@ def main() -> int:
 
                 # Create a single chunk for now (embedding left NULL; will be backfilled)
                 chunk_hash = sha256_bytes(text.encode("utf-8"))
-                cur.execute(
+                _ = cur.execute(
                     """
                     INSERT INTO code_chunks (file_id, symbol_id, chunk_index, content, docstring,
                                               token_count, content_hash, embedding, model_name, model_version, normalized, meta)
