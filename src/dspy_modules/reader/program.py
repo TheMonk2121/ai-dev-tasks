@@ -16,14 +16,14 @@ OPS_TAGS = {"meta_ops", "ops_health"}
 
 
 def _normalize(ans: str, tag: str) -> str:
-    a = ans.strip()
+    a: Any = ans.strip()
     if a.upper() == "NOT_ANSWERABLE":
         return "NOT_ANSWERABLE"
     # Tag-aware canonicalization helps F1 scoring without hallucination
     if tag in OPS_TAGS:
-        a = a.replace("\\\\", "/")
-        a = re.sub(r"\s+", " ", a)
-        a = re.sub(r"^`|`$", "", a)
+        a: Any = a.replace("\\\\", "/")
+        a: Any = re.sub(r"\s+", " ", a)
+        a: Any = re.sub(r"^`|`$", "", a)
     return a
 
 
@@ -43,14 +43,14 @@ class ExtractiveReader(dspy.Module):
             self.extract = dspy.Predict(ExtractSpan, adapter=CompletionAdapter())
         except Exception:
             # Fallback to default if adapter not available
-            self.extract = dspy.Predict(ExtractSpan)
-        self.answerable_threshold = answerable_threshold
+            self.extract: Any = dspy.Predict(ExtractSpan)
+        self.answerable_threshold: Any = answerable_threshold
 
-    def forward(self, question: str, passages: list[str], tag: str = "general"):
+    def forward() -> Any:
         # Keep context surgical: 4–6 most relevant sentences + visible path/title
         joined = "\n".join(passages[:6])
         try:
-            pred = self.extract(question=question, context=joined)
+            pred: Any = self.extract(question=question, context=joined)
         except Exception as e:  # Defensive: keep evaluation running even if adapter path throws
             if _LOGFIRE is not None:
                 try:

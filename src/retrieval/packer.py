@@ -36,7 +36,7 @@ def pack_candidates(
     per_doc_count: dict[str, int] = {}
 
     for doc_id, _score in candidates:
-        cnt = per_doc_count.get(doc_id, 0)
+        cnt: Any = per_doc_count.get(doc_id, 0)
         if cnt >= max_per_document:
             continue
 

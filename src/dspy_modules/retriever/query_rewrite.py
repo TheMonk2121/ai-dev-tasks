@@ -5,7 +5,7 @@ SLUG_RE = re.compile(r"\b(?P<slug>\d{3}_\d{2}_[a-z0-9\-]+)(?:\.md)?\b", re.I)
 
 
 def parse_doc_hint(q: str) -> str | None:
-    m = SLUG_RE.search(q or "")
+    m: Any = SLUG_RE.search(q or "")
     return m.group("slug").lower() if m else None
 
 
@@ -91,7 +91,7 @@ def _nz(s: str) -> str:
 
 def filename_regex_from_query(q: str) -> str:
     """Extract a compact OR-regex from query tokens for filename matching."""
-    toks = re.findall(r"[A-Za-z0-9_.-]{3,}", q or "")
+    toks: Any = re.findall(r"[A-Za-z0-9_.-]{3,}", q or "")
     toks = [t.lower() for t in toks if not t.isdigit()]
     if not toks:
         return "^$"
@@ -117,7 +117,7 @@ def build_channel_queries(user_q: str, tag: str) -> dict[str, Any]:
         Dictionary with channel-specific queries
     """
     user_q = _nz(user_q).strip()
-    hints = TAG_HINTS.get(tag, [])
+    hints: Any = TAG_HINTS.get(tag, [])
     hint_str = " ".join(dict.fromkeys(hints)) if hints else ""
     phrases = " ".join(PHRASE_HINTS.get(tag, [])) if tag in PHRASE_HINTS else ""
     prefix = " ".join([p for p in (phrases, hint_str) if p]).strip()

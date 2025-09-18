@@ -6,32 +6,26 @@ Implements the surgical patch SQL query.
 
 import logging
 import os
-from typing import Any
+
+# Add project paths
+import sys
+from typing import Any, LiteralString, cast
 
 import numpy as np
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import DictRow
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from common.embedding_validation import assert_embedding_dim, get_embedding_dim, suggest_dimension_fix
+from src.common.psycopg3_config import Psycopg3Config
 
 from .rerank import mmr_rerank
 from .weights import load_weights
 
 
-def get_db_connection():
-    """Get database connection from environment or default."""
-    dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-
-    # Strictly fail if DSN is a mock or empty
-    if not dsn or dsn.startswith("mock://"):
-        # ruff: noqa: RUF001
-        raise RuntimeError(
-            f"Invalid DSN detected: {dsn}. MUST use a real PostgreSQL connection string. "
-            "Set POSTGRES_DSN to a valid connection string. "  # ruff: noqa: RUF001
-            "Recommended: Use 300_evals/configs/profiles/real.env for real database connection."
-        )
-
-    return psycopg2.connect(dsn, cursor_factory=RealDictCursor)
+def get_db_connection() -> psycopg.Connection[DictRow]:
+    """Get database connection using Psycopg3Config."""
+    return Psycopg3Config.create_connection("retrieval")
 
 
 def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, Any]]:
@@ -62,21 +56,20 @@ def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, A
     LIMIT %(limit)s
     """
     params = {"slug": doc_slug.lower(), "limit": int(limit)}
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(sql, params)
-            rows = [dict(row) for row in cur.fetchall()]
-            # Normalize metadata to ensure provenance presence
-            for r in rows:
-                md = dict(r.get("metadata") or {})
-                if r.get("ingest_run_id") and not md.get("ingest_run_id"):
-                    md["ingest_run_id"] = r["ingest_run_id"]
-                if r.get("chunk_variant") and not md.get("chunk_variant"):
-                    md["chunk_variant"] = r["chunk_variant"]
-                md.setdefault("ingest_run_id", "legacy")
-                md.setdefault("chunk_variant", "legacy")
-                r["metadata"] = md
-            return rows
+    with Psycopg3Config.get_cursor("retrieval") as cur:
+        _ = cur.execute(sql, params)
+        rows = cur.fetchall()
+        # Normalize metadata to ensure provenance presence
+        for r in rows:
+            md = dict(r.get("metadata") or {})
+            if r.get("ingest_run_id") and not md.get("ingest_run_id"):
+                md["ingest_run_id"] = r["ingest_run_id"]
+            if r.get("chunk_variant") and not md.get("chunk_variant"):
+                md["chunk_variant"] = r["chunk_variant"]
+            md.setdefault("ingest_run_id", "legacy")
+            md.setdefault("chunk_variant", "legacy")
+            r["metadata"] = md
+        return rows
 
 
 def _vec_expr() -> str:
@@ -159,11 +152,28 @@ def run_fused_query(
         if (tag == "db_workflows" and adjacency_db)
         else "websearch_to_tsquery('simple', %(q_short)s)"
     )
-    sql = """
+
+    # Default or YAML-derived weights if not provided
+    if weights is None:
+        weights = load_weights(tag=tag, file_path=weights_file)
+
+    # Use larger pool for MMR reranking
+    pool_size = 60 if use_mmr else k
+
+    # Determine minimum character length for retrieval
+    MIN_CHARS = int(os.getenv("RETRIEVER_MIN_CHARS", "140"))
+
+    # Relax minimum character length for very short queries
+    q_len = len(q_short.strip() or q_title.strip() or q_bm25.strip())
+    min_chars = MIN_CHARS if q_len >= 25 else int(os.getenv("RETRIEVER_MIN_CHARS_SHORT_QUERY", "80"))
+
+    # Build SQL query without dynamic modification - use direct string execution
+    # This avoids psycopg3 LiteralString typing issues while maintaining functionality
+    sql_template = f"""
     WITH
     q AS (
       SELECT
-        CASE WHEN %(q_short)s <> '' THEN SHORT_TSQ_PLACEHOLDER END  AS tsq_short,
+        CASE WHEN %(q_short)s <> '' THEN {short_tsq} END  AS tsq_short,
         CASE WHEN %(q_title)s <> '' THEN websearch_to_tsquery('simple', %(q_title)s) END  AS tsq_title,
         CASE WHEN %(q_bm25)s <> '' THEN websearch_to_tsquery('simple', %(q_bm25)s) END  AS tsq_bm25
     ),
@@ -203,7 +213,7 @@ def run_fused_query(
       COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)  AS s_short,
       COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)  AS s_title,
       COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)  AS s_bm25,
-      COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN VEC_PLACEHOLDER ELSE 0.0 END), 0.0) AS s_vec,
+      COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN {VEC} ELSE 0.0 END), 0.0) AS s_vec,
 
       (
         (CASE
@@ -235,7 +245,7 @@ def run_fused_query(
       + COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)
       + COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)
       + COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)
-      + (CASE WHEN %(has_vec)s THEN %(w_vec)s * (VEC_PLACEHOLDER) ELSE 0.0 END)
+      + (CASE WHEN %(has_vec)s THEN %(w_vec)s * ({VEC}) ELSE 0.0 END)
       )
       * LEAST(GREATEST(1.0 + (
           (CASE
@@ -256,35 +266,6 @@ def run_fused_query(
     ORDER BY score DESC NULLS LAST
     LIMIT %(limit)s;
     """
-
-    # Default or YAML-derived weights if not provided
-    if weights is None:
-        weights = load_weights(tag=tag, file_path=weights_file)
-
-    # Use larger pool for MMR reranking
-    pool_size = 60 if use_mmr else k
-
-    # Determine minimum character length for retrieval
-    MIN_CHARS = int(os.getenv("RETRIEVER_MIN_CHARS", "140"))
-
-    # Relax minimum character length for very short queries
-    q_len = len(q_short.strip() or q_title.strip() or q_bm25.strip())
-    min_chars = MIN_CHARS if q_len >= 25 else int(os.getenv("RETRIEVER_MIN_CHARS_SHORT_QUERY", "80"))
-
-    # Modify SQL to include minimum character length filter
-    sql = sql.replace(
-        "WHERE b.file_path IS NULL OR b.file_path NOT LIKE '600_%%'",
-        "WHERE (b.file_path IS NULL OR b.file_path NOT LIKE '600_%%') AND char_length(b.content) >= %(min_chars)s",
-    )
-
-    # Ensure params is defined before adding min_chars
-    if "params" not in locals():
-        params = {}
-    params["min_chars"] = min_chars
-
-    # Replace placeholders with actual expressions
-    sql = sql.replace("VEC_PLACEHOLDER", VEC)
-    sql = sql.replace("SHORT_TSQ_PLACEHOLDER", short_tsq)
 
     # Cold-start boost: increase w_vec when query is lexically sparse
     if cold_start:
@@ -319,116 +300,111 @@ def run_fused_query(
         "fname_regex": fname_regex or "^$",
         "tag": tag or "",
         "limit": pool_size,
-        "min_chars": min_chars,  # Add min_chars to existing params
+        "min_chars": min_chars,
     }
 
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            try:
-                cur.execute(sql, params)
-                rows = [dict(row) for row in cur.fetchall()]
-            except Exception as e:
-                if "path_tsv" in str(e).lower():
-                    # Fallback: compute path_tsv on the fly
-                    fallback_sql = """
-                    WITH
-                    q AS (
-                      SELECT
-                        CASE WHEN %(q_short)s <> '' THEN SHORT_TSQ_PLACEHOLDER END  AS tsq_short,
-                        CASE WHEN %(q_title)s <> '' THEN websearch_to_tsquery('simple', %(q_title)s) END  AS tsq_title,
-                        CASE WHEN %(q_bm25)s <> '' THEN websearch_to_tsquery('simple', %(q_bm25)s) END  AS tsq_bm25
-                    ),
-                    base AS (
-                      SELECT
-                        dc.chunk_id,
-                        dc.filename,
-                        dc.short_tsv,
-                        dc.title_tsv,
-                        dc.content_tsv,
-                        dc.embedding,
-                        dc.embedding_text,
-                        dc.bm25_text,
-                        d.file_path,
-                        to_tsvector('simple', replace(replace(coalesce(d.file_path,''), '/', ' '), '_', ' ')) AS path_tsv
-                      FROM document_chunks dc
-                      LEFT JOIN documents d ON d.id = dc.document_id
-                    )
-                    SELECT
-                      b.chunk_id,
-                      b.filename,
-                      b.file_path,
-                      b.embedding,
-                      b.embedding_text,
-                      COALESCE(b.embedding_text, b.bm25_text) AS text_for_reader,
+    try:
+        with Psycopg3Config.get_cursor("retrieval") as cur:
+            # Cast to LiteralString to satisfy psycopg3 typing requirements
+            _ = cur.execute(cast("LiteralString", sql_template), params)
+            rows = cur.fetchall()
+    except Exception as e:
+        if "path_tsv" in str(e).lower():
+            # Fallback: compute path_tsv on the fly
+            fallback_template = f"""
+            WITH
+            q AS (
+              SELECT
+                CASE WHEN %(q_short)s <> '' THEN {short_tsq} END  AS tsq_short,
+                CASE WHEN %(q_title)s <> '' THEN websearch_to_tsquery('simple', %(q_title)s) END  AS tsq_title,
+                CASE WHEN %(q_bm25)s <> '' THEN websearch_to_tsquery('simple', %(q_bm25)s) END  AS tsq_bm25
+            ),
+            base AS (
+              SELECT
+                dc.chunk_id,
+                dc.filename,
+                dc.short_tsv,
+                dc.title_tsv,
+                dc.content_tsv,
+                dc.embedding,
+                dc.embedding_text,
+                dc.bm25_text,
+                d.file_path,
+                to_tsvector('simple', replace(replace(coalesce(d.file_path,''), '/', ' '), '_', ' ')) AS path_tsv
+              FROM document_chunks dc
+              LEFT JOIN documents d ON d.id = dc.document_id
+            )
+            SELECT
+              b.chunk_id,
+              b.filename,
+              b.file_path,
+              b.embedding,
+              b.embedding_text,
+              COALESCE(b.embedding_text, b.bm25_text) AS text_for_reader,
 
-                      COALESCE(%(w_path)s * ts_rank(b.path_tsv,  q.tsq_short, 32), 0.0)   AS s_path,
-                      COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)  AS s_short,
-                      COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)  AS s_title,
-                      COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)  AS s_bm25,
-                      COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN VEC_PLACEHOLDER ELSE 0.0 END), 0.0) AS s_vec,
+              COALESCE(%(w_path)s * ts_rank(b.path_tsv,  q.tsq_short, 32), 0.0)   AS s_path,
+              COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)  AS s_short,
+              COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)  AS s_title,
+              COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)  AS s_bm25,
+              COALESCE(%(w_vec)s * (CASE WHEN %(has_vec)s THEN {VEC} ELSE 0.0 END), 0.0) AS s_vec,
 
-                      (
-                        (CASE
-                           WHEN b.filename ~* '\\.(sql|sh|bash|zsh|py|ipynb|yaml|yml|toml|ini|env|dockerfile)$' THEN 0.25
-                           WHEN b.embedding_text ~ '```' THEN 0.15
-                           WHEN b.embedding_text ~ '(?i)\\b(CREATE|ALTER)\\s+(INDEX|TABLE)\\b' THEN 0.20
-                           ELSE 0.0
-                         END
-                         - CASE
-                             WHEN lower(b.filename) ~ '(readme|notes|journal|diary|thoughts)' THEN 0.20
-                             ELSE 0.0
-                           END
-                         + CASE WHEN %(fname_regex)s <> '^$' AND lower(b.filename) ~ %(fname_regex)s THEN 0.05 ELSE 0.0 END
-                         + CASE WHEN %(tag)s = 'db_workflows' AND lower(b.file_path) ~ '(^|/)(db|database|migrations?|sql)(/|$)' THEN 0.03 ELSE 0.0 END
-                         + CASE WHEN %(tag)s = 'ops_health' AND lower(b.file_path) ~ '(^|/)(ops|scripts|shell|setup)(/|$)' THEN 0.03 ELSE 0.0 END
-                         + CASE
-                             WHEN lower(b.file_path) ~ '(^|/)(docs?|designs?)(/|$)' THEN 0.05
-                             ELSE 0.0
-                           END
-                         + CASE
-                             WHEN lower(b.file_path) ~ 'dspy_modules/retriever/' THEN 0.03
-                             ELSE 0.0
-                           END
-                        ) / 10.0
-                      ) AS prior_scaled,
+              (
+                (CASE
+                   WHEN b.filename ~* '\\.(sql|sh|bash|zsh|py|ipynb|yaml|yml|toml|ini|env|dockerfile)$' THEN 0.25
+                   WHEN b.embedding_text ~ '```' THEN 0.15
+                   WHEN b.embedding_text ~ '(?i)\\b(CREATE|ALTER)\\s+(INDEX|TABLE)\\b' THEN 0.20
+                   ELSE 0.0
+                 END
+                 - CASE
+                     WHEN lower(b.filename) ~ '(readme|notes|journal|diary|thoughts)' THEN 0.20
+                     ELSE 0.0
+                   END
+                 + CASE WHEN %(fname_regex)s <> '^$' AND lower(b.filename) ~ %(fname_regex)s THEN 0.05 ELSE 0.0 END
+                 + CASE WHEN %(tag)s = 'db_workflows' AND lower(b.file_path) ~ '(^|/)(db|database|migrations?|sql)(/|$)' THEN 0.03 ELSE 0.0 END
+                 + CASE WHEN %(tag)s = 'ops_health' AND lower(b.file_path) ~ '(^|/)(ops|scripts|shell|setup)(/|$)' THEN 0.03 ELSE 0.0 END
+                 + CASE
+                     WHEN lower(b.file_path) ~ '(^|/)(docs?|designs?)(/|$)' THEN 0.05
+                     ELSE 0.0
+                   END
+                 + CASE
+                     WHEN lower(b.file_path) ~ 'dspy_modules/retriever/' THEN 0.03
+                     ELSE 0.0
+                   END
+                ) / 10.0
+              ) AS prior_scaled,
 
-                      (
-                        COALESCE(%(w_path)s * ts_rank(b.path_tsv,  q.tsq_short, 32), 0.0)
-                      + COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)
-                      + COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)
-                      + COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)
-                      + (CASE WHEN %(has_vec)s THEN %(w_vec)s * (VEC_PLACEHOLDER) ELSE 0.0 END)
-                      )
-                      * LEAST(GREATEST(1.0 + (
-                          (CASE
-                             WHEN b.filename ~* '\\.(sql|sh|bash|zsh|py|ipynb|yaml|yml|toml|ini|env|dockerfile)$' THEN 0.25
-                             WHEN b.embedding_text ~ '```' THEN 0.15
-                             WHEN b.embedding_text ~ '(?i)\\b(CREATE|ALTER)\\s+(INDEX|TABLE)\\b' THEN 0.20
-                             ELSE 0.0
-                           END
-                           - CASE
-                               WHEN lower(b.filename) ~ '(readme|notes|journal|diary|thoughts)' THEN 0.20
-                               ELSE 0.0
-                             END
-                        ) / 10.0), 0.95), 1.05)
-                      AS score
+              (
+                COALESCE(%(w_path)s * ts_rank(b.path_tsv,  q.tsq_short, 32), 0.0)
+              + COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)
+              + COALESCE(%(w_title)s * ts_rank(b.title_tsv, q.tsq_title, 32), 0.0)
+              + COALESCE(%(w_bm25)s * ts_rank(b.content_tsv, q.tsq_bm25, 32), 0.0)
+              + (CASE WHEN %(has_vec)s THEN %(w_vec)s * ({VEC}) ELSE 0.0 END)
+              )
+              * LEAST(GREATEST(1.0 + (
+                  (CASE
+                     WHEN b.filename ~* '\\.(sql|sh|bash|zsh|py|ipynb|yaml|yml|toml|ini|env|dockerfile)$' THEN 0.25
+                     WHEN b.embedding_text ~ '```' THEN 0.15
+                     WHEN b.embedding_text ~ '(?i)\\b(CREATE|ALTER)\\s+(INDEX|TABLE)\\b' THEN 0.20
+                     ELSE 0.0
+                   END
+                   - CASE
+                       WHEN lower(b.filename) ~ '(readme|notes|journal|diary|thoughts)' THEN 0.20
+                       ELSE 0.0
+                     END
+                ) / 10.0), 0.95), 1.05)
+              AS score
 
-                    FROM base b, q
-                    ORDER BY score DESC NULLS LAST
-                    LIMIT %(limit)s;
-                    """
-                    # Open a fresh transaction for fallback
-                    cur.close()
-                    conn.rollback()
-                    with get_db_connection() as conn2:
-                        with conn2.cursor() as cur2:
-                            # Replace placeholders in fallback SQL too
-                            fallback_sql = fallback_sql.replace("VEC_PLACEHOLDER", VEC)
-                            fallback_sql = fallback_sql.replace("SHORT_TSQ_PLACEHOLDER", short_tsq)
-                            cur2.execute(fallback_sql, params)
-                            rows = [dict(row) for row in cur2.fetchall()]
-                else:
-                    raise
+            FROM base b, q
+            ORDER BY score DESC NULLS LAST
+            LIMIT %(limit)s;
+            """
+            
+            with Psycopg3Config.get_cursor("retrieval") as cur2:
+                # Cast to LiteralString to satisfy psycopg3 typing requirements
+                _ = cur2.execute(cast("LiteralString", fallback_template), params)
+                rows = cur2.fetchall()
+        else:
+            raise
 
     # Apply learned fusion head if enabled
     enabled = os.getenv("FUSION_HEAD_ENABLE", "0") == "1"
@@ -475,6 +451,6 @@ def gold_hit(case_id: str, retrieved_rows: list[dict[str, Any]]) -> bool:
     Returns:
         True if any chunk matches gold standard
     """
-    from ..evals.gold import gold_hit as real_gold_hit
+    from evals.gold import gold_hit as real_gold_hit
 
     return real_gold_hit(case_id, retrieved_rows)

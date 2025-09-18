@@ -81,7 +81,7 @@ def heuristic_rerank(
     norm = _normalize_scores(candidates)
     scored: list[tuple[DocId, Score]] = []
     for doc_id, fused_score in candidates:
-        doc_text = documents.get(doc_id, "")
+        doc_text: Any = documents.get(doc_id, "")
         rerank_score = _score_rerank(query, doc_text)
         final = alpha * rerank_score + (1.0 - alpha) * norm.get(doc_id, 0.5)
         scored.append((doc_id, final))

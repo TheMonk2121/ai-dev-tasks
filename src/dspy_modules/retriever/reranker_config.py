@@ -48,15 +48,15 @@ def load_reranker_config(tag: str = "", file_path: str | None = None) -> dict[st
                 data = yaml.safe_load(f) or {}
 
             # Load default reranker config
-            default_config = data.get("default", {})
-            reranker_config = default_config.get("reranker", {})
+            default_config: Any = data.get("default", {})
+            reranker_config: Any = default_config.get("reranker", {})
             if isinstance(reranker_config, dict):
                 config.update({k: v for k, v in reranker_config.items()})
 
             # Load tag-specific overrides
-            tags = data.get("tags", {})
-            tag_config = tags.get(tag, {})
-            tag_reranker_config = tag_config.get("reranker", {})
+            tags: Any = data.get("tags", {})
+            tag_config: Any = tags.get(tag, {})
+            tag_reranker_config: Any = tag_config.get("reranker", {})
             if isinstance(tag_reranker_config, dict):
                 config.update({k: v for k, v in tag_reranker_config.items()})
 
@@ -131,7 +131,7 @@ def get_reranker_env_vars(config: dict[str, Any]) -> dict[str, str]:
     return env_vars
 
 
-def apply_reranker_config(config: dict[str, Any]):
+def apply_reranker_config() -> Any:
     """
     Apply reranker configuration by setting environment variables.
 

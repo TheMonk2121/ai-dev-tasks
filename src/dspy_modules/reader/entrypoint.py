@@ -38,7 +38,7 @@ def build_reader_context(
     counter = None
     if enable_token_pack:
         try:
-            from src.llm.token_count import make_counter
+            from src.llm import make_counter
 
             counter = make_counter(token_family, token_model, model_path=llama_model_path)
         except Exception:
@@ -50,7 +50,7 @@ def build_reader_context(
             from ..retriever.query_rewrite import PHRASE_HINTS
 
             phrase_hints = PHRASE_HINTS.get(tag, [])
-            compact_sentences, chosen = select_sentences(rows, query, tag, phrase_hints, per_chunk=2, total=10)
+            compact_sentences, _ = select_sentences(rows, query, tag, phrase_hints, per_chunk=2, total=10)
             context_text = compact_sentences
             total_chars = len(context_text)
             # Token pack: trim context to budget if enabled
