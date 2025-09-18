@@ -1380,9 +1380,9 @@ tail -f mcp_server.log
 ```bash
 export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency"
 uv run python -c "
-import psycopg2
+import psycopg
 import os
-conn = psycopg2.connect(os.getenv('POSTGRES_DSN'))
+conn = psycopg.connect(os.getenv('POSTGRES_DSN'))
 print('✅ Database connection successful')
 conn.close()
 "

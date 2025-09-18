@@ -1957,7 +1957,7 @@ class CPUOptimizer:
 #### **Database Performance Monitor**
 ```python
 import sqlite3
-import psycopg2
+import psycopg
 from typing import Dict, Any, List, Optional
 
 class DatabasePerformanceMonitor:
@@ -1973,7 +1973,7 @@ class DatabasePerformanceMonitor:
         if self.db_type == "sqlite":
             return sqlite3.connect(self.connection_string)
         elif self.db_type == "postgresql":
-            return psycopg2.connect(self.connection_string)
+            return psycopg.connect(self.connection_string)
         else:
             raise ValueError(f"Unsupported database type: {self.db_type}")
 

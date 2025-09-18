@@ -588,7 +588,7 @@ python3 dashboard.py
 #### **Database Connection Configuration**
 ```python
 def get_db_connection():
-    return psycopg2.connect(
+    return psycopg.connect(
         host=os.getenv("DB_HOST", "localhost"),
         database=os.getenv("DB_NAME", "ai_agency"),
         user=os.getenv("DB_USER", "danieljacobs"),

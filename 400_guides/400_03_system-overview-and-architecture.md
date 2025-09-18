@@ -862,7 +862,7 @@ python3 -c "import dspy_rag_system; print('Import successful')"
 export POSTGRES_DSN="postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable"
 
 # 2. Test connection
-python3 -c "import psycopg2; print('Connection successful')"
+python3 -c "import psycopg; print('Connection successful')"
 
 # 3. Verify database access
 psql -d ai_agency -c "SELECT COUNT(*) FROM document_chunks;"

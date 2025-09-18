@@ -478,7 +478,7 @@ python scripts/uv_team_onboarding.py
 ```
 
 **Required Dependencies** (managed via UV):
-- `psycopg2` - Database connectivity
+- `psycopg` - Database connectivity
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
