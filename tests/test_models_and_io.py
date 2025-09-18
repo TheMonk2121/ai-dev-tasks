@@ -32,15 +32,15 @@ def test_roundtrip_json(tmp_path: Path):
     assert loaded.n_cases == 1
 
 
-def test_list_validation():
+def test_list_validation() -> Any:
     """Test list validation with TypeAdapter."""
     raw = [{"doc_id": "A", "score": 0.7, "chunk": "x"}]
     ta = TypeAdapter(list[RetrievalCandidate])
-    items = ta.validate_python(raw)
+    items: Any = ta.validate_python(raw)
     assert items[0].doc_id == "A"
 
 
-def test_qa_answer_schema():
+def test_qa_answer_schema() -> Any:
     """Test QAAnswer schema validation."""
     # Test valid QAAnswer
     answer = QAAnswer(answer="This is a test answer", confidence=0.95)
@@ -57,7 +57,7 @@ def test_qa_answer_schema():
         pass
 
 
-def test_strict_validation():
+def test_strict_validation() -> Any:
     """Test strict validation prevents invalid data."""
     from pydantic import ValidationError
 
@@ -69,7 +69,7 @@ def test_strict_validation():
         pass
 
 
-def test_computed_field():
+def test_computed_field() -> Any:
     """Test computed fields work correctly."""
     run = EvaluationRun(
         profile="test",
@@ -84,7 +84,7 @@ def test_computed_field():
     assert run.n_cases == 2
 
 
-def test_non_empty_string_validation():
+def test_non_empty_string_validation() -> Any:
     """Test NonEmptyStr validation."""
     from pydantic import ValidationError
 
@@ -95,7 +95,7 @@ def test_non_empty_string_validation():
         pass
 
 
-def test_extra_forbid():
+def test_extra_forbid() -> Any:
     """Test that extra fields are forbidden."""
     from pydantic import ValidationError
 

@@ -19,7 +19,7 @@ Enhanced with Unicode normalization to improve monotonicity properties.
 
 
 
-def _maybe_counter():
+def _maybe_counter() -> Any:
     # Try backends in order of likelihood; skip if optional deps missing
     for fam, name in (
         ("hf_fast", "bert-base-uncased"),
@@ -40,7 +40,7 @@ COUNTER = _maybe_counter()
 @given(s=st.text(max_size=400))
 @settings(max_examples=20, deadline=100)
 def test_non_negativity(s: str) -> None:
-    n = COUNTER.count(s)
+    n: Any = COUNTER.count(s)
     if n < 0:
         record_case("test_token_count_nonneg", {"raw": s, "count": n})
     assert n >= 0
@@ -51,9 +51,9 @@ def test_non_negativity(s: str) -> None:
 @given(a=st.text(max_size=200), b=st.text(max_size=200))
 @settings(max_examples=15, deadline=150)
 def test_monotonic_concat(a: str, b: str) -> None:
-    ca = COUNTER.count(a)
-    cb = COUNTER.count(b)
-    ab = COUNTER.count(a + b)
+    ca: Any = COUNTER.count(a)
+    cb: Any = COUNTER.count(b)
+    ab: Any = COUNTER.count(a + b)
 
     # Record cases where monotonicity fails for analysis
     if ab < ca or ab < cb:

@@ -21,7 +21,7 @@ def normalize_query(query: str) -> str:
     normalized = query.strip().casefold()
 
     # Handle special Unicode cases
-    normalized = normalized.replace("ß", "ss")
+    normalized: Any = normalized.replace("ß", "ss")
     normalized = normalized.replace("ı", "i")  # Turkish dotless i
     normalized = normalized.replace("i̇", "i")  # Turkish dotted i (İ -> i̇ -> i)
 

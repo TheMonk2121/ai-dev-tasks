@@ -16,7 +16,7 @@ def _row(ok: bool = True) -> dict:
     return {"chunk_id": "abc123", "text": "hello world", "score": 0.9, "metadata": md}
 
 
-def test_rows_to_dtos_enforces_required_provenance():
+def test_rows_to_dtos_enforces_required_provenance() -> Any:
     chunks = rows_to_dtos([_row(ok=True)], run_id="r1", producer="test", version="v1", strict=True)
     assert len(chunks) == 1
     c = chunks[0]
@@ -25,12 +25,12 @@ def test_rows_to_dtos_enforces_required_provenance():
     assert c.provenance.chunk_variant == "v1"
 
 
-def test_rows_to_dtos_raises_on_missing_provenance():
+def test_rows_to_dtos_raises_on_missing_provenance() -> Any:
     with pytest.raises(ValueError):
         _ = rows_to_dtos([_row(ok=False)], run_id="r1", producer="test", version="v1", strict=True)
 
 
-def test_answer_forbids_extra_fields():
+def test_answer_forbids_extra_fields() -> Any:
     prov = Provenance(
         run_id="r1",
         ingest_run_id="run-123",

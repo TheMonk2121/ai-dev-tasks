@@ -21,8 +21,8 @@ Property-based tests for IntentRouter invariants.
 @settings(max_examples=20, deadline=100)
 def test_classify_idempotent_whitespace_and_case(query: str):
     r = IntentRouter(IntentRouterConfig())
-    a = r.classify_intent(query)
-    b = r.classify_intent("  " + query + "  ")
+    a: Any = r.classify_intent(query)
+    b: Any = r.classify_intent("  " + query + "  ")
     c = r.classify_intent(query.upper())
     # Intent type should remain stable across trivial formatting
     assert a.intent_type == b.intent_type

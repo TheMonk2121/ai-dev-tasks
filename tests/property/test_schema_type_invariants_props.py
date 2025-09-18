@@ -220,10 +220,10 @@ class TestSchemaTypeInvariants:
             )
 
             # Serialize to dict
-            data = original.model_dump()
+            data: Any = original.model_dump()
 
             # Deserialize from dict
-            restored = CaseResult.model_validate(data)
+            restored: Any = CaseResult.model_validate(data)
 
             # Check that types are preserved
             assert isinstance(restored.precision, type(original.precision))
@@ -260,10 +260,10 @@ class TestSchemaTypeInvariants:
             )
 
             # Serialize to dict
-            data = original.model_dump()
+            data: Any = original.model_dump()
 
             # Deserialize from dict
-            restored = GoldCase.model_validate(data)
+            restored: Any = GoldCase.model_validate(data)
 
             # Check that types are preserved
             assert isinstance(restored.tags, list)
@@ -305,8 +305,8 @@ class TestSchemaTypeInvariants:
             )
 
             # Serialize to JSON
-            json_str = original.model_dump_json()
-            data = json.loads(json_str)
+            json_str: Any = original.model_dump_json()
+            data: Any = json.loads(json_str)
 
             # Check that JSON contains correct types
             if precision is not None:

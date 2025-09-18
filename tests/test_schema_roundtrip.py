@@ -17,7 +17,7 @@ from src.schemas.eval import (
 )
 
 
-def test_roundtrip_case_result():
+def test_roundtrip_case_result() -> Any:
     chunk = ContextChunk(source_id="doc_1:0", text="hello world", start=0, end=100)
     rc = RetrievalCandidate(doc_id="d1", score=0.9, chunk="chunk text")
     c = CaseResult(
@@ -32,12 +32,12 @@ def test_roundtrip_case_result():
         f1=0.13,
         answer_latency_ms=10,
     )
-    js = c.model_dump_json()
-    c2 = CaseResult.model_validate_json(js)
+    js: Any = c.model_dump_json()
+    c2: Any = CaseResult.model_validate_json(js)
     assert c2 == c
 
 
-def test_roundtrip_evaluation_run():
+def test_roundtrip_evaluation_run() -> Any:
     rr = RerankerConfig()
     from datetime import datetime
 
@@ -52,12 +52,12 @@ def test_roundtrip_evaluation_run():
         overall={"precision": 0.1},
         artifact_paths={"results_json": "metrics/foo.json"},
     )
-    js = er.model_dump_json()
-    er2 = EvaluationRun.model_validate_json(js)
+    js: Any = er.model_dump_json()
+    er2: Any = EvaluationRun.model_validate_json(js)
     assert er2 == er
 
 
-def test_alias_loading_and_roundtrip():
+def test_alias_loading_and_roundtrip() -> Any:
     legacy = {
         "case_id": "C1",
         "question": "How do I run the evals?",
@@ -65,7 +65,7 @@ def test_alias_loading_and_roundtrip():
         "mode": "reader",
         "response": "Use scripts/ragchecker_official_evaluation.py ...",
     }
-    gc = GoldCase.model_validate(legacy)
+    gc: Any = GoldCase.model_validate(legacy)
     assert gc.id == "C1"
     assert gc.query.startswith("How do I run")
     assert gc.tags == ["ops_health"]
@@ -78,9 +78,9 @@ def test_alias_loading_and_roundtrip():
     assert gc.gt_answer == gc.gt_answer
 
 
-def test_result_model_minimal():
+def test_result_model_minimal() -> Any:
     res = EvaluationResult(
         id="C2", mode=Mode.retrieval, tags=["rag_qa_single"], query="List the core workflow guides in 000_core."
     )
-    payload = res.model_dump()
+    payload: Any = res.model_dump()
     assert payload["id"] == "C2"

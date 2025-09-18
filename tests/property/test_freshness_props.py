@@ -28,7 +28,7 @@ def _result(ts: float | None, score: float = 1.0) -> dict:
 def test_time_decay_monotonicity(age_days: float):
     cfg = FreshnessConfig(enable_time_decay=True, enable_recency_prior=False)
     enh = FreshnessEnhancer(cfg)
-    now = time.time()
+    now: Any = time.time()
     # Two docs: one older by age_days, one current
     older = _result(now - age_days * 24 * 3600)
     current = _result(now)
@@ -43,7 +43,7 @@ def test_time_decay_monotonicity(age_days: float):
 def test_recency_boost_prefers_newer(days: float):
     cfg = FreshnessConfig(enable_time_decay=False, enable_recency_prior=True, recency_threshold_days=7)
     enh = FreshnessEnhancer(cfg)
-    now = time.time()
+    now: Any = time.time()
     newer = _result(now - 1 * 24 * 3600)
     older = _result(now - days * 24 * 3600)
     outs, _ = enh.enhance_retrieval_results("latest", [older, newer], current_time=now)

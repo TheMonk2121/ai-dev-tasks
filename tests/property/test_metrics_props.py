@@ -28,10 +28,10 @@ Property-based tests for enhanced_metrics invariants.
 @settings(max_examples=25, deadline=100)
 def test_ndcg_bounds_and_ordering(rels: list[float], k: int) -> None:
     ideal = sorted(rels, reverse=True)
-    nd = NDCGCalculator.ndcg(rels, ideal, k)
+    nd: Any = NDCGCalculator.ndcg(rels, ideal, k)
     assert 0.0 <= nd <= 1.0
     # Perfect ranking achieves max
-    nd_perfect = NDCGCalculator.ndcg(ideal, ideal, k)
+    nd_perfect: Any = NDCGCalculator.ndcg(ideal, ideal, k)
     if not (nd_perfect >= nd):
         record_case("test_ndcg_ordering", {"rels": rels, "k": k, "nd": nd, "nd_perfect": nd_perfect})
     assert nd_perfect >= nd
@@ -45,7 +45,7 @@ def test_ndcg_bounds_and_ordering(rels: list[float], k: int) -> None:
 @settings(max_examples=20, deadline=100)
 def test_ece_bounds(conf: list[float], corr: list[bool]) -> None:
     n = min(len(conf), len(corr))
-    e = ECECalculator.calculate_ece(conf[:n], corr[:n], n_bins=10)
+    e: Any = ECECalculator.calculate_ece(conf[:n], corr[:n], n_bins=10)
     if not (0.0 <= e <= 1.0):
         record_case("test_ece_bounds", {"conf": conf[:n], "corr": corr[:n], "ece": e})
     assert 0.0 <= e <= 1.0
@@ -65,12 +65,12 @@ def test_temperature_scaler_stability(conf: list[float], corr: list[bool]) -> No
     if n < 5:
         pytest.skip("not enough samples")
     ts = TemperatureScaler()
-    t = ts.fit(conf, corr)
+    t: Any = ts.fit(conf, corr)
     if not math.isfinite(float(t)):
         record_case("test_temp_scaler_finite", {"conf": conf, "corr": corr, "t": t})
     assert math.isfinite(float(t))
     # Calibrate a point and ensure it is within [0,1]
-    out = ts.calibrate(conf[0])
+    out: Any = ts.calibrate(conf[0])
     if not (0.0 <= float(out) <= 1.0):
         record_case("test_temp_scaler_output_bounds", {"conf": conf, "t": float(t), "out": float(out)})
     assert 0.0 <= float(out) <= 1.0

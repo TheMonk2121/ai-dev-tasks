@@ -63,7 +63,7 @@ def test_audit_trail_generation(monkeypatch: MonkeyPatch, tmp_path: Path):
 
     assert audit_line  # Line should not be empty
 
-    audit_data = json.loads(audit_line)
+    audit_data: Any = json.loads(audit_line)
 
     assert audit_data["role"] == "test"
     assert audit_data["src"] == "DATABASE_URL"

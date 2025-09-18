@@ -1,0 +1,48 @@
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙}", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",򲍙", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_parsing_failed", "env_key": "EVAL_KNOWN_TAGS", "env_value": ",", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "0", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "61", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014áÍ񻊪󤦿`", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "0", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014áÍ񻊪󤦿`", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "000000000", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014áÍ񻊪󤦿", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014áÍ񻊪", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014áÍ", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014á", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014á", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊\u0014", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝󣉊", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "𢠝", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "1", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "”", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "M", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "5", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "=", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "6", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": ";", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "9", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": ":", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "2", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "8", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "00000000", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "0000000", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "000000", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "00000", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "0000", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "000", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "00", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "00", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": ":", "known_tags_type": "str", "error": "error parsing value for field \"known_tags\" from source \"EnvSettingsSource\""}
+{"test": "settings_known_tags_list_string_failed", "known_tags": "0", "known_tags_type": "str", "error": "the JSON object must be str, bytes or bytearray, not int"}

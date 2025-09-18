@@ -26,7 +26,7 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
         return 0.0
 
     # Check for overflow/underflow in dot product
-    dot_product = np.dot(a, b)
+    dot_product: Any = np.dot(a, b)
     if np.isnan(dot_product) or np.isinf(dot_product):
         return 0.0
 
@@ -45,7 +45,7 @@ def normalize_vector(v: np.ndarray) -> np.ndarray:
     norm = np.linalg.norm(v)
     if norm == 0:
         # For zero vectors, return a unit vector in the first dimension
-        result = np.zeros_like(v)
+        result: Any = np.zeros_like(v)
         if len(v) > 0:
             result[0] = 1.0
         return result
@@ -53,7 +53,7 @@ def normalize_vector(v: np.ndarray) -> np.ndarray:
     # Check for overflow/underflow
     if np.isnan(norm) or np.isinf(norm):
         # For overflow cases, return a unit vector in the first dimension
-        result = np.zeros_like(v)
+        result: Any = np.zeros_like(v)
         if len(v) > 0:
             result[0] = 1.0
         return result
@@ -69,7 +69,7 @@ class TestVectorProperties:
     @settings(max_examples=25, deadline=50)
     def test_cosine_bounds(self, vec: list[float]) -> None:
         """Cosine similarity should be in [-1, 1]"""
-        a = np.array(vec, dtype=np.float32)
+        a: Any = np.array(vec, dtype=np.float32)
         b = np.array(vec[::-1], dtype=np.float32)  # Reverse for different vector
         cos = cosine_similarity(a, b)
         assert -1.0 <= cos <= 1.0, f"Cosine similarity out of bounds: {cos}"
@@ -79,8 +79,8 @@ class TestVectorProperties:
     @settings(max_examples=25, deadline=50)
     def test_cosine_symmetry(self, vec: list[float]) -> None:
         """Cosine similarity should be symmetric: cos(a,b) == cos(b,a)"""
-        a = np.array(vec, dtype=np.float32)
-        b = np.array(vec[::-1], dtype=np.float32)
+        a: Any = np.array(vec, dtype=np.float32)
+        b: Any = np.array(vec[::-1], dtype=np.float32)
         cos_ab = cosine_similarity(a, b)
         cos_ba = cosine_similarity(b, a)
         assert abs(cos_ab - cos_ba) < 1e-6, f"Cosine similarity not symmetric: {cos_ab} != {cos_ba}"
@@ -90,7 +90,7 @@ class TestVectorProperties:
     @settings(max_examples=25, deadline=50)
     def test_cosine_identical_vectors(self, vec: list[float]) -> None:
         """Cosine similarity of identical vectors should be 1"""
-        a = np.array(vec, dtype=np.float32)
+        a: Any = np.array(vec, dtype=np.float32)
         cos = cosine_similarity(a, a)
 
         # Handle zero vectors specially
@@ -108,7 +108,7 @@ class TestVectorProperties:
     @settings(max_examples=25, deadline=50)
     def test_normalize_unit_length(self, vec: list[float]) -> None:
         """Normalized vectors should have unit length"""
-        a = np.array(vec, dtype=np.float32)
+        a: Any = np.array(vec, dtype=np.float32)
         normalized = normalize_vector(a)
 
         norm = np.linalg.norm(normalized)
@@ -120,7 +120,7 @@ class TestVectorProperties:
     @settings(max_examples=25, deadline=50)
     def test_normalize_preserves_direction(self, vec: list[float]) -> None:
         """Normalization should preserve direction (proportionality)"""
-        a = np.array(vec, dtype=np.float32)
+        a: Any = np.array(vec, dtype=np.float32)
         if np.linalg.norm(a) == 0:
             return  # Skip zero vectors
 
@@ -149,7 +149,7 @@ class TestVectorProperties:
     @settings(max_examples=25, deadline=50)
     def test_normalize_idempotent(self, vec: list[float]) -> None:
         """Normalization should be idempotent: normalize(normalize(v)) == normalize(v)."""
-        a = np.array(vec, dtype=np.float32)
+        a: Any = np.array(vec, dtype=np.float32)
         norm1 = normalize_vector(a)
         norm2 = normalize_vector(norm1)
 

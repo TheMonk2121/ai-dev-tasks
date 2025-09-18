@@ -28,7 +28,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that result is IntentClassification
             assert isinstance(result, IntentClassification)
@@ -76,7 +76,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that structured_fields is a dict
             assert isinstance(result.structured_fields, dict)
@@ -105,7 +105,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that should_short_circuit is boolean
             assert isinstance(result.should_short_circuit, bool)
@@ -136,7 +136,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that reasoning is non-empty
             assert len(result.reasoning) > 0
@@ -165,7 +165,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that route_target is one of expected values
             expected_targets = {"sql", "kg", "rag", "hybrid"}
@@ -190,7 +190,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that confidence is in valid range
             assert 0.0 <= result.confidence <= 1.0
@@ -214,7 +214,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that intent_type is one of expected values
             expected_types = {"structured", "text_rag", "hybrid"}
@@ -237,7 +237,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that result is valid
             assert isinstance(result, IntentClassification)
@@ -267,7 +267,7 @@ class TestIntentRouterTypeProps:
             router = IntentRouter(config)
 
             # Classify intent
-            result = router.classify_intent(query, request_id)
+            result: Any = router.classify_intent(query, request_id)
 
             # Check that result is valid
             assert isinstance(result, IntentClassification)

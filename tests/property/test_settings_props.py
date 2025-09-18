@@ -20,7 +20,7 @@ Property tests for EvaluationSettings parsing behavior.
 @pytest.mark.prop
 @given(st.lists(st.from_regex(r"[A-Za-z_][A-Za-z0-9_]{0,11}", fullmatch=True), min_size=1, max_size=10))
 @settings(max_examples=10, deadline=100)
-def test_known_tags_parsing_variants(tags):
+def test_known_tags_parsing_variants(tags: Any):
     csv = ",".join(tags)
     os.environ.pop("EVAL_KNOWN_TAGS", None)
     s1 = EvaluationSettings(known_tags=tags)
@@ -33,7 +33,7 @@ def test_known_tags_parsing_variants(tags):
 
 
 @pytest.mark.prop
-def test_settings_defaults_nonempty_known_tags():
+def test_settings_defaults_nonempty_known_tags() -> Any:
     # Ensure env is not forcing empty
     os.environ.pop("EVAL_KNOWN_TAGS", None)
     s = EvaluationSettings()

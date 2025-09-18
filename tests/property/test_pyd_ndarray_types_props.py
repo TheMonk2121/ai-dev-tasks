@@ -73,7 +73,7 @@ class TestPydanticArrayTypes:
     def test_vec8_json_serialization_produces_list_of_floats(self, arr: np.ndarray) -> None:  # type: ignore[misc]
         """Test that JSON serialization produces a list of floats with correct length."""
         model = ArrayTestModel(v8=arr)
-        json_data = model.model_dump()
+        json_data: Any = model.model_dump()
 
         # Check that v8 is serialized as a list
         assert isinstance(json_data["v8"], list)
@@ -167,10 +167,10 @@ class TestPydanticArrayTypes:
         model = ArrayTestModel(v8=arr)
 
         # Serialize to JSON
-        json_str = model.model_dump_json()
+        json_str: Any = model.model_dump_json()
 
         # Deserialize from JSON
-        parsed_model = ArrayTestModel.model_validate_json(json_str)
+        parsed_model: Any = ArrayTestModel.model_validate_json(json_str)
 
         # Check that values are preserved
         np.testing.assert_array_almost_equal(model.v8, parsed_model.v8, decimal=5)  # type: ignore[arg-type]

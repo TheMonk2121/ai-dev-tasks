@@ -34,7 +34,7 @@ def test_resolve_dsn_picks_primary(primary: str, fallback: str):
 
 
 @pytest.mark.prop
-def test_resolve_dsn_none_when_unset():
+def test_resolve_dsn_none_when_unset() -> Any:
     os.environ.pop(CANON_ENV, None)
     os.environ.pop(FALLBACK_ENV, None)
     with pytest.raises(RuntimeError):

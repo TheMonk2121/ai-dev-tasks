@@ -272,12 +272,12 @@ class TestLTSTMemorySystemProperties:
         """Test that context data can be serialized and deserialized."""
         try:
             # Test JSON serialization
-            json_str = json.dumps(context_data, default=str)
+            json_str: Any = json.dumps(context_data, default=str)
             assert isinstance(json_str, str)
             assert len(json_str) > 0
 
             # Test deserialization
-            deserialized = json.loads(json_str)
+            deserialized: Any = json.loads(json_str)
             assert isinstance(deserialized, dict)
             assert set(deserialized.keys()) == set(context_data.keys())
 

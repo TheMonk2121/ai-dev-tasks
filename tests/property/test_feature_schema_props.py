@@ -38,9 +38,9 @@ def test_numpy_arrays_serialize_to_lists(q: np.ndarray, d: np.ndarray) -> None:
         q_vec=q if q.size == 384 else None,
         d_vec=d if d.size == 384 else None,
     )
-    dumped = ff.model_dump()
-    qv = dumped.get("q_vec")
-    dv = dumped.get("d_vec")
+    dumped: Any = ff.model_dump()
+    qv: Any = dumped.get("q_vec")
+    dv: Any = dumped.get("d_vec")
     if q.size == 0 or q.size != 384:
         if not (qv is None or qv == []):
             record_case("test_feature_schema_q_empty_or_wrong", {"q_size": int(q.size), "dump_len": 0 if qv is None else len(qv)})

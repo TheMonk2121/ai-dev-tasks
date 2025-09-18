@@ -16,7 +16,7 @@ Property-based tests for RecallFriendlyPrefilter invariants.
 
 
 
-def _docs_strategy():
+def _docs_strategy() -> Any:
     return st.dictionaries(
         keys=st.text(min_size=1, max_size=8),
         values=st.text(min_size=0, max_size=300),
@@ -25,7 +25,7 @@ def _docs_strategy():
     )
 
 
-def _results_strategy(doc_ids):
+def _results_strategy(doc_ids: Any):
     return st.lists(
         st.tuples(st.sampled_from(doc_ids) if doc_ids else st.text(min_size=1, max_size=8), st.floats(0.0, 1.0)),
         min_size=0,
@@ -41,7 +41,7 @@ def test_filter_bm25_subset_and_quality(documents: dict[str, str]) -> None:
     doc_ids = list(documents.keys())
     results = [(doc_id, 1.0) for doc_id in doc_ids[:10]]
 
-    filtered = pf.filter_bm25_results(results, documents)
+    filtered: Any = pf.filter_bm25_results(results, documents)
 
     # size monotonicity
     if len(filtered) > len(results):
@@ -57,7 +57,7 @@ def test_filter_bm25_subset_and_quality(documents: dict[str, str]) -> None:
 
     # length constraints
     for d, _ in filtered:
-        text = documents.get(d, "")
+        text: Any = documents.get(d, "")
         if not (pf.config.min_doc_length <= len(text) <= pf.config.max_doc_length):
             record_case("prefilter_bm25_length_violation", {"id": d, "len": len(text)})
         assert pf.config.min_doc_length <= len(text) <= pf.config.max_doc_length
@@ -71,7 +71,7 @@ def test_filter_vector_subset_and_quality(documents: dict[str, str]) -> None:
     doc_ids = list(documents.keys())
     results = [(doc_id, 1.0) for doc_id in doc_ids[:10]]
 
-    filtered = pf.filter_vector_results(results, documents)
+    filtered: Any = pf.filter_vector_results(results, documents)
 
     # size monotonicity
     assert len(filtered) <= len(results)
@@ -83,7 +83,7 @@ def test_filter_vector_subset_and_quality(documents: dict[str, str]) -> None:
 
     # length constraints
     for d, _ in filtered:
-        text = documents.get(d, "")
+        text: Any = documents.get(d, "")
         assert pf.config.min_doc_length <= len(text) <= pf.config.max_doc_length
 
 
@@ -95,7 +95,7 @@ def test_diversity_filter_never_increases(documents: dict[str, str]) -> None:
     ids = list(documents.keys())
     base = [(doc_id, 0.5) for doc_id in ids[:10]]
 
-    filtered = pf.apply_diversity_filter(base, documents)
+    filtered: Any = pf.apply_diversity_filter(base, documents)
     if len(filtered) > len(base):
         record_case("prefilter_diversity_increase", {"orig": len(base), "filt": len(filtered)})
     assert len(filtered) <= len(base)
@@ -112,7 +112,7 @@ def test_prefilter_all_stats_consistency(documents: dict[str, str]) -> None:
     vec = [(doc_id, 0.9) for doc_id in ids[5:15]]
 
     fb, fv = pf.prefilter_all(bm25, vec, documents)
-    stats = pf.get_filter_stats(bm25, vec, fb, fv)
+    stats: Any = pf.get_filter_stats(bm25, vec, fb, fv)
     assert 0 <= stats["bm25_filtered"] <= stats["bm25_original"]
     assert 0 <= stats["vector_filtered"] <= stats["vector_original"]
     assert 0.0 <= stats["bm25_retention_rate"] <= 1.0

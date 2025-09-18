@@ -25,7 +25,7 @@ class TestSessionRegistry:
     """Test suite for SessionRegistry class."""
 
     @pytest.fixture
-    def temp_registry_path(self):
+    def temp_registry_path(self: Any):
         """Create a temporary registry file for testing."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             f.write(
@@ -39,12 +39,12 @@ class TestSessionRegistry:
         Path(temp_path).unlink(missing_ok=True)
 
     @pytest.fixture
-    def registry(self, temp_registry_path):
+    def registry(self, temp_registry_path: Any):
         """Create a SessionRegistry instance for testing."""
         return SessionRegistry(registry_path=temp_registry_path)
 
     @pytest.fixture
-    def sample_session_data(self):
+    def sample_session_data(self: Any):
         """Sample session data for testing."""
         return {
             "backlog_id": "B-999",
@@ -55,13 +55,13 @@ class TestSessionRegistry:
             "tags": ["role-validation", "context-preservation", "dspy-integration"],
         }
 
-    def test_registry_initialization(self, registry):
+    def test_registry_initialization(self, registry: Any):
         """Test SessionRegistry initialization."""
         assert registry is not None
         assert isinstance(registry.sessions, dict)
         assert len(registry.sessions) == 0
 
-    def test_register_session(self, registry, sample_session_data):
+    def test_register_session(self, registry, sample_session_data: Any):
         """Test session registration."""
         # Register a new session
         registry.register_session(
@@ -85,7 +85,7 @@ class TestSessionRegistry:
         assert session.context.priority == sample_session_data["priority"]
         assert set(sample_session_data["tags"]).issubset(session.context.tags)
 
-    def test_update_session_status(self, registry, sample_session_data):
+    def test_update_session_status(self, registry, sample_session_data: Any):
         """Test session status updates."""
         # Register a session
         registry.register_session(
@@ -101,7 +101,7 @@ class TestSessionRegistry:
         assert session.status == "completed"
         assert session.last_activity is not None
 
-    def test_add_context_tags(self, registry, sample_session_data):
+    def test_add_context_tags(self, registry, sample_session_data: Any):
         """Test adding context tags to a session."""
         # Register a session
         registry.register_session(
@@ -117,7 +117,7 @@ class TestSessionRegistry:
         session = registry.sessions[sample_session_data["backlog_id"]]
         assert all(tag in session.context.tags for tag in new_tags)
 
-    def test_remove_context_tags(self, registry, sample_session_data):
+    def test_remove_context_tags(self, registry, sample_session_data: Any):
         """Test removing context tags from a session."""
         # Register a session with tags
         registry.register_session(
@@ -135,7 +135,7 @@ class TestSessionRegistry:
         assert "role-validation" not in session.context.tags
         assert "context-preservation" in session.context.tags  # Should remain
 
-    def test_get_active_sessions(self, registry, sample_session_data):
+    def test_get_active_sessions(self, registry, sample_session_data: Any):
         """Test retrieving active sessions."""
         # Register multiple sessions with different statuses
         registry.register_session(backlog_id="B-999", pid=12345, worklog_path="artifacts/worklogs/B-999.md")
@@ -146,11 +146,11 @@ class TestSessionRegistry:
         registry.update_session_status("B-999", "completed")
 
         # Get active sessions
-        active_sessions = registry.get_active_sessions()
+        active_sessions: Any = registry.get_active_sessions()
         assert len(active_sessions) == 1
         assert active_sessions[0].backlog_id == "B-1000"
 
-    def test_get_sessions_by_context(self, registry, sample_session_data):
+    def test_get_sessions_by_context(self, registry, sample_session_data: Any):
         """Test retrieving sessions by context tags."""
         # Register sessions with different tags
         registry.register_session(
@@ -168,16 +168,16 @@ class TestSessionRegistry:
         )
 
         # Get sessions by context
-        matching_sessions = registry.get_sessions_by_context(["role-validation"])
+        matching_sessions: Any = registry.get_sessions_by_context(["role-validation"])
         assert len(matching_sessions) == 1
         assert matching_sessions[0].backlog_id == "B-999"
 
         # Test multiple tag matching
-        matching_sessions = registry.get_sessions_by_context(["dspy-integration", "testing"])
+        matching_sessions: Any = registry.get_sessions_by_context(["dspy-integration", "testing"])
         assert len(matching_sessions) == 1
         assert matching_sessions[0].backlog_id == "B-1000"
 
-    def test_get_session_info(self, registry, sample_session_data):
+    def test_get_session_info(self, registry, sample_session_data: Any):
         """Test retrieving detailed session information."""
         # Register a session
         registry.register_session(
@@ -187,16 +187,16 @@ class TestSessionRegistry:
         )
 
         # Get session info
-        session_info = registry.get_session_info(sample_session_data["backlog_id"])
+        session_info: Any = registry.get_session_info(sample_session_data["backlog_id"])
         assert session_info is not None
         assert session_info.backlog_id == sample_session_data["backlog_id"]
         assert session_info.pid == sample_session_data["pid"]
 
         # Test non-existent session
-        session_info = registry.get_session_info("NON-EXISTENT")
+        session_info: Any = registry.get_session_info("NON-EXISTENT")
         assert session_info is None
 
-    def test_cleanup_completed_sessions(self, registry, sample_session_data):
+    def test_cleanup_completed_sessions(self, registry, sample_session_data: Any):
         """Test cleanup of old completed sessions."""
         # Register a session
         registry.register_session(
@@ -219,7 +219,7 @@ class TestSessionRegistry:
         assert sample_session_data["backlog_id"] not in registry.sessions
 
     @patch("psutil.Process")
-    def test_validate_processes(self, mock_process, registry, sample_session_data):
+    def test_validate_processes(self, mock_process, registry, sample_session_data: Any):
         """Test process validation."""
         # Register a session
         registry.register_session(
@@ -238,7 +238,7 @@ class TestSessionRegistry:
         session = registry.sessions[sample_session_data["backlog_id"]]
         assert session.status == "orphaned"
 
-    def test_save_and_load_registry(self, temp_registry_path):
+    def test_save_and_load_registry(self, temp_registry_path: Any):
         """Test registry persistence."""
         # Create registry and add session
         registry = SessionRegistry(registry_path=temp_registry_path)
@@ -256,7 +256,7 @@ class TestSessionRegistry:
         assert session.pid == 12345
         assert "test-tag" in session.context.tags
 
-    def test_error_handling_invalid_backlog_id(self, registry):
+    def test_error_handling_invalid_backlog_id(self, registry: Any):
         """Test error handling for invalid operations."""
         # Try to update non-existent session
         registry.update_session_status("NON-EXISTENT", "completed")
@@ -266,7 +266,7 @@ class TestSessionRegistry:
         registry.add_context_tags("NON-EXISTENT", ["test-tag"])
         # Should not raise exception, just log warning
 
-    def test_session_context_serialization(self, registry, sample_session_data):
+    def test_session_context_serialization(self, registry, sample_session_data: Any):
         """Test session context serialization for JSON storage."""
         # Register session with complex context
         registry.register_session(
@@ -295,7 +295,7 @@ class TestSessionContextIntegrator:
     """Test suite for session context integration with memory rehydration."""
 
     @pytest.fixture
-    def temp_registry_path(self):
+    def temp_registry_path(self: Any):
         """Create a temporary registry file for testing."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             # Create sample registry data
@@ -347,15 +347,15 @@ class TestSessionContextIntegrator:
         Path(temp_path).unlink(missing_ok=True)
 
     @pytest.fixture
-    def integrator(self, temp_registry_path):
+    def integrator(self, temp_registry_path: Any):
         """Create a SessionContextIntegrator instance for testing."""
         from scripts.session_context_integration import SessionContextIntegrator
 
         return SessionContextIntegrator(registry_path=temp_registry_path)
 
-    def test_get_active_sessions_context(self, integrator):
+    def test_get_active_sessions_context(self, integrator: Any):
         """Test retrieving active sessions context."""
-        context = integrator.get_active_sessions_context()
+        context: Any = integrator.get_active_sessions_context()
 
         assert context["session_count"] == 1
         assert len(context["active_sessions"]) == 1
@@ -363,42 +363,42 @@ class TestSessionContextIntegrator:
         # Note: The integrator doesn't include status in the active sessions context
         # as it only returns active sessions by definition
 
-    def test_get_sessions_by_context(self, integrator):
+    def test_get_sessions_by_context(self, integrator: Any):
         """Test retrieving sessions by context tags."""
         # Test single tag
-        context = integrator.get_sessions_by_context(["role-validation"])
+        context: Any = integrator.get_sessions_by_context(["role-validation"])
         assert context["count"] == 1
         assert context["matching_sessions"][0]["backlog_id"] == "B-999"
 
         # Test multiple tags
-        context = integrator.get_sessions_by_context(["dspy-integration"])
+        context: Any = integrator.get_sessions_by_context(["dspy-integration"])
         assert context["count"] == 1
         assert context["matching_sessions"][0]["backlog_id"] == "B-1000"
 
         # Test non-matching tags
-        context = integrator.get_sessions_by_context(["non-existent-tag"])
+        context: Any = integrator.get_sessions_by_context(["non-existent-tag"])
         assert context["count"] == 0
 
-    def test_get_session_summary(self, integrator):
+    def test_get_session_summary(self, integrator: Any):
         """Test generating human-readable session summary."""
-        summary = integrator.get_session_summary()
+        summary: Any = integrator.get_session_summary()
 
         assert "Active Scribe Sessions (1)" in summary
         assert "B-999" in summary
         assert "role-validation" in summary
         assert "context-preservation" in summary
 
-    def test_enhance_memory_context(self, integrator):
+    def test_enhance_memory_context(self, integrator: Any):
         """Test enhancing memory context with session data."""
         base_context = {"existing": "data"}
-        enhanced_context = integrator.enhance_memory_context(base_context)
+        enhanced_context: Any = integrator.enhance_memory_context(base_context)
 
         assert enhanced_context["existing"] == "data"
         assert "scribe_sessions" in enhanced_context
         assert "session_summary" in enhanced_context
         assert enhanced_context["scribe_sessions"]["session_count"] == 1
 
-    def test_integrate_with_memory_rehydrator(self, temp_registry_path):
+    def test_integrate_with_memory_rehydrator(self, temp_registry_path: Any):
         """Test integration with memory rehydrator."""
         from scripts.session_context_integration import integrate_with_memory_rehydrator
 

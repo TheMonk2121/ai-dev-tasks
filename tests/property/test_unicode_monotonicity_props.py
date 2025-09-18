@@ -22,7 +22,7 @@ Unicode edge cases that commonly cause violations in tokenizers.
 
 
 
-def _maybe_counter():
+def _maybe_counter() -> Any:
     """Get a token counter for testing, preferring monotonicity-preserving tokenizers."""
     # Based on research: prefer character-level tokenizers for strict monotonicity
     # Subword tokenizers (BPE, WordPiece) have fundamental monotonicity limitations
@@ -50,9 +50,9 @@ def _maybe_counter():
 
                 severe_violations = 0
                 for test_a, test_b in test_cases:
-                    ca = counter.count(test_a)
-                    cb = counter.count(test_b)
-                    ab = counter.count(test_a + test_b)
+                    ca: Any = counter.count(test_a)
+                    cb: Any = counter.count(test_b)
+                    ab: Any = counter.count(test_a + test_b)
 
                     # Count severe violations (>50% reduction)
                     if ab < ca * 0.5 or ab < cb * 0.5:
@@ -89,9 +89,9 @@ def _is_subword_tokenizer() -> bool:
 
     violations = 0
     for test_a, test_b in test_cases:
-        ca = COUNTER.count(test_a)
-        cb = COUNTER.count(test_b)
-        ab = COUNTER.count(test_a + test_b)
+        ca: Any = COUNTER.count(test_a)
+        cb: Any = COUNTER.count(test_b)
+        ab: Any = COUNTER.count(test_a + test_b)
         # Count cases with significant violations (>30% reduction)
         if ab < ca * 0.7 or ab < cb * 0.7:
             violations += 1
@@ -122,7 +122,7 @@ def _get_monotonicity_threshold() -> float:
 @settings(max_examples=20, deadline=100)
 def test_unicode_normalization_non_negativity(s: str) -> None:
     """Test that Unicode normalization doesn't produce negative token counts."""
-    n = COUNTER.count(s)
+    n: Any = COUNTER.count(s)
     if n < 0:
         record_case("test_unicode_normalization_nonneg", {"raw": s, "count": n})
     assert n >= 0
@@ -134,9 +134,9 @@ def test_unicode_normalization_non_negativity(s: str) -> None:
 @settings(max_examples=15, deadline=150)
 def test_unicode_monotonic_concat(a: str, b: str) -> None:
     """Test monotonicity with Unicode normalization applied."""
-    ca = COUNTER.count(a)
-    cb = COUNTER.count(b)
-    ab = COUNTER.count(a + b)
+    ca: Any = COUNTER.count(a)
+    cb: Any = COUNTER.count(b)
+    ab: Any = COUNTER.count(a + b)
 
     # Record cases where monotonicity fails for analysis
     if ab < ca or ab < cb:
@@ -196,9 +196,9 @@ UNICODE_EDGE_CASES = [
 @pytest.mark.skipif(COUNTER is None, reason="no token counting backend available")
 def test_unicode_edge_cases_monotonicity(a: str, b: str) -> None:
     """Test monotonicity with specific Unicode edge cases."""
-    ca = COUNTER.count(a)
-    cb = COUNTER.count(b)
-    ab = COUNTER.count(a + b)
+    ca: Any = COUNTER.count(a)
+    cb: Any = COUNTER.count(b)
+    ab: Any = COUNTER.count(a + b)
 
     # Record violations for analysis
     if ab < ca or ab < cb:
@@ -246,9 +246,9 @@ def test_unicode_range_monotonicity(text: str) -> None:
     if not a or not b:  # Skip if split results in empty strings
         return
 
-    ca = COUNTER.count(a)
-    cb = COUNTER.count(b)
-    ab = COUNTER.count(a + b)
+    ca: Any = COUNTER.count(a)
+    cb: Any = COUNTER.count(b)
+    ab: Any = COUNTER.count(a + b)
 
     # Record violations
     if ab < ca or ab < cb:
