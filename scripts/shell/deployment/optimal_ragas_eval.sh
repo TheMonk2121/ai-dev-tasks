@@ -7,8 +7,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 if [ -f "$REPO_ROOT/.venv/bin/activate" ]; then
+  # shellcheck disable=SC1091  # Allow sourcing optional local venv without requiring shellcheck -x
   . "$REPO_ROOT/.venv/bin/activate"
 elif [ -f "$REPO_ROOT/venv/bin/activate" ]; then
+  # shellcheck disable=SC1091  # Allow sourcing optional local venv without requiring shellcheck -x
   . "$REPO_ROOT/venv/bin/activate"
 fi
 
