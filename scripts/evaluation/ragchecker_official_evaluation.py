@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
         import config_loader
 
         try:
-            _ = config_loader.resolve_config(argv)
+            _: Any = config_loader.resolve_config(argv)
         except SystemExit as e:
             # Surface clear error for profile misuse
             print(e)
@@ -60,7 +60,7 @@ def main(argv: list[str] | None = None) -> int:
     if "--outdir" in argv:
         outdir = None
         try:
-            i = argv.index("--outdir")
+            i: Any = argv.index("--outdir")
             outdir = argv[i + 1] if i + 1 < len(argv) else None
         except Exception:
             outdir = None
@@ -92,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
         import json as _json
         import time as _time
 
-        ts = _time.strftime("%Y%m%d_%H%M%S")
+        ts: Any = _time.strftime("%Y%m%d_%H%M%S")
         out_path = Path(outdir) / f"ragchecker_clean_evaluation_{ts}.json"
         os.makedirs(outdir, exist_ok=True)  # pylint: disable=unused-variable,no-value-for-parameter
         _ = out_path.write_text(_json.dumps(results, indent=2), encoding="utf-8")
@@ -168,7 +168,7 @@ class OfficialRAGCheckerEvaluator:
                 .SourceFileLoader("ragchecker_official_eval_impl", str(impl_path))
                 .load_module()
             )
-            self._impl = getattr(module, "OfficialRAGCheckerEvaluator")()
+            self._impl: Any = getattr(module, "OfficialRAGCheckerEvaluator")()
         except Exception as e:
             raise RuntimeError(f"Failed to load OfficialRAGCheckerEvaluator implementation: {e}")
 

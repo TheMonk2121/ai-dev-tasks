@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import hashlib
-import os
 import subprocess
 
 # Add repo root to import path
@@ -10,8 +9,8 @@ import sys
 from collections.abc import Iterable
 from pathlib import Path
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.extras import RealDictCursor, RealDictRow
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -66,7 +65,7 @@ def main() -> int:
     inserted_symbols = 0
     inserted_chunks = 0
 
-    with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
+    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
         with conn.cursor() as cur:
             for fp in files:
                 try:
@@ -96,7 +95,7 @@ def main() -> int:
                         "python",
                         commit,
                         ctime,
-                        psycopg2.Binary(fhash),
+                        fhash,
                         rel.startswith("tests/") or Path(rel).name.startswith("test_"),
                         False,
                         False,
@@ -104,7 +103,10 @@ def main() -> int:
                         "{}",
                     ),
                 )
-                file_id = int(cur.fetchone()["id"])  # type: ignore[index]
+                file_result: RealDictRow | None = cur.fetchone()
+                if file_result is None:
+                    raise RuntimeError("Failed to insert file record")
+                file_id = int(file_result["id"])
                 inserted_files += 1
 
                 # Insert a module-level symbol row (simple first slice)
@@ -126,7 +128,10 @@ def main() -> int:
                         "{}",
                     ),
                 )
-                symbol_id = int(cur.fetchone()["id"])  # type: ignore[index]
+                symbol_result: RealDictRow | None = cur.fetchone()
+                if symbol_result is None:
+                    raise RuntimeError("Failed to insert symbol record")
+                symbol_id = int(symbol_result["id"])
                 inserted_symbols += 1
 
                 # Create a single chunk for now (embedding left NULL; will be backfilled)
@@ -146,7 +151,7 @@ def main() -> int:
                         text,
                         None,
                         max(1, len(text) // 4),
-                        psycopg2.Binary(chunk_hash),
+                        chunk_hash,
                         None,  # embedding to be backfilled
                         None,
                         None,

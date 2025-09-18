@@ -21,11 +21,11 @@ import yaml
 class EvalManifestGenerator:
     """Generates comprehensive evaluation manifests for production traceability."""
 
-    def __init__(self, output_dir: str = "metrics/manifests"):
-        self.output_dir = Path(output_dir)
+    def __init__() -> Any:
+        self.output_dir: Any = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.manifest_id = str(uuid.uuid4())[:8]
-        self.timestamp = datetime.now().isoformat()
+        self.manifest_id: Any = str(uuid.uuid4())[:8]
+        self.timestamp: Any = datetime.now().isoformat()
 
     def generate_manifest(self, config_overrides: dict[str, Any] | None = None) -> dict[str, Any]:
         """Generate comprehensive evaluation manifest."""
@@ -109,7 +109,7 @@ class EvalManifestGenerator:
         config.update(overrides)
 
         # Generate configuration hash
-        config_str = json.dumps(config, sort_keys=True)
+        config_str: Any = json.dumps(config, sort_keys=True)
         config_hash = hashlib.sha256(config_str.encode()).hexdigest()[:16]
         config["config_hash"] = config_hash
 
@@ -205,7 +205,7 @@ class EvalManifestGenerator:
 
     def _get_data_checksum(self) -> str:
         """Get data checksum for reproducibility."""
-        eval_file = os.getenv("EVAL_CASES_FILE", "300_evals/datasets/eval_cases.jsonl")
+        eval_file: Any = os.getenv("EVAL_CASES_FILE", "300_evals/datasets/eval_cases.jsonl")
         if os.path.exists(eval_file):
             with open(eval_file, "rb") as f:
                 return hashlib.sha256(f.read()).hexdigest()[:16]
@@ -222,7 +222,7 @@ class EvalManifestGenerator:
         try:
             import subprocess
 
-            result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+            result: Any = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
             return result.stdout.strip()[:8] if result.returncode == 0 else "unknown"
         except Exception:
             return "unknown"
@@ -232,7 +232,7 @@ class EvalManifestGenerator:
         try:
             import subprocess
 
-            result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
+            result: Any = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
             return result.stdout.strip() if result.returncode == 0 else "unknown"
         except Exception:
             return "unknown"
@@ -255,7 +255,7 @@ class EvalManifestGenerator:
     def _mask_sensitive_data(self, data: str) -> str:
         """Mask sensitive data in configuration."""
         if "://" in data:
-            parts = data.split("://")
+            parts: Any = data.split("://")
             if len(parts) > 1:
                 return f"{parts[0]}://***"
         return data
@@ -288,32 +288,32 @@ class EvalManifestGenerator:
                 raise ValueError(f"Unsupported file format: {filepath}")
 
 
-def main():
+def main() -> Any:
     """Main entry point for manifest generation."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate evaluation manifest")
+    parser: Any = argparse.ArgumentParser(description="Generate evaluation manifest")
     parser.add_argument("--output-dir", default="metrics/manifests", help="Output directory for manifests")
     parser.add_argument("--format", choices=["yaml", "json"], default="yaml", help="Output format")
     parser.add_argument("--config-file", help="Configuration file to load overrides from")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Load configuration overrides if provided
     config_overrides = {}
     if args.config_file:
         with open(args.config_file) as f:
             if args.config_file.endswith(".yaml") or args.config_file.endswith(".yml"):
-                config_overrides = yaml.safe_load(f)
+                config_overrides: Any = yaml.safe_load(f)
             elif args.config_file.endswith(".json"):
-                config_overrides = json.load(f)
+                config_overrides: Any = json.load(f)
 
     # Generate manifest
     generator = EvalManifestGenerator(args.output_dir)
-    manifest = generator.generate_manifest(config_overrides)
+    manifest: Any = generator.generate_manifest(config_overrides)
 
     # Save manifest
-    filepath = generator.save_manifest(manifest, args.format)
+    filepath: Any = generator.save_manifest(manifest, args.format)
 
     print(f"✅ Evaluation manifest generated: {filepath}")
     print(f"📋 Manifest ID: {manifest['manifest_id']}")

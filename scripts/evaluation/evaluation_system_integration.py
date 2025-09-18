@@ -119,28 +119,28 @@ class EvaluationSystemIntegration:
 
         # Test Hot Memory Pool (database tables)
         try:
-            import psycopg2
-            from psycopg2.extras import RealDictCursor
+            from psycopg.rows import dict_row
 
-            conn = psycopg2.connect(self.config["postgres_dsn"])
-            cur = conn.cursor(cursor_factory=RealDictCursor)
+            from src.common.psycopg3_config import Psycopg3Config
 
-            cur.execute(
-                """
-                SELECT table_name FROM information_schema.tables
-                WHERE table_schema = 'public'
-                AND table_name = 'conv_chunks'
-            """
-            )
+            config = Psycopg3Config()
+            with config.get_connection() as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
+                    cur.execute(
+                        """
+                        SELECT table_name FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                        AND table_name = 'conv_chunks'
+                        """
+                    )
 
-            if cur.fetchone():
-                results["hot_memory_pool"] = "✅ Available"
-                print("   ✅ Hot Memory Pool: Available")
-            else:
-                results["hot_memory_pool"] = "❌ Missing table"
-                print("   ❌ Hot Memory Pool: Missing conv_chunks table")
-
-            conn.close()
+                    _ = cur.fetchone()  # Check if table exists
+                    if _:
+                        results["hot_memory_pool"] = "✅ Available"
+                        print("   ✅ Hot Memory Pool: Available")
+                    else:
+                        results["hot_memory_pool"] = "❌ Missing table"
+                        print("   ❌ Hot Memory Pool: Missing conv_chunks table")
 
         except Exception as e:
             results["hot_memory_pool"] = f"❌ Failed: {e}"
@@ -253,31 +253,30 @@ class EvaluationSystemIntegration:
 
         # Test Database Writer
         try:
-            import psycopg2
-            from psycopg2.extras import RealDictCursor
+            from psycopg.rows import dict_row
 
-            conn = psycopg2.connect(self.config["postgres_dsn"])
-            cur = conn.cursor(cursor_factory=RealDictCursor)
+            from src.common.psycopg3_config import Psycopg3Config
 
-            # Check if tables exist
-            cur.execute(
-                """
-                SELECT table_name FROM information_schema.tables
-                WHERE table_schema = 'public'
-                AND table_name IN ('documents', 'document_chunks')
-                ORDER BY table_name
-            """
-            )
+            config = Psycopg3Config()
+            with config.get_connection() as conn:
+                with conn.cursor(row_factory=dict_row) as cur:
+                    # Check if tables exist
+                    cur.execute(
+                        """
+                        SELECT table_name FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                        AND table_name IN ('documents', 'document_chunks')
+                        ORDER BY table_name
+                        """
+                    )
 
-            tables = [row["table_name"] for row in cur.fetchall()]
-            if len(tables) >= 2:
-                results["database_writer"] = f"✅ Tables available: {tables}"
-                print(f"   ✅ Database Writer: Tables available: {tables}")
-            else:
-                results["database_writer"] = f"❌ Missing tables: {tables}"
-                print(f"   ❌ Database Writer: Missing tables: {tables}")
-
-            conn.close()
+                    tables = [row["table_name"] for row in cur.fetchall()]
+                    if len(tables) >= 2:
+                        results["database_writer"] = f"✅ Tables available: {tables}"
+                        print(f"   ✅ Database Writer: Tables available: {tables}")
+                    else:
+                        results["database_writer"] = f"❌ Missing tables: {tables}"
+                        print(f"   ❌ Database Writer: Missing tables: {tables}")
 
         except Exception as e:
             results["database_writer"] = f"❌ Failed: {e}"

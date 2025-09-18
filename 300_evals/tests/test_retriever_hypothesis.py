@@ -29,7 +29,7 @@ except Exception as e:  # pragma: no cover - fail fast with clear message
     use_mmr=st.booleans(),
 )
 def test_run_fused_query_basic_properties(q: str, k: int, use_mmr: bool):
-    os.environ.setdefault("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+    _ = os.environ.setdefault("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
     rows: list[dict[str, Any]] = run_fused_query(
         q_short=q,
         q_title="",

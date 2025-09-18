@@ -2,6 +2,8 @@ import importlib.util
 from pathlib import Path
 from typing import Any, cast
 
+import pytest
+
 
 def _load_module_by_path():
     mod_path = Path("scripts/utilities/rehydration_integration.py").resolve()
@@ -12,7 +14,7 @@ def _load_module_by_path():
     return mod
 
 
-def test_disabled_flag_returns_false(tmp_path, monkeypatch):
+def test_disabled_flag_returns_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     mod = cast(Any, _load_module_by_path())
     # Redirect state file to a temp path
     mod.STATE_PATH = Path(tmp_path / ".rehydrate_state.json")
@@ -24,7 +26,7 @@ def test_disabled_flag_returns_false(tmp_path, monkeypatch):
     assert mod.should_trigger("B-TEST") is False
 
 
-def test_debounce_logic(tmp_path, monkeypatch):
+def test_debounce_logic(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     mod = cast(Any, _load_module_by_path())
     # Redirect state file to a temp path
     mod.STATE_PATH = Path(tmp_path / ".rehydrate_state.json")
