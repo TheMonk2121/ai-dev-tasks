@@ -1,0 +1,41 @@
+---
+description: "Comprehensive type safety and annotation standards for Python 3.12"
+globs: ["**/*.py"]
+alwaysApply: true
+priority: 1
+---
+
+# Type Safety Standards
+
+## Modern Python 3.12 Typing
+- **MANDATORY**: Use PEP 585 built-in generics: `dict[str, Any]` not `Dict[str, Any]`
+- **MANDATORY**: Use `list[str]` not `List[str]`
+- **MANDATORY**: Use `tuple[str, int]` not `Tuple[str, int]`
+- **MANDATORY**: Use `set[str]` not `Set[str]`
+- **MANDATORY**: Import only `from typing import Any` for complex types
+- **FORBIDDEN**: Never use `typing.Dict`, `typing.List`, `typing.Tuple`, `typing.Set`
+
+## Type Annotation Requirements
+- **MANDATORY**: All function parameters must have type hints
+- **MANDATORY**: All function return types must be annotated
+- **MANDATORY**: All class attributes must have type hints
+- **MANDATORY**: Use `-> None` for functions that don't return values
+- **MANDATORY**: Use `-> Any` only when absolutely necessary
+
+## Error Handling
+- **FORBIDDEN**: Never use `# type: ignore` - fix root causes instead
+- **MANDATORY**: Use proper type guards and isinstance checks
+- **MANDATORY**: Use `cast()` only when type narrowing is impossible
+- **MANDATORY**: Follow basedpyright strict configuration from pyproject.toml
+
+## Database Typing
+- **MANDATORY**: Use `psycopg.Connection[DictRow]` for database connections
+- **MANDATORY**: Import from `src.common.psycopg3_config` for database patterns
+- **MANDATORY**: Use cursor-level `row_factory=dict_row` not connection-level
+- **MANDATORY**: Use `from psycopg.rows import DictRow` for row typing
+
+## Import Patterns
+- **MANDATORY**: Use `from typing import Any` only
+- **MANDATORY**: Use built-in generics: `dict`, `list`, `tuple`, `set`
+- **MANDATORY**: Follow existing codebase import patterns
+- **MANDATORY**: Use absolute imports, no relative imports

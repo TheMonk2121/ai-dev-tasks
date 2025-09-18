@@ -1,0 +1,38 @@
+---
+description: "AI development patterns and DSPy integration standards"
+globs: ["**/*.py", "**/*.md"]
+alwaysApply: true
+priority: 4
+---
+
+# AI Development Patterns
+
+## DSPy Integration
+- **MANDATORY**: Use `BootstrapFewShot` for few-shot learning
+- **MANDATORY**: Define clear input/output contracts in signatures
+- **MANDATORY**: Implement retrieval and reader metrics with thresholds
+- **MANDATORY**: Use `Validate` for constraint enforcement
+
+## Memory Systems
+- **MANDATORY**: Use LTST for long-term semantic tracking
+- **MANDATORY**: Use Cursor memory for IDE integration
+- **MANDATORY**: Use Go CLI memory for command-line interface
+- **MANDATORY**: Use Prime for primary memory orchestration
+
+## RAG System Patterns
+- **MANDATORY**: Target micro ≥ 0.85, macro ≥ 0.75 precision
+- **MANDATORY**: Target F1 ≥ 0.60 or require explicit waiver
+- **MANDATORY**: No regressions allowed; improve recall while maintaining precision
+- **MANDATORY**: Use gold profile for production baselines
+
+## Evaluation Standards
+- **MANDATORY**: Use `make eval-gold` for production baseline evaluation
+- **MANDATORY**: Use `make eval-real` for development and tuning
+- **MANDATORY**: Use `make eval-mock` for infrastructure testing
+- **MANDATORY**: Follow evaluation profile management patterns
+
+## Code Organization
+- **MANDATORY**: Place DSPy modules in `src/dspy_modules/` with clear naming
+- **MANDATORY**: Use `scripts/evaluation/` for evaluation scripts
+- **MANDATORY**: Implement in `scripts/memory/` with proper interfaces
+- **MANDATORY**: Mirror source structure in `tests/` with comprehensive coverage

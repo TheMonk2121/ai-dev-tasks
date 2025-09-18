@@ -1,0 +1,115 @@
+name: Import Validation
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: ["main"]
+
+jobs:
+  import-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Check for relative imports
+        run: |
+          echo "🔍 Checking for relative imports in Python files..."
+
+          # Find all Python files in active directories
+          python_files=$(find src scripts evals tests -name "*.py" -not -path "*/600_archives/*" -not -path "*/venv/*" -not -path "*/.venv/*" -not -path "*/__pycache__/*" 2>/dev/null || true)
+
+          if [ -z "$python_files" ]; then
+            echo "No Python files found to check"
+            exit 0
+          fi
+
+          # Check for relative imports using grep
+          relative_imports=$(echo "$python_files" | xargs grep -n "from \." 2>/dev/null || true)
+
+          if [ -n "$relative_imports" ]; then
+            echo "❌ Found relative imports in the following files:"
+            echo "$relative_imports"
+            echo ""
+            echo "💡 To fix these, run:"
+            echo "  uv run python scripts/migration/migrate_to_absolute_imports.py"
+            echo ""
+            echo "📋 Project standards require absolute imports for:"
+            echo "  - Better type checking"
+            echo "  - Improved maintainability"
+            echo "  - Consistent code organization"
+            exit 1
+          else
+            echo "✅ No relative imports found - all imports are absolute!"
+          fi
+
+      - name: Validate import structure
+        run: |
+          echo "🔍 Validating import structure..."
+
+          # Check for common import issues
+          issues_found=0
+
+          # Check for sys.path modifications (except in migration scripts)
+          sys_path_mods=$(find src scripts evals tests -name "*.py" -not -path "*/600_archives/*" -not -path "*/migration/*" -not -path "*/venv/*" -not -path "*/.venv/*" -not -path "*/__pycache__/*" -exec grep -l "sys.path" {} \; 2>/dev/null || true)
+
+          if [ -n "$sys_path_mods" ]; then
+            echo "⚠️  Found sys.path modifications in:"
+            echo "$sys_path_mods"
+            echo "Consider using proper package structure instead"
+            issues_found=1
+          fi
+
+          # Check for hardcoded import paths
+          hardcoded_imports=$(find src scripts evals tests -name "*.py" -not -path "*/600_archives/*" -not -path "*/venv/*" -not -path "*/.venv/*" -not -path "*/__pycache__/*" -exec grep -n "from scripts\." {} \; 2>/dev/null || true)
+
+          if [ -n "$hardcoded_imports" ]; then
+            echo "⚠️  Found hardcoded 'from scripts.' imports:"
+            echo "$hardcoded_imports"
+            echo "Consider using relative imports or proper absolute imports"
+            issues_found=1
+          fi
+
+          if [ $issues_found -eq 0 ]; then
+            echo "✅ Import structure validation passed!"
+          else
+            echo "❌ Import structure validation found issues"
+            exit 1
+          fi
+
+      - name: Run migration tool dry-run
+        run: |
+          echo "🔍 Running migration tool dry-run to check for any missed relative imports..."
+
+          # Run the migration tool in dry-run mode to double-check
+          uv run python scripts/migration/migrate_to_absolute_imports.py --dry-run > migration_check.txt 2>&1 || true
+
+          # Check if there are any relative imports found
+          if grep -q "Files with changes:" migration_check.txt; then
+            changes_count=$(grep "Files with changes:" migration_check.txt | grep -o '[0-9]\+' | head -1)
+            if [ "$changes_count" -gt 0 ]; then
+              echo "❌ Migration tool found $changes_count files with relative imports:"
+              cat migration_check.txt
+              echo ""
+              echo "💡 Run the migration tool to fix:"
+              echo "  uv run python scripts/migration/migrate_to_absolute_imports.py"
+              exit 1
+            fi
+          fi
+
+          echo "✅ Migration tool dry-run passed - no relative imports found!"

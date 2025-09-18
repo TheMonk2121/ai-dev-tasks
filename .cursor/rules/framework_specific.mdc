@@ -1,0 +1,133 @@
+---
+description: "Framework-specific patterns for Flask, SQLAlchemy, Pydantic, and async operations"
+globs:
+  - '**/src/**/*.py'
+  - '**/scripts/**/*.py'
+  - '**/tests/**/*.py'
+  - '**/*app*.py'
+  - '**/*server*.py'
+  - '**/*api*.py'
+alwaysApply: true
+---
+
+# Framework-Specific Patterns
+
+## Flask Web Framework
+
+### Application Structure
+- **Blueprints**: Use blueprints for modular organization
+- **Configuration**: Use `pydantic-settings` for typed configuration
+- **Error Handling**: Implement custom error handlers with proper HTTP status codes
+- **Middleware**: Use Flask-SocketIO for real-time communication
+
+### API Design
+- **RESTful**: Follow REST conventions for API endpoints
+- **Validation**: Use Pydantic models for request/response validation
+- **Documentation**: Include OpenAPI/Swagger documentation
+- **Versioning**: Implement API versioning strategy
+
+### Security
+- **Input Validation**: Sanitize all user inputs
+- **Authentication**: Implement proper session management
+- **CORS**: Configure CORS for cross-origin requests
+- **Rate Limiting**: Implement rate limiting for API endpoints
+
+## SQLAlchemy ORM
+
+### Model Design
+- **Base Classes**: Use declarative base for consistent model structure
+- **Relationships**: Define clear foreign key relationships
+- **Indexes**: Add appropriate database indexes for performance
+- **Constraints**: Use database constraints for data integrity
+
+### Query Patterns
+- **Session Management**: Use context managers for proper session cleanup
+- **Eager Loading**: Use `joinedload` or `selectinload` to avoid N+1 queries
+- **Bulk Operations**: Use bulk operations for large data sets
+- **Transactions**: Wrap related operations in transactions
+
+### Migration Management
+- **Alembic**: Use Alembic for database migrations
+- **Idempotent**: Write idempotent migrations with `IF NOT EXISTS`
+- **Rollback**: Ensure migrations can be safely rolled back
+- **Testing**: Test migrations on sample data before production
+
+## Pydantic Data Validation
+
+### Model Configuration
+- **Validation**: Use `extra='forbid'` for strict validation
+- **Serialization**: Configure proper serialization for API responses
+- **Defaults**: Use `validate_default=True` for default value validation
+- **String Handling**: Use `str_strip_whitespace=True` for clean strings
+
+### Settings Management
+- **Environment Variables**: Use `pydantic-settings` for configuration
+- **Precedence**: Follow env vars → profile env → .env.local → defaults
+- **Validation**: Validate all settings at startup
+- **Documentation**: Document all settings in project documentation
+
+### Error Handling
+- **ValidationError**: Treat as hard fail in CI/CD
+- **Custom Validators**: Implement custom validators for complex logic
+- **Error Messages**: Provide clear, actionable error messages
+- **Logging**: Log validation errors for debugging
+
+## Async Operations
+
+### Async/Await Patterns
+- **Context Managers**: Use async context managers for resource cleanup
+- **Error Handling**: Properly handle exceptions in async code
+- **Cancellation**: Implement proper cancellation for long-running tasks
+- **Timeouts**: Set appropriate timeouts for async operations
+
+### HTTP Clients
+- **httpx**: Use httpx for async HTTP requests
+- **Connection Pooling**: Configure connection pooling for efficiency
+- **Retry Logic**: Implement exponential backoff for retries
+- **Circuit Breakers**: Use circuit breakers for external service calls
+
+### Database Async
+- **Async Sessions**: Use async SQLAlchemy sessions
+- **Connection Management**: Properly manage async database connections
+- **Transaction Handling**: Use async transaction contexts
+- **Error Recovery**: Implement proper error recovery for database operations
+
+## Testing Patterns
+
+### Unit Testing
+- **Mocking**: Use pytest-mock for mocking external dependencies
+- **Fixtures**: Create reusable fixtures for common test data
+- **Parametrization**: Use pytest.mark.parametrize for multiple test cases
+- **Coverage**: Aim for high test coverage on critical paths
+
+### Integration Testing
+- **Database**: Use test database for integration tests
+- **API Testing**: Test API endpoints with real HTTP requests
+- **Async Testing**: Use pytest-asyncio for async test functions
+- **Cleanup**: Ensure proper cleanup after integration tests
+
+### Performance Testing
+- **Benchmarks**: Create benchmarks for critical operations
+- **Load Testing**: Test under realistic load conditions
+- **Memory Profiling**: Use memory profilers to identify leaks
+- **Performance Budgets**: Define and enforce performance budgets
+
+## Best Practices
+
+### Code Organization
+- **Separation of Concerns**: Keep business logic separate from framework code
+- **Dependency Injection**: Use dependency injection for testability
+- **Interface Segregation**: Define clear interfaces for components
+- **Single Responsibility**: Each module should have a single responsibility
+
+### Error Handling
+- **Structured Logging**: Use structured logging with proper levels
+- **Error Context**: Include sufficient context in error messages
+- **Monitoring**: Integrate with monitoring systems for error tracking
+- **Graceful Degradation**: Handle failures gracefully without crashing
+
+### Performance
+- **Caching**: Implement intelligent caching strategies
+- **Database Optimization**: Optimize database queries and indexes
+- **Memory Management**: Monitor and optimize memory usage
+- **Resource Cleanup**: Ensure proper cleanup of resources

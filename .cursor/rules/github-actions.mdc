@@ -1,0 +1,38 @@
+---
+description: "GitHub Actions workflow standards and patterns"
+globs: ["**/.github/workflows/*.yml", "**/.github/workflows/*.yaml"]
+alwaysApply: true
+priority: 5
+---
+
+# GitHub Actions Standards
+
+## Context Usage
+- **MANDATORY**: Use `${{ runner.os }}` for runner context
+- **MANDATORY**: Use `${{ env.RUNNER_TEMP }}` for environment variables
+- **MANDATORY**: Use `${{ github.event_name }}` for event context
+- **FORBIDDEN**: Never use `${{ env.RUNNER_OS }}` - this is invalid
+
+## Workflow Structure
+- **MANDATORY**: Always include `with:` blocks for actions that require parameters
+- **MANDATORY**: Use proper YAML indentation (2 spaces)
+- **MANDATORY**: Include `uses:` and `with:` for all actions
+- **MANDATORY**: Use `actions/checkout@v4` for checkout actions
+
+## Environment Variables
+- **MANDATORY**: Set `UV_PROJECT_ENVIRONMENT=.venv` for local development
+- **MANDATORY**: Use `uv sync --frozen` in CI environments
+- **MANDATORY**: Use `uv run python` for all Python execution
+- **MANDATORY**: Set appropriate `POSTGRES_DSN` for database operations
+
+## Quality Gates
+- **MANDATORY**: Run `uv run pyright` for type checking
+- **MANDATORY**: Run `uv run ruff check` for linting
+- **MANDATORY**: Run `uv run pytest` for testing
+- **MANDATORY**: Include evaluation gates on gold profile
+
+## Caching
+- **MANDATORY**: Cache UV and virtualenv with proper keys
+- **MANDATORY**: Use `${{ runner.os }}-uv-${{ hashFiles('uv.lock') }}` for cache keys
+- **MANDATORY**: Cache HuggingFace models when needed
+- **MANDATORY**: Use appropriate restore-keys for fallback

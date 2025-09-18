@@ -1,0 +1,50 @@
+name: Type Error Checks
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: ["main"]
+
+jobs:
+  type-error-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Check for missing Any imports
+        run: make check-any-imports
+
+      - name: Check for deprecated types
+        run: make check-deprecated-types
+
+      - name: Check for relative imports
+        run: make check-imports
+
+      - name: Run type checking
+        run: make typecheck
+
+      - name: Run linting
+        run: make lint
+
+      - name: Auto-fix type errors (if any)
+        if: failure()
+        run: |
+          echo "🔧 Attempting to auto-fix type errors..."
+          make fix-any-imports || true
+          make fix-deprecated-types || true
+          make fix-type-errors || true
+          echo "✅ Auto-fix completed. Please review changes and commit if appropriate."

@@ -1,0 +1,160 @@
+---
+description: "Rule maintenance and update protocols for keeping cursor rules effective and relevant"
+globs:
+  - '**/.cursor/rules/**/*'
+  - '**/AGENTS.md'
+  - '**/.cursorrules'
+alwaysApply: true
+---
+
+# Rule Maintenance and Updates
+
+## Rule Review Schedule
+
+### Weekly Reviews
+- **Rule Effectiveness**: Check if rules are being followed consistently
+- **New Patterns**: Identify new patterns that need rule coverage
+- **Conflicts**: Resolve conflicts between overlapping rules
+- **Performance**: Monitor if rules are slowing down development
+
+### Monthly Reviews
+- **Rule Relevance**: Ensure rules match current project state
+- **Community Updates**: Check for new best practices from cursorrules.org
+- **Framework Updates**: Update rules when frameworks are upgraded
+- **Project Evolution**: Adapt rules to project growth and changes
+
+### Quarterly Reviews
+- **Rule Architecture**: Review overall rule organization and structure
+- **Redundancy**: Remove duplicate or conflicting rules
+- **Gaps**: Identify areas lacking rule coverage
+- **Documentation**: Update rule documentation and examples
+
+## Rule Update Process
+
+### 1. Identify Need
+- **Pain Points**: Rules causing friction or confusion
+- **Missing Coverage**: Areas without appropriate rules
+- **New Requirements**: Project changes requiring new rules
+- **Community Best Practices**: New patterns from the community
+
+### 2. Draft Changes
+- **Single Responsibility**: Each rule should have one clear purpose
+- **Clear Scope**: Use globs to target specific file types
+- **Actionable**: Rules should provide clear, actionable guidance
+- **Examples**: Include code examples where helpful
+
+### 3. Test Changes
+- **Validation**: Ensure rules work as expected
+- **No Conflicts**: Verify no conflicts with existing rules
+- **Performance**: Check that rules don't slow down development
+- **Adoption**: Monitor how well the rules are adopted
+
+### 4. Deploy and Monitor
+- **Gradual Rollout**: Deploy changes incrementally
+- **Feedback**: Collect feedback from development team
+- **Metrics**: Track rule effectiveness and adoption
+- **Iteration**: Continuously improve based on feedback
+
+## Rule Quality Standards
+
+### Content Quality
+- **Clarity**: Rules should be clear and unambiguous
+- **Completeness**: Cover all relevant scenarios
+- **Accuracy**: Rules should be technically accurate
+- **Relevance**: Rules should be relevant to current project needs
+
+### Format Quality
+- **Frontmatter**: Include proper description and globs
+- **Structure**: Use consistent markdown structure
+- **Examples**: Include code examples where appropriate
+- **Cross-References**: Link to related rules and documentation
+
+### Maintenance Quality
+- **Version Control**: Track rule changes in git
+- **Documentation**: Document rule changes and rationale
+- **Testing**: Test rule changes before deployment
+- **Rollback**: Have rollback plan for problematic rules
+
+## Rule Categories
+
+### Core Rules (Always Apply)
+- **Code Quality**: Basic coding standards and practices
+- **Testing**: Testing requirements and quality gates
+- **Security**: Security best practices and requirements
+- **Performance**: Performance standards and optimization
+
+### Project-Specific Rules (Context-Aware)
+- **AI Development**: Patterns specific to AI/ML development
+- **Database**: Database design and management patterns
+- **API Design**: API development and documentation standards
+- **Memory Systems**: Memory management and persistence patterns
+
+### Framework Rules (Technology-Specific)
+- **Flask**: Web framework patterns and best practices
+- **SQLAlchemy**: ORM patterns and database interactions
+- **Pydantic**: Data validation and serialization patterns
+- **Async**: Asynchronous programming patterns
+
+### Workflow Rules (Process-Specific)
+- **Git Workflow**: Version control and collaboration patterns
+- **CI/CD**: Continuous integration and deployment standards
+- **Documentation**: Documentation creation and maintenance
+- **Task Management**: Project management and task tracking
+
+## Rule Effectiveness Metrics
+
+### Adoption Metrics
+- **Rule Following**: How consistently are rules being followed?
+- **Violation Rate**: How often are rules being violated?
+- **Feedback Quality**: What feedback are developers providing?
+- **Time Impact**: Are rules helping or hindering development speed?
+
+### Quality Metrics
+- **Bug Reduction**: Are rules reducing bugs and issues?
+- **Code Quality**: Is code quality improving over time?
+- **Consistency**: Is code becoming more consistent?
+- **Maintainability**: Is code becoming more maintainable?
+
+### Process Metrics
+- **Rule Updates**: How often are rules being updated?
+- **Rule Conflicts**: How often do rules conflict?
+- **Rule Gaps**: What areas lack rule coverage?
+- **Rule Redundancy**: Are there duplicate or redundant rules?
+
+## Best Practices
+
+### Rule Creation
+- **Start Simple**: Begin with basic rules and add complexity gradually
+- **Community Input**: Leverage community best practices from cursorrules.org
+- **Project Context**: Tailor rules to specific project needs
+- **Clear Examples**: Include clear, actionable examples
+
+### Rule Management
+- **Version Control**: Track all rule changes in git
+- **Documentation**: Document rule rationale and changes
+- **Testing**: Test rule changes before deployment
+- **Monitoring**: Continuously monitor rule effectiveness
+
+### Rule Evolution
+- **Regular Updates**: Update rules regularly to stay current
+- **Community Learning**: Learn from community best practices
+- **Project Growth**: Adapt rules as project grows and evolves
+- **Technology Changes**: Update rules when technologies change
+
+## Quick Reference
+
+### Essential Commands
+- `find .cursor/rules -name "*.mdc" -o -name "*.cursorrules"` - List all rules
+- `grep -r "description:" .cursor/rules/` - Check rule descriptions
+- `grep -r "globs:" .cursor/rules/` - Check rule scoping
+
+### Key Files
+- `.cursor/rules/` - Project rules directory
+- `AGENTS.md` - Agent instructions
+- `.cursorrules` - Legacy rules (maintain for critical protocols)
+- `pyproject.toml` - Tool configuration (align rules with this)
+
+### Community Resources
+- [cursorrules.org](https://cursorrules.org) - Community rule examples
+- [Cursor Documentation](https://docs.cursor.com) - Official documentation
+- GitHub Issues - Community discussions and best practices

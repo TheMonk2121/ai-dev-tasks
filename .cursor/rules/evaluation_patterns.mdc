@@ -1,0 +1,212 @@
+---
+description: "Evaluation patterns and RAGChecker standards for AI system validation and performance monitoring"
+globs:
+  - '**/evaluation/**/*.py'
+  - '**/evals/**/*.py'
+  - '**/scripts/evaluation/**/*.py'
+  - '**/evals/**/*.py'
+  - '**/tests/test_*eval*.py'
+  - '**/tests/test_*rag*.py'
+  - '**/Makefile'
+  - '**/run_evals_*.sh'
+alwaysApply: true
+---
+
+# Evaluation Patterns and Standards
+
+## Evaluation Profile Management
+
+### Profile Types and Usage
+- **Gold Profile**: Production baselines and CI gates (curated test cases)
+  - Use: `make eval-gold` or `./scripts/shell/deployment/run_evals_gold.sh`
+  - Purpose: Reliable performance tracking, regression detection
+  - Thresholds: Retrieval micro ≥ 0.85, macro ≥ 0.75; reader F1 ≥ 0.60 or waiver
+
+- **Real Profile**: Development and tuning (full system testing)
+  - Use: `make eval-real` or `./scripts/shell/deployment/run_evals_real.sh`
+  - Purpose: Full system validation with project data
+  - Use Case: Development, tuning, full pipeline validation
+
+- **Mock Profile**: Infrastructure testing (fast plumbing tests)
+  - Use: `make eval-mock` or `./scripts/shell/deployment/run_evals_mock.sh`
+  - Purpose: Fast tests without external dependencies
+  - Use Case: CI infrastructure, unit tests, development setup
+
+### Profile Selection Guidelines
+- **PR Gates**: Use gold profile for baseline enforcement
+- **Development**: Use real profile for full system testing
+- **CI/Infrastructure**: Use mock profile for fast validation
+- **Nightly**: May use real profile for comprehensive regression testing
+
+## RAGChecker Standards
+
+### Performance Thresholds
+- **Retrieval Precision**: 
+  - Micro precision ≥ 0.85 (required)
+  - Macro precision ≥ 0.75 (required)
+- **Reader Performance**:
+  - F1 score ≥ 0.60 (required)
+  - Explicit waiver required if below threshold
+- **Baseline Enforcement**:
+  - No regressions allowed
+  - Improve recall while maintaining precision
+  - Document any performance trade-offs
+
+### Evaluation Commands
+```bash
+# Production baseline evaluation
+make eval-gold
+./scripts/shell/deployment/run_evals_gold.sh
+
+# Development and tuning
+make eval-real
+./scripts/shell/deployment/run_evals_real.sh
+
+# Infrastructure testing
+make eval-mock
+./scripts/shell/deployment/run_evals_mock.sh
+
+# Specialized evaluations
+./scripts/shell/deployment/run_precision_optimized_eval.sh
+./scripts/shell/deployment/run_recall_eval.sh
+./scripts/shell/deployment/run_hermetic_eval.sh
+
+# Legacy evaluation (if needed)
+uv run python scripts/ragchecker_official_evaluation.py --profile gold
+```
+
+### Environment Configuration
+- **Gold Profile**: Use production-like settings with curated datasets
+- **Real Profile**: Use full project data with realistic configurations
+- **Mock Profile**: Use synthetic data and minimal external dependencies
+
+## Evaluation Script Patterns
+
+### Script Organization
+- **Core Scripts**: `scripts/evaluation/` for main evaluation logic
+- **Profile Scripts**: `scripts/shell/deployment/run_evals_*.sh` for profile-specific runs
+- **Test Scripts**: `tests/test_*eval*.py` for evaluation unit tests
+- **Configuration**: `evals/configs/` for profile-specific configurations
+
+### Script Standards
+- **Error Handling**: Graceful failure with meaningful error messages
+- **Logging**: Structured logging with evaluation context
+- **Metrics**: Record all performance metrics and thresholds
+- **Cleanup**: Proper resource cleanup after evaluation runs
+
+### Configuration Management
+- **Profile-Specific**: Use separate configs for each profile
+- **Environment Variables**: Set appropriate EVAL_PROFILE, EVAL_DRIVER
+- **Provider Selection**: Use local providers for PR gates, cloud for nightly
+- **Timeout Management**: Set appropriate timeouts for each profile
+
+## Evaluation Data Management
+
+### Dataset Handling
+- **Gold Datasets**: Curated, stable test cases for baseline enforcement
+- **Real Datasets**: Full project data for comprehensive testing
+- **Mock Datasets**: Synthetic data for infrastructure testing
+- **Version Control**: Track dataset versions and changes
+
+### Results Storage
+- **Metrics Storage**: Store results in `metrics/` directory
+- **Baseline Tracking**: Maintain baseline performance metrics
+- **Regression Detection**: Compare against previous runs
+- **Artifact Management**: Store evaluation artifacts with provenance
+
+## Quality Gates and Validation
+
+### Pre-Evaluation Checks
+- [ ] Database connectivity verified
+- [ ] Required services running (if real profile)
+- [ ] Configuration validated
+- [ ] Dependencies installed
+- [ ] Environment variables set
+
+### Post-Evaluation Validation
+- [ ] Performance thresholds met
+- [ ] No regressions detected
+- [ ] Results properly stored
+- [ ] Logs captured and reviewed
+- [ ] Artifacts generated
+
+### Failure Handling
+- **Threshold Violations**: Document and investigate performance issues
+- **Service Failures**: Graceful degradation with fallback strategies
+- **Configuration Errors**: Clear error messages and resolution steps
+- **Timeout Issues**: Adjust timeouts or optimize evaluation process
+
+## Evaluation Best Practices
+
+### Performance Optimization
+- **Parallel Execution**: Use multiple workers for faster evaluation
+- **Caching**: Cache expensive operations where appropriate
+- **Resource Management**: Monitor memory and CPU usage
+- **Batch Processing**: Process multiple items together when possible
+
+### Monitoring and Alerting
+- **Performance Tracking**: Monitor evaluation performance over time
+- **Threshold Monitoring**: Alert on performance degradation
+- **Resource Usage**: Track resource consumption during evaluation
+- **Error Rate Monitoring**: Monitor and alert on evaluation failures
+
+### Documentation and Reporting
+- **Evaluation Reports**: Generate comprehensive evaluation reports
+- **Performance Trends**: Track performance trends over time
+- **Baseline Updates**: Document baseline changes and rationale
+- **Best Practices**: Document evaluation best practices and lessons learned
+
+## Integration with CI/CD
+
+### CI Integration
+- **PR Gates**: Run gold profile evaluation on pull requests
+- **Nightly Runs**: Run real profile evaluation for comprehensive testing
+- **Performance Regression**: Block PRs that cause performance regressions
+- **Artifact Storage**: Store evaluation artifacts for analysis
+
+### Deployment Integration
+- **Pre-Deployment**: Run evaluation before production deployment
+- **Post-Deployment**: Verify performance after deployment
+- **Rollback Triggers**: Use evaluation results for rollback decisions
+- **Monitoring**: Integrate evaluation results with monitoring systems
+
+## Troubleshooting and Debugging
+
+### Common Issues
+- **Performance Degradation**: Investigate threshold violations
+- **Service Failures**: Check service availability and configuration
+- **Timeout Issues**: Adjust timeouts or optimize evaluation process
+- **Memory Issues**: Monitor and optimize memory usage
+
+### Debugging Tools
+- **Verbose Logging**: Use verbose logging for detailed debugging
+- **Performance Profiling**: Profile evaluation performance
+- **Resource Monitoring**: Monitor resource usage during evaluation
+- **Error Analysis**: Analyze evaluation errors and failures
+
+### Recovery Procedures
+- **Service Restart**: Restart failed services
+- **Configuration Reset**: Reset configuration to known good state
+- **Resource Cleanup**: Clean up resources after failures
+- **Fallback Strategies**: Use fallback strategies for critical evaluations
+
+## Quick Reference
+
+### Essential Commands
+- `make eval-gold` - Production baseline evaluation
+- `make eval-real` - Full system evaluation
+- `make eval-mock` - Infrastructure testing
+- `make test-profiles` - Profile configuration tests
+
+### Key Directories
+- `scripts/evaluation/` - Core evaluation scripts
+- `evals/` - Evaluation configurations and datasets
+- `metrics/` - Evaluation results and artifacts
+- `tests/test_*eval*.py` - Evaluation unit tests
+
+### Environment Variables
+- `EVAL_PROFILE` - Evaluation profile (gold/real/mock)
+- `EVAL_DRIVER` - Evaluation driver (dspy_rag/synthetic)
+- `RAGCHECKER_USE_REAL_RAG` - Use real RAG system
+- `SEED` - Random seed for reproducible results
+- `MAX_WORKERS` - Number of parallel workers

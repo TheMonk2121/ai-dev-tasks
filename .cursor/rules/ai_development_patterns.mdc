@@ -1,0 +1,87 @@
+---
+description: "AI development patterns and neural program synthesis guidelines for DSPy and RAG systems"
+globs:
+  - '**/dspy*/**/*.py'
+  - '**/rag*/**/*.py'
+  - '**/evaluation/**/*.py'
+  - '**/memory/**/*.py'
+  - '**/scripts/evaluation/**/*.py'
+  - '**/scripts/memory/**/*.py'
+alwaysApply: true
+---
+
+# AI Development Patterns
+
+## Neural Program Synthesis (DSPy)
+
+### Module Design
+- **Optimizers**: Use `BootstrapFewShot` for few-shot learning
+- **Signatures**: Define clear input/output contracts
+- **Metrics**: Implement retrieval and reader metrics with thresholds
+- **Validation**: Use `Validate` for constraint enforcement
+
+### RAG System Patterns
+- **Retrieval**: Target micro ≥ 0.85, macro ≥ 0.75 precision
+- **Reader**: Target F1 ≥ 0.60 or require explicit waiver
+- **Baseline**: No regressions allowed; improve recall while maintaining precision
+- **Evaluation**: Use gold profile for production baselines
+
+### Memory Integration
+- **LTST**: Long-term semantic tracking for cross-session continuity
+- **Cursor**: IDE integration memory for development context
+- **Go CLI**: Command-line interface memory for tool usage
+- **Prime**: Primary memory orchestrator for system coordination
+
+## Evaluation Standards
+
+### Profile Management
+- **Gold**: Production baselines and CI gates (curated test cases)
+- **Real**: Development and tuning (full system testing)
+- **Mock**: Infrastructure testing (fast plumbing tests)
+
+### Performance Budgets
+- **Retrieval**: Micro precision ≥ 0.85, macro precision ≥ 0.75
+- **Reader**: F1 score ≥ 0.60 or explicit waiver required
+- **Latency**: Define and measure latency/throughput budgets
+- **Memory**: Track memory usage and optimize for efficiency
+
+### Quality Gates
+- [ ] Retrieval metrics meet thresholds
+- [ ] Reader performance validated
+- [ ] No baseline regressions
+- [ ] Performance budgets respected
+- [ ] Memory usage optimized
+
+## AI Agent Patterns
+
+### Role-Specific Guidelines
+- **Planner**: Focus on architecture, memory rehydration, cross-component integration
+- **Implementer**: Handle code implementation, database migrations, deployment
+- **Researcher**: Conduct analysis, performance evaluation, technology research
+- **Coder**: Execute specific coding tasks, debugging, test implementation
+
+### Context Management
+- **Memory Rehydration**: Always run before major tasks
+- **Cross-Session Continuity**: Use `.ai_state.json` for state persistence
+- **Structured Logging**: Include request/run IDs for traceability
+- **Metrics Recording**: Track dataset hash, seed, profile for reproducibility
+
+## Best Practices
+
+### Code Organization
+- **DSPy Modules**: Place in `src/dspy_modules/` with clear naming
+- **Evaluation Scripts**: Use `scripts/evaluation/` with profile-specific logic
+- **Memory Systems**: Implement in `scripts/memory/` with proper interfaces
+- **Tests**: Mirror source structure in `tests/` with comprehensive coverage
+
+### Error Handling
+- **Graceful Degradation**: Handle model failures with fallback strategies
+- **Retry Logic**: Implement exponential backoff for transient failures
+- **Monitoring**: Use structured logging for debugging and performance tracking
+- **Validation**: Enforce constraints and validate outputs at each stage
+
+### Performance Optimization
+- **Caching**: Implement intelligent caching for expensive operations
+- **Batching**: Process multiple items together when possible
+- **Async Operations**: Use async/await for I/O-bound operations
+- **Resource Management**: Proper cleanup of models and connections

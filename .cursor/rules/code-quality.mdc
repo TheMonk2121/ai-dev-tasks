@@ -1,0 +1,39 @@
+---
+description: "Code quality standards and formatting rules"
+globs: ["**/*.py"]
+alwaysApply: true
+priority: 2
+---
+
+# Code Quality Standards
+
+## Formatting and Style
+- **MANDATORY**: Follow black configuration: 120 character line length
+- **MANDATORY**: Follow ruff configuration from pyproject.toml
+- **MANDATORY**: Use snake_case for variables and functions
+- **MANDATORY**: Use PascalCase for classes
+- **MANDATORY**: Use UPPER_CASE for constants
+
+## Function and Class Standards
+- **MANDATORY**: Maximum function length: 50 lines (100 for complex logic)
+- **MANDATORY**: Document all public functions and classes
+- **MANDATORY**: Use docstrings for all public APIs
+- **MANDATORY**: Use type hints for all parameters and return types
+
+## Import Standards
+- **MANDATORY**: Use absolute imports, no sys.path hacks
+- **MANDATORY**: Group imports: standard library, third-party, local
+- **MANDATORY**: Use `uv run python` for all Python execution
+- **MANDATORY**: Follow existing codebase import patterns
+
+## Error Handling
+- **MANDATORY**: Use explicit error handling with proper exception types
+- **MANDATORY**: Include meaningful error messages
+- **MANDATORY**: Use structured logging for debugging
+- **MANDATORY**: Handle edge cases and boundary conditions
+
+## Project Structure
+- **MANDATORY**: Respect project exclusions: 600_archives, dspy-rag-system
+- **MANDATORY**: Follow existing test patterns and markers
+- **MANDATORY**: Use existing utilities instead of creating new ones
+- **MANDATORY**: Follow existing codebase organization patterns

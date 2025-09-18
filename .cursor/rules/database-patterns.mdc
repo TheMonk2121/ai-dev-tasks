@@ -1,0 +1,32 @@
+---
+description: "Database connection and query patterns"
+globs: ["**/*.py"]
+alwaysApply: true
+priority: 3
+---
+
+# Database Patterns
+
+## Connection Management
+- **MANDATORY**: Use `src.common.psycopg3_config.Psycopg3Config` for all database connections
+- **MANDATORY**: Use `psycopg.Connection[DictRow]` for connection typing
+- **MANDATORY**: Use cursor-level `row_factory=dict_row` not connection-level
+- **MANDATORY**: Use context managers for all database operations
+
+## Query Patterns
+- **MANDATORY**: Use parameterized queries, never string concatenation
+- **MANDATORY**: Use `with conn.cursor(row_factory=dict_row) as cur:` pattern
+- **MANDATORY**: Handle database errors explicitly
+- **MANDATORY**: Use transactions for multi-statement operations
+
+## Type Safety
+- **MANDATORY**: Import `from psycopg.rows import DictRow`
+- **MANDATORY**: Use `list[dict[str, Any]]` for query results
+- **MANDATORY**: Type all database-related functions properly
+- **FORBIDDEN**: Never use `# type: ignore` for database operations
+
+## Configuration
+- **MANDATORY**: Use `common.db_dsn.resolve_dsn` for DSN resolution
+- **MANDATORY**: Never read env vars directly for DSNs
+- **MANDATORY**: Use pydantic-settings for typed configuration
+- **MANDATORY**: Follow precedence: env vars → profile env → .env.local → defaults
