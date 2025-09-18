@@ -4,8 +4,13 @@ Robust migration of ALL vector tables to 384 dimensions with proper dependency h
 """
 
 import os
+import psycopg
 
-import psycopg2
+# Add project paths
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 
 def robust_vector_migration():
@@ -15,7 +20,7 @@ def robust_vector_migration():
     print("=" * 80)
 
     try:
-        with psycopg2.connect(os.getenv("POSTGRES_DSN")) as conn:
+        with psycopg.connect(resolve_dsn(strict=False, role="robust_vector_migration")) as conn:
             with conn.cursor() as cur:
                 # Step 1: Handle view dependencies first
                 print("\\n🔧 Step 1: Handling view dependencies...")
@@ -288,6 +293,7 @@ def robust_vector_migration():
     except Exception as e:
         print(f"❌ Robust migration failed: {e}")
         import traceback
+from src.common.db_dsn import resolve_dsn
 
         traceback.print_exc()
         return False

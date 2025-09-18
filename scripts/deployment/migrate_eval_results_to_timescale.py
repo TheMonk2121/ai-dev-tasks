@@ -8,8 +8,10 @@ import os
 import sys
 from datetime import datetime
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 
 def get_db_connection():
@@ -19,7 +21,7 @@ def get_db_connection():
     from src.common.db_dsn import resolve_dsn
 
     dsn = resolve_dsn()
-    return psycopg2.connect(dsn)
+    return psycopg.connect(dsn)
 
 
 def migrate_memory_performance_metrics(conn):

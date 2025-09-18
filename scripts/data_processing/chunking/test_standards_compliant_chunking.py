@@ -100,7 +100,7 @@ def main() -> int:
         )
 
         # Show stats
-        stats = capture.get_chunking_stats()
+        stats: Any = capture.get_chunking_stats()
         print("\n📊 Chunking Statistics:")
         for key, value in stats.items():
             print(f"   {key}: {value}")

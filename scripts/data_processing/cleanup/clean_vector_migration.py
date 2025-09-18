@@ -4,8 +4,13 @@ Clean migration of vector tables to 384 dimensions with fresh start.
 """
 
 import os
+import psycopg
 
-import psycopg2
+# Add project paths
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+from src.common.psycopg3_config import Psycopg3Config
 
 
 def clean_vector_migration():
@@ -15,7 +20,7 @@ def clean_vector_migration():
     print("=" * 70)
 
     try:
-        with psycopg2.connect(os.getenv("POSTGRES_DSN")) as conn:
+        with psycopg.connect(resolve_dsn(strict=False, role="clean_vector_migration")) as conn:
             with conn.cursor() as cur:
                 # Step 1: Start fresh - drop and recreate tables
                 print("\\n🔧 Step 1: Fresh start - recreating vector tables...")
@@ -312,6 +317,7 @@ def clean_vector_migration():
     except Exception as e:
         print(f"❌ Clean migration failed: {e}")
         import traceback
+from src.common.db_dsn import resolve_dsn
 
         traceback.print_exc()
         return False

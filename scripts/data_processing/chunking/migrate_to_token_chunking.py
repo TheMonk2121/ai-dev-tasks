@@ -10,9 +10,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import psycopg2
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 import torch
-from psycopg2.extras import RealDictCursor
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer
 
@@ -22,6 +24,7 @@ sys.path.insert(0, str(project_root))
 
 # Import DSN resolution
 import os
+
 DSN = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
 
 # Configuration
@@ -77,7 +80,7 @@ def migrate_documents():
     # Get database connection
     dsn = DSN
     
-    with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
+    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
         with conn.cursor() as cur:
             # Get all documents that need migration
             cur.execute("""
@@ -126,7 +129,7 @@ def migrate_documents():
                 chunks = [chunk for chunk in chunks if len(chunk.strip()) >= MIN_CHAR_LENGTH]
                 
                 if not chunks:
-                    print(f"   ⚠️  No valid chunks after filtering")
+                    print("   ⚠️  No valid chunks after filtering")
                     continue
                 
                 # Generate embeddings for all chunks
@@ -172,7 +175,7 @@ def migrate_documents():
             # Update statistics
             cur.execute("ANALYZE document_chunks")
             
-            print(f"\n🎉 Migration complete!")
+            print("\n🎉 Migration complete!")
             print(f"   📄 Documents processed: {len(documents)}")
             print(f"   📝 Total chunks created: {total_chunks}")
             print(f"   🧠 Embedding model: {EMBEDDER_NAME}")

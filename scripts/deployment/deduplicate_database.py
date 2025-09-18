@@ -3,8 +3,12 @@
 Remove duplicate files from database, keeping only the most recent version of each file.
 """
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+import sys
+
+import psycopg
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 
 def deduplicate_database():
@@ -12,7 +16,7 @@ def deduplicate_database():
 
     dsn = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
-    with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
+    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
         with conn.cursor() as cur:
             print("🔍 Analyzing duplicate files in database...")
 

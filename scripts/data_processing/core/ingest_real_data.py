@@ -9,9 +9,11 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, cast
 
-import psycopg2
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 import torch
-from psycopg2.extras import RealDictCursor
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
@@ -253,7 +255,7 @@ class RealDataIngester:
         """Ingest documents into the database."""
         document_map: dict[str, dict[str, Any]] = {}
 
-        with psycopg2.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
+        with psycopg.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
             with conn.cursor() as cur:
                 for file_path in files:
                     # Skip excluded directories and files
@@ -315,7 +317,7 @@ class RealDataIngester:
 
     def ingest_chunks(self, files: list[Path], document_map: dict[str, dict[str, Any]]):
         """Ingest document chunks into the database."""
-        with psycopg2.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
+        with psycopg.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
             with conn.cursor() as cur:
                 for file_path in files:
                     # Skip excluded directories and files
@@ -398,7 +400,7 @@ class RealDataIngester:
         self.ingest_chunks(files, document_map)
 
         # Print summary
-        with psycopg2.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
+        with psycopg.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT * FROM document_chunk_stats")
                 stats = cur.fetchone()

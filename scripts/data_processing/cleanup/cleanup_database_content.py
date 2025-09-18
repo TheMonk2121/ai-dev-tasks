@@ -3,8 +3,12 @@
 Clean up database content by removing low-value files that inhibit RAG performance.
 """
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Add project paths
+import sys
+
+import psycopg
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 # Files to exclude from RAG indexing
 EXCLUDE_PATTERNS = [
@@ -79,7 +83,7 @@ def cleanup_database():
 
     dsn = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
-    with psycopg2.connect(dsn, cursor_factory=RealDictCursor) as conn:
+    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
         with conn.cursor() as cur:
             # Get all documents
             cur.execute("SELECT id, file_path, file_name FROM documents")
