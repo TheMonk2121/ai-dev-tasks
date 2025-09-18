@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from typing import Any
 
 import httpx
 
@@ -24,7 +25,7 @@ def get_with_backoff(
     attempt = 0
     while True:
         try:
-            response = client.get(url)
+            response: Any = client.get(url)
             response.raise_for_status()
             return response
         except (httpx.HTTPError, httpx.TransportError):
