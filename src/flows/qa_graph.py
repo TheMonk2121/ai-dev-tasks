@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict
 
 from src.agents.qa import Deps, QAAnswer, run_agent
 
-if TYPE_CHECKING:  # type-only imports to satisfy Pyright without runtime dependency
+if TYPE_CHECKING:  # type-only imports to satisfy type checker without runtime dependency
     from pydantic_graph import Graph, Node  # type: ignore
 else:
 
@@ -52,7 +52,7 @@ class Draft(Node[FlowState, Literal["End"]]):
     """Draft generation node."""
 
     async def call(self, state: FlowState) -> type[End]:
-    import httpx
+        import httpx
         async with httpx.AsyncClient() as client:
             deps = Deps(http_client=client)
             qa = await run_agent(state.question, deps=deps)

@@ -313,8 +313,8 @@ uv run ruff check .
 # Format check
 uv run black --check .
 
-# Type check (prefer basedpyright)
-uv run basedpyright || uv run pyright
+# Type check
+uv run ruff check .
 
 # Tests
 uv run pytest -q -m "unit or smoke"

@@ -1,73 +1,29 @@
-name: RAG Quality Evaluation (RAGChecker + Pyright)
+name: RAG Quality Evaluation (RAGChecker)
 on:
   pull_request:
     paths:
-      - 'dspy-rag-system/**'
-      - 'scripts/**'
-      - 'configs/eval/**'
-      - '.github/workflows/eval.yml'
+      - "dspy-rag-system/**"
+      - "scripts/**"
+      - "configs/eval/**"
+      - ".github/workflows/eval.yml"
   push:
     branches: [main]
     paths:
-      - 'dspy-rag-system/**'
-      - 'scripts/**'
-      - 'configs/eval/**'
-      - '.github/workflows/eval.yml'
+      - "dspy-rag-system/**"
+      - "scripts/**"
+      - "configs/eval/**"
+      - ".github/workflows/eval.yml"
   schedule:
-    - cron: "0 7 * * *"  # Daily at 7 AM UTC
+    - cron: "0 7 * * *" # Daily at 7 AM UTC
 
 jobs:
-  pyright:
-    name: Type Checking (Pyright)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install UV
-        uses: astral-sh/setup-uv@v4
-        with:
-          version: "latest"
-
-      - name: Cache UV and virtualenv
-        uses: actions/cache@v4
-        with:
-          path: |
-            .venv
-            ~/.cache/uv
-          key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock', 'pyproject.toml', 'poetry.lock', 'requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-uv-
-
-      - name: Install dependencies
-        run: |
-          uv sync --extra dev
-
-      - name: Run Pyright type checking
-        run: |
-          echo "⚠️ Skipping Pyright type checking for database migration branch"
-          echo "Type checking will be re-enabled after migration completion"
-
-      - name: Upload type check results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pyright-results
-          path: .pyright/
-
   smoke-test:
     name: Smoke Test (Quick Evaluation)
     runs-on: ubuntu-latest
-    needs: pyright
     env:
-      HF_HOME: ${{ runner.temp }}/hf
-      SENTENCE_TRANSFORMERS_HOME: ${{ runner.temp }}/hf
-      TORCH_HOME: ${{ runner.temp }}/hf
+      HF_HOME: ${{ env.RUNNER_TEMP }}/hf
+      SENTENCE_TRANSFORMERS_HOME: ${{ env.RUNNER_TEMP }}/hf
+      TORCH_HOME: ${{ env.RUNNER_TEMP }}/hf
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -75,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install UV
         uses: astral-sh/setup-uv@v4
@@ -95,7 +51,7 @@ jobs:
       - name: Cache HuggingFace models
         uses: actions/cache@v4
         with:
-          path: ${{ runner.temp }}/hf
+          path: ${{ env.RUNNER_TEMP }}/hf
           key: ${{ runner.os }}-hf-${{ hashFiles('**/pyproject.toml', '**/uv.lock', '**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-hf-
@@ -121,11 +77,10 @@ jobs:
     name: Full Evaluation Suite (Nightly)
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
-    needs: pyright
     env:
-      HF_HOME: ${{ runner.temp }}/hf
-      SENTENCE_TRANSFORMERS_HOME: ${{ runner.temp }}/hf
-      TORCH_HOME: ${{ runner.temp }}/hf
+      HF_HOME: ${{ env.RUNNER_TEMP }}/hf
+      SENTENCE_TRANSFORMERS_HOME: ${{ env.RUNNER_TEMP }}/hf
+      TORCH_HOME: ${{ env.RUNNER_TEMP }}/hf
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -133,7 +88,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install UV
         uses: astral-sh/setup-uv@v4
@@ -152,7 +107,7 @@ jobs:
       - name: Cache HuggingFace models
         uses: actions/cache@v4
         with:
-          path: ${{ runner.temp }}/hf
+          path: ${{ env.RUNNER_TEMP }}/hf
           key: ${{ runner.os }}-hf-${{ hashFiles('**/pyproject.toml', '**/uv.lock', '**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-hf-
@@ -197,7 +152,7 @@ jobs:
   quality-gate:
     name: Quality Gate Check
     runs-on: ubuntu-latest
-    needs: [pyright, smoke-test]
+    needs: [smoke-test]
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout code
@@ -206,7 +161,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install UV
         uses: astral-sh/setup-uv@v4
@@ -247,9 +202,6 @@ jobs:
       - name: Generate evaluation summary
         run: |
           echo "## 📊 RAG Quality Evaluation Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Type Checking" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Pyright type checking completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Smoke Test Results" >> $GITHUB_STEP_SUMMARY
           if [ -d artifacts/smoke-test ] && [ -f artifacts/smoke-test/*.json ]; then

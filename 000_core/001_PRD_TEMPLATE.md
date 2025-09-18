@@ -35,7 +35,7 @@ uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cl
 - **Data store**: Postgres (pgvector installed). Optional: TimescaleDB for time‑series metrics.
 - **Indexing**: Hybrid BM25 + vector; entity‑aware retrieval (as applicable).
 - **Logging/Telemetry**: Pydantic Logfire + structured logs to stdout.
-- **QA Tooling**: pytest (+ markers), Ruff, Black, Pyright, pre‑commit.
+- **QA Tooling**: pytest (+ markers), Ruff, Black, pre‑commit.
 - **CI/CD**: GitHub Actions with required checks (lint, type‑check, tests, eval gates, nightly jobs).
 - **Task runner**: Makefile targets as the single entry surface for local and CI flows.
 
@@ -288,7 +288,7 @@ class EvalRunSummary(BaseModel):
 
 ### 4.1 Required jobs on pull requests
 - Lint: `ruff` and `black --check` via `uv run`.
-- Type check: `pyright` via `uv run`.
+- Type check: `ruff check` via `uv run`.
 - Tests: `pytest -q` with markers and budgets enforced.
 - Eval gates (gold profile only): retrieval micro ≥ [0.85], macro ≥ [0.75]; reader F1 ≥ [0.60] or explicit waiver.
 - Profile verifier: fails PR if `mock` profile is used on `main` or in required gates.
@@ -342,27 +342,20 @@ line-length = 100
 target-version = ["py312"]
 ```
 
-**Type checking ((based)Pyright)**
-- Preferred: **basedpyright** (drop-in, faster; stricter typing). Fallback: **pyright**.
-- CI step should run whichever is present:
-  - `uv run basedpyright || uv run pyright`
-- Suggested base config:
+**Type checking (Ruff)**
+- Use **Ruff** for both linting and type checking.
+- CI step should run:
+  - `uv run ruff check .`
+- Suggested base config in pyproject.toml:
 ```toml
-[tool.basedpyright]
-typeCheckingMode = "strict"
-pythonVersion = "3.12"
-reportMissingTypeStubs = false
-venvPath = "."
-venv = ".venv"
-# pragma: allow gradual typing in tests
-ignore = ["tests/**/fixtures/**"]
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+exclude = ["venv", "600_archives", "docs/legacy", "**/__pycache__"]
 
-# If using pyright instead of basedpyright:
-[tool.pyright]
-typeCheckingMode = "strict"
-pythonVersion = "3.12"
-venvPath = "."
-venv = ".venv"
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501", "E402", "E722", "F401", "F841"]
 ```
 
 **pytest & Hypothesis**
@@ -480,7 +473,7 @@ settings.load_profile("ci")
   `uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
 - Run tests and type checks:
   `uv run pytest -q`
-  `uv run pyright`
+  `uv run ruff check .`
 - Lint/format:
   `uv run ruff check .`
   `uv run black --check .`

@@ -269,7 +269,7 @@ uvx ruff check .
 uv run pytest tests/ -v --tb=short
 
 # Run type checking
-uv run python -m basedpyright
+uv run python -m ruff check
 
 echo "✅ Quick tests completed!"
 """

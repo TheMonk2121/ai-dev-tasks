@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
-# pyright: reportAny=false, reportUnknownParameterType=false
 """
 Cursor Query Storage Integration
 Stores Cursor conversations in the 48-hour conv_chunks table
 """
 
 import os
+
+# Add project paths
+import sys
 import time
 from datetime import datetime, timedelta
+from typing import Any
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from sentence_transformers import SentenceTransformer
+
+from src.common.psycopg3_config import Psycopg3Config
 
 
 class CursorQueryStorage:
@@ -44,7 +48,7 @@ class CursorQueryStorage:
             embedding = self.embedder.encode(content).tolist()
 
             # Extract entities (simple keyword extraction)
-            entities = self._extract_entities(content)
+            entities: Any = self._extract_entities(content)
 
             # Calculate salience score (simple length-based for now)
             salience_score = min(len(content) / 1000.0, 1.0)
@@ -52,33 +56,31 @@ class CursorQueryStorage:
             # Set expiration to 48 hours from now
             expires_at = datetime.now() + timedelta(hours=48)
 
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    cur.execute(
-                        """
-                        INSERT INTO conv_chunks 
-                        (session_id, chunk_text, embedding, entities, salience_score, 
-                         source_turn_id, expires_at, is_pinned)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                        RETURNING id
-                    """,
-                        (
-                            session_id,
-                            content,
-                            embedding,
-                            entities,
-                            salience_score,
-                            int(time.time() * 1000),  # source_turn_id
-                            expires_at,
-                            False,
-                        ),
-                    )
+            with Psycopg3Config.get_cursor("default") as _:
+                _.execute(
+                    """
+                    INSERT INTO conv_chunks 
+                    (session_id, chunk_text, embedding, entities, salience_score, 
+                     source_turn_id, expires_at, is_pinned)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id
+                """,
+                    (
+                        session_id,
+                        content,
+                        embedding,
+                        entities,
+                        salience_score,
+                        int(time.time() * 1000),  # source_turn_id
+                        expires_at,
+                        False,
+                    ),
+                )
 
-                    result = cur.fetchone()
-                    if result is None:
-                        raise ValueError("Failed to get chunk ID from database")
-                    chunk_id: int = result[0]  # type: ignore[assignment, misc]
-                    conn.commit()
+                result: Any = _.fetchone()
+                if result is None:
+                    raise ValueError("Failed to get chunk ID from database")
+                chunk_id: int = result[0]  # type: ignore[assignment, misc]
 
             print(f"✅ Stored conversation turn {chunk_id} for session {session_id}")
             return str(chunk_id)
@@ -92,10 +94,9 @@ class CursorQueryStorage:
     ) -> list[dict[str, str | int | float | bool | None]]:
         """Retrieve recent queries from conv_chunks."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            with Psycopg3Config.get_cursor("default") as _:
                     if session_id:
-                        cur.execute(
+                        _.execute(
                             """
                             SELECT id, session_id, chunk_text, salience_score, 
                                    created_at, expires_at, is_pinned
@@ -107,7 +108,7 @@ class CursorQueryStorage:
                             (session_id, limit),
                         )
                     else:
-                        cur.execute(
+                        _.execute(
                             """
                             SELECT id, session_id, chunk_text, salience_score, 
                                    created_at, expires_at, is_pinned
@@ -119,7 +120,7 @@ class CursorQueryStorage:
                             (limit,),
                         )
 
-                    results = cur.fetchall()
+                    results: Any = _.fetchall()
                     return [dict(row) for row in results]
 
         except Exception as e:
@@ -129,14 +130,12 @@ class CursorQueryStorage:
     def cleanup_expired_chunks(self) -> int:
         """Clean up expired chunks and return count deleted."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    cur.execute("SELECT cleanup_expired_chunks()")
-                    result = cur.fetchone()
-                    if result is None:
-                        raise ValueError("Failed to get cleanup count from database")
-                    deleted_count: int = result[0]  # type: ignore[assignment, misc]
-                    conn.commit()
+            with Psycopg3Config.get_cursor("default") as _:
+                _.execute("SELECT cleanup_expired_chunks()")
+                result: Any = _.fetchone()
+                if result is None:
+                    raise ValueError("Failed to get cleanup count from database")
+                deleted_count: int = result[0]  # type: ignore[assignment, misc]
 
             print(f"🧹 Cleaned up {deleted_count} expired chunks")
             return deleted_count
@@ -160,7 +159,7 @@ class CursorQueryStorage:
         entities.extend(file_paths)
 
         # Function names (snake_case)
-        functions = re.findall(r"[a-z_]+\(", text)
+        functions: Any = re.findall(r"[a-z_]+\(", text)
         entities.extend([str(f).rstrip("(") for f in functions])  # type: ignore[misc]
 
         return list(set(entities))  # Remove duplicates
@@ -168,57 +167,56 @@ class CursorQueryStorage:
     def get_storage_stats(self) -> dict[str, str | int | None]:
         """Get statistics about stored conversations."""
         try:
-            with psycopg2.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
-                    # Total chunks
-                    cur.execute("SELECT COUNT(*) FROM conv_chunks")
-                    result = cur.fetchone()
-                    if result is None:
-                        raise ValueError("Failed to get total chunks count")
-                    total_chunks: int = result[0]  # type: ignore[assignment, misc]
+            with Psycopg3Config.get_cursor("default") as _:
+                # Total chunks
+                _.execute("SELECT COUNT(*) FROM conv_chunks")
+                result: Any = _.fetchone()
+                if result is None:
+                    raise ValueError("Failed to get total chunks count")
+                total_chunks: int = result[0]  # type: ignore[assignment, misc]
 
-                    # Active chunks (not expired)
-                    cur.execute("SELECT COUNT(*) FROM conv_chunks WHERE expires_at > NOW()")
-                    result = cur.fetchone()
-                    if result is None:
-                        raise ValueError("Failed to get active chunks count")
-                    active_chunks: int = result[0]  # type: ignore[assignment, misc]
+                # Active chunks (not expired)
+                _.execute("SELECT COUNT(*) FROM conv_chunks WHERE expires_at > NOW()")
+                active_result: Any = _.fetchone()
+                if active_result is None:
+                    raise ValueError("Failed to get active chunks count")
+                active_chunks: int = active_result[0]  # type: ignore[assignment, misc]
 
-                    # Sessions
-                    cur.execute("SELECT COUNT(DISTINCT session_id) FROM conv_chunks")
-                    result = cur.fetchone()
-                    if result is None:
-                        raise ValueError("Failed to get unique sessions count")
-                    unique_sessions: int = result[0]  # type: ignore[assignment, misc]
+                # Sessions
+                _.execute("SELECT COUNT(DISTINCT session_id) FROM conv_chunks")
+                sessions_result: Any = _.fetchone()
+                if sessions_result is None:
+                    raise ValueError("Failed to get unique sessions count")
+                unique_sessions: int = sessions_result[0]  # type: ignore[assignment, misc]
 
-                    # Oldest and newest
-                    cur.execute(
-                        """
-                        SELECT MIN(created_at), MAX(created_at) 
-                        FROM conv_chunks WHERE expires_at > NOW()
+                # Oldest and newest
+                _.execute(
                     """
-                    )
-                    result = cur.fetchone()
-                    if result is None:
-                        oldest: datetime | None = None
-                        newest: datetime | None = None
-                    else:
-                        oldest, newest = result  # type: ignore[assignment, misc]
+                    SELECT MIN(created_at), MAX(created_at) 
+                    FROM conv_chunks WHERE expires_at > NOW()
+                """
+                )
+                date_result: Any = _.fetchone()
+                if date_result is None:
+                    oldest: datetime | None = None
+                    newest: datetime | None = None
+                else:
+                    oldest, newest = date_result  # type: ignore[assignment, misc]
 
-                    return {
-                        "total_chunks": total_chunks,
-                        "active_chunks": active_chunks,
-                        "unique_sessions": unique_sessions,
-                        "oldest_chunk": oldest.isoformat() if oldest is not None else None,
-                        "newest_chunk": newest.isoformat() if newest is not None else None,
-                    }
+                return {
+                    "total_chunks": total_chunks,
+                    "active_chunks": active_chunks,
+                    "unique_sessions": unique_sessions,
+                    "oldest_chunk": oldest.isoformat() if oldest is not None else None,
+                    "newest_chunk": newest.isoformat() if newest is not None else None,
+                }
 
         except Exception as e:
             print(f"❌ Error getting storage stats: {e}")
             return {}
 
 
-def main():
+def main() -> Any:
     """Test the Cursor query storage system."""
     storage = CursorQueryStorage()
 
@@ -237,15 +235,15 @@ def main():
         print(f"✅ Test conversation stored with ID: {chunk_id}")
 
         # Retrieve recent queries
-        recent = storage.retrieve_recent_queries(limit=5)
+        recent: Any = storage.retrieve_recent_queries(limit=5)
         print(f"📊 Retrieved {len(recent)} recent queries")
 
         # Get storage stats
-        stats = storage.get_storage_stats()
+        stats: Any = storage.get_storage_stats()
         print(f"📈 Storage stats: {stats}")
 
         # Clean up expired chunks
-        cleaned = storage.cleanup_expired_chunks()
+        cleaned: Any = storage.cleanup_expired_chunks()
         print(f"🧹 Cleaned up {cleaned} expired chunks")
 
     else:

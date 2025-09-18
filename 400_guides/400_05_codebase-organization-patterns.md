@@ -1014,7 +1014,7 @@ class OptimizedConflictChecker:
 - **Created new `.venv` with Python 3.12.11** (upgraded from 3.9.6)
 - **Installed all 184 packages** using UV (7.48s resolve + 516ms install)
 - **Verified compatibility** with existing pre-commit hooks
-- **Tested key dependencies**: DSPy 3.0.1, PyTorch 2.8.0, psycopg2
+- **Tested key dependencies**: DSPy 3.0.1, PyTorch 2.8.0, psycopg
 
 #### **Phase 2: pyproject.toml Migration**
 - **Migrated from `requirements.txt` to `pyproject.toml`** with organized dependency groups
@@ -2930,7 +2930,7 @@ Key insights from transitioning from governance-by-documentation to governance-b
 # Example: Automated governance checks
 governance_checks:
   - name: "Code Quality Enforcement"
-    script: "ruff check . && pyright"
+    script: "ruff check ."
     on: [push, pull_request]
   
   - name: "Documentation Compliance"
@@ -3096,12 +3096,12 @@ def optimization_pattern(module, test_data, metric):
 
 ##### **Connection Management Pattern**
 ```python
-def database_connection_pattern(dsn: str) -> psycopg2.connection:
+def database_connection_pattern(dsn: str) -> psycopg.connection:
     """Standard database connection pattern with error handling."""
     try:
-        conn = psycopg2.connect(dsn)
+        conn = psycopg.connect(dsn)
         return conn
-    except psycopg2.Error as e:
+    except psycopg.Error as e:
         logging.error(f"Database connection failed: {e}")
         raise
 ```
@@ -3162,7 +3162,7 @@ def mock_pattern(original_function, mock_function):
 @pytest.fixture
 def test_database():
     """Standard database fixture for testing."""
-    conn = psycopg2.connect("postgresql://test:test@localhost:5432/test")
+    conn = psycopg.connect("postgresql://test:test@localhost:5432/test")
     yield conn
     conn.close()
 ```

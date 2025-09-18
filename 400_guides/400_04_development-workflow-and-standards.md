@@ -453,7 +453,7 @@ uv run python scripts/monitor_communication_quality.py --real-time --output qual
 ### Stage 3: Implementation
 - Follow coding patterns and guardrails in 05 (types, errors, structure)
 - Keep edits atomic and evidence-first; reference sources in commit body
-- Useful commands: `ruff check .`, `pyright .`, `ruff format .`
+- Useful commands: `ruff check .`, `ruff format .`
 
 ### Stage 4: Testing
 - Unit, integration, and system tests as appropriate
@@ -611,7 +611,7 @@ uv run python scripts/check_broken_links.py
 uv run python scripts/single_doorway.py generate "feature description"
 
 # Check code quality
-uv run ruff check . && uv run pyright .
+uv run ruff check .
 
 # Run tests
 uv run pytest tests/ -q
@@ -648,7 +648,7 @@ The venv manager is automatically integrated into:
 
 #### **Required Dependencies**
 The venv manager checks for these essential packages:
-- `psycopg2` - Database connectivity
+- `psycopg` - Database connectivity
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
@@ -667,7 +667,7 @@ uv sync --extra dev
 
 # Missing Dependencies
 uv sync --extra dev
-uv add psycopg2-binary dspy pytest ruff
+uv add psycopg-binary dspy pytest ruff
 ```
 
 **Import Errors**: The venv manager automatically handles Python path issues and ensures the correct Python executable is used.
@@ -759,7 +759,7 @@ uv add psycopg2-binary dspy pytest ruff
 
 #### **Step 1: Prepare Environment**
 
-- Ensure Python deps: psycopg2-binary, pytes
+- Ensure Python deps: psycopg-binary, pytes
 - Configure DATABASE_URL
 - Recommended Postgres extensions:
   - vector (required for pgvector)
@@ -1494,7 +1494,6 @@ cp .env.example .env
 
 **Code Quality Tools**
 - **Ruff**: Fast Python linter and formatter
-- **Pyright**: Static type checking
 - **Bandit**: Security linting
 - **Pre-commit**: Git hooks for code quality
 
@@ -1518,7 +1517,7 @@ cp .env.example .env
 **Evaluation & Monitoring**
 - **ragchecker**: RAG evaluation framework
 - **boto3**: AWS SDK for Python
-- **psycopg2**: PostgreSQL adapter
+- **psycopg**: PostgreSQL adapter
 
 ### **🔧 Configuration Management**
 

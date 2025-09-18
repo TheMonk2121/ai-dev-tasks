@@ -27,7 +27,6 @@ dependencies = [
     "torch==2.3.1",
     "torchvision==0.18.1",
     # Database dependencies
-    "psycopg2-binary==2.9.7",
     "pgvector==0.2.4",
     # Document processing
     "PyMuPDF==1.23.8",
@@ -57,19 +56,10 @@ dependencies = [
     # Conflict detection tools
     "pycycle>=0.0.8",
     "pipdeptree>=2.0.0",
-    # Code quality tools
-    "black>=23.0.0",
-    "isort>=5.12.0",
-    "ruff>=0.1.0",
-    # Development tools
-    "pre-commit>=3.0.0",
-    "commitizen>=3.0.0",
-    # Performance monitoring
-    "memory-profiler>=0.60.0",
-    "py-spy>=0.3.0",
-    # Advanced analysis
-    "radon>=5.1.0",
-    "mccabe>=0.7.0",
+    # Code quality tools (moved to dev dependencies)
+    # Development tools (moved to dev dependencies)
+    # Performance monitoring (moved to dev dependencies)
+    # Advanced analysis (moved to dev dependencies)
     "boto3>=1.40.25",
     "pytest-cov>=6.2.1",
     "pytest-xdist>=3.8.0",
@@ -88,11 +78,9 @@ dependencies = [
     "opentelemetry-instrumentation-botocore>=0.57b0",
     "opentelemetry-instrumentation-jinja2>=0.57b0",
     "opentelemetry-instrumentation-psycopg>=0.57b0",
-    "opentelemetry-instrumentation-psycopg2>=0.57b0",
     "opentelemetry-instrumentation-sqlite3>=0.57b0",
     "opentelemetry-instrumentation-urllib>=0.57b0",
     "hypothesis>=6.135.24,<6.140.0",
-    "pytest>=8.4.2",
     "asyncpg>=0.30.0",
     "openai>=1.107.1",
 ]
@@ -118,7 +106,6 @@ dev = [
     "tqdm>=4.66.0",
     "datasketch>=1.6.5",
     # Type stubs for better IDE support and type checking
-    "types-psycopg2>=2.9.21",
     "types-requests>=2.31.0",
     "types-flask>=1.1.6",
     "types-boto3>=1.40.29",
@@ -246,11 +233,11 @@ reportAssignmentType = "none"
 reportPossiblyUnboundVariable = "none"
 reportExplicitAny = "none"
 reportAny = "none"
+reportUntypedBaseClass = "none"
 
 # Suppress type stub errors
 reportIncompatibleVariableOverride = false
 reportIncompatibleMethodOverride = false
-
 [tool.commitizen]
 name = "cz_conventional_commits"
 version = "0.0.0"

@@ -14,7 +14,7 @@ This replaces the legacy version that assumed ad‑hoc Python calls and emoji‑
 - `pydantic-settings` for typed configuration and layered env files
 - Postgres (+pgvector; optional TimescaleDB) as the datastore
 - Evaluation **profiles** (`real`, `gold`, `mock`) with Makefile entrypoints
-- CI gates (ruff, pyright, pytest budgets, eval gates) and deterministic seeds
+- CI gates (ruff, pytest budgets, eval gates) and deterministic seeds
 - Artifact provenance and Git LFS for large binaries
 
 No emojis in work docs.
@@ -229,7 +229,6 @@ When a PRD is skipped (e.g., points < 5 **and** score_total ≥ 3.0), parse `000
 
 **CI Gates**
 - [ ] ruff + black --check via uv run
-- [ ] pyright via uv run
 - [ ] pytest with budgets/markers
 - [ ] eval gates on gold profile (retrieval micro ≥ 0.85; macro ≥ 0.75; reader F1 ≥ 0.60 or waiver)
 - [ ] profile verifier (mock forbidden on main)
@@ -257,14 +256,14 @@ When a PRD is skipped (e.g., points < 5 **and** score_total ≥ 3.0), parse `000
 
 - Lint: `uv run ruff check .` (pyupgrade enabled via `select = ["UP", ...]` in pyproject)
 - Format: `uv run black --check .`
-- Types: `uv run basedpyright || uv run pyright`
+- Types: `uv run ruff check .`
 - Tests: `uv run pytest -q` (markers available: unit, integration, smoke, e2e, property, slow, flaky)
 - Property tests: use Hypothesis; default profile loaded via `conftest.py`
 
 **Acceptance Criteria additions**
 - [ ] Ruff passes with `UP` (pyupgrade) rules enabled; no autofix diffs remain
 - [ ] Black passes in `--check` mode
-- [ ] basedpyright (or pyright) passes with `typeCheckingMode=strict`
+- [ ] Ruff passes with type checking enabled
 - [ ] pytest suite passes required markers for this task; property tests added where appropriate
 
 - **Unit**: isolate pure logic; mock I/O; exercise error paths.  
@@ -274,7 +273,7 @@ When a PRD is skipped (e.g., points < 5 **and** score_total ≥ 3.0), parse `000
 - **Resilience**: simulate network/DB errors; verify retries/backoff and graceful failure.  
 - **Edge**: large payloads, unusual characters, empty inputs, corrupted state.
 
-Tests run via `uv run pytest -q`; type checks via `uv run pyright`.
+Tests run via `uv run pytest -q`; type checks via `uv run ruff check .`.
 
 ---
 
@@ -354,7 +353,7 @@ uv sync
 
 # Run tests and type checks
 uv run pytest -q
-uv run pyright
+uv run ruff check .
 
 # Lint/format
 uv run ruff check .

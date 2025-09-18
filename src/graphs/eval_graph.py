@@ -1,61 +1,73 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_graph.graph import Graph  # type: ignore
-    from pydantic_graph.nodes import End, Node  # type: ignore
+    from pydantic_graph.nodes import (
+        Node,  # type: ignore[import-untyped,import-not-found,reportUnknownImportSymbol,reportAttributeAccessIssue,reportGeneralTypeIssues,reportUnknownSymbol,reportUnknownImportSymbol]
+    )
 else:
-    Graph = object  # type: ignore
-    End = object  # type: ignore
+    # Runtime fallbacks for when pydantic_graph is not available
+    class Graph:  # type: ignore
+        def __init__(self, nodes: list[Node]) -> None:  # type: ignore
+            self.nodes = nodes
+        
+        def mermaid(self) -> str:
+            return "# Graph not available"
+    
     class Node:  # type: ignore
-        pass
+        def __init__(self, *_args: Any, **_kwargs: Any) -> None:
+            pass
+        
+        def run(self, *_args: Any, **_kwargs: Any) -> Any:
+            raise NotImplementedError("Node.run must be implemented by subclasses")
 
 from src.schemas.eval import CaseResult, ContextChunk, RetrievalCandidate
 
-class LoadCases(Node[list[dict]]):  # returns list of raw case dicts
-    def run(self, gold_file: str) -> list[dict]:
+
+class LoadCases(Node):  # type: ignore  # returns list of raw case dicts
+    def run(self, gold_file: str) -> list[dict[str, Any]]:
         from src.utils.gold_loader import load_gold_cases
 
         cases = load_gold_cases(gold_file)
         # Convert GoldCase models to plain dicts for downstream simplicity
         return [c.model_dump() for c in cases]
 
-class Retrieve(Node[list[RetrievalCandidate]]):
+class Retrieve(Node):  # type: ignore
     def run(self, question: str) -> list[RetrievalCandidate]:
         # Use RAG pipeline module directly
         import os
+        
         from dspy_modules.rag_pipeline import RAGPipeline
 
         db_connection = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
         rp = RAGPipeline(db_connection)
-        out = rp.answer(question)
+        _ = rp.answer(question)
         snapshot = getattr(rp.rag_module, "_last_retrieval_candidates_dto", [])
         return list(snapshot)
 
-class Score(Node[CaseResult]):
+class Score(Node):  # type: ignore
     def run(
         self,
         case_id: str,
         mode: Literal["rag", "baseline", "oracle"],
-        tags: list[str],
+        _tags: list[str],
         query: str,
         candidates: list[RetrievalCandidate],
-        used: list[ContextChunk] | None = None,
+        _used: list[ContextChunk] | None = None,
     ) -> CaseResult:
         # Minimal scoring using existing harness logic (Jaccard-based metrics)
-        try:
-
-        except Exception:
-            CleanRAGCheckerEvaluator = None  # type: ignore
-
         precision = recall = f1 = 0.0
-        if CleanRAGCheckerEvaluator is not None:
+        try:
+            from src.evaluation.ragchecker_evaluator import CleanRAGCheckerEvaluator
             ev = CleanRAGCheckerEvaluator()
             precision = ev._calculate_precision("", "", query)
             recall = ev._calculate_recall("", "")
             f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+        except Exception:
+            # Fallback to default values if evaluator is not available
+            pass
 
         # Convert candidates to ContextChunk list for schema compatibility
         retrieved_context = [
@@ -85,8 +97,8 @@ def export_mermaid(path: str = "docs/graphs/eval_graph.mmd") -> None:
         from pathlib import Path
 
         p = Path(path)
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(out)
+        _ = p.parent.mkdir(parents=True, exist_ok=True)
+        _ = p.write_text(out)
     except Exception:
         # pydantic-graph not available; skip
         pass

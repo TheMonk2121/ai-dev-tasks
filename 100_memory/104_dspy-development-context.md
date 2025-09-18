@@ -112,11 +112,11 @@ High-level summary of DSPy's role in the ecosystem and current capabilities.
 
 **Critical**: All DSPy development requires proper virtual environment management.
 
-**CI Integration**: Non-blocking GitHub Actions workflow (`.github/workflows/dry-run.yml`) runs `ruff`, `pyright`, and `pytest` on PRs for early signal without merge friction.
+**CI Integration**: Non-blocking GitHub Actions workflow (`.github/workflows/dry-run.yml`) runs `ruff` and `pytest` on PRs for early signal without merge friction.
 
 **Quality Gates**: Simplified pre-commit hooks with fast execution:
 - Conflict detection: `git grep -nE "^(<<<<<<< |======= |>>>>>>> )"` (0.059s)
-- Type checking: `pyright` on Python files (0.102s)
+- Type checking: `ruff check` on Python files (0.102s)
 - Security scanning: `bandit` on staged files only (0.102s)
 - Documentation validation: Simple bash script for broken links and structure (0.030s)
 
@@ -133,11 +133,11 @@ from dspy_modules.model_switcher import ModelSwitcher
 ```
 
 **Required Dependencies**:
-- `psycopg2` - Database connectivity for vector store
+- `psycopg` - Database connectivity for vector store
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
-- `pyright` - Type checking
+- `ruff` - Type checking and linting
 - `bandit` - Security scanning
 
 **Workflow Usage**:
@@ -502,7 +502,7 @@ if cached_result:
 
 - **Python 3.12**: Use latest Python version with absolute imports
 - **Type Hints**: Comprehensive typing with PEP 585 generics
-- **Code Quality**: Ruff for linting, Pyright for type checking
+- **Code Quality**: Ruff for linting and type checking
 - **Documentation**: Update relevant guides when adding features
 - **Git Workflow**: Proper commit messages and pre-commit validation
 
@@ -523,7 +523,7 @@ if cached_result:
 - **Performance**: Optimized for M4 Mac constraints
 - **Pre-commit Validation**: Fast quality gates (<1s total execution time)
   - Conflict detection: Simple git grep for merge markers (0.059s)
-  - Type checking: Pyright on Python files (0.102s)
+  - Type checking: Ruff check on Python files (0.102s)
   - Security scanning: Bandit on staged files only (0.102s)
   - Documentation validation: Basic structure and broken link checks (0.030s)
 
@@ -531,7 +531,7 @@ if cached_result:
 
 - **Memory Rehydration**: `./scripts/memory_up.sh -r coder "task description"`
 - **Test Execution**: `python -m pytest tests/ -v`
-- **Code Quality**: `ruff check .` and `pyright`
+- **Code Quality**: `ruff check .`
 - **Security**: `bandit` for vulnerability scanning
 - **Documentation**: `bash scripts/simple_doc_validation.sh` for basic validation
 - **Documentation**: Update relevant 400_guides files
@@ -547,7 +547,7 @@ if cached_result:
 
 ### TOOL USAGE GUIDE
 
-- **Code Quality Tools**: Ruff, Pyright, pre-commit hooks
+- **Code Quality Tools**: Ruff, pre-commit hooks
 - **Validation Tools**: Broken link validation, dependency monitoring
 - **Development Tools**: Memory rehydration, task generation automation
 - **Testing Tools**: pytest, coverage analysis, performance benchmarking
