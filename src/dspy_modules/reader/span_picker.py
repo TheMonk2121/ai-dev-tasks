@@ -9,6 +9,52 @@ import re
 SQL_HINTS = r"(create|alter|drop|index|table|materialized|view|foreign key|primary key|using|gin|gist|ivfflat|to_tsvector|tsquery|websearch_to_tsquery)"
 
 
+def looks_like_command(question: str) -> bool:
+    """Check if question is asking for a command or operational instruction."""
+    ql = question.lower()
+    return any(k in ql for k in ("how do i run", "command", "profile", "run the gold", "evaluate"))
+
+
+def extract_code_block(text: str) -> str | None:
+    """Extract the first code block from text."""
+    # Look for code blocks with backticks
+    code_block_match = re.search(r"```(?:bash|sh|python|py)?\n(.*?)\n```", text, re.DOTALL)
+    if code_block_match:
+        return code_block_match.group(1).strip()
+
+    # Look for indented code blocks (4+ spaces)
+    lines = text.split("\n")
+    code_lines = []
+    in_code_block = False
+
+    for line in lines:
+        if re.match(r"^    ", line):  # 4+ spaces
+            in_code_block = True
+            code_lines.append(line[4:])  # Remove indentation
+        elif in_code_block and line.strip() == "":
+            code_lines.append("")
+        elif in_code_block and not re.match(r"^    ", line):
+            break
+
+    if code_lines:
+        return "\n".join(code_lines).strip()
+
+    return None
+
+
+# Command extraction regex for shell commands
+CMD_RE = re.compile(r"(?m)^\s*(?:env\s+[-\w= ]+ )?(?:uv|python|pipx|make)\b[^\n]*$")
+
+
+def extract_command_line(text: str) -> str | None:
+    """Extract command lines from text."""
+    # Look for command patterns: uv run, python, make, etc.
+    match = CMD_RE.search(text)
+    if match:
+        return match.group(0).strip()
+    return None
+
+
 def pick_span(context: str, question: str, tag: str) -> str | None:
     """
     Deterministically extract the best answer span from context.
@@ -23,6 +69,25 @@ def pick_span(context: str, question: str, tag: str) -> str | None:
     """
     if not context or not context.strip():
         return None
+
+    # Special handling for command-style questions
+    if looks_like_command(question):
+        # Look for code blocks first
+        code_block = extract_code_block(context)
+        if code_block and len(code_block) <= 200:
+            return code_block
+
+        # Look for command lines using regex
+        command_line = extract_command_line(context)
+        if command_line and len(command_line) <= 200:
+            return command_line
+
+        # Fallback: Look for command-like lines
+        lines = [line.strip() for line in context.splitlines() if line.strip()]
+        for line in lines:
+            # Match command patterns: uv run, python, make, etc.
+            if re.search(r"^(uv run|python|make|npm|yarn|git|docker)", line) and len(line) <= 200:
+                return line
 
     # For general questions, be very selective about span extraction
     # Only extract spans for specific question types
