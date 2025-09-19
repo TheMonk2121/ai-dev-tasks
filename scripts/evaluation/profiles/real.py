@@ -12,7 +12,7 @@ def _run_real(_argv: list[str]) -> int:  # Unused parameter
         print(f"Failed to load evaluator for real profile: {exc}")
         return 1
 
-    evaluator: Any = CleanDSPyEvaluator()
+    evaluator: Any = CleanDSPyEvaluator(profile="real")
     try:
         _ = evaluator.run_evaluation(
             gold_file="evals/data/real/v1/real_cases.jsonl",

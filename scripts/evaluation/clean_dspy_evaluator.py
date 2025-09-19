@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """
-Wrapper that delegates to the canonical evaluator at
-`evals/scripts/evaluation/clean_dspy_evaluator.py` while preserving
+Thin wrapper that delegates to the canonical evaluator at
+`evals/scripts/evaluation/dspy_evaluator.py` while preserving
 the historic import path `scripts.evaluation.clean_dspy_evaluator`.
+
+The actual evaluator implementation lives in evals/scripts/evaluation/dspy_evaluator.py.
+This wrapper exists only for backward compatibility.
 """
 
 from __future__ import annotations

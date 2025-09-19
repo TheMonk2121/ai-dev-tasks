@@ -13,7 +13,7 @@ def _run_gold(_argv: list[str]) -> int:  # Unused parameter
         print(f"Failed to load evaluator for gold profile: {exc}")
         return 1
 
-    evaluator: Any = CleanDSPyEvaluator()
+    evaluator: Any = CleanDSPyEvaluator(profile="gold")
     try:
         _ = evaluator.run_evaluation(
             gold_file="evals/data/gold/v1/gold_cases_121.jsonl",

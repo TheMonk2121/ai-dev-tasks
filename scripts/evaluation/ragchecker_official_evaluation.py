@@ -84,7 +84,10 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
             return int(runner.run(argv))
     except Exception as e:
-        print(f"Warning: profile dispatch failed, falling back to SSOT path ({e})")
+        print(f"❌ Profile dispatch failed: {e}")
+        print("   This indicates a serious configuration issue.")
+        print("   The evaluation system cannot proceed without proper profile dispatch.")
+        return 3
 
     # When invoked by the SSOT runner, we receive an --outdir argument.
     # In that case, run the official evaluator inline and write results there.

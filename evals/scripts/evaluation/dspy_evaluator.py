@@ -78,9 +78,9 @@ except ImportError:
 class CleanDSPyEvaluator:
     """Clean, focused evaluator for DSPy RAG system."""
 
-    def __init__(self, profile: str = "gold", progress_log: str | None = None):
+    def __init__(self, profile: str = "gold", progress_log: str | None = None, output_dir: str | None = None):
         self.profile: str = profile
-        self.results_dir: Path = Path("evals/metrics/dspy_evaluations")
+        self.results_dir: Path = Path(output_dir or "evals/metrics/dspy_evaluations")
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.progress_log: str | None = progress_log
         self._progress_fh: TextIO | None = None
@@ -99,6 +99,7 @@ class CleanDSPyEvaluator:
                 self.logfire_span: Any | None = logfire.span("evaluation.clean_dspy", profile=profile)
             except Exception as e:
                 print(f"⚠️  Logfire initialization failed: {e}")
+                print("   Continuing without observability - evaluation will run but without telemetry")
                 self.logfire_span = None
         else:
             self.logfire_span = None
@@ -121,6 +122,7 @@ class CleanDSPyEvaluator:
                         )
             except Exception as e:
                 print(f"⚠️  Config logging failed: {e}")
+                print("   Continuing without config capture - evaluation will run but without configuration tracking")
 
         # Initialize database telemetry logging
         self.db_telemetry: Any | None = None
@@ -135,6 +137,9 @@ class CleanDSPyEvaluator:
                         print(f"🗄️  Database telemetry initialized: {self.db_telemetry.run_id}")
             except Exception as e:
                 print(f"⚠️  Database telemetry initialization failed: {e}")
+                print(
+                    "   Continuing without DB telemetry - evaluation will run but without database performance tracking"
+                )
 
         # Open progress logging if specified
         if self.progress_log:
@@ -312,7 +317,15 @@ class CleanDSPyEvaluator:
             self._extractive_reader = ExtractiveReader()
             self._select_snippets = select_snippets
         except Exception as e:
-            print(f"⚠️ ExtractiveReader not available: {e}")
+            print(f"❌ ExtractiveReader import failed: {e}")
+            if self.profile in ["gold", "real"]:
+                print("   CRITICAL: ExtractiveReader is required for gold/real profiles!")
+                print("   This will severely impact evaluation quality.")
+                print("   Consider running with --profile mock for testing, or fix the import issue.")
+                # For now, continue but with clear warning
+                print("   Continuing with degraded evaluation quality...")
+            else:
+                print("   Continuing without ExtractiveReader (acceptable for mock profile)")
             self._reader_available = False
             self._extractive_reader = None
             self._select_snippets = None
@@ -383,8 +396,9 @@ class CleanDSPyEvaluator:
                         "RERANK_ENABLE": os.getenv("RERANK_ENABLE"),
                     }
                     print(f"[settings] {eff}")
-                except Exception:
-                    pass
+                except Exception as e:
+                    print(f"⚠️ Failed to dump diagnostic settings: {e}")
+                    print("   Continuing without settings debug output")
 
                 # Fail fast if contexts are empty when real RAG is requested
                 if (os.getenv("RAGCHECKER_USE_REAL_RAG") == "1") and not used_ctx:
@@ -681,6 +695,9 @@ class CleanDSPyEvaluator:
 
             print(f"🔍 Case {i}/{len(cases)}: {query[:60]}...")
 
+            # Initialize case failure tracking
+            case_failed = False
+
             try:
                 if self.profile == "mock":
                     # Synthetic evaluation
@@ -731,10 +748,13 @@ class CleanDSPyEvaluator:
 
                     except Exception as e:
                         print(f"❌ RAG system failed: {e}")
+                        print("   This case will be marked as FAILED - not counted as successful")
                         response = "I don't know"
                         retrieved_context = []
                         retrieval_snapshot = []
                         latency = 0.0
+                        # Mark this case as failed for proper error tracking
+                        case_failed = True
 
                     # Log retrieval span for real RAG
                     if logfire_available and logfire:
@@ -826,6 +846,7 @@ class CleanDSPyEvaluator:
                     "expected_files": case.get("expected_files"),
                     "tags": case.get("tags"),
                     "mode": case.get("mode"),
+                    "case_failed": case_failed,
                     # Combined metrics
                     "metrics": {
                         "precision": metrics["precision"],
@@ -886,8 +907,8 @@ class CleanDSPyEvaluator:
             "f1_score": total_f1 / n_cases if n_cases > 0 else 0.0,
             "faithfulness": total_faithfulness / n_cases if n_cases > 0 else 0.0,
             "total_cases": n_cases,
-            "successful_cases": len([c for c in case_results if "error" not in c]),
-            "failed_cases": len([c for c in case_results if "error" in c]),
+            "successful_cases": len([c for c in case_results if "error" not in c and not c.get("case_failed", False)]),
+            "failed_cases": len([c for c in case_results if "error" in c or c.get("case_failed", False)]),
         }
 
         # Create results
@@ -1016,7 +1037,7 @@ def main() -> None:
         help="Evaluation profile (gold: real RAG + gold cases, real: real RAG + real cases, mock: synthetic)",
     )
     _ = parser.add_argument(
-        "--gold-file", default="evals/data/gold/v1/gold_cases.jsonl", help="Path to gold cases file"
+        "--gold-file", default="evals/data/gold/v1/gold_cases_121.jsonl", help="Path to gold cases file"
     )
     _ = parser.add_argument("--limit", type=int, default=None, help="Limit number of cases to evaluate")
     _ = parser.add_argument("--tags", nargs="+", help="Filter cases by tags")
@@ -1028,7 +1049,7 @@ def main() -> None:
     args = parser.parse_args()
 
     # Create evaluator with specified profile
-    evaluator = CleanDSPyEvaluator(profile=args.profile, progress_log=args.progress_log)
+    evaluator = CleanDSPyEvaluator(profile=args.profile, progress_log=args.progress_log, output_dir=args.outdir)
     results = evaluator.run_evaluation(
         gold_file=args.gold_file, limit=args.limit, include_tags=args.tags, mode=args.mode, concurrency=args.concurrency
     )

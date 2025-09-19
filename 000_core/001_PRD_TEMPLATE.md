@@ -239,8 +239,8 @@ SQL
 ```
 
 ### 3.2 Datasets and gold cases
-- Curated gold lives under: `300_evals/datasets/gold_cases.jsonl`.
-- Dev/adhoc sets (optional): `300_evals/datasets/dev_gold.jsonl`.
+- Curated gold lives under: `evals/data/gold/v1/gold_cases_121.jsonl`.
+- Dev/adhoc sets (optional): `evals/data/gold/v1/dev_gold.jsonl`.
 - Every eval run computes and stores a dataset hash and run metadata (git SHA, profile, seed).
 - Any learned model must record the dataset hash used for training.
 
