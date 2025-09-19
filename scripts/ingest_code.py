@@ -24,7 +24,7 @@ def sha256_bytes(data: bytes) -> bytes:
 
 
 def iter_python_files() -> Iterable[Path]:
-    for base in (PROJECT_ROOT / "src", PROJECT_ROOT / "scripts"):
+    for base in (PROJECT_ROOT / "src", PROJECT_ROOT / "scripts", PROJECT_ROOT / "evals"):
         if not base.exists():
             continue
         for p in base.rglob("*.py"):
