@@ -26,7 +26,6 @@ from pathlib import Path
 from typing import cast
 
 import httpx
-import psycopg
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,6 +33,14 @@ from fastapi.responses import PlainTextResponse, StreamingResponse
 
 # Removed unused RealDictCursor import - using psycopg3 patterns
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+# Configure comprehensive logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("mcp_server.log"), logging.StreamHandler()],
+)
+logger = logging.getLogger(__name__)
 
 # Ensure repository root is on sys.path for absolute package imports
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -50,10 +57,11 @@ try:
 
     memory_orchestrator = UnifiedMemoryOrchestrator()
     cursor_integration_class = CursorWorkingIntegration
+    logger.info("✅ Successfully imported memory systems")
     print("✅ Successfully imported memory systems")
 except Exception as e:  # pragma: no cover - import environment dependent
+    logger.error(f"❌ Could not import memory systems: {e}", exc_info=True)
     print(f"❌ Could not import memory systems: {e}")
-    logging.warning(f"Could not import memory systems: {e}")
     memory_orchestrator = None
     cursor_integration_class = None
 
@@ -63,22 +71,33 @@ cursor_integrations = {}
 
 def get_cursor_integration(thread_id: str | None = None) -> CursorWorkingIntegration | None:
     """Get or create a thread-specific cursor integration instance."""
+    logger.debug(f"Getting cursor integration for thread_id: {thread_id}")
+
     if not cursor_integration_class:
+        logger.warning("Cursor integration class not available")
         return None
 
     # Use provided thread_id or create a new one
     if not thread_id:
         thread_id = f"thread_{uuid.uuid4().hex[:8]}"
+        logger.info(f"Generated new thread_id: {thread_id}")
 
     # Get or create integration for this thread
     if thread_id not in cursor_integrations:
-        cursor_integrations[thread_id] = cursor_integration_class()
-        # Override the thread_id to match our key
-        cursor_integrations[thread_id].thread_id = thread_id
-        # Ensure the thread exists in the database
-        if not cursor_integrations[thread_id]._ensure_thread_exists(thread_id):
-            print(f"❌ Failed to ensure thread {thread_id} exists, removing from cache")
-            del cursor_integrations[thread_id]
+        logger.info(f"Creating new cursor integration for thread: {thread_id}")
+        try:
+            cursor_integrations[thread_id] = cursor_integration_class()
+            # Override the thread_id to match our key
+            cursor_integrations[thread_id].thread_id = thread_id
+            # Ensure the thread exists in the database
+            if not cursor_integrations[thread_id]._ensure_thread_exists(thread_id):
+                logger.error(f"Failed to ensure thread {thread_id} exists, removing from cache")
+                print(f"❌ Failed to ensure thread {thread_id} exists, removing from cache")
+                del cursor_integrations[thread_id]
+                return None
+            logger.info(f"✅ Created cursor integration for thread: {thread_id}")
+        except Exception as e:
+            logger.error(f"Error creating cursor integration for thread {thread_id}: {e}", exc_info=True)
             return None
 
     return cursor_integrations[thread_id]
@@ -247,41 +266,60 @@ async def call_mcp_tool(request: MCPToolCall):
     global request_count, error_count
     request_count += 1
 
+    logger.info(f"Processing MCP tool call: {request.tool_name} with args: {list(request.arguments.keys())}")
+
     try:
         if request.tool_name == "query_memory":
+            logger.debug("Calling query_memory_system")
             return await query_memory_system(request.arguments)
         elif request.tool_name == "get_project_context":
+            logger.debug("Calling get_project_context")
             return await get_project_context(request.arguments)
         elif request.tool_name == "get_hot_context":
+            logger.debug("Calling get_hot_context")
             return await get_hot_context(request.arguments)
         elif request.tool_name == "search_hot_memory":
+            logger.debug("Calling search_hot_memory")
             return await search_hot_memory(request.arguments)
         elif request.tool_name == "pin_hot_item":
+            logger.debug("Calling pin_hot_item")
             return await pin_hot_item(request.arguments)
         elif request.tool_name == "run_precision_eval":
+            logger.debug("Calling run_precision_evaluation")
             return await run_precision_evaluation(request.arguments)
         elif request.tool_name == "process_files":
+            logger.debug("Calling process_files")
             return await process_files(request.arguments)
         elif request.tool_name == "analyze_file_content":
+            logger.debug("Calling analyze_file_content")
             return await analyze_file_content(request.arguments)
         elif request.tool_name == "get_precision_eval_status":
+            logger.debug("Calling get_precision_eval_status")
             return await get_precision_eval_status(request.arguments)
         elif request.tool_name == "get_precision_eval_result":
+            logger.debug("Calling get_precision_eval_result")
             return await get_precision_eval_result(request.arguments)
         elif request.tool_name == "cancel_precision_eval":
+            logger.debug("Calling cancel_precision_eval")
             return await cancel_precision_eval(request.arguments)
         elif request.tool_name == "capture_user_query":
+            logger.debug("Calling capture_user_query")
             return await capture_user_query(request.arguments)
         elif request.tool_name == "capture_ai_response":
+            logger.debug("Calling capture_ai_response")
             return await capture_ai_response(request.arguments)
         elif request.tool_name == "get_conversation_stats":
+            logger.debug("Calling get_conversation_stats")
             return await get_conversation_stats(request.arguments)
         elif request.tool_name == "record_chat_history":
+            logger.debug("Calling record_chat_history")
             return await record_chat_history(request.arguments)
         else:
+            logger.warning(f"Unknown tool requested: {request.tool_name}")
             raise HTTPException(status_code=400, detail=f"Unknown tool: {request.tool_name}")
     except Exception as e:
         error_count += 1
+        logger.error(f"Error processing MCP tool call {request.tool_name}: {e}", exc_info=True)
         return MemoryResponse(success=False, data={}, error=str(e))
 
 
@@ -876,28 +914,33 @@ async def list_tools() -> dict[str, object]:
 
 async def capture_user_query(args: Mapping[str, object]) -> MemoryResponse:
     """Capture a user query from Cursor conversation"""
+    logger.info("Starting capture_user_query")
     try:
         # Get thread-specific integration
         thread_id = cast(str | None, args.get("thread_id"))
+        logger.debug(f"Using thread_id: {thread_id}")
+
         cursor_integration = get_cursor_integration(thread_id)
 
         if not cursor_integration:
+            logger.error("Cursor integration not available")
             return MemoryResponse(success=False, data={}, error="Cursor integration not available")
 
         query = cast(str, args.get("query", ""))
         metadata = cast(dict[str, str | int | float | bool | None], args.get("metadata", {}))
 
         if not query:
+            logger.warning("Empty query provided")
             return MemoryResponse(success=False, data={}, error="Query is required")
 
-        # Async path using psycopg3 pool for concurrency safety
-        try:
-            from scripts.utilities.memory.db_async_pool import ensure_thread_exists, insert_user_turn, pool
+        logger.debug(f"Capturing user query: {query[:100]}...")
 
-            async with pool.connection() as conn:  # type: ignore[attr-defined]
-                tid = await ensure_thread_exists(conn, cursor_integration.thread_id)
-                turn_id, _ = await insert_user_turn(conn, thread_id=tid, content=query, metadata=metadata)
+        # Use the existing cursor integration method for compatibility
+        try:
+            turn_id = cursor_integration.capture_user_query(query, metadata)
+            logger.info(f"Successfully captured user query with turn_id: {turn_id}")
         except Exception as e:
+            logger.error(f"Error capturing user query: {e}", exc_info=True)
             return MemoryResponse(success=False, data={}, error=str(e))
 
         if turn_id:
@@ -912,20 +955,26 @@ async def capture_user_query(args: Mapping[str, object]) -> MemoryResponse:
                 error=None,
             )
         else:
+            logger.error("Failed to capture user query - no turn_id returned")
             return MemoryResponse(success=False, data={}, error="Failed to capture user query")
 
     except Exception as e:
+        logger.error(f"Unexpected error in capture_user_query: {e}", exc_info=True)
         return MemoryResponse(success=False, data={}, error=str(e))
 
 
 async def capture_ai_response(args: Mapping[str, object]) -> MemoryResponse:
     """Capture an AI response from Cursor conversation"""
+    logger.info("Starting capture_ai_response")
     try:
         # Get thread-specific integration
         thread_id = cast(str | None, args.get("thread_id"))
+        logger.debug(f"Using thread_id: {thread_id}")
+
         cursor_integration = get_cursor_integration(thread_id)
 
         if not cursor_integration:
+            logger.error("Cursor integration not available")
             return MemoryResponse(success=False, data={}, error="Cursor integration not available")
 
         response = cast(str, args.get("response", ""))
@@ -933,49 +982,22 @@ async def capture_ai_response(args: Mapping[str, object]) -> MemoryResponse:
         metadata = cast(dict[str, str | int | float | bool | None], args.get("metadata", {}))
 
         if not response:
+            logger.warning("Empty response provided")
             return MemoryResponse(success=False, data={}, error="Response is required")
 
         if raw_query_turn_id is None:
+            logger.warning("No query_turn_id provided")
             return MemoryResponse(success=False, data={}, error="query_turn_id is required")
 
         query_turn_id = cast(str, raw_query_turn_id)
+        logger.debug(f"Capturing AI response for query_turn_id: {query_turn_id}")
 
-        # Async parent validation and insert using psycopg3 helpers
+        # Use the existing cursor integration method for compatibility
         try:
-            from scripts.utilities.memory.db_async_pool import insert_ai_turn, pool
-
-            async with pool.connection() as conn:  # type: ignore[attr-defined]
-                try:
-                    turn_id, _tid, _seq = await insert_ai_turn(
-                        conn,
-                        parent_turn_id=query_turn_id,
-                        content=response,
-                        metadata=metadata,
-                        status="final",
-                        explicit_thread_id=cast(str | None, args.get("thread_id")),
-                        allow_supersede=False,
-                    )
-                except ValueError as ve:
-                    code = str(ve)
-                    if code in ("unknown_query_turn_id", "query_turn_not_user_role"):
-                        return MemoryResponse(success=False, data={"error": code}, error=None)
-                    return MemoryResponse(success=False, data={}, error=code)
-                except LookupError as le:
-                    parts = str(le).split(":")
-                    if len(parts) == 3 and parts[0] == "thread_id_mismatch":
-                        return MemoryResponse(
-                            success=False,
-                            data={"error": "thread_id_mismatch", "expected": parts[1], "got": parts[2]},
-                            error=None,
-                        )
-                    return MemoryResponse(success=False, data={}, error=str(le))
-                except FileExistsError:
-                    return MemoryResponse(
-                        success=False,
-                        data={"error": "parent_already_answered", "query_turn_id": query_turn_id},
-                        error=None,
-                    )
+            turn_id = cursor_integration.capture_ai_response(response, query_turn_id, metadata)
+            logger.info(f"Successfully captured AI response with turn_id: {turn_id}")
         except Exception as e:
+            logger.error(f"Error capturing AI response: {e}", exc_info=True)
             return MemoryResponse(success=False, data={}, error=str(e))
 
         if turn_id:
@@ -990,9 +1012,11 @@ async def capture_ai_response(args: Mapping[str, object]) -> MemoryResponse:
                 error=None,
             )
         else:
+            logger.error("Failed to capture AI response - no turn_id returned")
             return MemoryResponse(success=False, data={}, error="Failed to capture AI response")
 
     except Exception as e:
+        logger.error(f"Unexpected error in capture_ai_response: {e}", exc_info=True)
         return MemoryResponse(success=False, data={}, error=str(e))
 
 
@@ -1044,10 +1068,10 @@ async def record_chat_history(args: Mapping[str, object]) -> MemoryResponse:
         # Use the existing cursor integration methods for compatibility
         try:
             # Record user input
-            cursor_integration.capture_user_query(user_input)
+            _ = cursor_integration.capture_user_query(user_input)
 
             # Record AI response
-            cursor_integration.capture_ai_response(system_output)
+            _ = cursor_integration.capture_ai_response(system_output)
 
             # Generate turn IDs for compatibility
             query_turn_id = f"turn_{uuid.uuid4().hex[:8]}"
@@ -1085,6 +1109,41 @@ async def record_chat_history(args: Mapping[str, object]) -> MemoryResponse:
         return MemoryResponse(success=False, data={}, error=str(e))
 
 
+async def startup_health_check():
+    """Perform startup health checks"""
+    logger.info("Performing startup health checks...")
+
+    # Check database connectivity
+    try:
+        from src.common.psycopg3_config import Psycopg3Config
+
+        config = Psycopg3Config()
+        conn = config.create_connection()
+        try:
+            # Simple connectivity test
+            _ = conn.execute("SELECT 1")
+            logger.info("✅ Database connectivity check passed")
+        finally:
+            conn.close()
+    except Exception as e:
+        logger.error(f"❌ Database connectivity check failed: {e}", exc_info=True)
+        return False
+
+    # Check memory systems
+    if memory_orchestrator:
+        logger.info("✅ Memory orchestrator available")
+    else:
+        logger.warning("⚠️ Memory orchestrator not available")
+
+    if cursor_integration_class:
+        logger.info("✅ Cursor integration class available")
+    else:
+        logger.warning("⚠️ Cursor integration class not available")
+
+    logger.info("✅ Startup health checks completed")
+    return True
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MCP Memory Server")
     _ = parser.add_argument("--port", type=int, default=3000, help="Port to run on")
@@ -1092,6 +1151,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    logger.info(f"🚀 Starting MCP Memory Server on {args.host}:{args.port}")
     _ = print(f"🚀 Starting MCP Memory Server on {args.host}:{args.port}")
     _ = print(f"📡 Health check: http://{args.host}:{args.port}/health")
     _ = print(f"🔧 MCP tools: http://{args.host}:{args.port}/mcp/tools")
@@ -1101,5 +1161,15 @@ if __name__ == "__main__":
         _ = print(f"🧭 sys.path[:3]={sys.path[:3]}")
     except Exception:
         pass
+
+    # Perform startup health checks
+    import asyncio
+
+    try:
+        health_ok = asyncio.run(startup_health_check())
+        if not health_ok:
+            logger.error("Startup health checks failed, but continuing...")
+    except Exception as e:
+        logger.error(f"Startup health checks failed: {e}", exc_info=True)
 
     uvicorn.run(app, host=cast(str, args.host), port=cast(int, args.port))

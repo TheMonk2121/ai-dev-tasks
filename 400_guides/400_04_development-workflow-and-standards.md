@@ -617,6 +617,72 @@ uv run ruff check .
 uv run pytest tests/ -q
 ```
 
+## 🧪 Evaluation Profiles and Layout
+
+<!-- ANCHOR_KEY: evaluation-profiles-layout -->
+<!-- ANCHOR_PRIORITY: 6 -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
+
+### TL;DR
+- Single orchestrator with profile dispatch; no duplicate runners.
+- Configs live under `evals/configs/{gold,real,mock}/`.
+- Baseline outputs under `metrics/baseline_evaluations/{gold,real,mock}/`.
+
+### Entrypoints
+- Orchestrator: `scripts/evaluation/ragchecker_official_evaluation.py`
+- Module wrapper: `python -m scripts.evaluation ...` (thin forwarder)
+- Profiles package: `scripts/evaluation/profiles/{gold,real,mock}.py`
+- Shared utils: `scripts/evaluation/core/`
+
+### Commands (uv-only)
+```bash
+# Gold (PR gates / baselines)
+UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold
+
+# Real (development, full pipeline)
+UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile real
+
+# Mock (plumbing; forbidden on main gates)
+UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile mock
+```
+
+### Directory Structure
+```
+scripts/
+  evaluation/
+    ragchecker_official_evaluation.py   # single CLI
+    __main__.py                         # python -m wrapper
+    core/                               # shared utils
+    profiles/
+      gold.py
+      real.py
+      mock.py
+
+evals/
+  configs/
+    gold/
+    real/
+    mock/
+
+metrics/
+  baseline_evaluations/
+    gold/
+    real/
+    mock/
+
+tests/
+  evaluation/
+    mock/test_mock_smoke.py
+    test_main_wrapper.py
+```
+
+### Quality Gates (recap)
+- Use ruff, black --check, and basedpyright.
+- Enforce RAGChecker gates on gold where applicable.
+
 ### Virtual Environment Management
 
 #### **Virtual Environment Manager Overview**

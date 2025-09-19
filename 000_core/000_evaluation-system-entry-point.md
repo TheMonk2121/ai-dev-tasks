@@ -79,6 +79,28 @@ ls -la metrics/baseline_evaluations/BASELINE_*.md
 
 **Use this to verify system status before running evaluations.**
 
+### **🧭 Cursor Command Palette (Stateless Agents)**
+Use these project commands from the Cursor Command Palette (they are created under `.cursor/commands/`):
+
+```bash
+# Memory
+memory-remember         # record a conversation turn to MCP memory
+memory-refresh          # query MCP memory (LTST, Cursor, Go CLI)
+
+# Eval smoke (fast, unpinned)
+eval-smoke-mock         # harness mock profile
+eval-smoke-gold         # strict env; gold --limit 5
+eval-smoke-real         # strict env; real (add --limit locally if desired)
+
+# Eval full (unpinned)
+eval-full-gold          # strict env; full gold
+eval-full-real          # strict env; full real
+```
+
+Notes:
+- All Python invocations use `UV_PROJECT_ENVIRONMENT=.venv uv run ...`.
+- Strict eval runs unset `INGEST_RUN_ID`/`CHUNK_VARIANT` to avoid accidental pinning.
+
 ### **🔧 Environment Setup Command**
 ```bash
 # Set up all required environment variables for evaluation system

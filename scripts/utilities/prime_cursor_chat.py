@@ -19,6 +19,8 @@ Examples:
     python3 scripts/prime_cursor_chat.py implementer "DSPy integration"
     python3 scripts/prime_cursor_chat.py researcher "performance analysis"
 """
+
+
 def run_memory_rehydrator(role: str, task: str) -> Any:
     """Run the memory rehydrator adapter and return a text bundle string."""
 
@@ -51,7 +53,7 @@ def run_memory_rehydrator(role: str, task: str) -> Any:
             f"Mode: {getattr(bundle, 'meta', {}).get('mode')}",
         ]
 
-        return "\n".join(header) + (getattr(bundle, 'text', '') or "") + "\n" + "\n".join(footer)
+        return "\n".join(header) + (getattr(bundle, "text", "") or "") + "\n" + "\n".join(footer)
 
     except Exception as e:
         print(f"❌ Error: {e}")

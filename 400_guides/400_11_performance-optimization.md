@@ -126,6 +126,30 @@ ls -la metrics/baseline_evaluations/
 cat metrics/baseline_evaluations/ragchecker_official_evaluation_*.json | jq '.summary'
 ```
 
+### Evaluation Profiles Layout (reference)
+
+For the canonical profile structure and commands, see Development Workflow → Evaluation Profiles and Layout (`400_04_development-workflow-and-standards.md#evaluation-profiles-and-layout`).
+
+- Single orchestrator: `scripts/evaluation/ragchecker_official_evaluation.py`
+- Module wrapper: `python -m scripts.evaluation --profile {gold|real|mock}`
+- Configs: `evals/configs/{gold,real,mock}/`
+- Outputs: `metrics/baseline_evaluations/{gold,real,mock}/`
+
+Quick commands (uv-only):
+```bash
+# Gold (PR gates / baselines)
+UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold
+
+# Real (development)
+UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile real
+
+# Mock (plumbing)
+UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile mock
+```
+
 **🚨 CRITICAL**: This is the single source of truth for performance requirements. All other references to RED LINE or RAGChecker baselines should point to this section.
 
 ---
