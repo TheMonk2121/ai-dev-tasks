@@ -1,0 +1,237 @@
+# ANCHOR_KEY: prompt-sanitizer
+# ANCHOR_PRIORITY: 25
+# ROLE_PINS: ["implementer", "coder"]
+"""
+Prompt Sanitization Utility
+
+Provides regex-based prompt sanitization with configurable block-list and optional whitelist.
+"""
+
+import logging
+import os
+from typing import Any
+
+logger = logging.getLogger(__name__)
+
+
+class SecurityError(Exception):
+    """Raised when a security violation is detected"""
+
+    pass
+
+
+def load_security_config() -> dict[str, Any]:
+    """Load security configuration from pydantic-settings"""
+    try:
+        from ..config import get_settings
+
+        _ = get_settings()  # Load settings but don't use them yet
+
+        return {
+            "prompt_blocklist": ["{{", "}}", "<script>"],  # Could be added to settings if needed
+            "prompt_whitelist": [],  # Could be added to settings if needed
+            "file_validation": {
+                "max_size_mb": 50,  # Could be added to settings if needed
+                "allowed_ext": ["txt", "md", "pdf", "csv"],  # Could be added to settings if needed
+            },
+        }
+    except Exception as e:
+        logger.warning(f"Could not load security config: {e}. Using defaults.")
+        return {
+            "prompt_blocklist": ["{{", "}}", "<script>"],
+            "prompt_whitelist": [],
+            "file_validation": {"max_size_mb": 50, "allowed_ext": ["txt", "md", "pdf", "csv"]},
+        }
+
+
+def sanitize_prompt(prompt: str, _model_id: str | None = None) -> str:
+    """
+    Sanitize user input to prevent injection attacks.
+
+    Args:
+        prompt: The input prompt to sanitize
+        _model_id: Optional model ID for model-specific sanitization (unused)
+
+    Returns:
+        Sanitized prompt string
+
+    Raises:
+        SecurityError: If blocked patterns are detected
+    """
+    if not prompt:
+        return prompt
+
+    config = load_security_config()
+    blocklist = config["prompt_blocklist"]
+    whitelist = config["prompt_whitelist"]
+
+    # Convert to lowercase for case-insensitive matching
+    prompt_lower = prompt.lower()
+
+    # If whitelist is provided, only allow whitelisted patterns
+    if whitelist:
+        # Check if any non-whitelisted patterns are present
+        for pattern in blocklist:
+            if pattern.lower() in prompt_lower:
+                # Check if this pattern is in the whitelist
+                if pattern not in whitelist:
+                    raise SecurityError(f"Blocked pattern detected: {pattern}")
+        return prompt.strip()
+
+    # Otherwise, use block-list approach
+    for pattern in blocklist:
+        if pattern.lower() in prompt_lower:
+            raise SecurityError(f"Blocked pattern detected: {pattern}")
+
+    return prompt.strip()
+
+
+def validate_file_path(file_path: str) -> bool:
+    """
+    Validate file path to prevent path traversal attacks.
+
+    Args:
+        file_path: The file path to validate
+
+    Returns:
+        True if path is valid, False otherwise
+    """
+    if not file_path:
+        return False
+
+    # Check for path traversal attempts
+    dangerous_patterns = [
+        "../",
+        "..\\",
+        "..%2f",
+        "..%5c",  # Directory traversal
+        "file://",
+        "ftp://",
+        "http://",
+        "https://",  # URL schemes
+        "data:",
+        "javascript:",  # Dangerous protocols
+    ]
+
+    file_path_lower = file_path.lower()
+    for pattern in dangerous_patterns:
+        if pattern in file_path_lower:
+            logger.warning(f"Potentially dangerous file path detected: {file_path}")
+            return False
+
+    # Check for absolute paths (optional security measure)
+    if os.path.isabs(file_path):
+        logger.warning(f"Absolute path detected: {file_path}")
+        return False
+
+    return True
+
+
+def validate_file_size(file_size_bytes: int) -> bool:
+    """
+    Validate file size against configured limits.
+
+    Args:
+        file_size_bytes: File size in bytes
+
+    Returns:
+        True if file size is acceptable, False otherwise
+    """
+    config = load_security_config()
+    max_size_mb = config["file_validation"]["max_size_mb"]
+
+    # Check environment variable override
+    env_max_size = os.getenv("SECURITY_MAX_FILE_MB")
+    if env_max_size:
+        try:
+            max_size_mb = int(env_max_size)
+        except ValueError:
+            logger.warning(f"Invalid SECURITY_MAX_FILE_MB value: {env_max_size}")
+
+    max_size_bytes = max_size_mb * 1024 * 1024
+
+    if file_size_bytes > max_size_bytes:
+        logger.warning(f"File size {file_size_bytes} bytes exceeds limit {max_size_bytes} bytes")
+        return False
+
+    return True
+
+
+def validate_file_extension(filename: str) -> bool:
+    """
+    Validate file extension against allowed extensions.
+
+    Args:
+        filename: The filename to validate
+
+    Returns:
+        True if extension is allowed, False otherwise
+    """
+    if not filename:
+        return False
+
+    config = load_security_config()
+    allowed_extensions = config["file_validation"]["allowed_ext"]
+
+    # Extract file extension
+    _, ext = os.path.splitext(filename)
+    if ext:
+        ext = ext.lower().lstrip(".")
+        return ext in allowed_extensions
+
+    return False
+
+
+def sanitize_and_validate_input(
+    prompt: str, file_path: str | None = None, file_size_bytes: int | None = None, _model_id: str | None = None
+) -> dict[str, Any]:
+    """
+    Comprehensive input sanitization and validation.
+
+    Args:
+        prompt: The prompt to sanitize
+        file_path: Optional file path to validate
+        file_size_bytes: Optional file size to validate
+        _model_id: Optional model ID for model-specific validation (unused)
+
+    Returns:
+        Dictionary with validation results
+
+    Raises:
+        SecurityError: If any security violations are detected
+    """
+    results: dict[str, Any] = {
+        "prompt_sanitized": None,
+        "file_path_valid": None,
+        "file_size_valid": None,
+        "file_extension_valid": None,
+        "overall_valid": True,
+    }
+
+    try:
+        # Sanitize prompt
+        results["prompt_sanitized"] = sanitize_prompt(prompt, _model_id)
+    except SecurityError as e:
+        results["overall_valid"] = False
+        logger.error(f"Prompt sanitization failed: {e}")
+        raise
+
+    # Validate file path if provided
+    if file_path:
+        results["file_path_valid"] = validate_file_path(file_path)
+        if not results["file_path_valid"]:
+            results["overall_valid"] = False
+
+    # Validate file size if provided
+    if file_size_bytes is not None:
+        results["file_size_valid"] = validate_file_size(file_size_bytes)
+        if not results["file_size_valid"]:
+            results["overall_valid"] = False
+
+    # Validate file extension if file path provided
+    if file_path:
+        results["file_extension_valid"] = validate_file_extension(file_path)
+        if not results["file_extension_valid"]:
+            results["overall_valid"] = False
+
+    return results

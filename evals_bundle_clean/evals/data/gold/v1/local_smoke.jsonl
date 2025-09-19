@@ -1,0 +1,2 @@
+{"id": "case_001", "query": "What is the eval harness entry script path?", "gt_answer": "scripts/evaluation/ragchecker_official_evaluation.py", "tags": ["smoke", "gold"], "mode": "reader"}
+{"id": "case_002", "query": "Which env var selects the evaluation profile?", "gt_answer": "EVAL_PROFILE", "tags": ["smoke", "gold"], "mode": "retrieval"}

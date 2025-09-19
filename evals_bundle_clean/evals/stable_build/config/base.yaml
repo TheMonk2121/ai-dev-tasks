@@ -1,0 +1,101 @@
+---
+# Base configuration for AI Development Tasks ecosystem
+# This file provides sensible defaults for all environments
+
+env: dev
+root_dir: "."
+
+# Database configuration
+db:
+  dsn: "postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable"
+  pool_size: 8
+  timeout_ms: 5000
+  connect_timeout: 10
+  read_timeout: 30
+  write_timeout: 60
+  pool_timeout: 20
+
+# RAG system configuration
+rag:
+  fast_path_enabled: true
+  max_query_len: 256
+  topk: 25
+  prefetch_workers: 3
+  chunk_size: 450
+  overlap_ratio: 0.10
+  jaccard_threshold: 0.8
+  prefix_policy: "A"
+  embedder_name: "BAAI/bge-small-en-v1.5"
+  embedding_dim: 384
+
+# Evaluation configuration
+eval:
+  driver: "dspy_rag"
+  use_real_rag: true
+  disable_cache: false
+  use_bedrock: true
+  bypass_cli: false
+  lessons_mode: "advisory"
+  precision_threshold: 0.20
+  recall_threshold: 0.45
+  f1_threshold: 0.22
+  faithfulness_threshold: 0.60
+
+# Observability configuration
+obs:
+  logfire_token: null
+  endpoint: null
+  log_level: "INFO"
+  log_format: "text"
+  metrics_enabled: true
+  metrics_port: 8080
+
+# Security configuration
+security:
+  openai_api_key: null
+  aws_access_key_id: null
+  aws_secret_access_key: null
+  aws_region: "us-east-1"
+  enable_encryption: true
+  encryption_key_path: null
+  audit_logging: true
+
+# Performance configuration
+performance:
+  http_connect_timeout: 10
+  http_read_timeout: 30
+  http_total_timeout: 120
+  pdf_processing_timeout: 300
+  file_upload_timeout: 600
+  chunk_processing_timeout: 120
+  llm_request_timeout: 120
+  llm_stream_timeout: 300
+  health_check_timeout: 10
+  metrics_timeout: 5
+  startup_timeout: 60
+  max_memory_usage_mb: 8192
+  max_concurrent_requests: 10
+
+# Memory system configuration
+memory:
+  ltst_enabled: true
+  ltst_ttl_hours: 24
+  ltst_max_items: 10000
+  cursor_enabled: true
+  cursor_auto_rehydrate: true
+  go_cli_enabled: true
+  go_cli_mock_mode: true
+  prime_enabled: true
+  prime_auto_start: true
+
+# Development configuration
+dev:
+  environment: "dev"
+  debug_mode: false
+  hot_reload: true
+  test_timeout: 30
+  test_parallel: true
+  test_workers: 4
+  enable_profiling: false
+  enable_debugging: false
+  watch_files: true

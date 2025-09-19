@@ -1,0 +1,2 @@
+{"query_id": "case_4", "query": "How does the evaluation system work?", "gt_answer": "The evaluation system uses RAGChecker to assess RAG performance with metrics like precision, recall, and F1 score. It can evaluate both synthetic test cases and real RAG system responses."}
+{"query_id": "case_5", "query": "What is the purpose of the fusion adapter?", "gt_answer": "The fusion adapter combines multiple retrieval channels (BM25, vector search) using Reciprocal Rank Fusion (RRF) and cross-encoder reranking to improve retrieval quality and recall."}
