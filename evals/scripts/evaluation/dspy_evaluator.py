@@ -200,7 +200,7 @@ class CleanDSPyEvaluator:
 
             # Model configuration (matches working system)
             _ = os.environ.setdefault("DSPY_MODEL", "anthropic.claude-3-haiku-20240307-v1:0")
-            _ = os.environ.setdefault("RERANK_MODEL", "bge-reranker-base")
+            _ = os.environ.setdefault("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3")
 
             # Retrieval parameters (matches working system)
             _ = os.environ.setdefault("RETRIEVER_MIN_CHARS", "140")
@@ -273,7 +273,7 @@ class CleanDSPyEvaluator:
 
             # Model configuration (matches working system)
             _ = os.environ.setdefault("DSPY_MODEL", "anthropic.claude-3-haiku-20240307-v1:0")
-            _ = os.environ.setdefault("RERANK_MODEL", "bge-reranker-base")
+            _ = os.environ.setdefault("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3")
 
             # Retrieval parameters (matches working system)
             _ = os.environ.setdefault("RETRIEVER_MIN_CHARS", "140")
