@@ -1,3 +1,5 @@
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Evaluation Manifest Generator
@@ -12,7 +14,6 @@ import time
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 import yaml
 
@@ -20,11 +21,11 @@ import yaml
 class EvalManifestGenerator:
     """Generates comprehensive evaluation manifests for production traceability."""
 
-    def __init__(self, output_dir: str = "metrics/manifests"):
-        self.output_dir = Path(output_dir)
+    def __init__(self, output_dir: str = "evals/manifests") -> None:
+        self.output_dir: Path = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.manifest_id = str(uuid.uuid4())[:8]
-        self.timestamp = datetime.now().isoformat()
+        self.manifest_id: str = str(uuid.uuid4())[:8]
+        self.timestamp: str = datetime.now().isoformat()
 
     def generate_manifest(self, config_overrides: dict[str, Any] | None = None) -> dict[str, Any]:
         """Generate comprehensive evaluation manifest."""
@@ -59,17 +60,15 @@ class EvalManifestGenerator:
 
     def _capture_model_config(self) -> dict[str, Any]:
         """Capture model configuration and IDs."""
-        from src.rag.reranker_env import get_reranker_model
-
         return {
             "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
-            "rerank_model": get_reranker_model(),
+            "rerank_model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
             "generation_model": os.getenv("GENERATION_MODEL", "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"),
             "embedding_provider": os.getenv("EMBEDDING_PROVIDER", "local"),
             "generation_provider": os.getenv("GENERATION_PROVIDER", "bedrock"),
             "model_versions": {
                 "embedding": self._get_model_version(os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")),
-                "rerank": self._get_model_version(get_reranker_model()),
+                "rerank": self._get_model_version(os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")),
             },
         }
 
@@ -87,7 +86,7 @@ class EvalManifestGenerator:
             # Reranking Configuration
             "reranking": {
                 "enabled": os.getenv("RERANK_ENABLE", "1") == "1",
-                "model": os.getenv("RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"),
+                "model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
                 "pool_size": int(os.getenv("RERANK_POOL", "60")),
                 "topn": int(os.getenv("RERANK_TOPN", "18")),
             },
@@ -110,9 +109,9 @@ class EvalManifestGenerator:
         config.update(overrides)
 
         # Generate configuration hash
-        config_str = json.dumps(config, sort_keys=True)
+        config_str: Any = json.dumps(config, sort_keys=True)
         config_hash = hashlib.sha256(config_str.encode()).hexdigest()[:16]
-        return config_hash
+        config["config_hash"] = config_hash
 
         return config
 
@@ -204,7 +203,7 @@ class EvalManifestGenerator:
 
     def _get_data_checksum(self) -> str:
         """Get data checksum for reproducibility."""
-        eval_file = os.getenv("EVAL_CASES_FILE", "evals/datasets/eval_cases.jsonl")
+        eval_file: Any = os.getenv("EVAL_CASES_FILE", "evals/datasets/eval_cases.jsonl")
         if os.path.exists(eval_file):
             with open(eval_file, "rb") as f:
                 return hashlib.sha256(f.read()).hexdigest()[:16]
@@ -221,7 +220,7 @@ class EvalManifestGenerator:
         try:
             import subprocess
 
-            result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+            result: Any = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
             return result.stdout.strip()[:8] if result.returncode == 0 else "unknown"
         except Exception:
             return "unknown"
@@ -231,7 +230,7 @@ class EvalManifestGenerator:
         try:
             import subprocess
 
-            result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
+            result: Any = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
             return result.stdout.strip() if result.returncode == 0 else "unknown"
         except Exception:
             return "unknown"
@@ -254,9 +253,9 @@ class EvalManifestGenerator:
     def _mask_sensitive_data(self, data: str) -> str:
         """Mask sensitive data in configuration."""
         if "://" in data:
-            parts = data.split("://")
+            parts: Any = data.split("://")
             if len(parts) > 1:
-                return f"{parts[0]}://***masked***"
+                return f"{parts[0]}://***"
         return data
 
     def save_manifest(self, manifest: dict[str, Any], format: str = "yaml") -> str:
@@ -287,37 +286,37 @@ class EvalManifestGenerator:
                 raise ValueError(f"Unsupported file format: {filepath}")
 
 
-def main():
+def main() -> Any:
     """Main entry point for manifest generation."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate evaluation manifest")
+    parser: Any = argparse.ArgumentParser(description="Generate evaluation manifest")
     parser.add_argument("--output-dir", default="metrics/manifests", help="Output directory for manifests")
     parser.add_argument("--format", choices=["yaml", "json"], default="yaml", help="Output format")
     parser.add_argument("--config-file", help="Configuration file to load overrides from")
 
-    args = parser.parse_args()
+    args: Any = parser.parse_args()
 
     # Load configuration overrides if provided
     config_overrides = {}
     if args.config_file:
         with open(args.config_file) as f:
             if args.config_file.endswith(".yaml") or args.config_file.endswith(".yml"):
-                config_overrides = yaml.safe_load(f)
+                config_overrides: Any = yaml.safe_load(f)
             elif args.config_file.endswith(".json"):
-                config_overrides = json.load(f)
+                config_overrides: Any = json.load(f)
 
     # Generate manifest
     generator = EvalManifestGenerator(args.output_dir)
-    manifest = generator.generate_manifest(config_overrides)
+    manifest: Any = generator.generate_manifest(config_overrides)
 
     # Save manifest
-    filepath = generator.save_manifest(manifest, args.format)
+    filepath: Any = generator.save_manifest(manifest, args.format)
 
     print(f"✅ Evaluation manifest generated: {filepath}")
-    print(f"📋 Manifest ID: {manifest['metadata']['manifest_id']}")
-    print(f"🔧 Config Hash: {manifest['metadata']['config_hash']}")
-    print(f"📊 Data Checksum: {manifest['metadata']['data_checksum']}")
+    print(f"📋 Manifest ID: {manifest['manifest_id']}")
+    print(f"🔧 Config Hash: {manifest['system_config']['config_hash']}")
+    print(f"📊 Data Checksum: {manifest['data_config']['data_checksum']}")
 
     return filepath
 

@@ -46,28 +46,28 @@ class HealthGatedEvaluator:
         """Run all enabled health checks."""
         print("🔍 Running health checks...")
 
-        if self.health_checks.get("environment_validation", True):
+        if self.checks_enabled["env_validation"]:
             self._check_environment_validation()
 
-        if self.health_checks.get("index_presence", True):
+        if self.checks_enabled["index_present"]:
             self._check_index_presence()
 
-        if self.health_checks.get("token_budget", True):
+        if self.checks_enabled["token_budget"]:
             self._check_token_budget()
 
-        if self.health_checks.get("prefix_leakage", True):
+        if self.checks_enabled["prefix_leakage"]:
             self._check_prefix_leakage()
 
-        if self.health_checks.get("database_connectivity", True):
+        if self.checks_enabled["database_connectivity"]:
             self._check_database_connectivity()
 
-        if self.health_checks.get("model_availability", True):
+        if self.checks_enabled["model_availability"]:
             self._check_model_availability()
 
-        if self.health_checks.get("config_validation", True):
+        if self.checks_enabled["config_validation"]:
             self._check_config_validation()
 
-        if self.health_checks.get("resource_availability", True):
+        if self.checks_enabled["resource_availability"]:
             self._check_resource_availability()
 
         # Determine overall health status
@@ -209,9 +209,7 @@ class HealthGatedEvaluator:
 
         # Check rerank model if enabled
         if os.getenv("RERANK_ENABLE", "1") == "1":
-            from src.rag.reranker_env import get_reranker_model
-
-            rerank_model = get_reranker_model()
+            rerank_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
             try:
                 from sentence_transformers import CrossEncoder
 
@@ -329,13 +327,13 @@ def main():
 
     args = parser.parse_args()
 
-    # Disable specific checks if requested
     evaluator = HealthGatedEvaluator()
 
+    # Disable specific checks if requested
     if args.disable_check:
         for check in args.disable_check:
-            if check in evaluator.health_checks:
-                evaluator.health_checks[check] = False
+            if check in evaluator.checks_enabled:
+                evaluator.checks_enabled[check] = False
 
     if args.check_only:
         # Just run health checks
