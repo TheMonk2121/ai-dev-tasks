@@ -49,7 +49,7 @@ RERANK_ENABLE = _b("RERANK_ENABLE", "RERANKER_ENABLED", default=False)
 RERANK_INPUT_TOPK = _i("RERANK_INPUT_TOPK", "RERANK_POOL", default=50)
 RERANK_KEEP = _i("RERANK_KEEP", "RERANK_TOPN", default=12)
 RERANK_BATCH = _i("RERANK_BATCH", default=8)
-RERANKER_MODEL = _s("RERANKER_MODEL", default="cross-encoder/ms-marco-MiniLM-L-6-v2")
+RERANKER_MODEL = _s("RERANKER_MODEL", default="BAAI/bge-reranker-v2-m3")
 TORCH_DEVICE = _device(_s("TORCH_DEVICE", default="auto"))
 
 RERANK_CACHE_BACKEND = _s("RERANK_CACHE_BACKEND", default="sqlite")  # sqlite|postgres

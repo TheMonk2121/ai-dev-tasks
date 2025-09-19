@@ -15,7 +15,7 @@ class EvalSettings(BaseSettings):
     EVAL_CONCURRENCY: int = 8
 
     # Reranker defaults
-    RERANKER_MODEL: str = "bge-reranker-v2"
+    RERANKER_MODEL: str = "BAAI/bge-reranker-v2-m3"
     RERANKER_TOPK: int = 40
     RERANKER_KEEP: int = 10
     RERANKER_DEVICE: str | None = None

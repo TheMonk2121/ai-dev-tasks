@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from datetime import datetime
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Any, Literal, override
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, ConfigDict, Field, SecretStr, computed_field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 from pydantic.functional_validators import AfterValidator
 
 if TYPE_CHECKING:
@@ -16,9 +15,9 @@ NonEmptyStr = Annotated[str, AfterValidator(lambda s: s if s.strip() else (_ for
 
 
 class RerankerConfig(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid")
     enable: bool = Field(default=True)
-    model: NonEmptyStr = "bge-reranker-v2"
+    model: NonEmptyStr = "BAAI/bge-reranker-v2-m3"
     input_topk: int = 40
     keep: int = 10
     batch: int = 16
@@ -27,7 +26,7 @@ class RerankerConfig(BaseModel):
 
 
 class ContextChunk(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid")
     source_id: NonEmptyStr
     text: NonEmptyStr
     start: int | None = None
@@ -35,7 +34,7 @@ class ContextChunk(BaseModel):
 
 
 class RetrievalCandidate(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid")
     doc_id: NonEmptyStr
     score: float
     title: str | None = None
@@ -44,7 +43,7 @@ class RetrievalCandidate(BaseModel):
 
 
 class CaseResult(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid")
     case_id: NonEmptyStr
     mode: Literal["rag", "baseline", "oracle"]
     query: NonEmptyStr
@@ -59,7 +58,7 @@ class CaseResult(BaseModel):
 
 
 class EvaluationRun(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid")
     run_id: UUID = Field(default_factory=uuid4)
     started_at: datetime
     finished_at: datetime | None = None
@@ -80,11 +79,13 @@ class EvaluationRun(BaseModel):
     def n_cases(self) -> int:
         return len(self.cases)
 
+    @override
     def model_dump(self, **kwargs: Any) -> dict[str, Any]:
         """Override to exclude computed fields from serialization."""
         kwargs.setdefault("exclude", set()).add("n_cases")
         return super().model_dump(**kwargs)
 
+    @override
     def model_dump_json(self, **kwargs: Any) -> str:
         """Override to exclude computed fields from JSON serialization."""
         kwargs.setdefault("exclude", set()).add("n_cases")
@@ -93,9 +94,8 @@ class EvaluationRun(BaseModel):
 
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import field_validator, model_validator
 
 # ---- Enumerations -----------------------------------------------------------
 
@@ -164,18 +164,18 @@ class GoldCase(BaseModel):
     # --- Aliases / normalization bridge (legacy fields) ---
     # We accept extra and remap in a root validator.
     class Config:
-        validate_by_name = True
-        str_strip_whitespace = False  # Don't strip whitespace to preserve carriage returns
-        validate_assignment = True
-        extra = "allow"  # tolerate legacy keys; we'll normalize below
+        validate_by_name: bool = True
+        str_strip_whitespace: bool = False  # Don't strip whitespace to preserve carriage returns
+        validate_assignment: bool = True
+        extra: str = "allow"  # tolerate legacy keys; we'll normalize below
 
     @model_validator(mode="before")
     @classmethod
     def _normalize_legacy(cls, values: dict[str, Any]) -> dict[str, Any]:
         # id aliases
-        values.setdefault("id", values.get("case_id", values.get("query_id")))
+        _ = values.setdefault("id", values.get("case_id", values.get("query_id")))
         # query aliases
-        values.setdefault("query", values.get("question"))
+        _ = values.setdefault("query", values.get("question"))
         # tags aliases
         if "tags" not in values and "tag" in values:
             values["tags"] = values["tag"]
@@ -216,8 +216,8 @@ class GoldCase(BaseModel):
     def _mode_requirements(self) -> GoldCase:
         mode: Mode = self.mode
         has_reader = bool(self.gt_answer)
-        has_retr = bool(self.expected_files or self.globs)
-        has_dec = bool(self.expected_decisions)
+        _ = bool(self.expected_files or self.globs)  # has_retr
+        _ = bool(self.expected_decisions)  # has_dec
 
         if mode == Mode.reader and not has_reader:
             raise ValueError(f"{self.id}: reader mode requires gt_answer")

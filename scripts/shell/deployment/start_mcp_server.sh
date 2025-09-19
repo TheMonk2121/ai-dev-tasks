@@ -6,8 +6,8 @@ set -e
 
 echo "🚀 Starting MCP Memory Server..."
 
-# Get the project root
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Get the project root (go up from scripts/shell/deployment to project root)
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$PROJECT_ROOT"
 
 # Use uv-managed environment
@@ -40,4 +40,4 @@ echo "📡 Health check: http://localhost:$PORT/health"
 echo "🔧 MCP tools: http://localhost:$PORT/mcp/tools"
 echo ""
 
-uv run python scripts/mcp_memory_server.py --port "$PORT"
+uv run python scripts/utilities/memory/mcp_memory_server.py --port "$PORT"
