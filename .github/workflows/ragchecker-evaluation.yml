@@ -4,33 +4,33 @@ on:
   push:
     branches: [main]
     paths:
-      - 'scripts/ragchecker_*.py'
-      - 'tests/test_ragchecker_*.py'
-      - 'metrics/baseline_evaluations/**'
-      - '400_guides/400_ragchecker-*.md'
+      - "scripts/ragchecker_*.py"
+      - "tests/test_ragchecker_*.py"
+      - "metrics/baseline_evaluations/**"
+      - "400_guides/400_ragchecker-*.md"
   pull_request:
     branches: [main]
     paths:
-      - 'scripts/ragchecker_*.py'
-      - 'tests/test_ragchecker_*.py'
-      - 'metrics/baseline_evaluations/**'
-      - '400_guides/400_ragchecker-*.md'
+      - "scripts/ragchecker_*.py"
+      - "tests/test_ragchecker_*.py"
+      - "metrics/baseline_evaluations/**"
+      - "400_guides/400_ragchecker-*.md"
   workflow_dispatch:
   schedule:
     # Run daily at 2 AM UTC
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
 jobs:
   ragchecker-evaluation:
     runs-on: ubuntu-latest
     name: RAGChecker Evaluation Pipeline
     env:
-      ENFORCE_GATES: "false"  # soft gates (warnings only)
+      ENFORCE_GATES: "false" # soft gates (warnings only)
       EVAL_MODE: "bedrock_only"
       CACHE_DISABLED: "1"
-      HF_HOME: ${{ runner.temp }}/hf
-      SENTENCE_TRANSFORMERS_HOME: ${{ runner.temp }}/hf
-      TORCH_HOME: ${{ runner.temp }}/hf
+      HF_HOME: /tmp/hf
+      SENTENCE_TRANSFORMERS_HOME: /tmp/hf
+      TORCH_HOME: /tmp/hf
 
     steps:
       - name: Checkout
@@ -65,7 +65,7 @@ jobs:
       - name: Cache HuggingFace models
         uses: actions/cache@v4
         with:
-          path: ${{ runner.temp }}/hf
+          path: /tmp/hf
           key: ${{ runner.os }}-hf-${{ hashFiles('**/pyproject.toml', '**/uv.lock', '**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-hf-

@@ -102,17 +102,58 @@ def ingest_evaluation_bundle(bundle_dir: Path, dsn: str, commit: str, ctime: str
                 file_id = file_result["id"]
                 inserted_files += 1
 
-                # Simple symbol extraction (functions and classes)
+                # Enhanced symbol extraction (functions and classes with proper body detection)
                 symbols = []
                 lines = text.split("\n")
+
+                def find_function_end(start_line: int) -> int:
+                    """Find the end line of a function by tracking indentation."""
+                    if start_line >= len(lines):
+                        return start_line
+
+                    # Get the indentation of the function definition
+                    def_line = lines[start_line - 1]
+                    def_indent = len(def_line) - len(def_line.lstrip())
+
+                    # Look for the next line with same or less indentation (not empty/comment)
+                    for i in range(start_line, len(lines)):
+                        line = lines[i]
+                        if not line.strip() or line.strip().startswith("#"):
+                            continue
+                        line_indent = len(line) - len(line.lstrip())
+                        if line_indent <= def_indent:
+                            return i
+                    return len(lines)
+
+                def find_class_end(start_line: int) -> int:
+                    """Find the end line of a class by tracking indentation."""
+                    if start_line >= len(lines):
+                        return start_line
+
+                    # Get the indentation of the class definition
+                    class_line = lines[start_line - 1]
+                    class_indent = len(class_line) - len(class_line.lstrip())
+
+                    # Look for the next line with same or less indentation (not empty/comment)
+                    for i in range(start_line, len(lines)):
+                        line = lines[i]
+                        if not line.strip() or line.strip().startswith("#"):
+                            continue
+                        line_indent = len(line) - len(line.lstrip())
+                        if line_indent <= class_indent:
+                            return i
+                    return len(lines)
+
                 for i, line in enumerate(lines, 1):
                     line = line.strip()
                     if line.startswith("def ") and "(" in line:
                         name = line.split("(")[0].replace("def ", "").strip()
-                        symbols.append(("function", name, i, i))
+                        end_line = find_function_end(i)
+                        symbols.append(("function", name, i, end_line))
                     elif line.startswith("class ") and ":" in line:
                         name = line.split(":")[0].replace("class ", "").strip()
-                        symbols.append(("class", name, i, i))
+                        end_line = find_class_end(i)
+                        symbols.append(("class", name, i, end_line))
 
                 # Insert symbols
                 for symbol_type, symbol_name, start_line, end_line in symbols:
@@ -129,7 +170,7 @@ def ingest_evaluation_bundle(bundle_dir: Path, dsn: str, commit: str, ctime: str
                         symbol_id = symbol_result["id"]
                         inserted_symbols += 1
 
-                        # Simple chunking (split by functions/classes)
+                        # Enhanced chunking (split by functions/classes with full body)
                         chunk_content = f"{symbol_type} {symbol_name}\n" + "\n".join(lines[start_line - 1 : end_line])
 
                         _ = cur.execute(

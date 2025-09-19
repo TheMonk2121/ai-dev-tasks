@@ -3,7 +3,7 @@
 # test-fast: Run quick gate tests in host venv (macOS)
 # test-full: Run full test suite in container venv (Linux)
 
-.PHONY: test-fast test-full setup-host setup-container clean dsn-resolver-info
+.PHONY: test-fast test-full setup-host setup-container clean dsn-resolver-info validate-github-actions
 
 # Environment variables for deterministic runs
 export RAGCHECKER_BYPASS_CLI=1
@@ -76,6 +76,25 @@ dsn-resolver-info:
 	@echo "Yup—everything funnels through resolve_dsn in src/common/db_dsn.py:93, which normalizes DATABASE_URL/POSTGRES_DSN, guards against mismatches, applies SSL/pgBouncer policies, and logs usage."
 	@echo "Coverage lives in tests/db/test_dsn_resolver.py:1, so new code should import common.db_dsn.resolve_dsn() rather than touching env vars directly."
 
+# Validate GitHub Actions workflows for common context issues
+validate-github-actions:
+	@echo "Validating GitHub Actions workflows..."
+	@echo "Checking for problematic context usage..."
+	@if grep -r "\$${{ runner\.temp }}" .github/workflows/ --exclude="*.md" 2>/dev/null; then \
+		echo "❌ Found problematic \$${{ runner.temp }} usage"; \
+		echo "   Fix: Replace with /tmp/ or \$${{ env.RUNNER_TEMP }}"; \
+		echo "   Example: HF_HOME: /tmp/hf"; \
+		exit 1; \
+	fi
+	@if grep -r "\$${{ env\.RUNNER_TEMP }}" .github/workflows/ --exclude="*.md" 2>/dev/null; then \
+		echo "❌ Found problematic \$${{ env.RUNNER_TEMP }} usage"; \
+		echo "   Fix: Replace with /tmp/ for better compatibility"; \
+		echo "   Example: HF_HOME: /tmp/hf"; \
+		exit 1; \
+	fi
+	@echo "✅ GitHub Actions workflows validated successfully"
+	@echo "   All context usage follows project standards"
+
 # Help target
 help:
 	@echo "Available targets:"
@@ -90,4 +109,5 @@ help:
 	@echo "  eval-mock        - Run evaluation with mock profile"
 	@echo "  test-profiles    - Run profile configuration tests"
 	@echo "  dsn-resolver-info - Show centralized DSN resolver guidance"
+	@echo "  validate-github-actions - Validate GitHub Actions workflows for context issues"
 	@echo "  help             - Show this help message"
