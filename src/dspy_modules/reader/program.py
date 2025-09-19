@@ -1,4 +1,5 @@
 import re
+from typing import Any
 
 import dspy
 
@@ -6,9 +7,9 @@ import dspy
 try:
     from scripts.observability import get_logfire  # type: ignore
 
-    _LOGFIRE = get_logfire()
+    logfire = get_logfire()
 except Exception:  # pragma: no cover - best-effort only
-    _LOGFIRE = None
+    logfire = None
 
 from .signatures import ExtractSpan
 
@@ -16,47 +17,51 @@ OPS_TAGS = {"meta_ops", "ops_health"}
 
 
 def _normalize(ans: str, tag: str) -> str:
-    a: Any = ans.strip()
-    if a.upper() == "NOT_ANSWERABLE":
+    normalized: Any = ans.strip()
+    if normalized.upper() == "NOT_ANSWERABLE":
         return "NOT_ANSWERABLE"
     # Tag-aware canonicalization helps F1 scoring without hallucination
     if tag in OPS_TAGS:
-        a: Any = a.replace("\\\\", "/")
-        a: Any = re.sub(r"\s+", " ", a)
-        a: Any = re.sub(r"^`|`$", "", a)
-    return a
+        normalized = normalized.replace("\\\\", "/")
+        normalized = re.sub(r"\s+", " ", normalized)
+        normalized = re.sub(r"^`|`$", "", normalized)
+    return normalized
 
 
 class ExtractiveReader(dspy.Module):
     def __init__(self, answerable_threshold: float = 0.12):
         super().__init__()
         # Force completion adapter to avoid ChatAdapter type check issues
+        self.extract: Any = dspy.Predict(ExtractSpan)  # Default fallback
+
         try:
-            from dspy.adapters import CompletionAdapter
+            # Try to import CompletionAdapter - may not be available in all DSPy versions
+            import importlib
 
-            # Ensure global DSPy is configured with completion adapter
-            try:
-                dspy.configure(adapter=CompletionAdapter())
-            except Exception:
-                pass  # May already be configured
+            adapters_module = importlib.import_module("dspy.adapters")
+            CompletionAdapter = getattr(adapters_module, "CompletionAdapter", None)
 
-            self.extract = dspy.Predict(ExtractSpan, adapter=CompletionAdapter())
+            if CompletionAdapter is not None:
+                # Ensure global DSPy is configured with completion adapter
+                try:
+                    dspy.configure(adapter=CompletionAdapter())
+                except Exception:
+                    pass  # May already be configured
+
+                self.extract = dspy.Predict(ExtractSpan, adapter=CompletionAdapter())
         except Exception:
-            # Fallback to default if adapter not available
-            self.extract: Any = dspy.Predict(ExtractSpan)
+            pass  # Keep default fallback
         self.answerable_threshold: Any = answerable_threshold
 
-    def forward() -> Any:
+    def forward(self, question: str, passages: list[str], tag: str = "") -> Any:
         # Keep context surgical: 4–6 most relevant sentences + visible path/title
         joined = "\n".join(passages[:6])
         try:
             pred: Any = self.extract(question=question, context=joined)
         except Exception as e:  # Defensive: keep evaluation running even if adapter path throws
-            if _LOGFIRE is not None:
+            if logfire is not None:
                 try:
-                    _LOGFIRE.warning(
-                        "reader.predict.error", error=str(e), tag=tag, qlen=len(question), clen=len(joined)
-                    )
+                    logfire.warning("reader.predict.error", error=str(e), tag=tag, qlen=len(question), clen=len(joined))
                 except Exception:
                     pass
             # Minimal safe fallback

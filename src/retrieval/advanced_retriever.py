@@ -324,8 +324,9 @@ class AdvancedRetriever:
                         all_docs[doc_id] = content
 
                     # Convert results to (doc_id, score) format for fusion
-                    bm25_scores: list[tuple[str, float]] = [(row[0], float(row[5])) for row in bm25_results]
-                    vector_scores: list[tuple[str, float]] = [(row[0], float(row[5])) for row in vector_results]
+                    # row[6] is the score (rank/similarity), row[5] is path_tsv
+                    bm25_scores: list[tuple[str, float]] = [(row[0], float(row[6])) for row in bm25_results]
+                    vector_scores: list[tuple[str, float]] = [(row[0], float(row[6])) for row in vector_results]
 
                     # Apply prefiltering
                     filtered_bm25, filtered_vector = self.prefilter.prefilter_all(bm25_scores, vector_scores, all_docs)
@@ -379,13 +380,13 @@ class AdvancedRetriever:
 
                             results.append(
                                 {
-                                    "chunk_index": row[0],
-                                    "filename": row[1],
-                                    "content": row[2],
-                                    "metadata": row[3],
+                                    "chunk_index": original_row[0],
+                                    "filename": original_row[1],
+                                    "content": original_row[2],
+                                    "metadata": original_row[3],
                                     "score": score,
-                                    "file_path": row[4],
-                                    "path_tsv": row[5],
+                                    "file_path": original_row[4],
+                                    "path_tsv": original_row[5],
                                     "embedding": embedding,
                                 }
                             )

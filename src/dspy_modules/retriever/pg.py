@@ -38,8 +38,8 @@ def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, A
         return []
     sql = """
     SELECT
-      dc.chunk_id,
-      dc.filename,
+      dc.chunk_index AS chunk_id,
+      d.file_name AS filename,
       d.file_path,
       dc.embedding,
       dc.embedding_text,
@@ -50,9 +50,9 @@ def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, A
       100.0::float AS score
     FROM document_chunks dc
     LEFT JOIN documents d ON d.id = dc.document_id
-    WHERE lower(replace(coalesce(dc.filename,''), '.md','')) = %(slug)s
+    WHERE lower(replace(coalesce(d.file_name,''), '.md','')) = %(slug)s
        OR d.file_path ILIKE '%%' || %(slug)s || '%%'
-    ORDER BY dc.chunk_id
+    ORDER BY dc.chunk_index
     LIMIT %(limit)s
     """
     params = {"slug": doc_slug.lower(), "limit": int(limit)}
@@ -179,8 +179,8 @@ def run_fused_query(
     ),
     base AS (
       SELECT
-        dc.chunk_id,
-        dc.filename,
+        dc.chunk_index AS chunk_id,
+        d.file_name AS filename,
         dc.short_tsv,
         dc.title_tsv,
         dc.content_tsv,
@@ -321,8 +321,8 @@ def run_fused_query(
             ),
             base AS (
               SELECT
-                dc.chunk_id,
-                dc.filename,
+                dc.chunk_index AS chunk_id,
+                d.file_name AS filename,
                 dc.short_tsv,
                 dc.title_tsv,
                 dc.content_tsv,
