@@ -24,9 +24,12 @@ try:
     logfire = get_logfire()
     try:
         _ = init_observability(service="ai-dev-tasks")
-    except Exception:
-        pass
-except Exception:
+    except Exception as e:
+        print(f"⚠️ Observability initialization failed: {e}")
+        print("   Continuing without observability - evaluation will run but without telemetry")
+except Exception as e:
+    print(f"⚠️ Observability import failed: {e}")
+    print("   Continuing without observability - evaluation will run but without telemetry")
     logfire = None
 
 # Import config logger
@@ -57,7 +60,8 @@ def main(argv: list[str] | None = None) -> int:
             config_data = config_logger.capture_full_config()
             print(f"🔧 Configuration captured: {result.get("key", "")
         except Exception as e:
-            print(f"⚠️  Config logging failed: {e}")
+            print(f"⚠️ Config logging failed: {e}")
+            print("   Continuing without config capture - evaluation will run but without configuration tracking")
 
     # Resolve profile and print banner if possible
     try:
@@ -73,9 +77,9 @@ def main(argv: list[str] | None = None) -> int:
             print(e)
             return 1
     except Exception as e:
-        print(f"Warning: Could not load config loader: {e}")
+        print(f"⚠️ Config loader failed: {e}")
+        print("   Continuing without config loader - evaluation will run but without configuration validation")
         # Keep going even if loader isn't available in this environment
-        pass
 
     # When invoked by the SSOT runner, we receive an --outdir argument.
     # In that case, run the official evaluator inline and write results there.
@@ -107,7 +111,9 @@ def main(argv: list[str] | None = None) -> int:
                 gold_file="evals/data/gold/v1/gold_cases.jsonl", limit=5  # Small test
             )
         except Exception as e:
-            print(f"⚠️ Real evaluation failed ({e})")
+            print(f"❌ CRITICAL: Real evaluation failed: {e}")
+            print("   This indicates a serious runtime issue with the evaluation system.")
+            print("   The SSOT fallback path cannot proceed without a working evaluator.")
             return 1
 
         # Write to requested outdir with the name the runner expects
@@ -140,7 +146,9 @@ def main(argv: list[str] | None = None) -> int:
             sys.path.insert(0, str(repo_root))
         from evals_300.tools.run import run as ssot_run
     except Exception as e:
-        print(f"Failed to import SSOT runner: {e}")
+        print(f"❌ CRITICAL: Failed to import SSOT runner: {e}")
+        print("   This indicates a serious configuration issue.")
+        print("   The evaluation system cannot proceed without the SSOT runner.")
         return 3
 
     suite = os.result.get("key", "")

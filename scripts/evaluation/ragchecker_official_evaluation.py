@@ -20,9 +20,12 @@ try:
     logfire = get_logfire()
     try:
         _ = init_observability(service="ai-dev-tasks")
-    except Exception:
-        pass
-except Exception:
+    except Exception as e:
+        print(f"⚠️ Observability initialization failed: {e}")
+        print("   Continuing without observability - evaluation will run but without telemetry")
+except Exception as e:
+    print(f"⚠️ Observability import failed: {e}")
+    print("   Continuing without observability - evaluation will run but without telemetry")
     logfire = None
 
 
@@ -51,9 +54,9 @@ def main(argv: list[str] | None = None) -> int:
             print(e)
             return 1
     except Exception as e:
-        print(f"Warning: Could not load config loader: {e}")
+        print(f"⚠️ Config loader failed: {e}")
+        print("   Continuing without config loader - evaluation will run but without configuration validation")
         # Keep going even if loader isn't available in this environment
-        pass
 
     # Profile-dispatch path: if --profile is provided (or EVAL_PROFILE is set), route to profile runner.
     try:
@@ -121,7 +124,9 @@ def main(argv: list[str] | None = None) -> int:
                 limit=5,  # Small test
             )
         except Exception as e:
-            print(f"⚠️ Real evaluation failed ({e})")
+            print(f"❌ CRITICAL: Real evaluation failed: {e}")
+            print("   This indicates a serious runtime issue with the evaluation system.")
+            print("   The SSOT fallback path cannot proceed without a working evaluator.")
             return 1
 
         # Write to requested outdir with the name the runner expects
