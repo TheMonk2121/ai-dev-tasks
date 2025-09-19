@@ -19,15 +19,10 @@ class Psycopg3Config:
     DEFAULT_CONNECTION_PARAMS: dict[str, Any] = {
         "application_name": "ai-dev-tasks",
         "connect_timeout": 10,
-        "command_timeout": 300,  # 5 minutes for complex vector queries
         "options": [
-            "-c default_transaction_isolation=read_committed",
-            "-c work_mem=256MB",  # Increased for vector operations
-            "-c maintenance_work_mem=1GB",  # For vector index maintenance
-            "-c effective_cache_size=32GB",  # Utilize 128GB RAM
-            "-c shared_buffers=8GB",  # Increased buffer pool
-            "-c random_page_cost=1.1",  # SSD optimization
-            "-c effective_io_concurrency=200",  # SSD parallel I/O
+            # Safe, per-session settings only
+            "-c statement_timeout=300000",  # 5 minutes
+            "-c work_mem=256MB",
         ],
     }
 
@@ -44,8 +39,12 @@ class Psycopg3Config:
         params = cls.DEFAULT_CONNECTION_PARAMS.copy()
         # Add vector optimizations for vector-heavy roles
         if role in ["ltst", "retrieval", "vector"]:
-            vector_options = [f"-c {k}={v}" for k, v in cls.VECTOR_OPTIMIZATIONS.items()]
-            params["options"].extend(vector_options)
+            # Skip adding vector-specific GUCs here to avoid superuser-only settings.
+            pass
+
+        # psycopg expects a single options string; normalize if provided as list
+        if isinstance(params.get("options"), list):
+            params["options"] = " ".join(params["options"])  # type: ignore[assignment]
 
         # Apply overrides
         params.update(overrides)

@@ -59,9 +59,9 @@ class DatabaseTelemetryLogger:
     def __enter__(self: Any):
         """Context manager entry."""
         try:
-            # Connection will be created on demand using Psycopg3Config
-            self.connection = None
-            self.cursor: Any = None
+            # Establish connection and cursor using project-standard config
+            self.connection = Psycopg3Config.create_connection("default")
+            self.cursor = self.connection.cursor()
             return self
         except Exception as e:
             print(f"⚠️  Database connection failed: {e}")

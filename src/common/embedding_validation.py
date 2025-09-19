@@ -5,10 +5,11 @@ Prevents silent failures from dimension mismatches between DB and model.
 """
 
 # Add project paths
+import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
-from src.common.psycopg3_config import Psycopg3Config
+# from src.common.psycopg3_config import Psycopg3Config  # Unused import
 
 
 def _pg_vector_dim(dsn: str, table: str = "document_chunks", column: str = "embedding") -> int:
@@ -23,18 +24,35 @@ def _pg_vector_dim(dsn: str, table: str = "document_chunks", column: str = "embe
         Vector dimension, or -1 if not found
     """
     try:
-        with Psycopg3Config.get_cursor("default") as cur:
-            # atttypmod directly contains the dimension for vector columns
-            q = """
-            SELECT a.atttypmod AS dim
-            FROM pg_attribute a
-            JOIN pg_class c ON a.attrelid = c.oid
-            JOIN pg_namespace n ON c.relnamespace = n.oid
-            WHERE c.relname = %s AND a.attname = %s AND n.nspname = ANY (current_schemas(true));
-            """
-            cur.execute(q, (table, column))
-            row: Any = cur.fetchone()
-            return int(row[0]) if row and row[0] else -1
+        # Use the provided DSN to create a connection
+        import psycopg
+
+        with psycopg.connect(dsn) as conn:
+            with conn.cursor() as cur:
+                # Try to get vector dimension from existing data first
+                try:
+                    # Use SQL composition for dynamic table/column names
+                    from psycopg.sql import SQL, Identifier
+
+                    query = SQL("SELECT vector_dims({}) FROM {} LIMIT 1").format(Identifier(column), Identifier(table))
+                    _ = cur.execute(query)
+                    row = cur.fetchone()
+                    if row and row[0]:
+                        return int(row[0])
+                except Exception:
+                    pass
+
+                # Fallback: get dimension from column definition
+                q = """
+                SELECT a.atttypmod AS dim
+                FROM pg_attribute a
+                JOIN pg_class c ON a.attrelid = c.oid
+                JOIN pg_namespace n ON c.relnamespace = n.oid
+                WHERE c.relname = %s AND a.attname = %s AND n.nspname = ANY (current_schemas(true));
+                """
+                _ = cur.execute(q, (table, column))
+                row = cur.fetchone()
+                return int(row[0]) if row and row[0] else -1
     except Exception as e:
         print(f"Warning: Could not determine vector dimension: {e}")
         return -1
@@ -60,8 +78,8 @@ def assert_embedding_dim(
     if actual != expected_dim:
         raise RuntimeError(
             f"Embedding dimension mismatch: DB={actual}, config={expected_dim}. "
-            "Fix before running. "
-            f"Table: {table}, Column: {column}"
+            + "Fix before running. "
+            + f"Table: {table}, Column: {column}"
         )
 
 
