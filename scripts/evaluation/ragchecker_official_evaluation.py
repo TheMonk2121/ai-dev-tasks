@@ -13,6 +13,22 @@ import sys
 from pathlib import Path
 from typing import Any
 
+# Load .env early to ensure environment variables are available
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(override=False)  # read .env into process env once
+except Exception:
+    pass
+
+# Bootstrap imports and observability
+try:
+    from ._bootstrap import init_obs
+
+    init_obs()
+except Exception:
+    pass
+
 # Setup observability if available
 try:
     from scripts.monitoring.observability import get_logfire, init_observability
