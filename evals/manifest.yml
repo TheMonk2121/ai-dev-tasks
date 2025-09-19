@@ -1,0 +1,83 @@
+# Evaluation System Manifest
+# Defines all files required for the evaluation system to function
+# Used by export script to create a complete bundle for ingestion
+
+entrypoints:
+  clean_dspy:
+    description: "Main DSPy evaluation system"
+    code:
+      # Core evaluator (actual implementation)
+      - evals/scripts/evaluation/dspy_evaluator.py
+      - evals/scripts/evaluation/core/**
+
+      # Wrapper/entry points
+      - scripts/evaluation/clean_dspy_evaluator.py
+      - scripts/evaluation/ragchecker_official_evaluation.py
+      - scripts/evaluation/__main__.py
+      - scripts/evaluation/__init__.py
+
+      # Profile runners
+      - scripts/evaluation/profiles/**
+
+      # DSPy modules (retrieval/reader system)
+      - src/dspy_modules/**
+
+      # RAG system components
+      - src/rag/**
+      - src/retrieval/**
+
+      # Configuration and utilities
+      - src/common/**
+      - src/utils/**
+      - src/config/**
+      - src/schemas/**
+
+      # Supporting modules
+      - src/llm/**
+      - src/monitoring/**
+      - src/observability/**
+      - src/telemetry/**
+
+    config:
+      # Profile configurations
+      - evals/configs/profiles/**
+      - evals/stable_build/config/**
+
+      # Environment files
+      - evals/configs/*.env
+      - evals/stable_build/config/*.env
+
+    data:
+      # Test data
+      - evals/data/gold/v1/**
+      - evals/data/real/v1/**
+      - evals/datasets/**
+
+    # output: excluded - these are artifacts, not source code
+
+  # Additional entrypoints can be added here
+  # e.g., synthetic_smoke, baseline_check, etc.
+
+# Global exclusions (applied to all entrypoints)
+exclusions:
+  - "**/__pycache__/**"
+  - "**/.pytest_cache/**"
+  - "**/node_modules/**"
+  - "**/.venv/**"
+  - "**/venv/**"
+  - "**/*.pyc"
+  - "**/*.pyo"
+  - "**/.DS_Store"
+  - "**/Thumbs.db"
+
+# File patterns to include
+include_patterns:
+  - "**/*.py"
+  - "**/*.yml"
+  - "**/*.yaml"
+  - "**/*.env"
+  - "**/*.json"
+  - "**/*.jsonl"
+  - "**/*.md"
+  - "**/*.txt"
+  - "**/*.sql"
