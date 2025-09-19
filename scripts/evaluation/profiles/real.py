@@ -5,7 +5,7 @@ from typing import Any
 from . import ProfileRunner
 
 
-def _run_real(argv: list[str]) -> int:
+def _run_real(_argv: list[str]) -> int:  # Unused parameter
     try:
         from scripts.evaluation.clean_dspy_evaluator import CleanDSPyEvaluator  # type: ignore
     except Exception as exc:  # pragma: no cover
@@ -29,5 +29,3 @@ RUNNER = ProfileRunner(
     description="Full retrieval + reader on project data",
     run=_run_real,
 )
-
-

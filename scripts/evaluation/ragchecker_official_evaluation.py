@@ -114,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             # Run real evaluation with gold test cases
             results = evaluator.run_evaluation(
-                gold_file="evals/data/gold/v1/gold_cases.jsonl",
+                gold_file="evals/data/gold/v1/gold_cases_121.jsonl",
                 limit=5,  # Small test
             )
         except Exception as e:
@@ -132,30 +132,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[wrapper] Wrote results → {out_path}")
         return 0
 
-    print("[DEPRECATION] Use evals_300.tools.run; forwarding…")
-
-    # Forward into SSOT runner programmatically (avoid CLI parsing conflicts) for standalone calls
-    try:
-        # Ensure repository root is on sys.path so 'evals_300' is importable
-        repo_root = Path(__file__).resolve().parents[2]
-        if str(repo_root) not in sys.path:
-            sys.path.insert(0, str(repo_root))
-        from evals_300.tools.run import run as ssot_run
-    except Exception as e:
-        print(f"Failed to import SSOT runner: {e}")
-        return 3
-
-    suite = os.environ.get("EVAL_SUITE", "300_core")
-    pass_id = os.environ.get("EVAL_PASS", "reranker_ablation_suite")
-
-    try:
-        conc_env = os.environ.get("EVAL_CONCURRENCY")
-        concurrency = int(conc_env) if conc_env else None
-    except ValueError:
-        concurrency = None
-
-    _ = ssot_run(suite=suite, pass_id=pass_id, out=None, seed=None, concurrency=concurrency)
-    return 0
+    print("❌ Profile dispatch failed and SSOT fallback is no longer available.")
+    print("   The evaluation system now uses profile-based dispatch only.")
+    print("   Available profiles: gold, real, mock")
+    return 3
 
 
 # --- Minimal shims for compatibility ---

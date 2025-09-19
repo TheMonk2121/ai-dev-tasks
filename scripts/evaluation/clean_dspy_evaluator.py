@@ -7,7 +7,7 @@ the historic import path `scripts.evaluation.clean_dspy_evaluator`.
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import cast
 
 # Prefer absolute import from the vendored evals package
 try:
@@ -19,13 +19,13 @@ try:
     )
 except Exception as _e:  # Fallback: re-raise with clearer context
     raise ImportError(
-        "Failed to import evals.scripts.evaluation.clean_dspy_evaluator. "
-        "Ensure the 'evals' package directory exists and is on sys.path."
+        "Failed to import evals.scripts.evaluation.dspy_evaluator. "
+        + "Ensure the 'evals' package directory exists and is on sys.path."
     ) from _e
 
 
 # Re-export primary symbols used by tests and callers with explicit typing
-CleanDSPyEvaluator: type[object] = cast(type[object], _CleanDSPyEvaluator)
+CleanDSPyEvaluator = _CleanDSPyEvaluator
 
 
 def main() -> None:

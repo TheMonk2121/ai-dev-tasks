@@ -5,7 +5,7 @@ from typing import Any
 from . import ProfileRunner
 
 
-def _run_gold(argv: list[str]) -> int:
+def _run_gold(_argv: list[str]) -> int:  # Unused parameter
     # Defer heavy imports to runtime
     try:
         from scripts.evaluation.clean_dspy_evaluator import CleanDSPyEvaluator  # type: ignore
@@ -16,7 +16,7 @@ def _run_gold(argv: list[str]) -> int:
     evaluator: Any = CleanDSPyEvaluator()
     try:
         _ = evaluator.run_evaluation(
-            gold_file="evals/data/gold/v1/gold_cases.jsonl",
+            gold_file="evals/data/gold/v1/gold_cases_121.jsonl",
             limit=None,
         )
     except Exception as exc:
@@ -30,5 +30,3 @@ RUNNER = ProfileRunner(
     description="Curated gold cases; baseline and PR gates",
     run=_run_gold,
 )
-
-
