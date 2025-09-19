@@ -11,3 +11,34 @@ applyIntelligently: true
 - Use update_memory for important project decisions
 - Run linter checks before committing changes
 </repo_specific_rule>
+
+## Cursor Commands (Project)
+
+### Memory
+- memory-remember — record a conversation turn in MCP memory
+  - runs: make mem-add-turn U="${prompt:user_input}" S="${prompt:system_output}" FO="${prompt:file_ops}" TID="${prompt:thread_id}"
+
+- memory-refresh — query MCP memory (LTST, Cursor, Go CLI)
+  - runs: curl POST /mcp/tools/call tool_name=query_memory (prompts for query/role)
+
+### Eval Smoke (fast, unpinned)
+- eval-smoke-mock — harness mock profile
+  - runs: UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile mock
+
+- eval-smoke-gold — harness gold profile (limit recommended via CI command)
+  - runs: env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold --limit 5
+
+- eval-smoke-real — harness real profile (limit recommended if added)
+  - runs: env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile real
+
+### Eval Full (unpinned)
+- eval-full-gold — full gold profile run
+  - runs: env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile gold
+
+- eval-full-real — full real profile run
+  - runs: env -u INGEST_RUN_ID -u CHUNK_VARIANT UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile real
+
+Notes:
+- All Python invocations must use uv (`UV_PROJECT_ENVIRONMENT=.venv uv run ...`).
+- Use strict, unpinned env for evals (unset INGEST_RUN_ID/CHUNK_VARIANT).
+- MCP Memory Server must be running at http://localhost:3000 for memory tools.
