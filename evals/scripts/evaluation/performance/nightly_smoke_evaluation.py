@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 Nightly Smoke Evaluation System
@@ -6,12 +5,12 @@ Runs comprehensive smoke tests and exports deltas and top regressions.
 """
 
 import json
-from typing import Any
 import os
 import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -65,9 +64,9 @@ class NightlySmokeEvaluator:
         start_time = time.time()
 
         # Run all smoke test categories
-        for category, config in self.\1.items()
-            print(f"\n🧪 Running {category} tests: {result.get("key", "")
-            self.results[category] = self._run_category_tests(category, result.get("key", "")
+        for category, config in self.test_categories.items():
+            print(f"\n🧪 Running {category} tests: {config.get('description', 'No description')}")
+            self.results[category] = self._run_category_tests(category, config)
 
         # Calculate deltas and regressions
         self._calculate_deltas()
@@ -98,16 +97,20 @@ class NightlySmokeEvaluator:
         """Run tests for a specific category."""
         category_results = {"category": category, "tests": {}, "status": "pass", "errors": [], "warnings": []}
 
+        failures = []
+        failed_tests = []
+        warnings = []
+
         for test in tests:
             print(f"  🔍 Running {test}...")
             test_result = self._run_single_test(category, test)
-            result.get("key", "")
+            category_results["tests"][test] = test_result
 
-            if result.get("key", "")
-                result.get("key", "")
-                result.get("key", "")
-            elif result.get("key", "")
-                result.get("key", "")
+            if test_result.get("status") == "fail":
+                failures.append(test_result.get("error", "Unknown error"))
+                failed_tests.append(test)
+            elif test_result.get("status") == "warn":
+                warnings.append(test_result.get("warning", "Unknown warning"))
 
         return category_results
 
@@ -226,7 +229,7 @@ class NightlySmokeEvaluator:
             if os.getenv("RERANK_ENABLE", "1") == "1":
                 from sentence_transformers import CrossEncoder
 
-                rerank_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
+                rerank_model = os.getenv("RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
                 reranker = CrossEncoder(rerank_model)
                 test_score = reranker.predict([("query", "document")])
 
@@ -456,8 +459,8 @@ class NightlySmokeEvaluator:
 
     def _determine_overall_status(self) -> str:
         """Determine overall evaluation status."""
-        for category_result in self.\1.values()
-            if result.get("key", "")
+        for category_result in self.results.values():
+            if category_result.get("status") == "fail":
                 return "fail"
         return "pass"
 
@@ -465,11 +468,11 @@ class NightlySmokeEvaluator:
         """Generate recommendations based on results."""
         recommendations = []
 
-        for category, result in self.\1.items()
-            if result.get("key", "")
-                recommendations.append(f"Fix {category} failures: {', '.join(result.get("key", "")
-            elif result.get("key", "")
-                recommendations.append(f"Address {category} warnings: {', '.join(result.get("key", "")
+        for category, result in self.results.items():
+            if result.get("status") == "fail":
+                recommendations.append(f"Fix {category} failures: {', '.join(result.get('errors', []))}")
+            elif result.get("status") == "warn":
+                recommendations.append(f"Address {category} warnings: {', '.join(result.get('warnings', []))}")
 
         if not recommendations:
             recommendations.append("All smoke tests passed - system healthy")
@@ -491,42 +494,42 @@ class NightlySmokeEvaluator:
         print("=" * 60)
 
         # Overall status
-        status = result.get("key", "")
+        status = self._determine_overall_status()
         status_emoji = "✅" if status == "pass" else "❌"
         print(f"{status_emoji} Overall Status: {status.upper()}")
-        print(f"⏱️ Duration: {result.get("key", "")
+        print(f"⏱️ Duration: {self.duration:.2f}s")
 
         # Category results
         print("\n📊 Category Results:")
-        for category, result in result.get("key", "")
-            status_emoji = "✅" if result.get("key", "")
-            print(f"  {status_emoji} {category}: {result.get("key", "")
+        for category, result in self.results.items():
+            status_emoji = "✅" if result.get("status") == "pass" else "❌"
+            print(f"  {status_emoji} {category}: {result.get('status', 'unknown')}")
 
-            if result.get("key", "")
-                for error in result.get("key", "")
+            if result.get("errors"):
+                for error in result.get("errors"):
                     print(f"    🔴 {error}")
 
-            if result.get("key", "")
-                for warning in result.get("key", "")
+            if result.get("warnings"):
+                for warning in result.get("warnings"):
                     print(f"    ⚠️ {warning}")
 
         # Deltas
-        if result.get("key", "")
+        if hasattr(self, "deltas") and self.deltas:
             print("\n📈 Deltas:")
-            deltas = result.get("key", "")
-            print(f"  • New failures: {result.get("key", "")
-            print(f"  • Resolved failures: {result.get("key", "")
+            deltas = self.deltas
+            print(f"  • New failures: {deltas.get('new_failures', 0)}")
+            print(f"  • Resolved failures: {deltas.get('resolved_failures', 0)}")
 
         # Regressions
-        if result.get("key", "")
+        if hasattr(self, "regressions") and self.regressions:
             print("\n📉 Top Regressions:")
-            for regression in result.get("key", "")
-                severity_emoji = "🔴" if result.get("key", "")
-                print(f"  {severity_emoji} {result.get("key", "")
+            for regression in self.regressions:
+                severity_emoji = "🔴" if regression.get("severity") == "high" else "🟡"
+                print(f"  {severity_emoji} {regression.get('test', 'Unknown test')}")
 
         # Recommendations
         print("\n💡 Recommendations:")
-        for recommendation in result.get("key", "")
+        for recommendation in self._generate_recommendations():
             print(f"  • {recommendation}")
 
         print("=" * 60)
@@ -548,15 +551,15 @@ def main():
         # Run specific category only
         if args.category in evaluator.smoke_tests:
             config = evaluator.smoke_tests[args.category]
-            result = evaluator._run_category_tests(args.category, result.get("key", "")
-            print(f"Category {args.category} result: {result.get("key", "")
+            result = evaluator._run_category_tests(args.category, config)
+            print(f"Category {args.category} result: {result.get('status', 'unknown')}")
         else:
             print(f"Unknown category: {args.category}")
             sys.exit(1)
     else:
         # Run full evaluation
         result = evaluator.run_nightly_smoke_evaluation()
-        sys.exit(0 if result.get("key", "")
+        sys.exit(0 if result.get("status") == "pass" else 1)
 
 
 if __name__ == "__main__":

@@ -1,16 +1,24 @@
+#!/usr/bin/env python3
 from __future__ import annotations
+
+import json
 import os
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-import json
-#!/usr/bin/env python3
+
+# Add the src directory to the path to import get_reranker_model
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "src"))
+
+from rag.reranker_env import get_reranker_model
+
 """
 Day-0 Sanity Checklist
 2-minute checklist to ensure production readiness before go-live.
 """
+
 
 class Day0SanityChecklist:
     """Day-0 sanity checklist for production go-live."""
@@ -28,37 +36,36 @@ class Day0SanityChecklist:
         # Check 1: Secrets loaded & scoped
         print("🔐 Check 1: Secrets loaded & scoped...")
         secrets_check = self._check_secrets_loaded()
-        self.result.get("key", "")
+        self.checklist_results["secrets"] = secrets_check
 
         # Check 2: Active pointer / run-id
         print("📍 Check 2: Active pointer / run-id...")
         pointer_check = self._check_active_pointer()
-        self.result.get("key", "")
+        self.checklist_results["pointer"] = pointer_check
 
         # Check 3: Cache stance
         print("💾 Check 3: Cache stance...")
         cache_check = self._check_cache_stance()
-        self.result.get("key", "")
+        self.checklist_results["cache"] = cache_check
 
         # Check 4: Reranker prewarm
         print("🔥 Check 4: Reranker prewarm...")
         reranker_check = self._check_reranker_prewarm()
-        self.result.get("key", "")
+        self.checklist_results["reranker"] = reranker_check
 
         # Check 5: Kill switch
         print("🚨 Check 5: Kill switch...")
         killswitch_check = self._check_kill_switch()
-        self.result.get("key", "")
+        self.checklist_results["killswitch"] = killswitch_check
 
         # Determine overall status
-        all_checks_passed = all(result.get("key", "")
-        self.result.get("key", "")
+        all_checks_passed = all(result.get("status") == "pass" for result in self.checklist_results.values())
 
         # Print summary
         print("\n📊 Day-0 Sanity Checklist Summary:")
-        for check_name, check_result in self.result.get("key", "")
-            status_emoji = "✅" if result.get("key", "")
-            print(f"  {status_emoji} {check_name}: {result.get("key", "")
+        for check_name, check_result in self.checklist_results.items():
+            status_emoji = "✅" if check_result.get("status") == "pass" else "❌"
+            print(f"  {status_emoji} {check_name}: {check_result.get('message', 'No message')}")
 
         if all_checks_passed:
             print("\n🎉 All checks passed - Ready for production go-live!")
@@ -78,7 +85,7 @@ class Day0SanityChecklist:
         missing_secrets = []
         present_secrets = []
 
-        for secret, description in \1.items()
+        for secret, description in required_secrets.items():
             if os.getenv(secret):
                 present_secrets.append(secret)
             else:
@@ -143,7 +150,7 @@ class Day0SanityChecklist:
     def _check_reranker_prewarm(self) -> dict[str, Any]:
         """Check reranker prewarm configuration."""
         reranker_prewarm = os.getenv("RERANKER_PREWARM", "0")
-        reranker_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
+        reranker_model = get_reranker_model()
 
         # Check if prewarm is enabled
         prewarm_enabled = reranker_prewarm == "1"
@@ -206,6 +213,7 @@ class Day0SanityChecklist:
         print("   export DEPLOY_DISABLE_NEW_CONFIG=1")
         print("   python3 scripts/test_kill_switch.py")
 
+
 def main():
     """Main entry point for Day-0 sanity checklist."""
     checklist = Day0SanityChecklist()
@@ -215,12 +223,14 @@ def main():
     checklist.print_verification_commands()
 
     # Exit with appropriate code
-    if result.get("key", "")
+    all_checks_passed = all(result.get("status") == "pass" for result in result.get("checks", {}).values())
+    if all_checks_passed:
         print("\n🎉 Day-0 sanity checklist passed - Ready for go-live!")
         sys.exit(0)
     else:
         print("\n⚠️ Day-0 sanity checklist failed - Address issues before go-live")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

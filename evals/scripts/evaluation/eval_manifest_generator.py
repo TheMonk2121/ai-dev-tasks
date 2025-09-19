@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 Evaluation Manifest Generator
@@ -6,7 +5,6 @@ Generates comprehensive run manifests for production-grade traceability and repr
 """
 
 import hashlib
-from typing import Any
 import json
 import os
 import sys
@@ -14,6 +12,7 @@ import time
 import uuid
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -60,15 +59,17 @@ class EvalManifestGenerator:
 
     def _capture_model_config(self) -> dict[str, Any]:
         """Capture model configuration and IDs."""
+        from src.rag.reranker_env import get_reranker_model
+
         return {
             "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
-            "rerank_model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
+            "rerank_model": get_reranker_model(),
             "generation_model": os.getenv("GENERATION_MODEL", "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"),
             "embedding_provider": os.getenv("EMBEDDING_PROVIDER", "local"),
             "generation_provider": os.getenv("GENERATION_PROVIDER", "bedrock"),
             "model_versions": {
                 "embedding": self._get_model_version(os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")),
-                "rerank": self._get_model_version(os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")),
+                "rerank": self._get_model_version(get_reranker_model()),
             },
         }
 
@@ -86,7 +87,7 @@ class EvalManifestGenerator:
             # Reranking Configuration
             "reranking": {
                 "enabled": os.getenv("RERANK_ENABLE", "1") == "1",
-                "model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
+                "model": os.getenv("RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"),
                 "pool_size": int(os.getenv("RERANK_POOL", "60")),
                 "topn": int(os.getenv("RERANK_TOPN", "18")),
             },
@@ -111,7 +112,7 @@ class EvalManifestGenerator:
         # Generate configuration hash
         config_str = json.dumps(config, sort_keys=True)
         config_hash = hashlib.sha256(config_str.encode()).hexdigest()[:16]
-        result.get("key", "")
+        return config_hash
 
         return config
 
@@ -132,9 +133,7 @@ class EvalManifestGenerator:
             "use_real_rag": os.getenv("RAGCHECKER_USE_REAL_RAG", "1") == "1",
             "bypass_cli": os.getenv("RAGCHECKER_BYPASS_CLI", "1") == "1",
             "disable_embeddings": os.getenv("RAGCHECKER_DISABLE_EMBEDDINGS", "1") == "1",
-            "progress_log": os.getenv(
-                "RAGCHECKER_PROGRESS_LOG", "evals/metrics/baseline_evaluations/progress.jsonl"
-            ),
+            "progress_log": os.getenv("RAGCHECKER_PROGRESS_LOG", "evals/metrics/baseline_evaluations/progress.jsonl"),
             "save_candidates_max": int(os.getenv("SAVE_CANDIDATES_MAX", "20")),
             "snapshot_max_items": int(os.getenv("SNAPSHOT_MAX_ITEMS", "50")),
         }
@@ -257,7 +256,7 @@ class EvalManifestGenerator:
         if "://" in data:
             parts = data.split("://")
             if len(parts) > 1:
-                return f"{result.get("key", "")
+                return f"{parts[0]}://***masked***"
         return data
 
     def save_manifest(self, manifest: dict[str, Any], format: str = "yaml") -> str:
@@ -316,9 +315,9 @@ def main():
     filepath = generator.save_manifest(manifest, args.format)
 
     print(f"✅ Evaluation manifest generated: {filepath}")
-    print(f"📋 Manifest ID: {result.get("key", "")
-    print(f"🔧 Config Hash: {result.get("key", "")
-    print(f"📊 Data Checksum: {result.get("key", "")
+    print(f"📋 Manifest ID: {manifest['metadata']['manifest_id']}")
+    print(f"🔧 Config Hash: {manifest['metadata']['config_hash']}")
+    print(f"📊 Data Checksum: {manifest['metadata']['data_checksum']}")
 
     return filepath
 
