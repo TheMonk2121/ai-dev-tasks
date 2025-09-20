@@ -249,8 +249,6 @@ class TestOptimizationReport:
         assert "few_shot_results" in report
         assert "optimization_summary" in report
         assert "recommendations" in report
-        assert result
-        assert result
 
     def test_generate_optimization_report_with_failures(self):
         """Test generate_optimization_report handles failed evaluations."""
@@ -284,8 +282,6 @@ class TestOptimizationReport:
         assert "few_shot_results" in report
         assert "optimization_summary" in report
         assert "recommendations" in report
-        assert result
-        assert result
 
     def test_generate_optimization_report_mixed_results(self):
         """Test generate_optimization_report with mixed success/failure results."""
@@ -319,8 +315,6 @@ class TestOptimizationReport:
         assert "few_shot_results" in report
         assert "optimization_summary" in report
         assert "recommendations" in report
-        assert result
-        assert result
 
 
 class TestEvalOptimizationSuiteCLI:
@@ -657,13 +651,13 @@ class TestEvalOptimizationSuiteIntegration:
             assert field in report
 
         # Check optimization summary structure
-        assert "performance_comparison" in result
-        assert "improvement_areas" in result
-        assert "optimization_score" in result
+        assert "performance_comparison" in report["optimization_summary"]
+        assert "improvement_areas" in report["optimization_summary"]
+        assert "optimization_score" in report["optimization_summary"]
 
         # Check recommendations structure
-        assert isinstance(result
-        assert len(result
+        assert isinstance(report["recommendations"], list)
+        assert len(report["recommendations"]) > 0
 
 
 if __name__ == "__main__":

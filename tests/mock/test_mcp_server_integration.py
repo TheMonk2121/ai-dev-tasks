@@ -58,33 +58,33 @@ class TestMCPServerIntegration:
             assert field in data, f"Missing required field: {field}"
 
         # Verify field types
-        assert isinstance(result
-        assert isinstance(result
-        assert isinstance(result
-        assert isinstance(result
-        assert isinstance(result
-        assert isinstance(result
+        assert isinstance(data["status"], str)
+        assert isinstance(data["timestamp"], str)
+        assert isinstance(data["version"], str)
+        assert isinstance(data["uptime"], int | float)
+        assert isinstance(data["memory_usage"], dict)
+        assert isinstance(data["database_status"], str)
 
     def test_mcp_tools_listing_workflow(self):
         """Test MCP tools listing workflow."""
-        response = self.result
+        response = self.client.get("/mcp/tools")
 
         assert response.status_code == 200
         data = response.json()
 
         # Verify tools structure
         assert "tools" in data
-        assert isinstance(result
-        assert len(result
+        assert isinstance(data["tools"], list)
+        assert len(data["tools"]) > 0
 
         # Verify each tool has required fields
-        for tool in result.items()
+        for tool in data["tools"]:
             assert "name" in tool
             assert "description" in tool
             assert "inputSchema" in tool
-            assert isinstance(result
-            assert isinstance(result
-            assert isinstance(result
+            assert isinstance(tool["name"], str)
+            assert isinstance(tool["description"], str)
+            assert isinstance(tool["inputSchema"], dict)
 
     def test_capture_user_query_workflow(self):
         """Test complete user query capture workflow."""
@@ -134,9 +134,9 @@ class TestMCPServerIntegration:
                         # Verify response structure
                         assert "success" in data
                         assert "data" in data
-                        assert result
-                        assert "turn_id" in result
-                        assert result
+                        assert data["success"] is True
+                        assert "turn_id" in data["data"]
+                        assert data["data"]["turn_id"] == "turn_789"
 
                         # Verify database calls
                         mock_ensure_thread.assert_called_once()
@@ -189,9 +189,9 @@ class TestMCPServerIntegration:
                     # Verify response structure
                     assert "success" in data
                     assert "data" in data
-                    assert result
-                    assert "turn_id" in result
-                    assert result
+                    assert data["success"] is True
+                    assert "turn_id" in data["data"]
+                    assert data["data"]["turn_id"] == "turn_456"
 
                     # Verify database calls
                     mock_insert_ai.assert_called_once()
@@ -258,11 +258,11 @@ class TestMCPServerIntegration:
                                 # Verify response structure
                                 assert "success" in data
                                 assert "data" in data
-                                assert result
-                                assert "query_turn_id" in result
-                                assert "response_turn_id" in result
-                                assert result
-                                assert result
+                                assert data["success"] is True
+                                assert "query_turn_id" in data["data"]
+                                assert "response_turn_id" in data["data"]
+                                assert data["data"]["query_turn_id"] == "turn_789"
+                                assert data["data"]["response_turn_id"] == "turn_456"
 
                                 # Verify database calls
                                 mock_ensure_thread.assert_called_once()
@@ -296,10 +296,10 @@ class TestMCPServerIntegration:
             # Verify response structure
             assert "success" in data
             assert "data" in data
-            assert result
-            assert "stats" in result
-            assert result
-            assert result
+            assert data["success"] is True
+            assert "stats" in data["data"]
+            assert data["data"]["stats"]["turns"] == 10
+            assert data["data"]["stats"]["messages"] == 20
 
     def test_error_handling_workflow(self):
         """Test error handling in the workflow."""
@@ -309,7 +309,7 @@ class TestMCPServerIntegration:
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
-        assert "Unknown tool" in result
+        assert "Unknown tool" in data["error"]
 
     def test_malformed_request_handling(self):
         """Test handling of malformed requests."""
@@ -367,7 +367,7 @@ class TestMCPServerIntegration:
                         for response in responses:
                             assert response.status_code == 200
                             data = response.json()
-                            assert result
+                            assert data["success"] is True
 
     def test_large_payload_handling(self):
         """Test handling of large payloads."""
@@ -420,7 +420,7 @@ class TestMCPServerIntegration:
 
                         assert response.status_code == 200
                         data = response.json()
-                        assert result
+                        assert data["success"] is True
 
     def test_unicode_handling(self):
         """Test handling of Unicode content."""
@@ -473,7 +473,7 @@ class TestMCPServerIntegration:
 
                         assert response.status_code == 200
                         data = response.json()
-                        assert result
+                        assert data["success"] is True
 
     def test_service_discovery_workflow(self):
         """Test service discovery workflow."""
@@ -494,4 +494,4 @@ class TestMCPServerIntegration:
 
         # Test that tools endpoint returns expected structure
         assert "tools" in tools_data
-        assert isinstance(result
+        assert isinstance(tools_data["tools"], list)

@@ -1,19 +1,22 @@
-from __future__ import annotations
-import asyncio
-import sys
-from pathlib import Path
-import httpx
-from pydantic import BaseModel, ConfigDict, Field
-from pydantic_ai import Agent
-from pydantic_ai.models.instrumented import InstrumentationSettings
-import os
-import json
 #!/usr/bin/env python3
 """
 Test Ollama integration with Pydantic ecosystem.
 
 This script tests the integration without requiring Ollama to be running.
 """
+
+from __future__ import annotations
+
+import asyncio
+import json
+import os
+import sys
+from pathlib import Path
+
+import httpx
+from pydantic import BaseModel, ConfigDict, Field
+from pydantic_ai import Agent
+from pydantic_ai.models.instrumented import InstrumentationSettings
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -32,12 +35,12 @@ async def test_ollama_availability():
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await result
+            response = await client.get("http://localhost:11434/api/tags")
             if response.status_code == 200:
                 models = response.json().get("models", [])
                 print(f"✅ Ollama is running with {len(models)} models:")
                 for model in models[:5]:  # Show first 5 models
-                    print(f"   - {result
+                    print(f"   - {model['name']}")
                 return True
             else:
                 print(f"⚠️  Ollama API returned status {response.status_code}")

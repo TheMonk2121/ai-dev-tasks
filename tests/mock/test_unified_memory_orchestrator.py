@@ -193,9 +193,9 @@ class TestUnifiedMemoryOrchestrator:
             cursor_result = orchestrator.get_cursor_memory("test")
             go_cli_result = orchestrator.get_go_cli_memory("test")
 
-            assert result
-            assert result
-            assert result
+            assert ltst_result
+            assert cursor_result
+            assert go_cli_result
 
     def test_timestamp_in_responses(self):
         """Test that all responses include timestamps."""
@@ -210,9 +210,9 @@ class TestUnifiedMemoryOrchestrator:
         assert "timestamp" in go_cli_result
 
         # Timestamps should be numeric
-        assert isinstance(result
-        assert isinstance(result
-        assert isinstance(result
+        assert isinstance(ltst_result["timestamp"], int | float)
+        assert isinstance(cursor_result["timestamp"], int | float)
+        assert isinstance(go_cli_result["timestamp"], int | float)
 
     def test_source_identification(self):
         """Test that all responses include correct source identification."""
@@ -226,9 +226,9 @@ class TestUnifiedMemoryOrchestrator:
         assert "source" in cursor_result
         assert "source" in go_cli_result
 
-        assert "LTST" in result
-        assert "Cursor" in result
-        assert "Go CLI" in result
+        assert "LTST" in ltst_result["source"]
+        assert "Cursor" in cursor_result["source"]
+        assert "Go CLI" in go_cli_result["source"]
 
     def test_error_response_structure(self):
         """Test that error responses have consistent structure."""
@@ -241,9 +241,9 @@ class TestUnifiedMemoryOrchestrator:
         assert "source" in result
         assert "timestamp" in result
 
-        assert result
-        assert isinstance(result
-        assert len(result
+        assert result["status"] == "error"
+        assert isinstance(result["bundle"], list)
+        assert len(result["bundle"]) == 0
 
     def test_success_response_structure(self):
         """Test that success responses have consistent structure."""
@@ -275,8 +275,8 @@ class TestUnifiedMemoryOrchestrator:
                     assert "bundle" in result
                     assert "timestamp" in result
 
-                    assert result
-                    assert isinstance(result
+                    assert result["status"] == "success"
+                    assert isinstance(result["bundle"], list)
 
     def test_role_parameter_handling(self):
         """Test that role parameter is handled correctly."""
