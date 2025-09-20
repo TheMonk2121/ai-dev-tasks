@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import time
+from typing import Any
 
 import pytest
 from hypothesis import given, settings
@@ -13,9 +14,6 @@ from src.retrieval.freshness_enhancer import FreshnessConfig, FreshnessEnhancer
 """
 Property-based tests for freshness enhancer invariants.
 """
-
-
-
 
 
 def _result(ts: float | None, score: float = 1.0) -> dict:

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
+from typing import Any
 
 from utils.db_pool import get_conn  # type: ignore[import-untyped]
 from utils.decision_extractor import create_decisions_table  # type: ignore[import-untyped]
@@ -25,6 +26,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DSRC = os.path.join(ROOT, "src")
 if DSRC not in sys.path:
     sys.path.insert(0, DSRC)
+
 
 def ensure_retrieval_schema() -> None:
     # Reuse the dedicated script logic inline to avoid import coupling
@@ -59,6 +61,7 @@ def ensure_retrieval_schema() -> None:
             )
         conn.commit()
 
+
 def ensure_performance_helpers() -> None:
     with get_conn(role="writer") as conn:
         with conn.cursor() as cur:
@@ -67,6 +70,7 @@ def ensure_performance_helpers() -> None:
             if cur.fetchone():
                 cur.execute("SELECT ensure_future_performance_partitions(7);")
         conn.commit()
+
 
 def main() -> None:
     dsn: Any = os.getenv("DATABASE_URL", "")
@@ -78,6 +82,7 @@ def main() -> None:
     # Performance partitions helper
     ensure_performance_helpers()
     print("[OK] Minimal DB setup completed.")
+
 
 if __name__ == "__main__":
     main()

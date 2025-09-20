@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 import pytest
 from hypothesis import given, settings
@@ -12,9 +13,6 @@ from src.common.db_dsn import CANON_ENV, FALLBACK_ENV, resolve_dsn
 """
 Property tests for DB DSN resolver.
 """
-
-
-
 
 
 def _safe_dsn() -> str:

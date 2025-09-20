@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, cast
 
 import psycopg
+from psycopg.rows import RealDictCursor
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
@@ -196,11 +197,32 @@ class RealDataIngester:
         except Exception as e:
             return f"[Error reading file: {e}]"
 
+    @staticmethod
+    def _is_noise_line(raw_line: str) -> bool:
+        """Return True when a line is safe to drop without harming retrieval."""
+
+        stripped = raw_line.strip()
+        if not stripped:
+            return True
+
+        lowered = stripped.lower()
+        if lowered in {"table of contents", "toc", "contents"}:
+            return True
+
+        if stripped.startswith("<!--") and stripped.endswith("-->"):
+            return True
+
+        # Navigation bullets with no alphanumeric characters add little value
+        if len(stripped) <= 4 and not any(ch.isalnum() for ch in stripped):
+            return True
+
+        return False
+
     def chunk_content(self, content: str, file_path: str, content_type: str) -> list[dict[str, Any]]:
         """Chunk content using token-based strategy."""
-        # Remove excessive boilerplate/nav lines
-        lines = [line for line in content.split("\n") if len(line.strip()) >= 40]
-        content = "\n".join(lines)
+
+        filtered_lines = [line for line in content.splitlines() if not self._is_noise_line(line)]
+        content = "\n".join(filtered_lines)
 
         # Chunk by tokens
         chunks = list(

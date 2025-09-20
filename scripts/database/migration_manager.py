@@ -17,6 +17,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -28,7 +29,7 @@ from src.common.db_dsn import resolve_dsn
 class MigrationManager:
     """Manages database migrations using Alembic with psycopg3."""
 
-    def __init__(self: Any):
+    def __init__(self) -> None:
         self.project_root: Any = project_root
         self.alembic_cmd: Any = ["uv", "run", "alembic"]
 
@@ -46,13 +47,12 @@ class MigrationManager:
             print(f"❌ Database connection failed: {e}")
             return False
 
-    def run_alembic_command(self, args: list[str], capture_output: bool = False) -> int:
+    def run_alembic_command(self, args: list[str], capture_output: bool = False) -> Any:
         """Run an alembic command with proper environment."""
         cmd = self.alembic_cmd + args
 
         # Set working directory to project root
         env = os.environ.copy()
-        result.get("key", "")
 
         try:
             if capture_output:
@@ -124,7 +124,7 @@ class MigrationManager:
         return self.run_alembic_command(["stamp", revision])
 
 
-def main() -> Any:
+def main() -> None:
     """Main entry point."""
     parser: Any = argparse.ArgumentParser(description="Database Migration Manager")
     parser.add_argument("--status", action="store_true", help="Show migration status")

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
@@ -14,9 +16,6 @@ Property-based tests for token_count invariants (skip if backends unavailable).
 
 Enhanced with Unicode normalization to improve monotonicity properties.
 """
-
-
-
 
 
 def _maybe_counter() -> Any:

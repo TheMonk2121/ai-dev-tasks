@@ -12,6 +12,7 @@ import os
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
@@ -422,7 +423,7 @@ class TestMetricsGuardCLI:
     @patch("scripts.evaluation.metrics_guard.check_baseline_compliance")
     @patch("scripts.evaluation.metrics_guard.validate_metrics_format")
     @patch("scripts.evaluation.metrics_guard.check_quality_gates")
-    def test_main_success() -> Any:
+    def test_main_success(self, mock_quality_gates: Any, mock_format: Any, mock_baseline: Any) -> Any:
         """Test main function runs successfully."""
         # Mock all checks to pass
         mock_baseline.return_value = True
@@ -431,7 +432,7 @@ class TestMetricsGuardCLI:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", "test_results.json"]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Verify all checks were called
@@ -440,7 +441,7 @@ class TestMetricsGuardCLI:
                     mock_quality_gates.assert_called_once_with("test_results.json")
 
                     # Verify output was printed
-                    _mock_print.assert_called()
+                    mock_print.assert_called()
 
                     # Should complete successfully
                     mock_exit.assert_called_once_with(0)
@@ -448,7 +449,7 @@ class TestMetricsGuardCLI:
     @patch("scripts.evaluation.metrics_guard.check_baseline_compliance")
     @patch("scripts.evaluation.metrics_guard.validate_metrics_format")
     @patch("scripts.evaluation.metrics_guard.check_quality_gates")
-    def test_main_baseline_failure() -> Any:
+    def test_main_baseline_failure(self, mock_quality_gates: Any, mock_format: Any, mock_baseline: Any) -> Any:
         """Test main function handles baseline compliance failure."""
         # Mock baseline check to fail
         mock_baseline.return_value = False
@@ -457,7 +458,7 @@ class TestMetricsGuardCLI:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", "test_results.json"]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Verify all checks were called
@@ -471,7 +472,7 @@ class TestMetricsGuardCLI:
     @patch("scripts.evaluation.metrics_guard.check_baseline_compliance")
     @patch("scripts.evaluation.metrics_guard.validate_metrics_format")
     @patch("scripts.evaluation.metrics_guard.check_quality_gates")
-    def test_main_format_failure() -> Any:
+    def test_main_format_failure(self, mock_quality_gates: Any, mock_format: Any, mock_baseline: Any) -> Any:
         """Test main function handles format validation failure."""
         # Mock format check to fail
         mock_baseline.return_value = True
@@ -480,7 +481,7 @@ class TestMetricsGuardCLI:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", "test_results.json"]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Verify all checks were called
@@ -494,7 +495,7 @@ class TestMetricsGuardCLI:
     @patch("scripts.evaluation.metrics_guard.check_baseline_compliance")
     @patch("scripts.evaluation.metrics_guard.validate_metrics_format")
     @patch("scripts.evaluation.metrics_guard.check_quality_gates")
-    def test_main_quality_gates_failure() -> Any:
+    def test_main_quality_gates_failure(self, mock_quality_gates: Any, mock_format: Any, mock_baseline: Any) -> Any:
         """Test main function handles quality gates failure."""
         # Mock quality gates check to fail
         mock_baseline.return_value = True
@@ -503,7 +504,7 @@ class TestMetricsGuardCLI:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", "test_results.json"]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Verify all checks were called
@@ -517,7 +518,7 @@ class TestMetricsGuardCLI:
     @patch("scripts.evaluation.metrics_guard.check_baseline_compliance")
     @patch("scripts.evaluation.metrics_guard.validate_metrics_format")
     @patch("scripts.evaluation.metrics_guard.check_quality_gates")
-    def test_main_default_arguments() -> Any:
+    def test_main_default_arguments(self, mock_quality_gates: Any, mock_format: Any, mock_baseline: Any) -> Any:
         """Test main function with default arguments."""
         # Mock all checks to pass
         mock_baseline.return_value = True
@@ -526,7 +527,7 @@ class TestMetricsGuardCLI:
 
         with patch("sys.argv", ["metrics_guard.py"]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Verify default results file was used
@@ -592,12 +593,12 @@ class TestMetricsGuardIntegration:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", str(results_file)]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Should complete successfully
                     mock_exit.assert_called_once_with(0)
-                    _mock_print.assert_called()
+                    mock_print.assert_called()
 
     def test_validation_with_realistic_metrics(self: Any):
         """Test validation with realistic metrics data."""
@@ -639,12 +640,12 @@ class TestMetricsGuardIntegration:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", str(results_file)]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Should complete successfully
                     mock_exit.assert_called_once_with(0)
-                    _mock_print.assert_called()
+                    mock_print.assert_called()
 
     def test_validation_thresholds(self: Any):
         """Test validation with different threshold scenarios."""
@@ -672,12 +673,12 @@ class TestMetricsGuardIntegration:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", str(results_file_1)]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Should complete successfully
                     mock_exit.assert_called_once_with(0)
-                    _mock_print.assert_called()
+                    mock_print.assert_called()
 
     def test_error_handling_robustness(self: Any):
         """Test error handling robustness with various failure scenarios."""
@@ -688,7 +689,7 @@ class TestMetricsGuardIntegration:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", str(invalid_file)]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Should exit with error
@@ -700,7 +701,7 @@ class TestMetricsGuardIntegration:
 
         with patch("sys.argv", ["metrics_guard.py", "--results-file", str(nonexistent_file)]):
             with patch("scripts.evaluation.metrics_guard.sys.exit") as mock_exit:
-                with patch("builtins.print") as _mock_print:
+                with patch("builtins.print") as mock_print:
                     main()
 
                     # Should exit with error

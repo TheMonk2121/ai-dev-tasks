@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from typing import Any
 
 import numpy as np
 import pytest
@@ -15,9 +16,6 @@ from ._regression_capture import record_case
 """
 Property-based tests for enhanced_metrics invariants.
 """
-
-
-
 
 
 @pytest.mark.prop

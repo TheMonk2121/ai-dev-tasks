@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 from src.common.db_dsn import resolve_dsn
 
@@ -15,6 +16,7 @@ Complete setup including schema creation and real data ingestion.
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
+
 
 def main() -> Any:
     """Main setup process."""
@@ -77,6 +79,7 @@ def main() -> Any:
     print("   3. Monitor performance: uv run python scripts/health_gated_evaluation.py --check-only")
 
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

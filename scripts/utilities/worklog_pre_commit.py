@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from worklog_summarizer import generate_markdown_summary, summarize_worklog
 
@@ -12,6 +13,7 @@ Pre-commit worklog summarization
 Automatically generates worklog summaries when scribe sessions are active.
 Designed to be called from pre-commit hooks or manually.
 """
+
 
 def check_active_scribe_session() -> str | None:
     """Check if there's an active scribe session and return backlog ID."""
@@ -37,6 +39,7 @@ def check_active_scribe_session() -> str | None:
 
     except Exception:
         return None
+
 
 def main() -> Any:
     """Main function for pre-commit worklog summarization."""
@@ -77,6 +80,7 @@ def main() -> Any:
     except Exception as e:
         print(f"❌ Error in worklog summarization: {e}")
         return 1
+
 
 if __name__ == "__main__":
     exit(main())

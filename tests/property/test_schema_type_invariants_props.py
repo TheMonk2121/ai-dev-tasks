@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from typing import Any
 
 import pytest
 from hypothesis import given, settings
@@ -310,17 +311,17 @@ class TestSchemaTypeInvariants:
 
             # Check that JSON contains correct types
             if precision is not None:
-                assert isinstance(data["precision"], (int, float))
+                assert isinstance(data["precision"], int | float)
             else:
                 assert data["precision"] is None
 
             if recall is not None:
-                assert isinstance(data["recall"], (int, float))
+                assert isinstance(data["recall"], int | float)
             else:
                 assert data["recall"] is None
 
             if f1 is not None:
-                assert isinstance(data["f1"], (int, float))
+                assert isinstance(data["f1"], int | float)
             else:
                 assert data["f1"] is None
 

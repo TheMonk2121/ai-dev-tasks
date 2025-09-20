@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 import pytest
 from hypothesis import given, settings
@@ -11,8 +13,6 @@ from src.uncertainty.confidence_calibration import CalibrationConfig, Confidence
 """
 Property tests for ConfidenceCalibrator bounds and stability.
 """
-
-
 
 
 @pytest.mark.prop

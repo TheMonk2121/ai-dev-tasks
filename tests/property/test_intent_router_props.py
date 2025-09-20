@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 import pytest
 from hypothesis import given, settings
@@ -12,8 +13,6 @@ from src.retrieval.intent_router import IntentRouter, IntentRouterConfig
 """
 Property-based tests for IntentRouter invariants.
 """
-
-
 
 
 @pytest.mark.prop

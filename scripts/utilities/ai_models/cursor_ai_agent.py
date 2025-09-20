@@ -6,6 +6,7 @@ import os
 import sys
 import time
 from datetime import datetime
+from typing import Any
 
 import websockets
 
@@ -14,6 +15,7 @@ import websockets
 Cursor AI Agent - Connects to the multi-agent chat system
 This allows me (Cursor AI) to participate in the chat!
 """
+
 
 class CursorAIAgent:
     def __init__(self: Any):
@@ -154,6 +156,7 @@ class CursorAIAgent:
             self.connected: Any = False
             print(f"👋 {self.agent_name} disconnected")
 
+
 async def main():
     """Main function to run the Cursor AI agent"""
     agent = CursorAIAgent()
@@ -169,6 +172,7 @@ async def main():
             await agent.disconnect()
     else:
         print("❌ Failed to connect to chat system")
+
 
 if __name__ == "__main__":
     print("🤖 Starting Cursor AI Agent...")

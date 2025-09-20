@@ -21,7 +21,7 @@ import yaml
 class EvalManifestGenerator:
     """Generates comprehensive evaluation manifests for production traceability."""
 
-    def __init__() -> Any:
+    def __init__(self, output_dir: str = "evals/manifests") -> Any:
         self.output_dir: Any = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.manifest_id: Any = str(uuid.uuid4())[:8]
@@ -62,13 +62,13 @@ class EvalManifestGenerator:
         """Capture model configuration and IDs."""
         return {
             "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
-            "rerank_model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
+            "rerank_model": os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base"),
             "generation_model": os.getenv("GENERATION_MODEL", "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"),
             "embedding_provider": os.getenv("EMBEDDING_PROVIDER", "local"),
             "generation_provider": os.getenv("GENERATION_PROVIDER", "bedrock"),
             "model_versions": {
                 "embedding": self._get_model_version(os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")),
-                "rerank": self._get_model_version(os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")),
+                "rerank": self._get_model_version(os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base")),
             },
         }
 
@@ -86,7 +86,7 @@ class EvalManifestGenerator:
             # Reranking Configuration
             "reranking": {
                 "enabled": os.getenv("RERANK_ENABLE", "1") == "1",
-                "model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
+                "model": os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base"),
                 "pool_size": int(os.getenv("RERANK_POOL", "60")),
                 "topn": int(os.getenv("RERANK_TOPN", "18")),
             },

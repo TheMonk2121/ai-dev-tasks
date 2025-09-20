@@ -3,11 +3,13 @@ from __future__ import annotations
 import json
 import os
 import sys
+from typing import Any
 
 #!/usr/bin/env python3
 """
 Mock reader script for testing the reader gate.
 """
+
 
 def mock_reader(query: str, context: str, tag: str, case_id: str) -> str:
     """
@@ -42,6 +44,7 @@ def mock_reader(query: str, context: str, tag: str, case_id: str) -> str:
     # Final fallback
     return f"Based on the context, this appears to be related to {tag}."
 
+
 def main() -> Any:
     """Main entry point for the reader script."""
     try:
@@ -66,6 +69,7 @@ def main() -> Any:
         error_response = {"answer": f"Error processing query: {str(e)}", "error": str(e)}
         print(json.dumps(error_response))
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

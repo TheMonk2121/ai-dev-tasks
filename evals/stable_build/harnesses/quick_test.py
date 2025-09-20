@@ -4,6 +4,7 @@ Quick B-1046 Integration Test
 """
 
 import sys
+from typing import Any
 
 sys.path.insert(0, ".")
 

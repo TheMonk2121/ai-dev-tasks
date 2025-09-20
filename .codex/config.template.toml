@@ -1,0 +1,12 @@
+model = "gpt-5-codex"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+model_reasoning_effort = "high"
+
+[history]
+persistence = "save-all"
+
+[mcp_servers.ai_dev_memory]
+command = "uv"
+args = ["run", "python", "-m", "scripts.utilities.memory.mcp_memory_server"]
+env = { POSTGRES_DSN = "postgresql://USER:PASS@localhost:5432/ai_agency" }

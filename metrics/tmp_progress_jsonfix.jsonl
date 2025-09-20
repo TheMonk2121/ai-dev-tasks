@@ -1,0 +1,6 @@
+{"type": "case_completed", "case_id": "gold_028", "precision": 0.2095238095238095, "recall": 0.27586206896551724, "f1_score": 0.23815967523680648, "faithfulness": 0.6567164179104478, "latency_sec": 4.412219762802124}
+{"type": "case_completed", "case_id": "gold_006", "precision": 0.0, "recall": 0.0, "f1_score": 0.0, "faithfulness": 0.0, "latency_sec": 3.092161178588867}
+{"type": "case_completed", "case_id": "gold_070", "precision": 0.24848484848484848, "recall": 0.06666666666666667, "f1_score": 0.10512820512820513, "faithfulness": 0.14285714285714285, "latency_sec": 8.160913705825806}
+{"type": "case_completed", "case_id": "gold_062", "precision": 0.0, "recall": 0.0, "f1_score": 0.0, "faithfulness": 0.0, "latency_sec": 5.691098928451538}
+{"type": "case_completed", "case_id": "gold_057", "precision": 0.0, "recall": 0.0, "f1_score": 0.0, "faithfulness": 0.013888888888888888, "latency_sec": 9.698184967041016}
+{"type": "evaluation_complete", "overall_metrics": {"precision": 0.0916017316017316, "recall": 0.06850574712643678, "f1_score": 0.06865757607300232, "faithfulness": 0.1626924899312959, "total_cases": 5, "successful_cases": 5, "failed_cases": 0}, "results_file": "metrics/tmp_eval_jsonfix/dspy_evaluation_20250919_001050.json"}

@@ -209,7 +209,7 @@ class HealthGatedEvaluator:
 
         # Check rerank model if enabled
         if os.getenv("RERANK_ENABLE", "1") == "1":
-            rerank_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
+            rerank_model = os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base")
             try:
                 from sentence_transformers import CrossEncoder
 
@@ -327,13 +327,13 @@ def main():
 
     args = parser.parse_args()
 
+    evaluator = HealthGatedEvaluator()
+
     # Disable specific checks if requested
     if args.disable_check:
         for check in args.disable_check:
             if check in evaluator.checks_enabled:
                 evaluator.checks_enabled[check] = False
-
-    evaluator = HealthGatedEvaluator()
 
     if args.check_only:
         # Just run health checks

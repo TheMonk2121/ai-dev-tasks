@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import os
 import re
+from typing import Any
 
 #!/usr/bin/env python3
 """
 Fix markdown issues in the 400_markdown-cleanup-progress.md file.
 Addresses MD022 (heading spacing), MD032 (list spacing), and MD029 (ordered list prefix).
 """
+
 
 def fix_markdown_progress_file() -> Any:
     """Fix markdown issues in the progress file."""
@@ -85,6 +87,7 @@ def fix_markdown_progress_file() -> Any:
     else:
         print(f"ℹ️  No changes needed for {file_path}")
         return False
+
 
 if __name__ == "__main__":
     fix_markdown_progress_file()

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import subprocess
 from datetime import datetime
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -9,6 +10,7 @@ Weekly UV Optimization Script
 
 Automated weekly optimization tasks for UV environment.
 """
+
 
 def run_weekly_optimization() -> Any:
     """Run weekly optimization tasks."""
@@ -28,6 +30,7 @@ def run_weekly_optimization() -> Any:
             print(f"✅ {task_name} completed")
         except subprocess.CalledProcessError as e:
             print(f"⚠️ {task_name} failed: {e}")
+
 
 if __name__ == "__main__":
     run_weekly_optimization()

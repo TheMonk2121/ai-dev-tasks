@@ -18,7 +18,7 @@ def _run_real(_argv: list[str]) -> int:  # Unused parameter
     try:
         evaluator: Any = CleanDSPyEvaluator(profile="real")
         _ = evaluator.run_evaluation(
-            gold_file="evals/data/real/v1/real_cases.jsonl",
+            gold_file="evals/data/gold/v1/gold_cases_121.jsonl",
             limit=None,
         )
     except Exception as exc:

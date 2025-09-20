@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
@@ -84,7 +86,7 @@ class TestIntentRouterTypeProps:
             # Check that all values in structured_fields are JSON-serializable
             for key, value in result.structured_fields.items():
                 assert isinstance(key, str)
-                assert isinstance(value, (str, int, float, bool, list, dict, type(None)))
+                assert isinstance(value, str | int | float | bool | list | dict | type(None))
 
         except Exception as e:
             record_case(

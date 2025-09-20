@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -12,6 +13,7 @@ UV Export Requirements Script
 This script exports dependencies from pyproject.toml to requirements.txt format
 for backward compatibility with tools that still expect requirements.txt files.
 """
+
 
 def run_command(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
     """Run a command and return the result."""
@@ -22,6 +24,7 @@ def run_command(cmd: list[str], check: bool = True) -> subprocess.CompletedProce
         print(f"❌ Command failed: {' '.join(cmd)}")
         print(f"Error: {e.stderr}")
         sys.exit(1)
+
 
 def export_requirements(output_file: str = "requirements.txt", dev: bool = False) -> None:
     """Export requirements from pyproject.toml to requirements.txt format."""
@@ -69,6 +72,7 @@ def export_requirements(output_file: str = "requirements.txt", dev: bool = False
     if len(lines) > 10:
         print(f"  ... and {len(lines) - 10} more lines")
 
+
 def export_lock_to_requirements(output_file: str = "requirements-lock.txt") -> None:
     """Export locked dependencies from uv.lock to requirements.txt format."""
 
@@ -88,9 +92,12 @@ def export_lock_to_requirements(output_file: str = "requirements-lock.txt") -> N
 
     print(f"✅ Locked requirements exported to {output_file}")
 
+
 def main() -> Any:
     """Main function."""
-    parser: Any = argparse.ArgumentParser(description="Export dependencies from pyproject.toml to requirements.txt format")
+    parser: Any = argparse.ArgumentParser(
+        description="Export dependencies from pyproject.toml to requirements.txt format"
+    )
     parser.add_argument(
         "--output", "-o", default="requirements.txt", help="Output file name (default: requirements.txt)"
     )
@@ -117,6 +124,7 @@ def main() -> Any:
         export_lock_to_requirements(args.output)
     else:
         export_requirements(args.output, args.dev)
+
 
 if __name__ == "__main__":
     main()

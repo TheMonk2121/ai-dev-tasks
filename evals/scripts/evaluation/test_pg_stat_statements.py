@@ -1,10 +1,14 @@
 from __future__ import annotations
 
-# Add project paths
-import sys
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 import os
+import sys
+from typing import Any
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+
+import psycopg
+from psycopg.rows import dict_row
 
 from src.common.psycopg3_config import Psycopg3Config
 
@@ -14,8 +18,8 @@ from src.common.psycopg3_config import Psycopg3Config
 
 def test_queries() -> Any:
     try:
-        with psycopg2.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        with psycopg.connect("postgresql://danieljacobs@localhost:5432/ai_agency") as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 # Test slow queries
                 cur.execute(
                     """

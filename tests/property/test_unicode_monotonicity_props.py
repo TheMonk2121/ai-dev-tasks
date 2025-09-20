@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 import pytest
 from hypothesis import given, settings
@@ -17,9 +18,6 @@ Property-based tests for Unicode tokenization monotonicity.
 Tests the monotonicity property count(a + b) >= count(b) with various
 Unicode edge cases that commonly cause violations in tokenizers.
 """
-
-
-
 
 
 def _maybe_counter() -> Any:

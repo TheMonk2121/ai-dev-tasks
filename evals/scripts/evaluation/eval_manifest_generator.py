@@ -62,13 +62,13 @@ class EvalManifestGenerator:
         """Capture model configuration and IDs."""
         return {
             "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
-            "rerank_model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
+            "rerank_model": os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3"),
             "generation_model": os.getenv("GENERATION_MODEL", "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"),
             "embedding_provider": os.getenv("EMBEDDING_PROVIDER", "local"),
             "generation_provider": os.getenv("GENERATION_PROVIDER", "bedrock"),
             "model_versions": {
                 "embedding": self._get_model_version(os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")),
-                "rerank": self._get_model_version(os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")),
+                "rerank": self._get_model_version(os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3")),
             },
         }
 
@@ -86,7 +86,7 @@ class EvalManifestGenerator:
             # Reranking Configuration
             "reranking": {
                 "enabled": os.getenv("RERANK_ENABLE", "1") == "1",
-                "model": os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"),
+                "model": os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3"),
                 "pool_size": int(os.getenv("RERANK_POOL", "60")),
                 "topn": int(os.getenv("RERANK_TOPN", "18")),
             },

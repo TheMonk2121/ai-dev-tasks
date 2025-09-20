@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sys
 from subprocess import run
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -10,6 +11,7 @@ Health Gate for CI/Automation
 
 Exits with non-zero status if overall health is not healthy.
 """
+
 
 def main() -> int:
     result = run(
@@ -64,6 +66,7 @@ def main() -> int:
 
     print("✅ Health gate passed: overall_status=healthy")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

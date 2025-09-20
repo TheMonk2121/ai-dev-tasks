@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
@@ -12,8 +14,6 @@ from ._regression_capture import record_case
 """
 Property-based tests for RecallFriendlyPrefilter invariants.
 """
-
-
 
 
 def _docs_strategy() -> Any:

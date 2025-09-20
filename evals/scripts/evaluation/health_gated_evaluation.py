@@ -209,7 +209,7 @@ class HealthGatedEvaluator:
 
         # Check rerank model if enabled
         if os.getenv("RERANK_ENABLE", "1") == "1":
-            rerank_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
+            rerank_model = os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3")
             try:
                 from sentence_transformers import CrossEncoder
 

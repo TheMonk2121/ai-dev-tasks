@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
@@ -12,8 +14,6 @@ from ._regression_capture import record_case
 """
 Property-based tests for retrieval fusion invariants.
 """
-
-
 
 
 def _doc_ids() -> Any:
@@ -37,8 +37,12 @@ def test_weighted_rrf_subset_and_limit(bm_ids, vec_ids, limit: Any):
 
 @pytest.mark.prop
 @given(
-    st.lists(st.tuples(st.text(min_size=1, max_size=8), st.floats(min_value=0.0, max_value=1.0)), min_size=1, max_size=20),
-    st.lists(st.tuples(st.text(min_size=1, max_size=8), st.floats(min_value=0.0, max_value=1.0)), min_size=1, max_size=20),
+    st.lists(
+        st.tuples(st.text(min_size=1, max_size=8), st.floats(min_value=0.0, max_value=1.0)), min_size=1, max_size=20
+    ),
+    st.lists(
+        st.tuples(st.text(min_size=1, max_size=8), st.floats(min_value=0.0, max_value=1.0)), min_size=1, max_size=20
+    ),
 )
 @settings(max_examples=15, deadline=100)
 def test_weighted_rrf_deterministic(bm, vec: Any):
@@ -60,6 +64,8 @@ def test_weighted_rrf_weight_flip(doc_a, doc_b: Any):
     top_sem = out_sem[0][0] if out_sem else None
     # With high lexical weight, A should dominate; with high semantic, B should dominate
     if not (top_lex == doc_a and top_sem == doc_b):
-        record_case("fusion_rrf_weight_flip_unexpected", {"lex_top": top_lex, "sem_top": top_sem, "A": doc_a, "B": doc_b})
+        record_case(
+            "fusion_rrf_weight_flip_unexpected", {"lex_top": top_lex, "sem_top": top_sem, "A": doc_a, "B": doc_b}
+        )
     assert top_lex == doc_a
     assert top_sem == doc_b

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 import pytest
 from hypothesis import given, settings
@@ -12,9 +13,6 @@ from src.schemas.settings import EvaluationSettings
 """
 Property tests for EvaluationSettings parsing behavior.
 """
-
-
-
 
 
 @pytest.mark.prop

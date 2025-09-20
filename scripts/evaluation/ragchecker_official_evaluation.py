@@ -31,6 +31,11 @@ except Exception:
 
 # Setup observability if available
 try:
+    # Add project root to path for imports
+    project_root = Path(__file__).parent.parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+
     from scripts.monitoring.observability import get_logfire, init_observability
 
     logfire = get_logfire()

@@ -1,6 +1,7 @@
 """Comprehensive tests for Pydantic models and I/O operations."""
 
 from pathlib import Path
+from typing import Any
 
 # Import QAAnswer directly to avoid agent initialization
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter

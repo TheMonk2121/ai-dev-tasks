@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+from typing import Any
 Property-based tests for text normalization invariants.
 """
 
@@ -21,7 +22,7 @@ def normalize_query(query: str) -> str:
     normalized = query.strip().casefold()
 
     # Handle special Unicode cases
-    normalized: Any = normalized.replace("ß", "ss")
+    normalized = normalized.replace("ß", "ss")
     normalized = normalized.replace("ı", "i")  # Turkish dotless i
     normalized = normalized.replace("i̇", "i")  # Turkish dotted i (İ -> i̇ -> i)
 

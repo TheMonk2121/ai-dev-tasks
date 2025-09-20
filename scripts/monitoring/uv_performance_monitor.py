@@ -7,6 +7,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -15,6 +16,7 @@ UV Performance Monitor
 This script monitors UV performance metrics and provides optimization recommendations.
 It tracks installation times, cache hit rates, and dependency resolution performance.
 """
+
 
 class UVPerformanceMonitor:
     """Monitor UV performance metrics and provide optimization insights."""
@@ -289,6 +291,7 @@ class UVPerformanceMonitor:
 
         print("\n" + "=" * 60)
 
+
 def main() -> Any:
     """Main function."""
     parser: Any = argparse.ArgumentParser(description="Monitor UV performance metrics")
@@ -342,6 +345,7 @@ def main() -> Any:
 
         # Save metrics
         monitor._save_metrics()
+
 
 if __name__ == "__main__":
     main()

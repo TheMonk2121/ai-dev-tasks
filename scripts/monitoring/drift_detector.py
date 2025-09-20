@@ -4,6 +4,7 @@ import datetime as dt
 import json
 import os
 import sys
+from typing import Any
 
 #!/usr/bin/env python3
 
@@ -15,13 +16,16 @@ READ_BASE = "evals/baseline_reader_metrics.json"
 MAX_RETR_DRIFT = float(os.getenv("MAX_RETR_WEEKLY_DRIFT", "0.02"))
 MAX_READ_DRIFT = float(os.getenv("MAX_READ_WEEKLY_DRIFT", "0.03"))
 
+
 def load(path: Any):
     return json.load(open(path, encoding="utf-8")) if os.path.exists(path) else None
+
 
 def drift(latest, base: Any):
     if not latest or not base:
         return None
     return latest.get("micro", 0.0) - base.get("micro", 0.0)
+
 
 if __name__ == "__main__":
     retr_d = drift(load(RETR_LATEST), load(RETR_BASE))

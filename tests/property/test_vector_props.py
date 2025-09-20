@@ -3,6 +3,8 @@
 Property-based tests for vector operations invariants.
 """
 
+from typing import Any
+
 import numpy as np
 import pytest
 from hypothesis import given, settings

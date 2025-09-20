@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 import pytest
 from hypothesis import given, settings
@@ -14,7 +16,6 @@ from ._regression_capture import record_case
 """
 Property-based tests for FusionFeatures serialization.
 """
-
 
 
 _float_arrays = hnp.arrays(
@@ -43,7 +44,10 @@ def test_numpy_arrays_serialize_to_lists(q: np.ndarray, d: np.ndarray) -> None:
     dv: Any = dumped.get("d_vec")
     if q.size == 0 or q.size != 384:
         if not (qv is None or qv == []):
-            record_case("test_feature_schema_q_empty_or_wrong", {"q_size": int(q.size), "dump_len": 0 if qv is None else len(qv)})
+            record_case(
+                "test_feature_schema_q_empty_or_wrong",
+                {"q_size": int(q.size), "dump_len": 0 if qv is None else len(qv)},
+            )
         assert qv is None or qv == []
     else:
         if not (isinstance(qv, list) and len(qv) == q.size):
@@ -51,7 +55,10 @@ def test_numpy_arrays_serialize_to_lists(q: np.ndarray, d: np.ndarray) -> None:
         assert isinstance(qv, list) and len(qv) == q.size
     if d.size == 0 or d.size != 384:
         if not (dv is None or dv == []):
-            record_case("test_feature_schema_d_empty_or_wrong", {"d_size": int(d.size), "dump_len": 0 if dv is None else len(dv)})
+            record_case(
+                "test_feature_schema_d_empty_or_wrong",
+                {"d_size": int(d.size), "dump_len": 0 if dv is None else len(dv)},
+            )
         assert dv is None or dv == []
     else:
         if not (isinstance(dv, list) and len(dv) == d.size):

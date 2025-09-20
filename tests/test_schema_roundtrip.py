@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from typing import Any
 
 sys.path.append(".")
 # Removed deprecated import: from src.compat.schema_adapters import goldcase_to_legacy_case_dict, legacy_payload_to_goldcase

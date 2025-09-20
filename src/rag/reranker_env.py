@@ -60,7 +60,7 @@ RERANK_ENABLE = _b("RERANK_ENABLE", "RERANKER_ENABLED", default=False)
 RERANK_INPUT_TOPK = _i("RERANK_INPUT_TOPK", "RERANK_POOL", default=120)
 RERANK_KEEP = _i("RERANK_KEEP", "RERANK_TOPN", default=24)
 RERANK_BATCH = _i("RERANK_BATCH", default=8)
-# Don't set RERANKER_MODEL at import time - use get_reranker_model() instead
+# Use get_reranker_model() for consistent model resolution
 MIN_RERANK_SCORE = _f("MIN_RERANK_SCORE", default=0.30)
 TORCH_DEVICE = _device(_s("TORCH_DEVICE", default="auto"))
 
@@ -70,18 +70,8 @@ RERANK_CACHE_PATH = _s("RERANK_CACHE_PATH", default=".cache/rerank.sqlite")
 
 
 def get_reranker_model() -> str:
-    """Get reranker model with robust environment variable handling."""
-    import warnings
-
-    preferred = os.getenv("RERANKER_MODEL")
-    legacy = os.getenv("RERANK_MODEL")
-    default = "BAAI/bge-reranker-v2-m3"
-
-    if preferred and legacy and preferred != legacy:
-        warnings.warn(f"Conflicting reranker envs; using RERANKER_MODEL={preferred}")
-        return preferred
-
-    return preferred or legacy or default
+    """Get reranker model from environment variable."""
+    return os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3")
 
 
 def rerank_enabled() -> bool:

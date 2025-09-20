@@ -3,6 +3,7 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 #!/usr/bin/env -S uv run python
 """
@@ -10,6 +11,7 @@ Workflow Runner
 --------------
 Simple wrapper that ensures the virtual environment is active and runs the workflow.
 """
+
 
 def main() -> Any:
     """Run the workflow with venv management."""
@@ -50,6 +52,7 @@ def main() -> Any:
     except Exception as e:
         print(f"❌ Workflow error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

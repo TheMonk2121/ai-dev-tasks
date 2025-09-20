@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import subprocess
 from datetime import datetime
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -9,6 +10,7 @@ Daily UV Maintenance Script
 
 Automated daily maintenance tasks for UV environment.
 """
+
 
 def run_daily_maintenance() -> Any:
     """Run daily maintenance tasks."""
@@ -28,6 +30,7 @@ def run_daily_maintenance() -> Any:
             print(f"✅ {task_name} completed")
         except subprocess.CalledProcessError as e:
             print(f"⚠️ {task_name} failed: {e}")
+
 
 if __name__ == "__main__":
     run_daily_maintenance()

@@ -5,6 +5,7 @@ import os
 import subprocess
 import time
 from pathlib import Path
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -17,8 +18,10 @@ Environment:
 
 STATE_PATH = Path(".rehydrate_state.json")
 
+
 def _now_ts() -> float:
     return time.time()
+
 
 def _load_state() -> dict:
     if STATE_PATH.exists():
@@ -29,6 +32,7 @@ def _load_state() -> dict:
             return {}
     return {}
 
+
 def _save_state(state: dict) -> None:
     try:
         with open(STATE_PATH, "w") as f:
@@ -36,14 +40,17 @@ def _save_state(state: dict) -> None:
     except Exception:
         pass
 
+
 def is_enabled() -> bool:
     return os.getenv("AUTO_REHYDRATE", "0") == "1"
+
 
 def get_debounce_minutes() -> int:
     try:
         return int(os.getenv("REHYDRATE_MINUTES", "10"))
     except ValueError:
         return 10
+
 
 def should_trigger(backlog_id: str | None) -> bool:
     if not is_enabled():
@@ -55,12 +62,14 @@ def should_trigger(backlog_id: str | None) -> bool:
     window_sec = max(get_debounce_minutes(), 0) * 60
     return (_now_ts() - last_ts) >= window_sec
 
+
 def record_trigger(backlog_id: str | None) -> None:
     if not backlog_id:
         return
     state = _load_state()
     state[backlog_id] = _now_ts()
     _save_state(state)
+
 
 def rehydrate_with_debounce(
     backlog_id: str | None,

@@ -36,7 +36,7 @@ REQUIRED_IMPORTS: list[str] = [
     # Light-weight/importable modules only; avoid heavy initializations
     "dspy",  # core DSPy interface
     "flask",  # dashboard
-    "psycopg2",  # Postgres client
+    "psycopg[binary]",  # Postgres client
 ]
 
 OPTIONAL_IMPORTS: list[str] = [
@@ -46,10 +46,12 @@ OPTIONAL_IMPORTS: list[str] = [
     "transformers",  # tokenizer/LLM utils (optional)
 ]
 
+
 def _check_python_version(min_major: int = 3, min_minor: int = 10) -> tuple[bool, str]:
     ver = sys.version_info
     ok = (ver.major, ver.minor) >= (min_major, min_minor)
     return ok, f"Python {ver.major}.{ver.minor} detected (require >= {min_major}.{min_minor})"
+
 
 def _check_imports(module_names: list[str]) -> tuple[bool, list[str]]:
     missing: list[str] = []
@@ -58,9 +60,9 @@ def _check_imports(module_names: list[str]) -> tuple[bool, list[str]]:
             missing.append(name)
     return len(missing) == 0, missing
 
+
 def _check_db_connection(dsn: str, check_pgvector: bool = True) -> tuple[bool, str]:
     try:
-
         conn = psycopg.connect(dsn)
         try:
             with conn.cursor(row_factory=dict_row) as cur:
@@ -76,6 +78,7 @@ def _check_db_connection(dsn: str, check_pgvector: bool = True) -> tuple[bool, s
         return True, "Database connectivity OK"
     except Exception as e:
         return False, f"Database check failed: {e}"
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Setup validator for Cursor-native AI models")
@@ -124,6 +127,7 @@ def main() -> int:
     else:
         print("✖ Environment checks failed; see messages above")
         return 1
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

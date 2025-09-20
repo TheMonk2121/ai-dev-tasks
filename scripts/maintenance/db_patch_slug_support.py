@@ -1,23 +1,28 @@
 from __future__ import annotations
+
 import os
-import psycopg
 import sys
 from pathlib import Path
+
+import psycopg
+
 # Add project paths
-import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from src.common.psycopg3_config import Psycopg3Config
+
 #!/usr/bin/env python3
 """
 Backfill file_path on document_chunks and add slug/identifier columns and indexes.
 Safe to run multiple times.
 """
 
+
 def main() -> int:
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
     try:
+        import psycopg
     except Exception as e:
-        print(f"❌ psycopg2 not available: {e}")
+        print(f"❌ psycopg not available: {e}")
         return 1
 
     try:
@@ -115,6 +120,7 @@ def main() -> int:
             conn.close()
         except Exception:
             pass
+
 
 if __name__ == "__main__":
     sys.exit(main())

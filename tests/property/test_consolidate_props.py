@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
@@ -12,11 +14,11 @@ Property tests for memory consolidation graph stubs.
 """
 
 
-
-
 def _turns() -> Any:
     return st.lists(
-        st.fixed_dictionaries({"role": st.sampled_from(["user", "assistant"]) , "content": st.text(min_size=0, max_size=200)}),
+        st.fixed_dictionaries(
+            {"role": st.sampled_from(["user", "assistant"]), "content": st.text(min_size=0, max_size=200)}
+        ),
         min_size=0,
         max_size=20,
     )

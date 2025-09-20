@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 from src.common.db_dsn import resolve_dsn
 
@@ -15,6 +16,7 @@ Updates environment variables to use real database instead of mock.
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
+
 
 def update_environment_for_production() -> Any:
     """Update environment variables for production database use."""
@@ -62,9 +64,11 @@ def update_environment_for_production() -> Any:
 
     return 0
 
+
 def main() -> Any:
     """Main entry point."""
     return update_environment_for_production()
+
 
 if __name__ == "__main__":
     sys.exit(main())

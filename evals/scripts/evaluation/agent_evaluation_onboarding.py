@@ -1,4 +1,5 @@
 import sys
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -10,7 +11,7 @@ import subprocess
 from pathlib import Path
 
 
-def print_header() -> Any:
+def print_header(title: str) -> Any:
     """Print a formatted header."""
     print(f"\n{'=' * 60}")
     print(f"🎯 {title}")

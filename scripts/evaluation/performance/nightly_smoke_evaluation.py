@@ -226,7 +226,7 @@ class NightlySmokeEvaluator:
             if os.getenv("RERANK_ENABLE", "1") == "1":
                 from sentence_transformers import CrossEncoder
 
-                rerank_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
+                rerank_model = os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base")
                 reranker = CrossEncoder(rerank_model)
                 test_score = reranker.predict([("query", "document")])
 

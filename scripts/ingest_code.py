@@ -2,21 +2,31 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import os
 import subprocess
 
 # Add repo root to import path
 import sys
 from collections.abc import Iterable
 from pathlib import Path
+from typing import Any
 
 import psycopg
+import torch
 from psycopg.rows import dict_row
+from sentence_transformers import SentenceTransformer
+from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.common.db_dsn import resolve_dsn  # type: ignore
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+EMBEDDER_NAME = "BAAI/bge-small-en-v1.5"
+CODE_CHUNK_TOKENS = int(os.getenv("CODE_CHUNK_SIZE_TOKENS", "256"))
+CODE_CHUNK_OVERLAP = int(os.getenv("CODE_CHUNK_OVERLAP_TOKENS", "64"))
 
 
 def sha256_bytes(data: bytes) -> bytes:
@@ -33,6 +43,36 @@ def iter_python_files() -> Iterable[Path]:
             if any(seg in s for seg in ("/.venv/", "/venv/", "__pycache__", ".pytest_cache", "node_modules")):
                 continue
             yield p
+
+
+def chunk_code_by_tokens(
+    text: str,
+    tokenizer: PreTrainedTokenizerBase,
+    max_tokens: int = CODE_CHUNK_TOKENS,
+    overlap_tokens: int = CODE_CHUNK_OVERLAP,
+) -> list[str]:
+    """Split code into overlapping token windows to improve retrieval granularity."""
+
+    if not text.strip():
+        return []
+
+    token_ids = tokenizer.encode(text, add_special_tokens=False)
+    if not token_ids:
+        return []
+
+    windows: list[str] = []
+    step = max(1, max_tokens - overlap_tokens)
+
+    for start in range(0, len(token_ids), step):
+        window_ids = token_ids[start : start + max_tokens]
+        if not window_ids:
+            break
+        window_text = tokenizer.decode(window_ids)
+        snippet = window_text.strip()
+        if snippet:
+            windows.append(snippet)
+
+    return windows
 
 
 def current_commit() -> str:
@@ -55,6 +95,14 @@ def main() -> int:
     dsn = resolve_dsn(strict=True)
     commit = current_commit()
     ctime = current_commit_time()
+
+    # Initialize embedder and tokenizer
+    print(f"Loading embedder: {EMBEDDER_NAME}")
+    embedder = SentenceTransformer(EMBEDDER_NAME, device="cuda" if torch.cuda.is_available() else "cpu")
+    embedder.max_seq_length = 512
+    tokenizer = AutoTokenizer.from_pretrained(EMBEDDER_NAME)
+    chunk_variant = f"code_t{CODE_CHUNK_TOKENS}_o{CODE_CHUNK_OVERLAP}"
+    ingest_run_id = os.getenv("INGEST_RUN_ID", f"ing-{os.getpid()}")
 
     files = list(iter_python_files())
     if not files:
@@ -134,32 +182,52 @@ def main() -> int:
                 symbol_id = int(symbol_result["id"])
                 inserted_symbols += 1
 
-                # Create a single chunk for now (embedding left NULL; will be backfilled)
-                chunk_hash = sha256_bytes(text.encode("utf-8"))
-                _ = cur.execute(
-                    """
-                    INSERT INTO code_chunks (file_id, symbol_id, chunk_index, content, docstring,
-                                              token_count, content_hash, embedding, model_name, model_version, normalized, meta)
-                    VALUES (%s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT DO NOTHING
-                    """,
-                    (
-                        file_id,
-                        symbol_id,
-                        0,
-                        text,
-                        None,
-                        max(1, len(text) // 4),
-                        chunk_hash,
-                        None,  # embedding to be backfilled
-                        None,
-                        None,
-                        False,
-                        "{}",
-                    ),
+                # Replace any previous chunks for this file to keep indexes consistent
+                cur.execute("DELETE FROM code_chunks WHERE file_id = %s", (file_id,))
+
+                windows = chunk_code_by_tokens(text, tokenizer, CODE_CHUNK_TOKENS, CODE_CHUNK_OVERLAP)
+                if not windows:
+                    continue
+
+                embeddings = embedder.encode(
+                    windows,
+                    normalize_embeddings=True,
+                    show_progress_bar=False,
+                    convert_to_numpy=True,
                 )
-                inserted_chunks += 1
+                for idx, snippet in enumerate(windows):
+                    tokens = tokenizer.encode(snippet, add_special_tokens=False)
+                    metadata = json.dumps(
+                        {
+                            "chunk_variant": chunk_variant,
+                            "source_path": rel,
+                            "ingest_run_id": ingest_run_id,
+                        }
+                    )
+                    vector = embeddings[idx].tolist() if hasattr(embeddings[idx], "tolist") else list(embeddings[idx])
+                    _ = cur.execute(
+                        """
+                        INSERT INTO code_chunks (file_id, symbol_id, chunk_index, content, docstring,
+                                                  token_count, content_hash, embedding, model_name, model_version, normalized, meta)
+                        VALUES (%s, %s, %s, %s, %s,
+                                %s, %s, %s, %s, %s, %s, %s)
+                        """,
+                        (
+                            file_id,
+                            symbol_id,
+                            idx,
+                            snippet,
+                            None,
+                            max(1, len(tokens)),
+                            sha256_bytes(snippet.encode("utf-8")),
+                            vector,
+                            EMBEDDER_NAME,
+                            "v1.5",
+                            True,
+                            metadata,
+                        ),
+                    )
+                    inserted_chunks += 1
 
         conn.commit()
 

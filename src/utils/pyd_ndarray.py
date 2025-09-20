@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from typing import Any
 
 import numpy as np
 from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
@@ -14,7 +15,6 @@ Pydantic-compatible numpy array types with shape validation.
 """
 
 
-
 class ArrayF32WithShape:
     """
     A Pydantic type for numpy arrays with specific shape constraints.
@@ -24,7 +24,7 @@ class ArrayF32WithShape:
         Vector2D = ArrayF32WithShape((10, 20))  # 2D array with shape (10, 20)
     """
 
-    def __init__() -> Any:
+    def __init__(self, shape: int | tuple[int, ...]) -> None:
         self.shape: Any = shape if isinstance(shape, tuple) else (shape,)
 
     def __get_pydantic_core_schema__(self, source_type: type, handler: GetCoreSchemaHandler) -> CoreSchema:

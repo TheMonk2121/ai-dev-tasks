@@ -1,18 +1,14 @@
 from __future__ import annotations
 
 import os
-import psycopg
 import re
 import sys
 
+import psycopg
+
 # Add project paths
-import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from src.common.psycopg3_config import Psycopg3Config
-# Add project paths
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
-from src.common.psycopg3_config import Psycopg3Config.extras
 
 #!/usr/bin/env python3
 """
@@ -30,6 +26,7 @@ MD = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 PY = re.compile(r"^(?:@[\w\.]+\(.*\)\s*\n)*\s*(class|def)\s+([A-Za-z_]\w*)", re.MULTILINE)
 JS = re.compile(r"^(?:export\s+)?(class|function|const)\s+([A-Za-z_]\w*)", re.MULTILINE)
 SQL = re.compile(r"(?is)\b(CREATE|ALTER)\s+(INDEX|TABLE|VIEW)\s+(\"?[\w\.]+\"?)")
+
 
 def derive_section_title(filename: str | None, text: str) -> tuple[str, str]:
     fp = (filename or "").lower()
@@ -71,6 +68,7 @@ def derive_section_title(filename: str | None, text: str) -> tuple[str, str]:
         if ln:
             return (ln[:80], ln[:80])
     return ("", "")
+
 
 def main() -> int:
     dsn = os.environ.get("POSTGRES_DSN")
@@ -124,7 +122,7 @@ def main() -> int:
     # Batch process rows lacking section_title
     BATCH = 1000
     while True:
-        dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        dict_cur = conn.cursor(row_factory=psycopg.rows.dict_row)
         dict_cur.execute(
             """
             SELECT id, filename, bm25_text
@@ -149,7 +147,7 @@ def main() -> int:
                 updates.append((title, path, _id))
 
         if updates:
-            psycopg2.extras.execute_batch(
+            psycopg.extras.execute_batch(
                 conn.cursor(),
                 """
                 UPDATE document_chunks
@@ -174,6 +172,7 @@ def main() -> int:
     conn.close()
     print("Backfill complete.")
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

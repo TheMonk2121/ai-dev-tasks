@@ -1,5 +1,6 @@
 import os
 from importlib import reload
+from typing import Any
 
 
 def test_legacy_aliases(monkeypatch: Any):

@@ -6,7 +6,9 @@ per-document caps and overall character budget.
 """
 
 from __future__ import annotations
+
 import re
+from typing import Any
 
 DocId = str
 Score = float

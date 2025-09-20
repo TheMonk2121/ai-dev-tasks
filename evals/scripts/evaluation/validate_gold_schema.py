@@ -4,6 +4,7 @@ import glob
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from src.schemas.eval import GoldCase
 from src.schemas.settings import settings
