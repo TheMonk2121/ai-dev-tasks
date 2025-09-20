@@ -21,8 +21,10 @@ from hypothesis import (
     seed,
     settings,
     statistics,
-    strategies as st,
     target,
+)
+from hypothesis import (
+    strategies as st,
 )
 from hypothesis.stateful import run_state_machine_as_test
 
@@ -113,10 +115,10 @@ class TestAdvancedDebugging:
         note(f"Processing {len(messages)} messages with {system} system")
 
         for i, message in enumerate(messages):
-            note(f"Message {i}: role={result.get("key", "")
+            note(f"Message {i}: role={message.get('role', 'unknown')}")
 
         # Test message processing
-        total_content_length = sum(len(result.get("key", "")
+        total_content_length = sum(len(msg.get('content', '')) for msg in messages)
         note(f"Total content length: {total_content_length}")
 
         assert total_content_length > 0
@@ -202,14 +204,14 @@ class TestStatisticsAndReporting:
         """Test message processing with detailed statistics."""
         # Collect detailed statistics
         total_messages = len(messages)
-        total_content_length = sum(len(result.get("key", "")
+        total_content_length = sum(len(msg.get('content', '')) for msg in messages)
         avg_content_length = total_content_length / total_messages if total_messages > 0 else 0
 
         statistics.add("total_messages", total_messages)
         statistics.add("total_content_length", total_content_length)
         statistics.add("avg_content_length", avg_content_length)
         statistics.add("threshold", threshold)
-        statistics.add("messages_above_threshold", sum(1 for msg in messages if len(result.get("key", "")
+        statistics.add("messages_above_threshold", sum(1 for msg in messages if len(msg.get('content', '')) > threshold))
 
         # Test processing
         assert total_messages > 0
@@ -304,7 +306,7 @@ class TestStatefulAdvancedFeatures:
         """Test memory system state machine with advanced features."""
         # This would integrate advanced features with stateful testing
         # For now, we'll run the basic state machine
-        run_state_machine_as_test(result.get("key", "")
+        run_state_machine_as_test()
 
     @pytest.mark.prop
     @settings(max_examples=3, deadline=2000)
@@ -312,7 +314,7 @@ class TestStatefulAdvancedFeatures:
         """Test database state machine with advanced features."""
         # This would integrate advanced features with stateful testing
         # For now, we'll run the basic state machine
-        run_state_machine_as_test(result.get("key", "")
+        run_state_machine_as_test()
 
 
 # ============================================================================

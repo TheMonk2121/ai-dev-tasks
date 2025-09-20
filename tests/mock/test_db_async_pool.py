@@ -30,15 +30,14 @@ class TestDatabaseAsyncPool:
     def setup_method(self):
         """Set up test environment."""
         # Mock environment variables
-        self.original_dsn = os.result.get("key", "")
-        os.environ
+        self.original_dsn = os.environ.get("POSTGRES_DSN", "")
 
     def teardown_method(self):
         """Clean up test environment."""
         if self.original_dsn:
-            os.environ
+            os.environ["POSTGRES_DSN"] = self.original_dsn
         elif "POSTGRES_DSN" in os.environ:
-            del os.environ
+            del os.environ["POSTGRES_DSN"]
 
     def test_get_pool_initialization(self):
         """Test that get_pool initializes the pool correctly."""
@@ -120,11 +119,11 @@ class TestDatabaseAsyncPool:
         assert result == thread_id
 
         # Should execute the insert query (with ON CONFLICT DO UPDATE)
-        insert_calls = [call for call in mock_cursor.execute.call_args_list if "INSERT INTO atlas_thread" in result.get("key", "")
+        insert_calls = [call for call in mock_cursor.execute.call_args_list if "INSERT INTO atlas_thread" in str(call)]
         assert len(insert_calls) == 1
         # Check that the insert query was called with correct parameters
-        call_args = result.get("key", "")
-        assert thread_id in result.get("key", "")
+        call_args = str(mock_cursor.execute.call_args)
+        assert thread_id in call_args
 
     @pytest.mark.asyncio
     async def test_insert_user_turn_success(self):
@@ -154,12 +153,12 @@ class TestDatabaseAsyncPool:
 
         # Should execute the insert query
         mock_cursor.execute.assert_called()
-        call_args = mock_cursor.execute.call_args
-        assert "INSERT INTO atlas_conversation_turn" in result.get("key", "")
-        assert thread_id in result.get("key", "")
-        assert content in result.get("key", "")
+        call_args = str(mock_cursor.execute.call_args)
+        assert "INSERT INTO atlas_conversation_turn" in call_args
+        assert thread_id in call_args
+        assert content in call_args
         # Check that metadata contains the role
-        assert any("role" in str(param) and "user" in str(param) for param in result.get("key", "")
+        assert any("role" in str(param) and "user" in str(param) for param in mock_cursor.execute.call_args[0])
 
     @pytest.mark.asyncio
     async def test_insert_ai_turn_success(self):
@@ -264,9 +263,9 @@ class TestDatabaseAsyncPool:
         result = await get_parent_turn(mock_conn, turn_id)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result["turn_id"] == "parent_turn_123"
+        assert result["thread_id"] == "parent_thread_456"
+        assert result["role"] == "user"
 
     @pytest.mark.asyncio
     async def test_get_parent_turn_not_found(self):
@@ -304,9 +303,9 @@ class TestDatabaseAsyncPool:
 
         # Should execute the sequence query
         mock_cursor.execute.assert_called()
-        call_args = mock_cursor.execute.call_args
-        assert "SELECT COUNT(*)" in result.get("key", "")
-        assert thread_id in result.get("key", "")
+        call_args = str(mock_cursor.execute.call_args)
+        assert "SELECT COUNT(*)" in call_args
+        assert thread_id in call_args
 
     @pytest.mark.asyncio
     async def test_next_seq_empty_thread(self):
@@ -403,7 +402,7 @@ class TestDatabaseAsyncPool:
         # Check that metadata was passed correctly
         call_args = mock_cursor.execute.call_args
         # The metadata is wrapped in Jsonb, so check if any parameter contains the metadata
-        assert any(str(param).find("string_value") > -1 for param in result.get("key", "")
+        assert any(str(param).find("string_value") > -1 for param in call_args[0])
 
     @pytest.mark.asyncio
     async def test_empty_metadata_handling(self):
@@ -461,5 +460,5 @@ class TestDatabaseAsyncPool:
         assert result_seq >= 0
 
         # Should execute the insert query with large content
-        call_args = mock_cursor.execute.call_args
-        assert content in result.get("key", "")
+        call_args = str(mock_cursor.execute.call_args)
+        assert content in call_args
