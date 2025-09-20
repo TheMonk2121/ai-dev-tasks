@@ -10,7 +10,7 @@ import os
 from typing import Any
 
 try:
-import logfire
+    import logfire
 except Exception:  # pragma: no cover - optional dependency
     logfire = None  # type: ignore
 

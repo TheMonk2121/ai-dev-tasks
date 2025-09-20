@@ -27,7 +27,8 @@ def _get_sentence_transformers():
     global _sentence_transformers
     if _sentence_transformers is None:
         try:
-    import sentence_transformers
+            import sentence_transformers
+
             _sentence_transformers = sentence_transformers
         except ImportError:
             logger.warning("sentence_transformers not available, reranker disabled")
@@ -40,7 +41,8 @@ def _get_torch():
     global _torch
     if _torch is None:
         try:
-    import torch
+            import torch
+
             _torch = torch
         except ImportError:
             logger.warning("torch not available, reranker disabled")

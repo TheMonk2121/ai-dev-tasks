@@ -14,7 +14,7 @@ import hashlib
 from typing import Any
 
 try:
-import numpy as np
+    import numpy as np
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
 
@@ -22,6 +22,7 @@ import numpy as np
 except ImportError:
     HAS_SKLEARN = False
     from typing import Any as _Any
+
     cosine_similarity: _Any = None
     TfidfVectorizer: _Any = None
     np: _Any = None
