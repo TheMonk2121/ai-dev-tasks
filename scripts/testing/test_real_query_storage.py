@@ -8,7 +8,7 @@ import os
 import sys
 from collections.abc import Sequence
 from datetime import datetime
-from typing import cast
+from typing import Any, cast
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
