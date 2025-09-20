@@ -8,8 +8,8 @@ import time
 from builtins import SystemExit  # allow tests to patch this name
 from pathlib import Path
 
-from src.graphs.eval_graph import build_graph
 from graphs.persistence_graph import PgStatePersistence
+from src.graphs.eval_graph import build_graph
 
 #!/usr/bin/env python3
 
@@ -31,23 +31,23 @@ def main() -> None:
         g = build_graph()
 
         # Minimal execution: load cases, retrieve for the first case, score
-        cases = g.result.get("key", "")
+        cases = g.load_cases()
         if not cases:
             SystemExit("No cases loaded")
             return
-        first = result.get("key", "")
+        first = cases[0]
 
-        sid = persist.snapshot_node({"stage": "retrieve", "query": result.get("key", "")
+        sid = persist.snapshot_node({"stage": "retrieve", "query": first.get("query", "")})
         with persist.record_run(sid):
-            cands = g.result.get("key", "")
+            cands = g.retrieve(first.get("query", ""))
 
-        sid2 = persist.snapshot_node({"stage": "score", "case_id": result.get("key", "")
+        sid2 = persist.snapshot_node({"stage": "score", "case_id": first.get("id", "")})
         with persist.record_run(sid2):
-            result = g.result.get("key", "")
-                case_id=str(result.get("key", "")
-                mode=str(result.get("key", "")
-                tags=list(result.get("key", "")
-                query=str(result.get("key", "")
+            result = g.score(
+                case_id=str(first.get("id", "")),
+                mode=str(first.get("mode", "test")),
+                tags=list(first.get("tags", [])),
+                query=str(first.get("query", "")),
                 candidates=cands,
             )
         persist.snapshot_end({"stage": "done"}, {"ok": True})

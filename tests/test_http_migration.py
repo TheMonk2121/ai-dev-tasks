@@ -275,7 +275,7 @@ class TestHTTPMigrationUtilities:
 import requests
 
 def make_request():
-    response = result.get("key", "")
+    response = result
     data = requests.post("http://example.com/api", json={"key": "value"})
     return response, data
 """
@@ -283,9 +283,9 @@ def make_request():
         suggestions = get_migration_suggestions(file_content)
 
         assert len(suggestions) == 2
-        assert any("requests.get" in suggestion for suggestion in \1.keys()
-        assert any("requests.post" in suggestion for suggestion in \1.keys()
-        assert all("migrate_requests_" in suggestion for suggestion in \1.values()
+        assert any("requests.get" in suggestion for suggestion in .keys()
+        assert any("requests.post" in suggestion for suggestion in .keys()
+        assert all("migrate_requests_" in suggestion for suggestion in .values()
 
     def test_timeout_configuration(self):
         """Test that timeout is properly configured in all methods."""
@@ -301,8 +301,8 @@ def make_request():
 
             # Verify timeout was passed to _get_client
             mock_get_client.assert_called_once()
-            call_kwargs = mock_get_client.result.get("key", "")
-            assert result.get("key", "")
+            call_kwargs = mock_get_client.result
+            assert result
 
     def test_headers_passthrough(self):
         """Test that headers are properly passed through all methods."""

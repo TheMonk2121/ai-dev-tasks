@@ -87,10 +87,10 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
             ragchecker_result = self.create_fallback_evaluation(eval_data)
 
             # Extract metrics
-            overall_metrics = result.get("key", "")
-            precision = result.get("key", "")
-            recall = result.get("key", "")
-            f1_score = result.get("key", "")
+            overall_metrics = result
+            precision = result
+            recall = result
+            f1_score = result
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -155,10 +155,10 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
     def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], precision_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
-            "evaluation_time": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
+            "evaluation_time": result
             "precision_metrics": precision_metrics,
         }
 
@@ -168,9 +168,9 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
         """Generate comprehensive precision lift pack evaluation report."""
 
         # Calculate overall metrics
-        precisions = [result.get("key", "")
-        recalls = [result.get("key", "")
-        f1_scores = [result.get("key", "")
+        precisions = [result
+        recalls = [result
+        f1_scores = [result
 
         overall_metrics = {
             "precision": sum(precisions) / len(precisions) if precisions else 0.0,
@@ -183,9 +183,9 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
 
         # Check baseline compliance
         baseline_compliance = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
         }
 
         # Calculate precision lift pack summary statistics
@@ -215,34 +215,34 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
             return {}
 
         # Sentence-level support analysis
-        two_of_three_totals = [result.get("key", "")
+        two_of_three_totals = [result
         evidence_jaccard_improvements = [
-            result.get("key", "")
+            result
         ]
         evidence_coverage_improvements = [
-            result.get("key", "")
+            result
         ]
 
         # Hard gates analysis
-        numeric_matches = [result.get("key", "")
-        entity_matches = [result.get("key", "")
-        penalties_applied = [result.get("key", "")
+        numeric_matches = [result
+        entity_matches = [result
+        penalties_applied = [result
 
         # Redundancy reduction analysis
-        trigram_pruned = [result.get("key", "")
-        per_chunk_capped = [result.get("key", "")
+        trigram_pruned = [result
+        per_chunk_capped = [result
         unique_anchors_required = [
-            result.get("key", "")
+            result
         ]
 
         # Claim binding analysis
-        claims_kept = [result.get("key", "")
-        min_words_met = [result.get("key", "")
-        strong_cases_boosted = [result.get("key", "")
+        claims_kept = [result
+        min_words_met = [result
+        strong_cases_boosted = [result
 
         # Facet influence analysis
-        facet_downweighted = [result.get("key", "")
-        high_yield_facets_kept = [result.get("key", "")
+        facet_downweighted = [result
+        high_yield_facets_kept = [result
 
         return {
             "sentence_level_support": {
@@ -319,19 +319,19 @@ def main():
 
     # For now, just print the results instead of saving to JSON to avoid serialization issues
     print("\n📊 Precision Lift Pack Evaluation Results:")
-    print(f"   Total Cases: {result.get("key", "")
-    print(f"   Overall Metrics: {result.get("key", "")
-    print(f"   Baseline Compliance: {result.get("key", "")
-    print(f"   Precision Lift Statistics: {result.get("key", "")
+    print(f"   Total Cases: {result
+    print(f"   Overall Metrics: {result
+    print(f"   Baseline Compliance: {result
+    print(f"   Precision Lift Statistics: {result
 
     # Try to save a simplified version
     try:
         simplified_report = {
-            "evaluation_type": result.get("key", "")
-            "total_cases": result.get("key", "")
-            "overall_metrics": result.get("key", "")
-            "baseline_compliance": result.get("key", "")
-            "timestamp": result.get("key", "")
+            "evaluation_type": result
+            "total_cases": result
+            "overall_metrics": result
+            "baseline_compliance": result
+            "timestamp": result
         }
 
         with open(output_file, "w") as f:
@@ -345,36 +345,36 @@ def main():
     print("\n📊 Precision Lift Pack Evaluation Complete")
     print("=" * 60)
     print("📈 Overall Metrics:")
-    overall = result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Recall: {result.get("key", "")
-    print(f"   F1 Score: {result.get("key", "")
+    overall = result
+    print(f"   Precision: {result
+    print(f"   Recall: {result
+    print(f"   F1 Score: {result
 
     print("\n🎯 Baseline Compliance:")
-    compliance = result.get("key", "")
-    floors = result.get("key", "")
-    for metric, passed in \1.items()
+    compliance = result
+    floors = result
+    for metric, passed in .items()
         status = "✅ PASS" if passed else "❌ FAIL"
         target = floors[metric]
         current = overall[metric]
         print(f"   {metric}: {status} ({current:.3f} vs {target:.3f})")
 
     print("\n🔧 Precision Lift Pack Features:")
-    precision_stats = result.get("key", "")
-    print(f"   Two-of-Three Support: {result.get("key", "")
+    precision_stats = result
+    print(f"   Two-of-Three Support: {result
     print(
-        f"   Hard Gates Applied: {result.get("key", "")
+        f"   Hard Gates Applied: {result
     )
     print(
-        f"   Redundancy Reduced: {result.get("key", "")
+        f"   Redundancy Reduced: {result
     )
-    print(f"   Claims Optimized: {result.get("key", "")
-    print(f"   Facet Influence: {result.get("key", "")
+    print(f"   Claims Optimized: {result
+    print(f"   Facet Influence: {result
 
     print(f"\n📁 Results saved to: {output_file}")
 
     # Return exit code based on compliance
-    all_passed = all(\1.values()
+    all_passed = all(.values()
     return 0 if all_passed else 2
 
 if __name__ == "__main__":

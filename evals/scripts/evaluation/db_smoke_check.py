@@ -34,7 +34,7 @@ def show_gucs(role: str) -> None:
             st = cur.fetchone()[0]
             cur.execute("SHOW idle_in_transaction_session_timeout;")
             it = cur.fetchone()[0]
-            # Optional: show plan cache mode if supported
+            # Optional: show plan cache mode if supported:
             try:
                 cur.execute("SHOW plan_cache_mode;")
                 pcm = cur.fetchone()[0]
@@ -69,46 +69,43 @@ def check_decisions_indexes() -> None:
             cur.execute("SELECT extname FROM pg_extension WHERE extname='pg_trgm';")
             has_trgm = bool(cur.fetchone())
             cur.execute("SELECT indexname FROM pg_indexes WHERE tablename='decisions';")
-            present = {result.get("key", "")
+            present = {result
 
             missing = [i for i in expected_indexes if i not in present]
             print(f"pg_trgm={'yes' if has_trgm else 'no'}; missing_indexes={missing if missing else 'none'}")
 
-            cur.execute(
-                """
+            cur.execute("""
                 SELECT tgname FROM pg_trigger WHERE tgname='trg_decisions_set_updated_at';
-                """
+                """)
             )
             has_trg = bool(cur.fetchone())
-            print(f"updated_at_trigger={'present' if has_trg else 'missing'}")
-
+            print(f"updated_at_trigger={'present' if has_trg else 'missing'}"):
+:
 def check_supersedence_fks() -> None:
     print("\n[Checks] supersedence foreign keys")
     with get_conn(role="retrieval") as conn:
         with conn.cursor() as cur:
-            cur.execute(
-                """
+            cur.execute("""
                 SELECT tc.constraint_name
                 FROM information_schema.table_constraints tc
                 WHERE tc.table_name='decision_supersedence_log'
                   AND tc.constraint_type='FOREIGN KEY'
                   AND tc.constraint_name IN (
                     'fk_supersedence_log_superseded',
-                    'fk_supersedence_log_superseding'
+                    'fk_supersedence_log_superseding')
                   );
                 """
             )
-            fks = {result.get("key", "")
+            fks = {result
             missing = [
                 n
-                for n in (
-                    "fk_supersedence_log_superseded",
-                    "fk_supersedence_log_superseding",
+                for n in("fk_supersedence_log_superseded",
+                    "fk_supersedence_log_superseding",)
                 )
                 if n not in fks
             ]
-            print(f"missing_fks={missing if missing else 'none'}")
-
+            print(f"missing_fks={missing if missing else 'none'}"):
+:
 def check_performance_helpers() -> None:
     print("\n[Checks] performance helpers")
     with get_conn(role="retrieval") as conn:
@@ -116,7 +113,7 @@ def check_performance_helpers() -> None:
             cur.execute("SELECT 1 FROM pg_proc WHERE proname='ensure_future_performance_partitions';")
             has_fn = bool(cur.fetchone())
     print(f"ensure_future_performance_partitions={'present' if has_fn else 'missing'}")
-
+:
 def check_retrieval_indexes() -> None:
     print("\n[Checks] retrieval indexes (document_chunks/documents)")
     expected = [
@@ -135,10 +132,10 @@ def check_retrieval_indexes() -> None:
             for table, _ in expected:
                 cur.execute("SELECT indexname FROM pg_indexes WHERE tablename=%s;", (table,))
                 for row in cur.fetchall():
-                    present.add((table, result.get("key", "")
-            missing = [pair for pair in expected if pair not in present]
-            print(f"vector_ext={'yes' if has_vector else 'no'}; missing={missing if missing else 'none'}")
-
+                    present.add((table, result
+            missing = [pair for pair in expected if pair not in present])
+            print(f"vector_ext={'yes' if has_vector else 'no'}; missing={missing if missing else 'none'}"):
+:
 def main() -> None:
     # Verify GUCs for two roles
     show_gucs("retrieval")

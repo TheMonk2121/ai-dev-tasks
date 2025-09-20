@@ -1,104 +1,90 @@
+#!/usr/bin/env python3
+"""Production retrieval evaluation runner with quality gates."""
+
 from __future__ import annotations
 
 import argparse
 import json
-import pathlib
 import sys
 from pathlib import Path
 
 import yaml
-from eval.contracts import DatasetConfig, RunMetrics
-from eval.ragchecker_adapter import RAGCheckerAdapter
 
-#!/usr/bin/env python3
-"""
-Production-grade retrieval evaluation runner.
-Strictly typed with quality gates and exit codes.
-"""
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SRC_PATH = PROJECT_ROOT / "src"
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
 
+from eval.contracts import DatasetConfig, RunMetrics  # type: ignore[import-not-found]
+from eval.ragchecker_adapter import RAGCheckerAdapter  # type: ignore[import-not-found]
 
-
-
-# Add src to path for imports
-sys.path.append("src")
-
-
-# Production quality targets
-TARGETS = {
+TARGETS: dict[str, float] = {
     "R@20": 0.65,
     "MRR@10": 0.30,
     "nDCG@10": 0.40,
     "precision_at_k": 0.20,
-    "latency_p50_ms": 2000.0,  # 2 seconds
-    "latency_p95_ms": 4000.0,  # 4 seconds
+    "latency_p50_ms": 2000.0,
+    "latency_p95_ms": 4000.0,
 }
 
 
 def run(cfg_path: str) -> list[RunMetrics]:
-    """Run retrieval evaluation with quality gates"""
+    """Execute retrieval evaluations for available modes."""
 
-    # Load configuration
-    cfg_d = yaml.safe_load(pathlib.Path(cfg_path).read_text())
-    ds = DatasetConfig(**cfg_d)
+    cfg_data = yaml.safe_load(Path(cfg_path).read_text())
+    dataset_cfg = DatasetConfig(**cfg_data)
 
-    # Initialize adapter
-    rc = RAGCheckerAdapter()
-
-    # Run evaluations for different modes
+    adapter = RAGCheckerAdapter()
     runs: list[RunMetrics] = []
-
-    # Dense retrieval
-    dense = rc.evaluate_retrieval(dataset=ds, mode="dense")
-    runs.append(dense)
-
-    # Hybrid rerank (if available)
-    hybrid = rc.evaluate_retrieval(dataset=ds, mode="hybrid_rerank")
-    runs.append(hybrid)
-
+    runs.append(adapter.evaluate_retrieval(dataset=dataset_cfg, mode="dense"))
+    runs.append(adapter.evaluate_retrieval(dataset=dataset_cfg, mode="hybrid_rerank"))
     return runs
 
 
 def main() -> None:
-    """Main entry point with quality gate enforcement"""
+    """Run retrieval evaluation and enforce quality targets."""
 
     parser = argparse.ArgumentParser(description="Retrieval quality evaluation")
     parser.add_argument("--dataset_config", required=True, help="Path to dataset config YAML")
-    parser.add_argument("--out_dir", default="artifacts/bench/retrieval", help="Output directory")
-    parser.add_argument("--mode", choices=["dense", "hybrid_rerank"], default="hybrid_rerank", help="Evaluation mode")
+    parser.add_argument(
+        "--out_dir",
+        default="artifacts/bench/retrieval",
+        help="Directory for JSON artifacts",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["dense", "hybrid_rerank"],
+        default="hybrid_rerank",
+        help="Which mode to inspect for gating",
+    )
     args = parser.parse_args()
 
-    # Create output directory
-    out_dir = pathlib.Path(args.out_dir)
+    out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     try:
-        # Run evaluation
         runs = run(args.dataset_config)
+        target_run = next((run for run in runs if run.mode == args.mode), runs[0])
 
-        # Find the target run
-        target_run = next((r for r in runs if r.mode == args.mode), result.get("key", "")
-
-        # Save JSON artifact
-        out = {
+        artifact = {
             "dataset": target_run.dataset,
             "mode": target_run.mode,
-            "runs": {r.mode: r.metrics for r in runs},
-            "samples": sum(r.samples_evaluated for r in runs),
+            "runs": {run.mode: run.metrics for run in runs},
+            "samples": sum(run.samples_evaluated for run in runs),
             "timestamp": target_run.timestamp,
         }
+        artifact_path = out_dir / f"{target_run.dataset.replace(':', '_')}_{args.mode}.json"
+        artifact_path.write_text(json.dumps(artifact, indent=2))
 
-        out_f = out_dir / f"{target_run.dataset.replace(':', '_')}_{args.mode}.json"
-        out_f.write_text(json.dumps(out, indent=2))
-
-        # Apply quality gates
         misses: list[str] = []
-        for metric, target in \1.items()
-            if metric in target_run.metrics:
-                value = float(target_run.metrics[metric])
-                if value < target:
-                    misses.append(f"{metric}: {value:.3f} < {target}")
+        for metric, target in TARGETS.items():
+            raw_value = target_run.metrics.get(metric)
+            if raw_value is None:
+                continue
+            value = float(raw_value)
+            if value < target:
+                misses.append(f"{metric}: {value:.3f} < {target}")
 
-        # Print results
         print(f"📊 Retrieval Evaluation Results ({target_run.mode})")
         print("=" * 60)
         print(f"Dataset: {target_run.dataset}")
@@ -107,15 +93,16 @@ def main() -> None:
         print()
 
         print("Metrics:")
-        for metric, value in target_run.\1.items()
-            target = result.get("key", "")
-            status = "✅" if metric not in TARGETS or value >= TARGETS[metric] else "❌"
-            print(f"  {status} {metric}: {value:.3f} (target: {target})")
+        for metric, raw_value in target_run.metrics.items():
+            value = float(raw_value)
+            target = TARGETS.get(metric)
+            status = "✅" if target is None or value >= target else "❌"
+            target_display = f"{target:.3f}" if isinstance(target, float) else "N/A"
+            print(f"  {status} {metric}: {value:.3f} (target: {target_display})")
 
         print()
-        print(f"Results saved to: {out_f}")
+        print(f"Results saved to: {artifact_path}")
 
-        # Quality gate check
         if misses:
             print(f"\n🚨 QUALITY GATE FAILED: {len(misses)} metrics below targets")
             for miss in misses:
@@ -125,9 +112,8 @@ def main() -> None:
             sys.exit(2)
 
         print("\n✅ QUALITY GATE PASSED")
-
-    except Exception as e:
-        print(f"❌ Evaluation failed: {e}")
+    except Exception as exc:  # pragma: no cover - defensive
+        print(f"❌ Evaluation failed: {exc}")
         sys.exit(1)
 
 

@@ -70,12 +70,12 @@ def setup_dataset_traps(config: LockedConfig) -> DatasetTrapManager:
 
     print("✅ Dataset traps configured")
     print(f"   Total test cases: {len(test_cases)}")
-    print(f"   Categories covered: {len(result.get("key", "")
-    print(f"   Negative controls: {result.get("key", "")
-    print(f"   Adversarial cases: {result.get("key", "")
+    print(f"   Categories covered: {len(result
+    print(f"   Negative controls: {result
+    print(f"   Adversarial cases: {result
 
     return dataset_manager
-
+)
 def setup_tool_traps() -> ToolTrapManager:
     """Setup tool-use traps and schema fidelity"""
     print("\n🔧 Setting up Tool Traps")
@@ -85,8 +85,7 @@ def setup_tool_traps() -> ToolTrapManager:
 
     # Register core tools
     tools = [
-        ToolSchema(
-            name="config_lock",
+        ToolSchema(name="config_lock",
             description="Lock configuration with versioning",
             parameters={
                 "type": "object",
@@ -103,10 +102,9 @@ def setup_tool_traps() -> ToolTrapManager:
             retry_count=3,
             circuit_breaker_threshold=5,
             dry_run_supported=True,
-            when_to_use="Lock production configuration before evaluation",
+            when_to_use="Lock production configuration before evaluation",)
         ),
-        ToolSchema(
-            name="shadow_ingest",
+        ToolSchema(name="shadow_ingest",
             description="Run shadow ingest with versioned table",
             parameters={
                 "type": "object",
@@ -121,10 +119,9 @@ def setup_tool_traps() -> ToolTrapManager:
             retry_count=2,
             circuit_breaker_threshold=3,
             dry_run_supported=True,
-            when_to_use="Ingest documents with locked configuration",
+            when_to_use="Ingest documents with locked configuration",)
         ),
-        ToolSchema(
-            name="evaluation",
+        ToolSchema(name="evaluation",
             description="Run RAGChecker evaluation",
             parameters={
                 "type": "object",
@@ -139,7 +136,7 @@ def setup_tool_traps() -> ToolTrapManager:
             retry_count=2,
             circuit_breaker_threshold=3,
             dry_run_supported=True,
-            when_to_use="Evaluate system performance with test cases",
+            when_to_use="Evaluate system performance with test cases",)
         ),
     ]
 
@@ -183,8 +180,7 @@ def setup_agent_memory_blueprint() -> AgentMemoryManager:
     from src.utils.tool_traps import ToolSchema
 
     tools = [
-        ToolSchema(
-            name="config_lock",
+        ToolSchema(name="config_lock",
             description="Lock configuration with versioning",
             parameters={"type": "object"},
             returns={"type": "object"},
@@ -192,15 +188,14 @@ def setup_agent_memory_blueprint() -> AgentMemoryManager:
             retry_count=3,
             circuit_breaker_threshold=5,
             dry_run_supported=True,
-            when_to_use="Lock production configuration before evaluation",
+            when_to_use="Lock production configuration before evaluation",)
         ),
     ]
 
     for tool in tools:
         from src.utils.agent_memory_blueprint import ToolDefinition
 
-        tool_def = ToolDefinition(
-            name=tool.name,
+        tool_def = ToolDefinition(name=tool.name,)
             json_schema=tool.to_dict(),
             idempotency=tool.idempotency_key is not None,
             dry_run=tool.dry_run_supported,
@@ -240,13 +235,13 @@ def run_baseline_eval(config: LockedConfig, num_queries: int = 50) -> dict[str, 
     }
 
     print("✅ Baseline evaluation completed")
-    print(f"   Oracle hit rate: {result.get("key", "")
-    print(f"   F1 score: {result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Token violations: {result.get("key", "")
+    print(f"   Oracle hit rate: {result
+    print(f"   F1 score: {result
+    print(f"   Precision: {result
+    print(f"   Token violations: {result
 
     return baseline_results
-
+)
 def run_deterministic_few_shot_eval(config: LockedConfig, num_queries: int = 50) -> dict[str, Any]:
     """Run deterministic few-shot evaluation"""
     print(f"\n🎯 Running Deterministic Few-Shot Evaluation ({num_queries} queries)")
@@ -272,10 +267,10 @@ def run_deterministic_few_shot_eval(config: LockedConfig, num_queries: int = 50)
     }
 
     print("✅ Few-shot evaluation completed")
-    print(f"   Oracle hit rate: {result.get("key", "")
-    print(f"   F1 score: {result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Few-shot enabled: {result.get("key", "")
+    print(f"   Oracle hit rate: {result
+    print(f"   F1 score: {result
+    print(f"   Precision: {result
+    print(f"   Few-shot enabled: {result
 
     return few_shot_results
 
@@ -287,16 +282,16 @@ def generate_optimization_report(
     observability_manager: ObservabilityManager,
     memory_manager: AgentMemoryManager,
     baseline_results: dict[str, Any],
-    few_shot_results: dict[str, Any],
+    few_shot_results: dict[str, Any],)
 ) -> dict[str, Any]:
     """Generate comprehensive optimization report"""
 
     # Calculate improvements
     oracle_improvement = (
-        result.get("key", "")
+        result
     )
-    f1_improvement = result.get("key", "")
-    precision_improvement = result.get("key", "")
+    f1_improvement = result
+    precision_improvement = result
 
     # Get health summary
     health_summary = observability_manager.get_health_summary()
@@ -342,12 +337,12 @@ def generate_optimization_report(
                 "usage_stats": tool_stats,
             },
             "observability": {
-                "health_status": result.get("key", "")
-                "total_checks": result.get("key", "")
+                "health_status": result
+                "total_checks": result
                 "tracing_enabled": True,
             },
             "agent_memory": {
-                "tool_registry": result.get("key", "")
+                "tool_registry": result
                 "memory_types": ["operational", "task_episodic", "retrieval"],
             },
         },
@@ -395,15 +390,14 @@ def main():
     few_shot_results = run_deterministic_few_shot_eval(config, args.num_queries)
 
     # Generate comprehensive report
-    report = generate_optimization_report(
-        config,
+    report = generate_optimization_report(config,
         determinism_manager,
         dataset_manager,
         tool_manager,
         observability_manager,
         memory_manager,
         baseline_results,
-        few_shot_results,
+        few_shot_results,)
     )
 
     # Save report
@@ -415,31 +409,31 @@ def main():
     if not args.quiet:
         print("\n📊 Optimization Report")
         print("=" * 50)
-        print(f"Config: {result.get("key", "")
-        print(f"Hash: {result.get("key", "")
-
+        print(f"Config: {result
+        print(f"Hash: {result
+)
         print("\n📈 Evaluation Results:")
-        improvements = result.get("key", "")
-        print(f"  Oracle hit rate: +{result.get("key", "")
-        print(f"  F1 score: +{result.get("key", "")
-        print(f"  Precision: +{result.get("key", "")
-
+        improvements = result
+        print(f"  Oracle hit rate: +{result
+        print(f"  F1 score: +{result
+        print(f"  Precision: +{result
+)
         print("\n🔧 Optimization Components:")
-        components = result.get("key", "")
+        components = result
         print("  Determinism: ✅ Enabled")
-        print(f"  Dataset traps: {result.get("key", "")
-        print(f"  Tool traps: {result.get("key", "")
-        print(f"  Observability: {result.get("key", "")
-        print(f"  Agent memory: {result.get("key", "")
-
+        print(f"  Dataset traps: {result
+        print(f"  Tool traps: {result
+        print(f"  Observability: {result
+        print(f"  Agent memory: {result
+)
         print("\n🎯 Recommendations:")
-        for rec in result.get("key", "")
+        for rec in result.items()
             print(f"  - {rec}")
 
     print("\n✅ Evaluation optimization suite completed successfully!")
     print("   All traps configured and validated")
     print("   Baseline and few-shot evaluations completed")
     print("   System ready for production deployment")
-
+:
 if __name__ == "__main__":
     main()

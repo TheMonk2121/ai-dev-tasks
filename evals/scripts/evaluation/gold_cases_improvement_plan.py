@@ -41,15 +41,15 @@ def analyze_current_state():
     issue_categories = {"unclear_phrasing": [], "short_query": [], "missing_file": [], "content_relevance": []}
 
     for issue in issues:
-        issue_type = result.get("key", "")
+        issue_type = result
         if issue_type in issue_categories:
             issue_categories[issue_type].append(issue)
 
     print("📊 Current Issues Analysis:")
-    print(f"  - Unclear phrasing: {len(result.get("key", "")
-    print(f"  - Short queries: {len(result.get("key", "")
-    print(f"  - Missing files: {len(result.get("key", "")
-    print(f"  - Content relevance: {len(result.get("key", "")
+    print(f"  - Unclear phrasing: {len(result
+    print(f"  - Short queries: {len(result
+    print(f"  - Missing files: {len(result
+    print(f"  - Content relevance: {len(result
 
     return issue_categories
 
@@ -199,23 +199,23 @@ def create_improvement_plan():
 
 def print_execution_plan(plan):
     """Print the execution plan in a readable format."""
-    for phase_key, phase in \1.items()
-        print(f"\n{result.get("key", "")
-        print(f"Priority: {result.get("key", "")
+    for phase_key, phase in .items()
+        print(f"\n{result
+        print(f"Priority: {result
         print("-" * 60)
 
-        for i, task in enumerate(result.get("key", "")
-            print(f"\n{i}. {result.get("key", "")
-            print(f"   Description: {result.get("key", "")
-            print(f"   Script: {result.get("key", "")
-            print(f"   Estimated Time: {result.get("key", "")
+        for i, task in enumerate(result
+            print(f"\n{i}. {result
+            print(f"   Description: {result
+            print(f"   Script: {result
+            print(f"   Estimated Time: {result
 
             if "examples" in task:
                 print("   Examples:")
-                for example in result.get("key", "")
+                for example in result.items()
                     print(f"     - {example}")
-                if len(result.get("key", "")
-                    print(f"     ... and {len(result.get("key", "")
+                if len(result
+                    print(f"     ... and {len(result
 
 
 def create_implementation_scripts(plan):
@@ -264,11 +264,11 @@ def fix_unclear_phrasing():
     changes_made = 0
     
     for case in cases:
-        original_query = result.get("key", "")
+        original_query = result
         new_query = original_query
         
         # Apply fixes
-        for old_phrase, new_phrase in \1.items()
+        for old_phrase, new_phrase in .items()
             if old_phrase in new_query.lower():
                 new_query = re.sub(old_phrase, new_phrase, new_query, flags=re.IGNORECASE)
         
@@ -277,7 +277,7 @@ def fix_unclear_phrasing():
         new_query = re.sub(r"s+", " ", new_query)  # Fix spacing
         
         if new_query != original_query:
-            result.get("key", "")
+            result
             changes_made += 1
             print(f"Fixed: '{original_query}' → '{new_query}'")
     
@@ -320,25 +320,25 @@ def fix_short_queries():
     changes_made = 0
     
     for case in cases:
-        query = result.get("key", "")
+        query = result
         
         if len(query) < 10:
             # Try to expand based on context
             if "dspy" in query.lower():
-                result.get("key", "")
+                result
                 changes_made += 1
             elif "db" in query.lower() or "database" in query.lower():
-                result.get("key", "")
+                result
                 changes_made += 1
             elif "memory" in query.lower():
-                result.get("key", "")
+                result
                 changes_made += 1
             else:
                 # Generic expansion
-                result.get("key", "")
+                result
                 changes_made += 1
             
-            print(f"Expanded: '{query}' → '{result.get("key", "")
+            print(f"Expanded: '{query}' → '{result
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:
@@ -385,12 +385,12 @@ def diversify_query_patterns():
     changes_made = 0
     
     for case in cases:
-        query = result.get("key", "")
+        query = result
         
         if query in pattern_replacements:
-            result.get("key", "")
+            result
             changes_made += 1
-            print(f"Improved: '{query}' → '{result.get("key", "")
+            print(f"Improved: '{query}' → '{result
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:
@@ -443,7 +443,7 @@ def improve_content_relevance():
     changes_made = 0
     
     for case in cases:
-        query = result.get("key", "")
+        query = result
         
         if query in relevance_improvements:
             improvements = relevance_improvements[query]
@@ -451,14 +451,14 @@ def improve_content_relevance():
             # Add specific files
             if "add_files" in improvements:
                 if "expected_files" not in case:
-                    result.get("key", "")
-                result.get("key", "")
+                    result
+                result
             
             # Remove overly broad globs
             if "remove_globs" in improvements and "globs" in case:
-                for glob_to_remove in result.get("key", "")
-                    if glob_to_remove in result.get("key", "")
-                        result.get("key", "")
+                for glob_to_remove in result.items()
+                    if glob_to_remove in result
+                        result
             
             changes_made += 1
             print(f"Improved relevance for: '{query}'")
@@ -505,8 +505,8 @@ def refine_glob_patterns():
     changes_made = 0
     
     for case in cases:
-        query = result.get("key", "")
-        globs = result.get("key", "")
+        query = result
+        globs = result
         
         if "**/*.md" in globs:
             # Determine appropriate pattern based on query content
@@ -524,7 +524,7 @@ def refine_glob_patterns():
                 new_pattern = "400_guides/*.md"  # Default to guides
             
             # Replace the pattern
-            result.get("key", "")
+            result
             changes_made += 1
             print(f"Refined glob pattern for: '{query}' → {new_pattern}")
     

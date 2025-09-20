@@ -231,29 +231,29 @@ def main():
 
     # Display results
     print("\n📈 Results:")
-    print(f"Total test cases: {result.get("key", "")
+    print(f"Total test cases: {result
     print(
-        f"Violations without normalization: {result.get("key", "")
+        f"Violations without normalization: {result
     )
-    print(f"Violations with normalization: {result.get("key", "")
+    print(f"Violations with normalization: {result
     print(
-        f"Severe violations without normalization: {result.get("key", "")
+        f"Severe violations without normalization: {result
     )
     print(
-        f"Severe violations with normalization: {result.get("key", "")
+        f"Severe violations with normalization: {result
     )
 
     # Calculate improvement
-    if result.get("key", "")
-        violation_reduction = (result.get("key", "")
+    if result:
+        violation_reduction = (result
             "violations_without_norm"
         ]
         print(f"\n🎯 Violation reduction: {violation_reduction:.1%}")
 
-    if result.get("key", "")
+    if result:
         severe_reduction = (
-            result.get("key", "")
-        ) / result.get("key", "")
+            result
+        ) / result
         print(f"🎯 Severe violation reduction: {severe_reduction:.1%}")
 
     print("\n✅ Benchmark complete!")

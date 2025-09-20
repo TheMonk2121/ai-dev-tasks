@@ -1,23 +1,25 @@
 from __future__ import annotations
+
 import asyncio
 import json
 import logging
 import os
 import random
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Optional, Union
+
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
-    from scripts.bedrock_client import BedrockUsage
-import os
-import sys
+
 # FIXME: Update this import path after reorganization
 # from scripts.bedrock_client import BedrockUsage
-from typing import Any, Optional, Union
+from scripts.bedrock_client import BedrockUsage
+
 #!/usr/bin/env python3
 """
 Enhanced AWS Bedrock Client with Multi-Key Load Balancing
@@ -27,9 +29,10 @@ to optimize RAGChecker performance and handle API rate limits effectively.
 
 # Import BedrockUsage from the standard client to avoid duplication
 try:
+    # Import already done above
+    pass
 except ImportError:
     # Fallback for when running from different directory
-
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Configure logging

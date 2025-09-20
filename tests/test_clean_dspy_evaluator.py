@@ -96,8 +96,8 @@ class TestCleanDSPyEvaluator:
             cases = self.evaluator._load_gold_cases("test.jsonl")
 
             assert len(cases) == 1
-            assert result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert result
 
     def test_load_gold_cases_file_not_found(self):
         """Test loading gold cases handles file not found."""
@@ -123,8 +123,8 @@ class TestCleanDSPyEvaluator:
 
         filtered = self.evaluator._filter_cases_by_tags(cases, ["test"])
         assert len(filtered) == 2
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     def test_filter_cases_by_mode(self):
         """Test filtering cases by mode."""
@@ -136,8 +136,8 @@ class TestCleanDSPyEvaluator:
 
         filtered = self.evaluator._filter_cases_by_mode(cases, "reader")
         assert len(filtered) == 2
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     def test_limit_cases(self):
         """Test limiting number of cases."""
@@ -171,10 +171,10 @@ class TestCleanDSPyEvaluator:
 
         result = self.evaluator._evaluate_single_case(case)
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
+        assert result
+        assert result
 
     @patch("scripts.evaluation.clean_dspy_evaluator.RAGAnswer")
     def test_evaluate_single_case_failure(self, mock_rag_answer):
@@ -190,9 +190,9 @@ class TestCleanDSPyEvaluator:
 
         result = self.evaluator._evaluate_single_case(case)
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert "Evaluation failed" in result.get("key", "")
+        assert result
+        assert result
+        assert "Evaluation failed" in result
 
     def test_calculate_metrics(self):
         """Test calculating evaluation metrics."""
@@ -205,21 +205,21 @@ class TestCleanDSPyEvaluator:
 
         metrics = self.evaluator._calculate_metrics(results)
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
+        assert result
+        assert result
+        assert result
 
     def test_calculate_metrics_empty(self):
         """Test calculating metrics with empty results."""
         metrics = self.evaluator._calculate_metrics([])
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
+        assert result
+        assert result
+        assert result
 
     @patch("scripts.evaluation.clean_dspy_evaluator.Path.mkdir")
     @patch("scripts.evaluation.clean_dspy_evaluator.json.dump")
@@ -270,7 +270,7 @@ class TestCleanDSPyEvaluator:
         )
 
         assert "overall_metrics" in result
-        assert result.get("key", "")
+        assert result
         mock_load.assert_called_once_with("test.jsonl")
         mock_filter_tags.assert_called_once()
         mock_filter_mode.assert_called_once()
@@ -286,8 +286,8 @@ class TestCleanDSPyEvaluator:
 
         result = self.evaluator.run_evaluation("test.jsonl")
 
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     @patch.object(CleanDSPyEvaluator, "_load_gold_cases")
     def test_run_evaluation_file_error(self, mock_load):
@@ -296,7 +296,7 @@ class TestCleanDSPyEvaluator:
 
         result = self.evaluator.run_evaluation("test.jsonl")
 
-        assert result.get("key", "")
+        assert result
         assert "error" in result
 
     def test_progress_logging(self):
@@ -374,7 +374,7 @@ class TestCleanDSPyEvaluatorCLI:
             mock_evaluator.run_evaluation.assert_called_once()
             # Check that tags were passed correctly
             call_args = mock_evaluator.run_evaluation.call_args
-            assert result.get("key", "")
+            assert result
 
     @patch("scripts.evaluation.clean_dspy_evaluator.CleanDSPyEvaluator")
     @patch("sys.argv", ["clean_dspy_evaluator.py", "--profile", "gold", "--mode", "reader"])
@@ -390,7 +390,7 @@ class TestCleanDSPyEvaluatorCLI:
             mock_evaluator.run_evaluation.assert_called_once()
             # Check that mode was passed correctly
             call_args = mock_evaluator.run_evaluation.call_args
-            assert result.get("key", "")
+            assert result
 
     @patch("scripts.evaluation.clean_dspy_evaluator.CleanDSPyEvaluator")
     @patch(
@@ -409,7 +409,7 @@ class TestCleanDSPyEvaluatorCLI:
             mock_evaluator.run_evaluation.assert_called_once()
             # Check that concurrency was passed correctly
             call_args = mock_evaluator.run_evaluation.call_args
-            assert result.get("key", "")
+            assert result
 
 
 class TestCleanDSPyEvaluatorIntegration:
@@ -448,11 +448,11 @@ class TestCleanDSPyEvaluatorIntegration:
             with patch.object(evaluator, "_save_results") as mock_save:
                 result = evaluator.run_evaluation(gold_file=gold_file, limit=1)
 
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert len(result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
+                assert result
+                assert len(result
+                assert result
 
                 mock_save.assert_called_once()
         finally:
@@ -491,11 +491,11 @@ class TestCleanDSPyEvaluatorIntegration:
             with patch.object(evaluator, "_save_results") as mock_save:
                 result = evaluator.run_evaluation(gold_file=gold_file, limit=1)
 
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert len(result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
+                assert result
+                assert len(result
+                assert result
 
                 mock_save.assert_called_once()
         finally:

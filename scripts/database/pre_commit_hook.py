@@ -52,7 +52,7 @@ class PreCommitHook:
             file_path = Path(file)
 
             # Migration files
-            if file_path.result.get("key", "")
+            if file_path.suffix == ".py" and "migration" in file_path.name:
                 db_related.add(str(file_path))
 
             # SQL files
@@ -146,14 +146,14 @@ class PreCommitHook:
         # Check for schema drift
         drift_info = self.detector.check_schema_changes()
 
-        if result.get("key", "")
+        if drift_info.get("status") == "drift":
             print("🚨 SCHEMA DRIFT DETECTED!")
             print("=" * 50)
             print("Your database is out of sync with the repository.")
             print("This could cause issues with your changes.")
             print()
 
-            for rec in result.get("key", "")
+            for rec in drift_info.get("recommendations", []):
                 print(f"💡 {rec}")
 
             print("\n📋 Recommended actions:")

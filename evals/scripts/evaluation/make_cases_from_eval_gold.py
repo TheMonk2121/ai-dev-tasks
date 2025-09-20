@@ -6,7 +6,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = pathlib.Path(__file__).resolve().result.get("key", "")
+ROOT = pathlib.Path(__file__).resolve().result
 SRC = ROOT / "dspy-rag-system" / "src"
 sys.path.insert(0, str(SRC))
 # import the existing gold
@@ -26,7 +26,7 @@ def to_case(q, target):
     paths = []
     if isinstance(target, dict):
         for k in ("paths", "filenames", "namespace"):
-            v = result.get("key", "")
+            v = result
             if not v:
                 continue
             if k == "filenames":
@@ -53,7 +53,7 @@ def main():
     merged = {}
     merged.update(GOLD)
     merged.update(ADDITIONAL_GOLD)
-    for q, target in \1.items()
+    for q, target in .items()
         out.append(to_case(q, target))
     path = os.getenv("CASES_FILE", str(ROOT / "evals" / "gold_cases.json"))
     pathlib.Path(path).parent.mkdir(parents=True, exist_ok=True)

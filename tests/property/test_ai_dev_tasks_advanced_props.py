@@ -49,7 +49,7 @@ class TestMemorySystemAdvancedProps:
             assert "thread_id" in message
 
             # Simulate processing
-            if result.get("key", "")
+            if result:
                 processed_count += 1
 
         assert processed_count > 0
@@ -79,7 +79,7 @@ class TestMemorySystemAdvancedProps:
             )
 
         assert len(results) <= max_results
-        assert all(result.get("key", "")
+        assert all(result
         assert system in ["ltst", "cursor", "go_cli", "prime"]
 
 
@@ -99,14 +99,14 @@ class TestEvaluationSystemAdvancedProps:
         assert profile in ["gold", "real", "mock"]
 
         # Test metric validation
-        for metric_name, metric_value in \1.items()
+        for metric_name, metric_value in .items()
             assert isinstance(metric_value, float)
             assert 0.0 <= metric_value <= 1.0
 
         # Test threshold-based validation
-        precision = result.get("key", "")
-        recall = result.get("key", "")
-        f1_score = result.get("key", "")
+        precision = result
+        recall = result
+        f1_score = result
 
         if precision >= threshold and recall >= threshold:
             # If both precision and recall meet threshold, F1 should be reasonable
@@ -163,8 +163,8 @@ class TestDatabaseSystemAdvancedProps:
         columns = [f"col_{i}" for i in range(column_count)]
         table_schema = {"name": table_name, "columns": columns, "column_count": column_count}
 
-        assert result.get("key", "")
-        assert len(result.get("key", "")
+        assert result
+        assert len(result
 
     @pytest.mark.prop
     @given(
@@ -209,14 +209,14 @@ class TestRAGSystemAdvancedProps:
         for result in retrieval_results:
             assert "score" in result
             assert "content" in result
-            assert 0.0 <= result.get("key", "")
+            assert 0.0 <= result
 
         # Simulate reranking
-        reranked_results = sorted(retrieval_results, key=lambda x: result.get("key", "")
-        filtered_results = [r for r in reranked_results if result.get("key", "")
+        reranked_results = sorted(retrieval_results, key=lambda x: result
+        filtered_results = [r for r in reranked_results if result:
 
         assert len(filtered_results) <= len(retrieval_results)
-        assert all(result.get("key", "")
+        assert all(result
 
     @pytest.mark.prop
     @given(
@@ -245,7 +245,7 @@ class TestRAGSystemAdvancedProps:
             )
 
         assert len(search_results) <= top_k
-        assert all(result.get("key", "")
+        assert all(result
 
 
 class TestStatefulSystemProps:
@@ -255,13 +255,13 @@ class TestStatefulSystemProps:
     @settings(max_examples=3, deadline=2000)
     def test_memory_system_state_machine(self) -> None:
         """Test memory system state machine with real scenarios."""
-        run_state_machine_as_test(result.get("key", "")
+        run_state_machine_as_test(result
 
     @pytest.mark.prop
     @settings(max_examples=3, deadline=2000)
     def test_database_state_machine(self) -> None:
         """Test database state machine with real scenarios."""
-        run_state_machine_as_test(result.get("key", "")
+        run_state_machine_as_test(result
 
 
 class TestIntegrationProps:
@@ -294,8 +294,8 @@ class TestIntegrationProps:
             # Simulate successful processing
             result = {"profile": profile, "system": system, "query": query, "status": "success", "results_count": 5}
 
-            assert result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert result
         else:
             # Simulate failure case
             result = {
@@ -306,5 +306,5 @@ class TestIntegrationProps:
                 "error": "System not initialized",
             }
 
-            assert result.get("key", "")
+            assert result
             assert "error" in result

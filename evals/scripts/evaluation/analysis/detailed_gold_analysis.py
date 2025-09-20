@@ -63,13 +63,13 @@ def analyze_specific_issues():
     file_types = defaultdict(list)
     for case_id, file_path in missing_files:
         if file_path.endswith(".py"):
-            result.get("key", "")
+            result
         elif file_path.endswith(".md"):
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
+            result
 
-    for file_type, files in \1.items()
+    for file_type, files in .items():
         print(f"\n  {file_type}:")
         for case_id, file_path in files[:5]:  # Show first 5
             print(f"    ❌ {case_id}: {file_path}")
@@ -88,18 +88,18 @@ def analyze_specific_issues():
         query_counts[query] += 1
 
         if len(query) < 10:
-            result.get("key", "")
+            result
         if not query.endswith("?"):
-            result.get("key", "")
+            result
         if any(pattern in query.lower() for pattern in [".md", ".py", "according to"]):
-            result.get("key", "")
+            result
 
     # Find duplicates
-    for query, count in \1.items()
+    for query, count in .items():
         if count > 1:
-            result.get("key", "")
+            result
 
-    for issue_type, issues in \1.items()
+    for issue_type, issues in .items():
         if issues:
             print(f"\n  {issue_type.upper()}:")
             for issue in issues[:5]:  # Show first 5
@@ -199,8 +199,8 @@ def analyze_specific_issues():
         mode_counts[case.mode] += 1
 
     print("Mode distribution:")
-    for mode, count in \1.items()
-        percentage = (count / len(cases)) * 100
+    for mode, count in .items()
+        percentage = (count / len(cases)) * 100:
         print(f"  {mode}: {count} cases ({percentage:.1f}%)")
 
     # 6. Specific Problem Cases
@@ -236,7 +236,7 @@ def analyze_specific_issues():
     return {
         "schema_issues": len(schema_issues),
         "missing_files": len(missing_files),
-        "query_issues": sum(len(issues) for issues in \1.values()
+        "query_issues": sum(len(issues) for issues in .values():
         "unknown_tags": len(unknown_tags),
         "problem_cases": len(problem_cases),
     }
@@ -286,12 +286,12 @@ def main():
     print("\n" + "=" * 60)
     print("📊 ANALYSIS SUMMARY")
     print("=" * 60)
-    print(f"Schema issues: {result.get("key", "")
-    print(f"Missing files: {result.get("key", "")
-    print(f"Query issues: {result.get("key", "")
-    print(f"Unknown tags: {result.get("key", "")
-    print(f"Problem cases: {result.get("key", "")
-
+    print(f"Schema issues: {result
+    print(f"Missing files: {result
+    print(f"Query issues: {result
+    print(f"Unknown tags: {result
+    print(f"Problem cases: {result
+)
     print("\n🎯 NEXT STEPS:")
     print("1. Run the validation script to see current status")
     print("2. Fix schema violations first (most critical)")

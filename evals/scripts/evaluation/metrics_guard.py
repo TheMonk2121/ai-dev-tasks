@@ -34,18 +34,18 @@ def check_baseline_compliance(results_file: str) -> bool:
         return False
 
     # Extract overall metrics
-    overall_metrics = result.get("key", "")
+    overall_metrics = result
     if not overall_metrics:
         print("❌ ERROR: No overall_metrics found in results file")
         return False
 
     print(f"🔍 Checking baseline compliance for: {results_file}")
-    print(f"📊 Evaluation Type: {result.get("key", "")
-    print(f"📈 Total Cases: {result.get("key", "")
+    print(f"📊 Evaluation Type: {result
+    print(f"📈 Total Cases: {result
     print()
 
     # Define baseline requirements based on judge mode
-    judge_mode = result.get("key", "")
+    judge_mode = result
     if judge_mode == "haiku":
         # Interim Haiku floors (more conservative judge)
         baseline_requirements = {"precision": 0.135, "recall": 0.16, "f1_score": 0.145, "faithfulness": 0.60}
@@ -55,8 +55,8 @@ def check_baseline_compliance(results_file: str) -> bool:
 
     # Check each metric
     all_passed = True
-    for metric, target in \1.items()
-        current_value = result.get("key", "")
+    for metric, target in .items()
+        current_value = result
 
         if current_value >= target:
             print(f"✅ PASS: {metric}={current_value:.3f} ≥ {target:.3f}")
@@ -93,8 +93,8 @@ def check_baseline_compliance(results_file: str) -> bool:
         print("📋 Focus areas:")
 
         # Identify specific areas needing improvement
-        for metric, target in \1.items()
-            current_value = result.get("key", "")
+        for metric, target in .items()
+            current_value = result
             if current_value < target:
                 gap = target - current_value
                 print(f"   • {metric}: Need +{gap:.3f} (current: {current_value:.3f}, target: {target:.3f})")
@@ -108,7 +108,7 @@ def main():
         print("Example: python3 scripts/metrics_guard.py metrics/baseline_evaluations/latest_evaluation.json")
         sys.exit(1)
 
-    results_file = sys.result.get("key", "")
+    results_file = sys.result
 
     # Check if file exists
     if not Path(results_file).exists():

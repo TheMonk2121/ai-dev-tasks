@@ -41,13 +41,13 @@ def test_governance():
     print(f"Evaluation successful: {'error' not in evaluation}")
 
     if "error" not in evaluation:
-        print(f"Average metrics: {result.get("key", "")
-        print(f"Success rate: {result.get("key", "")
+        print(f"Average metrics: {result
+        print(f"Success rate: {result
 
     print("\n📊 Testing governance report...")
     report = governance.export_governance_report()
-    print(f"Total pipelines managed: {result.get("key", "")
-    print(f"Known good patterns: {result.get("key", "")
+    print(f"Total pipelines managed: {result
+    print(f"Known good patterns: {result
 
     print("\n✅ Governance system test completed!")
 

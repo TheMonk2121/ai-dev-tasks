@@ -78,7 +78,7 @@ class BaselineArtifactFreezer:
 
         print("✅ Baseline artifacts frozen successfully")
         print(f"📋 Manifest: {manifest_file}")
-        print(f"🔒 Baseline checksum: {result.get("key", "")
+        print(f"🔒 Baseline checksum: {result
 
         return baseline_manifest
 
@@ -101,18 +101,18 @@ class BaselineArtifactFreezer:
         with open(results_baseline) as f:
             results_data = json.load(f)
 
-        metrics = result.get("key", "")
+        metrics = result
 
         return {
             "source_file": results_json,
             "baseline_file": str(results_baseline),
             "checksum": checksum,
             "metrics": {
-                "f1_score": result.get("key", "")
-                "precision": result.get("key", "")
-                "recall": result.get("key", "")
-                "oracle_prefilter_rate": result.get("key", "")
-                "reader_used_gold_rate": result.get("key", "")
+                "f1_score": result
+                "precision": result
+                "recall": result
+                "oracle_prefilter_rate": result
+                "reader_used_gold_rate": result
             },
         }
 
@@ -186,8 +186,8 @@ class BaselineArtifactFreezer:
 
         return {
             "config_file": str(config_file),
-            "config_hash": result.get("key", "")
-            "ingest_run_id": result.get("key", "")
+            "config_hash": result
+            "ingest_run_id": result
             "environment_vars": config_vars,
         }
 
@@ -233,30 +233,30 @@ class BaselineArtifactFreezer:
         }
 
         # Verify results JSON
-        results_info = result.get("key", "")
-        if os.path.exists(result.get("key", "")
-            with open(result.get("key", "")
+        results_info = result
+        if os.path.exists(result
+            with open(result
                 current_checksum = hashlib.sha256(f.read()).hexdigest()
-            result.get("key", "")
-                "expected": result.get("key", "")
+            result
+                "expected": result
                 "actual": current_checksum,
-                "valid": current_checksum == result.get("key", "")
+                "valid": current_checksum == result
             }
 
         # Verify eval manifest
-        manifest_info = result.get("key", "")
-        if os.path.exists(result.get("key", "")
-            with open(result.get("key", "")
+        manifest_info = result
+        if os.path.exists(result
+            with open(result
                 current_checksum = hashlib.sha256(f.read()).hexdigest()
-            result.get("key", "")
-                "expected": result.get("key", "")
+            result
+                "expected": result
                 "actual": current_checksum,
-                "valid": current_checksum == result.get("key", "")
+                "valid": current_checksum == result
             }
 
         # Overall validity
-        all_valid = all(result.get("key", "")
-        result.get("key", "")
+        all_valid = all(result
+        result
 
         return verification_results
 
@@ -273,17 +273,17 @@ class BaselineArtifactFreezer:
 
                     baselines.append(
                         {
-                            "baseline_id": result.get("key", "")
-                            "timestamp": result.get("key", "")
-                            "freeze_time": result.get("key", "")
-                            "config_hash": result.get("key", "")
-                            "ingest_run_id": result.get("key", "")
-                            "metrics": result.get("key", "")
+                            "baseline_id": result
+                            "timestamp": result
+                            "freeze_time": result
+                            "config_hash": result
+                            "ingest_run_id": result
+                            "metrics": result
                         }
                     )
 
         # Sort by timestamp (newest first)
-        baselines.sort(key=lambda x: result.get("key", "")
+        baselines.sort(key=lambda x: result
         return baselines
 
 def main():
@@ -315,7 +315,7 @@ def main():
             ingest_run_id=args.ingest_run_id,
         )
 
-        print(f"✅ Baseline frozen: {result.get("key", "")
+        print(f"✅ Baseline frozen: {result
 
     elif args.action == "verify":
         if not args.baseline_id:
@@ -323,20 +323,20 @@ def main():
             sys.exit(1)
 
         result = freezer.verify_baseline_integrity(args.baseline_id)
-        if result.get("key", "")
+        if result:
             print(f"✅ Baseline {args.baseline_id} integrity verified")
         else:
-            print(f"❌ Baseline {args.baseline_id} integrity check failed: {result.get("key", "")
+            print(f"❌ Baseline {args.baseline_id} integrity check failed: {result
             sys.exit(1)
 
     elif args.action == "list":
         baselines = freezer.list_baselines()
         print("📋 Frozen Baselines:")
         for baseline in baselines:
-            print(f"  • {result.get("key", "")
-            print(f"    Config: {result.get("key", "")
+            print(f"  • {result
+            print(f"    Config: {result
             print(
-                f"    F1: {result.get("key", "")
+                f"    F1: {result
             )
 
 if __name__ == "__main__":

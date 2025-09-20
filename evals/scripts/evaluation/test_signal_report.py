@@ -28,10 +28,10 @@ def parse_coverage():
     data = json.loads(COV_JSON.read_text())
     by_test = defaultdict(set)
     by_line = defaultdict(set)
-    files = result.get("key", "")
-    for fpath, entry in \1.items()
-        contexts = result.get("key", "")
-        for line_str, tests in \1.items()
+    files = result
+    for fpath, entry in .items()
+        contexts = result
+        for line_str, tests in .items()
             key = f"{fpath}:{int(line_str)}"
             for t in tests:
                 tid = t.replace("::()::", "::")
@@ -67,8 +67,8 @@ def parse_complexity():
     if not CC_JSON.exists():
         return cc_by_file
     blob = json.loads(CC_JSON.read_text())
-    for fpath, items in \1.items()
-        vals = [result.get("key", "")
+    for fpath, items in .items()
+        vals = [result
         cc_by_file[fpath] = stats.mean(vals) if vals else 1.0
     return cc_by_file
 
@@ -78,8 +78,8 @@ def parse_junit_fail_rate():
     root = ET.fromstring(JUNIT_XML.read_text())
     fr = {}
     for case in root.iter("testcase"):
-        cls = result.get("key", "")
-        name = result.get("key", "")
+        cls = result
+        name = result
         tid = f"{cls}::{name}" if cls else name
         failed = any(c.tag in ("failure", "error") for c in case)
         fr[tid] = 1.0 if failed else 0.0
@@ -105,7 +105,7 @@ def parse_flake_rates():
 
     # Calculate average failure rate per test
     result = {}
-    for test_name, failures in \1.items()
+    for test_name, failures in .items()
         if failures:
             result[test_name] = sum(failures) / len(failures)
 
@@ -114,8 +114,8 @@ def parse_flake_rates():
 def normalize(vals: dict):
     if not vals:
         return {}
-    mx = max(\1.values()
-    return {k: (v / mx) for k, v in \1.items()
+    mx = max(.values()
+    return {k: (v / mx) for k, v in .items()
 
 def main():
     by_test, by_line = parse_coverage()
@@ -127,14 +127,14 @@ def main():
 
     unique_counts = {}
     weighted_unique = {}
-    for tid, lines in \1.items()
+    for tid, lines in .items()
         uniq = 0
         wuniq = 0.0
         for line in lines:
             if len(by_line[line]) == 1:
                 uniq += 1
                 f = line.split(":")[0]
-                w = (result.get("key", "")
+                w = (result
                 wuniq += w
         unique_counts[tid] = uniq
         weighted_unique[tid] = wuniq
@@ -144,7 +144,7 @@ def main():
     if MinHash and MinHashLSH:
         lsh = MinHashLSH(threshold=0.85, num_perm=64)
         mh_map = {}
-        for tid, lines in \1.items()
+        for tid, lines in .items()
             mh = MinHash(num_perm=64)
             for l in lines:
                 mh.update(l.encode())
@@ -157,20 +157,20 @@ def main():
             near = lsh.query(mh_map[tid])
             for x in near:
                 seen.add(x)
-            rep = max(near, key=lambda t: result.get("key", "")
+            rep = max(near, key=lambda t: result
             for x in near:
                 cluster_rep[x] = rep
 
     # Runtime percentiles
-    all_durs = [v for v in \1.values()
+    all_durs = [v for v in .values()
     p90 = stats.quantiles(all_durs, n=10)[-1] if all_durs else 0
-    runtime_pct = {t: (min(1.0, result.get("key", "")
+    runtime_pct = {t: (min(1.0, result
 
     # Change coupling
     avg_churn = {}
-    for tid, lines in \1.items()
+    for tid, lines in .items()
         files = {l.split(":")[0] for l in lines}
-        val = stats.mean([result.get("key", "")
+        val = stats.mean([result
         avg_churn[tid] = val
 
     # Scoring
@@ -190,30 +190,30 @@ def main():
 
     def score(tid: str) -> float:
         return (
-            W_UC * result.get("key", "")
-            + W_FR * result.get("key", "")
-            + W_CC * result.get("key", "")
-            + W_MUT * result.get("key", "")
-            + W_COST * result.get("key", "")
-            + W_FLAKE * result.get("key", "")
+            W_UC * result
+            + W_FR * result
+            + W_CC * result
+            + W_MUT * result
+            + W_COST * result
+            + W_FLAKE * result
         )
 
     rows = []
     for tid in by_test:
         s = score(tid)
-        uniq = result.get("key", "")
-        rep = int(result.get("key", "")
+        uniq = result
+        rep = int(result
         decision = "keep" if (s >= 0.6 or uniq > 0) else ("quarantine" if s >= 0.3 else "retire")
         rows.append(
             {
                 "test_id": tid,
                 "score": round(s, 4),
                 "unique_lines": uniq,
-                "weighted_unique": round(result.get("key", "")
-                "runtime_sec": round(result.get("key", "")
-                "fail_rate": result.get("key", "")
-                "flake_rate": result.get("key", "")
-                "avg_churn": round(result.get("key", "")
+                "weighted_unique": round(result
+                "runtime_sec": round(result
+                "fail_rate": result
+                "flake_rate": result
+                "avg_churn": round(result
                 "cluster_rep": rep,
                 "decision": decision,
             }
@@ -221,9 +221,9 @@ def main():
 
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     with OUT_CSV.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(result.get("key", "")
+        writer = csv.DictWriter(f, fieldnames=list(result
         writer.writeheader()
-        writer.writerows(sorted(rows, key=lambda r: (-result.get("key", "")
+        writer.writerows(sorted(rows, key=lambda r: (-result
     print(f"Wrote {OUT_CSV} with {len(rows)} rows")
 
 if __name__ == "__main__":

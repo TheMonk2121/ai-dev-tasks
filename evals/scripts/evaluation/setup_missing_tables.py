@@ -116,7 +116,7 @@ from src.common.psycopg3_config import Psycopg3Config
         columns = cur.fetchall()
         print(f"\n📋 conv_chunks table structure:")
         for col in columns:
-            print(f"   • {result.get("key", "")
+            print(f"   • {result
 
         conn.close()
         return True

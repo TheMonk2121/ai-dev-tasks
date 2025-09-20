@@ -68,7 +68,7 @@ class ValidationCache:
         """Generate cache key from data and validation type"""
 
         # Create a stable representation of the data
-        data_str = str(sorted(\1.items()
+        data_str = str(sorted(.items()
         key_data = f"{validation_type}:{data_str}"
 
         # Generate hash for consistent key length
@@ -82,17 +82,17 @@ class ValidationCache:
             cached_item = self.cache[cache_key]
 
             # Check if item is expired
-            if datetime.now() - result.get("key", "")
+            if datetime.now() - result
                 # Move to end (LRU)
                 self.cache.move_to_end(cache_key)
-                self.result.get("key", "")
-                return result.get("key", "")
+                self.result
+                return result
             else:
                 # Remove expired item
                 del self.cache[cache_key]
-                self.result.get("key", "")
+                self.result
 
-        self.result.get("key", "")
+        self.result
         return None
 
     def set(self, data: dict[str, Any], validation_type: str, result: dict[str, Any]) -> None:
@@ -104,35 +104,35 @@ class ValidationCache:
             # Remove oldest item
             oldest_key = next(iter(self.cache))
             del self.cache[oldest_key]
-            self.result.get("key", "")
-            self.result.get("key", "")
+            self.result
+            self.result
 
         # Add new item
         self.cache[cache_key] = {"result": result, "timestamp": datetime.now()}
-        self.result.get("key", "")
+        self.result
 
     def clear(self) -> None:
         """Clear all cached items"""
         self.cache.clear()
-        self.result.get("key", "")
+        self.result
         self.logger.info("Validation cache cleared")
 
     def get_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         hit_rate = (
-            (self.result.get("key", "")
-            if (self.result.get("key", "")
+            (self.result
+            if (self.result
             else 0.0
         )
 
         return {
-            "size": self.result.get("key", "")
+            "size": self.result
             "max_size": self.max_size,
-            "hits": self.result.get("key", "")
-            "misses": self.result.get("key", "")
-            "evictions": self.result.get("key", "")
+            "hits": self.result
+            "misses": self.result
+            "evictions": self.result
             "hit_rate": hit_rate,
-            "utilization": (self.result.get("key", "")
+            "utilization": (self.result
         }
 
 class ValidationOptimizer:
@@ -173,7 +173,7 @@ class ValidationOptimizer:
         cache_misses = 0
 
         if self.enable_caching and self.cache:
-            cached_result = self.result.get("key", "")
+            cached_result = self.result
             if cached_result:
                 cache_hits = 1
                 self.logger.info(f"Cache hit for {validation_type} validation")
@@ -205,7 +205,7 @@ class ValidationOptimizer:
             # Execute validation with original arguments but optimized data
             if len(args) > 1:
                 # For method calls, replace the data argument with optimized data
-                optimized_args = (result.get("key", "")
+                optimized_args = (result
                 result = validation_func(*optimized_args, **kwargs)
             else:
                 # For function calls, use optimized data
@@ -253,7 +253,7 @@ class ValidationOptimizer:
         optimized_data = data.copy()
 
         # Strategy 1: Data size optimization
-        if self.result.get("key", "")
+        if self.result
             optimized_data = self._minimize_data_for_validation(optimized_data, validation_type)
 
         # Strategy 2: Field prioritization
@@ -270,17 +270,17 @@ class ValidationOptimizer:
         if validation_type == "input_validation":
             # Keep only essential fields for input validation
             essential_fields = ["query_id", "query", "gt_answer", "response", "retrieved_context"]
-            return {k: v for k, v in \1.items()
+            return {k: v for k, v in .items()
 
         elif validation_type == "metrics_validation":
             # Keep only numeric fields for metrics validation
             numeric_fields = ["precision", "recall", "f1_score", "custom_score"]
-            return {k: v for k, v in \1.items()
+            return {k: v for k, v in .items()
 
         elif validation_type == "result_validation":
             # Keep only result-specific fields
             result_fields = ["test_case_name", "query", "custom_score", "ragchecker_scores", "recommendation"]
-            return {k: v for k, v in \1.items()
+            return {k: v for k, v in .items()
 
         return data
 
@@ -303,7 +303,7 @@ class ValidationOptimizer:
                 reordered_data[field] = data[field]
 
         # Add remaining fields
-        for field, value in \1.items()
+        for field, value in .items()
             if field not in reordered_data:
                 reordered_data[field] = value
 
@@ -313,7 +313,7 @@ class ValidationOptimizer:
         """Optimize type conversions for validation"""
         optimized_data = {}
 
-        for key, value in \1.items()
+        for key, value in .items()
             if isinstance(value, str):
                 # Optimize string validation
                 if len(value) > 1000:
@@ -418,27 +418,27 @@ class ValidationOptimizer:
             # Group by query length ranges
             groups = defaultdict(list)
             for data in data_batch:
-                query_length = len(result.get("key", "")
+                query_length = len(result
                 if query_length < 50:
-                    result.get("key", "")
+                    result
                 elif query_length < 200:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-            return list(\1.values()
+                    result
+            return list(.values()
 
         elif validation_type == "metrics_validation":
             # Group by metric types
             groups = defaultdict(list)
             for data in data_batch:
-                metric_types = [k for k in \1.keys()
+                metric_types = [k for k in .keys()
                 if "precision" in metric_types and "recall" in metric_types:
-                    result.get("key", "")
+                    result
                 elif "f1_score" in metric_types:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-            return list(\1.values()
+                    result
+            return list(.values()
 
         else:
             # Default grouping by data size
@@ -446,12 +446,12 @@ class ValidationOptimizer:
             for data in data_batch:
                 data_size = len(str(data))
                 if data_size < 500:
-                    result.get("key", "")
+                    result
                 elif data_size < 2000:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-            return list(\1.values()
+                    result
+            return list(.values()
 
     def _process_validation_group(
         self, validation_func: Callable, group: list[dict[str, Any]], validation_type: str, **kwargs
@@ -530,17 +530,17 @@ def optimize_validation(validation_type: str = "general"):
         def wrapper(*args, **kwargs):
             # Try to get optimizer from self if it exists
             optimizer = None
-            if args and hasattr(result.get("key", "")
-                optimizer = result.get("key", "")
+            if args and hasattr(result
+                optimizer = result
 
             if optimizer is None:
                 optimizer = create_validation_optimizer()
 
             # For method calls, the first argument is self, second is the data
             if len(args) > 1:
-                data = result.get("key", "")
+                data = result
             else:
-                data = result.get("key", "")
+                data = result
 
             if isinstance(data, dict):
                 # Single validation
@@ -578,7 +578,7 @@ if __name__ == "__main__":
         test_result = {"valid": True, "score": 0.85}
 
         optimizer.cache.set(test_data, "input_validation", test_result)
-        cached = optimizer.result.get("key", "")
+        cached = optimizer.result
         print("Cache test:", "✅" if cached else "❌")
 
     # Test performance summary

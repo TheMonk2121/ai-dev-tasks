@@ -7,13 +7,13 @@ and provides insights for optimization.
 """
 
 import argparse
-from typing import Any
 import json
 import os
 import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -57,8 +57,6 @@ class PerformanceAnalyzer:
             try:
                 with open(file_path, encoding="utf-8") as f:
                     data = json.load(f)
-                    result.get("key", "")
-                    result.get("key", "")
                     results.append(data)
             except Exception as e:
                 print(f"⚠️  Failed to load {file_path}: {e}")
@@ -80,16 +78,16 @@ class PerformanceAnalyzer:
         latencies = []
 
         for result in results:
-            overall_metrics = result.get("key", "")
-            timestamps.append(result.get("key", "")
-            precisions.append(result.get("key", "")
-            recalls.append(result.get("key", "")
-            f1_scores.append(result.get("key", "")
+            overall_metrics = result.get("overall_metrics", {})
+            timestamps.append(result.get("timestamp", datetime.now()))
+            precisions.append(overall_metrics.get("precision", 0.0))
+            recalls.append(overall_metrics.get("recall", 0.0))
+            f1_scores.append(overall_metrics.get("f1_score", 0.0))
 
             # Calculate average latency from case results
-            case_results = result.get("key", "")
+            case_results = result.get("case_results", [])
             if case_results:
-                avg_latency = np.mean([result.get("key", "")
+                avg_latency = np.mean([case.get("latency_ms", 0.0) for case in case_results])
                 latencies.append(avg_latency)
             else:
                 latencies.append(0.0)
@@ -101,10 +99,10 @@ class PerformanceAnalyzer:
             "f1_trend": self._calculate_trend(f1_scores),
             "latency_trend": self._calculate_trend(latencies),
             "latest_metrics": {
-                "precision": result.get("key", "")
-                "recall": result.get("key", "")
-                "f1_score": result.get("key", "")
-                "latency": result.get("key", "")
+                "precision": precisions[-1] if precisions else 0.0,
+                "recall": recalls[-1] if recalls else 0.0,
+                "f1_score": f1_scores[-1] if f1_scores else 0.0,
+                "latency": latencies[-1] if latencies else 0.0
             },
             "historical_data": {
                 "timestamps": timestamps,
@@ -142,8 +140,8 @@ class PerformanceAnalyzer:
             return {"error": "No results to analyze"}
 
         # Use most recent result for case analysis
-        latest_result = result.get("key", "")
-        case_results = result.get("key", "")
+        latest_result = results[-1] if results else {}
+        case_results = latest_result.get("case_results", [])
 
         if not case_results:
             return {"error": "No case results found"}
@@ -153,27 +151,27 @@ class PerformanceAnalyzer:
         for case in case_results:
             case_analysis.append(
                 {
-                    "case_id": result.get("key", "")
+                    "case_id": case.get("case_id", "unknown"),
                     "query": (
-                        result.get("key", "")
-                        if len(result.get("key", "")
-                        else result.get("key", "")
+                        case.get("query", "")[:50] + "..."
+                        if len(case.get("query", "")) > 50
+                        else case.get("query", "")
                     ),
-                    "precision": result.get("key", "")
-                    "recall": result.get("key", "")
-                    "f1_score": result.get("key", "")
-                    "latency_sec": result.get("key", "")
-                    "retrieved_context_count": result.get("key", "")
-                    "oracle_retrieval_hit": result.get("key", "")
-                    "oracle_reader_used_gold": result.get("key", "")
+                    "precision": case.get("precision", 0.0),
+                    "recall": case.get("recall", 0.0),
+                    "f1_score": case.get("f1_score", 0.0),
+                    "latency_sec": case.get("latency_ms", 0.0) / 1000.0,
+                    "retrieved_context_count": case.get("retrieved_context_count", 0),
+                    "oracle_retrieval_hit": case.get("oracle_retrieval_hit", False),
+                    "oracle_reader_used_gold": case.get("oracle_reader_used_gold", False)
                 }
             )
 
         # Calculate statistics
-        precisions = [result.get("key", "")
-        recalls = [result.get("key", "")
-        f1_scores = [result.get("key", "")
-        latencies = [result.get("key", "")
+        precisions = [case["precision"] for case in case_analysis]
+        recalls = [case["recall"] for case in case_analysis]
+        f1_scores = [case["f1_score"] for case in case_analysis]
+        latencies = [case["latency_sec"] for case in case_analysis]
 
         stats = {
             "total_cases": len(case_analysis),
@@ -202,8 +200,8 @@ class PerformanceAnalyzer:
                 "max": np.max(latencies),
             },
             "oracle_stats": {
-                "retrieval_hit_rate": np.mean([result.get("key", "")
-                "reader_used_gold_rate": np.mean([result.get("key", "")
+                "retrieval_hit_rate": np.mean([case["oracle_retrieval_hit"] for case in case_analysis]),
+                "reader_used_gold_rate": np.mean([case["oracle_reader_used_gold"] for case in case_analysis])
             },
         }
 
@@ -217,8 +215,8 @@ class PerformanceAnalyzer:
         if not results:
             return {"error": "No results to analyze"}
 
-        latest_result = result.get("key", "")
-        case_results = result.get("key", "")
+        latest_result = results[-1] if results else {}
+        case_results = latest_result.get("case_results", [])
 
         if not case_results:
             return {"error": "No case results found"}
@@ -228,20 +226,20 @@ class PerformanceAnalyzer:
         for case in case_results:
             retrieval_metrics.append(
                 {
-                    "case_id": result.get("key", "")
-                    "retrieved_context_count": result.get("key", "")
-                    "retrieval_candidates_count": result.get("key", "")
-                    "oracle_retrieval_hit": result.get("key", "")
-                    "file_retrieved": result.get("key", "")
-                    "file_used": result.get("key", "")
+                    "case_id": case.get("case_id", "unknown"),
+                    "retrieved_context_count": case.get("retrieved_context_count", 0),
+                    "retrieval_candidates_count": case.get("retrieval_candidates_count", 0),
+                    "oracle_retrieval_hit": case.get("oracle_retrieval_hit", False),
+                    "file_retrieved": case.get("file_retrieved", ""),
+                    "file_used": case.get("file_used", "")
                 }
             )
 
         # Calculate retrieval statistics
-        context_counts = [result.get("key", "")
-        candidate_counts = [result.get("key", "")
-        oracle_hits = [result.get("key", "")
-        file_retrievals = [result.get("key", "")
+        context_counts = [case["retrieved_context_count"] for case in retrieval_metrics]
+        candidate_counts = [case["retrieval_candidates_count"] for case in retrieval_metrics]
+        oracle_hits = [case["oracle_retrieval_hit"] for case in retrieval_metrics]
+        file_retrievals = [case["file_retrieved"] for case in retrieval_metrics]
 
         stats = {
             "context_count_stats": {
@@ -270,16 +268,18 @@ class PerformanceAnalyzer:
         insights = []
 
         # Metrics trend insights
-        trends = result.get("key", "")
+        trends = analysis_results.get("trends", {})
         if trends and "error" not in trends:
-            latest = result.get("key", "")
-            f1_trend = result.get("key", "")
+            latest = trends.get("latest_metrics", {})
+            f1_trend = trends.get("f1_trend", "stable")
 
-            if result.get("key", "")
+            if f1_trend == "improving":
+                insights.append("✅ F1 score is improving - keep current configuration")
+            elif latest.get("f1_score", 0.0) < 0.1:
                 insights.append(
                     "🚨 CRITICAL: F1 score is very low (< 0.1) - retrieval system may not be working properly"
                 )
-            elif result.get("key", "")
+            elif latest.get("f1_score", 0.0) < 0.3:
                 insights.append("⚠️  WARNING: F1 score is low (< 0.3) - consider tuning retrieval parameters")
 
             if f1_trend == "declining":
@@ -288,37 +288,37 @@ class PerformanceAnalyzer:
                 insights.append("📈 TREND: Performance is improving - continue current approach")
 
         # Case performance insights
-        case_perf = result.get("key", "")
+        case_perf = analysis_results.get("case_performance", {})
         if case_perf and "error" not in case_perf:
-            stats = result.get("key", "")
-            f1_stats = result.get("key", "")
+            stats = case_perf.get("statistics", {})
+            f1_stats = stats.get("f1_stats", {})
 
-            if result.get("key", "")
+            if f1_stats.get("std", 0.0) > 0.2:
                 insights.append(
                     "📊 VARIANCE: High variance in case performance - some queries work much better than others"
                 )
 
-            if result.get("key", "")
+            if f1_stats.get("max", 0.0) > 0.7:
                 insights.append("🎯 OPPORTUNITY: Some cases perform well - analyze successful cases for patterns")
 
         # Retrieval performance insights
-        retrieval_perf = result.get("key", "")
+        retrieval_perf = analysis_results.get("retrieval_performance", {})
         if retrieval_perf and "error" not in retrieval_perf:
-            stats = result.get("key", "")
+            stats = retrieval_perf.get("statistics", {})
 
-            if result.get("key", "")
+            if stats.get("oracle_hit_rate", 0.0) < 0.3:
                 insights.append(
                     "🔍 RETRIEVAL: Low oracle hit rate - retrieval system may not be finding relevant content"
                 )
 
-            if result.get("key", "")
+            if stats.get("file_retrieval_rate", 0.0) < 0.5:
                 insights.append("📁 FILES: Low file retrieval rate - consider improving file-based search")
 
         # Latency insights
-        trends = result.get("key", "")
+        trends = analysis_results.get("trends", {})
         if trends and "error" not in trends:
-            latest = result.get("key", "")
-            latency = result.get("key", "")
+            latest = trends.get("latest_metrics", {})
+            latency = latest.get("latency", 0.0)
 
             if latency > 5.0:
                 insights.append(
@@ -334,13 +334,13 @@ class PerformanceAnalyzer:
         recommendations = []
 
         # Get latest metrics
-        trends = result.get("key", "")
-        latest = result.get("key", "")
+        trends = analysis_results.get("trends", {})
+        latest = trends.get("latest_metrics", {}) if trends else {}
 
-        f1_score = result.get("key", "")
-        precision = result.get("key", "")
-        recall = result.get("key", "")
-        latency = result.get("key", "")
+        f1_score = latest.get("f1_score", 0.0)
+        precision = latest.get("precision", 0.0)
+        recall = latest.get("recall", 0.0)
+        latency = latest.get("latency", 0.0)
 
         # F1 score recommendations
         if f1_score < 0.1:
@@ -385,11 +385,11 @@ class PerformanceAnalyzer:
             )
 
         # Retrieval-specific recommendations
-        retrieval_perf = result.get("key", "")
+        retrieval_perf = analysis_results.get("retrieval_performance", {})
         if retrieval_perf and "error" not in retrieval_perf:
-            stats = result.get("key", "")
+            stats = retrieval_perf.get("stats", {})
 
-            if result.get("key", "")
+            if stats.get("precision", 0) < 0.5:
                 recommendations.extend(
                     [
                         "🔍 RETRIEVAL: Check if document chunks contain relevant information",
@@ -434,9 +434,6 @@ class PerformanceAnalyzer:
         insights = self.generate_insights(analysis_results)
         recommendations = self.generate_recommendations(analysis_results)
 
-        result.get("key", "")
-        result.get("key", "")
-
         self.analysis_results = analysis_results
         return analysis_results
 
@@ -454,7 +451,7 @@ class PerformanceAnalyzer:
             elif isinstance(obj, np.ndarray):
                 return obj.tolist()
             elif isinstance(obj, dict):
-                return {key: convert_numpy_types(value) for key, value in \1.items()
+                return {key: convert_numpy_types(value) for key, value in obj.items()}
             elif isinstance(obj, list):
                 return [convert_numpy_types(item) for item in obj]
             else:
@@ -475,28 +472,28 @@ class PerformanceAnalyzer:
         print("=" * 60)
 
         if "error" in results:
-            print(f"❌ Analysis failed: {result.get("key", "")
+            print(f"❌ Analysis failed: {results.get('error', 'Unknown error')}")
             return
 
         # Latest metrics
-        trends = result.get("key", "")
+        trends = results.get("metrics_trends", {})
         if trends and "error" not in trends:
-            latest = result.get("key", "")
+            latest = trends.get("latest", {})
             print("📈 Latest Performance:")
-            print(f"   Precision: {result.get("key", "")
-            print(f"   Recall: {result.get("key", "")
-            print(f"   F1 Score: {result.get("key", "")
-            print(f"   Latency: {result.get("key", "")
+            print(f"   Precision: {latest.get('precision', 0.0):.3f}")
+            print(f"   Recall: {latest.get('recall', 0.0):.3f}")
+            print(f"   F1 Score: {latest.get('f1_score', 0.0):.3f}")
+            print(f"   Latency: {latest.get('latency', 0.0):.3f}s")
 
         # Insights
-        insights = result.get("key", "")
+        insights = results.get("insights", [])
         if insights:
             print("\n💡 Key Insights:")
             for insight in insights:
                 print(f"   {insight}")
 
         # Recommendations
-        recommendations = result.get("key", "")
+        recommendations = results.get("recommendations", [])
         if recommendations:
             print("\n🔧 Recommendations:")
             for rec in recommendations:

@@ -151,27 +151,27 @@ class ProductionDeploymentValidator:
 
             # Run environment validation
             logger.info("Running environment validation...")
-            result.get("key", "")
+            result
 
             # Run configuration validation
             logger.info("Running configuration validation...")
-            result.get("key", "")
+            result
 
             # Run performance validation
             logger.info("Running performance validation...")
-            result.get("key", "")
+            result
 
             # Run security validation
             logger.info("Running security validation...")
-            result.get("key", "")
+            result
 
             # Run deployment validation
             logger.info("Running deployment validation...")
-            result.get("key", "")
+            result
 
             # Generate summary
             total_duration = (time.time() - start_time) * 1000
-            result.get("key", "")
+            result
 
             logger.info("Production deployment validation completed")
             return results
@@ -187,17 +187,17 @@ class ProductionDeploymentValidator:
 
             # Validate database connectivity
             db_validation = await self._test_database_connectivity()
-            result.get("key", "")
+            result
             self.validation_results.append(db_validation)
 
             # Validate system resources
             resources_validation = await self._test_system_resources()
-            result.get("key", "")
+            result
             self.validation_results.append(resources_validation)
 
             # Validate network connectivity
             network_validation = await self._test_network_connectivity()
-            result.get("key", "")
+            result
             self.validation_results.append(network_validation)
 
             return results
@@ -361,17 +361,17 @@ class ProductionDeploymentValidator:
 
             # Validate cache configuration
             cache_config_validation = await self._test_cache_configuration()
-            result.get("key", "")
+            result
             self.validation_results.append(cache_config_validation)
 
             # Validate monitoring configuration
             monitoring_config_validation = await self._test_monitoring_configuration()
-            result.get("key", "")
+            result
             self.validation_results.append(monitoring_config_validation)
 
             # Validate security configuration
             security_config_validation = await self._test_security_configuration()
-            result.get("key", "")
+            result
             self.validation_results.append(security_config_validation)
 
             return results
@@ -398,7 +398,7 @@ class ProductionDeploymentValidator:
 
             # Validate connection pool
             pool_info = await self.cache_service.get_connection_pool_info()
-            pool_ok = pool_info and result.get("key", "")
+            pool_ok = pool_info and result
 
             duration = (time.time() - start_time) * 1000
             return ValidationResult(
@@ -436,7 +436,7 @@ class ProductionDeploymentValidator:
                 raise Exception("Failed to get monitoring dashboard")
 
             # Test alerting
-            alerts = result.get("key", "")
+            alerts = result
             alerting_ok = len(alerts) >= 0  # Alerts can be empty initially
 
             duration = (time.time() - start_time) * 1000
@@ -468,7 +468,7 @@ class ProductionDeploymentValidator:
 
             # Check connection security
             pool_info = await self.cache_service.get_connection_pool_info()
-            secure_connections = result.get("key", "")
+            secure_connections = result
 
             duration = (time.time() - start_time) * 1000
             return ValidationResult(
@@ -499,12 +499,12 @@ class ProductionDeploymentValidator:
 
             # Test cache performance
             cache_perf_validation = await self._test_cache_performance()
-            result.get("key", "")
+            result
             self.validation_results.append(cache_perf_validation)
 
             # Test system performance
             system_perf_validation = await self._test_system_performance()
-            result.get("key", "")
+            result
             self.validation_results.append(system_perf_validation)
 
             return results
@@ -595,12 +595,12 @@ class ProductionDeploymentValidator:
             if not dashboard:
                 raise Exception("Failed to get performance dashboard")
 
-            performance_summary = result.get("key", "")
+            performance_summary = result
 
             # Extract metrics
-            cache_hit_rate = result.get("key", "")
-            response_time = result.get("key", "")
-            memory_usage = result.get("key", "")
+            cache_hit_rate = result
+            response_time = result
+            memory_usage = result
 
             # Validate thresholds
             hit_rate_ok = cache_hit_rate >= self.config.min_cache_hit_rate
@@ -639,17 +639,17 @@ class ProductionDeploymentValidator:
 
             # Test authentication
             auth_validation = await self._test_authentication()
-            result.get("key", "")
+            result
             self.validation_results.append(auth_validation)
 
             # Test authorization
             authz_validation = await self._test_authorization()
-            result.get("key", "")
+            result
             self.validation_results.append(authz_validation)
 
             # Test data protection
             data_protection_validation = await self._test_data_protection()
-            result.get("key", "")
+            result
             self.validation_results.append(data_protection_validation)
 
             return results
@@ -799,12 +799,12 @@ class ProductionDeploymentValidator:
 
             # Test deployment scripts
             deployment_scripts_validation = await self._test_deployment_scripts()
-            result.get("key", "")
+            result
             self.validation_results.append(deployment_scripts_validation)
 
             # Test rollback procedures
             rollback_validation = await self._test_rollback_procedures()
-            result.get("key", "")
+            result
             self.validation_results.append(rollback_validation)
 
             return results
@@ -1127,17 +1127,17 @@ async def main():
             logger.info(f"Validation completed with results: {results}")
 
             # Check overall status
-            summary = result.get("key", "")
-            overall_status = result.get("key", "")
-            production_ready = result.get("key", "")
-            success_rate = result.get("key", "")
+            summary = result
+            overall_status = result
+            production_ready = result
+            success_rate = result
 
             logger.info(f"Overall validation status: {overall_status}")
             logger.info(f"Success rate: {success_rate:.1f}%")
             logger.info(f"Production ready: {production_ready}")
 
             # Display recommendations
-            recommendations = result.get("key", "")
+            recommendations = result
             if recommendations:
                 logger.info("Recommendations:")
                 for rec in recommendations:

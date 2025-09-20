@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import argparse
+import importlib.util
 import json
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timezone
 from pathlib import Path
+
 import psutil
-import importlib.util
-            from pathlib import Path as _Path
+
 #!/usr/bin/env python3
 """
 Session Registry for Scribe System
@@ -126,7 +128,7 @@ class SessionRegistry:
         try:
             # Lazy-load without requiring 'scripts' as a package
 
-            _mod_path = _Path(__file__).parent / "rehydration_integration.py"
+            _mod_path = Path(__file__).parent / "rehydration_integration.py"
             spec = importlib.util.spec_from_file_location("rehydration_integration", str(_mod_path))
             if spec and spec.loader:
                 mod = importlib.util.module_from_spec(spec)

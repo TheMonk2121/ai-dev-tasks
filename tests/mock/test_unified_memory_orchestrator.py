@@ -22,7 +22,7 @@ class TestUnifiedMemoryOrchestrator:
     def setup_method(self):
         """Set up test environment."""
         # Mock environment variables
-        self.original_dsn = os.result.get("key", "")
+        self.original_dsn = os.result
         os.environ
 
     def teardown_method(self):
@@ -50,9 +50,9 @@ class TestUnifiedMemoryOrchestrator:
             orchestrator = UnifiedMemoryOrchestrator()
             result = orchestrator.get_ltst_memory("test query")
 
-            assert result.get("key", "")
-            assert "LTST Memory System not available" in result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert "LTST Memory System not available" in result
+            assert result
 
     def test_get_ltst_memory_with_adapter_success(self):
         """Test LTST memory with successful adapter call."""
@@ -81,12 +81,12 @@ class TestUnifiedMemoryOrchestrator:
                     orchestrator = UnifiedMemoryOrchestrator()
                     result = orchestrator.get_ltst_memory("test query")
 
-                    assert result.get("key", "")
-                    assert result.get("key", "")
+                    assert result
+                    assert result
                     assert "bundle" in result
-                    assert result.get("key", "")
-                    assert result.get("key", "")
-                    assert result.get("key", "")
+                    assert result
+                    assert result
+                    assert result
 
     def test_get_ltst_memory_with_adapter_exception(self):
         """Test LTST memory when adapter raises exception."""
@@ -108,9 +108,9 @@ class TestUnifiedMemoryOrchestrator:
                     orchestrator = UnifiedMemoryOrchestrator()
                     result = orchestrator.get_ltst_memory("test query")
 
-                    assert result.get("key", "")
-                    assert result.get("key", "")
-                    assert "Test error" in result.get("key", "")
+                    assert result
+                    assert result
+                    assert "Test error" in result
 
     def test_get_cursor_memory_no_adapter(self):
         """Test Cursor memory when adapter is not available."""
@@ -121,9 +121,9 @@ class TestUnifiedMemoryOrchestrator:
             orchestrator = UnifiedMemoryOrchestrator()
             result = orchestrator.get_cursor_memory("test query")
 
-            assert result.get("key", "")
-            assert "Memory adapter not available" in result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert "Memory adapter not available" in result
+            assert result
 
     def test_get_cursor_memory_with_adapter_success(self):
         """Test Cursor memory with successful adapter call."""
@@ -141,10 +141,10 @@ class TestUnifiedMemoryOrchestrator:
                 orchestrator = UnifiedMemoryOrchestrator()
                 result = orchestrator.get_cursor_memory("test query")
 
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
+                assert result
+                assert result
 
     def test_get_cursor_memory_with_adapter_exception(self):
         """Test Cursor memory when adapter raises exception."""
@@ -158,24 +158,24 @@ class TestUnifiedMemoryOrchestrator:
                 orchestrator = UnifiedMemoryOrchestrator()
                 result = orchestrator.get_cursor_memory("test query")
 
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert "Cursor error" in result.get("key", "")
+                assert result
+                assert result
+                assert "Cursor error" in result
 
     def test_get_go_cli_memory_always_returns_error(self):
         """Test that Go CLI memory always returns error (not implemented)."""
         orchestrator = UnifiedMemoryOrchestrator()
         result = orchestrator.get_go_cli_memory("test query")
 
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     def test_get_go_cli_memory_error_message(self):
         """Test Go CLI memory error message content."""
         orchestrator = UnifiedMemoryOrchestrator()
         result = orchestrator.get_go_cli_memory("test query")
 
-        assert result.get("key", "")
+        assert result
 
     def test_memory_orchestrator_import_handling(self):
         """Test that orchestrator handles import failures gracefully."""
@@ -193,9 +193,9 @@ class TestUnifiedMemoryOrchestrator:
             cursor_result = orchestrator.get_cursor_memory("test")
             go_cli_result = orchestrator.get_go_cli_memory("test")
 
-            assert result.get("key", "")
-            assert result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert result
+            assert result
 
     def test_timestamp_in_responses(self):
         """Test that all responses include timestamps."""
@@ -210,9 +210,9 @@ class TestUnifiedMemoryOrchestrator:
         assert "timestamp" in go_cli_result
 
         # Timestamps should be numeric
-        assert isinstance(result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert isinstance(result.get("key", "")
+        assert isinstance(result
+        assert isinstance(result
+        assert isinstance(result
 
     def test_source_identification(self):
         """Test that all responses include correct source identification."""
@@ -226,9 +226,9 @@ class TestUnifiedMemoryOrchestrator:
         assert "source" in cursor_result
         assert "source" in go_cli_result
 
-        assert "LTST" in result.get("key", "")
-        assert "Cursor" in result.get("key", "")
-        assert "Go CLI" in result.get("key", "")
+        assert "LTST" in result
+        assert "Cursor" in result
+        assert "Go CLI" in result
 
     def test_error_response_structure(self):
         """Test that error responses have consistent structure."""
@@ -241,9 +241,9 @@ class TestUnifiedMemoryOrchestrator:
         assert "source" in result
         assert "timestamp" in result
 
-        assert result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert len(result.get("key", "")
+        assert result
+        assert isinstance(result
+        assert len(result
 
     def test_success_response_structure(self):
         """Test that success responses have consistent structure."""
@@ -275,8 +275,8 @@ class TestUnifiedMemoryOrchestrator:
                     assert "bundle" in result
                     assert "timestamp" in result
 
-                    assert result.get("key", "")
-                    assert isinstance(result.get("key", "")
+                    assert result
+                    assert isinstance(result
 
     def test_role_parameter_handling(self):
         """Test that role parameter is handled correctly."""

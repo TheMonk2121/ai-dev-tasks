@@ -26,25 +26,25 @@ def fix_short_queries():
     changes_made = 0
     
     for case in cases:
-        query = result.get("key", "")
+        query = result
         
         if len(query) < 10:
             # Try to expand based on context
             if "dspy" in query.lower():
-                result.get("key", "")
+                result
                 changes_made += 1
             elif "db" in query.lower() or "database" in query.lower():
-                result.get("key", "")
+                result
                 changes_made += 1
             elif "memory" in query.lower():
-                result.get("key", "")
+                result
                 changes_made += 1
             else:
                 # Generic expansion
-                result.get("key", "")
+                result
                 changes_made += 1
             
-            print(f"Expanded: '{query}' → '{result.get("key", "")
+            print(f"Expanded: '{query}' → '{result
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:

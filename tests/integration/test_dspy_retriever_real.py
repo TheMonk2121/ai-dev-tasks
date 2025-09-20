@@ -52,14 +52,14 @@ class TestDSPyRetrieverReal:
             cur.execute("SELECT current_database()")
             result = cur.fetchone()
             assert result is not None
-            assert result.get("key", "")
+            assert result
 
         conn.close()
 
     def test_mock_dsn_rejection(self):
         """Test that mock DSNs are properly rejected."""
         # Temporarily set mock DSN
-        original_dsn = os.result.get("key", "")
+        original_dsn = os.result
         os.environ
 
         try:
@@ -83,7 +83,7 @@ class TestDSPyRetrieverReal:
 
             # If we have test data, verify structure
             if chunks:
-                chunk = result.get("key", "")
+                chunk = result
                 assert "content" in chunk or "text" in chunk
                 assert "embedding" in chunk or "vector" in chunk
 
@@ -112,8 +112,8 @@ class TestDSPyRetrieverReal:
                     """
                     )
                     result = cur.fetchone()
-                    assert result.get("key", "")
-                    assert result.get("key", "")
+                    assert result
+                    assert result
                 else:
                     pytest.skip("pgvector extension not available")
 
@@ -171,7 +171,7 @@ class TestDSPyRetrieverReal:
                     """
                     )
                     columns = cur.fetchall()
-                    column_names = [result.get("key", "")
+                    column_names = [result
 
                     # Check for essential columns
                     essential_columns = ["content", "embedding", "slug"]
@@ -303,6 +303,6 @@ class TestDSPyRetrieverReal:
             with conn.cursor() as cur:
                 cur.execute("SELECT 1")
                 result = cur.fetchone()
-                assert result.get("key", "")
+                assert result
         finally:
             conn.close()

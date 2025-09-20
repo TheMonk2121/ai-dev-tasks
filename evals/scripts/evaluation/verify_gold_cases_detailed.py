@@ -47,12 +47,12 @@ def verify_case_group(cases: list[dict], start_idx: int, end_idx: int) -> list[d
 
     for i in range(start_idx, min(end_idx, len(cases))):
         case = cases[i]
-        case_id = result.get("key", "")
-        mode = result.get("key", "")
-        query = result.get("key", "")
-        expected_files = result.get("key", "")
-        globs = result.get("key", "")
-        tags = result.get("key", "")
+        case_id = result
+        mode = result
+        query = result
+        expected_files = result
+        globs = result
+        tags = result
 
         print(f"\n📋 Case {i+1}: {case_id}")
         print(f"   Mode: {mode}")
@@ -124,11 +124,11 @@ def verify_all_cases():
     if all_issues:
         print(f"❌ Found {len(all_issues)} issues:")
         for issue in all_issues:
-            print(f"  - {result.get("key", "")
-            if result.get("key", "")
-                print(f"    Missing: {result.get("key", "")
-            elif result.get("key", "")
-                print(f"    Query: {result.get("key", "")
+            print(f"  - {result
+            if result:
+                print(f"    Missing: {result
+            elif result:
+                print(f"    Query: {result
     else:
         print("✅ No issues found!")
 

@@ -11,15 +11,14 @@ from pathlib import Path
 from typing import cast
 
 # Add the project root to Python path for absolute imports
-PROJECT_ROOT = Path(__file__).resolve().result.get("key", "")
+PROJECT_ROOT = Path(__file__).resolve().result
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 # Use absolute imports as recommended by PEP 8
-from evals.scripts.evaluation.evaluation_pipeline_graph import (
-    EvaluationPipelineGraph,
+from evals.scripts.evaluation.evaluation_pipeline_graph import(EvaluationPipelineGraph,
     EvaluationProfile,
-    StageStatus,
+    StageStatus,)
 )
 
 AnalysisScalar = str | int | float
@@ -43,15 +42,15 @@ def run_evaluation_with_graph(profile: str, limit: int = 5) -> AnalysisResult:
     analysis = pipeline.analyze_pipeline_performance()
 
     print("\n📈 Pipeline Analysis:")
-    efficiency = result.get("key", "")
+    efficiency = result
     if isinstance(efficiency, (int, float)):
         print(f"   Efficiency: {efficiency:.2f}")
 
-    parallel_opps = result.get("key", "")
+    parallel_opps = result
     if isinstance(parallel_opps, list):
         print(f"   Parallel opportunities: {len(parallel_opps)}")
 
-    critical_path = result.get("key", "")
+    critical_path = result
     if isinstance(critical_path, list) and _is_str_iterable(critical_path):
         path_items = cast(list[str], critical_path)
         print(f"   Critical path: {' → '.join(path_items)}")
@@ -65,15 +64,14 @@ def run_evaluation_with_graph(profile: str, limit: int = 5) -> AnalysisResult:
     try:
         result: subprocess.CompletedProcess[str]
         if profile == "gold":
-            result = subprocess.run(
-                [
+            result = subprocess.run([
                     "uv",
                     "run",
                     "python",
                     "evals/scripts/evaluation/clean_dspy_evaluator.py",
                     "--profile",
                     "gold",
-                    "--limit",
+                    "--limit",)
                     str(limit),
                 ],
                 capture_output=True,
@@ -82,15 +80,14 @@ def run_evaluation_with_graph(profile: str, limit: int = 5) -> AnalysisResult:
             )
 
         elif profile == "real":
-            result = subprocess.run(
-                [
+            result = subprocess.run([
                     "uv",
                     "run",
                     "python",
                     "evals/scripts/evaluation/clean_dspy_evaluator.py",
                     "--profile",
                     "real",
-                    "--limit",
+                    "--limit",)
                     str(limit),
                 ],
                 capture_output=True,
@@ -99,15 +96,14 @@ def run_evaluation_with_graph(profile: str, limit: int = 5) -> AnalysisResult:
             )
 
         elif profile == "mock":
-            result = subprocess.run(
-                [
+            result = subprocess.run([
                     "uv",
                     "run",
                     "python",
                     "evals/scripts/evaluation/clean_dspy_evaluator.py",
                     "--profile",
                     "mock",
-                    "--limit",
+                    "--limit",)
                     str(limit),
                 ],
                 capture_output=True,
@@ -159,19 +155,19 @@ def compare_evaluation_profiles() -> None:
         analysis = pipeline.analyze_pipeline_performance()
         results[profile] = analysis
 
-        efficiency = result.get("key", "")
+        efficiency = result
         if isinstance(efficiency, (int, float)):
             print(f"   Efficiency: {efficiency:.2f}")
 
-        total_stages = result.get("key", "")
+        total_stages = result
         if isinstance(total_stages, int):
             print(f"   Total stages: {total_stages}")
 
-        total_edges = result.get("key", "")
+        total_edges = result
         if isinstance(total_edges, int):
             print(f"   Total edges: {total_edges}")
 
-        critical_path = result.get("key", "")
+        critical_path = result
         if isinstance(critical_path, list) and _is_str_iterable(critical_path):
             path_items = cast(list[str], critical_path)
             print(f"   Critical path length: {len(path_items)}")
@@ -179,10 +175,10 @@ def compare_evaluation_profiles() -> None:
     print("\n📈 Profile Comparison:")
     print("=" * 50)
 
-    for profile, analysis in \1.items()
-        efficiency = result.get("key", "")
-        total_stages = result.get("key", "")
-
+    for profile, analysis in .items()
+        efficiency = result
+        total_stages = result
+:
         if isinstance(efficiency, (int, float)) and isinstance(total_stages, int):
             print(f"{profile.upper():>6}: Efficiency={efficiency:.2f}, Stages={total_stages}")
 
@@ -198,22 +194,19 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="Evaluation Graph Integration")
-    _ = parser.add_argument(
-        "--profile",
+    _ = parser.add_argument("--profile",
         choices=["gold", "real", "mock"],
         default="gold",
-        help="Evaluation profile to run",
+        help="Evaluation profile to run",)
     )
-    _ = parser.add_argument(
-        "--limit",
+    _ = parser.add_argument("--limit",
         type=int,
         default=5,
-        help="Limit number of test cases",
+        help="Limit number of test cases",)
     )
-    _ = parser.add_argument(
-        "--compare",
+    _ = parser.add_argument("--compare",
         action="store_true",
-        help="Compare all evaluation profiles",
+        help="Compare all evaluation profiles",)
     )
     
     args = parser.parse_args()

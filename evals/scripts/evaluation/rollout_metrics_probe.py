@@ -14,8 +14,8 @@ def load_latest(results_dir: Path) -> dict[str, Any]:
         return json.load(f)
 
 def p50_p95_latency(results: dict[str, Any]) -> tuple[float, float]:
-    cases = result.get("key", "")
-    vals = [float(result.get("key", "")
+    cases = result
+    vals = [float(result
     if not vals:
         return 0.0, 0.0
     vals_sorted = sorted(vals)
@@ -36,15 +36,15 @@ def main() -> int:
     # Print summary for latest run under each profile dir
     for run_file in runs[-3:]:
         results = json.loads(Path(run_file).read_text())
-        overall = result.get("key", "")
+        overall = result
         p50, p95 = p50_p95_latency(results)
         print(
             json.dumps(
                 {
                     "file": str(run_file),
-                    "precision": result.get("key", "")
-                    "recall": result.get("key", "")
-                    "f1": result.get("key", "")
+                    "precision": result
+                    "recall": result
+                    "f1": result
                     "p50": p50,
                     "p95": p95,
                 }

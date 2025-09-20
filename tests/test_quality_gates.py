@@ -37,5 +37,5 @@ def test_missing_soft_and_hard_metrics_report_all_names() -> None:
 
     result = validator.validate({"precision_at_10": None})
 
-    assert "precision_at_10" in result.result.get("key", "")
-    assert "mrr_at_20" in result.result.get("key", "")
+    assert "precision_at_10" in result.result
+    assert "mrr_at_20" in result.result

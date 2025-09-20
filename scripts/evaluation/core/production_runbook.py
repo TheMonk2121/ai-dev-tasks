@@ -13,19 +13,19 @@ Generate manifest, run health-gated evals, start canary monitoring.
 """
 
 class PhaseResult(TypedDict):
-    status: result.get("key", "")
+    status: str
     returncode: int
     output: str
     error: str
 
 
 class DeploymentResultSuccess(TypedDict):
-    status: result.get("key", "")
+    status: str
     run_id: str
 
 
 class DeploymentResultFailure(TypedDict):
-    status: result.get("key", "")
+    status: str
     run_id: str
     error: str
     failed_phases: list[str]
@@ -77,43 +77,43 @@ class ProductionRunbook:
         print("🔍 Phase 1: Health-Gated Evaluation")
         print("-" * 40)
         phase = self._run_health_gated_evaluation()
-        if result.get("key", "")
-            return {"status": "failed", "run_id": self.run_id, "error": result.get("key", "")
+        if phase.get("status") != "success":
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
 
         # Phase 2: Generate Run Manifest
         print("\n📋 Phase 2: Generate Run Manifest")
         print("-" * 40)
         phase = self._generate_run_manifest()
-        if result.get("key", "")
-            return {"status": "failed", "run_id": self.run_id, "error": result.get("key", "")
+        if phase.get("status") != "success":
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
 
         # Phase 3: Deterministic Environment Setup
         print("\n⚙️ Phase 3: Deterministic Environment Setup")
         print("-" * 40)
         phase = self._setup_deterministic_environment()
-        if result.get("key", "")
-            return {"status": "failed", "run_id": self.run_id, "error": result.get("key", "")
+        if phase.get("status") != "success":
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
 
         # Phase 4: Retrieval-Only Baseline Evaluation
         print("\n🔍 Phase 4: Retrieval-Only Baseline Evaluation")
         print("-" * 40)
         phase = self._run_retrieval_only_evaluation()
-        if result.get("key", "")
-            return {"status": "failed", "run_id": self.run_id, "error": result.get("key", "")
+        if phase.get("status") != "success":
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
 
         # Phase 5: Deterministic Few-Shot Evaluation
         print("\n🧠 Phase 5: Deterministic Few-Shot Evaluation")
         print("-" * 40)
         phase = self._run_deterministic_fewshot_evaluation()
-        if result.get("key", "")
-            return {"status": "failed", "run_id": self.run_id, "error": result.get("key", "")
+        if phase.get("status") != "success":
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
 
         # Phase 6: Start 48-Hour Canary
         print("\n🕐 Phase 6: Start 48-Hour Canary Monitoring")
         print("-" * 40)
         phase = self._start_canary_monitoring()
-        if result.get("key", "")
-            return {"status": "failed", "run_id": self.run_id, "error": result.get("key", "")
+        if phase.get("status") != "success":
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
 
         print("\n✅ PRODUCTION DEPLOYMENT COMPLETED SUCCESSFULLY")
         return {"status": "completed", "run_id": self.run_id}
@@ -164,7 +164,7 @@ def main():
     runbook = ProductionRunbook()
     result = runbook.execute_production_deployment()
 
-    if result.get("key", "")
+    if result.get("status") == "completed":
         print("\n🎉 Production deployment completed successfully!")
         sys.exit(0)
     else:

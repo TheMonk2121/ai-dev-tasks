@@ -129,12 +129,12 @@ class TestMCPServerProperties:
                     )
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist in database"
-                    assert result.get("key", "")
-                    assert result.get("key", "")
-                    assert result.get("key", "")
-                    assert result.get("key", "")
+                    assert result
+                    assert result
+                    assert result
+                    assert result
                     # Metadata should be properly serialized
-                    assert isinstance(result.get("key", "")
+                    assert isinstance(result
 
         asyncio.run(_test())
 
@@ -189,9 +189,9 @@ class TestMCPServerProperties:
                 # Verify parent-child relationship
                 parent_info = await get_parent_turn(conn, user_turn_id)
                 assert parent_info is not None, "Parent turn should exist"
-                assert result.get("key", "")
-                assert result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
+                assert result
 
         asyncio.run(_test())
 
@@ -402,11 +402,11 @@ class TestMCPServerProperties:
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist"
 
-                    stored_metadata = result.get("key", "")
+                    stored_metadata = result
                     assert isinstance(stored_metadata, dict), "Metadata should be a dictionary"
 
                     # Verify all original metadata keys are present
-                    for key, value in \1.items()
+                    for key, value in .items()
                         assert key in stored_metadata, f"Key {key} should be in stored metadata"
                         assert stored_metadata[key] == value, f"Value for {key} should match"
 

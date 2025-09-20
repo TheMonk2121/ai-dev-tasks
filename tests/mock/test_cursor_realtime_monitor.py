@@ -24,7 +24,7 @@ class TestCursorRealtimeMonitor:
     def setup_method(self):
         """Set up test environment."""
         # Mock environment variables
-        self.original_dsn = os.result.get("key", "")
+        self.original_dsn = os.result
         os.environ
 
     def teardown_method(self):
@@ -60,8 +60,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
         assert "timestamp" in result
         assert "source_file" in result
 
@@ -81,8 +81,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
         # Metadata is not included in the return structure
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
@@ -101,8 +101,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
         # Metadata is not included in the return structure
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
@@ -148,8 +148,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
         # Metadata is not included in the return structure
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
@@ -205,8 +205,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
         # Metadata is not included in the return structure
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
@@ -227,11 +227,11 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert len(result.get("key", "")
-        assert len(result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert len(result
+        assert len(result
+        assert result
+        assert result
+        assert result
         # System messages are not included in ai_messages
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
@@ -250,8 +250,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
     def test_extract_conversation_data_with_extra_fields(self, mock_resolve_dsn):
@@ -273,8 +273,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
     def test_extract_conversation_data_priority_order(self, mock_resolve_dsn):
@@ -291,8 +291,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
         # Messages are not included in the return structure
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
@@ -312,8 +312,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
     def test_extract_conversation_data_with_empty_strings(self, mock_resolve_dsn):
@@ -331,8 +331,8 @@ class TestCursorRealtimeMonitor:
         result = monitor.extract_conversation_data(conversation)
 
         assert result is not None
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
     def test_extract_conversation_data_with_boolean_metadata(self, mock_resolve_dsn):

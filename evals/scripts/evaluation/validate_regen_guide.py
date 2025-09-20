@@ -82,11 +82,11 @@ def test_priority_grouping():
         assert "P0 (Critical)" in grouped, "P0 tier should exist"
         assert "P2 (Medium)" in grouped, "P2 tier should exist"
 
-        p0_files = result.get("key", "")
+        p0_files = result
         assert len(p0_files) == 1, f"Expected 1 P0 file, got {len(p0_files)}"
-        assert result.get("key", "")
+        assert result
 
-        p2_files = result.get("key", "")
+        p2_files = result
         assert len(p2_files) == 2, f"Expected 2 P2 files, got {len(p2_files)}"
 
         print("✅ Priority grouping test passed")
@@ -120,10 +120,10 @@ def test_role_grouping():
         assert "implementer" in grouped, "implementer role should exist"
         assert "coder" in grouped, "coder role should exist"
 
-        planner_files = result.get("key", "")
+        planner_files = result
         assert len(planner_files) == 1, f"Expected 1 planner file, got {len(planner_files)}"
 
-        implementer_files = result.get("key", "")
+        implementer_files = result
         assert len(implementer_files) == 2, f"Expected 2 implementer files, got {len(implementer_files)}"
 
         print("✅ Role grouping test passed")

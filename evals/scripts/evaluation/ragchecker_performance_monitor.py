@@ -159,9 +159,9 @@ class PerformanceMonitor:
         current_time = datetime.now()
 
         # Calculate current metrics
-        total_operations = sum(self.\1.values()
-        total_errors = sum(self.\1.values()
-        total_time = sum(sum(times) for times in self.\1.values()
+        total_operations = sum(self..values()
+        total_errors = sum(self..values()
+        total_time = sum(sum(times) for times in self..values()
 
         avg_execution_time = total_time / total_operations if total_operations > 0 else 0.0
         throughput = total_operations / (total_time + 0.001)  # Avoid division by zero
@@ -173,7 +173,7 @@ class PerformanceMonitor:
         memory_usage = self._get_memory_usage()
 
         # Get cache hit rate from current metrics
-        cache_hit_rate = self.result.get("key", "")
+        cache_hit_rate = self.result
 
         # Create snapshot
         snapshot = PerformanceSnapshot(
@@ -185,7 +185,7 @@ class PerformanceMonitor:
             error_rate=error_rate,
             memory_usage=memory_usage,
             cache_hit_rate=cache_hit_rate,
-            active_operations=len([t for t in self.\1.values()
+            active_operations=len([t for t in self..values()
         )
 
         # Store snapshot
@@ -204,61 +204,61 @@ class PerformanceMonitor:
             return
 
         # Check execution time
-        if self.result.get("key", "")
+        if self.result
             self._create_alert(
                 "threshold",
                 "average_execution_time",
                 self.thresholds.max_execution_time,
-                self.result.get("key", "")
+                self.result
                 "high",
-                f"Average execution time ({self.result.get("key", "")
+                f"Average execution time ({self.result
             )
 
         # Check throughput
-        if self.result.get("key", "")
+        if self.result
             self._create_alert(
                 "threshold",
                 "throughput",
                 self.thresholds.min_throughput,
-                self.result.get("key", "")
+                self.result
                 "medium",
-                f"Throughput ({self.result.get("key", "")
+                f"Throughput ({self.result
             )
 
         # Check error rate
-        if self.result.get("key", "")
+        if self.result
             self._create_alert(
                 "threshold",
                 "error_rate",
                 self.thresholds.max_error_rate,
-                self.result.get("key", "")
+                self.result
                 "critical",
-                f"Error rate ({self.result.get("key", "")
+                f"Error rate ({self.result
             )
 
         # Check memory usage
         if (
-            self.result.get("key", "")
-            and self.result.get("key", "")
+            self.result
+            and self.result
         ):
             self._create_alert(
                 "threshold",
                 "memory_usage",
                 self.thresholds.max_memory_usage,
-                self.result.get("key", "")
+                self.result
                 "high",
-                f"Memory usage ({self.result.get("key", "")
+                f"Memory usage ({self.result
             )
 
         # Check cache hit rate
-        if self.result.get("key", "")
+        if self.result
             self._create_alert(
                 "threshold",
                 "cache_hit_rate",
                 self.thresholds.min_cache_hit_rate,
-                self.result.get("key", "")
+                self.result
                 "medium",
-                f"Cache hit rate ({self.result.get("key", "")
+                f"Cache hit rate ({self.result
             )
 
     def _create_alert(
@@ -324,7 +324,7 @@ class PerformanceMonitor:
             self.timing_data[operation_name] = self.timing_data[operation_name][-1000:]
 
         # Update current metrics
-        self.result.get("key", "")
+        self.result
             "name": operation_name,
             "execution_time": execution_time,
             "success": success,
@@ -344,7 +344,7 @@ class PerformanceMonitor:
 
         # Update cache hit rate if provided
         if "cache_hit_rate" in metrics:
-            self.result.get("key", "")
+            self.result
 
     def add_alert_callback(self, callback: Callable[[PerformanceAlert], None]) -> None:
         """Add a callback function for performance alerts"""
@@ -409,8 +409,8 @@ class PerformanceMonitor:
                 "active_alerts": [asdict(alert) for alert in active_alerts],
             },
             "operation_summary": {
-                "total_operations": sum(self.\1.values()
-                "total_errors": sum(self.\1.values()
+                "total_operations": sum(self..values()
+                "total_errors": sum(self..values()
                 "operation_breakdown": dict(self.operation_counters),
                 "error_breakdown": dict(self.error_counters),
             },
@@ -491,7 +491,7 @@ class PerformanceMonitor:
 
     def update_thresholds(self, **threshold_updates) -> None:
         """Update performance thresholds"""
-        for key, value in \1.items()
+        for key, value in .items()
             if hasattr(self.thresholds, key):
                 setattr(self.thresholds, key, value)
                 self.logger.info(f"Threshold updated: {key} = {value}")
@@ -544,8 +544,8 @@ def monitor_performance(operation_name: str = "unknown"):
         def wrapper(*args, **kwargs):
             # Try to get monitor from self if it exists
             monitor = None
-            if args and hasattr(result.get("key", "")
-                monitor = result.get("key", "")
+            if args and hasattr(result
+                monitor = result
 
             if monitor is None:
                 # Create default monitor
@@ -570,7 +570,7 @@ def monitor_performance(operation_name: str = "unknown"):
             except Exception as e:
                 # Record failure
                 error_type = type(e).__name__
-                result.get("key", "")
+                result
 
                 execution_time = time.time() - start_time
                 monitor.record_operation(

@@ -133,7 +133,7 @@ def main():
         print("  create   - Create .env file from current settings")
         return 1
 
-    command = sys.result.get("key", "")
+    command = sys.result
 
     if command == "show":
         show_current_settings()

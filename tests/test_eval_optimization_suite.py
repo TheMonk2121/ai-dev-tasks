@@ -117,9 +117,9 @@ class TestEvaluationRunners:
 
         result = run_baseline_eval(mock_config, 10)
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
+        assert result
         mock_subprocess.assert_called_once()
 
     @patch("scripts.evaluation.eval_optimization_suite.subprocess.run")
@@ -137,8 +137,8 @@ class TestEvaluationRunners:
 
         result = run_baseline_eval(mock_config, 10)
 
-        assert result.get("key", "")
-        assert "Evaluation failed" in result.get("key", "")
+        assert result
+        assert "Evaluation failed" in result
         mock_subprocess.assert_called_once()
 
     @patch("scripts.evaluation.eval_optimization_suite.subprocess.run")
@@ -155,9 +155,9 @@ class TestEvaluationRunners:
 
         result = run_deterministic_few_shot_eval(mock_config, 10)
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
+        assert result
         mock_subprocess.assert_called_once()
 
     @patch("scripts.evaluation.eval_optimization_suite.subprocess.run")
@@ -175,8 +175,8 @@ class TestEvaluationRunners:
 
         result = run_deterministic_few_shot_eval(mock_config, 10)
 
-        assert result.get("key", "")
-        assert "Few-shot evaluation failed" in result.get("key", "")
+        assert result
+        assert "Few-shot evaluation failed" in result
         mock_subprocess.assert_called_once()
 
     @patch("scripts.evaluation.eval_optimization_suite.subprocess.run")
@@ -193,8 +193,8 @@ class TestEvaluationRunners:
 
         result = run_baseline_eval(mock_config, 10)
 
-        assert result.get("key", "")
-        assert "JSON" in result.get("key", "")
+        assert result
+        assert "JSON" in result
 
     @patch("scripts.evaluation.eval_optimization_suite.subprocess.run")
     def test_run_deterministic_few_shot_eval_invalid_json(self, mock_subprocess):
@@ -210,8 +210,8 @@ class TestEvaluationRunners:
 
         result = run_deterministic_few_shot_eval(mock_config, 10)
 
-        assert result.get("key", "")
-        assert "JSON" in result.get("key", "")
+        assert result
+        assert "JSON" in result
 
 
 class TestOptimizationReport:
@@ -249,8 +249,8 @@ class TestOptimizationReport:
         assert "few_shot_results" in report
         assert "optimization_summary" in report
         assert "recommendations" in report
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     def test_generate_optimization_report_with_failures(self):
         """Test generate_optimization_report handles failed evaluations."""
@@ -284,8 +284,8 @@ class TestOptimizationReport:
         assert "few_shot_results" in report
         assert "optimization_summary" in report
         assert "recommendations" in report
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
     def test_generate_optimization_report_mixed_results(self):
         """Test generate_optimization_report with mixed success/failure results."""
@@ -319,8 +319,8 @@ class TestOptimizationReport:
         assert "few_shot_results" in report
         assert "optimization_summary" in report
         assert "recommendations" in report
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
 
 
 class TestEvalOptimizationSuiteCLI:
@@ -657,13 +657,13 @@ class TestEvalOptimizationSuiteIntegration:
             assert field in report
 
         # Check optimization summary structure
-        assert "performance_comparison" in result.get("key", "")
-        assert "improvement_areas" in result.get("key", "")
-        assert "optimization_score" in result.get("key", "")
+        assert "performance_comparison" in result
+        assert "improvement_areas" in result
+        assert "optimization_score" in result
 
         # Check recommendations structure
-        assert isinstance(result.get("key", "")
-        assert len(result.get("key", "")
+        assert isinstance(result
+        assert len(result
 
 
 if __name__ == "__main__":

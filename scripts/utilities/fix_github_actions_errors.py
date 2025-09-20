@@ -9,7 +9,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 class GitHubActionsErrorFixer:
@@ -145,14 +145,14 @@ class GitHubActionsErrorFixer:
         if "error" in analysis:
             return analysis
         
-        content = result.get("key", "")
+        content = analysis["content"]
         original_content = content
         fixes_applied = 0
         
         # Apply fixes
-        for pattern_name, pattern_info in self.\1.items()
-            pattern = result.get("key", "")
-            replacement = result.get("key", "")
+        for pattern_name, pattern_info in self.patterns.items():
+            pattern = pattern_info.get("pattern", "")
+            replacement = pattern_info.get("replacement", "")
             
             # Use multiline flag for complex patterns
             if "\n" in pattern:
@@ -163,7 +163,7 @@ class GitHubActionsErrorFixer:
             if new_content != content:
                 content = new_content
                 fixes_applied += 1
-                print(f"  ✅ Applied fix: {result.get("key", "")
+                print(f"  ✅ Applied fix: {pattern_name}")
         
         # Write changes if not dry run
         if not dry_run and content != original_content:
@@ -175,7 +175,7 @@ class GitHubActionsErrorFixer:
                 return {"error": f"Failed to write file: {e}"}
         
         return {
-            "issues_found": len(result.get("key", "")
+            "issues_found": len(analysis.get("issues", [])),
             "fixes_applied": fixes_applied,
             "changed": content != original_content
         }
@@ -199,14 +199,14 @@ class GitHubActionsErrorFixer:
             result = self.fix_file(file_path, dry_run)
             
             if "error" in result:
-                print(f"  ❌ Error: {result.get("key", "")
+                print(f"  ❌ Error: {result.get('error', 'Unknown error')}")
                 continue
             
-            if result.get("key", "")
-                total_fixes += result.get("key", "")
-                if result.get("key", "")
+            if result.get("fixes_applied", 0) > 0:
+                total_fixes += result.get("fixes_applied", 0)
+                if result.get("file_changed", False):
                     files_changed += 1
-                print(f"  ✅ Applied {result.get("key", "")
+                print(f"  ✅ Applied {result.get('fixes_applied', 0)} fixes")
             else:
                 print("  ✅ No issues found")
         
@@ -222,9 +222,9 @@ class GitHubActionsErrorFixer:
 GitHub Actions Error Fixing Report
 ==================================
 
-Files processed: {result.get("key", "")
-Files changed: {result.get("key", "")
-Total fixes applied: {result.get("key", "")
+Files processed: {results.get("files_processed", 0)}
+Files changed: {results.get("files_changed", 0)}
+Total fixes applied: {results.get("fixes_applied", 0)}
 
 Common fixes applied:
 - Added missing with: blocks for uses: actions
@@ -260,10 +260,10 @@ def main():
         result = fixer.fix_file(file_path, args.dry_run)
         
         if "error" in result:
-            print(f"Error: {result.get("key", "")
+            print(f"Error: {result.get('error', 'Unknown error')}")
             sys.exit(1)
         
-        print(f"Applied {result.get("key", "")
+        print(f"Applied {result.get('fixes_applied', 0)} fixes")
     else:
         print("GitHub Actions Error Fixer")
         print("=" * 40)

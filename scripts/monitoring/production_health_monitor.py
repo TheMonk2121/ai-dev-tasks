@@ -1,12 +1,21 @@
 from __future__ import annotations
+
 import argparse
 import json
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-from src.utils.config_lock import (
 from typing import Any, Optional, Union
+
+from src.utils.config_lock import (
+    AgentMemoryManager,
+    DatasetTrapManager,
+    DeterminismManager,
+    LockedConfig,
+    ObservabilityManager,
+    ToolTrapManager,
+)
+
 #!/usr/bin/env python3
 """
 Production Health Monitor
@@ -24,10 +33,16 @@ sys.path.insert(0, str(project_root))
 dspy_rag_path = project_root / "dspy-rag-system"
 sys.path.insert(0, str(dspy_rag_path))
 
-    ConfigLockManager,
-    LockedConfig,
-    ProductionGuardrails,
-)
+# Import additional modules from dspy-rag-system
+try:
+    from src.utils.config_lock import (
+        ConfigLockManager,
+        ProductionGuardrails,
+    )
+except ImportError:
+    # These modules may not be available in all environments
+    ConfigLockManager = None
+    ProductionGuardrails = None
 
 def check_config_health(config: LockedConfig) -> dict[str, Any]:
     """Check configuration health"""

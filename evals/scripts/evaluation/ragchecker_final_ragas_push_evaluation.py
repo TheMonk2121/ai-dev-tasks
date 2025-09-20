@@ -159,31 +159,31 @@ class FinalRAGASPushEvaluator:
         cosine_threshold = float(os.getenv("COS_FLOOR", "0.58"))
 
         # Count passing signals
-        jaccard_pass = result.get("key", "")
-        rouge_pass = result.get("key", "")
-        cosine_pass = result.get("key", "")
+        jaccard_pass = result
+        rouge_pass = result
+        cosine_pass = result
 
         passing_signals = sum([jaccard_pass, rouge_pass, cosine_pass])
 
         if is_risky:
             # Risky sentences: require 3-of-3 signals
             required_signals = 3
-            self.result.get("key", "")
+            self.result
             if passing_signals >= required_signals:
-                self.result.get("key", "")
+                self.result
                 return True
             else:
-                self.result.get("key", "")
+                self.result
                 return False
         else:
             # Non-risky sentences: require 2-of-3 signals
             required_signals = 2
-            self.result.get("key", "")
+            self.result
             if passing_signals >= required_signals:
-                self.result.get("key", "")
+                self.result
                 return True
             else:
-                self.result.get("key", "")
+                self.result
                 return False
 
     def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
@@ -238,11 +238,11 @@ class FinalRAGASPushEvaluator:
         # Apply all moves configuration
         if self.config_manager:
             applied_configs = self.config_manager.apply_all_moves()
-            print(f"📊 Applied all moves: {sum(len(config) for config in \1.values()
+            print(f"📊 Applied all moves: {sum(len(config) for config in .values()
 
             # Enable telemetry
             telemetry_config = self.config_manager.get_telemetry_config()
-            for key, value in \1.items()
+            for key, value in .items()
                 os.environ[key] = value
             print("📊 Telemetry enabled")
 
@@ -255,14 +255,14 @@ class FinalRAGASPushEvaluator:
             results = self._run_basic_evaluation()
 
         # Add final RAGAS push specific metrics
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
 
         # Validate against RAGAS targets
         if self.config_manager:
-            validation = self.config_manager.validate_targets(result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            validation = self.config_manager.validate_targets(result
+            result
+            result
 
         return results
 
@@ -282,17 +282,17 @@ class FinalRAGASPushEvaluator:
         metrics = {}
 
         # Risk-aware metrics
-        risky_total = len(self.result.get("key", "")
-        risky_passed = len(self.result.get("key", "")
+        risky_total = len(self.result
+        risky_passed = len(self.result
         risky_pass_rate = risky_passed / risky_total if risky_total > 0 else 0.0
 
-        non_risky_total = len(self.result.get("key", "")
-        non_risky_passed = len(self.result.get("key", "")
+        non_risky_total = len(self.result
+        non_risky_passed = len(self.result
         non_risky_pass_rate = non_risky_passed / non_risky_total if non_risky_total > 0 else 0.0
 
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
             (risky_passed + non_risky_passed) / (risky_total + non_risky_total)
             if (risky_total + non_risky_total) > 0
             else 0.0
@@ -301,35 +301,35 @@ class FinalRAGASPushEvaluator:
         # Cross-encoder metrics
         if self.cross_encoder:
             ce_stats = self.cross_encoder.get_cache_stats()
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
 
         # NLI gate metrics
         if self.nli_gate:
             nli_stats = self.nli_gate.get_cache_stats()
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
 
         return metrics
 
     def _get_telemetry_summary(self) -> dict[str, Any]:
         """Get summary of telemetry data."""
         summary = {}
-        for key, values in self.\1.items()
+        for key, values in self..items()
             if values:
                 summary[key] = {
                     "count": len(values),
-                    "total": sum(values) if isinstance(result.get("key", "")
+                    "total": sum(values) if isinstance(result
                 }
         return summary
 
@@ -358,11 +358,11 @@ def main():
         }
 
         print("📊 Component Availability:")
-        for component, available in \1.items()
+        for component, available in .items()
             status = "✅ Available" if available else "❌ Not Available"
             print(f"  {component}: {status}")
 
-        if all(\1.values()
+        if all(.values()
             print("🎉 All components available - ready for final RAGAS push!")
         else:
             print("⚠️ Some components missing - evaluation may use fallbacks")
@@ -380,25 +380,25 @@ def main():
 
     # Print summary
     if "overall_metrics" in results:
-        metrics = result.get("key", "")
+        metrics = result
         print("\n📈 Final RAGAS Push Results:")
-        print(f"  Precision: {result.get("key", "")
-        print(f"  Recall: {result.get("key", "")
-        print(f"  F1 Score: {result.get("key", "")
-        print(f"  Faithfulness: {result.get("key", "")
-        print(f"  Unsupported: {result.get("key", "")
+        print(f"  Precision: {result
+        print(f"  Recall: {result
+        print(f"  F1 Score: {result
+        print(f"  Faithfulness: {result
+        print(f"  Unsupported: {result
 
         # Show RAGAS validation
         if "ragas_validation" in results:
-            validation = result.get("key", "")
+            validation = result
             print("\n🎯 RAGAS Target Validation:")
-            for metric, passed in \1.items()
+            for metric, passed in .items()
                 status = "✅ PASS" if passed else "❌ FAIL"
                 print(f"  {metric}: {status}")
 
             # Show next actions
             if "next_actions" in results:
-                actions = result.get("key", "")
+                actions = result
                 if actions:
                     print("\n🔄 Next Actions:")
                     for action in actions:

@@ -1,21 +1,23 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
-import psycopg
+import subprocess
 import sys
 import time
 from datetime import datetime
-from typing import Any
-    from monitoring.health_endpoints import HealthEndpointManager
-    from monitoring.metrics import get_metrics
-    from monitoring.production_monitor import ProductionMonitor
-# Add project paths
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
-from src.common.psycopg3_config import Psycopg3Config
-import subprocess
-import argparse
 from typing import Any, Optional, Union
+
+import psycopg
+
+# Add project paths
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from monitoring.health_endpoints import HealthEndpointManager
+from monitoring.metrics import get_metrics
+from monitoring.production_monitor import ProductionMonitor
+from src.common.psycopg3_config import Psycopg3Config
+
 #!/usr/bin/env python3
 """
 System Monitor for AI Development Tasks
@@ -32,6 +34,8 @@ Provides comprehensive monitoring of:
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 try:
+    # Import monitoring modules
+    pass
 except ImportError as e:
     print(f"❌ Monitoring modules not available: {e}")
     sys.exit(1)

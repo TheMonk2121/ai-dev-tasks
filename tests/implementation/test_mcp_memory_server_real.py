@@ -117,20 +117,20 @@ class TestMCPMemoryServerReal:
             # Test parent turn retrieval
             parent_turn = await get_parent_turn(conn, ai_turn_id)
             assert parent_turn is not None
-            assert result.get("key", "")
-            assert result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert result
+            assert result
 
     async def test_mcp_server_endpoints_real_database(self):
         """Test MCP server endpoints with real database operations."""
         client = TestClient(app)
 
         # Test health endpoint
-        response = result.get("key", "")
+        response = result
         assert response.status_code == 200
         health_data = response.json()
-        assert result.get("key", "")
-        assert "database" in result.get("key", "")
+        assert result
+        assert "database" in result
 
         # Test memory query endpoint
         query_data = {

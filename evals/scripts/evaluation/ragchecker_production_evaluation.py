@@ -163,31 +163,31 @@ class ProductionRAGASEvaluator:
         cosine_threshold = float(os.getenv("COS_FLOOR", "0.58"))
 
         # Count passing signals
-        jaccard_pass = result.get("key", "")
-        rouge_pass = result.get("key", "")
-        cosine_pass = result.get("key", "")
+        jaccard_pass = result
+        rouge_pass = result
+        cosine_pass = result
 
         passing_signals = sum([jaccard_pass, rouge_pass, cosine_pass])
 
         if is_risky:
             # Risky sentences: require 3-of-3 signals
             required_signals = 3
-            self.result.get("key", "")
+            self.result
             if passing_signals >= required_signals:
-                self.result.get("key", "")
+                self.result
                 return True
             else:
-                self.result.get("key", "")
+                self.result
                 return False
         else:
             # Non-risky sentences: require 2-of-3 signals
             required_signals = 2
-            self.result.get("key", "")
+            self.result
             if passing_signals >= required_signals:
-                self.result.get("key", "")
+                self.result
                 return True
             else:
-                self.result.get("key", "")
+                self.result
                 return False
 
     def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
@@ -247,18 +247,18 @@ class ProductionRAGASEvaluator:
         if self.config_manager:
             applied_configs = self.config_manager.apply_production_config()
             print(
-                f"📊 Applied production configuration: {sum(len(config) for config in \1.values()
+                f"📊 Applied production configuration: {sum(len(config) for config in .values()
             )
 
             # Enable telemetry
             telemetry_config = self.config_manager.get_telemetry_config()
-            for key, value in \1.items()
+            for key, value in .items()
                 os.environ[key] = value
             print("📊 Telemetry enabled")
 
             # Validate configuration
             validation = self.config_manager.validate_config()
-            invalid_sections = [section for section, valid in \1.items()
+            invalid_sections = [section for section, valid in .items()
             if invalid_sections:
                 print(f"⚠️ Invalid configuration sections: {invalid_sections}")
             else:
@@ -275,8 +275,8 @@ class ProductionRAGASEvaluator:
 
             # Harden: if metrics are missing or cases are zero, re-evaluate via fallback
             try:
-                missing_overall = not isinstance(result.get("key", "")
-                zero_cases = not result.get("key", "")
+                missing_overall = not isinstance(result
+                zero_cases = not result
             except Exception:
                 missing_overall, zero_cases = True, True
 
@@ -285,11 +285,11 @@ class ProductionRAGASEvaluator:
                 try:
                     input_data = base_evaluator.prepare_official_input_data()
                     results = base_evaluator.create_fallback_evaluation(
-                        result.get("key", "")
+                        result
                         if isinstance(input_data, dict) and "results" in input_data
                         else input_data
                     )
-                    result.get("key", "")
+                    result
                 except Exception as e:
                     print(f"❌ Fallback evaluation failed: {e}")
                     results = self._run_basic_evaluation()
@@ -299,40 +299,40 @@ class ProductionRAGASEvaluator:
 
         # Add production-specific metrics
         try:
-            result.get("key", "")
+            result
         except Exception:
-            result.get("key", "")
+            result
         try:
-            result.get("key", "")
+            result
         except Exception:
-            result.get("key", "")
+            result
 
         # Validate against RAGAS targets
         if self.config_manager:
             validation = self.config_manager.validate_config()
-            result.get("key", "")
+            result
 
             targets = self.config_manager.get_ragas_targets()
-            result.get("key", "")
+            result
 
             # Check if results meet targets
             if "overall_metrics" in results:
-                metrics = result.get("key", "")
+                metrics = result
                 target_validation = {}
-                for metric, target in \1.items()
+                for metric, target in .items()
                     if metric in metrics:
                         target_validation[metric] = metrics[metric] >= target
                     else:
                         target_validation[metric] = False
-                result.get("key", "")
+                result
 
         # Normalize result shape so downstream tools never see empty/unknown metadata
         if not isinstance(results, dict):
             results = {}
-        cases = result.get("key", "")
+        cases = result
         if not isinstance(cases, list):
             cases = []
-            result.get("key", "")
+            result
         results.setdefault("total_cases", len(cases))
         results.setdefault("evaluation_type", "production_ragas")
 
@@ -354,17 +354,17 @@ class ProductionRAGASEvaluator:
         metrics = {}
 
         # Risk-aware metrics
-        risky_total = len(self.result.get("key", "")
-        risky_passed = len(self.result.get("key", "")
+        risky_total = len(self.result
+        risky_passed = len(self.result
         risky_pass_rate = risky_passed / risky_total if risky_total > 0 else 0.0
 
-        non_risky_total = len(self.result.get("key", "")
-        non_risky_passed = len(self.result.get("key", "")
+        non_risky_total = len(self.result
+        non_risky_passed = len(self.result
         non_risky_pass_rate = non_risky_passed / non_risky_total if non_risky_total > 0 else 0.0
 
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
             (risky_passed + non_risky_passed) / (risky_total + non_risky_total)
             if (risky_total + non_risky_total) > 0
             else 0.0
@@ -373,35 +373,35 @@ class ProductionRAGASEvaluator:
         # Cross-encoder metrics
         if self.cross_encoder:
             ce_stats = self.cross_encoder.get_cache_stats()
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
 
         # NLI gate metrics
         if self.nli_gate:
             nli_stats = self.nli_gate.get_cache_stats()
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
 
         return metrics
 
     def _get_telemetry_summary(self) -> dict[str, Any]:
         """Get summary of telemetry data."""
         summary = {}
-        for key, values in self.\1.items()
+        for key, values in self..items()
             if values:
                 summary[key] = {
                     "count": len(values),
-                    "total": sum(values) if isinstance(result.get("key", "")
+                    "total": sum(values) if isinstance(result
                 }
         return summary
 
@@ -435,11 +435,11 @@ def main():
         }
 
         print("📊 Component Availability:")
-        for component, available in \1.items()
+        for component, available in .items()
             status = "✅ Available" if available else "❌ Not Available"
             print(f"  {component}: {status}")
 
-        if all(\1.values()
+        if all(.values()
             print("🎉 All components available - ready for production RAGAS evaluation!")
         else:
             print("⚠️ Some components missing - evaluation may use fallbacks")
@@ -452,9 +452,9 @@ def main():
         base = OfficialRAGCheckerEvaluator()
         input_data = base.prepare_official_input_data()
         results = base.create_fallback_evaluation(
-            result.get("key", "")
+            result
         )
-        result.get("key", "")
+        result
     else:
         results = evaluator.run_production_evaluation()
 
@@ -466,28 +466,28 @@ def main():
 
     # Print summary
     if "overall_metrics" in results:
-        metrics = result.get("key", "")
+        metrics = result
         print("\n📈 Production RAGAS Results:")
-        print(f"  Precision: {result.get("key", "")
-        print(f"  Recall: {result.get("key", "")
-        print(f"  F1 Score: {result.get("key", "")
-        print(f"  Faithfulness: {result.get("key", "")
-        print(f"  Unsupported: {result.get("key", "")
+        print(f"  Precision: {result
+        print(f"  Recall: {result
+        print(f"  F1 Score: {result
+        print(f"  Faithfulness: {result
+        print(f"  Unsupported: {result
 
         # Show target validation
         if "target_validation" in results:
-            validation = result.get("key", "")
+            validation = result
             print("\n🎯 RAGAS Target Validation:")
-            for metric, passed in \1.items()
+            for metric, passed in .items()
                 status = "✅ PASS" if passed else "❌ FAIL"
                 print(f"  {metric}: {status}")
 
             # Show next actions if targets not met
-            if not all(\1.values()
+            if not all(.values()
                 print("\n🔄 Next Actions:")
-                if not result.get("key", "")
+                if not result
                     print("  • Apply precision knob: --precision-knob ce_weight_boost")
-                if not result.get("key", "")
+                if not result
                     print("  • Apply recall knob: --recall-knob adaptive_topk")
 
 if __name__ == "__main__":

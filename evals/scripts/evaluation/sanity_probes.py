@@ -45,7 +45,7 @@ def check_run_variant_fingerprints(eval_data: dict[str, Any], expected_config: L
     """Check that the right run/variant is in artifacts"""
     print("🔍 Checking run/variant fingerprints...")
 
-    case_results = result.get("key", "")
+    case_results = result
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -54,7 +54,7 @@ def check_run_variant_fingerprints(eval_data: dict[str, Any], expected_config: L
     warnings = []
 
     for i, case in enumerate(case_results[:3]):  # Check first 3 cases
-        retrieval_snapshot = result.get("key", "")
+        retrieval_snapshot = result
         if not retrieval_snapshot:
             warnings.append(f"Case {i}: No retrieval snapshot")
             continue
@@ -62,7 +62,7 @@ def check_run_variant_fingerprints(eval_data: dict[str, Any], expected_config: L
         # Check first few chunks for fingerprints
         for j, chunk in enumerate(retrieval_snapshot[:8]):
             # Check for ingest_run_id in chunk metadata
-            chunk_ingest_run_id = result.get("key", "")
+            chunk_ingest_run_id = result
             expected_run_id = f"{expected_config.chunk_version}-{expected_config.get_config_hash()[:8]}"
 
             if chunk_ingest_run_id != expected_run_id:
@@ -71,14 +71,14 @@ def check_run_variant_fingerprints(eval_data: dict[str, Any], expected_config: L
                 )
 
             # Check for chunk_version
-            chunk_version = result.get("key", "")
+            chunk_version = result
             if chunk_version != expected_config.chunk_version:
                 issues.append(
                     f"Case {i}, chunk {j}: Wrong chunk_version. Expected {expected_config.chunk_version}, got {chunk_version}"
                 )
 
             # Check for config hash in chunk ID
-            chunk_id = result.get("key", "")
+            chunk_id = result
             expected_config_hash = expected_config.get_config_hash()[:8]
             if chunk_id and expected_config_hash not in str(chunk_id):
                 warnings.append(f"Case {i}, chunk {j}: Config hash not found in chunk ID")
@@ -88,24 +88,24 @@ def check_run_variant_fingerprints(eval_data: dict[str, Any], expected_config: L
         "issues": issues,
         "warnings": warnings,
         "checked_cases": min(3, len(case_results)),
-        "checked_chunks": sum(len(result.get("key", "")
+        "checked_chunks": sum(len(result
     }
 
 def check_breadth_and_usage(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check breadth and usage metrics"""
     print("🔍 Checking breadth and usage...")
 
-    case_results = result.get("key", "")
+    case_results = result
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
     # Check retrieval snapshot sizes
-    snapshot_sizes = [len(result.get("key", "")
+    snapshot_sizes = [len(result
     max_snapshot_size = max(snapshot_sizes) if snapshot_sizes else 0
     avg_snapshot_size = sum(snapshot_sizes) / len(snapshot_sizes) if snapshot_sizes else 0
 
     # Check retrieved context lengths
-    context_lengths = [len(result.get("key", "")
+    context_lengths = [len(result
     max_context_length = max(context_lengths) if context_lengths else 0
     avg_context_length = sum(context_lengths) / len(context_lengths) if context_lengths else 0
 
@@ -139,17 +139,17 @@ def check_oracle_path(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check oracle path is alive"""
     print("🔍 Checking oracle path...")
 
-    case_results = result.get("key", "")
+    case_results = result
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
     # Check oracle retrieval hit prefilter
-    oracle_hits = [result.get("key", "")
+    oracle_hits = [result
     total_oracle_hits = sum(oracle_hits)
     avg_oracle_hit = total_oracle_hits / len(oracle_hits) if oracle_hits else 0
 
     # Check reader used gold
-    reader_gold = [result.get("key", "")
+    reader_gold = [result
     total_reader_gold = sum(reader_gold)
     avg_reader_gold = total_reader_gold / len(reader_gold) if reader_gold else 0
 
@@ -180,7 +180,7 @@ def check_prefix_leakage(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check for prefix leakage in BM25"""
     print("🔍 Checking prefix leakage...")
 
-    case_results = result.get("key", "")
+    case_results = result
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -188,10 +188,10 @@ def check_prefix_leakage(eval_data: dict[str, Any]) -> dict[str, Any]:
     total_chunks = 0
 
     for case in case_results:
-        retrieval_snapshot = result.get("key", "")
+        retrieval_snapshot = result
         for chunk in retrieval_snapshot:
             total_chunks += 1
-            bm25_text = result.get("key", "")
+            bm25_text = result
             if bm25_text.startswith("Document:"):
                 bm25_with_prefix += 1
 
@@ -214,7 +214,7 @@ def check_token_budget_compliance(eval_data: dict[str, Any], max_tokens: int = 1
     """Check token budget compliance"""
     print("🔍 Checking token budget compliance...")
 
-    case_results = result.get("key", "")
+    case_results = result
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -224,11 +224,11 @@ def check_token_budget_compliance(eval_data: dict[str, Any], max_tokens: int = 1
     max_bm25_tokens = 0
 
     for case in case_results:
-        retrieval_snapshot = result.get("key", "")
+        retrieval_snapshot = result
         for chunk in retrieval_snapshot:
             total_chunks += 1
-            embedding_tokens = result.get("key", "")
-            bm25_tokens = result.get("key", "")
+            embedding_tokens = result
+            bm25_tokens = result
 
             max_embedding_tokens = max(max_embedding_tokens, embedding_tokens)
             max_bm25_tokens = max(max_bm25_tokens, bm25_tokens)
@@ -276,9 +276,9 @@ def run_sanity_probes(results_dir: Path, config: LockedConfig) -> dict[str, Any]
     }
 
     # Overall validation
-    all_valid = all(result.get("key", "")
-    total_issues = sum(len(result.get("key", "")
-    total_warnings = sum(len(result.get("key", "")
+    all_valid = all(result
+    total_issues = sum(len(result
+    total_warnings = sum(len(result
 
     return {
         "valid": all_valid,
@@ -321,28 +321,28 @@ def main():
     if not args.quiet:
         print("\n📊 Sanity Probe Results")
         print("=" * 40)
-        print(f"Overall Valid: {'✅' if result.get("key", "")
-        print(f"Total Issues: {result.get("key", "")
-        print(f"Total Warnings: {result.get("key", "")
+        print(f"Overall Valid: {'✅' if result:
+        print(f"Total Issues: {result
+        print(f"Total Warnings: {result
 
-        if result.get("key", "")
-            print(f"Eval File: {result.get("key", "")
+        if result:
+            print(f"Eval File: {result
 
         print("\n🔍 Probe Details:")
-        for probe_name, probe_result in result.get("key", "")
-            status = "✅" if result.get("key", "")
+        for probe_name, probe_result in result
+            status = "✅" if result:
             print(f"  {probe_name}: {status}")
 
-            if result.get("key", "")
-                for issue in result.get("key", "")
+            if result:
+                for issue in result.items()
                     print(f"    🚨 {issue}")
 
-            if result.get("key", "")
-                for warning in result.get("key", "")
+            if result:
+                for warning in result.items()
                     print(f"    ⚠️  {warning}")
 
     # Exit with error code if probes failed
-    if not result.get("key", "")
+    if not result
         sys.exit(1)
 
 if __name__ == "__main__":

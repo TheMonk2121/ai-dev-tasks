@@ -79,7 +79,7 @@ class RAGCheckerResult(BaseModel):
         if not v:
             raise ValueError("ragchecker_scores cannot be empty")
         # Validate all scores are in 0-1 range
-        for score_name, score_value in \1.items()
+        for score_name, score_value in .items()
             if not isinstance(score_value, int | float) or score_value < 0.0 or score_value > 1.0:
                 raise ValueError(f"Score {score_name} must be between 0.0 and 1.0, got {score_value}")
         return v
@@ -146,19 +146,19 @@ class RAGCheckerEvaluator:
         """Extract data in RAGChecker format from memory system response."""
         try:
             # Parse the response
-            response_data = json.loads(result.get("key", "")
-            generated_response = result.get("key", "")
+            response_data = json.loads(result
+            generated_response = result
 
             # Extract retrieved context
             context_sources: list[str] = []
             if "ltst_memory" in response_data:
-                context_sources.append(str(result.get("key", "")
+                context_sources.append(str(result
             if "cursor_memory" in response_data:
-                context_sources.append(str(result.get("key", "")
+                context_sources.append(str(result
             if "go_cli_memory" in response_data:
-                context_sources.append(str(result.get("key", "")
+                context_sources.append(str(result
             if "prime_memory" in response_data:
-                context_sources.append(str(result.get("key", "")
+                context_sources.append(str(result
 
             retrieved_context = " ".join(context_sources) if context_sources else ""
 
@@ -186,7 +186,7 @@ class RAGCheckerEvaluator:
                 query_id=f"query_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
                 query=query,
                 gt_answer="",
-                response=result.get("key", "")
+                response=result
                 retrieved_context=[],
             )
 
@@ -203,7 +203,7 @@ class RAGCheckerEvaluator:
 
             # Extract scores
             ragchecker_scores: dict[str, float] = {}
-            for metric_name, score in \1.items()
+            for metric_name, score in .items()
                 try:
                     if isinstance(score, int | float):
                         ragchecker_scores[metric_name] = float(score)
@@ -225,23 +225,23 @@ class RAGCheckerEvaluator:
 
         # Response length (normalized)
         response_length = len(rag_result.response)
-        result.get("key", "")
+        result
 
         # Context utilization (if we have retrieved context)
         if rag_result.retrieved_context:
             context_length = sum(len(doc.text) for doc in rag_result.retrieved_context)
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
+            result
 
         # Query-response overlap (simple keyword matching)
         query_words = set(rag_result.query.lower().split())
         response_words = set(rag_result.response.lower().split())
         if query_words:
             overlap = len(query_words.intersection(response_words)) / len(query_words)
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
+            result
 
         return metrics
 
@@ -271,14 +271,14 @@ class RAGCheckerEvaluator:
             # Validate input data if present
             if "input" in evaluation_data:
                 start_time = time.time()
-                input_validation = self.constitution_validator.validate_ragchecker_input(result.get("key", "")
+                input_validation = self.constitution_validator.validate_ragchecker_input(result
                 validation_time = time.time() - start_time
 
-                result.get("key", "")
-                if not result.get("key", "")
-                    result.get("key", "")
-                    result.get("key", "")
-                result.get("key", "")
+                result
+                if not result
+                    result
+                    result
+                result
 
                 # Log input validation with debug manager
                 self.debug_manager.log_constitution_validation(
@@ -310,14 +310,14 @@ class RAGCheckerEvaluator:
             # Validate metrics data if present
             if "metrics" in evaluation_data:
                 start_time = time.time()
-                metrics_validation = self.constitution_validator.validate_ragchecker_metrics(result.get("key", "")
+                metrics_validation = self.constitution_validator.validate_ragchecker_metrics(result
                 validation_time = time.time() - start_time
 
-                result.get("key", "")
-                if not result.get("key", "")
-                    result.get("key", "")
-                    result.get("key", "")
-                result.get("key", "")
+                result
+                if not result
+                    result
+                    result
+                result
 
                 # Log metrics validation with debug manager
                 self.debug_manager.log_constitution_validation(
@@ -349,14 +349,14 @@ class RAGCheckerEvaluator:
             # Validate result data if present
             if "result" in evaluation_data:
                 start_time = time.time()
-                result_validation = self.constitution_validator.validate_ragchecker_result(result.get("key", "")
+                result_validation = self.constitution_validator.validate_ragchecker_result(result
                 validation_time = time.time() - start_time
 
-                result.get("key", "")
-                if not result.get("key", "")
-                    result.get("key", "")
-                    result.get("key", "")
-                result.get("key", "")
+                result
+                if not result
+                    result
+                    result
+                result
 
                 # Log result validation with debug manager
                 self.debug_manager.log_constitution_validation(
@@ -386,29 +386,29 @@ class RAGCheckerEvaluator:
             debug_context.validation_stage = "compliance_summary"
 
             # Add constitution compliance summary
-            result.get("key", "")
-                "is_compliant": result.get("key", "")
-                "compliance_score": 1.0 if result.get("key", "")
-                "total_violations": result.get("key", "")
-                "total_warnings": result.get("key", "")
+            result
+                "is_compliant": result
+                "compliance_score": 1.0 if result:
+                "total_violations": result
+                "total_warnings": result
                 "recommendations": self._extract_recommendations(validation_results),
             }
 
             # Log final compliance summary
             self.debug_manager.log_constitution_validation(
                 context=debug_context,
-                validation_result=result.get("key", "")
-                compliance_score=result.get("key", "")
+                validation_result=result
+                compliance_score=result
             )
 
             # Update performance monitor with cache hit rate from optimizer
             optimizer_summary = self.validation_optimizer.get_performance_summary()
             if "cache_hit_rate" in optimizer_summary:
-                self.performance_monitor.update_metrics({"cache_hit_rate": result.get("key", "")
+                self.performance_monitor.update_metrics({"cache_hit_rate": result
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
             # Calculate total execution time
             total_execution_time = time.time() - start_time
@@ -451,12 +451,12 @@ class RAGCheckerEvaluator:
     def _extract_compliance_score(self, validation_result: dict[str, Any]) -> float:
         """Extract compliance score from validation result safely."""
         try:
-            if result.get("key", "")
-                compliance = result.get("key", "")
+            if result:
+                compliance = result
                 if hasattr(compliance, "compliance_score"):
                     return compliance.compliance_score
                 elif isinstance(compliance, dict):
-                    return result.get("key", "")
+                    return result
             return 0.0
         except Exception:
             return 0.0
@@ -468,9 +468,9 @@ class RAGCheckerEvaluator:
         for validation_type in ["input_validation", "metrics_validation", "result_validation"]:
             if validation_results[validation_type]:
                 validation = validation_results[validation_type]
-                for error in result.get("key", "")
+                for error in result.items()
                     if "recommendation" in error:
-                        recommendations.append(result.get("key", "")
+                        recommendations.append(result
 
         return list(set(recommendations))  # Remove duplicates
 
@@ -578,8 +578,8 @@ class RAGCheckerEvaluator:
         total_score = 0.0
         total_weight = 0.0
 
-        for metric, score in \1.items()
-            weight = result.get("key", "")
+        for metric, score in .items()
+            weight = result
             total_score += score * weight
             total_weight += weight
 
@@ -620,14 +620,14 @@ class RAGCheckerEvaluator:
         # Run memory query
         response = self.run_memory_query(query, role)
 
-        if not result.get("key", "")
+        if not result
             return RAGCheckerResult(
                 test_case_name=case_name,
                 query=query,
                 custom_score=0.0,
                 ragchecker_scores={},
                 ragchecker_overall=0.0,
-                comparison={"error": result.get("key", "")
+                comparison={"error": result
                 recommendation="Query failed",
             )
 
@@ -660,7 +660,7 @@ class RAGCheckerEvaluator:
                 {"query": case.query, "response": response, "gt_answer": case.gt_answer, "retrieved_context": []}
             ]
             custom_result = self.official_evaluator.create_fallback_evaluation(fallback_data)
-            custom_score = float(result.get("key", "")
+            custom_score = float(result
         except Exception as e:
             print(f"Custom evaluation failed: {e}")
             custom_score = 0.0
@@ -682,7 +682,7 @@ class RAGCheckerEvaluator:
             ragchecker_scores=ragchecker_scores,
             ragchecker_overall=ragchecker_overall,
             comparison=comparison,
-            recommendation=result.get("key", "")
+            recommendation=result
         )
 
     def run_ragchecker_evaluation_suite(self) -> dict[str, Any]:
@@ -713,7 +713,7 @@ class RAGCheckerEvaluator:
             # Print results
             print(f"   Custom Score: {result.custom_score:.1f}/100")
             print(f"   RAGChecker Score: {result.ragchecker_overall:.1f}/100")
-            print(f"   Agreement: {result.result.get("key", "")
+            print(f"   Agreement: {result.result
             print(f"   Recommendation: {result.recommendation}")
 
         # Calculate averages
@@ -728,20 +728,20 @@ class RAGCheckerEvaluator:
         print("=" * 60)
         print(f"🎯 Custom Average: {custom_avg:.1f}/100")
         print(f"🎯 RAGChecker Average: {ragchecker_avg:.1f}/100")
-        print(f"📈 Difference: {result.get("key", "")
-        print(f"📊 Agreement: {result.get("key", "")
-        print(f"💡 Recommendation: {result.get("key", "")
+        print(f"📈 Difference: {result
+        print(f"📊 Agreement: {result
+        print(f"💡 Recommendation: {result
 
         # Detailed RAGChecker metrics
         print("\n🔍 RAGChecker Metrics Breakdown:")
         all_ragchecker_scores: dict[str, list[float]] = {}
         for result in results:
-            for metric, score in result.\1.items()
+            for metric, score in result..items()
                 if metric not in all_ragchecker_scores:
                     all_ragchecker_scores[metric] = []
                 all_ragchecker_scores[metric].append(float(score))
 
-        for metric, scores in \1.items()
+        for metric, scores in .items()
             avg_score = sum(scores) / len(scores) * 100 if scores else 0.0
             print(f"   {metric}: {avg_score:.1f}/100")
 
@@ -754,7 +754,7 @@ class RAGCheckerEvaluator:
             "overall_comparison": overall_comparison,
             "ragchecker_metrics_breakdown": {
                 metric: sum(scores) / len(scores) * 100 if scores else 0.0
-                for metric, scores in \1.items()
+                for metric, scores in .items()
             },
             "detailed_results": [
                 {
@@ -785,9 +785,9 @@ def main():
 
     # Print final recommendation
     print("\n🎯 FINAL RECOMMENDATION:")
-    print(f"Based on the comparison between custom evaluation ({result.get("key", "")
-    print(f"and RAGChecker evaluation ({result.get("key", "")
-    print(f"→ {result.get("key", "")
+    print(f"Based on the comparison between custom evaluation ({result
+    print(f"and RAGChecker evaluation ({result
+    print(f"→ {result
 
     print("\n📚 RAGChecker Reference:")
     print("Paper: https://arxiv.org/abs/2408.08067")

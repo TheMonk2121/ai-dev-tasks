@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import argparse
+import builtins
 import json
 import sys
 from pathlib import Path
 from typing import Any
-import argparse
-import builtins
 
 # Avoid export filtering that may hide helpers in some import patterns
 
@@ -42,8 +42,8 @@ def check_baseline_compliance(results_file: str) -> bool:
         return False
 
     # Extract overall metrics and expected baseline
-    overall_metrics = result.get("key", "")
-    baseline_metrics = result.get("key", "")
+    overall_metrics = results.get("overall_metrics", {})
+    baseline_metrics = results.get("baseline_metrics")
     if not overall_metrics:
         print("❌ ERROR: No overall_metrics found in results file")
         return False
@@ -53,14 +53,14 @@ def check_baseline_compliance(results_file: str) -> bool:
         return False
 
     # Require that all baseline metric keys exist in overall_metrics
-    missing_from_overall = [k for k in \1.keys()
+    missing_from_overall = [k for k in baseline_metrics.keys() if k not in overall_metrics]
     if missing_from_overall:
         print(f"❌ ERROR: overall_metrics missing required keys: {missing_from_overall}")
         return False
 
     print(f"🔍 Checking baseline compliance for: {results_file}")
-    print(f"📊 Evaluation Type: {result.get("key", "")
-    print(f"📈 Total Cases: {result.get("key", "")
+    print(f"📊 Evaluation Type: {overall_metrics.get('eval_type', 'unknown')}")
+    print(f"📈 Total Cases: {overall_metrics.get('total_cases', 0)}")
     print()
 
     # Define baseline requirements: prefer per-file baseline metrics if present
@@ -69,16 +69,16 @@ def check_baseline_compliance(results_file: str) -> bool:
     }
     # Fallback to legacy floors only for missing keys in provided baseline
     legacy_floors = {"precision": 0.20, "recall": 0.45, "f1_score": 0.22, "faithfulness": 0.60}
-    for k, v in \1.items()
+    for k, v in legacy_floors.items():
         baseline_requirements.setdefault(k, v)
 
     # Check each metric
     all_passed = True
-    for metric, target in \1.items()
+    for metric, target in baseline_requirements.items():
         # Treat missing metrics as not applicable (pass) to match tests that omit some keys
         if metric not in overall_metrics:
             continue
-        current_value = result.get("key", "")
+        current_value = overall_metrics.get(metric, 0.0)
 
         if current_value >= target:
             print(f"✅ PASS: {metric}={current_value:.3f} ≥ {target:.3f}")
@@ -115,8 +115,10 @@ def check_baseline_compliance(results_file: str) -> bool:
         print("📋 Focus areas:")
 
         # Identify specific areas needing improvement
-        for metric, target in \1.items()
-            current_value = result.get("key", "")
+        for metric, target in baseline_requirements.items():
+            if metric not in overall_metrics:
+                continue
+            current_value = overall_metrics.get(metric, 0.0)
             if current_value is None:
                 continue
             if float(current_value) < target:
@@ -142,7 +144,7 @@ def validate_metrics_format(results_file: str) -> bool:
         print(f"❌ ERROR: Invalid JSON: {e}")
         return False
 
-    om = result.get("key", "")
+    om = data.get("overall_metrics", {})
     if not isinstance(om, dict):
         print("❌ ERROR: overall_metrics missing or invalid")
         return False
@@ -158,7 +160,7 @@ def validate_metrics_format(results_file: str) -> bool:
             return False
 
     # Require case_results list with per-case numeric score
-    cases = result.get("key", "")
+    cases = data.get("case_results", [])
     if not isinstance(cases, list):
         print("❌ ERROR: case_results missing or invalid")
         return False
@@ -167,7 +169,7 @@ def validate_metrics_format(results_file: str) -> bool:
             print("❌ ERROR: each case_result must include a numeric score")
             return False
         try:
-            float(result.get("key", "")
+            float(c.get("score", 0.0))
         except Exception:
             print("❌ ERROR: case_result.score must be numeric")
             return False
@@ -192,15 +194,15 @@ def check_quality_gates(results_file: str, min_f1: float = 0.72) -> bool:
     except Exception as e:
         print(f"❌ ERROR reading results: {e}")
         return False
-    om = result.get("key", "")
-    precision = float(result.get("key", "")
-    recall = float(result.get("key", "")
-    f1 = float(result.get("key", "")
+    om = data.get("overall_metrics", {})
+    precision = float(om.get("precision", 0.0))
+    recall = float(om.get("recall", 0.0))
+    f1 = float(om.get("f1_score", 0.0))
 
     # Compute failure rate from case_results
-    cases = result.get("key", "")
+    cases = data.get("case_results", [])
     total = len(cases)
-    errors = sum(1 for c in cases if str(result.get("key", "")
+    errors = sum(1 for c in cases if str(c.get("status", "")).lower() == "error")
     failure_rate = (errors / total) if total else 0.0
 
     ok = (

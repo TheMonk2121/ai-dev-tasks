@@ -1,14 +1,16 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-    from few_shot_integration import FewShotExampleLoader
-import os
 from typing import Any, Optional, Union
+
+from few_shot_integration import FewShotExampleLoader
+
 #!/usr/bin/env python3
 """
 Cursor Memory Context Auto-Update Helper (B-061)

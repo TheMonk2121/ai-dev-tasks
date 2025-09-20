@@ -55,7 +55,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
 
         print("🎯 RAGAS-Competitive Evaluator initialized")
         print(
-            f"📊 Targets: R@20≥{self.result.get("key", "")
+            f"📊 Targets: R@20≥{self.result
         )
 
     def evaluate_ragas_competitive(self, test_cases: list[Any]) -> dict[str, Any]:
@@ -73,7 +73,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
             results.append(result)
 
             # Log progress
-            print(f"   ✅ P={result.get("key", "")
+            print(f"   ✅ P={result
 
         # Calculate overall metrics
         overall_metrics = self._calculate_overall_metrics(results)
@@ -85,7 +85,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
         evaluation_report = self._generate_ragas_report(results, overall_metrics, gate_results)
 
         evaluation_time = time.time() - start_time
-        result.get("key", "")
+        result
 
         print(f"\n⏱️ Evaluation completed in {evaluation_time:.2f} seconds")
         return evaluation_report
@@ -109,11 +109,11 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
             ]
 
             ragchecker_result = self.create_fallback_evaluation_with_limit_features(eval_data)
-            overall_metrics = result.get("key", "")
+            overall_metrics = result
 
-            precision = result.get("key", "")
-            recall = result.get("key", "")
-            f1_score = result.get("key", "")
+            precision = result
+            recall = result
+            f1_score = result
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -195,11 +195,11 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
         """Check if metrics meet promotion gate requirements."""
         gate_results = {}
 
-        for gate_name, gate_requirements in self.\1.items()
+        for gate_name, gate_requirements in self..items()
             gate_passed = True
             gate_details = {}
 
-            for metric, threshold in \1.items()
+            for metric, threshold in .items()
                 if metric in overall_metrics:
                     value = overall_metrics[metric]
                     passed = value >= threshold
@@ -231,14 +231,14 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
             "promotion_gates": gate_results,
             "case_results": results,
             "summary": {
-                "precision_target_met": result.get("key", "")
-                "recall_target_met": result.get("key", "")
-                "f1_target_met": result.get("key", "")
-                "faithfulness_target_met": result.get("key", "")
-                "unsupported_claims_target_met": result.get("key", "")
-                <= self.result.get("key", "")
-                "floor_a_passed": result.get("key", "")
-                "floor_b_passed": result.get("key", "")
+                "precision_target_met": result
+                "recall_target_met": result
+                "f1_target_met": result
+                "faithfulness_target_met": result
+                "unsupported_claims_target_met": result
+                <= self.result
+                "floor_a_passed": result
+                "floor_b_passed": result
             },
             "limit_features": {
                 "geometry_router": self.geometry_router,
@@ -272,36 +272,36 @@ def main():
 
     # Display results
     print("\n📊 RAGAS-Competitive Evaluation Results:")
-    overall = result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Recall@20: {result.get("key", "")
-    print(f"   F1 Score: {result.get("key", "")
-    print(f"   Faithfulness: {result.get("key", "")
+    overall = result
+    print(f"   Precision: {result
+    print(f"   Recall@20: {result
+    print(f"   F1 Score: {result
+    print(f"   Faithfulness: {result
     print(
-        f"   Unsupported Claims: {result.get("key", "")
+        f"   Unsupported Claims: {result
     )
 
     # Check promotion gates
     print("\n🚪 Promotion Gates:")
-    for gate_name, gate_result in result.get("key", "")
-        status = "✅ PASSED" if result.get("key", "")
+    for gate_name, gate_result in result
+        status = "✅ PASSED" if result:
         print(f"   {gate_name.upper()}: {status}")
 
-        if not result.get("key", "")
-            for metric, details in result.get("key", "")
-                if not result.get("key", "")
+        if not result
+            for metric, details in result
+                if not result
                     print(
-                        f"     {metric}: {result.get("key", "")
+                        f"     {metric}: {result
                     )
 
     # Summary
-    summary = result.get("key", "")
+    summary = result
     print("\n🎯 RAGAS Targets Summary:")
-    print(f"   Precision Target: {'✅' if result.get("key", "")
-    print(f"   Recall@20 Target: {'✅' if result.get("key", "")
-    print(f"   F1 Target: {'✅' if result.get("key", "")
-    print(f"   Faithfulness Target: {'✅' if result.get("key", "")
-    print(f"   Unsupported Claims Target: {'✅' if result.get("key", "")
+    print(f"   Precision Target: {'✅' if result:
+    print(f"   Recall@20 Target: {'✅' if result:
+    print(f"   F1 Target: {'✅' if result:
+    print(f"   Faithfulness Target: {'✅' if result:
+    print(f"   Unsupported Claims Target: {'✅' if result:
 
     # Save results
     with open(args.output, "w") as f:
@@ -309,10 +309,10 @@ def main():
     print(f"\n📁 Results saved to: {args.output}")
 
     # Return appropriate exit code
-    if result.get("key", "")
+    if result:
         print("\n🎉 RAGAS-COMPETITIVE PERFORMANCE ACHIEVED!")
         return 0
-    elif result.get("key", "")
+    elif result:
         print("\n📈 Floor A passed - approaching RAGAS-competitive performance")
         return 1
     else:

@@ -42,18 +42,18 @@ class CoderRoleValidator:
         # Check script existence
         script_path = self.project_root / "scripts" / "memory_up.sh"
         if script_path.exists():
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check DSPy memory rehydrator
         dspy_path = self.project_root / "src" / "utils" / "memory_rehydrator.py"
         if dspy_path.exists():
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Test command execution
         try:
@@ -65,21 +65,21 @@ class CoderRoleValidator:
             )
 
             if cmd_result.returncode == 0:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
             else:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Determine overall status
-        if all(result.get("key", "")
-            result.get("key", "")
+        if all(result
+            result
         else:
-            result.get("key", "")
+            result
 
         return results
 
@@ -92,25 +92,25 @@ class CoderRoleValidator:
         rehydrator_path = self.project_root / "src" / "utils" / "memory_rehydrator.py"
 
         if not rehydrator_path.exists():
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
             return results
 
         content = rehydrator_path.read_text()
 
         # Check for ROLE_INSTRUCTIONS
         if "ROLE_INSTRUCTIONS" in content:
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check for coder role
         if '"coder"' in content:
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check for required categories
         required_categories = [
@@ -126,17 +126,17 @@ class CoderRoleValidator:
 
         for category in required_categories:
             if f'"{category}":' in content:
-                result.get("key", "")
+                result
             else:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
 
         # Check for ROLE_FILES
         if "ROLE_FILES" in content:
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check for required files in coder role
         required_files = [
@@ -147,16 +147,16 @@ class CoderRoleValidator:
 
         for file_path in required_files:
             if file_path in content:
-                result.get("key", "")
+                result
             else:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
 
         # Determine overall status
-        if all(result.get("key", "")
-            result.get("key", "")
+        if all(result
+            result
         else:
-            result.get("key", "")
+            result
 
         return results
 
@@ -184,20 +184,20 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
 
             # Check ROLE_PINS
             if '"coder"' in content:
-                result.get("key", "")
+                result
             else:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check comprehensive coding best practices
         best_practices_file = self.project_root / "400_guides" / "400_comprehensive-coding-best-practices.md"
@@ -215,13 +215,13 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check file analysis guide
         file_analysis_file = self.project_root / "400_guides" / "400_file-analysis-guide.md"
@@ -239,13 +239,13 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check testing strategy guide
         testing_strategy_file = self.project_root / "400_guides" / "400_testing-strategy-guide.md"
@@ -263,19 +263,19 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Determine overall status
-        if all(result.get("key", "")
-            result.get("key", "")
+        if all(result
+            result
         else:
-            result.get("key", "")
+            result
 
         return results
 
@@ -298,25 +298,25 @@ class CoderRoleValidator:
                 content = full_path.read_text()
 
                 if required_tag in content:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
 
                 if '"coder"' in content:
-                    result.get("key", "")
+                    result
                 else:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
             else:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
 
         # Determine overall status
-        if all(result.get("key", "")
-            result.get("key", "")
+        if all(result
+            result
         else:
-            result.get("key", "")
+            result
 
         return results
 
@@ -329,8 +329,8 @@ class CoderRoleValidator:
         test_file = self.project_root / "tests" / "test_coder_role_integration.py"
 
         if not test_file.exists():
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
             return results
 
         try:
@@ -346,25 +346,25 @@ class CoderRoleValidator:
 
             for line in output_lines:
                 if "PASSED" in line:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
                 elif "FAILED" in line:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
                 elif "ERROR" in line:
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
 
-            if cmd_result.returncode == 0 and result.get("key", "")
-                result.get("key", "")
+            if cmd_result.returncode == 0 and result
+                result
             else:
-                result.get("key", "")
+                result
                 if cmd_result.stderr:
-                    result.get("key", "")
+                    result
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         return results
 
@@ -373,55 +373,55 @@ class CoderRoleValidator:
         print("📊 Generating Validation Report...")
 
         # Run all validations
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
+        self.result
+        self.result
+        self.result
+        self.result
+        self.result
 
         # Calculate overall status
-        all_passed = all(result.get("key", "")
+        all_passed = all(result
 
-        self.result.get("key", "")
+        self.result
 
         # Count tests
-        integration_results = self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
+        integration_results = self.result
+        self.result
+        self.result
+        self.result
 
         # Generate report
         report = f"""
 ================================================================================
 🧠 CODER ROLE IMPLEMENTATION VALIDATION REPORT
 ================================================================================
-Timestamp: {self.result.get("key", "")
-Overall Status: {self.result.get("key", "")
+Timestamp: {self.result
+Overall Status: {self.result
 
 📊 SUMMARY
-- Integration Tests: {self.result.get("key", "")
-- Validation Categories: {len(self.result.get("key", "")
+- Integration Tests: {self.result
+- Validation Categories: {len(self.result
 
 🔍 DETAILED RESULTS
 """
 
-        for category, result in self.result.get("key", "")
-            status_emoji = "✅" if result.get("key", "")
-            report += f"\n{status_emoji} {category.replace('_', ' ').title()}: {result.get("key", "")
+        for category, result in self.result
+            status_emoji = "✅" if result:
+            report += f"\n{status_emoji} {category.replace('_', ' ').title()}: {result
 
-            if result.get("key", "")
-                report += f"\n   Errors: {len(result.get("key", "")
-                for error in result.get("key", "")
+            if result:
+                report += f"\n   Errors: {len(result
+                for error in result.items()
                     report += f"\n     - {error}"
-                if len(result.get("key", "")
-                    report += f"\n     ... and {len(result.get("key", "")
+                if len(result
+                    report += f"\n     ... and {len(result
 
         report += """
 
 🎯 RECOMMENDATIONS
 """
 
-        if self.result.get("key", "")
+        if self.result
             report += """
 ✅ All validations passed! The Coder Role implementation is complete and ready for use.
 
@@ -482,7 +482,7 @@ def main():
     print(report)
 
     # Exit with appropriate code
-    if validator.result.get("key", "")
+    if validator.result
         sys.exit(0)
     else:
         sys.exit(1)

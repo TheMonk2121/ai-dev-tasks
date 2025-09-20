@@ -150,7 +150,7 @@ class RAGCheckerErrorRecovery:
                 result = {"recovery_successful": False, "error": str(recovery_error), "fallback_used": False}
 
         # Add recovery context to result
-        result.get("key", "")
+        result
         return result
 
     def _execute_recovery_with_retry(
@@ -173,7 +173,7 @@ class RAGCheckerErrorRecovery:
                 # Execute recovery
                 result = recovery_func(error, context, recovery_context)
 
-                if result.get("key", "")
+                if result:
                     return result
 
                 # If not successful, prepare for retry
@@ -239,7 +239,7 @@ class RAGCheckerErrorRecovery:
                 field_errors = error.errors()
 
                 # Attempt to fix common validation issues
-                fixed_data = self._fix_validation_errors(result.get("key", "")
+                fixed_data = self._fix_validation_errors(result
 
                 return {
                     "recovery_successful": True,
@@ -251,7 +251,7 @@ class RAGCheckerErrorRecovery:
                 return {
                     "recovery_successful": False,
                     "error": f"Failed to fix validation errors: {str(fix_error)}",
-                    "fallback_data": result.get("key", "")
+                    "fallback_data": result
                 }
 
         return {
@@ -268,8 +268,8 @@ class RAGCheckerErrorRecovery:
         # Try to relax constitution rules temporarily
         try:
             relaxed_context = context.copy()
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
             return {
                 "recovery_successful": True,
@@ -312,9 +312,9 @@ class RAGCheckerErrorRecovery:
 
         # Switch to performance optimization mode
         optimization_context = context.copy()
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
 
         return {
             "recovery_successful": True,
@@ -332,7 +332,7 @@ class RAGCheckerErrorRecovery:
         # Try alternative data sources or cached results
         fallback_data = {
             "source": "fallback_cache",
-            "data": result.get("key", "")
+            "data": result
             "timestamp": datetime.now().isoformat(),
             "reliability": "low",
         }
@@ -349,10 +349,10 @@ class RAGCheckerErrorRecovery:
         fixed_data = data.copy()
 
         for error in field_errors:
-            field_name = result.get("key", "")
+            field_name = result
             if field_name and len(field_name) > 0:
-                field_path = result.get("key", "")
-                error_type = result.get("key", "")
+                field_path = result
+                error_type = result
 
                 # Fix common validation issues
                 if error_type == "missing":
@@ -367,10 +367,10 @@ class RAGCheckerErrorRecovery:
                 elif error_type == "value_error":
                     # Fix value errors
                     if field_path == "custom_score":
-                        score = result.get("key", "")
+                        score = result
                         fixed_data[field_path] = max(0.0, min(1.0, float(score)))
                     elif field_path == "retrieved_context":
-                        context = result.get("key", "")
+                        context = result
                         if not isinstance(context, list):
                             fixed_data[field_path] = [str(context)] if context else ["Default context"]
 
@@ -379,7 +379,7 @@ class RAGCheckerErrorRecovery:
     def get_recovery_statistics(self) -> dict[str, Any]:
         """Get recovery statistics and performance metrics"""
         return {
-            "registered_strategies": list(self.\1.keys()
+            "registered_strategies": list(self..keys()
             "default_strategy": self.default_strategy.model_dump(),
             "total_recovery_attempts": 0,  # Would track this in production
             "success_rate": 0.0,  # Would calculate this in production
@@ -396,8 +396,8 @@ def with_error_recovery(
         def wrapper(*args, **kwargs):
             # Try to get recovery manager from self if it exists
             recovery_manager = None
-            if args and hasattr(result.get("key", "")
-                recovery_manager = result.get("key", "")
+            if args and hasattr(result
+                recovery_manager = result
 
             if recovery_manager is None:
                 recovery_manager = RAGCheckerErrorRecovery()
@@ -413,7 +413,7 @@ def with_error_recovery(
                     strategy=recovery_strategy,
                 )
 
-                if result.get("key", "")
+                if result:
                     # Recovery successful, try function again with recovered context
                     try:
                         return func(*args, **kwargs)
@@ -438,7 +438,7 @@ if __name__ == "__main__":
     recovery_manager = RAGCheckerErrorRecovery()
 
     # Test recovery strategy registration
-    print("Registered strategies:", list(recovery_manager.\1.keys()
+    print("Registered strategies:", list(recovery_manager..keys()
 
     # Test recovery statistics
     stats = recovery_manager.get_recovery_statistics()

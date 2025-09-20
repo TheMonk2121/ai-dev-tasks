@@ -60,120 +60,110 @@ class ConstitutionComplianceChecker:
     def _parse_file_safety_rules(self, content: str):
         """Parse Article I: File Safety & Analysis rules."""
         # File analysis requirement
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="I",
                 rule_id="file_analysis_requirement",
                 description="ALWAYS read 400_file-analysis-guide.md completely before file operations",
                 validation_function=self._validate_file_analysis_requirement,
-                critical=True,
+                critical=True,)
             )
         )
 
         # Critical file protection
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="I",
                 rule_id="critical_file_protection",
                 description="Never delete files with CRITICAL_FILE or ARCHIVE_PROTECTED metadata",
                 validation_function=self._validate_critical_file_protection,
-                critical=True,
+                critical=True,)
             )
         )
 
     def _parse_context_preservation_rules(self, content: str):
         """Parse Article II: Context Preservation & Memory Management rules."""
         # Memory context priority
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="II",
                 rule_id="memory_context_priority",
                 description="ALWAYS read 100_cursor-memory-context.md first in new sessions",
                 validation_function=self._validate_memory_context_priority,
-                critical=True,
+                critical=True,)
             )
         )
 
         # Context hierarchy enforcement
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="II",
                 rule_id="context_hierarchy_enforcement",
                 description="Follow context hierarchy: HIGH > MEDIUM > LOW priority files",
                 validation_function=self._validate_context_hierarchy,
-                critical=False,
+                critical=False,)
             )
         )
 
     def _parse_error_prevention_rules(self, content: str):
         """Parse Article III: Error Prevention & Recovery rules."""
         # Multi-turn process enforcement
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="III",
                 rule_id="multi_turn_process_enforcement",
                 description="Use mandatory checklist enforcement for high-risk operations",
                 validation_function=self._validate_multi_turn_process,
-                critical=True,
+                critical=True,)
             )
         )
 
         # Error recovery patterns
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="III",
                 rule_id="error_recovery_patterns",
                 description="Follow 400_error-recovery-guide.md for all error handling",
                 validation_function=self._validate_error_recovery_patterns,
-                critical=False,
+                critical=False,)
             )
         )
 
     def _parse_documentation_rules(self, content: str):
         """Parse Article IV: Documentation & Knowledge Management rules."""
         # Documentation architecture
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="IV",
                 rule_id="documentation_architecture",
                 description="Follow modular, MECE-aligned documentation patterns",
                 validation_function=self._validate_documentation_architecture,
-                critical=False,
+                critical=False,)
             )
         )
 
         # Knowledge retrieval
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="IV",
                 rule_id="knowledge_retrieval",
                 description="Use RAG systems for relevant context retrieval",
                 validation_function=self._validate_knowledge_retrieval,
-                critical=False,
+                critical=False,)
             )
         )
 
     def _parse_system_integration_rules(self, content: str):
         """Parse Article V: System Integration & Workflow rules."""
         # Workflow chain preservation
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="V",
                 rule_id="workflow_chain_preservation",
                 description="Maintain 000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md chain",
                 validation_function=self._validate_workflow_chain,
-                critical=True,
+                critical=True,)
             )
         )
 
         # Technology stack integrity
-        self.rules.append(
-            ConstitutionRule(
+        self.rules.append(ConstitutionRule(
                 article="V",
                 rule_id="technology_stack_integrity",
                 description="Maintain Cursor Native AI + Specialized Agents + DSPy foundation",
                 validation_function=self._validate_technology_stack,
-                critical=True,
+                critical=True,)
             )
         )
 
@@ -187,29 +177,29 @@ class ConstitutionComplianceChecker:
         self._parse_system_integration_rules("")
 
     # Validation Functions
-
+:
     def _validate_file_analysis_requirement(self, operation: dict) -> tuple[bool, str]:
         """Validate that file analysis requirements are met."""
-        if result.get("key", "")
-            if not result.get("key", "")
+        if result:
+            if not result
                 return False, "File analysis requirement not met"
         return True, "File analysis requirement satisfied"
-
+:
     def _validate_critical_file_protection(self, operation: dict) -> tuple[bool, str]:
         """Validate that critical files are protected."""
-        if result.get("key", "")
-            target_file = result.get("key", "")
+        if result:
+            target_file = result
             if any(protected in target_file for protected in ["CRITICAL_FILE", "ARCHIVE_PROTECTED"]):
                 return False, f"Attempted to delete protected file: {target_file}"
         return True, "Critical file protection satisfied"
 
     def _validate_memory_context_priority(self, operation: dict) -> tuple[bool, str]:
         """Validate that memory context is read first in new sessions."""
-        if result.get("key", "")
-            if not result.get("key", "")
+        if result:
+            if not result
                 return False, "Memory context not read in new session"
         return True, "Memory context priority satisfied"
-
+:
     def _validate_context_hierarchy(self, operation: dict) -> tuple[bool, str]:
         """Validate that context hierarchy is followed."""
         # This is a complex validation that would check file reading order
@@ -217,18 +207,18 @@ class ConstitutionComplianceChecker:
 
     def _validate_multi_turn_process(self, operation: dict) -> tuple[bool, str]:
         """Validate that multi-turn processes are used for high-risk operations."""
-        if result.get("key", "")
-            if not result.get("key", "")
+        if result:
+            if not result
                 return False, "Multi-turn confirmation required for high-risk operations"
         return True, "Multi-turn process satisfied"
-
+:
     def _validate_error_recovery_patterns(self, operation: dict) -> tuple[bool, str]:
         """Validate that error recovery patterns are followed."""
-        if result.get("key", "")
-            if not result.get("key", "")
+        if result:
+            if not result
                 return False, "Error recovery guide not followed"
         return True, "Error recovery patterns satisfied"
-
+:
     def _validate_documentation_architecture(self, operation: dict) -> tuple[bool, str]:
         """Validate that documentation architecture is maintained."""
         # This would check documentation structure and patterns
@@ -236,11 +226,11 @@ class ConstitutionComplianceChecker:
 
     def _validate_knowledge_retrieval(self, operation: dict) -> tuple[bool, str]:
         """Validate that knowledge retrieval systems are used."""
-        if result.get("key", "")
-            if not result.get("key", "")
+        if result:
+            if not result
                 return False, "RAG system not used for context retrieval"
         return True, "Knowledge retrieval satisfied"
-
+:
     def _validate_workflow_chain(self, operation: dict) -> tuple[bool, str]:
         """Validate that workflow chain is preserved."""
         # This would check that the workflow chain is maintained
@@ -272,11 +262,11 @@ class ConstitutionComplianceChecker:
                         "message": message,
                         "critical": rule.critical,
                     }
-                    result.get("key", "")
+                    result
                     if rule.critical:
-                        result.get("key", "")
+                        result
                     else:
-                        result.get("key", "")
+                        result
             except Exception as e:
                 violation = {
                     "rule_id": rule.rule_id,
@@ -285,9 +275,9 @@ class ConstitutionComplianceChecker:
                     "message": f"Validation error: {str(e)}",
                     "critical": rule.critical,
                 }
-                result.get("key", "")
+                result
                 if rule.critical:
-                    result.get("key", "")
+                    result
 
         return results
 
@@ -302,7 +292,7 @@ class ConstitutionComplianceChecker:
 
         # Add file analysis requirement check
         if operation_type in ["delete", "move", "rename"]:
-            result.get("key", "")
+            result
 
         return self.validate_operation(operation)
 
@@ -311,7 +301,7 @@ class ConstitutionComplianceChecker:
         # This would check if the file analysis guide has been read
         # and the 6-step analysis completed
         return True  # Placeholder implementation
-
+:
     def generate_compliance_report(self) -> str:
         """Generate a human-readable compliance report."""
         if not self.violations:
@@ -320,19 +310,19 @@ class ConstitutionComplianceChecker:
         report = "🤖 AI Constitution Compliance Report\n"
         report += "=" * 50 + "\n\n"
 
-        critical_violations = [v for v in self.violations if result.get("key", "")
-        warnings = [v for v in self.violations if not result.get("key", "")
-
+        critical_violations = [v for v in self.violations if result:
+        warnings = [v for v in self.violations if not result:
+:
         if critical_violations:
             report += "🚨 CRITICAL VIOLATIONS:\n"
             for violation in critical_violations:
-                report += f"  • {result.get("key", "")
+                report += f"  • {result
             report += "\n"
 
         if warnings:
             report += "⚠️  WARNINGS:\n"
             for warning in warnings:
-                report += f"  • {result.get("key", "")
+                report += f"  • {result
             report += "\n"
 
         report += f"📊 Summary: {len(critical_violations)} critical violations, {len(warnings)} warnings\n"

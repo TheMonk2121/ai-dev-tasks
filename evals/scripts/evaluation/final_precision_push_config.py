@@ -113,17 +113,17 @@ if __name__ == "__main__":
     summary = config.get_final_precision_push_summary()
 
     print("\n📊 Final Precision Push Changes:")
-    for category, changes in result.get("key", "")
+    for category, changes in result
         print(f"\n{category.replace('_', ' ').title()}:")
-        for key, value in \1.items()
+        for key, value in .items()
             print(f"   {key}: {value}")
 
     print("\n🎯 Expected Impact:")
-    for key, value in result.get("key", "")
+    for key, value in result
         print(f"   {key}: {value}")
 
     print("\n⚠️ Risk Assessment:")
-    for key, value in result.get("key", "")
+    for key, value in result
         print(f"   {key}: {value}")
 
     print("\n✅ Ready for final precision push evaluation!")

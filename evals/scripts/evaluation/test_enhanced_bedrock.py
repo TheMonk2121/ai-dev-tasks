@@ -110,8 +110,8 @@ async def test_multi_key_load_balancing():
     total_time = time.time() - start_time
 
     # Analyze results
-    successful_requests = [r for r in results if result.get("key", "")
-    failed_requests = [r for r in results if not result.get("key", "")
+    successful_requests = [r for r in results if result:
+    failed_requests = [r for r in results if not result
 
     print("📊 Results Summary:")
     print(f"   Total time: {total_time:.2f}s")
@@ -119,8 +119,8 @@ async def test_multi_key_load_balancing():
     print(f"   Failed requests: {len(failed_requests)}")
 
     if successful_requests:
-        avg_response_time = sum(result.get("key", "")
-        total_tokens = sum(result.get("key", "")
+        avg_response_time = sum(result
+        total_tokens = sum(result
         print(f"   Average response time: {avg_response_time:.2f}s")
         print(f"   Total tokens processed: {total_tokens}")
         print(f"   Throughput: {len(successful_requests)/total_time:.2f} requests/second")
@@ -128,18 +128,18 @@ async def test_multi_key_load_balancing():
     # Show individual results
     print("\n📋 Individual Request Results:")
     for result in results:
-        status = "✅" if result.get("key", "")
-        print(f"   {status} Request {result.get("key", "")
-        if result.get("key", "")
-            print(f"      Response: {result.get("key", "")
+        status = "✅" if result:
+        print(f"   {status} Request {result
+        if result:
+            print(f"      Response: {result
         else:
-            print(f"      Error: {result.get("key", "")
+            print(f"      Error: {result
 
     # Get final status
     final_status = client.get_status()
     print("\n🔍 Final Client Status:")
-    print(f"   Load Balancer: {json.dumps(result.get("key", "")
-    print(f"   Rate Limiter: {json.dumps(result.get("key", "")
+    print(f"   Load Balancer: {json.dumps(result
+    print(f"   Rate Limiter: {json.dumps(result
 
     print()
 
@@ -172,8 +172,8 @@ async def test_rate_limiting_and_resilience():
     results = await asyncio.gather(*tasks)
     total_time = time.time() - start_time
 
-    successful = [r for r in results if result.get("key", "")
-    failed = [r for r in results if not result.get("key", "")
+    successful = [r for r in results if result:
+    failed = [r for r in results if not result
 
     print("📊 Rapid Request Results:")
     print(f"   Total time: {total_time:.2f}s")
@@ -182,7 +182,7 @@ async def test_rate_limiting_and_resilience():
     print(f"   Rate: {len(results)/total_time:.2f} requests/second")
 
     if successful:
-        avg_time = sum(result.get("key", "")
+        avg_time = sum(result
         print(f"   Average response time: {avg_time:.2f}s")
 
     # Test circuit breaker behavior
@@ -190,12 +190,12 @@ async def test_rate_limiting_and_resilience():
 
     # Get current status
     status = client.get_status()
-    rate_limiter_status = result.get("key", "")
+    rate_limiter_status = result
 
-    print(f"   Current RPS: {result.get("key", "")
-    print(f"   Circuit open: {result.get("key", "")
-    print(f"   Failure count: {result.get("key", "")
-    print(f"   Success count: {result.get("key", "")
+    print(f"   Current RPS: {result
+    print(f"   Circuit open: {result
+    print(f"   Failure count: {result
+    print(f"   Success count: {result
 
     print()
 
@@ -230,7 +230,7 @@ async def test_configuration_loading():
         print(f"   ✅ Status reporting: {len(status1)} components (default), {len(status2)} components (custom)")
 
         # Verify custom config was applied
-        if result.get("key", "")
+        if result:
             print("   ✅ Custom max_retries configuration verified")
         else:
             print("   ⚠️ Custom max_retries configuration not reflected in status")

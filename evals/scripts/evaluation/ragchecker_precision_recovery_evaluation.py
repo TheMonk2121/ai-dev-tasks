@@ -52,7 +52,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             case_overrides = self.config.get_case_specific_overrides(test_case.query_id)
             if case_overrides:
                 print("   🔧 Applying case-specific overrides for weak case")
-                for key, value in \1.items()
+                for key, value in .items()
                     os.environ[key] = str(value)
 
             # Evaluate with enhanced logging
@@ -112,10 +112,10 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             ragchecker_result = self.create_fallback_evaluation(eval_data)
 
             # Extract metrics
-            overall_metrics = result.get("key", "")
-            precision = result.get("key", "")
-            recall = result.get("key", "")
-            f1_score = result.get("key", "")
+            overall_metrics = result
+            precision = result
+            recall = result
+            f1_score = result
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -223,26 +223,26 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
     def _log_case_metrics(self, query_id: str, case_result: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
-            "evaluation_time": result.get("key", "")
-            "retrieval_metrics": result.get("key", "")
-            "facet_metrics": result.get("key", "")
-            "fusion_metrics": result.get("key", "")
-            "dynamic_k_metrics": result.get("key", "")
-            "binding_metrics": result.get("key", "")
-            "pruning_metrics": result.get("key", "")
-            "judge_metrics": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
+            "evaluation_time": result
+            "retrieval_metrics": result
+            "facet_metrics": result
+            "fusion_metrics": result
+            "dynamic_k_metrics": result
+            "binding_metrics": result
+            "pruning_metrics": result
+            "judge_metrics": result
         }
 
     def _generate_evaluation_report(self, results: list[dict[str, Any]]) -> dict[str, Any]:
         """Generate comprehensive evaluation report."""
 
         # Calculate overall metrics
-        precisions = [result.get("key", "")
-        recalls = [result.get("key", "")
-        f1_scores = [result.get("key", "")
+        precisions = [result
+        recalls = [result
+        f1_scores = [result
 
         overall_metrics = {
             "precision": sum(precisions) / len(precisions) if precisions else 0.0,
@@ -255,9 +255,9 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
 
         # Check baseline compliance
         baseline_compliance = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
         }
 
         # Generate summary statistics
@@ -286,41 +286,41 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
         # Identify weak cases
         weak_cases = ["advanced_features_001", "architecture_001", "role_context_001"]
 
-        weak_case_results = [r for r in results if result.get("key", "")
-        strong_case_results = [r for r in results if result.get("key", "")
+        weak_case_results = [r for r in results if result:
+        strong_case_results = [r for r in results if result:
 
         # Calculate metrics by case type
         def calc_metrics(case_list):
             if not case_list:
                 return {"precision": 0.0, "recall": 0.0, "f1_score": 0.0}
             return {
-                "precision": sum(result.get("key", "")
-                "recall": sum(result.get("key", "")
-                "f1_score": sum(result.get("key", "")
+                "precision": sum(result
+                "recall": sum(result
+                "f1_score": sum(result
             }
 
         return {
             "weak_cases": {
                 "count": len(weak_case_results),
                 "metrics": calc_metrics(weak_case_results),
-                "case_ids": [result.get("key", "")
+                "case_ids": [result
             },
             "strong_cases": {
                 "count": len(strong_case_results),
                 "metrics": calc_metrics(strong_case_results),
-                "case_ids": [result.get("key", "")
+                "case_ids": [result
             },
             "fusion_gains": {
-                "total_fusion_gain": sum(result.get("key", "")
+                "total_fusion_gain": sum(result
                 "cases_with_fusion_gain": len(
-                    [r for r in results if result.get("key", "")
+                    [r for r in results if result:
                 ),
             },
             "facet_yields": {
-                "total_facets_generated": sum(result.get("key", "")
-                "total_facets_kept": sum(result.get("key", "")
+                "total_facets_generated": sum(result
+                "total_facets_kept": sum(result
                 "cases_with_facet_yield": len(
-                    [r for r in results if result.get("key", "")
+                    [r for r in results if result:
                 ),
             },
         }
@@ -371,15 +371,15 @@ def main():
     print(f"\n📊 Precision Recovery Evaluation Complete (Step {args.step})")
     print("=" * 60)
     print("📈 Overall Metrics:")
-    overall = result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Recall: {result.get("key", "")
-    print(f"   F1 Score: {result.get("key", "")
+    overall = result
+    print(f"   Precision: {result
+    print(f"   Recall: {result
+    print(f"   F1 Score: {result
 
     print("\n🎯 Baseline Compliance:")
-    compliance = result.get("key", "")
-    floors = result.get("key", "")
-    for metric, passed in \1.items()
+    compliance = result
+    floors = result
+    for metric, passed in .items()
         status = "✅ PASS" if passed else "❌ FAIL"
         target = floors[metric]
         current = overall[metric]
@@ -388,7 +388,7 @@ def main():
     print(f"\n📁 Results saved to: {output_file}")
 
     # Return exit code based on compliance
-    all_passed = all(\1.values()
+    all_passed = all(.values()
     return 0 if all_passed else 2
 
 if __name__ == "__main__":

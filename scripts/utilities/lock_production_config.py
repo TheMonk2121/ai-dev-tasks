@@ -1,10 +1,20 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
 from pathlib import Path
+
 from src.utils.config_lock import (
+    AgentMemoryManager,
+    DatasetTrapManager,
+    DeterminismManager,
+    LockedConfig,
+    ObservabilityManager,
+    ToolTrapManager,
+)
+
 #!/usr/bin/env python3
 """
 Production Configuration Locking Script
@@ -21,10 +31,18 @@ sys.path.insert(0, str(project_root))
 dspy_rag_path = project_root / "dspy-rag-system"
 sys.path.insert(0, str(dspy_rag_path))
 
-    ConfigLockManager,
-    create_production_config,
-    get_production_runbook,
-)
+# Import additional modules from dspy-rag-system
+try:
+    from src.utils.config_lock import (
+        ConfigLockManager,
+        create_production_config,
+        get_production_runbook,
+    )
+except ImportError:
+    # These modules may not be available in all environments
+    ConfigLockManager = None
+    create_production_config = None
+    get_production_runbook = None
 
 def main():
     parser = argparse.ArgumentParser(description="Lock production chunking configuration")

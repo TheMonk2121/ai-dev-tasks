@@ -133,7 +133,7 @@ def test_cross_encoder_functionality():
 
         # Test cache stats
         stats = reranker.get_cache_stats()
-        print(f"\n📊 Cache Stats: {result.get("key", "")
+        print(f"\n📊 Cache Stats: {result
 
         return True
     except Exception as e:
@@ -197,10 +197,10 @@ def main():
     print("\n📊 Test Results Summary")
     print("=" * 60)
 
-    passed = sum(\1.values()
+    passed = sum(.values()
     total = len(results)
 
-    for test_name, result in \1.items()
+    for test_name, result in .items()
         status = "✅ PASS" if result else "❌ FAIL"
         print(f"  {test_name}: {status}")
 

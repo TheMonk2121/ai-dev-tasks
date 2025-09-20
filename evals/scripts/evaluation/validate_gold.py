@@ -72,7 +72,7 @@ def validate_gold_dataset() -> list[str]:
         if "views" not in manifest:
             issues.append("Manifest missing 'views' section")
         else:
-            for view_name, view_config in result.get("key", "")
+            for view_name, view_config in result
                 required_fields = ["seed", "strata", "size"]
                 for field in required_fields:
                     if field not in view_config:
@@ -80,7 +80,7 @@ def validate_gold_dataset() -> list[str]:
 
                 # Validate strata sum to 1.0
                 if "strata" in view_config:
-                    strata_sum = sum(result.get("key", "")
+                    strata_sum = sum(result
                     if abs(strata_sum - 1.0) > 0.01:
                         issues.append(f"View '{view_name}' strata sum is {strata_sum}, should be 1.0")
 

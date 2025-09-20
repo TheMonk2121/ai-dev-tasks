@@ -1,21 +1,22 @@
 from __future__ import annotations
+
 import argparse
+import glob
+import json
 import os
 import shutil
 import subprocess
 import sys
 import time
+from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any
-    from monitoring.health_endpoints import HealthEndpointManager
-    from monitoring.maintenance_metrics import store_maintenance_analysis
-    from monitoring.metrics import get_metrics
-        from collections import defaultdict
-import json
-import glob
-            from monitoring.health_endpoints import HealthEndpointManager
 from typing import Any, Optional, Union
+
+from monitoring.health_endpoints import HealthEndpointManager
+from monitoring.maintenance_metrics import store_maintenance_analysis
+from monitoring.metrics import get_metrics
+
 #!/usr/bin/env python3
 """
 Maintenance Cleanup Script for AI Development Tasks
@@ -33,6 +34,8 @@ Automated cleanup script that runs various maintenance tasks:
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 try:
+    # Import monitoring modules
+    pass
 except ImportError:
     print("⚠️  Monitoring modules not available - some features will be limited")
     store_maintenance_analysis = None

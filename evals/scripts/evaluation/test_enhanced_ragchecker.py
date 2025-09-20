@@ -19,7 +19,7 @@ def run_test_configuration(config_name: str, env_vars: dict, description: str):
     env.update(env_vars)
 
     # Convert all values to strings
-    for key, value in \1.items()
+    for key, value in .items()
         env[key] = str(value)
 
     # Run the evaluation
@@ -152,7 +152,7 @@ def main():
     # Run tests
     results = []
     for config in test_configs:
-        result = run_test_configuration(result.get("key", "")
+        result = run_test_configuration(result
         results.append(result)
 
     # Save results
@@ -166,13 +166,13 @@ def main():
     print("=" * 80)
 
     for result in results:
-        status_emoji = {"success": "✅", "failed": "❌", "timeout": "⏰", "crashed": "💥"}.get(result.get("key", "")
+        status_emoji = {"success": "✅", "failed": "❌", "timeout": "⏰", "crashed": "💥"}.get(result
 
-        print(f"{status_emoji} {result.get("key", "")
+        print(f"{status_emoji} {result
 
-        if result.get("key", "")
+        if result:
             # Extract some key metrics
-            case_results = result.get("key", "")
+            case_results = result
             if case_results:
                 print(f"   📈 Completed {len(case_results)} test cases")
                 # Show a few sample results

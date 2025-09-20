@@ -32,12 +32,12 @@ async def test_ollama_availability():
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await result.get("key", "")
+            response = await result
             if response.status_code == 200:
                 models = response.json().get("models", [])
                 print(f"✅ Ollama is running with {len(models)} models:")
                 for model in models[:5]:  # Show first 5 models
-                    print(f"   - {result.get("key", "")
+                    print(f"   - {result
                 return True
             else:
                 print(f"⚠️  Ollama API returned status {response.status_code}")

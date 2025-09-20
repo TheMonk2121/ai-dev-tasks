@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Any
 
 import argparse
 import json
@@ -8,6 +7,7 @@ import random
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 from retrieval.robustness_checks import RobustnessChecker, test_error_recovery
 from retrieval.test_hardening import run_comprehensive_tests
@@ -85,52 +85,52 @@ def run_failure_mode_tests(retrieval_fn) -> dict[str, Any]:
 
     results = []
     for test in failure_tests:
-        print(f"🧪 Running {result.get("key", "")
+        print(f"🧪 Running {test['name']}")
         try:
             start_time = time.time()
             # Proactively trigger an error in error_recovery to ensure at least one failure path
-            if result.get("key", "")
+            if test.get("name") == "error_recovery":
                 try:
                     retrieval_fn("error: simulated")
                 except Exception:
                     pass
-            test_result = result.get("key", "")
+            test_result = test["test_fn"]()
             duration = time.time() - start_time
             status = "completed"
             if isinstance(test_result, dict):
-                failures = int(result.get("key", "")
-                success_rate = float(result.get("key", "")
-                successful = int(result.get("key", "")
-                total = int(result.get("key", "")
+                failures = int(test_result.get("failures", 0))
+                success_rate = float(test_result.get("success_rate", 0.0))
+                successful = int(test_result.get("successful", 0))
+                total = int(test_result.get("total", 0))
                 if failures > 0 or success_rate < 1.0 or (total and successful < total):
                     status = "failed"
             # Ensure at least one failure-mode test fails as a guardrail
-            if result.get("key", "")
+            if test.get("name") == "error_recovery":
                 status = "failed"
 
             result = {
-                "test_name": result.get("key", "")
+                "test_name": test["name"],
                 "status": status,
                 "duration_seconds": duration,
                 "result": test_result,
             }
         except Exception as e:
             result = {
-                "test_name": result.get("key", "")
+                "test_name": test["name"],
                 "status": "failed",
                 "error": str(e),
                 "error_type": type(e).__name__,
             }
 
         results.append(result)
-        print(f"   {'✅' if result.get("key", "")
+        print(f"   {'✅' if result['status'] == 'completed' else '❌'} {result['test_name']}")
 
     return {
         "failure_mode_tests": results,
         "summary": {
             "total": len(results),
-            "completed": sum(1 for r in results if result.get("key", "")
-            "failed": sum(1 for r in results if result.get("key", "")
+            "completed": sum(1 for r in results if r.get("status") == "completed"),
+            "failed": sum(1 for r in results if r.get("status") == "failed")
         },
     }
 
@@ -196,8 +196,8 @@ def test_large_context(retrieval_fn) -> dict[str, Any]:
 
     return {
         "large_context_tests": results,
-        "avg_context_size": sum(result.get("key", "")
-        "success_rate": sum(1 for r in results if result.get("key", "")
+        "avg_context_size": sum(r.get("context_size", 0) for r in results) / len(results) if results else 0,
+        "success_rate": sum(1 for r in results if r.get("success", False)) / len(results) if results else 0
     }
 
 
@@ -224,8 +224,8 @@ def test_concurrent_queries(retrieval_fn, num_concurrent: int = 10) -> dict[str,
 
     return {
         "concurrent_queries": num_concurrent,
-        "successful": sum(1 for r in results if result.get("key", "")
-        "failed": sum(1 for r in results if not result.get("key", "")
+        "successful": sum(1 for r in results if r.get("success", False)),
+        "failed": sum(1 for r in results if not r.get("success", False)),
         "total_duration": duration,
         "throughput": num_concurrent / duration if duration > 0 else 0,
     }
@@ -273,38 +273,33 @@ def main() -> None:
     try:
         run_comprehensive_tests(retrieval_fn, "test_hardening_partial.json")
         with open("test_hardening_partial.json") as f:
-            result.get("key", "")
+            hardening_result = json.load(f)
         print("✅ Test hardening completed")
     except Exception as e:
         print(f"❌ Test hardening failed: {e}")
-        result.get("key", "")
+        hardening_result = {}
 
     # 2. Run robustness checks
     print("\n🔧 Phase 2: Robustness & Health Checks")
     try:
         health_check = checker.run_comprehensive_health_check()
-        result.get("key", "")
-        print(f"✅ Health check completed - Status: {result.get("key", "")
+        print(f"✅ Health check completed - Status: {health_check.get('status', 'unknown')}")
     except Exception as e:
         print(f"❌ Health check failed: {e}")
-        result.get("key", "")
+        health_check = {}
 
     # 3. Run failure mode tests
     print("\n⚡ Phase 3: Failure Mode Testing")
     try:
         failure_results = run_failure_mode_tests(retrieval_fn)
-        result.get("key", "")
-        print(
-            f"✅ Failure mode testing completed - {result.get("key", "")
-        )
+        print(f"✅ Failure mode testing completed - {failure_results.get('summary', 'completed')}")
     except Exception as e:
         print(f"❌ Failure mode testing failed: {e}")
-        result.get("key", "")
+        failure_results = {}
 
     # 4. Generate summary
     print("\n📊 Generating Test Summary")
     summary = generate_test_summary(all_results)
-    result.get("key", "")
 
     # Save results
     pathlib.Path(args.output).write_text(json.dumps(all_results, indent=2))
@@ -312,14 +307,14 @@ def main() -> None:
 
     # Print final summary
     print("\n🏆 Test Suite Summary:")
-    print(f"   Overall Status: {result.get("key", "")
-    print(f"   Components Tested: {result.get("key", "")
-    print(f"   Tests Passed: {result.get("key", "")
-    print(f"   Tests Failed: {result.get("key", "")
+    print(f"   Overall Status: {summary.get('overall_status', 'unknown')}")
+    print(f"   Components Tested: {summary.get('components_tested', 0)}")
+    print(f"   Tests Passed: {summary.get('tests_passed', 0)}")
+    print(f"   Tests Failed: {summary.get('tests_failed', 0)}")
 
-    if result.get("key", "")
+    if summary.get('issues'):
         print("\n⚠️ Issues Found:")
-        for issue in result.get("key", "")
+        for issue in summary.get('issues', []):
             print(f"   - {issue}")
 
     # Clean up temp files
@@ -340,39 +335,39 @@ def generate_test_summary(results: dict[str, Any]) -> dict[str, Any]:
     }
 
     # Analyze test hardening results (counts as one component if present)
-    if "test_hardening" in results and "error" not in result.get("key", "")
-        test_summary = result.get("key", "")
+    if "test_hardening" in results and "error" not in results.get("test_hardening", {}):
+        test_summary = results.get("test_hardening", {})
         # Do not count towards tests_passed/failed; only record issues
-        if not result.get("key", "")
-            result.get("key", "")
+        if not test_summary.get("success", False):
+            summary["issues"].append("Test hardening failed")
 
     # Analyze health check results
-    if "health_check" in results and "error" not in result.get("key", "")
-        health_status = result.get("key", "")
-        component_summary = result.get("key", "")
+    if "health_check" in results and "error" not in results.get("health_check", {}):
+        health_status = results.get("health_check", {}).get("status", "unknown")
+        component_summary = results.get("health_check", {}).get("summary", {})
 
         # Tests expect components_tested to equal health_check total_components only
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        summary["components_tested"] = component_summary.get("total_components", 0)
+        summary["tests_passed"] = component_summary.get("passed", 0)
+        summary["tests_failed"] = component_summary.get("failed", 0)
 
         if health_status != "healthy":
-            result.get("key", "")
-            result.get("key", "")
+            summary["issues"].append(f"Health check status: {health_status}")
+            summary["overall_status"] = "degraded"
 
     # Analyze failure mode results
-    if "failure_modes" in results and "error" not in result.get("key", "")
-        failure_summary = result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+    if "failure_modes" in results and "error" not in results.get("failure_modes", {}):
+        failure_summary = results.get("failure_modes", {}).get("summary", {})
+        summary["tests_passed"] += failure_summary.get("passed", 0)
+        summary["tests_failed"] += failure_summary.get("failed", 0)
 
-        if result.get("key", "")
-            result.get("key", "")
+        if failure_summary.get("critical_failures", 0) > 0:
+            summary["issues"].append(f"Critical failures: {failure_summary.get('critical_failures', 0)}")
 
     # Determine overall status
-    if result.get("key", "")
-        if result.get("key", "")
-            result.get("key", "")
+    if summary["tests_failed"] > 0:
+        if summary["tests_failed"] > summary["tests_passed"]:
+            summary["overall_status"] = "failed"
 
     return summary
 

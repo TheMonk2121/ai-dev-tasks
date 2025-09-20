@@ -32,8 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Import our existing systems
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
+logging.basicConfig(level=logging.INFO,)
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[logging.FileHandler("logs/comprehensive_testing.log"), logging.StreamHandler()],
 )
@@ -98,12 +97,11 @@ class ComprehensiveTestingSuite:
             logger.info("Initializing Comprehensive Testing Suite")
 
             # Initialize PostgreSQL cache service
-            cache_config = CacheConfig(
-                max_connections=10,
+            cache_config = CacheConfig(max_connections=10,
                 min_connections=2,
                 similarity_threshold=0.7,
                 enable_metrics=True,
-                enable_connection_pooling=True,
+                enable_connection_pooling=True,)
             )
 
             self.cache_service = PostgreSQLCacheService(config=cache_config)
@@ -111,21 +109,19 @@ class ComprehensiveTestingSuite:
             logger.info("PostgreSQL cache service initialized for testing")
 
             # Initialize similarity engine
-            similarity_config = SimilarityConfig(
-                primary_algorithm="hybrid",
+            similarity_config = SimilarityConfig(primary_algorithm="hybrid",
                 enable_caching=True,
                 cache_size=2000,
-                use_tfidf=True,
+                use_tfidf=True,)
             )
 
             self.similarity_engine = SimilarityScoringEngine(config=similarity_config)
             logger.info("Similarity engine initialized for testing")
 
             # Initialize cache invalidation integration
-            integration_config = IntegrationConfig(
-                enable_background_cleanup=True,
+            integration_config = IntegrationConfig(enable_background_cleanup=True,
                 enable_performance_monitoring=True,
-                enable_alerting=True,
+                enable_alerting=True,)
             )
 
             self.integration = CacheInvalidationIntegration(config=integration_config)
@@ -133,11 +129,10 @@ class ComprehensiveTestingSuite:
             logger.info("Cache invalidation integration initialized for testing")
 
             # Initialize LTST memory integration
-            ltst_config = LTSTIntegrationConfig(
-                enable_cache_warming=True,
+            ltst_config = LTSTIntegrationConfig(enable_cache_warming=True,
                 warming_batch_size=100,
                 warming_interval_minutes=2,
-                enable_fallback_to_direct=True,
+                enable_fallback_to_direct=True,)
             )
 
             self.ltst_integration = LTSTMemoryIntegration(config=ltst_config)
@@ -145,13 +140,12 @@ class ComprehensiveTestingSuite:
             logger.info("LTST memory integration initialized for testing")
 
             # Initialize performance monitor
-            monitoring_config = MonitoringConfig(
-                metrics_collection_interval_seconds=15,
+            monitoring_config = MonitoringConfig(metrics_collection_interval_seconds=15,
                 dashboard_update_interval_seconds=30,
                 trend_analysis_interval_minutes=2,
                 enable_alerting=True,
                 enable_dashboard=True,
-                enable_trend_analysis=True,
+                enable_trend_analysis=True,)
             )
 
             self.performance_monitor = CachePerformanceMonitor(config=monitoring_config)
@@ -181,26 +175,26 @@ class ComprehensiveTestingSuite:
             # Run unit tests
             if self.config.enable_unit_tests:
                 logger.info("Running unit tests...")
-                result.get("key", "")
+                result
 
             # Run integration tests
             if self.config.enable_integration_tests:
                 logger.info("Running integration tests...")
-                result.get("key", "")
+                result
 
             # Run performance tests
             if self.config.enable_performance_tests:
                 logger.info("Running performance tests...")
-                result.get("key", "")
+                result
 
             # Run stress tests
             if self.config.enable_stress_tests:
                 logger.info("Running stress tests...")
-                result.get("key", "")
+                result
 
             # Generate summary
             total_duration = (time.time() - start_time) * 1000
-            result.get("key", "")
+            result
 
             logger.info("Comprehensive testing suite completed")
             return results
@@ -216,17 +210,17 @@ class ComprehensiveTestingSuite:
 
             # Test cache service basic operations
             cache_test = await self._test_cache_service_basic()
-            result.get("key", "")
+            result
             self.test_results.append(cache_test)
 
             # Test similarity engine algorithms
             similarity_test = await self._test_similarity_algorithms()
-            result.get("key", "")
+            result
             self.test_results.append(similarity_test)
 
             # Test cache invalidation
             invalidation_test = await self._test_cache_invalidation()
-            result.get("key", "")
+            result
             self.test_results.append(invalidation_test)
 
             return results
@@ -241,14 +235,13 @@ class ComprehensiveTestingSuite:
 
         try:
             # Test cache entry storage
-            test_entry = CacheEntry(
-                user_id="test_user",
+            test_entry = CacheEntry(user_id="test_user",
                 model_type="test_model",
                 prompt="Test prompt for unit testing",
                 response="Test response for unit testing",
                 tokens_used=50,
                 cache_hit=False,
-                similarity_score=1.0,
+                similarity_score=1.0,)
             )
 
             entry_id = await self.cache_service.store_cache_entry(test_entry)
@@ -256,8 +249,7 @@ class ComprehensiveTestingSuite:
                 raise Exception("Failed to store cache entry")
 
             # Test cache entry retrieval with exact match
-            retrieved_entry = await self.cache_service.retrieve_cache_entry(
-                "Test prompt for unit testing", "test_user", similarity_threshold=0.0
+            retrieved_entry = await self.cache_service.retrieve_cache_entry("Test prompt for unit testing", "test_user", similarity_threshold=0.0)
             )
             if not retrieved_entry:
                 raise Exception("Failed to retrieve cache entry")
@@ -268,8 +260,7 @@ class ComprehensiveTestingSuite:
                 raise Exception("Failed to get cache statistics")
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="cache_service_basic",
+            return TestResult(test_name="cache_service_basic",
                 test_category="unit",
                 status="passed",
                 duration_ms=duration,
@@ -278,17 +269,16 @@ class ComprehensiveTestingSuite:
                     "entry_retrieved": True,
                     "statistics_retrieved": True,
                     "entry_id": entry_id,
-                },
+                },)
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="cache_service_basic",
+            return TestResult(test_name="cache_service_basic",
                 test_category="unit",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -317,8 +307,7 @@ class ComprehensiveTestingSuite:
                 raise Exception("Hybrid similarity score invalid")
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="similarity_algorithms",
+            return TestResult(test_name="similarity_algorithms",
                 test_category="unit",
                 status="passed",
                 duration_ms=duration,
@@ -326,17 +315,16 @@ class ComprehensiveTestingSuite:
                     "cosine_score": cosine_result.score,
                     "jaccard_score": jaccard_result.score,
                     "hybrid_score": hybrid_result.score,
-                },
+                },)
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="similarity_algorithms",
+            return TestResult(test_name="similarity_algorithms",
                 test_category="unit",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -361,8 +349,7 @@ class ComprehensiveTestingSuite:
                 raise Exception("Frequency-based invalidation returned invalid result")
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="cache_invalidation",
+            return TestResult(test_name="cache_invalidation",
                 test_category="unit",
                 status="passed",
                 duration_ms=duration,
@@ -370,17 +357,16 @@ class ComprehensiveTestingSuite:
                     "ttl_invalidated": ttl_result,
                     "similarity_invalidated": similarity_result,
                     "frequency_invalidated": frequency_result,
-                },
+                },)
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="cache_invalidation",
+            return TestResult(test_name="cache_invalidation",
                 test_category="unit",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -391,17 +377,17 @@ class ComprehensiveTestingSuite:
 
             # Test LTST memory integration
             ltst_test = await self._test_ltst_integration()
-            result.get("key", "")
+            result
             self.test_results.append(ltst_test)
 
             # Test performance monitoring integration
             perf_test = await self._test_performance_monitoring()
-            result.get("key", "")
+            result
             self.test_results.append(perf_test)
 
             # Test end-to-end workflow
             workflow_test = await self._test_end_to_end_workflow()
-            result.get("key", "")
+            result
             self.test_results.append(workflow_test)
 
             return results
@@ -426,8 +412,7 @@ class ComprehensiveTestingSuite:
                     raise Exception("Failed to store context")
 
             # Test similar context search
-            similar_contexts = await self.ltst_integration.search_similar_contexts(
-                "machine learning algorithms", limit=5
+            similar_contexts = await self.ltst_integration.search_similar_contexts("machine learning algorithms", limit=5)
             )
 
             # Test integration metrics
@@ -436,14 +421,13 @@ class ComprehensiveTestingSuite:
                 raise Exception("Failed to get integration metrics")
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="ltst_integration",
+            return TestResult(test_name="ltst_integration",
                 test_category="integration",
                 status="passed",
                 duration_ms=duration,
                 details={
                     "context_retrieved": context is not None,
-                    "context_stored": context is not None,
+                    "context_stored": context is not None,)
                     "similar_contexts_found": len(similar_contexts),
                     "metrics_retrieved": True,
                 },
@@ -451,12 +435,11 @@ class ComprehensiveTestingSuite:
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="ltst_integration",
+            return TestResult(test_name="ltst_integration",
                 test_category="integration",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -473,34 +456,32 @@ class ComprehensiveTestingSuite:
             if not dashboard:
                 raise Exception("Failed to get monitoring dashboard")
 
-            # Test alert acknowledgment (if alerts exist)
-            if result.get("key", "")
-                first_alert = result.get("key", "")
-                ack_success = await self.performance_monitor.acknowledge_alert(result.get("key", "")
-                if not ack_success:
+            # Test alert acknowledgment (if alerts exist):
+            if result:
+                first_alert = result
+                ack_success = await self.performance_monitor.acknowledge_alert(result
+                if not ack_success:)
                     raise Exception("Failed to acknowledge alert")
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="performance_monitoring",
+            return TestResult(test_name="performance_monitoring",
                 test_category="integration",
                 status="passed",
                 duration_ms=duration,
                 details={
                     "dashboard_retrieved": True,
-                    "alerts_acknowledged": result.get("key", "")
-                    "dashboard_status": result.get("key", "")
-                },
+                    "alerts_acknowledged": result
+                    "dashboard_status": result
+                },)
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="performance_monitoring",
+            return TestResult(test_name="performance_monitoring",
                 test_category="integration",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -513,14 +494,13 @@ class ComprehensiveTestingSuite:
             user_query = "Explain neural networks in simple terms"
 
             # 1. Store initial response
-            initial_entry = CacheEntry(
-                user_id="workflow_user",
+            initial_entry = CacheEntry(user_id="workflow_user",
                 model_type="gpt-4",
                 prompt=user_query,
                 response="Neural networks are computing systems inspired by biological brains...",
                 tokens_used=150,
                 cache_hit=False,
-                similarity_score=1.0,
+                similarity_score=1.0,)
             )
 
             entry_id = await self.cache_service.store_cache_entry(initial_entry)
@@ -528,8 +508,7 @@ class ComprehensiveTestingSuite:
                 raise Exception("Failed to store initial entry")
 
             # 2. Retrieve from cache (should hit)
-            retrieved_entry = await self.cache_service.retrieve_cache_entry(
-                user_query, "workflow_user", similarity_threshold=0.0
+            retrieved_entry = await self.cache_service.retrieve_cache_entry(user_query, "workflow_user", similarity_threshold=0.0)
             )
             if not retrieved_entry:
                 raise Exception("Failed to retrieve cached entry")
@@ -541,14 +520,13 @@ class ComprehensiveTestingSuite:
             context = await self.ltst_integration.retrieve_context(user_query, "workflow_user")
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="end_to_end_workflow",
+            return TestResult(test_name="end_to_end_workflow",
                 test_category="integration",
                 status="passed",
                 duration_ms=duration,
                 details={
                     "entry_stored": True,
-                    "entry_retrieved": True,
+                    "entry_retrieved": True,)
                     "similar_entries_found": len(similar_entries),
                     "ltst_context_retrieved": context is not None,
                 },
@@ -556,12 +534,11 @@ class ComprehensiveTestingSuite:
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="end_to_end_workflow",
+            return TestResult(test_name="end_to_end_workflow",
                 test_category="integration",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -572,17 +549,17 @@ class ComprehensiveTestingSuite:
 
             # Test cache service performance
             cache_perf_test = await self._test_cache_service_performance()
-            result.get("key", "")
+            result
             self.test_results.append(cache_perf_test)
 
             # Test similarity engine performance
             similarity_perf_test = await self._test_similarity_engine_performance()
-            result.get("key", "")
+            result
             self.test_results.append(similarity_perf_test)
 
             # Test overall system performance
             system_perf_test = await self._test_system_performance()
-            result.get("key", "")
+            result
             self.test_results.append(system_perf_test)
 
             return results
@@ -599,13 +576,12 @@ class ComprehensiveTestingSuite:
             # Generate test data
             test_entries = []
             for i in range(self.config.test_data_size):
-                entry = CacheEntry(
-                    user_id=f"perf_user_{i}",
+                entry = CacheEntry(user_id=f"perf_user_{i}",
                     model_type="test_model",
                     prompt=f"Performance test prompt {i}",
                     response=f"Performance test response {i}",
                     tokens_used=50 + i,
-                    cache_hit=False,
+                    cache_hit=False,)
                     similarity_score=0.8 + (i * 0.002),
                 )
                 test_entries.append(entry)
@@ -632,12 +608,11 @@ class ComprehensiveTestingSuite:
             retrieval_throughput = retrieved_count / (retrieval_time / 1000)
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="cache_service_performance",
+            return TestResult(test_name="cache_service_performance",
                 test_category="performance",
                 status="passed",
                 duration_ms=duration,
-                details={
+                details={)
                     "entries_stored": len(stored_ids),
                     "storage_time_ms": storage_time,
                     "storage_throughput_ops_per_sec": storage_throughput,
@@ -649,12 +624,11 @@ class ComprehensiveTestingSuite:
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="cache_service_performance",
+            return TestResult(test_name="cache_service_performance",
                 test_category="performance",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -675,7 +649,7 @@ class ComprehensiveTestingSuite:
             # Measure similarity calculation performance
             similarity_start = time.time()
             similarity_results = []
-
+:
             for i, text1 in enumerate(test_texts):
                 for j, text2 in enumerate(test_texts[i + 1 :], i + 1):
                     result = self.similarity_engine.calculate_similarity(text1, text2, algorithm="hybrid")
@@ -685,12 +659,11 @@ class ComprehensiveTestingSuite:
             similarity_throughput = len(similarity_results) / (similarity_time / 1000)
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="similarity_engine_performance",
+            return TestResult(test_name="similarity_engine_performance",
                 test_category="performance",
                 status="passed",
                 duration_ms=duration,
-                details={
+                details={)
                     "similarity_calculations": len(similarity_results),
                     "calculation_time_ms": similarity_time,
                     "throughput_ops_per_sec": similarity_throughput,
@@ -700,12 +673,11 @@ class ComprehensiveTestingSuite:
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="similarity_engine_performance",
+            return TestResult(test_name="similarity_engine_performance",
                 test_category="performance",
                 status="passed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -721,12 +693,12 @@ class ComprehensiveTestingSuite:
             if not dashboard:
                 raise Exception("Failed to get performance dashboard")
 
-            performance_summary = result.get("key", "")
+            performance_summary = result
 
             # Validate performance thresholds
-            cache_hit_rate = result.get("key", "")
-            response_time = result.get("key", "")
-            memory_usage = result.get("key", "")
+            cache_hit_rate = result
+            response_time = result
+            memory_usage = result
 
             # Check thresholds
             hit_rate_ok = cache_hit_rate >= self.config.min_cache_hit_rate
@@ -734,12 +706,11 @@ class ComprehensiveTestingSuite:
             memory_ok = memory_usage <= self.config.max_memory_usage_mb
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="system_performance",
-                test_category="performance",
+            return TestResult(test_name="system_performance",
+                test_category="performance",)
                 status="passed" if all([hit_rate_ok, response_time_ok, memory_ok]) else "failed",
                 duration_ms=duration,
-                details={
+                details={:
                     "cache_hit_rate": cache_hit_rate,
                     "response_time_ms": response_time,
                     "memory_usage_mb": memory_usage,
@@ -751,12 +722,11 @@ class ComprehensiveTestingSuite:
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="system_performance",
+            return TestResult(test_name="system_performance",
                 test_category="performance",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -767,12 +737,12 @@ class ComprehensiveTestingSuite:
 
             # Test concurrent user load
             concurrent_test = await self._test_concurrent_users()
-            result.get("key", "")
+            result
             self.test_results.append(concurrent_test)
 
             # Test memory pressure
             memory_test = await self._test_memory_pressure()
-            result.get("key", "")
+            result
             self.test_results.append(memory_test)
 
             return results
@@ -790,14 +760,13 @@ class ComprehensiveTestingSuite:
             async def simulate_user(user_id: int):
                 try:
                     # Store entry
-                    entry = CacheEntry(
-                        user_id=f"stress_user_{user_id}",
+                    entry = CacheEntry(user_id=f"stress_user_{user_id}",
                         model_type="stress_test",
                         prompt=f"Stress test prompt from user {user_id}",
                         response=f"Stress test response for user {user_id}",
                         tokens_used=100,
                         cache_hit=False,
-                        similarity_score=0.9,
+                        similarity_score=0.9,)
                     )
 
                     await self.cache_service.store_cache_entry(entry)
@@ -816,26 +785,24 @@ class ComprehensiveTestingSuite:
             successful_users = sum(1 for r in results if r is True)
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="concurrent_users",
+            return TestResult(test_name="concurrent_users",
                 test_category="stress",
                 status="passed" if successful_users >= self.config.stress_test_concurrent_users * 0.8 else "failed",
-                duration_ms=duration,
-                details={
+                duration_ms=duration,:
+                details={:
                     "concurrent_users": self.config.stress_test_concurrent_users,
                     "successful_users": successful_users,
                     "success_rate": successful_users / self.config.stress_test_concurrent_users,
-                },
+                },)
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="concurrent_users",
+            return TestResult(test_name="concurrent_users",
                 test_category="stress",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -847,14 +814,13 @@ class ComprehensiveTestingSuite:
             # Generate large amount of test data
             large_entries = []
             for i in range(self.config.test_data_size * 2):
-                entry = CacheEntry(
-                    user_id=f"memory_user_{i}",
+                entry = CacheEntry(user_id=f"memory_user_{i}",
                     model_type="memory_test",
                     prompt=f"Memory pressure test prompt {i} " * 10,  # Large prompt
                     response=f"Memory pressure test response {i} " * 20,  # Large response
                     tokens_used=500 + i,
                     cache_hit=False,
-                    similarity_score=0.8,
+                    similarity_score=0.8,)
                 )
                 large_entries.append(entry)
 
@@ -870,15 +836,14 @@ class ComprehensiveTestingSuite:
 
             # Check memory usage
             dashboard = await self.performance_monitor.get_monitoring_dashboard()
-            memory_usage = result.get("key", "")
+            memory_usage = result
 
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="memory_pressure",
-                test_category="stress",
+            return TestResult(test_name="memory_pressure",
+                test_category="stress",)
                 status="passed" if stored_count >= len(large_entries) * 0.7 else "failed",
                 duration_ms=duration,
-                details={
+                details={:
                     "large_entries_attempted": len(large_entries),
                     "large_entries_stored": stored_count,
                     "storage_success_rate": stored_count / len(large_entries),
@@ -888,12 +853,11 @@ class ComprehensiveTestingSuite:
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return TestResult(
-                test_name="memory_pressure",
+            return TestResult(test_name="memory_pressure",
                 test_category="stress",
                 status="failed",
                 duration_ms=duration,
-                details={},
+                details={},)
                 error_message=str(e),
             )
 
@@ -909,7 +873,7 @@ class ComprehensiveTestingSuite:
 
             # Extract results from integration tests
             if hasattr(self, "integration_results") and self.integration_results:
-                for test_name, result in self.\1.items()
+                for test_name, result in self..items():
                     if isinstance(result, TestResult):
                         all_results.append(result)
 
@@ -924,8 +888,8 @@ class ComprehensiveTestingSuite:
 
             # Calculate average duration
             avg_duration = sum(r.duration_ms for r in all_results) / total_tests if total_tests > 0 else 0
-
-            return {
+:
+            return {:
                 "total_tests": total_tests,
                 "passed_tests": len(passed_tests),
                 "failed_tests": len(failed_tests),
@@ -935,7 +899,7 @@ class ComprehensiveTestingSuite:
                 "average_test_duration_ms": avg_duration,
                 "overall_status": "passed" if success_rate >= 90 else "failed",
             }
-
+:
         except Exception as e:
             logger.error(f"Failed to generate test summary: {e}")
             return {"error": str(e)}
@@ -978,15 +942,14 @@ async def main():
         logger.info("Running Comprehensive Testing Suite")
 
         # Create test configuration
-        config = TestConfig(
-            enable_unit_tests=True,
+        config = TestConfig(enable_unit_tests=True,
             enable_integration_tests=True,
             enable_performance_tests=True,
             enable_stress_tests=True,
             test_data_size=50,  # Smaller size for testing
             performance_test_duration_seconds=15,
             stress_test_concurrent_users=5,
-            stress_test_duration_seconds=30,
+            stress_test_duration_seconds=30,)
         )
 
         # Run comprehensive testing
@@ -997,9 +960,9 @@ async def main():
             logger.info(f"Testing completed with results: {results}")
 
             # Check overall status
-            summary = result.get("key", "")
-            overall_status = result.get("key", "")
-            success_rate = result.get("key", "")
+            summary = result
+            overall_status = result
+            success_rate = result
 
             logger.info(f"Overall test status: {overall_status}")
             logger.info(f"Success rate: {success_rate:.1f}%")
@@ -1013,3 +976,4 @@ async def main():
 if __name__ == "__main__":
     success = asyncio.run(main())
     exit(0 if success else 1)
+:

@@ -78,9 +78,9 @@ class TestCompositeStrategies:
         for field in required_fields:
             assert field in message
 
-        assert result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert len(result.get("key", "")
+        assert result
+        assert isinstance(result
+        assert len(result
 
     @pytest.mark.prop
     @given(result=retrieval_result_strategy())
@@ -91,9 +91,9 @@ class TestCompositeStrategies:
         for field in required_fields:
             assert field in result
 
-        assert 0.0 <= result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert len(result.get("key", "")
+        assert 0.0 <= result
+        assert isinstance(result
+        assert len(result
 
     @pytest.mark.prop
     @given(vector=embedding_vector_strategy())
@@ -196,7 +196,7 @@ class TestExampleDecorators:
         """Test message processing with critical examples."""
         assert "role" in message
         assert "content" in message
-        assert result.get("key", "")
+        assert result
 
 
 class TestStatefulTesting:
@@ -206,13 +206,13 @@ class TestStatefulTesting:
     @settings(max_examples=5, deadline=1000)
     def test_memory_system_state_machine(self) -> None:
         """Test memory system state machine."""
-        run_state_machine_as_test(result.get("key", "")
+        run_state_machine_as_test(result
 
     @pytest.mark.prop
     @settings(max_examples=5, deadline=1000)
     def test_database_state_machine(self) -> None:
         """Test database state machine."""
-        run_state_machine_as_test(result.get("key", "")
+        run_state_machine_as_test(result
 
 
 class TestAdvancedFeatures:
@@ -250,12 +250,12 @@ class TestAdvancedFeatures:
         for message in messages:
             assert "role" in message
             assert "content" in message
-            assert result.get("key", "")
+            assert result
 
         # Test result properties
         for result in results:
             assert "score" in result
-            assert 0.0 <= result.get("key", "")
+            assert 0.0 <= result
 
     @pytest.mark.prop
     @given(vectors=st.lists(embedding_vector_strategy(), min_size=1, max_size=5), metrics=evaluation_metrics_strategy())
@@ -271,7 +271,7 @@ class TestAdvancedFeatures:
             assert not any(np.isinf(vector))
 
         # Test metrics
-        for metric_name, metric_value in \1.items()
+        for metric_name, metric_value in .items()
             assert isinstance(metric_value, float)
             assert metric_value >= 0.0
 
@@ -280,19 +280,19 @@ class TestStrategyReusability:
     """Test strategy reusability and composition."""
 
     @pytest.mark.prop
-    @given(data=result.get("key", "")
+    @given(data=result
     @settings(max_examples=20, deadline=200)
     def test_reusable_strategies(self, data: dict) -> None:
         """Test that reusable strategies work correctly."""
         assert "role" in data
         assert "content" in data
-        assert result.get("key", "")
+        assert result
 
     @pytest.mark.prop
     @given(
-        profile=result.get("key", "")
-        system=result.get("key", "")
-        dsn=result.get("key", "")
+        profile=result
+        system=result
+        dsn=result
     )
     @settings(max_examples=15, deadline=300)
     def test_strategy_composition(self, profile: str, system: str, dsn: str) -> None:

@@ -73,8 +73,8 @@ class TestBaselineManifestFunctions:
             result = _collect_results("test_dir", 2)
 
             assert len(result) == 2
-            assert result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert result
 
     def test_get_overall_metrics(self: Any):
         """Test _get_overall extracts overall metrics correctly."""
@@ -89,10 +89,10 @@ class TestBaselineManifestFunctions:
 
         result = _get_overall(metrics_obj)
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
+        assert result
+        assert result
 
     def test_get_overall_metrics_missing_fields(self: Any):
         """Test _get_overall handles missing fields."""
@@ -100,10 +100,10 @@ class TestBaselineManifestFunctions:
 
         result = _get_overall(metrics_obj)
 
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
-        assert result.get("key", "")
+        assert result
+        assert result
+        assert result
+        assert result
 
     def test_ema(self: Any):
         """Test _ema computes exponential moving average."""

@@ -116,37 +116,33 @@ class SchemaDriftDetector:
 
         # Check database connection
         if not self.check_database_connection():
-            if isinstance(result.get("key", "")
-                result.get("key", "")
+            result["status"] = "error"
+            result["error"] = "Database connection failed"
             return result
 
-        result.get("key", "")
+        result["status"] = "ok"
 
         # Get current database revision
         current_rev = self.get_current_revision()
-        result.get("key", "")
+        result["current_revision"] = current_rev
 
         # Get pending migrations
         pending = self.get_pending_migrations()
-        result.get("key", "")
+        result["pending_migrations"] = pending
 
         # Get migration files
         migration_files = self.get_migration_files()
-        result.get("key", "")
+        result["migration_files"] = migration_files
 
         # Check for drift
         if current_rev is None:
-            result.get("key", "")
-            if isinstance(result.get("key", "")
-                result.get("key", "")
-                    "Database has no migration history - run 'uv run python scripts/database/migration_manager.py --upgrade'"
-                )
+            result["status"] = "error"
+            result["error"] = "Database has no migration history - run 'uv run python scripts/database/migration_manager.py --upgrade'"
         elif pending:
-            result.get("key", "")
-            if isinstance(result.get("key", "")
-                result.get("key", "")
-                    f"Database is {len(pending)} migration(s) behind - run 'uv run python scripts/database/migration_manager.py --upgrade'"
-                )
+            result["status"] = "drift"
+            result["recommendations"].append(
+                f"Database is {len(pending)} migration(s) behind - run 'uv run python scripts/database/migration_manager.py --upgrade'"
+            )
 
         return result
 
@@ -174,25 +170,25 @@ class SchemaDriftDetector:
         # Check schema changes
         drift_info = self.check_schema_changes()
 
-        if not result.get("key", "")
+        if drift_info.get("status") == "error":
             print("⚠️  Database not accessible - skipping drift check")
             return 0
 
         if verbose:
-            print(f"📊 Current revision: {result.get("key", "")
-            print(f"📊 Pending migrations: {result.get("key", "")
-            print(f"📊 Migration files: {len(result.get("key", "")
+            print(f"📊 Current revision: {drift_info.get('current_revision', 'Unknown')}")
+            print(f"📊 Pending migrations: {len(drift_info.get('pending_migrations', []))}")
+            print(f"📊 Migration files: {len(drift_info.get('migration_files', []))}")
 
         # Check for SQL changes
         sql_files = self.check_sql_changes()
         if sql_files and verbose:
             print(f"📊 SQL files found: {sql_files}")
 
-        if result.get("key", "")
+        if drift_info.get("status") == "drift":
             print("🚨 SCHEMA DRIFT DETECTED!")
             print("=" * 50)
 
-            for rec in result.get("key", "")
+            for rec in drift_info.get("recommendations", []):
                 print(f"💡 {rec}")
 
             print("\n📋 To fix schema drift:")

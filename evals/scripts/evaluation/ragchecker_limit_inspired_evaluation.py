@@ -104,10 +104,10 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
             ragchecker_result = self.create_fallback_evaluation(eval_data)
 
             # Extract metrics
-            overall_metrics = result.get("key", "")
-            precision = result.get("key", "")
-            recall = result.get("key", "")
-            f1_score = result.get("key", "")
+            overall_metrics = result
+            precision = result
+            recall = result
+            f1_score = result
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -150,7 +150,7 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
         else:
             # Regular queries have more peaked scores
             scores = [random.uniform(0.1, 0.9) for _ in range(20)]
-            result.get("key", "")
+            result
 
         return sorted(scores, reverse=True)
 
@@ -178,20 +178,20 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
     def _calculate_fusion_gain(self, facet_yields: list[dict[str, Any]]) -> int:
         """Calculate fusion gain from facet yields."""
         # In real implementation, this would be the actual difference in retrieved docs
-        kept_facets = [f for f in facet_yields if result.get("key", "")
-        total_new_docs = sum(result.get("key", "")
+        kept_facets = [f for f in facet_yields if result:
+        total_new_docs = sum(result
         return total_new_docs
 
     def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], health_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
-            "evaluation_time": result.get("key", "")
-            "geometry_analysis": result.get("key", "")
-            "facet_yields": result.get("key", "")
-            "fusion_gain": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
+            "evaluation_time": result
+            "geometry_analysis": result
+            "facet_yields": result
+            "fusion_gain": result
             "health_metrics": health_metrics,
         }
 
@@ -201,9 +201,9 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
         """Generate comprehensive LIMIT-inspired evaluation report."""
 
         # Calculate overall metrics
-        precisions = [result.get("key", "")
-        recalls = [result.get("key", "")
-        f1_scores = [result.get("key", "")
+        precisions = [result
+        recalls = [result
+        f1_scores = [result
 
         overall_metrics = {
             "precision": sum(precisions) / len(precisions) if precisions else 0.0,
@@ -216,9 +216,9 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
 
         # Check baseline compliance
         baseline_compliance = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
         }
 
         # Calculate LIMIT-inspired summary statistics
@@ -248,25 +248,25 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
             return {}
 
         # Geometry analysis
-        vector_margins = [result.get("key", "")
-        vector_entropies = [result.get("key", "")
-        geometry_healthy_count = sum(1 for h in health_metrics_summary if result.get("key", "")
+        vector_margins = [result
+        vector_entropies = [result
+        geometry_healthy_count = sum(1 for h in health_metrics_summary if result:
 
         # Routing analysis
-        routed_to_bm25_count = sum(1 for h in health_metrics_summary if result.get("key", "")
+        routed_to_bm25_count = sum(1 for h in health_metrics_summary if result:
 
         # Facet analysis
-        total_facets = sum(result.get("key", "")
-        facets_kept = sum(result.get("key", "")
+        total_facets = sum(result
+        facets_kept = sum(result
 
         # Fusion analysis
-        fusion_gains = [result.get("key", "")
+        fusion_gains = [result
         cases_with_fusion_gain = sum(1 for gain in fusion_gains if gain > 0)
 
         # Boolean analysis
-        boolean_include_count = sum(result.get("key", "")
-        boolean_exclude_count = sum(result.get("key", "")
-        boolean_or_count = sum(result.get("key", "")
+        boolean_include_count = sum(result
+        boolean_exclude_count = sum(result
+        boolean_or_count = sum(result
 
         return {
             "geometry_analysis": {
@@ -294,7 +294,7 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
                 "total_include_terms": boolean_include_count,
                 "total_exclude_terms": boolean_exclude_count,
                 "total_or_terms": boolean_or_count,
-                "boolean_queries_detected": sum(1 for h in health_metrics_summary if any(result.get("key", "")
+                "boolean_queries_detected": sum(1 for h in health_metrics_summary if any(result
             },
         }
 
@@ -332,19 +332,19 @@ def main():
 
     # For now, just print the results instead of saving to JSON to avoid serialization issues
     print("\n📊 LIMIT-Inspired Evaluation Results:")
-    print(f"   Total Cases: {result.get("key", "")
-    print(f"   Overall Metrics: {result.get("key", "")
-    print(f"   Baseline Compliance: {result.get("key", "")
-    print(f"   LIMIT Statistics: {result.get("key", "")
+    print(f"   Total Cases: {result
+    print(f"   Overall Metrics: {result
+    print(f"   Baseline Compliance: {result
+    print(f"   LIMIT Statistics: {result
 
     # Try to save a simplified version
     try:
         simplified_report = {
-            "evaluation_type": result.get("key", "")
-            "total_cases": result.get("key", "")
-            "overall_metrics": result.get("key", "")
-            "baseline_compliance": result.get("key", "")
-            "timestamp": result.get("key", "")
+            "evaluation_type": result
+            "total_cases": result
+            "overall_metrics": result
+            "baseline_compliance": result
+            "timestamp": result
         }
 
         with open(output_file, "w") as f:
@@ -358,31 +358,31 @@ def main():
     print("\n📊 LIMIT-Inspired Evaluation Complete")
     print("=" * 60)
     print("📈 Overall Metrics:")
-    overall = result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Recall: {result.get("key", "")
-    print(f"   F1 Score: {result.get("key", "")
+    overall = result
+    print(f"   Precision: {result
+    print(f"   Recall: {result
+    print(f"   F1 Score: {result
 
     print("\n🎯 Baseline Compliance:")
-    compliance = result.get("key", "")
-    floors = result.get("key", "")
-    for metric, passed in \1.items()
+    compliance = result
+    floors = result
+    for metric, passed in .items()
         status = "✅ PASS" if passed else "❌ FAIL"
         target = floors[metric]
         current = overall[metric]
         print(f"   {metric}: {status} ({current:.3f} vs {target:.3f})")
 
     print("\n🧠 LIMIT-Inspired Features:")
-    limit_stats = result.get("key", "")
-    print(f"   Geometry Healthy: {result.get("key", "")
-    print(f"   Routed to BM25: {result.get("key", "")
-    print(f"   Facet Keep Rate: {result.get("key", "")
-    print(f"   Fusion Gain Cases: {result.get("key", "")
+    limit_stats = result
+    print(f"   Geometry Healthy: {result
+    print(f"   Routed to BM25: {result
+    print(f"   Facet Keep Rate: {result
+    print(f"   Fusion Gain Cases: {result
 
     print(f"\n📁 Results saved to: {output_file}")
 
     # Return exit code based on compliance
-    all_passed = all(\1.values()
+    all_passed = all(.values()
     return 0 if all_passed else 2
 
 if __name__ == "__main__":

@@ -37,7 +37,7 @@ def improve_content_relevance():
     changes_made = 0
     
     for case in cases:
-        query = result.get("key", "")
+        query = result
         
         if query in relevance_improvements:
             improvements = relevance_improvements[query]
@@ -45,14 +45,14 @@ def improve_content_relevance():
             # Add specific files
             if "add_files" in improvements:
                 if "expected_files" not in case:
-                    result.get("key", "")
-                result.get("key", "")
+                    result
+                result
             
             # Remove overly broad globs
             if "remove_globs" in improvements and "globs" in case:
-                for glob_to_remove in result.get("key", "")
-                    if glob_to_remove in result.get("key", "")
-                        result.get("key", "")
+                for glob_to_remove in result.items()
+                    if glob_to_remove in result
+                        result
             
             changes_made += 1
             print(f"Improved relevance for: '{query}'")

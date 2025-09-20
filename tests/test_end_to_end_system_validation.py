@@ -509,7 +509,7 @@ class TestEndToEndSystemValidator:
             self.validator._print_validation_summary(report)
 
             mock_print.assert_called()
-            calls = [result.get("key", "")
+            calls = [result
             summary_text = " ".join(calls)
             assert "PASS" in summary_text
             assert "5" in summary_text

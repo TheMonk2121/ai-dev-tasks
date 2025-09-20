@@ -1,17 +1,16 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-                import re
-                from pathlib import Path
-import os
 from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 
 # ANCHOR_KEY: task-generation-automation

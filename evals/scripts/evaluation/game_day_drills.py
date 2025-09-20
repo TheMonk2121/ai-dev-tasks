@@ -32,27 +32,27 @@ class GameDayDrillsSystem:
         # Drill 1: Brownout/rollback drill
         print("🔄 Drill 1: Brownout/rollback drill...")
         rollback_drill = self._run_rollback_drill()
-        result.get("key", "")
+        result
 
         # Drill 2: Negative control audit
         print("🚫 Drill 2: Negative control audit...")
         negative_drill = self._run_negative_control_audit()
-        result.get("key", "")
+        result
 
         # Drill 3: Prefix guard
         print("🛡️ Drill 3: Prefix guard...")
         prefix_drill = self._run_prefix_guard_drill()
-        result.get("key", "")
+        result
 
         # Determine overall status
-        all_drills_passed = all(result.get("key", "")
-        result.get("key", "")
+        all_drills_passed = all(result
+        result
 
         # Print summary
         print("\n📊 Game-Day Drills Summary:")
-        for drill_name, drill_result in result.get("key", "")
-            status_emoji = "✅" if result.get("key", "")
-            print(f"  {status_emoji} {drill_name}: {result.get("key", "")
+        for drill_name, drill_result in result
+            status_emoji = "✅" if result:
+            print(f"  {status_emoji} {drill_name}: {result
 
         if all_drills_passed:
             print("\n🎉 All drills passed - Production ready!")
@@ -83,7 +83,7 @@ class GameDayDrillsSystem:
                 rollback_cmd, shell=True, capture_output=True, text=True, timeout=300  # 5 minute timeout
             )
 
-            result.get("key", "")
+            result
                 "success": result.returncode == 0,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
@@ -92,34 +92,34 @@ class GameDayDrillsSystem:
             # Step 2: Verify active pointer flips
             print("    📍 Step 2: Verifying active pointer flips...")
             pointer_check = self._verify_active_pointer_flip()
-            result.get("key", "")
+            result
 
             # Step 3: Verify cache clears
             print("    🧹 Step 3: Verifying cache clears...")
             cache_check = self._verify_cache_clear()
-            result.get("key", "")
+            result
 
             # Step 4: Verify smoke eval stays green
             print("    🧪 Step 4: Verifying smoke eval stays green...")
             smoke_check = self._verify_smoke_eval_green()
-            result.get("key", "")
+            result
 
             # Step 5: Verify audit log written
             print("    📝 Step 5: Verifying audit log written...")
             audit_check = self._verify_audit_log_written()
-            result.get("key", "")
+            result
 
             # Determine if drill passed
-            all_steps_passed = all(result.get("key", "")
-            result.get("key", "")
+            all_steps_passed = all(result
+            result
 
-            result.get("key", "")
-                f"Rollback drill: {'passed' if all_steps_passed else 'failed'} - {len([s for s in result.get("key", "")
+            result
+                f"Rollback drill: {'passed' if all_steps_passed else 'failed'} - {len([s for s in result.items()
             )
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         return drill_result
 
@@ -147,23 +147,23 @@ class GameDayDrillsSystem:
 
         try:
             for case in negative_cases:
-                print(f"    🧪 Testing case {result.get("key", "")
+                print(f"    🧪 Testing case {result
 
                 # Run the case through the system
                 case_result = self._run_negative_case(case)
-                result.get("key", "")
+                result
 
             # Check if all cases passed
-            all_cases_passed = all(result.get("key", "")
-            result.get("key", "")
+            all_cases_passed = all(result
+            result
 
-            result.get("key", "")
-                f"Negative control audit: {'passed' if all_cases_passed else 'failed'} - {len([c for c in result.get("key", "")
+            result
+                f"Negative control audit: {'passed' if all_cases_passed else 'failed'} - {len([c for c in result.items()
             )
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         return drill_result
 
@@ -182,29 +182,29 @@ class GameDayDrillsSystem:
             # Check 1: Run prefix leakage SQL check
             print("    🔍 Check 1: Running prefix leakage SQL check...")
             sql_check = self._run_prefix_leakage_sql_check()
-            result.get("key", "")
+            result
 
             # Check 2: Verify zero rows in BM25
             print("    🔍 Check 2: Verifying zero rows in BM25...")
             bm25_check = self._verify_bm25_prefix_clean()
-            result.get("key", "")
+            result
 
             # Check 3: Verify prefix guard is active
             print("    🔍 Check 3: Verifying prefix guard is active...")
             guard_check = self._verify_prefix_guard_active()
-            result.get("key", "")
+            result
 
             # Determine if drill passed
-            all_checks_passed = all(result.get("key", "")
-            result.get("key", "")
+            all_checks_passed = all(result
+            result
 
-            result.get("key", "")
-                f"Prefix guard drill: {'passed' if all_checks_passed else 'failed'} - {len([c for c in result.get("key", "")
+            result
+                f"Prefix guard drill: {'passed' if all_checks_passed else 'failed'} - {len([c for c in result.items()
             )
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         return drill_result
 
@@ -221,8 +221,8 @@ class GameDayDrillsSystem:
                 pointer_data = json.load(f)
 
             # Check if pointer has rollback flag
-            has_rollback = result.get("key", "")
-            is_active = result.get("key", "")
+            has_rollback = result
+            is_active = result
 
             return {
                 "success": has_rollback and is_active,
@@ -292,7 +292,7 @@ class GameDayDrillsSystem:
             for line in lines[-10:]:  # Check last 10 lines
                 try:
                     log_entry = json.loads(line.strip())
-                    if result.get("key", "")
+                    if result:
                         recent_rollbacks.append(log_entry)
                 except json.JSONDecodeError:
                     continue
@@ -311,8 +311,8 @@ class GameDayDrillsSystem:
         try:
             # This would run the case through your actual RAG system
             # For now, simulate the test
-            query = result.get("key", "")
-            expected = result.get("key", "")
+            query = result
+            expected = result
 
             # Simulate system response
             system_response = "not found"  # This would come from your actual system
@@ -321,7 +321,7 @@ class GameDayDrillsSystem:
             response_matches = system_response.lower() == expected.lower()
 
             return {
-                "case_id": result.get("key", "")
+                "case_id": result
                 "query": query,
                 "expected": expected,
                 "actual": system_response,
@@ -331,7 +331,7 @@ class GameDayDrillsSystem:
 
         except Exception as e:
             return {
-                "case_id": result.get("key", "")
+                "case_id": result
                 "passed": False,
                 "error": str(e),
                 "timestamp": datetime.now().isoformat(),
@@ -397,7 +397,7 @@ def main():
     result = drills_system.run_game_day_drills()
 
     # Exit with appropriate code
-    if result.get("key", "")
+    if result:
         print("\n🎉 Game-day drills passed - Production ready!")
         sys.exit(0)
     else:

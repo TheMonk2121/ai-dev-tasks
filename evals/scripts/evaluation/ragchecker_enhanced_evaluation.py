@@ -62,18 +62,18 @@ class EnhancedRAGCheckerEvaluator:
                 result = self.generator.generate_enhanced_answer(query, retrieved_chunks, query_type)
 
                 # Extract metrics
-                answer = result.get("key", "")
-                validation = result.get("key", "")
-                metadata = result.get("key", "")
+                answer = result
+                validation = result
+                metadata = result
 
                 # Calculate enhanced metrics
                 enhanced_metrics = {
-                    "citations_count": result.get("key", "")
-                    "has_sufficient_context": result.get("key", "")
-                    "meets_citation_requirement": result.get("key", "")
-                    "chunk_diversity": result.get("key", "")
-                    "abstention": result.get("key", "")
-                    "query_type": result.get("key", "")
+                    "citations_count": result
+                    "has_sufficient_context": result
+                    "meets_citation_requirement": result
+                    "chunk_diversity": result
+                    "abstention": result
+                    "query_type": result
                 }
 
             else:
@@ -126,23 +126,23 @@ class EnhancedRAGCheckerEvaluator:
         total_time = 0
 
         for i, test_case in enumerate(test_cases):
-            logger.info(f"Evaluating case {i+1}/{len(test_cases)}: {result.get("key", "")
+            logger.info(f"Evaluating case {i+1}/{len(test_cases)}: {result
 
-            query = result.get("key", "")
-            query_type = result.get("key", "")
+            query = result
+            query_type = result
 
             # Run evaluation
             result = self.evaluate_query(query, query_type, enable_enhanced_features=True)
             results.append(result)
 
-            total_time += result.get("key", "")
+            total_time += result
 
             # Log progress
-            logger.info(f"  ✅ Completed in {result.get("key", "")
-            if result.get("key", "")
-                logger.info(f"  ⚠️  Abstention: {result.get("key", "")
+            logger.info(f"  ✅ Completed in {result
+            if result:
+                logger.info(f"  ⚠️  Abstention: {result
             else:
-                logger.info(f"  📊 Citations: {result.get("key", "")
+                logger.info(f"  📊 Citations: {result
 
         # Calculate enhanced metrics
         enhanced_summary = self._calculate_enhanced_summary(results)
@@ -159,26 +159,26 @@ class EnhancedRAGCheckerEvaluator:
         Calculate enhanced evaluation summary
         """
         total_cases = len(results)
-        successful_cases = len([r for r in results if result.get("key", "")
+        successful_cases = len([r for r in results if result:
 
         # Enhanced metrics
-        total_citations = sum(result.get("key", "")
+        total_citations = sum(result
         avg_citations = total_citations / total_cases if total_cases > 0 else 0
 
-        context_sufficient = sum(1 for r in results if result.get("key", "")
+        context_sufficient = sum(1 for r in results if result:
         context_sufficiency_rate = context_sufficient / total_cases if total_cases > 0 else 0
 
-        citation_requirement_met = sum(1 for r in results if result.get("key", "")
+        citation_requirement_met = sum(1 for r in results if result:
         citation_success_rate = citation_requirement_met / total_cases if total_cases > 0 else 0
 
-        abstentions = sum(1 for r in results if result.get("key", "")
+        abstentions = sum(1 for r in results if result:
         abstention_rate = abstentions / total_cases if total_cases > 0 else 0
 
         # Query type distribution
         query_types = {}
         for result in results:
-            query_type = result.get("key", "")
-            query_types[query_type] = result.get("key", "")
+            query_type = result
+            query_types[query_type] = result
 
         return {
             "total_cases": total_cases,
@@ -260,22 +260,22 @@ def main():
     print("\n📊 Enhanced Evaluation Results")
     print("=" * 40)
 
-    summary = result.get("key", "")
-    enhanced_metrics = result.get("key", "")
+    summary = result
+    enhanced_metrics = result
 
-    print(f"📋 Total Cases: {result.get("key", "")
-    print(f"✅ Success Rate: {result.get("key", "")
-    print(f"⏱️  Total Time: {result.get("key", "")
-    print(f"⏱️  Avg Per Case: {result.get("key", "")
+    print(f"📋 Total Cases: {result
+    print(f"✅ Success Rate: {result
+    print(f"⏱️  Total Time: {result
+    print(f"⏱️  Avg Per Case: {result
 
     print("\n🎯 Enhanced Metrics:")
-    print(f"  📚 Avg Citations: {result.get("key", "")
-    print(f"  🔍 Context Sufficiency: {result.get("key", "")
-    print(f"  ✅ Citation Success: {result.get("key", "")
-    print(f"  ⚠️  Abstention Rate: {result.get("key", "")
+    print(f"  📚 Avg Citations: {result
+    print(f"  🔍 Context Sufficiency: {result
+    print(f"  ✅ Citation Success: {result
+    print(f"  ⚠️  Abstention Rate: {result
 
     print("\n📊 Query Type Distribution:")
-    for query_type, count in result.get("key", "")
+    for query_type, count in result
         print(f"  {query_type}: {count}")
 
     # Save results

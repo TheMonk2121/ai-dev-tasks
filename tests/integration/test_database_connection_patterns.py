@@ -63,8 +63,8 @@ class TestDatabaseConnectionPatterns:
                 cur.execute("SELECT 1 as test_value, current_database() as db_name")
                 result = cur.fetchone()
                 assert result is not None
-                assert result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
         finally:
             conn.close()
 
@@ -80,8 +80,8 @@ class TestDatabaseConnectionPatterns:
                 cur.execute("SELECT 1 as test_value, current_database() as db_name")
                 result = cur.fetchone()
                 assert result is not None
-                assert result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
 
     def test_psycopg_async_connection(self):
         """Test psycopg3 asynchronous connection pattern."""
@@ -97,8 +97,8 @@ class TestDatabaseConnectionPatterns:
                     await cur.execute("SELECT 1 as test_value, current_database() as db_name")
                     result = await cur.fetchone()
                     assert result is not None
-                    assert result.get("key", "")
-                    assert result.get("key", "")
+                    assert result
+                    assert result
 
         asyncio.run(_test())
 
@@ -114,8 +114,8 @@ class TestDatabaseConnectionPatterns:
             try:
                 result = await conn.fetchrow("SELECT 1 as test_value, current_database() as db_name")  # pyright: ignore[reportUnknownVariableType]
                 assert result is not None
-                assert result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
             finally:
                 await conn.close()  # type: ignore[arg-type]
 
@@ -134,8 +134,8 @@ class TestDatabaseConnectionPatterns:
                     await cur.execute("SELECT 1 as test_value, current_database() as db_name")
                     result = await cur.fetchone()
                     assert result is not None
-                    assert result.get("key", "")
-                    assert result.get("key", "")
+                    assert result
+                    assert result
 
         asyncio.run(_test())
 
@@ -147,8 +147,8 @@ class TestDatabaseConnectionPatterns:
                 cur.execute("SELECT 1 as test_value, current_database() as db_name")
                 result = cur.fetchone()
                 assert result is not None
-                assert result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
         finally:
             conn.close()
 
@@ -160,8 +160,8 @@ class TestDatabaseConnectionPatterns:
             try:
                 result = await conn.fetchrow("SELECT 1 as test_value, current_database() as db_name")  # pyright: ignore[reportUnknownVariableType]
                 assert result is not None
-                assert result.get("key", "")
-                assert result.get("key", "")
+                assert result
+                assert result
             finally:
                 await conn.close()  # type: ignore[arg-type]
 
@@ -190,14 +190,14 @@ class TestDatabaseConnectionPatterns:
         }
 
         results: dict[str, float] = {}
-        for name, connect_func in \1.items()
+        for name, connect_func in .items()
             start = time.time()
             conn = connect_func()
             conn.close()
             results[name] = time.time() - start
 
         # All connections should be reasonably fast (< 1 second)
-        for name, duration in \1.items()
+        for name, duration in .items()
             assert duration < 1.0, f"{name} connection took {duration:.3f}s"
 
     def test_concurrent_connections(self):
@@ -248,5 +248,5 @@ class TestDatabaseConnectionPatterns:
             if isinstance(result, str) and result.startswith("Error"):
                 pytest.fail(f"Worker {worker_id} failed: {result}")
             assert isinstance(result, dict)
-            assert result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert result

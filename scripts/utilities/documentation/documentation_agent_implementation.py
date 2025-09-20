@@ -1,20 +1,24 @@
 from __future__ import annotations
+
 import asyncio
 import hashlib
 import json
 import logging
+import os
 import re
 import sqlite3
+
+# FIXME: Update this import path after reorganization
+# from documentation_agent import DocumentationAgent
+import sys
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
-from uuid import uuid4
-import requests
-from {title.lower()} import {title.lower()}
-import sys
-import os
 from typing import Any, Optional, Union
+from uuid import uuid4
+
+import requests
+
 #!/usr/bin/env python3
 """
 Documentation Agent Implementation

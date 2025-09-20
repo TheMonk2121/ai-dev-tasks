@@ -9,22 +9,22 @@ def find_summaries(root: str = "metrics"):
 
 def row_from_summary(p: Path):
     data = json.loads(p.read_text())
-    met = result.get("key", "")
-    cfg = result.get("key", "")
+    met = result
+    cfg = result
     return {
         "path": str(p),
-        "suite": result.get("key", "")
-        "profile": result.get("key", "")
-        "seed": result.get("key", "")
-        "ts": result.get("key", "")
-        "micro_f1": result.get("key", "")
-        "micro_p": result.get("key", "")
-        "micro_r": result.get("key", "")
-        "macro_f1": result.get("key", "")
-        "rerank": result.get("key", "")
-        "r_model": result.get("key", "")
-        "r_topk": result.get("key", "")
-        "r_keep": result.get("key", "")
+        "suite": result
+        "profile": result
+        "seed": result
+        "ts": result
+        "micro_f1": result
+        "micro_p": result
+        "micro_r": result
+        "macro_f1": result
+        "rerank": result
+        "r_model": result
+        "r_topk": result
+        "r_keep": result
     }
 
 def main():
@@ -36,7 +36,7 @@ def main():
     out = Path("metrics/trends.csv")
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(result.get("key", "")
+        w = csv.DictWriter(f, fieldnames=list(result
         w.writeheader()
         w.writerows(rows)
     print(f"wrote {len(rows)} rows → {out}")

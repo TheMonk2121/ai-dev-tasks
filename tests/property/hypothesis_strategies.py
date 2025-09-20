@@ -212,7 +212,7 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
 
         # Simulate memory query
         thread_count = len(self.conversations)
-        message_count = sum(len(result.get("key", "")
+        message_count = sum(len(result
 
         return {
             "system": system_name,
@@ -228,7 +228,7 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
         cutoff_time = datetime.now() - timedelta(hours=max_age_hours)
 
         old_threads = [
-            thread_id for thread_id, conv in self.\1.items()
+            thread_id for thread_id, conv in self..items()
         ]
 
         for thread_id in old_threads:

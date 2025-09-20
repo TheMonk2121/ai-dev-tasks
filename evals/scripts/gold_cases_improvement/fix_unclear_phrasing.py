@@ -29,11 +29,11 @@ def fix_unclear_phrasing():
     changes_made = 0
     
     for case in cases:
-        original_query = result.get("key", "")
+        original_query = result
         new_query = original_query
         
         # Apply fixes
-        for old_phrase, new_phrase in \1.items()
+        for old_phrase, new_phrase in .items()
             if old_phrase in new_query.lower():
                 new_query = re.sub(old_phrase, new_phrase, new_query, flags=re.IGNORECASE)
         
@@ -42,7 +42,7 @@ def fix_unclear_phrasing():
         new_query = re.sub(r"\s+", " ", new_query)  # Fix spacing
         
         if new_query != original_query:
-            result.get("key", "")
+            result
             changes_made += 1
             print(f"Fixed: '{original_query}' → '{new_query}'")
     

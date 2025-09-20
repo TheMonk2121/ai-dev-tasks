@@ -1,9 +1,12 @@
-from __future__ import annotations
-from pathlib import Path
-import yaml
-import sys
-import os
 #!/usr/bin/env python3
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+import yaml
+
 """
 Add Baseline Check to Pre-commit
 
@@ -24,10 +27,10 @@ def add_baseline_check_to_precommit():
         config = yaml.safe_load(f)
 
     # Check if baseline check already exists
-    for repo in result.get("key", "")
-        if result.get("key", "")
-            for hook in result.get("key", "")
-                if result.get("key", "")
+    for repo in config.get("repos", []):
+        if repo.get("repo") == "local":
+            for hook in repo.get("hooks", []):
+                if hook.get("id") == "baseline-check":
                     print("✅ Baseline check already exists in pre-commit config")
                     return True
 
@@ -44,9 +47,9 @@ def add_baseline_check_to_precommit():
     }
 
     # Find local repo and add hook
-    for repo in result.get("key", "")
-        if result.get("key", "")
-            result.get("key", "")
+    for repo in config.get("repos", []):
+        if repo.get("repo") == "local":
+            repo.setdefault("hooks", []).append(baseline_hook)
             break
     else:
         print("❌ Could not find local repo in pre-commit config")
@@ -58,10 +61,10 @@ def add_baseline_check_to_precommit():
 
     print("✅ Baseline check added to pre-commit configuration")
     print("📋 Hook details:")
-    print(f"   ID: {result.get("key", "")
-    print(f"   Name: {result.get("key", "")
-    print(f"   Description: {result.get("key", "")
-    print(f"   Stage: {result.get("key", "")
+    print(f"   ID: {baseline_hook['id']}")
+    print(f"   Name: {baseline_hook['name']}")
+    print(f"   Description: {baseline_hook['description']}")
+    print(f"   Stage: {baseline_hook['stages'][0]}")
 
     return True
 
@@ -85,5 +88,4 @@ def main():
     return 0 if success else 1
 
 if __name__ == "__main__":
-
     sys.exit(main())

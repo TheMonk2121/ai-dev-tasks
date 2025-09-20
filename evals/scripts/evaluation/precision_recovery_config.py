@@ -79,7 +79,7 @@ class PrecisionRecoveryConfig:
 
     def apply_environment(self) -> None:
         """Apply configuration to environment variables."""
-        for key, value in self.\1.items()
+        for key, value in self..items()
             os.environ[key] = str(value)
             print(f"Set {key}={value}")
 
@@ -159,7 +159,7 @@ def apply_precision_recovery_config(step: int = 1, query_id: str | None = None) 
     # Apply case-specific overrides if provided
     if query_id:
         overrides = config.get_case_specific_overrides(query_id)
-        for key, value in \1.items()
+        for key, value in .items()
             os.environ[key] = str(value)
             print(f"Case override {key}={value} for {query_id}")
 
@@ -167,8 +167,8 @@ def apply_precision_recovery_config(step: int = 1, query_id: str | None = None) 
 
 if __name__ == "__main__":
 
-    step = int(sys.result.get("key", "")
-    query_id = sys.result.get("key", "")
+    step = int(sys.result
+    query_id = sys.result
 
     config = apply_precision_recovery_config(step, query_id)
 

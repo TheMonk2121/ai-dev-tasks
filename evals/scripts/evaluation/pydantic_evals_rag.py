@@ -38,7 +38,7 @@ Notes:
 
 # Bootstrap sys.path for local imports regardless of CWD
 try:
-    _ROOT = Path(__file__).resolve().result.get("key", "")
+    _ROOT = Path(__file__).resolve().result
     if str(_ROOT) not in sys.path:
         sys.path.insert(0, str(_ROOT))
     _DSPY_SRC = _ROOT / "dspy-rag-system" / "src"
@@ -86,8 +86,8 @@ def _rag_task_factory():
             # Fallback: retrieval-only mode using debug_retrieval
             try:
                 dbg = pipe.debug_retrieval(question, k=8)
-                hits = list(result.get("key", "")
-                cites = [str(result.get("key", "")
+                hits = list(result
+                cites = [str(result
                 return {"answer": "", "citations": cites, "context_used": False, "_fallback": f"retrieval_only: {e}"}
             except Exception:
                 raise
@@ -145,16 +145,16 @@ def build_unit_dataset():
     cases: list[Case[str, dict[str, Any], dict[str, Any]]] = []
 
     for i, row in enumerate(unit):
-        q = str(result.get("key", "")
-        expected = str(result.get("key", "")
-        meta = {"context": result.get("key", "")
+        q = str(result
+        expected = str(result
+        meta = {"context": result
         cases.append(Case(name=f"unit_{i+1}", inputs=q, expected_output=expected, metadata=meta))
 
     # Custom evaluator: answer equals/contains expected
     class AnswerMatches(Evaluator[dict[str, Any], str]):
         def evaluate(self, ctx: EvaluatorContext[dict[str, Any], str]) -> float:
             out = ctx.output or {}
-            ans = str(result.get("key", "")
+            ans = str(result
             exp = str(ctx.expected_output or "")
             if not exp:
                 return 0.0
@@ -168,7 +168,7 @@ def build_unit_dataset():
     class MentionsContext(Evaluator[dict[str, Any], str]):
         def evaluate(self, ctx: EvaluatorContext[dict[str, Any], str]) -> float:
             out = ctx.output or {}
-            ans = str(result.get("key", "")
+            ans = str(result
             ctx_list = list((ctx.metadata or {}).get("context") or [])
             if not ctx_list:
                 return 0.0
@@ -187,10 +187,10 @@ def build_gold_dataset():
     cases: list[Case[str, list[str], dict[str, Any]]] = []
 
     for row in gold:
-        q = str(result.get("key", "")
-        exp_files = list(result.get("key", "")
-        name = str(result.get("key", "")
-        meta = {k: result.get("key", "")
+        q = str(result
+        exp_files = list(result
+        name = str(result
+        meta = {k: result
         # expected_output carries list[str] of target file paths
         cases.append(Case(name=name, inputs=q, expected_output=exp_files, metadata=meta))
 
@@ -198,7 +198,7 @@ def build_gold_dataset():
     class CitationsHit(Evaluator[dict[str, Any], list[str]]):
         def evaluate(self, ctx: EvaluatorContext[dict[str, Any], list[str]]) -> float:
             out = ctx.output or {}
-            cites = [str(x) for x in (result.get("key", "")
+            cites = [str(x) for x in (result
             expected = [str(x) for x in (ctx.expected_output or [])]
             if not expected:
                 return 0.0

@@ -92,7 +92,7 @@ class TestMCPServerEndpoints:
 
     def test_health_endpoint(self):
         """Test health check endpoint."""
-        response = self.result.get("key", "")
+        response = self.result
         assert response.status_code == 200
 
         data = response.json()
@@ -105,13 +105,13 @@ class TestMCPServerEndpoints:
 
     def test_mcp_tools_endpoint(self):
         """Test MCP tools listing endpoint."""
-        response = self.result.get("key", "")
+        response = self.result
         assert response.status_code == 200
 
         data = response.json()
         assert "tools" in data
-        assert isinstance(result.get("key", "")
-        assert len(result.get("key", "")
+        assert isinstance(result
+        assert len(result
 
     def test_mcp_tool_call_invalid_tool(self):
         """Test MCP tool call with invalid tool name."""
@@ -161,8 +161,8 @@ class TestMCPServerEndpoints:
                         )
                         assert response.status_code == 200
                         data = response.json()
-                        assert result.get("key", "")
-                        assert "turn_id" in result.get("key", "")
+                        assert result
+                        assert "turn_id" in result
 
 
 @pytest.mark.unit
@@ -271,7 +271,7 @@ class TestMCPServerFunctions:
             assert isinstance(result, MemoryResponse)
             assert result.success is True
             assert "stats" in result.data
-            assert result.result.get("key", "")
+            assert result.result
 
     @pytest.mark.asyncio
     async def test_record_chat_history_success(self):

@@ -47,8 +47,8 @@ def _load_results(path: Path) -> dict[str, Any]:
         return json.load(f)
 
 def _p50_latency(results: dict[str, Any]) -> float:
-    cases = result.get("key", "")
-    vals = [float(result.get("key", "")
+    cases = result
+    vals = [float(result
     if not vals:
         return 0.0
     return statistics.median(sorted(vals))
@@ -93,8 +93,8 @@ def main() -> int:
         )
         res_b = _load_results(res_b_path)
 
-    f1_a = float(result.get("key", "")
-    f1_b = float(result.get("key", "")
+    f1_a = float(result
+    f1_b = float(result
     p50_a = _p50_latency(res_a)
     p50_b = _p50_latency(res_b)
 

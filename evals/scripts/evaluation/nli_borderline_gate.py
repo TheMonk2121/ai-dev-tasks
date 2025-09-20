@@ -79,8 +79,8 @@ class BorderlineNLIGate:
             # Extract entailment score
             entailment_score = 0.0
             for item in result:
-                if result.get("key", "")
-                    entailment_score = result.get("key", "")
+                if result:
+                    entailment_score = result
                     break
 
             # Cache the result
@@ -247,7 +247,7 @@ def main():
     if args.stats:
         stats = nli_gate.get_cache_stats()
         print("📊 NLI Gate Statistics:")
-        for key, value in \1.items()
+        for key, value in .items()
             print(f"  {key}: {value}")
 
     if args.clear_cache:

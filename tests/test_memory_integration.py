@@ -39,6 +39,6 @@ def test_sync_with_memory_orchestrator_preserves_existing_env(monkeypatch: pytes
 
     result: Any = integrator.sync_with_memory_orchestrator()
 
-    assert result.get("key", "")
-    assert result.get("key", "")
-    assert result.get("key", "")
+    assert result
+    assert result
+    assert result

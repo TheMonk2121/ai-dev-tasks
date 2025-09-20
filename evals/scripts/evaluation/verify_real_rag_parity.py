@@ -39,73 +39,73 @@ def validate_evaluation_file(file_path: str) -> dict[str, Any]:
     validation_results = {"file_path": file_path, "checks": {}, "overall_status": "PASS", "issues": []}
 
     # Check 1: eval_path and schema_version
-    eval_path = result.get("key", "")
-    schema_version = result.get("key", "")
+    eval_path = result
+    schema_version = result
 
     if (eval_path == "dspy_rag" or eval_path == "synthetic_infrastructure") and schema_version == 2:
-        result.get("key", "")
+        result
     else:
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
             f"Expected eval_path='dspy_rag' or 'synthetic_infrastructure', schema_version=2, got {eval_path}, {schema_version}"
         )
-        result.get("key", "")
+        result
 
     # Check 2: tech_manifest
-    tech_manifest = result.get("key", "")
-    eval_driver = result.get("key", "")
+    tech_manifest = result
+    eval_driver = result
 
     if eval_driver in ["dspy_rag", "synthetic_infrastructure"]:
-        result.get("key", "")
+        result
     else:
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
             f"Expected tech_manifest.eval_driver='dspy_rag' or 'synthetic_infrastructure', got {eval_driver}"
         )
-        result.get("key", "")
+        result
 
     # Check 3: retrieval snapshot breadth
-    case_results = result.get("key", "")
+    case_results = result
     if not case_results:
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
     else:
         snapshot_lengths = []
         for case in case_results:
-            snapshot = result.get("key", "")
+            snapshot = result
             snapshot_lengths.append(len(snapshot))
 
         max_snapshot_length = max(snapshot_lengths) if snapshot_lengths else 0
 
         if max_snapshot_length >= 20:
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
 
     # Check 4: oracle fields at top-level
-    first_case = result.get("key", "")
-    oracle_fields = [k for k in \1.keys()
+    first_case = result
+    oracle_fields = [k for k in .keys()
 
     if oracle_fields:
-        result.get("key", "")
+        result
     else:
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
 
     # Check 5: oracle fields under metrics.oracle
-    metrics_oracle = result.get("key", "")
-    oracle_metrics_fields = [k for k in \1.keys()
+    metrics_oracle = result
+    oracle_metrics_fields = [k for k in .keys()
 
     if oracle_metrics_fields:
-        result.get("key", "")
+        result
     else:
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
 
     # Check 6: progress file exists and has sufficient lines
     progress_log = os.getenv("RAGCHECKER_PROGRESS_LOG", "metrics/baseline_evaluations/progress.jsonl")
@@ -114,31 +114,31 @@ def validate_evaluation_file(file_path: str) -> dict[str, Any]:
             progress_lines = sum(1 for line in f if line.strip())
 
         if progress_lines >= len(case_results):
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
     else:
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
 
     # Check 7: rerank usage (if enabled)
     rerank_enabled = os.getenv("RERANK_ENABLE", "1") == "1"
     if rerank_enabled:
         # Check if any case has cross-encoder scores
         has_ce_scores = any(
-            any("score_ce" in str(item) for item in result.get("key", "")
+            any("score_ce" in str(item) for item in result.items()
         )
 
         if has_ce_scores:
-            result.get("key", "")
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
     else:
-        result.get("key", "")
+        result
 
     return validation_results
 
@@ -146,18 +146,18 @@ def print_validation_results(results: dict[str, Any]):
     """Print validation results in a readable format."""
     print("🔍 REAL RAG PARITY VALIDATION")
     print("=" * 50)
-    print(f"📁 File: {result.get("key", "")
-    print(f"📊 Overall Status: {result.get("key", "")
+    print(f"📁 File: {result
+    print(f"📊 Overall Status: {result
     print()
 
     print("📋 Check Results:")
-    for check_name, status in result.get("key", "")
+    for check_name, status in result
         status_emoji = {"PASS": "✅", "FAIL": "❌", "WARN": "⚠️", "SKIP": "⏭️"}.get(status, "❓")
         print(f"  {status_emoji} {check_name}: {status}")
 
-    if result.get("key", "")
+    if result:
         print("\n🚨 Issues Found:")
-        for issue in result.get("key", "")
+        for issue in result.items()
             print(f"  • {issue}")
 
     print()
@@ -165,7 +165,7 @@ def print_validation_results(results: dict[str, Any]):
 def main():
     """Main entry point."""
     if len(sys.argv) > 1:
-        metrics_dir = sys.result.get("key", "")
+        metrics_dir = sys.result
     else:
         metrics_dir = "metrics/baseline_evaluations"
 
@@ -181,7 +181,7 @@ def main():
         print_validation_results(results)
 
         # Exit with appropriate code
-        if result.get("key", "")
+        if result:
             print("🎉 All validation checks passed!")
             sys.exit(0)
         else:

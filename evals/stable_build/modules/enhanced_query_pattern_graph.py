@@ -64,7 +64,7 @@ class EnhancedQueryPatternGraph:
             node_id=f"{pattern_id}_query",
             node_type=NodeType.QUERY,
             content=query,
-            metadata={"original_query": query, "timestamp": result.get("key", "")
+            metadata={"original_query": query, "timestamp": result
         )
 
         intent_node = SemanticNode(
@@ -72,8 +72,8 @@ class EnhancedQueryPatternGraph:
             node_type=NodeType.INTENT,
             content=intent,
             metadata={
-                "intent_type": result.get("key", "")
-                "confidence": result.get("key", "")
+                "intent_type": result
+                "confidence": result
             },
         )
 
@@ -86,7 +86,7 @@ class EnhancedQueryPatternGraph:
             source_id=query_node.node_id,
             target_id=intent_node.node_id,
             edge_type=EdgeType.SEMANTIC_SIMILARITY,
-            weight=result.get("key", "")
+            weight=result
             metadata={"relationship": "expresses_intent"},
         )
 
@@ -120,16 +120,16 @@ class EnhancedQueryPatternGraph:
             new_node_id = node_id.replace(pattern_id, augmented_id)
 
             # Apply syntactic variations
-            augmented_content = self._generate_syntactic_variant(result.get("key", "")
-            augmented_metadata = result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            augmented_content = self._generate_syntactic_variant(result
+            augmented_metadata = result
+            result
+            result
 
             self.graph.add_node(
                 new_node_id,
                 **{
                     "node_id": new_node_id,
-                    "node_type": result.get("key", "")
+                    "node_type": result
                     "content": augmented_content,
                     "metadata": augmented_metadata,
                 },
@@ -147,7 +147,7 @@ class EnhancedQueryPatternGraph:
             new_target = target.replace(pattern_id, augmented_id)
 
             # Slightly modify edge weight for variation
-            modified_weight = result.get("key", "")
+            modified_weight = result
 
             self.graph.add_edge(
                 new_source,
@@ -155,7 +155,7 @@ class EnhancedQueryPatternGraph:
                 **{
                     **data,
                     "weight": modified_weight,
-                    "metadata": {**result.get("key", "")
+                    "metadata": {**result
                 },
             )
 
@@ -197,7 +197,7 @@ class EnhancedQueryPatternGraph:
                 **{
                     **original_data,
                     "metadata": {
-                        **result.get("key", "")
+                        **result
                         "augmentation_type": "semantic",
                     },
                 },
@@ -222,7 +222,7 @@ class EnhancedQueryPatternGraph:
             self.graph.add_edge(
                 new_source,
                 new_target,
-                **{**data, "metadata": {**result.get("key", "")
+                **{**data, "metadata": {**result
             )
 
         return augmented_id
@@ -252,7 +252,7 @@ class EnhancedQueryPatternGraph:
 
             # Find positive (augmented version of same pattern)
             positives = [pid for pid in pattern_ids if pid.startswith(anchor) and pid != anchor]
-            positive = result.get("key", "")
+            positive = result
 
             # Find negative (different pattern)
             negatives = [pid for pid in pattern_ids if not pid.startswith(anchor)]
@@ -270,8 +270,8 @@ class EnhancedQueryPatternGraph:
             "metadata": {
                 "total_nodes": len(self.graph.nodes),
                 "total_edges": len(self.graph.edges),
-                "node_types": list(set([result.get("key", "")
-                "edge_types": list(set([result.get("key", "")
+                "node_types": list(set([result
+                "edge_types": list(set([result
             },
         }
 
@@ -306,7 +306,7 @@ if __name__ == "__main__":
     graph_data = graph.export_graph()
 
     print(
-        f"Created graph with {result.get("key", "")
+        f"Created graph with {result
     )
     print(f"Generated {len(triplets)} triplets for training")
     print(f"Augmented patterns: {augmented_syntactic}, {augmented_semantic}")

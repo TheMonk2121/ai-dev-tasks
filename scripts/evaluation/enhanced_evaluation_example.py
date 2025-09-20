@@ -52,18 +52,18 @@ def run_enhanced_evaluation(profile: str = "gold", limit: int = 5):
 
         # Log evaluation completion with enhanced metrics
         overall_metrics = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
-            "faithfulness": result.get("key", "")
-            "oracle_retrieval_hit_rate": result.get("key", "")
-            "oracle_reader_hit_rate": result.get("key", "")
-            "successful_cases": result.get("key", "")
-            "total_cases": result.get("key", "")
+            "precision": results.get("precision", 0.0),
+            "recall": results.get("recall", 0.0),
+            "f1_score": results.get("f1_score", 0.0),
+            "faithfulness": results.get("faithfulness", 0.0),
+            "oracle_retrieval_hit_rate": results.get("oracle_retrieval_hit_rate", 0.0),
+            "oracle_reader_hit_rate": results.get("oracle_reader_hit_rate", 0.0),
+            "successful_cases": results.get("successful_cases", 0),
+            "total_cases": results.get("total_cases", 0)
         }
 
         logger.log_evaluation_complete(
-            overall_metrics=overall_metrics, results_file=result.get("key", "")
+            overall_metrics=overall_metrics, results_file=results.get("results_file", "unknown")
         )
 
         print("✅ Enhanced evaluation completed successfully!")

@@ -9,12 +9,12 @@ Evaluation Optimization Suite
 """
 
 import argparse
-from typing import Any
 import json
 import os
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -203,9 +203,10 @@ def setup_dataset_traps(config: LockedConfig) -> DatasetTrapManager:
 
     print("✅ Dataset traps configured")
     print(f"   Total test cases: {len(test_cases)}")
-    print(f"   Categories covered: {len(result.get("key", "")
-    print(f"   Negative controls: {result.get("key", "")
-    print(f"   Adversarial cases: {result.get("key", "")
+    categories = set(c.get('category', 'unknown') for c in test_cases)
+    print(f"   Categories covered: {len(categories)}")
+    print(f"   Negative controls: {len([c for c in test_cases if c.get('type') == 'negative'])}")
+    print(f"   Adversarial cases: {len([c for c in test_cases if c.get('type') == 'adversarial'])}")
 
     return dataset_manager
 
@@ -401,10 +402,10 @@ def run_baseline_eval(config: LockedConfig, num_queries: int = 50) -> dict[str, 
     }
 
     print("✅ Baseline evaluation completed")
-    print(f"   Oracle hit rate: {result.get("key", "")
-    print(f"   F1 score: {result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Token violations: {result.get("key", "")
+    print(f"   Oracle hit rate: {baseline_results.get('oracle_hit_rate', 0.0):.3f}")
+    print(f"   F1 score: {baseline_results.get('f1_score', 0.0):.3f}")
+    print(f"   Precision: {baseline_results.get('precision', 0.0):.3f}")
+    print(f"   Token violations: {baseline_results.get('token_violations', 0)}")
 
     return baseline_results
 
@@ -434,10 +435,10 @@ def run_deterministic_few_shot_eval(config: LockedConfig, num_queries: int = 50)
     }
 
     print("✅ Few-shot evaluation completed")
-    print(f"   Oracle hit rate: {result.get("key", "")
-    print(f"   F1 score: {result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Few-shot enabled: {result.get("key", "")
+    print(f"   Oracle hit rate: {few_shot_results.get('oracle_hit_rate', 0.0):.3f}")
+    print(f"   F1 score: {few_shot_results.get('f1_score', 0.0):.3f}")
+    print(f"   Precision: {few_shot_results.get('precision', 0.0):.3f}")
+    print(f"   Few-shot enabled: {few_shot_results.get('few_shot_enabled', False)}")
 
     return few_shot_results
 
@@ -456,10 +457,10 @@ def generate_optimization_report(
 
     # Calculate improvements
     oracle_improvement = (
-        result.get("key", "")
+        few_shot_results.get("oracle_hit_rate", 0.0) - baseline_results.get("oracle_hit_rate", 0.0)
     )
-    f1_improvement = result.get("key", "")
-    precision_improvement = result.get("key", "")
+    f1_improvement = few_shot_results.get("f1_score", 0.0) - baseline_results.get("f1_score", 0.0)
+    precision_improvement = few_shot_results.get("precision", 0.0) - baseline_results.get("precision", 0.0)
 
     # Get health summary
     health_summary = observability_manager.get_health_summary()
@@ -505,12 +506,12 @@ def generate_optimization_report(
                 "usage_stats": tool_stats,
             },
             "observability": {
-                "health_status": result.get("key", "")
-                "total_checks": result.get("key", "")
+                "health_status": health_summary.get("status", "unknown"),
+                "total_checks": health_summary.get("total_checks", 0),
                 "tracing_enabled": True,
             },
             "agent_memory": {
-                "tool_registry": result.get("key", "")
+                "tool_registry": memory_summary.get("tool_registry", {}),
                 "memory_types": ["operational", "task_episodic", "retrieval"],
             },
         },
@@ -579,25 +580,25 @@ def main():
     if not args.quiet:
         print("\n📊 Optimization Report")
         print("=" * 50)
-        print(f"Config: {result.get("key", "")
-        print(f"Hash: {result.get("key", "")
+        print(f"Config: {report.get('config', {}).get('chunk_version', 'unknown')}")
+        print(f"Hash: {report.get('config', {}).get('config_hash', 'unknown')}")
 
         print("\n📈 Evaluation Results:")
-        improvements = result.get("key", "")
-        print(f"  Oracle hit rate: +{result.get("key", "")
-        print(f"  F1 score: +{result.get("key", "")
-        print(f"  Precision: +{result.get("key", "")
+        improvements = report.get("evaluation_results", {}).get("improvements", {})
+        print(f"  Oracle hit rate: +{improvements.get('oracle_hit_rate', 0.0):.3f}")
+        print(f"  F1 score: +{improvements.get('f1_score', 0.0):.3f}")
+        print(f"  Precision: +{improvements.get('precision', 0.0):.3f}")
 
         print("\n🔧 Optimization Components:")
-        components = result.get("key", "")
+        components = report.get("optimization_components", {})
         print("  Determinism: ✅ Enabled")
-        print(f"  Dataset traps: {result.get("key", "")
-        print(f"  Tool traps: {result.get("key", "")
-        print(f"  Observability: {result.get("key", "")
-        print(f"  Agent memory: {result.get("key", "")
+        print(f"  Dataset traps: {components.get('dataset_traps', {}).get('total_cases', 0)} cases")
+        print(f"  Tool traps: {components.get('tool_traps', {}).get('registered_tools', 0)} tools")
+        print(f"  Observability: {components.get('observability', {}).get('health_status', 'unknown')}")
+        print(f"  Agent memory: {len(components.get('agent_memory', {}).get('memory_types', []))} types")
 
         print("\n🎯 Recommendations:")
-        for rec in result.get("key", "")
+        for rec in report.get("recommendations", []):
             print(f"  - {rec}")
 
     print("\n✅ Evaluation optimization suite completed successfully!")

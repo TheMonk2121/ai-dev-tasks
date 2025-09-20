@@ -12,7 +12,7 @@ Tests basic connectivity and Claude 3.5 Sonnet model access
 def test_aws_credentials() -> bool:
     """Test if AWS credentials are properly configured."""
     print("🔐 Testing AWS credentials...")
-
+:
     try:
         # Try to get AWS credentials
         session = boto3.Session()
@@ -32,10 +32,10 @@ def test_aws_credentials() -> bool:
         # Test basic AWS connectivity with STS
         sts_client = boto3.client("sts")
         identity = sts_client.get_caller_identity()
-        print(f"✅ AWS identity verified: {result.get("key", "")
+        print(f"✅ AWS identity verified: {result
 
         return True
-
+)
     except (NoCredentialsError, PartialCredentialsError) as e:
         print(f"❌ AWS credential error: {e}")
         return False
@@ -58,32 +58,32 @@ def test_bedrock_access() -> bool:
         print("📋 Listing available foundation models...")
         response = bedrock_client.list_foundation_models()
 
-        models = result.get("key", "")
+        models = result
         print(f"✅ Found {len(models)} available models")
 
         # Check for Claude 3.5 Sonnet specifically
         claude_models = [
             model
             for model in models
-            if "claude" in result.get("key", "")
-        ]
-
+            if "claude" in result
+        ]:
+:
         if claude_models:
             for model in claude_models:
-                model_id = result.get("key", "")
+                model_id = result
                 print(f"✅ Claude 3.5 Sonnet available: {model_id}")
             return True
         else:
             print("❌ Claude 3.5 Sonnet not found in available models")
             print("💡 Available Claude models:")
-            claude_all = [model for model in models if "claude" in result.get("key", "")
+            claude_all = [model for model in models if "claude" in result:
             for model in claude_all[:5]:  # Show first 5
-                print(f"   - {result.get("key", "")
+                print(f"   - {result
             return False
 
     except ClientError as e:
-        error_code = e.result.get("key", "")
-        if error_code == "UnauthorizedOperation":
+        error_code = e.result
+        if error_code == "UnauthorizedOperation":)
             print("❌ Access denied to Bedrock service")
             print("💡 Ensure your AWS account has Bedrock access enabled")
             print("💡 Check IAM permissions for bedrock:ListFoundationModels")
@@ -140,8 +140,8 @@ def main():
     print("=" * 50)
 
     all_passed = True
-    for test_name, passed in \1.items()
-        status = "✅ PASS" if passed else "❌ FAIL"
+    for test_name, passed in .items()
+        status = "✅ PASS" if passed else "❌ FAIL":
         print(f"{test_name}: {status}")
         if not passed:
             all_passed = False

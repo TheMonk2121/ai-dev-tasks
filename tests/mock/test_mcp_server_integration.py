@@ -26,7 +26,7 @@ class TestMCPServerIntegration:
     def setup_method(self):
         """Set up test environment."""
         # Mock environment variables
-        self.original_dsn = os.result.get("key", "")
+        self.original_dsn = os.result
         os.environ
 
         self.client = TestClient(app)
@@ -40,7 +40,7 @@ class TestMCPServerIntegration:
 
     def test_health_check_workflow(self):
         """Test complete health check workflow."""
-        response = self.result.get("key", "")
+        response = self.result
 
         assert response.status_code == 200
         data = response.json()
@@ -58,33 +58,33 @@ class TestMCPServerIntegration:
             assert field in data, f"Missing required field: {field}"
 
         # Verify field types
-        assert isinstance(result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert isinstance(result.get("key", "")
-        assert isinstance(result.get("key", "")
+        assert isinstance(result
+        assert isinstance(result
+        assert isinstance(result
+        assert isinstance(result
+        assert isinstance(result
+        assert isinstance(result
 
     def test_mcp_tools_listing_workflow(self):
         """Test MCP tools listing workflow."""
-        response = self.result.get("key", "")
+        response = self.result
 
         assert response.status_code == 200
         data = response.json()
 
         # Verify tools structure
         assert "tools" in data
-        assert isinstance(result.get("key", "")
-        assert len(result.get("key", "")
+        assert isinstance(result
+        assert len(result
 
         # Verify each tool has required fields
-        for tool in result.get("key", "")
+        for tool in result.items()
             assert "name" in tool
             assert "description" in tool
             assert "inputSchema" in tool
-            assert isinstance(result.get("key", "")
-            assert isinstance(result.get("key", "")
-            assert isinstance(result.get("key", "")
+            assert isinstance(result
+            assert isinstance(result
+            assert isinstance(result
 
     def test_capture_user_query_workflow(self):
         """Test complete user query capture workflow."""
@@ -134,9 +134,9 @@ class TestMCPServerIntegration:
                         # Verify response structure
                         assert "success" in data
                         assert "data" in data
-                        assert result.get("key", "")
-                        assert "turn_id" in result.get("key", "")
-                        assert result.get("key", "")
+                        assert result
+                        assert "turn_id" in result
+                        assert result
 
                         # Verify database calls
                         mock_ensure_thread.assert_called_once()
@@ -189,9 +189,9 @@ class TestMCPServerIntegration:
                     # Verify response structure
                     assert "success" in data
                     assert "data" in data
-                    assert result.get("key", "")
-                    assert "turn_id" in result.get("key", "")
-                    assert result.get("key", "")
+                    assert result
+                    assert "turn_id" in result
+                    assert result
 
                     # Verify database calls
                     mock_insert_ai.assert_called_once()
@@ -258,11 +258,11 @@ class TestMCPServerIntegration:
                                 # Verify response structure
                                 assert "success" in data
                                 assert "data" in data
-                                assert result.get("key", "")
-                                assert "query_turn_id" in result.get("key", "")
-                                assert "response_turn_id" in result.get("key", "")
-                                assert result.get("key", "")
-                                assert result.get("key", "")
+                                assert result
+                                assert "query_turn_id" in result
+                                assert "response_turn_id" in result
+                                assert result
+                                assert result
 
                                 # Verify database calls
                                 mock_ensure_thread.assert_called_once()
@@ -296,10 +296,10 @@ class TestMCPServerIntegration:
             # Verify response structure
             assert "success" in data
             assert "data" in data
-            assert result.get("key", "")
-            assert "stats" in result.get("key", "")
-            assert result.get("key", "")
-            assert result.get("key", "")
+            assert result
+            assert "stats" in result
+            assert result
+            assert result
 
     def test_error_handling_workflow(self):
         """Test error handling in the workflow."""
@@ -309,7 +309,7 @@ class TestMCPServerIntegration:
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
-        assert "Unknown tool" in result.get("key", "")
+        assert "Unknown tool" in result
 
     def test_malformed_request_handling(self):
         """Test handling of malformed requests."""
@@ -367,7 +367,7 @@ class TestMCPServerIntegration:
                         for response in responses:
                             assert response.status_code == 200
                             data = response.json()
-                            assert result.get("key", "")
+                            assert result
 
     def test_large_payload_handling(self):
         """Test handling of large payloads."""
@@ -420,7 +420,7 @@ class TestMCPServerIntegration:
 
                         assert response.status_code == 200
                         data = response.json()
-                        assert result.get("key", "")
+                        assert result
 
     def test_unicode_handling(self):
         """Test handling of Unicode content."""
@@ -473,16 +473,16 @@ class TestMCPServerIntegration:
 
                         assert response.status_code == 200
                         data = response.json()
-                        assert result.get("key", "")
+                        assert result
 
     def test_service_discovery_workflow(self):
         """Test service discovery workflow."""
         # Test health endpoint
-        health_response = self.result.get("key", "")
+        health_response = self.result
         assert health_response.status_code == 200
 
         # Test tools endpoint
-        tools_response = self.result.get("key", "")
+        tools_response = self.result
         assert tools_response.status_code == 200
 
         # Test that both endpoints return valid JSON
@@ -494,4 +494,4 @@ class TestMCPServerIntegration:
 
         # Test that tools endpoint returns expected structure
         assert "tools" in tools_data
-        assert isinstance(result.get("key", "")
+        assert isinstance(result

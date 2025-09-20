@@ -28,8 +28,8 @@ async def simulate_cursor_agent():
             try:
                 async for response in websocket:
                     data = json.loads(response)
-                    if result.get("key", "")
-                        print(f"📥 Cursor received from {result.get("key", "")
+                    if result:
+                        print(f"📥 Cursor received from {result
             except TimeoutError:
                 print("⏰ Cursor timeout waiting for responses")
 
@@ -57,8 +57,8 @@ async def simulate_codex_agent():
             try:
                 async for response in websocket:
                     data = json.loads(response)
-                    if result.get("key", "")
-                        print(f"📥 Codex received from {result.get("key", "")
+                    if result:
+                        print(f"📥 Codex received from {result
             except TimeoutError:
                 print("⏰ Codex timeout waiting for responses")
 
@@ -88,8 +88,8 @@ async def simulate_dspy_agent():
             try:
                 async for response in websocket:
                     data = json.loads(response)
-                    if result.get("key", "")
-                        print(f"📥 DSPy Planner received from {result.get("key", "")
+                    if result:
+                        print(f"📥 DSPy Planner received from {result
             except TimeoutError:
                 print("⏰ DSPy Planner timeout waiting for responses")
 

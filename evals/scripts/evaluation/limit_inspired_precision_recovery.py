@@ -20,7 +20,7 @@ class GeometryFailureRouter:
             return 0.0
 
         top10 = sorted(scores, reverse=True)[:10]
-        top1 = result.get("key", "")
+        top1 = result
         median_top10 = np.median(top10)
         std_top10 = np.std(top10)
         epsilon = 1e-8
@@ -161,7 +161,7 @@ class LimitInspiredPrecisionRecovery:
 
     def apply_environment(self) -> None:
         """Apply enhanced configuration to environment variables."""
-        for key, value in self.\1.items()
+        for key, value in self..items()
             os.environ[key] = str(value)
             print(f"Set {key}={value}")
 
@@ -192,8 +192,8 @@ class LimitInspiredPrecisionRecovery:
 
         enhanced_facets = []
         for facet in facets:
-            new_docs = result.get("key", "")
-            entity_overlap = result.get("key", "")
+            new_docs = result
+            entity_overlap = result
 
             yield_score = self.facet_calculator.calculate_facet_yield(new_docs, entity_overlap)
             should_keep = self.facet_calculator.should_keep_facet(yield_score)
@@ -210,18 +210,18 @@ class LimitInspiredPrecisionRecovery:
 
         return {
             "query_id": query_id,
-            "vector_margin": result.get("key", "")
-            "vector_entropy": result.get("key", "")
-            "rewrite_agreement": result.get("key", "")
+            "vector_margin": result
+            "vector_entropy": result
+            "rewrite_agreement": result
             "fusion_gain": fusion_gain,
-            "facets_kept": len([f for f in facet_yields if result.get("key", "")
+            "facets_kept": len([f for f in facet_yields if result:
             "total_facets": len(facet_yields),
-            "geometry_healthy": result.get("key", "")
-            "routed_to_bm25": result.get("key", "")
+            "geometry_healthy": result
+            "routed_to_bm25": result
             "boolean_terms": {
-                "include": len(result.get("key", "")
-                "exclude": len(result.get("key", "")
-                "or": len(result.get("key", "")
+                "include": len(result
+                "exclude": len(result
+                "or": len(result
             },
         }
 
@@ -231,7 +231,7 @@ class LimitInspiredPrecisionRecovery:
         """Determine if retrieval changes should be promoted based on health metrics."""
 
         # Promotion rule: only keep changes if fusion_gain > 0 and floors hold
-        fusion_gain_positive = result.get("key", "")
+        fusion_gain_positive = result
         floors_hold = precision >= 0.135 and recall >= 0.160 and f1_score >= 0.145
 
         return fusion_gain_positive and floors_hold
@@ -257,7 +257,7 @@ if __name__ == "__main__":
 
     analysis = config.analyze_query_geometry(test_query, test_scores, 0.3)
     print("\n🧪 Test Analysis:")
-    print(f"   Vector Margin: {result.get("key", "")
-    print(f"   Vector Entropy: {result.get("key", "")
-    print(f"   Route to BM25: {result.get("key", "")
-    print(f"   Boolean Logic: {result.get("key", "")
+    print(f"   Vector Margin: {result
+    print(f"   Vector Entropy: {result
+    print(f"   Route to BM25: {result
+    print(f"   Boolean Logic: {result

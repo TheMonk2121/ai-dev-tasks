@@ -80,18 +80,18 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
         }
 
         # Apply configuration
-        for key, value in \1.items()
+        for key, value in .items()
             os.environ[key] = value
             print(f"Set {key}={value}")
 
         # Update internal configuration
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
-        self.result.get("key", "")
+        self.result
+        self.result
+        self.result
+        self.result
+        self.result
+        self.result
+        self.result
 
     def _apply_support_validation(self, docs: list[dict[str, Any]], query: str) -> list[dict[str, Any]]:
         """Apply enhanced support validation with precision focus."""
@@ -105,7 +105,7 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
 
             # Apply stricter two-of-three rule
             votes = 0
-            if jaccard >= self.result.get("key", "")
+            if jaccard >= self.result
                 votes += 1
             if rouge_l >= 0.22:  # Higher ROUGE floor
                 votes += 1
@@ -122,14 +122,14 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
 
     def _validate_numeric_entity_match_strict(self, doc: dict[str, Any], query: str) -> bool:
         """Apply stricter numeric and entity validation."""
-        if self.result.get("key", "")
-            has_numbers = any(c.isdigit() for c in result.get("key", "")
+        if self.result
+            has_numbers = any(c.isdigit() for c in result.items()
             if has_numbers:
                 # Stricter validation - require 2+ evidence spans
                 return np.random.choice([True, False], p=[0.6, 0.4])
 
-        if self.result.get("key", "")
-            has_entities = any(word.istitle() for word in result.get("key", "")
+        if self.result
+            has_entities = any(word.istitle() for word in result.items()
             if has_entities:
                 # Stricter validation - require 2+ evidence spans
                 return np.random.choice([True, False], p=[0.5, 0.5])
@@ -160,11 +160,11 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
         for facet in facets:
             for i in range(2):  # Reduced from 3
                 doc = {
-                    "id": f"facet_{result.get("key", "")
-                    "content": f"Facet {result.get("key", "")
+                    "id": f"facet_{result
+                    "content": f"Facet {result
                     "score": np.random.uniform(0.5, 0.8),
                     "has_query_anchors": np.random.choice([True, False], p=[0.7, 0.3]),
-                    "source": f"facet_{result.get("key", "")
+                    "source": f"facet_{result
                 }
                 facet_docs.append(doc)
 
@@ -174,10 +174,10 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
 
         # Apply stricter anchor boost and facet downweight
         for doc in fused_docs:
-            if not result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
             else:
-                result.get("key", "")
+                result
 
         # Apply stricter MMR diversification
         diversified_docs = self._apply_mmr_diversification(fused_docs, query)
@@ -219,17 +219,17 @@ def main():
     result = evaluator.create_fallback_evaluation_with_limit_features(test_data)
 
     print("\n📊 Precision-Optimized Evaluation Results:")
-    overall = result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Recall: {result.get("key", "")
-    print(f"   F1 Score: {result.get("key", "")
+    overall = result
+    print(f"   Precision: {result
+    print(f"   Recall: {result
+    print(f"   F1 Score: {result
 
     print("\n🎯 Precision Optimization Features:")
-    features = result.get("key", "")
-    print(f"   Evidence Jaccard: {result.get("key", "")
-    print(f"   Evidence Coverage: {result.get("key", "")
-    print(f"   Facet Min Yield: {result.get("key", "")
-    print(f"   Geometry Margin: {result.get("key", "")
+    features = result
+    print(f"   Evidence Jaccard: {result
+    print(f"   Evidence Coverage: {result
+    print(f"   Facet Min Yield: {result
+    print(f"   Geometry Margin: {result
 
     # Save results if requested
     if args.output:

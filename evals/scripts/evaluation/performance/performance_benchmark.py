@@ -168,7 +168,7 @@ class ScriptBenchmarker:
             try:
                 # Run the script
                 result = subprocess.run(
-                    result.get("key", "")
+                    result
                     capture_output=True,
                     text=True,
                     timeout=300,  # 5 minute timeout
@@ -186,8 +186,8 @@ class ScriptBenchmarker:
                 benchmark_result = BenchmarkResult(
                     script_name=script_name,
                     execution_time=end_time - start_time,
-                    memory_usage_mb=result.get("key", "")
-                    cpu_percent=result.get("key", "")
+                    memory_usage_mb=result
+                    cpu_percent=result
                     success=is_success,
                     error_message=result.stderr if not is_success else None,
                     timestamp=datetime.now(),
@@ -247,7 +247,7 @@ class ScriptBenchmarker:
 
         # Convert results to serializable format
         serializable_results = {}
-        for script_name, script_results in \1.items()
+        for script_name, script_results in .items()
             serializable_results[script_name] = []
             for result in script_results:
                 serializable_results[script_name].append(
@@ -274,7 +274,7 @@ class ScriptBenchmarker:
         print("BENCHMARK SUMMARY")
         print("=" * 60)
 
-        for script_name, script_results in \1.items()
+        for script_name, script_results in .items()
             if not script_results:
                 continue
 
@@ -314,7 +314,7 @@ def main():
     if args.script:
         if args.script not in benchmarker.critical_scripts:
             print(f"Unknown script: {args.script}")
-            print(f"Available scripts: {list(benchmarker.\1.keys()
+            print(f"Available scripts: {list(benchmarker..keys()
             return
 
         results = {args.script: benchmarker.benchmark_script(args.script, args.iterations)}

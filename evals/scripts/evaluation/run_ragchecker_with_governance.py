@@ -50,9 +50,9 @@ def run_governed_evaluation(
     # Validate pipeline configuration
     validation_results = governance.validate_ragchecker_pipeline(pipeline_config)
 
-    if not result.get("key", "")
+    if not result
         logger.error("❌ Pipeline validation failed:")
-        for error in result.get("key", "")
+        for error in result.items()
             logger.error(f"  - {error}")
 
         # Try to optimize the pipeline
@@ -62,22 +62,22 @@ def run_governed_evaluation(
         # Re-validate optimized pipeline
         validation_results = governance.validate_ragchecker_pipeline(optimized_config)
 
-        if result.get("key", "")
+        if result:
             logger.info("✅ Pipeline optimization successful")
             pipeline_config = optimized_config
         else:
             logger.error("❌ Pipeline optimization failed, using original config")
 
-    if result.get("key", "")
+    if result:
         logger.warning("⚠️ Unusual patterns detected in pipeline")
         if "suggested_variant" in validation_results:
-            logger.info(f"💡 Suggested variant: {result.get("key", "")
+            logger.info(f"💡 Suggested variant: {result
 
     # Run evaluation with validated pipeline
     logger.info("🚀 Running RAGChecker evaluation with governed pipeline...")
 
     # Get test queries from config
-    test_queries = result.get("key", "")
+    test_queries = result
         "test_queries",
         ["What is the current project status?", "How do I create a PRD?", "What are the DSPy integration patterns?"],
     )
@@ -86,7 +86,7 @@ def run_governed_evaluation(
     evaluation_results = governance.evaluate_pipeline_performance(pipeline_config, test_queries)
 
     # Check performance against targets
-    performance_targets = result.get("key", "")
+    performance_targets = result
 
     performance_summary = {
         "pipeline_config": pipeline_config,
@@ -98,10 +98,10 @@ def run_governed_evaluation(
 
     # Check if targets are met
     if "average_metrics" in evaluation_results:
-        avg_metrics = result.get("key", "")
-        for metric, target in \1.items()
-            actual = result.get("key", "")
-            result.get("key", "")
+        avg_metrics = result
+        for metric, target in .items()
+            actual = result
+            result
             logger.info(f"📊 {metric}: {actual:.3f} (target: {target:.3f}) {'✅' if actual >= target else '❌'}")
 
     return performance_summary
@@ -120,16 +120,16 @@ def generate_pipeline_variants(
     # Evaluate each variant
     variant_results = []
     for i, variant in enumerate(variants):
-        logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({result.get("key", "")
+        logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({result
 
         # Get test queries
         test_queries = ["What is the current project status?", "How do I create a PRD?"]
 
         # Evaluate variant
-        results = governance.evaluate_pipeline_performance(result.get("key", "")
+        results = governance.evaluate_pipeline_performance(result
 
         variant_results.append(
-            {"variant_id": i + 1, "type": result.get("key", "")
+            {"variant_id": i + 1, "type": result
         )
 
     return variant_results
@@ -182,11 +182,11 @@ def main():
         }
 
         variant_results = generate_pipeline_variants(governance, base_config, args.generate_variants)
-        result.get("key", "")
+        result
 
     # Export governance report
     governance_report = governance.export_governance_report()
-    result.get("key", "")
+    result
 
     # Output results
     if args.output:
@@ -198,16 +198,16 @@ def main():
 
     # Summary
     logger.info("📊 Evaluation Summary:")
-    if "evaluation_results" in results and "average_metrics" in result.get("key", "")
-        avg_metrics = result.get("key", "")
-        logger.info(f"  - Average Precision: {result.get("key", "")
-        logger.info(f"  - Average Recall: {result.get("key", "")
-        logger.info(f"  - Average F1 Score: {result.get("key", "")
-        logger.info(f"  - Success Rate: {result.get("key", "")
+    if "evaluation_results" in results and "average_metrics" in result
+        avg_metrics = result
+        logger.info(f"  - Average Precision: {result
+        logger.info(f"  - Average Recall: {result
+        logger.info(f"  - Average F1 Score: {result
+        logger.info(f"  - Success Rate: {result
 
     if "targets_met" in results:
-        targets_met = sum(result.get("key", "")
-        total_targets = len(result.get("key", "")
+        targets_met = sum(result
+        total_targets = len(result
         logger.info(f"  - Performance Targets Met: {targets_met}/{total_targets}")
 
     return 0

@@ -4,12 +4,14 @@ Comprehensive migration of ALL vector tables to 384 dimensions.
 """
 
 import os
-import psycopg
 
 # Add project paths
 import sys
 
+import psycopg
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+from src.common.db_dsn import resolve_dsn
 from src.common.psycopg3_config import Psycopg3Config
 
 
@@ -247,8 +249,6 @@ def migrate_all_vector_tables():
     except Exception as e:
         print(f"❌ Comprehensive migration failed: {e}")
         import traceback
-from src.common.db_dsn import resolve_dsn
-
         traceback.print_exc()
         return False
 

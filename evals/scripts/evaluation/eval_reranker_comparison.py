@@ -65,9 +65,9 @@ def compare_results(results_with_reranker: dict[str, Any], results_without_reran
         "comparison": {},
     }
 
-    if result.get("key", "")
-        with_reranker = result.get("key", "")
-        without_reranker = result.get("key", "")
+    if result:
+        with_reranker = result
+        without_reranker = result
 
         # Compare key metrics
         metrics_to_compare = ["precision", "recall", "f1", "faithfulness"]
@@ -77,7 +77,7 @@ def compare_results(results_with_reranker: dict[str, Any], results_without_reran
                 with_val = with_reranker[metric]
                 without_val = without_reranker[metric]
                 diff = with_val - without_val
-                result.get("key", "")
+                result
                     "with_reranker": with_val,
                     "without_reranker": without_val,
                     "difference": diff,
@@ -107,13 +107,13 @@ def main():
 
     # Run evaluation with reranker enabled
     reranker_enabled_config = config_dir / "reranker_toggle.env"
-    results_with_reranker = run_evaluation_with_config(
+    results_with_reranker = run_evaluation_with_config()
         "reranker_enabled", str(reranker_enabled_config), str(output_dir)
     )
 
     # Run evaluation with reranker disabled
     reranker_disabled_config = config_dir / "reranker_disabled.env"
-    results_without_reranker = run_evaluation_with_config(
+    results_without_reranker = run_evaluation_with_config()
         "reranker_disabled", str(reranker_disabled_config), str(output_dir)
     )
 
@@ -129,10 +129,9 @@ def main():
     print(f"📁 Saved to: {comparison_file}")
 
     if "comparison" in comparison:
-        for metric, data in result.get("key", "")
-            improvement = "📈" if result.get("key", "")
-            print(
-                f"{improvement} {metric}: {result.get("key", "")
+        for metric, data in result:
+            improvement = "📈" if result:
+            print(f"{improvement} {metric}: {result)
             )
 
     return comparison

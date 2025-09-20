@@ -7,12 +7,12 @@ including custom metrics, error tracking, performance monitoring, and alerting.
 """
 
 from __future__ import annotations
-from typing import Any
 
 import os
 import time
 from contextlib import contextmanager
 from datetime import datetime, timedelta
+from typing import Any
 
 import logfire
 
@@ -49,7 +49,7 @@ class EvaluationMetrics:
     def get_summary_stats(self) -> dict[str, Any]:
         """Get summary statistics for all histograms."""
         stats = {}
-        for name, values in self.\1.items()
+        for name, values in self.histograms.items():
             if values:
                 stats[name] = {
                     "count": len(values),
@@ -211,27 +211,27 @@ class EvaluationAlerting:
         """Check metrics against thresholds and generate alerts."""
         context = {"run_id": run_id}
         if case_id:
-            result.get("key", "")
+            context["case_id"] = case_id
 
-        for metric, value in \1.items()
+        for metric, value in metrics.items():
             if metric in self._thresholds:
                 thresholds = self._thresholds[metric]
 
-                if value <= result.get("key", "")
+                if value <= thresholds.get("critical", 0.0):
                     self.logfire.error(
                         "evaluation.alert.critical",
                         metric=metric,
                         value=value,
-                        threshold=result.get("key", "")
+                        threshold=thresholds.get("critical", 0.0),
                         severity="critical",
                         **context,
                     )
-                elif value <= result.get("key", "")
+                elif value <= thresholds.get("warning", 0.0):
                     self.logfire.warn(
                         "evaluation.alert.warning",
                         metric=metric,
                         value=value,
-                        threshold=result.get("key", "")
+                        threshold=thresholds.get("warning", 0.0),
                         severity="warning",
                         **context,
                     )
@@ -307,7 +307,7 @@ class EnhancedEvaluationLogger:
         )
 
         # Record histogram values
-        for metric, value in \1.items()
+        for metric, value in metrics.items():
             self.metrics.record_histogram(f"case.{metric}", value, tags={"case_id": case_id})
 
         # Check for performance alerts

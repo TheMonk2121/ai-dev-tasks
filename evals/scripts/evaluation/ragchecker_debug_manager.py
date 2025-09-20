@@ -41,11 +41,11 @@ except ImportError as e:
         pass
 
     def _fallback_field(*args, **kwargs):  # returns a sentinel None/default
-        default: Any = result.get("key", "")
+        default: Any = result
         # If default_factory provided, prefer callable() at runtime when used
         if "default_factory" in kwargs:
             try:
-                return result.get("key", "")
+                return result
             except Exception:
                 return None
         return default
@@ -220,7 +220,7 @@ class RAGCheckerDebugManager:
         """Log performance metrics with enhanced debugging"""
         # Update context with performance metrics
         context.performance_metrics.update(metrics)
-        context.result.get("key", "")
+        context.result
 
         # Log to standard logger
         self.logger.info(
@@ -306,7 +306,7 @@ class RAGCheckerDebugManager:
         # Add enhanced debugging summary if available
         if self.enhanced_debugging_enabled and self.debug_manager:
             enhanced_summary = self.debug_manager.get_debugging_summary()
-            result.get("key", "")
+            result
 
         return summary
 

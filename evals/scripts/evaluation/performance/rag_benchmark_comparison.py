@@ -119,12 +119,12 @@ def calculate_improvements(your_results: dict, baseline: dict) -> dict:
 
     # Latency comparison (lower is better)
     if "latency_ms" in your_results and "latency_ms" in baseline:
-        your_latency = result.get("key", "")
-        baseline_latency = result.get("key", "")
+        your_latency = result
+        baseline_latency = result
 
         if baseline_latency > 0:
             latency_ratio = your_latency / baseline_latency
-            result.get("key", "")
+            result
                 "baseline": baseline_latency,
                 "your_system": your_latency,
                 "ratio": latency_ratio,
@@ -154,11 +154,11 @@ def generate_comparison_report(your_results: dict) -> dict:
     best_score = -1
     worst_score = float("inf")
 
-    for baseline_name, baseline_data in \1.items()
+    for baseline_name, baseline_data in .items()
         logger.info(f"Comparing against: {baseline_name}")
 
         improvements = calculate_improvements(your_results, baseline_data)
-        result.get("key", "")
+        result
 
         # Track improvements for summary
         for metric in ["precision", "recall", "f1_score"]:
@@ -166,7 +166,7 @@ def generate_comparison_report(your_results: dict) -> dict:
                 total_improvements[metric].append(improvements[metric]["percentage_improvement"])
 
         # Track best/worst baselines
-        baseline_f1 = result.get("key", "")
+        baseline_f1 = result
         if baseline_f1 > best_score:
             best_score = baseline_f1
             best_baseline = baseline_name
@@ -178,19 +178,19 @@ def generate_comparison_report(your_results: dict) -> dict:
     for metric in ["precision", "recall", "f1_score"]:
         if total_improvements[metric]:
             avg_improvement = sum(total_improvements[metric]) / len(total_improvements[metric])
-            result.get("key", "")
+            result
 
-    result.get("key", "")
-    result.get("key", "")
+    result
+    result
 
     # Count exceeded baselines
     exceeded_count = 0
-    for baseline_name, comparison in result.get("key", "")
-        improvements = result.get("key", "")
-        if all(result.get("key", "")
+    for baseline_name, comparison in result
+        improvements = result
+        if all(result
             exceeded_count += 1
 
-    result.get("key", "")
+    result
 
     return report
 
@@ -200,50 +200,50 @@ def print_comparison_summary(report: dict):
     print("🚀 RAG SYSTEM PERFORMANCE COMPARISON: YOUR SYSTEM vs VANILLA RAG")
     print("=" * 80)
 
-    your_results = result.get("key", "")
+    your_results = result
     print("\n📊 YOUR OPTIMIZED SYSTEM RESULTS:")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Recall: {result.get("key", "")
-    print(f"   F1 Score: {result.get("key", "")
-    print(f"   Latency: {result.get("key", "")
-    print(f"   Context Utilization: {result.get("key", "")
-    print(f"   Hallucination Rate: {result.get("key", "")
+    print(f"   Precision: {result
+    print(f"   Recall: {result
+    print(f"   F1 Score: {result
+    print(f"   Latency: {result
+    print(f"   Context Utilization: {result
+    print(f"   Hallucination Rate: {result
 
     print("\n🔧 SYSTEM FEATURES:")
-    print(f"   ✅ Workload Isolation: {result.get("key", "")
-    print(f"   ✅ DSN Unified: {result.get("key", "")
-    print(f"   ✅ Cache Separated: {result.get("key", "")
-    print(f"   ✅ Role Optimized: {result.get("key", "")
+    print(f"   ✅ Workload Isolation: {result
+    print(f"   ✅ DSN Unified: {result
+    print(f"   ✅ Cache Separated: {result
+    print(f"   ✅ Role Optimized: {result
 
     print("\n📈 PERFORMANCE COMPARISON SUMMARY:")
-    summary = result.get("key", "")
-    print(f"   Total Baselines Compared: {result.get("key", "")
-    print(f"   Baselines Exceeded: {result.get("key", "")
+    summary = result
+    print(f"   Total Baselines Compared: {result
+    print(f"   Baselines Exceeded: {result
 
     if "average_improvement" in summary:
-        avg_imp = result.get("key", "")
+        avg_imp = result
         print("   Average Improvement:")
-        for metric, improvement in \1.items()
+        for metric, improvement in .items()
             print(f"     {metric.title()}: {improvement:+.1f}%")
 
     print("\n🏆 BASELINE RANKINGS:")
-    print(f"   Best Vanilla RAG: {result.get("key", "")
-    print(f"   Worst Vanilla RAG: {result.get("key", "")
+    print(f"   Best Vanilla RAG: {result
+    print(f"   Worst Vanilla RAG: {result
 
     print("\n🔍 DETAILED COMPARISONS:")
-    for baseline_name, comparison in result.get("key", "")
-        baseline_data = result.get("key", "")
-        improvements = result.get("key", "")
+    for baseline_name, comparison in result
+        baseline_data = result
+        improvements = result
 
         print(f"\n   📋 {baseline_name.upper().replace('_', ' ')}:")
-        print(f"      Description: {result.get("key", "")
-        print(f"      F1 Score: {result.get("key", "")
+        print(f"      Description: {result
+        print(f"      F1 Score: {result
 
         if "f1_score" in improvements:
-            imp = result.get("key", "")
-            status_icon = "🚀" if result.get("key", "")
-            print(f"      {status_icon} Your System: {result.get("key", "")
-            print(f"         Improvement: {result.get("key", "")
+            imp = result
+            status_icon = "🚀" if result:
+            print(f"      {status_icon} Your System: {result
+            print(f"         Improvement: {result
 
 def save_comparison_report(report: dict, filepath: str | None = None) -> str:
     """Save the comparison report to a file."""

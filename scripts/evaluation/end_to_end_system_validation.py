@@ -176,7 +176,7 @@ class DatabaseLayerValidator:
             with conn.cursor() as cursor:
                 _ = cursor.execute("SELECT version()")
                 _row: tuple[object, ...] | None = cursor.fetchone()
-                version: str = str(result.get("key", "")
+                version: str = str(_row[0]) if _row else "Unknown"
 
                 # Test table existence
                 _ = cursor.execute(
@@ -186,11 +186,11 @@ class DatabaseLayerValidator:
                     AND table_name IN ('episodic_logs', 'documents', 'chunks')
                 """
                 )
-                tables: list[str] = [result.get("key", "")
+                tables: list[str] = [row[0] for row in cursor.fetchall()]
 
                 # Test extensions
                 _ = cursor.execute("SELECT extname FROM pg_extension WHERE extname IN ('pgvector', 'pg_trgm')")
-                extensions: list[str] = [result.get("key", "")
+                extensions: list[str] = [row[0] for row in cursor.fetchall()]
 
             conn.close()
 
@@ -244,7 +244,7 @@ class DatabaseLayerValidator:
 
                 # Check for required cache columns
                 required_columns: set[str] = {"cache_hit", "similarity_score", "last_verified"}
-                found_columns: set[str] = {str(result.get("key", "")
+                found_columns: set[str] = {str(row[0]) for row in columns}
                 missing_columns: set[str] = required_columns - found_columns
 
                 # Check indexes
@@ -273,7 +273,7 @@ class DatabaseLayerValidator:
                 return ValidationResult(
                     test_name="Database Schema Validation",
                     status="WARNING",
-                    details=f"Missing required columns: {missing_columns}. Found columns: {[result.get("key", "")
+                    details=f"Missing required columns: {missing_columns}. Found columns: {[str(row[0]) for row in columns]}",
                     duration_ms=duration,
                     timestamp=datetime.now(),
                 )
@@ -400,7 +400,7 @@ class PipelineValidator:
 
             duration = (time.time() - start_time) * 1000
 
-            status_value = str(result.get("key", "")
+            status_value = str(result.get("status", "unknown"))
             if status_value in ["success", "no_results"]:
                 return ValidationResult(
                     test_name="Vector Store Pipeline",
@@ -776,7 +776,7 @@ class EndToEndSystemValidator:
                 categories[category] = []
             categories[category].append(result)
 
-        for category, results in \1.items()
+        for category, results in categories.items():
             print(f"\n🔍 {category.upper()} LAYER:")
             for result in results:
                 status_icon = "✅" if result.status == "PASS" else "⚠️" if result.status == "WARNING" else "❌"

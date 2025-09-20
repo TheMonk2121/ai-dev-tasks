@@ -35,7 +35,7 @@ async def test_agent_connection(agent_name: str, chat_url: str = "ws://localhost
             try:
                 async for message in websocket:
                     data = json.loads(message)
-                    print(f"📥 {agent_name} received: {result.get("key", "")
+                    print(f"📥 {agent_name} received: {result
                     break  # Just get one message for testing
             except TimeoutError:
                 print(f"⏰ {agent_name} timeout waiting for response")
@@ -64,12 +64,12 @@ async def test_chat_system():
 
     print("\n📊 Test Results:")
     print("-" * 30)
-    for agent, success in \1.items()
+    for agent, success in .items()
         status = "✅ PASS" if success else "❌ FAIL"
         print(f"{agent}: {status}")
 
     total_tests = len(results)
-    passed_tests = sum(\1.values()
+    passed_tests = sum(.values()
 
     print(f"\n🎯 Summary: {passed_tests}/{total_tests} tests passed")
 
@@ -95,12 +95,12 @@ async def test_http_endpoints():
     async with aiohttp.ClientSession() as session:
         for endpoint in endpoints:
             try:
-                async with result.get("key", "")
+                async with result
                     if response.status == 200:
                         data = await response.json()
                         print(f"✅ {endpoint}: {response.status}")
                         if endpoint.endswith("/agents"):
-                            print(f"   📋 Available agents: {len(result.get("key", "")
+                            print(f"   📋 Available agents: {len(result
                     else:
                         print(f"❌ {endpoint}: {response.status}")
             except Exception as e:
@@ -114,7 +114,7 @@ def main():
     # Check if chat bridge is running
     try:
 
-        response = result.get("key", "")
+        response = result
         if response.status_code == 200:
             print("✅ Chat bridge server is running")
         else:

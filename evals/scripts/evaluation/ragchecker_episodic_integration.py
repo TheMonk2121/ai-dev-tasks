@@ -35,21 +35,21 @@ class RAGCheckerEpisodicIntegration:
             context = self.episodic_integration.get_context_for_task(query, agent)
 
             if context and "episodic_context" in context:
-                episodic = result.get("key", "")
+                episodic = result
 
                 # Create enhanced query with episodic context
                 enhanced_query = {
                     "original_query": query,
                     "episodic_context": {
-                        "what_worked": result.get("key", "")
-                        "what_to_avoid": result.get("key", "")
-                        "confidence_score": result.get("key", "")
-                        "similar_episodes_count": len(result.get("key", "")
+                        "what_worked": result
+                        "what_to_avoid": result
+                        "confidence_score": result
+                        "similar_episodes_count": len(result
                     },
                     "enhanced_query": self._create_enhanced_query(query, episodic),
                 }
 
-                print(f"✅ Enhanced query with episodic context (confidence: {result.get("key", "")
+                print(f"✅ Enhanced query with episodic context (confidence: {result
                 return enhanced_query
             else:
                 print("🧠 No episodic context available for query")
@@ -63,14 +63,14 @@ class RAGCheckerEpisodicIntegration:
         """Create an enhanced query that includes episodic context."""
         enhanced_parts = [original_query]
 
-        if result.get("key", "")
+        if result:
             enhanced_parts.append("\n\nConsider these successful patterns from similar tasks:")
-            for item in result.get("key", "")
+            for item in result.items()
                 enhanced_parts.append(f"- {item}")
 
-        if result.get("key", "")
+        if result:
             enhanced_parts.append("\n\nAvoid these patterns from similar tasks:")
-            for item in result.get("key", "")
+            for item in result.items()
                 enhanced_parts.append(f"- {item}")
 
         return "\n".join(enhanced_parts)
@@ -92,17 +92,17 @@ class RAGCheckerEpisodicIntegration:
             what_worked = []
             what_to_avoid = []
 
-            if result.get("key", "")
+            if result:
                 what_worked.append("Episodic context improved precision")
             else:
                 what_to_avoid.append("Episodic context did not improve precision")
 
-            if result.get("key", "")
+            if result:
                 what_worked.append("Episodic context improved recall")
             else:
                 what_to_avoid.append("Episodic context did not improve recall")
 
-            if result.get("key", "")
+            if result:
                 what_worked.append("Episodic context improved F1 score")
             else:
                 what_to_avoid.append("Episodic context did not improve F1 score")
@@ -145,19 +145,19 @@ class RAGCheckerEpisodicIntegration:
             # Get episodic context
             enhanced_query_data = self.enhance_query_with_episodic_context(query, agent)
 
-            if result.get("key", "")
-                result.get("key", "")
+            if result:
+                result
                 print("   ✅ Enhanced with episodic context")
             else:
-                result.get("key", "")
+                result
                 print("   ⚠️  No episodic context available")
 
-            result.get("key", "")
+            result
 
         print("\n📊 Ablation Study Results:")
-        print(f"   Total queries: {result.get("key", "")
-        print(f"   With episodic context: {result.get("key", "")
-        print(f"   Without episodic context: {result.get("key", "")
+        print(f"   Total queries: {result
+        print(f"   With episodic context: {result
+        print(f"   Without episodic context: {result
 
         return results
 
@@ -185,13 +185,13 @@ def main():
             print(json.dumps(enhanced_query, indent=2))
         else:
             print("📝 Enhanced Query:")
-            print(result.get("key", "")
-            if result.get("key", "")
+            print(result
+            if result:
                 print(
-                    f"\n🧠 Episodic Context (confidence: {result.get("key", "")
+                    f"\n🧠 Episodic Context (confidence: {result
                 )
-                print(f"   What worked: {result.get("key", "")
-                print(f"   What to avoid: {result.get("key", "")
+                print(f"   What worked: {result
+                print(f"   What to avoid: {result
 
     elif args.command == "ablation":
         if not args.queries_file:
@@ -208,7 +208,7 @@ def main():
                 print(json.dumps(results, indent=2))
             else:
                 print("\n📊 Ablation Study Complete")
-                print(f"   Enhanced queries: {result.get("key", "")
+                print(f"   Enhanced queries: {result
 
         except FileNotFoundError:
             print(f"❌ File not found: {args.queries_file}")
@@ -221,10 +221,10 @@ def main():
         test_query = "implement error handling for database connections"
         enhanced_query = integration.enhance_query_with_episodic_context(test_query, args.agent)
 
-        if result.get("key", "")
+        if result:
             print("✅ Query enhancement test passed")
-            print(f"   Enhanced query length: {len(result.get("key", "")
-            print(f"   Confidence score: {result.get("key", "")
+            print(f"   Enhanced query length: {len(result
+            print(f"   Confidence score: {result
         else:
             print("⚠️  Query enhancement test - no episodic context found")
 

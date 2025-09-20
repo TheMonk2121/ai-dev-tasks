@@ -97,7 +97,7 @@ def main():
     runbook = ProductionRunbook()
     result = runbook.execute_production_deployment()
 
-    if result.get("key", "")
+    if result:
         print("\n🎉 Production deployment completed successfully!")
         sys.exit(0)
     else:

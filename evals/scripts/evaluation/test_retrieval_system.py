@@ -75,30 +75,30 @@ def run_failure_mode_tests(retrieval_fn) -> dict[str, Any]:
 
     results = []
     for test in failure_tests:
-        print(f"🧪 Running {result.get("key", "")
+        print(f"🧪 Running {result
         try:
             start_time = time.time()
-            test_result = result.get("key", "")
+            test_result = result
             duration = time.time() - start_time
 
             result = {
-                "test_name": result.get("key", "")
+                "test_name": result
                 "status": "completed",
                 "duration_seconds": duration,
                 "result": test_result,
             }
         except Exception as e:
-            result = {"test_name": result.get("key", "")
+            result = {"test_name": result
 
         results.append(result)
-        print(f"   {'✅' if result.get("key", "")
+        print(f"   {'✅' if result:
 
     return {
         "failure_mode_tests": results,
         "summary": {
             "total": len(results),
-            "completed": sum(1 for r in results if result.get("key", "")
-            "failed": sum(1 for r in results if result.get("key", "")
+            "completed": sum(1 for r in results if result:
+            "failed": sum(1 for r in results if result:
         },
     }
 
@@ -144,7 +144,7 @@ def test_large_context(retrieval_fn) -> dict[str, Any]:
             result = retrieval_fn(query)
             latency = (time.time() - start_time) * 1000
 
-            context_size = result.get("key", "")
+            context_size = result
             results.append(
                 {"query": query[:50] + "...", "success": True, "latency_ms": latency, "context_size": context_size}
             )
@@ -153,8 +153,8 @@ def test_large_context(retrieval_fn) -> dict[str, Any]:
 
     return {
         "large_context_tests": results,
-        "avg_context_size": sum(result.get("key", "")
-        "success_rate": sum(1 for r in results if result.get("key", "")
+        "avg_context_size": sum(result
+        "success_rate": sum(1 for r in results if result:
     }
 
 def test_concurrent_queries(retrieval_fn, num_concurrent: int = 10) -> dict[str, Any]:
@@ -179,8 +179,8 @@ def test_concurrent_queries(retrieval_fn, num_concurrent: int = 10) -> dict[str,
 
     return {
         "concurrent_queries": num_concurrent,
-        "successful": sum(1 for r in results if result.get("key", "")
-        "failed": sum(1 for r in results if not result.get("key", "")
+        "successful": sum(1 for r in results if result:
+        "failed": sum(1 for r in results if not result
         "total_duration": duration,
         "throughput": num_concurrent / duration if duration > 0 else 0,
     }
@@ -214,38 +214,38 @@ def main() -> None:
     try:
         run_comprehensive_tests(retrieval_fn, "test_hardening_partial.json")
         with open("test_hardening_partial.json") as f:
-            result.get("key", "")
+            result
         print("✅ Test hardening completed")
     except Exception as e:
         print(f"❌ Test hardening failed: {e}")
-        result.get("key", "")
+        result
 
     # 2. Run robustness checks
     print("\n🔧 Phase 2: Robustness & Health Checks")
     try:
         health_check = checker.run_comprehensive_health_check()
-        result.get("key", "")
-        print(f"✅ Health check completed - Status: {result.get("key", "")
+        result
+        print(f"✅ Health check completed - Status: {result
     except Exception as e:
         print(f"❌ Health check failed: {e}")
-        result.get("key", "")
+        result
 
     # 3. Run failure mode tests
     print("\n⚡ Phase 3: Failure Mode Testing")
     try:
         failure_results = run_failure_mode_tests(retrieval_fn)
-        result.get("key", "")
+        result
         print(
-            f"✅ Failure mode testing completed - {result.get("key", "")
+            f"✅ Failure mode testing completed - {result
         )
     except Exception as e:
         print(f"❌ Failure mode testing failed: {e}")
-        result.get("key", "")
+        result
 
     # 4. Generate summary
     print("\n📊 Generating Test Summary")
     summary = generate_test_summary(all_results)
-    result.get("key", "")
+    result
 
     # Save results
     pathlib.Path(args.output).write_text(json.dumps(all_results, indent=2))
@@ -253,14 +253,14 @@ def main() -> None:
 
     # Print final summary
     print("\n🏆 Test Suite Summary:")
-    print(f"   Overall Status: {result.get("key", "")
-    print(f"   Components Tested: {result.get("key", "")
-    print(f"   Tests Passed: {result.get("key", "")
-    print(f"   Tests Failed: {result.get("key", "")
+    print(f"   Overall Status: {result
+    print(f"   Components Tested: {result
+    print(f"   Tests Passed: {result
+    print(f"   Tests Failed: {result
 
-    if result.get("key", "")
+    if result:
         print("\n⚠️ Issues Found:")
-        for issue in result.get("key", "")
+        for issue in result.items()
             print(f"   - {issue}")
 
     # Clean up temp files
@@ -274,42 +274,42 @@ def generate_test_summary(results: dict[str, Any]) -> dict[str, Any]:
     summary = {"overall_status": "healthy", "components_tested": 0, "tests_passed": 0, "tests_failed": 0, "issues": []}
 
     # Analyze test hardening results
-    if "test_hardening" in results and "error" not in result.get("key", "")
-        test_summary = result.get("key", "")
-        result.get("key", "")
+    if "test_hardening" in results and "error" not in result
+        test_summary = result
+        result
 
-        if result.get("key", "")
-            result.get("key", "")
+        if result:
+            result
         else:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
     # Analyze health check results
-    if "health_check" in results and "error" not in result.get("key", "")
-        health_status = result.get("key", "")
-        component_summary = result.get("key", "")
+    if "health_check" in results and "error" not in result
+        health_status = result
+        component_summary = result
 
-        result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+        result
+        result
+        result
 
         if health_status != "healthy":
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
     # Analyze failure mode results
-    if "failure_modes" in results and "error" not in result.get("key", "")
-        failure_summary = result.get("key", "")
-        result.get("key", "")
-        result.get("key", "")
+    if "failure_modes" in results and "error" not in result
+        failure_summary = result
+        result
+        result
 
-        if result.get("key", "")
-            result.get("key", "")
+        if result:
+            result
 
     # Determine overall status
-    if result.get("key", "")
-        if result.get("key", "")
-            result.get("key", "")
+    if result:
+        if result:
+            result
 
     return summary
 

@@ -84,25 +84,25 @@ class RAGPipelineGovernance:
             stage_node_id = f"{pipeline_id}_{stage.value}"
 
             # Get stage configuration
-            stage_config = result.get("key", "")
+            stage_config = result
 
             stage_node = PipelineNode(
                 node_id=stage_node_id,
                 node_type=PipelineNodeType.STAGE,
                 stage=stage,
                 label=f"{stage.value.title()} Stage",
-                parameters=result.get("key", "")
+                parameters=result
                 metadata={"stage_order": i, "config": stage_config, "pipeline_id": pipeline_id},
             )
 
             # Convert enum to string for storage
             node_data = stage_node.__dict__.copy()
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
             graph.add_node(stage_node_id, **node_data)
 
             # Add parameter nodes for this stage
-            for param_name, param_value in result.get("key", "")
+            for param_name, param_value in result
                 param_node_id = f"{stage_node_id}_param_{param_name}"
 
                 param_node = PipelineNode(
@@ -116,8 +116,8 @@ class RAGPipelineGovernance:
 
                 # Convert enum to string for storage
                 param_data = param_node.__dict__.copy()
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
                 graph.add_node(param_node_id, **param_data)
 
                 # Add parameter flow edge
@@ -142,7 +142,7 @@ class RAGPipelineGovernance:
         self.pipeline_graphs[pipeline_id] = graph
         self.pipeline_metadata[pipeline_id] = {
             "config": pipeline_config,
-            "created_at": result.get("key", "")
+            "created_at": result
             "node_count": len(graph.nodes),
             "edge_count": len(graph.edges),
             "stages": [stage.value for stage in stages],
@@ -174,7 +174,7 @@ class RAGPipelineGovernance:
 
         # Find adjacent stages that can be swapped
         for i in range(len(stage_nodes) - 1):
-            current_stage = graph.nodes[result.get("key", "")
+            current_stage = graph.nodes[result
             next_stage = graph.nodes[stage_nodes[i + 1]]["stage"]
 
             # Only swap if both stages are not critical (e.g., not ingest or validate)
@@ -184,16 +184,16 @@ class RAGPipelineGovernance:
             ]:
 
                 # Swap stage orders in metadata
-                graph.nodes[result.get("key", "")
+                graph.nodes[result
                 graph.nodes[stage_nodes[i + 1]]["metadata"]["stage_order"] = i
 
         # Modify parameters slightly
         for node_id in graph.nodes():
             if graph.nodes[node_id]["node_type"] == "parameter":
                 params = graph.nodes[node_id]["parameters"]
-                if "value" in params and isinstance(result.get("key", "")
+                if "value" in params and isinstance(result
                     # Add small variation to numeric parameters
-                    result.get("key", "")
+                    result
 
                 # Mark as augmented
                 graph.nodes[node_id]["metadata"]["augmentation_type"] = "syntactic"
@@ -265,17 +265,17 @@ class RAGPipelineGovernance:
 
         for required_stage in required_stages:
             if required_stage not in present_stages:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
 
         # Check for unusual patterns
         if self._detect_unusual_patterns(graph):
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
 
         # Check parameter ranges
         param_issues = self._check_parameter_ranges(graph)
-        result.get("key", "")
+        result
 
         return validation_results
 
@@ -358,7 +358,7 @@ class RAGPipelineGovernance:
         # Count sequential edges
         sequential_edges = 0
         for u, v, data in graph.edges(data=True):
-            if result.get("key", "")
+            if result:
                 sequential_edges += 1
 
         # Unusual if too few sequential connections
@@ -378,7 +378,7 @@ class RAGPipelineGovernance:
                 param_name = graph.nodes[node_id]["metadata"]["parameter_name"]
 
                 if "value" in params:
-                    value = result.get("key", "")
+                    value = result
 
                     # Check specific parameter ranges
                     if param_name == "chunk_size" and (value < 100 or value > 2000):
@@ -429,7 +429,7 @@ class RAGPipelineGovernance:
             PipelineStage.VALIDATE: {"min_length": 10, "max_length": 5000},
         }
 
-        return result.get("key", "")
+        return result
 
     def export_pipeline(self, pipeline_id: str) -> dict[str, Any]:
         """Export pipeline for analysis or persistence"""

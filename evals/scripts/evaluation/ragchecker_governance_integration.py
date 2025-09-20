@@ -56,24 +56,24 @@ class RAGCheckerGovernanceIntegration:
         # Validate pipeline configuration
         validation_results = self.governance.validate_ragchecker_pipeline(pipeline_config)
 
-        if not result.get("key", "")
+        if not result
             logger.warning("⚠️ Pipeline validation failed, attempting optimization...")
             optimized_config = self.governance.optimize_ragchecker_pipeline(pipeline_config)
 
             # Re-validate optimized pipeline
             validation_results = self.governance.validate_ragchecker_pipeline(optimized_config)
 
-            if result.get("key", "")
+            if result:
                 logger.info("✅ Pipeline optimization successful")
                 pipeline_config = optimized_config
             else:
                 logger.error("❌ Pipeline optimization failed, using original config")
 
         # Check for unusual patterns
-        if result.get("key", "")
+        if result:
             logger.warning("⚠️ Unusual patterns detected in pipeline")
             if "suggested_variant" in validation_results:
-                logger.info(f"💡 Suggested variant: {result.get("key", "")
+                logger.info(f"💡 Suggested variant: {result
 
         # Run actual RAGChecker evaluation
         logger.info("🚀 Running RAGChecker evaluation with governed pipeline...")
@@ -83,14 +83,14 @@ class RAGCheckerGovernanceIntegration:
             evaluation_results = self.ragchecker.run_official_evaluation(use_local_llm=False, use_bedrock=use_bedrock)
 
             # Extract key metrics
-            overall_metrics = result.get("key", "")
+            overall_metrics = result
 
             # Check against performance targets
             performance_targets = {"precision": 0.20, "recall": 0.45, "f1_score": 0.22, "context_utilization": 0.60}
 
             targets_met = {}
-            for metric, target in \1.items()
-                actual = result.get("key", "")
+            for metric, target in .items()
+                actual = result
                 targets_met[metric] = actual >= target
                 status = "✅" if actual >= target else "❌"
                 logger.info(f"📊 {metric}: {actual:.3f} (target: {target:.3f}) {status}")
@@ -134,22 +134,22 @@ class RAGCheckerGovernanceIntegration:
         # Evaluate each variant
         variant_results = []
         for i, variant in enumerate(variants):
-            logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({result.get("key", "")
+            logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({result
 
             try:
                 # Run evaluation for this variant
                 result = self.evaluate_with_governance(
-                    pipeline_config=result.get("key", "")
+                    pipeline_config=result
                 )
 
                 variant_results.append(
-                    {"variant_id": i + 1, "type": result.get("key", "")
+                    {"variant_id": i + 1, "type": result
                 )
 
             except Exception as e:
                 logger.error(f"❌ Variant {i+1} evaluation failed: {e}")
                 variant_results.append(
-                    {"variant_id": i + 1, "type": result.get("key", "")
+                    {"variant_id": i + 1, "type": result
                 )
 
         return variant_results
@@ -228,7 +228,7 @@ def main():
 
         results = integration.evaluate_with_governance(use_bedrock=args.use_bedrock, num_cases=args.num_cases)
 
-        result.get("key", "")
+        result
 
     # Output results
     if args.output:
@@ -239,19 +239,19 @@ def main():
         print(json.dumps(results, indent=2))
 
     # Summary
-    if "evaluation_results" in results and result.get("key", "")
-        eval_results = result.get("key", "")
-        overall_metrics = result.get("key", "")
+    if "evaluation_results" in results and result
+        eval_results = result
+        overall_metrics = result
 
         logger.info("📊 Evaluation Summary:")
-        logger.info(f"  - Precision: {result.get("key", "")
-        logger.info(f"  - Recall: {result.get("key", "")
-        logger.info(f"  - F1 Score: {result.get("key", "")
-        logger.info(f"  - Total Cases: {result.get("key", "")
+        logger.info(f"  - Precision: {result
+        logger.info(f"  - Recall: {result
+        logger.info(f"  - F1 Score: {result
+        logger.info(f"  - Total Cases: {result
 
         if "targets_met" in results:
-            targets_met = sum(result.get("key", "")
-            total_targets = len(result.get("key", "")
+            targets_met = sum(result
+            total_targets = len(result
             logger.info(f"  - Performance Targets Met: {targets_met}/{total_targets}")
 
 if __name__ == "__main__":

@@ -112,38 +112,38 @@ class RAGCheckerConstitutionValidator(BaseModel):
         try:
             # Rule 1: Input Validation
             input_validation = self._validate_input_quality(input_data)
-            if not result.get("key", "")
-                result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
+                result
 
             # Rule 2: Security Validation
             security_validation = self._validate_input_security(input_data)
-            if not result.get("key", "")
-                result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
+                result
 
             # Rule 3: Coherence Validation
             coherence_validation = self._validate_input_coherence(input_data)
-            if not result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
 
             # Create constitution compliance record
             if ConstitutionCompliance is not None:
-                compliance_score = 1.0 if result.get("key", "")
-                result.get("key", "")
-                    is_compliant=result.get("key", "")
+                compliance_score = 1.0 if result:
+                result
+                    is_compliant=result
                     compliance_score=compliance_score,
-                    violations=[result.get("key", "")
+                    violations=[result
                     recommendations=[
-                        result.get("key", "")
-                        for error in result.get("key", "")
-                        if result.get("key", "")
+                        result
+                        for error in result.items()
+                        if result:
                     ],
                 )
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
                 {
                     "type": "validation_error",
                     "message": f"Constitution validation failed: {str(e)}",
@@ -163,32 +163,32 @@ class RAGCheckerConstitutionValidator(BaseModel):
         try:
             # Rule 1: Metrics Coherence
             coherence_validation = self._validate_metrics_coherence(metrics_data)
-            if not result.get("key", "")
-                result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
+                result
 
             # Rule 2: Quality Thresholds
             quality_validation = self._validate_metrics_quality(metrics_data)
-            if not result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
 
             # Create constitution compliance record
             if ConstitutionCompliance is not None:
-                compliance_score = 1.0 if result.get("key", "")
-                result.get("key", "")
-                    is_compliant=result.get("key", "")
+                compliance_score = 1.0 if result:
+                result
+                    is_compliant=result
                     compliance_score=compliance_score,
-                    violations=[result.get("key", "")
+                    violations=[result
                     recommendations=[
-                        result.get("key", "")
-                        for error in result.get("key", "")
-                        if result.get("key", "")
+                        result
+                        for error in result.items()
+                        if result:
                     ],
                 )
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
                 {"type": "validation_error", "message": f"Metrics validation failed: {str(e)}", "severity": "critical"}
             )
 
@@ -204,32 +204,32 @@ class RAGCheckerConstitutionValidator(BaseModel):
         try:
             # Rule 1: Result Quality
             quality_validation = self._validate_result_quality(result_data)
-            if not result.get("key", "")
-                result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
+                result
 
             # Rule 2: Consistency Validation
             consistency_validation = self._validate_result_consistency(result_data)
-            if not result.get("key", "")
-                result.get("key", "")
+            if not result
+                result
 
             # Create constitution compliance record
             if ConstitutionCompliance is not None:
-                compliance_score = 1.0 if result.get("key", "")
-                result.get("key", "")
-                    is_compliant=result.get("key", "")
+                compliance_score = 1.0 if result:
+                result
+                    is_compliant=result
                     compliance_score=compliance_score,
-                    violations=[result.get("key", "")
+                    violations=[result
                     recommendations=[
-                        result.get("key", "")
-                        for error in result.get("key", "")
-                        if result.get("key", "")
+                        result
+                        for error in result.items()
+                        if result:
                     ],
                 )
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
                 {"type": "validation_error", "message": f"Result validation failed: {str(e)}", "severity": "critical"}
             )
 
@@ -243,8 +243,8 @@ class RAGCheckerConstitutionValidator(BaseModel):
         required_fields = ["query_id", "query", "gt_answer", "response", "retrieved_context"]
         for field in required_fields:
             if field not in input_data or not input_data[field]:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
                     {
                         "type": "validation_error",
                         "message": f"Required field '{field}' is missing or empty",
@@ -254,9 +254,9 @@ class RAGCheckerConstitutionValidator(BaseModel):
                 )
 
         # Check query length
-        if "query" in input_data and len(result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+        if "query" in input_data and len(result
+            result
+            result
                 {
                     "type": "validation_error",
                     "message": "Query is too short (minimum 5 characters)",
@@ -267,9 +267,9 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         # Check retrieved context
         if "retrieved_context" in input_data:
-            if not isinstance(result.get("key", "")
-                result.get("key", "")
-                result.get("key", "")
+            if not isinstance(result
+                result
+                result
                     {
                         "type": "validation_error",
                         "message": "Retrieved context must be a non-empty list",
@@ -293,8 +293,8 @@ class RAGCheckerConstitutionValidator(BaseModel):
                 content = str(input_data[field]).lower()
                 for pattern in sensitive_patterns:
                     if pattern in content:
-                        result.get("key", "")
-                        result.get("key", "")
+                        result
+                        result
                             {
                                 "type": "security_error",
                                 "message": f"Potential sensitive information detected in {field}: {pattern}",
@@ -311,13 +311,13 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         # Check if query and response are semantically related
         if "query" in input_data and "response" in input_data:
-            query_words = set(result.get("key", "")
-            response_words = set(result.get("key", "")
+            query_words = set(result
+            response_words = set(result
 
             # Simple overlap check (could be enhanced with semantic similarity)
             overlap = len(query_words.intersection(response_words))
             if overlap < 2:
-                result.get("key", "")
+                result
                     {
                         "type": "coherence_warning",
                         "message": "Query and response may not be semantically related",
@@ -334,8 +334,8 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         # Check if precision + recall = 1.0 (when both are 0.0 or both are 1.0)
         if "precision" in metrics_data and "recall" in metrics_data:
-            precision = result.get("key", "")
-            recall = result.get("key", "")
+            precision = result
+            recall = result
 
             if precision == 0.0 and recall == 0.0:
                 # This is valid - no relevant documents found
@@ -344,8 +344,8 @@ class RAGCheckerConstitutionValidator(BaseModel):
                 # This is valid - perfect retrieval
                 pass
             elif precision == 0.0 and recall > 0.0:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
                     {
                         "type": "coherence_error",
                         "message": "Incoherent metrics: precision=0 but recall>0",
@@ -362,10 +362,10 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         # Check for extremely low scores that might indicate issues
         low_threshold = 0.1
-        for metric_name, score in \1.items()
+        for metric_name, score in .items()
             if isinstance(score, int | float) and 0.0 <= score <= 1.0:
                 if score < low_threshold:
-                    result.get("key", "")
+                    result
                         {
                             "type": "quality_warning",
                             "message": f"Metric '{metric_name}' is very low ({score:.3f})",
@@ -384,8 +384,8 @@ class RAGCheckerConstitutionValidator(BaseModel):
         required_fields = ["test_case_name", "query", "custom_score", "ragchecker_scores", "recommendation"]
         for field in required_fields:
             if field not in result_data or not result_data[field]:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
                     {
                         "type": "validation_error",
                         "message": f"Required field '{field}' is missing or empty",
@@ -396,10 +396,10 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         # Check score ranges
         if "custom_score" in result_data:
-            score = result.get("key", "")
+            score = result
             if not isinstance(score, int | float) or score < 0.0 or score > 1.0:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
                     {
                         "type": "validation_error",
                         "message": f"Custom score must be between 0.0 and 1.0, got {score}",
@@ -416,13 +416,13 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         # Check if custom score and RAGChecker overall score are reasonably aligned
         if "custom_score" in result_data and "ragchecker_overall" in result_data:
-            custom_score = result.get("key", "")
-            ragchecker_score = result.get("key", "")
+            custom_score = result
+            ragchecker_score = result
 
             if isinstance(custom_score, int | float) and isinstance(ragchecker_score, int | float):
                 difference = abs(custom_score - ragchecker_score)
                 if difference > 0.3:  # More than 30% difference
-                    result.get("key", "")
+                    result
                         {
                             "type": "consistency_warning",
                             "message": f"Large difference between custom score ({custom_score:.3f}) and RAGChecker score ({ragchecker_score:.3f})",
@@ -439,13 +439,13 @@ class RAGCheckerConstitutionValidator(BaseModel):
         if not self.error_mapper or any(
             sym is None for sym in (ValidationError, CoherenceError, ErrorType, TaxonomyErrorSeverity)
         ):
-            result.get("key", "")
+            result
             return error_data
 
         try:
-            error_type = result.get("key", "")
-            message = result.get("key", "")
-            severity = result.get("key", "")
+            error_type = result
+            message = result
+            severity = result
 
             # Map to taxonomy error types
             if "validation" in error_type.lower():
@@ -453,28 +453,28 @@ class RAGCheckerConstitutionValidator(BaseModel):
                     "validation_failure",
                     message,
                     severity=self._map_severity(severity),
-                    field_name=result.get("key", "")
-                    expected_value=result.get("key", "")
-                    actual_value=result.get("key", "")
-                    validation_rule=result.get("key", "")
-                    context=result.get("key", "")
+                    field_name=result
+                    expected_value=result
+                    actual_value=result
+                    validation_rule=result
+                    context=result
                 )
             elif "coherence" in error_type.lower():
                 taxonomy_error = ConstitutionErrorMapper.map_constitution_failure_to_error(
                     "coherence_violation",
                     message,
                     severity=self._map_severity(severity),
-                    conflicting_elements=result.get("key", "")
-                    coherence_rule=result.get("key", "")
-                    suggested_resolution=result.get("key", "")
-                    context=result.get("key", "")
+                    conflicting_elements=result
+                    coherence_rule=result
+                    suggested_resolution=result
+                    context=result
                 )
             elif "security" in error_type.lower():
                 taxonomy_error = ConstitutionErrorMapper.map_constitution_failure_to_error(
                     "security_violation",
                     message,
                     severity=self._map_severity(severity),
-                    context=result.get("key", "")
+                    context=result
                 )
             else:
                 # Default to validation error
@@ -482,19 +482,19 @@ class RAGCheckerConstitutionValidator(BaseModel):
                     "validation_failure",
                     message,
                     severity=self._map_severity(severity),
-                    context=result.get("key", "")
+                    context=result
                 )
 
             # Add taxonomy information to error data
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
 
         except Exception as e:
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
-            result.get("key", "")
+            result
+            result
+            result
+            result
 
         return error_data
 
@@ -503,41 +503,41 @@ class RAGCheckerConstitutionValidator(BaseModel):
         if TaxonomyErrorSeverity is None:
             # Fallback to string when taxonomy enum is unavailable
             fallback = {"low": "low", "medium": "medium", "high": "high", "critical": "critical"}
-            return result.get("key", "")
+            return result
         severity_mapping = {
             "low": TaxonomyErrorSeverity.LOW,
             "medium": TaxonomyErrorSeverity.MEDIUM,
             "high": TaxonomyErrorSeverity.HIGH,
             "critical": TaxonomyErrorSeverity.CRITICAL,
         }
-        return result.get("key", "")
+        return result
 
     def enhance_validation_with_taxonomy(self, validation_results: dict[str, Any]) -> dict[str, Any]:
         """Enhance validation results with error taxonomy categorization."""
         enhanced_results = validation_results.copy()
 
         # Enhance input validation errors
-        if result.get("key", "")
-            for error in result.get("key", "")
+        if result:
+            for error in result.items()
                 self.map_validation_error_to_taxonomy(error)
 
         # Enhance metrics validation errors
-        if result.get("key", "")
-            for error in result.get("key", "")
+        if result:
+            for error in result.items()
                 self.map_validation_error_to_taxonomy(error)
 
         # Enhance result validation errors
-        if result.get("key", "")
-            for error in result.get("key", "")
+        if result:
+            for error in result.items()
                 self.map_validation_error_to_taxonomy(error)
 
         # Add taxonomy summary
-        result.get("key", "")
+        result
             "total_categorized_errors": sum(
                 [
-                    len(result.get("key", "")
-                    len(result.get("key", "")
-                    len(result.get("key", "")
+                    len(result
+                    len(result
+                    len(result
                 ]
             ),
             "categorization_success_rate": self._calculate_categorization_success_rate(enhanced_results),
@@ -552,10 +552,10 @@ class RAGCheckerConstitutionValidator(BaseModel):
         categorized_errors = 0
 
         for validation_type in ["input_validation", "metrics_validation", "result_validation"]:
-            if result.get("key", "")
+            if result:
                 for error in validation_results[validation_type]["errors"]:
                     total_errors += 1
-                    if result.get("key", "")
+                    if result:
                         categorized_errors += 1
 
         return categorized_errors / total_errors if total_errors > 0 else 1.0
@@ -565,10 +565,10 @@ class RAGCheckerConstitutionValidator(BaseModel):
         error_types = {}
 
         for validation_type in ["input_validation", "metrics_validation", "result_validation"]:
-            if result.get("key", "")
+            if result:
                 for error in validation_results[validation_type]["errors"]:
-                    error_type = result.get("key", "")
-                    error_types[error_type] = result.get("key", "")
+                    error_type = result
+                    error_types[error_type] = result
 
         return error_types
 

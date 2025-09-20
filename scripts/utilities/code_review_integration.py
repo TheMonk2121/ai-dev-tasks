@@ -1,24 +1,38 @@
 from __future__ import annotations
+
+import argparse
 import json
 import logging
+import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
-                from dspy_rag_system.src.n8n_workflows.n8n_integration import N8nWorkflowManager
-                from scripts.cursor_ai_integration_framework import CursorAIIntegrationFramework
-                from dspy_rag_system.src.monitoring.metrics import metrics_exporter
-                from dspy_rag_system.src.utils.database_resilience import get_database_manager
-            from scripts.pre_workflow_hook import run_quality_gates
-                from scripts.code_review_core import CodeReviewCore
-import sys
+
+from scripts.code_review_core import CodeReviewCore
+
 # FIXME: Update this import path after reorganization
 # from scripts.code_review_core import CodeReviewCore
-import argparse
+from scripts.pre_workflow_hook import run_quality_gates
+
+# Optional imports for advanced features
+try:
+    from dspy_rag_system.src.monitoring.metrics import metrics_exporter
+    from dspy_rag_system.src.n8n_workflows.n8n_integration import N8nWorkflowManager
+    from dspy_rag_system.src.utils.database_resilience import get_database_manager
+
+    from scripts.cursor_ai_integration_framework import CursorAIIntegrationFramework
+except ImportError:
+    # These modules may not be available in all environments
+    N8nWorkflowManager = None
+    CursorAIIntegrationFramework = None
+    metrics_exporter = None
+    get_database_manager = None
+
 import os
-from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Code Review Integration Module

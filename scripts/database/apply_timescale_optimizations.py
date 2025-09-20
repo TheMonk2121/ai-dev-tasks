@@ -95,7 +95,7 @@ def verify_optimizations(cursor):
     aggregates = cursor.fetchall()
     print(f"  📊 Continuous aggregates: {len(aggregates)} found")
     for agg in aggregates:
-        print(f"    - {result.get("key", "")
+        print(f"    - {agg[0]}")
 
     # Check compression policies
     cursor.execute(
@@ -110,7 +110,7 @@ def verify_optimizations(cursor):
     compression = cursor.fetchall()
     print(f"  🗜️  Compression settings: {len(compression)} found")
     for comp in compression:
-        print(f"    - {result.get("key", "")
+        print(f"    - {comp[0]}: {comp[1]}")
 
     # Check retention policies
     cursor.execute(
@@ -125,7 +125,7 @@ def verify_optimizations(cursor):
     retention = cursor.fetchall()
     print(f"  🗑️  Retention policies: {len(retention)} found")
     for ret in retention:
-        print(f"    - {result.get("key", "")
+        print(f"    - {ret[0]}: {ret[1]}")
 
     # Check hypertables
     cursor.execute(
@@ -140,7 +140,7 @@ def verify_optimizations(cursor):
     hypertables = cursor.fetchall()
     print(f"  📈 Hypertables: {len(hypertables)} found")
     for ht in hypertables:
-        print(f"    - {result.get("key", "")
+        print(f"    - {ht[0]}: {ht[1]} chunks")
 
     # Check views
     cursor.execute(
@@ -155,7 +155,7 @@ def verify_optimizations(cursor):
     views = cursor.fetchall()
     print(f"  👁️  Analysis views: {len(views)} found")
     for view in views:
-        print(f"    - {result.get("key", "")
+        print(f"    - {view[0]}")
 
 
 def main():

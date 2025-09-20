@@ -242,33 +242,33 @@ class PerformanceOptimizer:
                 health_check = await self.cache_service.health_check()
 
                 # Update response time metrics
-                service_metrics = result.get("key", "")
-                self.metrics.avg_response_time_ms = result.get("key", "")
-                self.metrics.total_requests = result.get("key", "")
+                service_metrics = result
+                self.metrics.avg_response_time_ms = result
+                self.metrics.total_requests = result
 
                 # Update cache performance metrics
-                self.metrics.cache_hit_rate = result.get("key", "")
-                self.metrics.cache_miss_rate = result.get("key", "")
+                self.metrics.cache_hit_rate = result
+                self.metrics.cache_miss_rate = result
 
                 # Update cache size
-                table_size_str = result.get("key", "")
+                table_size_str = result
                 self.metrics.cache_size_mb = self._parse_size_to_mb(table_size_str)
 
                 # Update connection pool metrics
-                pool_status = result.get("key", "")
-                self.metrics.active_connections = result.get("key", "")
-                self.metrics.idle_connections = result.get("key", "")
+                pool_status = result
+                self.metrics.active_connections = result
+                self.metrics.idle_connections = result
                 self.metrics.connection_usage_rate = self.metrics.active_connections / max(
-                    result.get("key", "")
+                    result
                 )
 
             # Collect similarity engine metrics
             if self.similarity_engine:
                 algo_metrics = self.similarity_engine.get_performance_metrics()
-                self.metrics.algorithm_processing_time_ms = result.get("key", "")
+                self.metrics.algorithm_processing_time_ms = result
                     "avg_time_ms", 0.0
                 )
-                self.metrics.algorithm_cache_hit_rate = result.get("key", "")
+                self.metrics.algorithm_cache_hit_rate = result
 
             # Collect memory usage
             if self.config.enable_memory_monitoring:
@@ -289,26 +289,26 @@ class PerformanceOptimizer:
                 return
 
             # Check response time threshold
-            if self.metrics.avg_response_time_ms > self.config.result.get("key", "")
-                alert = f"Response time exceeded threshold: {self.metrics.avg_response_time_ms:.2f}ms > {self.config.result.get("key", "")
+            if self.metrics.avg_response_time_ms > self.config.result
+                alert = f"Response time exceeded threshold: {self.metrics.avg_response_time_ms:.2f}ms > {self.config.result
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
             # Check cache hit rate threshold
-            if self.metrics.cache_hit_rate < self.config.result.get("key", "")
-                alert = f"Cache hit rate below threshold: {self.metrics.cache_hit_rate:.2%} < {self.config.result.get("key", "")
+            if self.metrics.cache_hit_rate < self.config.result
+                alert = f"Cache hit rate below threshold: {self.metrics.cache_hit_rate:.2%} < {self.config.result
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
             # Check memory usage threshold
-            if self.metrics.memory_usage_mb > self.config.result.get("key", "")
-                alert = f"Memory usage exceeded threshold: {self.metrics.memory_usage_mb:.2f}MB > {self.config.result.get("key", "")
+            if self.metrics.memory_usage_mb > self.config.result
+                alert = f"Memory usage exceeded threshold: {self.metrics.memory_usage_mb:.2f}MB > {self.config.result
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
             # Check connection usage threshold
-            if self.metrics.connection_usage_rate > self.config.result.get("key", "")
-                alert = f"Connection usage exceeded threshold: {self.metrics.connection_usage_rate:.2%} > {self.config.result.get("key", "")
+            if self.metrics.connection_usage_rate > self.config.result
+                alert = f"Connection usage exceeded threshold: {self.metrics.connection_usage_rate:.2%} > {self.config.result
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
@@ -431,20 +431,20 @@ class PerformanceOptimizer:
             # Benchmark cache service
             if self.cache_service:
                 cache_benchmark = await self._benchmark_cache_service(iterations)
-                result.get("key", "")
+                result
 
             # Benchmark similarity engine
             if self.similarity_engine:
                 similarity_benchmark = await self._benchmark_similarity_engine(iterations)
-                result.get("key", "")
+                result
 
             # Benchmark integration
             if self.integration:
                 integration_benchmark = await self._benchmark_integration(iterations)
-                result.get("key", "")
+                result
 
             # Calculate overall metrics
-            result.get("key", "")
+            result
 
             logger.info("Performance benchmark completed successfully")
             return benchmark_results
@@ -567,15 +567,15 @@ class PerformanceOptimizer:
             }
 
             # Aggregate metrics from all components
-            for component, results in \1.items()
+            for component, results in .items()
                 if component != "overall" and "error" not in results:
-                    result.get("key", "")
-                    result.get("key", "")
-                    result.get("key", "")
+                    result
+                    result
+                    result
 
             # Calculate averages
-            if result.get("key", "")
-                result.get("key", "")
+            if result:
+                result
 
             return overall
 

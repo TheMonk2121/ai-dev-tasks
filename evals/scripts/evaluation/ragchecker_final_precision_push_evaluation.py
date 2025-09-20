@@ -87,10 +87,10 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
             ragchecker_result = self.create_fallback_evaluation(eval_data)
 
             # Extract metrics
-            overall_metrics = result.get("key", "")
-            precision = result.get("key", "")
-            recall = result.get("key", "")
-            f1_score = result.get("key", "")
+            overall_metrics = result
+            precision = result
+            recall = result
+            f1_score = result
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -152,10 +152,10 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
     def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], final_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
-            "evaluation_time": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
+            "evaluation_time": result
             "final_metrics": final_metrics,
         }
 
@@ -165,9 +165,9 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
         """Generate comprehensive final precision push evaluation report."""
 
         # Calculate overall metrics
-        precisions = [result.get("key", "")
-        recalls = [result.get("key", "")
-        f1_scores = [result.get("key", "")
+        precisions = [result
+        recalls = [result
+        f1_scores = [result
 
         overall_metrics = {
             "precision": sum(precisions) / len(precisions) if precisions else 0.0,
@@ -180,9 +180,9 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
 
         # Check baseline compliance
         baseline_compliance = {
-            "precision": result.get("key", "")
-            "recall": result.get("key", "")
-            "f1_score": result.get("key", "")
+            "precision": result
+            "recall": result
+            "f1_score": result
         }
 
         # Calculate final precision push summary statistics
@@ -212,34 +212,34 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
             return {}
 
         # Aggressive tightening analysis
-        redundancy_pruned = [result.get("key", "")
-        per_chunk_capped = [result.get("key", "")
-        evidence_improved = [result.get("key", "")
-        penalties_applied = [result.get("key", "")
+        redundancy_pruned = [result
+        per_chunk_capped = [result
+        evidence_improved = [result
+        penalties_applied = [result
 
         # Claim binding tightening analysis
-        claims_kept = [result.get("key", "")
-        min_words_met = [result.get("key", "")
-        strong_cases_boosted = [result.get("key", "")
+        claims_kept = [result
+        min_words_met = [result
+        strong_cases_boosted = [result
 
         # Facet influence tightening analysis
         high_yield_facets_kept = [
-            result.get("key", "")
+            result
         ]
-        facet_downweighted = [result.get("key", "")
+        facet_downweighted = [result
 
         # Additional precision gates analysis
         strict_semantic_matches = [
-            result.get("key", "")
+            result
         ]
         query_anchors_required = [
-            result.get("key", "")
+            result
         ]
         weak_support_penalized = [
-            result.get("key", "")
+            result
         ]
         sentence_length_capped = [
-            result.get("key", "")
+            result
         ]
 
         return {
@@ -304,19 +304,19 @@ def main():
 
     # For now, just print the results instead of saving to JSON to avoid serialization issues
     print("\n📊 Final Precision Push Evaluation Results:")
-    print(f"   Total Cases: {result.get("key", "")
-    print(f"   Overall Metrics: {result.get("key", "")
-    print(f"   Baseline Compliance: {result.get("key", "")
-    print(f"   Final Precision Push Statistics: {result.get("key", "")
+    print(f"   Total Cases: {result
+    print(f"   Overall Metrics: {result
+    print(f"   Baseline Compliance: {result
+    print(f"   Final Precision Push Statistics: {result
 
     # Try to save a simplified version
     try:
         simplified_report = {
-            "evaluation_type": result.get("key", "")
-            "total_cases": result.get("key", "")
-            "overall_metrics": result.get("key", "")
-            "baseline_compliance": result.get("key", "")
-            "timestamp": result.get("key", "")
+            "evaluation_type": result
+            "total_cases": result
+            "overall_metrics": result
+            "baseline_compliance": result
+            "timestamp": result
         }
 
         with open(output_file, "w") as f:
@@ -330,39 +330,39 @@ def main():
     print("\n📊 Final Precision Push Evaluation Complete")
     print("=" * 60)
     print("📈 Overall Metrics:")
-    overall = result.get("key", "")
-    print(f"   Precision: {result.get("key", "")
-    print(f"   Recall: {result.get("key", "")
-    print(f"   F1 Score: {result.get("key", "")
+    overall = result
+    print(f"   Precision: {result
+    print(f"   Recall: {result
+    print(f"   F1 Score: {result
 
     print("\n🎯 Baseline Compliance:")
-    compliance = result.get("key", "")
-    floors = result.get("key", "")
-    for metric, passed in \1.items()
+    compliance = result
+    floors = result
+    for metric, passed in .items()
         status = "✅ PASS" if passed else "❌ FAIL"
         target = floors[metric]
         current = overall[metric]
         print(f"   {metric}: {status} ({current:.3f} vs {target:.3f})")
 
     print("\n🔧 Final Precision Push Features:")
-    final_stats = result.get("key", "")
+    final_stats = result
     print(
-        f"   Aggressive Tightening: {result.get("key", "")
+        f"   Aggressive Tightening: {result
     )
     print(
-        f"   Claim Binding: {result.get("key", "")
+        f"   Claim Binding: {result
     )
     print(
-        f"   Facet Influence: {result.get("key", "")
+        f"   Facet Influence: {result
     )
     print(
-        f"   Additional Gates: {result.get("key", "")
+        f"   Additional Gates: {result
     )
 
     print(f"\n📁 Results saved to: {output_file}")
 
     # Return exit code based on compliance
-    all_passed = all(\1.values()
+    all_passed = all(.values()
     return 0 if all_passed else 2
 
 if __name__ == "__main__":

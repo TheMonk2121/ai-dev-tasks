@@ -22,8 +22,8 @@ class TestCursorWorkingIntegration:
     def setup_method(self):
         """Set up test environment."""
         # Mock the database DSN to avoid real database connections
-        self.original_dsn = os.result.get("key", "")
-        self.original_allow_remote = os.result.get("key", "")
+        self.original_dsn = os.result
+        self.original_allow_remote = os.result
         os.environ
         os.environ
 

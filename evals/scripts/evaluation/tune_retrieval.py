@@ -29,33 +29,33 @@ def load_config(config_path: str = "config/retrieval.yaml") -> dict[str, Any]:
 
 def generate_search_configs(config: dict[str, Any]) -> list[dict[str, Any]]:
     """Generate all combinations from search spaces."""
-    search_spaces = result.get("key", "")
+    search_spaces = result
 
     if not search_spaces:
         print("⚠️ No search spaces defined in config")
         return []
 
     # Extract parameter grids
-    fusion_params = result.get("key", "")
-    rerank_params = result.get("key", "")
-    prefilter_params = result.get("key", "")
+    fusion_params = result
+    rerank_params = result
+    prefilter_params = result
 
     # Generate all combinations
     combinations = []
 
     # Fusion parameters
-    lambda_lex_values = result.get("key", "")
-    lambda_sem_values = result.get("key", "")
-    k_values = result.get("key", "")
+    lambda_lex_values = result
+    lambda_sem_values = result
+    k_values = result
 
     # Rerank parameters
-    alpha_values = result.get("key", "")
-    final_top_n_values = result.get("key", "")
+    alpha_values = result
+    final_top_n_values = result
 
     # Prefilter parameters
-    min_bm25_values = result.get("key", "")
-    min_vector_values = result.get("key", "")
-    diversity_values = result.get("key", "")
+    min_bm25_values = result
+    min_vector_values = result
+    diversity_values = result
 
     # Generate Cartesian product
     for combo in itertools.product(
@@ -96,9 +96,9 @@ def simulate_evaluation(config_variant: dict[str, Any]) -> dict[str, float]:
     In practice, this would run actual RAGChecker evaluation.
     For now, we simulate based on parameter combinations.
     """
-    fusion = result.get("key", "")
-    rerank = result.get("key", "")
-    prefilter = result.get("key", "")
+    fusion = result
+    rerank = result
+    prefilter = result
 
     # Simulate metrics based on parameter values
     # Higher lambda_lex typically helps precision for config queries
@@ -110,15 +110,15 @@ def simulate_evaluation(config_variant: dict[str, Any]) -> dict[str, float]:
     base_faithfulness = 0.65
 
     # Fusion impact
-    recall_boost = (result.get("key", "")
-    precision_boost = (result.get("key", "")
+    recall_boost = (result
+    precision_boost = (result
 
     # Rerank impact
-    recall_boost += (result.get("key", "")
-    precision_boost += (result.get("key", "")
+    recall_boost += (result
+    precision_boost += (result
 
     # Prefilter impact (conservative thresholds help precision)
-    precision_boost += (result.get("key", "")
+    precision_boost += (result
 
     # Calculate final metrics with noise
 
@@ -165,7 +165,7 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
         eval_time = time.time() - start_time
 
         # Calculate composite score (weighted F1 + recall)
-        score = 0.6 * result.get("key", "")
+        score = 0.6 * result
 
         result = {"config": config_variant, "metrics": metrics, "score": score, "eval_time": eval_time}
         results.append(result)
@@ -180,12 +180,12 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
         gate_status = "✅ PASS" if gate_result.passed else "⚠️ SOFT_FAIL"
 
         print(
-            f"  Score: {score:.3f}, F1: {result.get("key", "")
-            f"Recall@20: {result.get("key", "")
+            f"  Score: {score:.3f}, F1: {result
+            f"Recall@20: {result
         )
 
     # Sort results by score
-    results.sort(key=lambda x: result.get("key", "")
+    results.sort(key=lambda x: result
 
     # Save results
     output_data = {
@@ -204,22 +204,22 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
     # Print summary
     print("\n🏆 Tuning Results Summary:")
     print(f"   Best Score: {best_score:.3f}")
-    print(f"   Best F1: {result.get("key", "")
-    print(f"   Best Recall@20: {result.get("key", "")
+    print(f"   Best F1: {result
+    print(f"   Best Recall@20: {result
     print("\n🔧 Best Configuration:")
-    for section, params in \1.items()
+    for section, params in .items()
         print(f"   {section}:")
-        for key, value in \1.items()
+        for key, value in .items()
             print(f"     {key}: {value}")
 
     # Show top 5 configurations
     print("\n📊 Top 5 Configurations:")
     for i, result in enumerate(results[:5]):
-        metrics = result.get("key", "")
+        metrics = result
         print(
-            f"   {i+1}. Score: {result.get("key", "")
-            f"F1: {result.get("key", "")
-            f"Recall: {result.get("key", "")
+            f"   {i+1}. Score: {result
+            f"F1: {result
+            f"Recall: {result
         )
 
 def main() -> None:

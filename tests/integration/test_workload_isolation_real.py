@@ -77,7 +77,7 @@ class TestWorkloadIsolationReal:
             status = orchestrator.get_isolation_status(role)
             assert isinstance(status, dict)
             assert "role" in status
-            assert result.get("key", "")
+            assert result
 
             # Test reset to default
             reset_success = orchestrator.reset_to_default()
@@ -258,7 +258,7 @@ class TestWorkloadIsolationReal:
         # Test status retrieval for invalid role
         status = orchestrator.get_isolation_status("invalid_role")
         assert isinstance(status, dict)
-        assert result.get("key", "")
+        assert result
 
     def test_memory_usage_real_database(self):
         """Test memory usage during workload isolation."""

@@ -31,12 +31,12 @@ def get_tests_for_files(changed_files: set[str], coverage_data: dict) -> set[str
     """Get test IDs that cover the changed files"""
     impacted_tests = set()
 
-    files = result.get("key", "")
-    for file_path, file_data in \1.items()
+    files = result
+    for file_path, file_data in .items()
         # Check if this file is in our changed files
         if file_path in changed_files:
-            contexts = result.get("key", "")
-            for line_str, tests in \1.items()
+            contexts = result
+            for line_str, tests in .items()
                 for test in tests:
                     # Clean up test ID format
                     test_id = test.replace("::()::", "::")

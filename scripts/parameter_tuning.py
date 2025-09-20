@@ -79,7 +79,7 @@ class ParameterTuner:
             "eval_concurrency": "EVAL_CONCURRENCY",
         }
 
-        for param_name, env_var in \1.items()
+        for param_name, env_var in self.param_env_mapping.items():
             if param_name in params:
                 os.environ[env_var] = str(int(params[param_name]))
 
@@ -112,8 +112,8 @@ class ParameterTuner:
         successful_cases = 0
 
         for i, case in enumerate(test_cases, 1):
-            query = result.get("key", "")
-            gt_answer = result.get("key", "")
+            query = case.get("query", "")
+            gt_answer = case.get("answer", "")
 
             try:
                 start_time = time.time()
@@ -125,14 +125,14 @@ class ParameterTuner:
                 # Calculate metrics
                 metrics = self.calculate_metrics(response, gt_answer)
 
-                total_precision += result.get("key", "")
-                total_recall += result.get("key", "")
-                total_f1 += result.get("key", "")
+                total_precision += metrics.get("precision", 0.0)
+                total_recall += metrics.get("recall", 0.0)
+                total_f1 += metrics.get("f1_score", 0.0)
                 total_latency += latency
                 successful_cases += 1
 
                 print(
-                    f"  Case {i}: P={result.get("key", "")
+                    f"  Case {i}: P={metrics.get('precision', 0.0):.3f}, R={metrics.get('recall', 0.0):.3f}, F1={metrics.get('f1_score', 0.0):.3f}, L={latency:.2f}s"
                 )
 
             except Exception as e:
@@ -184,7 +184,7 @@ class ParameterTuner:
     def objective_function(self, x: np.ndarray) -> float:
         """Objective function for optimization (minimize negative F1 score)."""
         # Convert array to parameter dictionary
-        param_names = list(self.\1.keys()
+        param_names = list(self.param_bounds.keys())
         params = dict(zip(param_names, x))
 
         # Evaluate parameters
@@ -201,7 +201,7 @@ class ParameterTuner:
         )
 
         # Return negative F1 score (we want to maximize F1, so minimize negative F1)
-        return -result.get("key", "")
+        return -results.get("f1_score", 0.0)
 
     def optimize_parameters(self) -> dict[str, Any]:
         """Run parameter optimization using scipy.optimize."""
@@ -209,7 +209,7 @@ class ParameterTuner:
         print(f"📊 Optimizing {len(self.param_bounds)} parameters over {self.max_iterations} iterations")
 
         # Prepare initial parameters
-        param_names = list(self.\1.keys()
+        param_names = list(self.param_bounds.keys())
         initial_params = [self.default_params[name] for name in param_names]
         bounds = [self.param_bounds[name] for name in param_names]
 
@@ -265,21 +265,21 @@ class ParameterTuner:
         """Generate parameter tuning recommendations."""
         recommendations = []
 
-        if not result.get("key", "")
+        if not results.get("optimization_completed", False):
             recommendations.append("❌ Optimization failed - check error logs")
             return recommendations
 
-        best_params = result.get("key", "")
-        best_results = result.get("key", "")
+        best_params = results.get("best_parameters", {})
+        best_results = results.get("best_results", {})
 
-        recommendations.append(f"✅ Optimization completed in {result.get("key", "")
-        recommendations.append(f"📈 Best F1 Score: {result.get("key", "")
-        recommendations.append(f"📈 Best Precision: {result.get("key", "")
-        recommendations.append(f"📈 Best Recall: {result.get("key", "")
+        recommendations.append(f"✅ Optimization completed in {results.get('iterations', 0)} iterations")
+        recommendations.append(f"📈 Best F1 Score: {best_results.get('f1_score', 0.0):.3f}")
+        recommendations.append(f"📈 Best Precision: {best_results.get('precision', 0.0):.3f}")
+        recommendations.append(f"📈 Best Recall: {best_results.get('recall', 0.0):.3f}")
 
         # Parameter-specific recommendations
-        for param_name, value in \1.items()
-            default_value = self.result.get("key", "")
+        for param_name, value in best_params.items():
+            default_value = self.default_params.get(param_name, 0)
             change_pct = ((value - default_value) / default_value) * 100 if default_value > 0 else 0
 
             if abs(change_pct) > 10:
@@ -327,7 +327,7 @@ def main():
     print(f"\n📁 Detailed results saved to: {results_file}")
 
     # Exit with error code if optimization failed
-    if not result.get("key", "")
+    if not results.get("optimization_completed", False):
         sys.exit(1)
 
 

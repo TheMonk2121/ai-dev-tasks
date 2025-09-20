@@ -101,11 +101,11 @@ class ProductionRAGASConfig:
         """Apply production configuration and return applied configs."""
         applied_configs = {}
 
-        for section_name, config in self.\1.items()
+        for section_name, config in self..items()
             logger.info(f"🔧 Applying {section_name} configuration...")
 
             # Apply to environment only if not already set
-            for key, value in \1.items()
+            for key, value in .items()
                 if key not in os.environ:
                     os.environ[key] = str(value)
                     logger.info(f"  ✅ Set {key}={value}")
@@ -123,9 +123,9 @@ class ProductionRAGASConfig:
         print(f"\n🔧 Effective Configuration for {case_id}")
         print("=" * 60)
 
-        for section_name, config in self.\1.items()
+        for section_name, config in self..items()
             print(f"\n📊 {section_name.upper()}:")
-            for key, value in \1.items()
+            for key, value in .items()
                 # Get actual environment value
                 actual_value = os.getenv(key, "NOT_SET")
                 status = "✅" if str(actual_value) == str(value) else "❌"
@@ -137,9 +137,9 @@ class ProductionRAGASConfig:
         """Validate that all configuration values are properly set."""
         validation = {}
 
-        for section_name, config in self.\1.items()
+        for section_name, config in self..items()
             section_valid = True
-            for key, expected_value in \1.items()
+            for key, expected_value in .items()
                 actual_value = os.getenv(key)
                 if str(actual_value) != str(expected_value):
                     section_valid = False
@@ -208,7 +208,7 @@ class ProductionRAGASConfig:
             raise ValueError(f"Unknown precision knob: {knob_name}")
 
         config = knobs[knob_name]
-        for key, value in \1.items()
+        for key, value in .items()
             os.environ[key] = str(value)
 
         logger.info(f"🎯 Applied precision knob '{knob_name}': {config}")
@@ -221,7 +221,7 @@ class ProductionRAGASConfig:
             raise ValueError(f"Unknown recall knob: {knob_name}")
 
         config = knobs[knob_name]
-        for key, value in \1.items()
+        for key, value in .items()
             os.environ[key] = str(value)
 
         logger.info(f"📈 Applied recall knob '{knob_name}': {config}")
@@ -245,13 +245,13 @@ def main():
     if args.apply:
         applied_configs = config_manager.apply_production_config()
         print(
-            f"✅ Applied production configuration: {sum(len(config) for config in \1.values()
+            f"✅ Applied production configuration: {sum(len(config) for config in .values()
         )
 
     if args.validate:
         validation = config_manager.validate_config()
         print("📊 Configuration Validation:")
-        for section, valid in \1.items()
+        for section, valid in .items()
             status = "✅ VALID" if valid else "❌ INVALID"
             print(f"  {section}: {status}")
 
@@ -268,7 +268,7 @@ def main():
 
     if args.telemetry:
         telemetry_config = config_manager.get_telemetry_config()
-        for key, value in \1.items()
+        for key, value in .items()
             os.environ[key] = value
         print("📊 Telemetry configuration enabled")
 

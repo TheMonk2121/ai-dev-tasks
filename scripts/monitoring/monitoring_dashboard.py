@@ -1,15 +1,17 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import sys
 import time
 from datetime import datetime
-from typing import Any
-    from monitoring.health_endpoints import HealthEndpointManager
-    from monitoring.metrics import get_metrics, get_performance_summary
-    from monitoring.production_monitor import ProductionMonitor
-import argparse
 from typing import Any, Optional, Union
+
+from monitoring.health_endpoints import HealthEndpointManager
+from monitoring.metrics import get_metrics, get_performance_summary
+from monitoring.production_monitor import ProductionMonitor
+
 #!/usr/bin/env python3
 """
 Monitoring Dashboard for AI Development Tasks
@@ -25,6 +27,8 @@ Provides a real-time monitoring dashboard with:
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 try:
+    # Import monitoring modules
+    pass
 except ImportError as e:
     print(f"❌ Monitoring modules not available: {e}")
     sys.exit(1)

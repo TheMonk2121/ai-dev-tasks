@@ -82,10 +82,9 @@ class DatabaseLayerValidator:
                 version = version_row["version"] if version_row else "Unknown"
 
                 # Test table existence
-                _ = cur.execute(
-                    """
+                _ = cur.execute("""
                     SELECT table_name FROM information_schema.tables
-                    WHERE table_schema = 'public'
+                    WHERE table_schema = 'public')
                     AND table_name IN ('episodic_logs', 'documents', 'chunks')
                 """
                 )
@@ -97,20 +96,18 @@ class DatabaseLayerValidator:
                 ext_rows = cur.fetchall()
                 extensions = [row["extname"] for row in ext_rows]
 
-            duration = (time.time() - start_time) * 1000
-
+            duration = (time.time() - start_time) * 1000:
+:
             if len(tables) >= 1:  # At least episodic_logs should exist
-                return ValidationResult(
-                    test_name="Database Connection & Basic Operations",
+                return ValidationResult(test_name="Database Connection & Basic Operations",
                     status="PASS",
                     details=f"Connected successfully. Version: {version}. Found tables: {tables}. Extensions: {extensions}",
-                    duration_ms=duration,
+                    duration_ms=duration,)
                     timestamp=datetime.now(),
                 )
             else:
-                return ValidationResult(
-                    test_name="Database Connection & Basic Operations",
-                    status="WARNING",
+                return ValidationResult(test_name="Database Connection & Basic Operations",
+                    status="WARNING",)
                     details=f"Connected successfully (version: {version}) but missing expected tables. Found: {tables}",
                     duration_ms=duration,
                     timestamp=datetime.now(),
@@ -118,9 +115,8 @@ class DatabaseLayerValidator:
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="Database Connection & Basic Operations",
-                status="FAIL",
+            return ValidationResult(test_name="Database Connection & Basic Operations",
+                status="FAIL",)
                 details=f"Connection failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -133,13 +129,12 @@ class DatabaseLayerValidator:
         try:
             with Psycopg3Config.get_cursor("default") as cur:
                 # Check episodic_logs table structure
-                _ = cur.execute(
-                    """
+                _ = cur.execute("""
                     SELECT column_name, data_type, is_nullable
                     FROM information_schema.columns
                     WHERE table_name = 'episodic_logs'
                     ORDER BY ordinal_position
-                """
+                """)
                 )
                 column_rows = cur.fetchall()
                 columns = [row["column_name"] for row in column_rows]
@@ -150,40 +145,36 @@ class DatabaseLayerValidator:
                 missing_columns = required_columns - found_columns
 
                 # Check indexes
-                _ = cur.execute(
-                    """
+                _ = cur.execute("""
                     SELECT indexname, indexdef
                     FROM pg_indexes
                     WHERE tablename = 'episodic_logs'
-                """
+                """)
                 )
                 index_rows = cur.fetchall()
                 indexes = [row["indexname"] for row in index_rows]
 
             duration = (time.time() - start_time) * 1000
-
+:
             if not missing_columns:
-                return ValidationResult(
-                    test_name="Database Schema Validation",
-                    status="PASS",
+                return ValidationResult(test_name="Database Schema Validation",
+                    status="PASS",)
                     details=f"All required columns present. Found {len(columns)} columns and {len(indexes)} indexes",
                     duration_ms=duration,
                     timestamp=datetime.now(),
                 )
             else:
-                return ValidationResult(
-                    test_name="Database Schema Validation",
+                return ValidationResult(test_name="Database Schema Validation",
                     status="WARNING",
                     details=f"Missing required columns: {missing_columns}. Found columns: {columns}",
-                    duration_ms=duration,
+                    duration_ms=duration,)
                     timestamp=datetime.now(),
                 )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="Database Schema Validation",
-                status="FAIL",
+            return ValidationResult(test_name="Database Schema Validation",
+                status="FAIL",)
                 details=f"Schema validation failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -207,31 +198,27 @@ class MemorySystemValidator:
             memory_system = LTSTMemorySystem()
 
             # Ensure database connection is established
-            if hasattr(memory_system, "conversation_storage") and hasattr(
-                memory_system.conversation_storage, "connect"
+            if hasattr(memory_system, "conversation_storage") and hasattr(memory_system.conversation_storage, "connect":)
             ):
                 memory_system.conversation_storage.connect()
 
             # Test basic operations
-            result = memory_system.store_conversation_message(
-                "test_user", "test_message", "test_response", "test_session"
+            result = memory_system.store_conversation_message("test_user", "test_message", "test_response", "test_session")
             )
 
             duration = (time.time() - start_time) * 1000
 
-            return ValidationResult(
-                test_name="LTST Memory System",
+            return ValidationResult(test_name="LTST Memory System",
                 status="PASS",
                 details=f"Successfully initialized and stored memory. Result: {result}",
-                duration_ms=duration,
+                duration_ms=duration,)
                 timestamp=datetime.now(),
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="LTST Memory System",
-                status="FAIL",
+            return ValidationResult(test_name="LTST Memory System",
+                status="FAIL",)
                 details=f"LTST memory system failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -252,7 +239,7 @@ class MemorySystemValidator:
                 raise Exception("Failed to connect to database")
 
             # Test basic operations
-            result = storage.store_message(
+            result = storage.store_message()
                 ConversationMessage("test_user", "test_message", "test_response", "test_session")
             )
 
@@ -261,19 +248,17 @@ class MemorySystemValidator:
 
             duration = (time.time() - start_time) * 1000
 
-            return ValidationResult(
-                test_name="Conversation Storage",
+            return ValidationResult(test_name="Conversation Storage",
                 status="PASS",
                 details=f"Successfully initialized and stored conversation. Result: {result}",
-                duration_ms=duration,
+                duration_ms=duration,)
                 timestamp=datetime.now(),
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="Conversation Storage",
-                status="FAIL",
+            return ValidationResult(test_name="Conversation Storage",
+                status="FAIL",)
                 details=f"Conversation storage failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -302,27 +287,24 @@ class PipelineValidator:
             duration = (time.time() - start_time) * 1000
 
             if result and "status" in result:
-                return ValidationResult(
-                    test_name="Vector Store Pipeline",
+                return ValidationResult(test_name="Vector Store Pipeline",
                     status="PASS",
                     details=f"Successfully initialized and performed search. Result: {result}",
-                    duration_ms=duration,
+                    duration_ms=duration,)
                     timestamp=datetime.now(),
                 )
             else:
-                return ValidationResult(
-                    test_name="Vector Store Pipeline",
+                return ValidationResult(test_name="Vector Store Pipeline",
                     status="WARNING",
                     details=f"Search completed but with unexpected status: {result}",
-                    duration_ms=duration,
+                    duration_ms=duration,)
                     timestamp=datetime.now(),
                 )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="Vector Store Pipeline",
-                status="FAIL",
+            return ValidationResult(test_name="Vector Store Pipeline",
+                status="FAIL",)
                 details=f"Vector store validation failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -340,19 +322,17 @@ class PipelineValidator:
 
             duration = (time.time() - start_time) * 1000
 
-            return ValidationResult(
-                test_name="RAG Pipeline",
+            return ValidationResult(test_name="RAG Pipeline",
                 status="PASS",
                 details="Successfully initialized RAG pipeline",
-                duration_ms=duration,
+                duration_ms=duration,)
                 timestamp=datetime.now(),
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="RAG Pipeline",
-                status="FAIL",
+            return ValidationResult(test_name="RAG Pipeline",
+                status="FAIL",)
                 details=f"RAG pipeline validation failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -380,19 +360,17 @@ class IntegrationValidator:
 
             duration = (time.time() - start_time) * 1000
 
-            return ValidationResult(
-                test_name="Unified Memory Orchestrator",
+            return ValidationResult(test_name="Unified Memory Orchestrator",
                 status="PASS",
                 details=f"Successfully initialized orchestrator. Status: {result}",
-                duration_ms=duration,
+                duration_ms=duration,)
                 timestamp=datetime.now(),
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="Unified Memory Orchestrator",
-                status="FAIL",
+            return ValidationResult(test_name="Unified Memory Orchestrator",
+                status="FAIL",)
                 details=f"Orchestrator validation failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -413,19 +391,17 @@ class IntegrationValidator:
 
             duration = (time.time() - start_time) * 1000
 
-            return ValidationResult(
-                test_name="Generation Cache Service",
+            return ValidationResult(test_name="Generation Cache Service",
                 status="PASS",
                 details=f"Successfully initialized cache service. Result: {result}",
-                duration_ms=duration,
+                duration_ms=duration,)
                 timestamp=datetime.now(),
             )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="Generation Cache Service",
-                status="FAIL",
+            return ValidationResult(test_name="Generation Cache Service",
+                status="FAIL",)
                 details=f"Cache service validation failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -472,35 +448,31 @@ class PerformanceValidator:
 
             # Performance thresholds based on industry standards
             if db_time < 50 and memory_time < 100:
-                return ValidationResult(
-                    test_name="System Performance",
+                return ValidationResult(test_name="System Performance",
                     status="PASS",
                     details=f"Database: {db_time:.1f}ms, Memory: {memory_time:.1f}ms - Within performance thresholds",
-                    duration_ms=duration,
+                    duration_ms=duration,)
                     timestamp=datetime.now(),
                 )
             elif db_time < 100 and memory_time < 200:
-                return ValidationResult(
-                    test_name="System Performance",
+                return ValidationResult(test_name="System Performance",
                     status="WARNING",
                     details=f"Database: {db_time:.1f}ms, Memory: {memory_time:.1f}ms - Approaching performance limits",
-                    duration_ms=duration,
+                    duration_ms=duration,)
                     timestamp=datetime.now(),
                 )
             else:
-                return ValidationResult(
-                    test_name="System Performance",
+                return ValidationResult(test_name="System Performance",
                     status="FAIL",
                     details=f"Database: {db_time:.1f}ms, Memory: {memory_time:.1f}ms - Exceeds performance thresholds",
-                    duration_ms=duration,
+                    duration_ms=duration,)
                     timestamp=datetime.now(),
                 )
 
         except Exception as e:
             duration = (time.time() - start_time) * 1000
-            return ValidationResult(
-                test_name="System Performance",
-                status="FAIL",
+            return ValidationResult(test_name="System Performance",
+                status="FAIL",)
                 details=f"Performance validation failed: {str(e)}",
                 duration_ms=duration,
                 timestamp=datetime.now(),
@@ -563,8 +535,8 @@ class EndToEndSystemValidator:
         failed_tests = len([r for r in all_results if r.status == "FAIL"])
         warning_tests = len([r for r in all_results if r.status == "WARNING"])
 
-        overall_score = passed_tests / total_tests if total_tests > 0 else 0.0
-
+        overall_score = passed_tests / total_tests if total_tests > 0 else 0.0:
+:
         if overall_score >= 0.9:
             overall_status = "EXCELLENT"
         elif overall_score >= 0.8:
@@ -577,15 +549,14 @@ class EndToEndSystemValidator:
         # Generate recommendations
         recommendations = self._generate_recommendations(all_results)
 
-        return SystemValidationReport(
-            overall_status=overall_status,
+        return SystemValidationReport(overall_status=overall_status,
             overall_score=overall_score,
             total_tests=total_tests,
             passed_tests=passed_tests,
             failed_tests=failed_tests,
             warning_tests=warning_tests,
             test_results=all_results,
-            recommendations=recommendations,
+            recommendations=recommendations,)
             timestamp=datetime.now(),
         )
 
@@ -594,8 +565,8 @@ class EndToEndSystemValidator:
         recommendations = []
 
         failed_tests = [r for r in results if r.status == "FAIL"]
-        warning_tests = [r for r in results if r.status == "WARNING"]
-
+        warning_tests = [r for r in results if r.status == "WARNING"]:
+:
         if failed_tests:
             recommendations.append("🔴 Address failed tests immediately - these indicate critical system issues")
 
@@ -643,7 +614,7 @@ class EndToEndSystemValidator:
         for category, results in categories.items():
             print(f"\n🔍 {category.upper()} LAYER:")
             for result in results:
-                status_icon = "✅" if result.status == "PASS" else "⚠️" if result.status == "WARNING" else "❌"
+                status_icon = "✅" if result.status == "PASS" else "⚠️" if result.status == "WARNING" else "❌":
                 print(f"  {status_icon} {result.test_name}: {result.status}")
                 print(f"     Details: {result.details}")
                 print(f"     Duration: {result.duration_ms:.1f}ms")

@@ -9,12 +9,12 @@ def read_micro_f1(path: Path) -> float:
     # Prefer our overall_metrics->f1_score; fallback to metrics.micro_f1
     if isinstance(data, dict):
         if "overall_metrics" in data:
-            return float(result.get("key", "")
-        if "metrics" in data and isinstance(result.get("key", "")
-            if "micro_f1" in result.get("key", "")
-                return float(result.get("key", "")
+            return float(result
+        if "metrics" in data and isinstance(result
+            if "micro_f1" in result
+                return float(result)
     raise KeyError("No F1 metric found in summary JSON")
-
+:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("off_summary")

@@ -44,11 +44,11 @@ def test_query():
                 # Type cast to help the type checker understand this is a dict-like object
                 row_dict: dict[str, Any] = row  # type: ignore
                 print(f"\nRow {i+1}:")
-                print(f"  ID: {result.get("key", "")
-                print(f"  File: {result.get("key", "")
-                print(f"  Path: {result.get("key", "")
-                print(f"  Content length: {result.get("key", "")
-                print(f"  Content preview: {result.get("key", "")
+                print(f"  ID: {result
+                print(f"  File: {result
+                print(f"  Path: {result
+                print(f"  Content length: {result
+                print(f"  Content preview: {result
 
 if __name__ == "__main__":
     test_query()

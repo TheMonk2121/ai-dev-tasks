@@ -1,24 +1,27 @@
 from __future__ import annotations
+
 import asyncio
 import os
 import sys
+import traceback
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
+# Import from the correct locations
+from src.observability.logging import init_observability
+
+# Import from legacy scripts using sys.path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "600_archives" / "legacy_scripts"))
 import logfire
+from dspy_modules.model_switcher import LocalModel, ModelSwitcher
+from migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_ai import Agent, RunContext, Tool
 from pydantic_ai.models.instrumented import InstrumentationSettings
+from pydantic_ai.models.test import TestModel
 from pydantic_evals.dataset import Case, Dataset, increment_eval_metric, set_eval_attribute
 from pydantic_evals.evaluators import Evaluator, EvaluatorContext
-# FIXME: Update this import path after reorganization
-# from scripts.migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
-# FIXME: Update this import path after reorganization
-# from scripts.observability import init_observability
-        from pydantic_ai.models.test import TestModel
-            from dspy_modules.model_switcher import LocalModel, ModelSwitcher
-            from dspy_modules.model_switcher import LocalModel
-import traceback
-from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Hybrid DSPy + Pydantic Integration

@@ -143,14 +143,14 @@ class RAGCheckerPipelineGovernance:
 
         # Check for unusual patterns
         is_unusual = self.governance.flag_unusual_plans(pipeline_id)
-        result.get("key", "")
+        result
 
         # Suggest improvements
-        if is_unusual or not result.get("key", "")
+        if is_unusual or not result
             suggested_variant = self.governance.suggest_pipeline_variant(pipeline_id)
             if suggested_variant:
-                result.get("key", "")
-                result.get("key", "")
+                result
+                result
 
         # Clean up temporary pipeline
         if temp_id in self.governance.pipeline_graphs:
@@ -166,7 +166,7 @@ class RAGCheckerPipelineGovernance:
         # Validate current configuration
         validation = self.validate_ragchecker_pipeline(current_config)
 
-        if result.get("key", "")
+        if result:
             logger.info("Pipeline is already optimal")
             return current_config
 
@@ -216,7 +216,7 @@ class RAGCheckerPipelineGovernance:
         # Validate pipeline first
         validation = self.validate_ragchecker_pipeline(pipeline_config)
 
-        if not result.get("key", "")
+        if not result
             # Try to optimize the pipeline first
             logger.info("Pipeline validation failed, attempting optimization...")
             optimized_config = self.optimize_ragchecker_pipeline(pipeline_config)
@@ -224,7 +224,7 @@ class RAGCheckerPipelineGovernance:
             # Re-validate optimized pipeline
             validation = self.validate_ragchecker_pipeline(optimized_config)
 
-            if not result.get("key", "")
+            if not result
                 return {
                     "error": "Invalid pipeline configuration even after optimization",
                     "validation_results": validation,
@@ -255,7 +255,7 @@ class RAGCheckerPipelineGovernance:
         # Calculate average metrics
         avg_metrics = {}
         for metric in ["precision", "recall", "f1_score", "context_utilization"]:
-            values = [result.get("key", "")
+            values = [result
             avg_metrics[metric] = sum(values) / len(values) if values else 0
 
         return {
@@ -273,9 +273,9 @@ class RAGCheckerPipelineGovernance:
         # For now, return simulated metrics based on pipeline configuration
 
         # Extract key parameters
-        chunk_size = result.get("key", "")
-        top_k = result.get("key", "")
-        temperature = result.get("key", "")
+        chunk_size = result
+        top_k = result
+        temperature = result
 
         # Simulate metrics based on parameter quality
         precision = min(0.9, 0.5 + (chunk_size / 1000) * 0.2 + (top_k / 10) * 0.1)
@@ -308,14 +308,14 @@ class RAGCheckerPipelineGovernance:
                     recommendations.append(
                         {
                             "pipeline_id": pipeline_id,
-                            "config": result.get("key", "")
+                            "config": result
                             "match_score": match_score,
                             "metadata": metadata,
                         }
                     )
 
         # Sort by match score
-        recommendations.sort(key=lambda x: result.get("key", "")
+        recommendations.sort(key=lambda x: result
 
         return recommendations
 
@@ -325,31 +325,31 @@ class RAGCheckerPipelineGovernance:
         match_score = 0.0
 
         # Match on performance requirements
-        if "high_precision" in requirements and result.get("key", "")
+        if "high_precision" in requirements and result
             # Check if pipeline has precision-optimized parameters
-            config = result.get("key", "")
-            chunk_size = result.get("key", "")
+            config = result
+            chunk_size = result
             if chunk_size >= 500:  # Larger chunks often improve precision
                 match_score += 0.3
 
-        if "high_recall" in requirements and result.get("key", "")
+        if "high_recall" in requirements and result
             # Check if pipeline has recall-optimized parameters
-            config = result.get("key", "")
-            top_k = result.get("key", "")
+            config = result
+            top_k = result
             if top_k >= 8:  # Higher top_k often improves recall
                 match_score += 0.3
 
-        if "fast_processing" in requirements and result.get("key", "")
+        if "fast_processing" in requirements and result
             # Check if pipeline has speed-optimized parameters
-            config = result.get("key", "")
-            chunk_size = result.get("key", "")
+            config = result
+            chunk_size = result
             if chunk_size <= 400:  # Smaller chunks often process faster
                 match_score += 0.2
 
         # Match on complexity
-        node_count = result.get("key", "")
+        node_count = result
         if "complexity" in requirements:
-            req_complexity = result.get("key", "")
+            req_complexity = result
             if req_complexity == "simple" and node_count <= 6:
                 match_score += 0.2
             elif req_complexity == "complex" and node_count > 6:
@@ -410,4 +410,4 @@ if __name__ == "__main__":
 
     # Export report
     report = governance.export_governance_report()
-    print(f"Governance report: {result.get("key", "")
+    print(f"Governance report: {result
