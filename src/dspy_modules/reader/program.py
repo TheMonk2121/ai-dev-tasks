@@ -1,3 +1,4 @@
+import os
 import re
 from typing import Any
 
@@ -75,7 +76,11 @@ class ExtractiveReader(dspy.Module):
             # More lenient check: look for key terms from the answer in the context
             ans_words = set(re.findall(r"[A-Za-z0-9_/.-]+", ans.lower()))
             context_words = set(re.findall(r"[A-Za-z0-9_/.-]+", joined.lower()))
-            # If at least 50% of answer words are in context, accept it
-            if len(ans_words) > 0 and len(ans_words.intersection(context_words)) / len(ans_words) < 0.5:
+            overlap_ratio = (len(ans_words.intersection(context_words)) / len(ans_words)) if ans_words else 0.0
+            try:
+                min_overlap = float(os.getenv("READER_MIN_OVERLAP_RATIO", "0.3"))
+            except ValueError:
+                min_overlap = 0.3
+            if overlap_ratio < max(0.0, min_overlap):
                 ans = "NOT_ANSWERABLE"
         return {"answer": ans}
