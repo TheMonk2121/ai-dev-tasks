@@ -7,16 +7,17 @@ and domain-specific data generation.
 """
 
 from __future__ import annotations
-from typing import Any
 
 import json
 import uuid
 from datetime import datetime, timedelta
+from typing import Any
 
-from hypothesis import assume, example, given, settings, strategies as st
+import numpy as np
+from hypothesis import assume, example, given, settings
+from hypothesis import strategies as st
 from hypothesis.extra.numpy import arrays as hnp_arrays
 from hypothesis.stateful import Bundle, RuleBasedStateMachine, rule, run_state_machine_as_test
-import numpy as np
 
 # ============================================================================
 # Domain-Specific Strategies
@@ -79,7 +80,7 @@ def database_dsn_strategy(draw: st.DrawFn) -> str:
 
 
 @st.composite
-def conversation_message_strategy(draw: st.DrawFn) -> Dict[str, Any]:
+def conversation_message_strategy(draw: st.DrawFn) -> dict[str, Any]:
     """Generate conversation message data."""
     message_id = draw(st.text(min_size=1, max_size=50))
     thread_id = draw(st.text(min_size=1, max_size=50))
@@ -112,7 +113,7 @@ def conversation_message_strategy(draw: st.DrawFn) -> Dict[str, Any]:
 
 
 @st.composite
-def retrieval_result_strategy(draw: st.DrawFn) -> Dict[str, Any]:
+def retrieval_result_strategy(draw: st.DrawFn) -> dict[str, Any]:
     """Generate retrieval result data."""
     chunk_id = draw(st.text(min_size=1, max_size=50))
     content = draw(st.text(min_size=1, max_size=2000))
@@ -149,7 +150,7 @@ def embedding_vector_strategy(draw: st.DrawFn, dimension: int = 384) -> np.ndarr
 
 
 @st.composite
-def evaluation_metrics_strategy(draw: st.DrawFn) -> Dict[str, float]:
+def evaluation_metrics_strategy(draw: st.DrawFn) -> dict[str, float]:
     """Generate evaluation metrics data."""
     return {
         "precision": draw(st.floats(min_value=0.0, max_value=1.0)),
@@ -212,7 +213,7 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
 
         # Simulate memory query
         thread_count = len(self.conversations)
-        message_count = sum(len(result
+        message_count = sum(len(conv.get("messages", [])) for conv in self.conversations)
 
         return {
             "system": system_name,
@@ -228,7 +229,8 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
         cutoff_time = datetime.now() - timedelta(hours=max_age_hours)
 
         old_threads = [
-            thread_id for thread_id, conv in self..items()
+            thread_id for thread_id, conv in self.conversations.items()
+            if conv.get("last_activity", datetime.now()) < cutoff_time
         ]
 
         for thread_id in old_threads:

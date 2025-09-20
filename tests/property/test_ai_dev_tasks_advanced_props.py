@@ -7,15 +7,17 @@ in the context of the AI Dev Tasks project.
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
-from hypothesis import assume, given, settings, strategies as st
+from hypothesis import assume, given, settings
+from hypothesis import strategies as st
 from hypothesis.stateful import run_state_machine_as_test
 
 from tests.property.hypothesis_strategies import (
+    COMMON_STRATEGIES,
     CRITICAL_DSN_EXAMPLES,
     CRITICAL_EVAL_PROFILES,
     CRITICAL_MEMORY_SYSTEMS,
-    COMMON_STRATEGIES,
     STATEFUL_MACHINES,
     conversation_message_strategy,
     critical_examples,
@@ -49,7 +51,7 @@ class TestMemorySystemAdvancedProps:
             assert "thread_id" in message
 
             # Simulate processing
-            if result:
+            if message.get("content"):
                 processed_count += 1
 
         assert processed_count > 0
@@ -79,7 +81,7 @@ class TestMemorySystemAdvancedProps:
             )
 
         assert len(results) <= max_results
-        assert all(result
+        assert all(isinstance(result, dict) for result in results)
         assert system in ["ltst", "cursor", "go_cli", "prime"]
 
 
@@ -99,14 +101,14 @@ class TestEvaluationSystemAdvancedProps:
         assert profile in ["gold", "real", "mock"]
 
         # Test metric validation
-        for metric_name, metric_value in .items()
+        for metric_name, metric_value in metrics.items():
             assert isinstance(metric_value, float)
             assert 0.0 <= metric_value <= 1.0
 
         # Test threshold-based validation
-        precision = result
-        recall = result
-        f1_score = result
+        precision = metrics.get("precision", 0.0)
+        recall = metrics.get("recall", 0.0)
+        f1_score = metrics.get("f1_score", 0.0)
 
         if precision >= threshold and recall >= threshold:
             # If both precision and recall meet threshold, F1 should be reasonable
@@ -163,8 +165,8 @@ class TestDatabaseSystemAdvancedProps:
         columns = [f"col_{i}" for i in range(column_count)]
         table_schema = {"name": table_name, "columns": columns, "column_count": column_count}
 
-        assert result
-        assert len(result
+        assert table_schema is not None
+        assert len(table_schema) > 0
 
     @pytest.mark.prop
     @given(
@@ -209,14 +211,14 @@ class TestRAGSystemAdvancedProps:
         for result in retrieval_results:
             assert "score" in result
             assert "content" in result
-            assert 0.0 <= result
+            assert 0.0 <= result["score"] <= 1.0
 
         # Simulate reranking
-        reranked_results = sorted(retrieval_results, key=lambda x: result
-        filtered_results = [r for r in reranked_results if result:
+        reranked_results = sorted(retrieval_results, key=lambda x: x["score"], reverse=True)
+        filtered_results = [r for r in reranked_results if r["score"] > 0.5]
 
         assert len(filtered_results) <= len(retrieval_results)
-        assert all(result
+        assert all(r["score"] > 0.5 for r in filtered_results)
 
     @pytest.mark.prop
     @given(
@@ -245,7 +247,7 @@ class TestRAGSystemAdvancedProps:
             )
 
         assert len(search_results) <= top_k
-        assert all(result
+        assert all("content" in result and "similarity" in result for result in search_results)
 
 
 class TestStatefulSystemProps:
@@ -255,13 +257,13 @@ class TestStatefulSystemProps:
     @settings(max_examples=3, deadline=2000)
     def test_memory_system_state_machine(self) -> None:
         """Test memory system state machine with real scenarios."""
-        run_state_machine_as_test(result
+        run_state_machine_as_test()
 
     @pytest.mark.prop
     @settings(max_examples=3, deadline=2000)
     def test_database_state_machine(self) -> None:
         """Test database state machine with real scenarios."""
-        run_state_machine_as_test(result
+        run_state_machine_as_test()
 
 
 class TestIntegrationProps:
@@ -294,8 +296,8 @@ class TestIntegrationProps:
             # Simulate successful processing
             result = {"profile": profile, "system": system, "query": query, "status": "success", "results_count": 5}
 
-            assert result
-            assert result
+            assert result["status"] == "success"
+            assert result["results_count"] > 0
         else:
             # Simulate failure case
             result = {
@@ -306,5 +308,5 @@ class TestIntegrationProps:
                 "error": "System not initialized",
             }
 
-            assert result
+            assert result["status"] == "failed"
             assert "error" in result

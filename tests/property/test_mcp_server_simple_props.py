@@ -199,12 +199,12 @@ class TestMCPServerSimpleProperties:
                     )
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist in database"
-                    assert result
-                    assert result
-                    assert result
-                    assert result
+                    assert row["turn_id"] == "test_turn_123"
+                    assert row["thread_id"] == "test_thread_456"
+                    assert row["role"] == "user"
+                    assert row["content"] == "Test message"
                     # Metadata should be properly serialized
-                    assert isinstance(result
+                    assert isinstance(row["metadata"], dict)
             finally:
                 await conn.close()
 
@@ -317,8 +317,8 @@ class TestMCPServerSimpleProperties:
                     )
                     turns = await cur.fetchall()
                     assert len(turns) == 2, "Both turns should exist"
-                    assert result
-                    assert result
+                    assert turns[0]["role"] == "user"
+                    assert turns[1]["role"] == "assistant"
             finally:
                 await conn.close()
 
@@ -403,11 +403,11 @@ class TestMCPServerSimpleProperties:
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist"
 
-                    stored_metadata = result
+                    stored_metadata = row["metadata"]
                     assert isinstance(stored_metadata, dict), "Metadata should be a dictionary"
 
                     # Verify all original metadata keys are present
-                    for key, value in .items()
+                    for key, value in metadata.items():
                         assert key in stored_metadata, f"Key {key} should be in stored metadata"
                         assert stored_metadata[key] == value, f"Value for {key} should match"
             finally:

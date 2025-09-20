@@ -129,12 +129,12 @@ class TestMCPServerProperties:
                     )
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist in database"
-                    assert result
-                    assert result
-                    assert result
-                    assert result
+                    assert row["turn_id"] == "test_turn_123"
+                    assert row["thread_id"] == "test_thread_456"
+                    assert row["role"] == "user"
+                    assert row["content"] == "Test message"
                     # Metadata should be properly serialized
-                    assert isinstance(result
+                    assert isinstance(row["metadata"], dict)
 
         asyncio.run(_test())
 
@@ -189,9 +189,9 @@ class TestMCPServerProperties:
                 # Verify parent-child relationship
                 parent_info = await get_parent_turn(conn, user_turn_id)
                 assert parent_info is not None, "Parent turn should exist"
-                assert result
-                assert result
-                assert result
+                assert "parent_turn_id" in parent_info
+                assert "parent_thread_id" in parent_info
+                assert "parent_role" in parent_info
 
         asyncio.run(_test())
 
@@ -402,11 +402,11 @@ class TestMCPServerProperties:
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist"
 
-                    stored_metadata = result
+                    stored_metadata = row["metadata"]
                     assert isinstance(stored_metadata, dict), "Metadata should be a dictionary"
 
                     # Verify all original metadata keys are present
-                    for key, value in .items()
+                    for key, value in metadata.items():
                         assert key in stored_metadata, f"Key {key} should be in stored metadata"
                         assert stored_metadata[key] == value, f"Value for {key} should match"
 

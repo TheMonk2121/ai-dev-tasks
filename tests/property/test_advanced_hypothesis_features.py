@@ -13,15 +13,16 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from hypothesis import assume, given, settings, strategies as st
+from hypothesis import assume, given, settings
+from hypothesis import strategies as st
 from hypothesis.stateful import run_state_machine_as_test
 
 from tests.property.hypothesis_strategies import (
+    COMMON_STRATEGIES,
     CRITICAL_DSN_EXAMPLES,
     CRITICAL_EVAL_PROFILES,
     CRITICAL_MEMORY_SYSTEMS,
     CRITICAL_MESSAGE_EXAMPLES,
-    COMMON_STRATEGIES,
     STATEFUL_MACHINES,
     conversation_message_strategy,
     critical_examples,
@@ -78,9 +79,9 @@ class TestCompositeStrategies:
         for field in required_fields:
             assert field in message
 
-        assert result
-        assert isinstance(result
-        assert len(result
+        assert message is not None
+        assert isinstance(message, dict)
+        assert len(message) > 0
 
     @pytest.mark.prop
     @given(result=retrieval_result_strategy())
@@ -91,9 +92,9 @@ class TestCompositeStrategies:
         for field in required_fields:
             assert field in result
 
-        assert 0.0 <= result
-        assert isinstance(result
-        assert len(result
+        assert 0.0 <= result["score"] <= 1.0
+        assert isinstance(result["metadata"], dict)
+        assert len(result["content"]) > 0
 
     @pytest.mark.prop
     @given(vector=embedding_vector_strategy())
@@ -130,7 +131,7 @@ class TestAssumePreconditions:
         assume(a % b == 0)  # Only test cases where a is divisible by b
 
         result = a / b
-        assert isinstance(result, (int, float))
+        assert isinstance(result, int | float)
         assert result * b == a
 
     @pytest.mark.prop
@@ -196,7 +197,7 @@ class TestExampleDecorators:
         """Test message processing with critical examples."""
         assert "role" in message
         assert "content" in message
-        assert result
+        assert isinstance(message, dict)
 
 
 class TestStatefulTesting:
@@ -206,13 +207,13 @@ class TestStatefulTesting:
     @settings(max_examples=5, deadline=1000)
     def test_memory_system_state_machine(self) -> None:
         """Test memory system state machine."""
-        run_state_machine_as_test(result
+        run_state_machine_as_test()
 
     @pytest.mark.prop
     @settings(max_examples=5, deadline=1000)
     def test_database_state_machine(self) -> None:
         """Test database state machine."""
-        run_state_machine_as_test(result
+        run_state_machine_as_test()
 
 
 class TestAdvancedFeatures:
@@ -250,7 +251,7 @@ class TestAdvancedFeatures:
         for message in messages:
             assert "role" in message
             assert "content" in message
-            assert result
+            assert isinstance(message, dict)
 
         # Test result properties
         for result in results:
@@ -271,7 +272,7 @@ class TestAdvancedFeatures:
             assert not any(np.isinf(vector))
 
         # Test metrics
-        for metric_name, metric_value in .items()
+        for metric_name, metric_value in metrics.items():
             assert isinstance(metric_value, float)
             assert metric_value >= 0.0
 
@@ -280,19 +281,19 @@ class TestStrategyReusability:
     """Test strategy reusability and composition."""
 
     @pytest.mark.prop
-    @given(data=result
+    @given(data=st.data())
     @settings(max_examples=20, deadline=200)
     def test_reusable_strategies(self, data: dict) -> None:
         """Test that reusable strategies work correctly."""
         assert "role" in data
         assert "content" in data
-        assert result
+        assert isinstance(data, dict)
 
     @pytest.mark.prop
     @given(
-        profile=result
-        system=result
-        dsn=result
+        profile=st.sampled_from(["gold", "real", "mock"]),
+        system=st.sampled_from(["ltst", "cursor", "go_cli", "prime"]),
+        dsn=st.text(min_size=10, max_size=100)
     )
     @settings(max_examples=15, deadline=300)
     def test_strategy_composition(self, profile: str, system: str, dsn: str) -> None:
