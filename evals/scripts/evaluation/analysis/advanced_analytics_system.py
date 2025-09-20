@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Any
 
 import hashlib
 import json
@@ -13,6 +12,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from typing import Any
 
 import numpy as np
 
@@ -139,7 +139,8 @@ class AnalyticsDatabase:
         cursor = conn.cursor()
 
         # Usage patterns table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS usage_patterns (
                 pattern_id TEXT PRIMARY KEY,
                 pattern_type TEXT NOT NULL,
@@ -150,13 +151,14 @@ class AnalyticsDatabase:
                 recommendations TEXT,
                 metadata TEXT,
                 created_at REAL NOT NULL,
-                last_updated REAL NOT NULL)
+                last_updated REAL NOT NULL
             )
         """
         )
 
         # Performance metrics table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS performance_metrics (
                 metric_id TEXT PRIMARY KEY,
                 metric_name TEXT NOT NULL,
@@ -164,13 +166,14 @@ class AnalyticsDatabase:
                 unit TEXT NOT NULL,
                 timestamp REAL NOT NULL,
                 context TEXT,
-                created_at REAL NOT NULL)
+                created_at REAL NOT NULL
             )
         """
         )
 
         # Optimization opportunities table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS optimization_opportunities (
                 opportunity_id TEXT PRIMARY KEY,
                 opportunity_type TEXT NOT NULL,
@@ -183,13 +186,14 @@ class AnalyticsDatabase:
                 implementation_steps TEXT,
                 metadata TEXT,
                 created_at REAL NOT NULL,
-                last_updated REAL NOT NULL)
+                last_updated REAL NOT NULL
             )
         """
         )
 
         # Trend analysis table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS trend_analysis (
                 trend_id TEXT PRIMARY KEY,
                 metric_name TEXT NOT NULL,
@@ -201,13 +205,13 @@ class AnalyticsDatabase:
                 prediction REAL,
                 metadata TEXT,
                 created_at REAL NOT NULL,
-                last_updated REAL NOT NULL)
+                last_updated REAL NOT NULL
             )
         """
         )
 
         # Create indexes for better performance
-        cursor.execute()
+        cursor.execute(
             "CREATE INDEX IF NOT EXISTS idx_metrics_name_time ON performance_metrics(metric_name, timestamp)"
         )
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_patterns_type ON usage_patterns(pattern_type)")
@@ -229,9 +233,10 @@ class AnalyticsDatabase:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT OR REPLACE INTO usage_patterns
-            (pattern_id, pattern_type, frequency, confidence, impact_score, description,)
+            (pattern_id, pattern_type, frequency, confidence, impact_score, description,
              recommendations, metadata, created_at, last_updated)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
@@ -257,8 +262,9 @@ class AnalyticsDatabase:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
-            INSERT OR REPLACE INTO performance_metrics)
+        cursor.execute(
+            """
+            INSERT OR REPLACE INTO performance_metrics
             (metric_id, metric_name, value, unit, timestamp, context, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -281,9 +287,10 @@ class AnalyticsDatabase:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT OR REPLACE INTO optimization_opportunities
-            (opportunity_id, opportunity_type, current_value, potential_value, improvement_percentage,)
+            (opportunity_id, opportunity_type, current_value, potential_value, improvement_percentage,
              effort_required, priority, description, implementation_steps, metadata, created_at, last_updated)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
@@ -311,9 +318,10 @@ class AnalyticsDatabase:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT OR REPLACE INTO trend_analysis
-            (trend_id, metric_name, trend_direction, trend_strength, confidence, time_period,)
+            (trend_id, metric_name, trend_direction, trend_strength, confidence, time_period,
              data_points, prediction, metadata, created_at, last_updated)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
@@ -334,7 +342,7 @@ class AnalyticsDatabase:
 
         conn.commit()
         conn.close()
-:
+
     def get_performance_metrics(self, metric_name: str, days: int = 30) -> list[PerformanceMetric]:
         """Get performance metrics for a specific metric name"""
         cutoff_time = time.time() - (days * 24 * 3600)
@@ -342,23 +350,25 @@ class AnalyticsDatabase:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT metric_id, metric_name, value, unit, timestamp, context, created_at
             FROM performance_metrics
             WHERE metric_name = ? AND timestamp >= ?
             ORDER BY timestamp ASC
-        """,)
+        """,
             (metric_name, cutoff_time),
         )
 
         metrics = []
         for row in cursor.fetchall():
-            metric = PerformanceMetric(metric_id=result
-                metric_name=result
-                value=result
-                unit=result
-                timestamp=result
-                context=json.loads(result)
+            metric = PerformanceMetric(
+                metric_id=row.get("metric_id", ""),
+                metric_name=row.get("metric_name", ""),
+                value=row.get("value", 0.0),
+                unit=row.get("unit", ""),
+                timestamp=row.get("timestamp", ""),
+                context=json.loads(row.get("context", "{}"))
             )
             metrics.append(metric)
 
@@ -371,34 +381,37 @@ class AnalyticsDatabase:
         cursor = conn.cursor()
 
         if pattern_type:
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT pattern_id, pattern_type, frequency, confidence, impact_score,
                        description, recommendations, metadata, created_at, last_updated
                 FROM usage_patterns
                 WHERE pattern_type = ?
                 ORDER BY impact_score DESC
-            """,)
+            """,
                 (pattern_type,),
             )
         else:
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT pattern_id, pattern_type, frequency, confidence, impact_score,
                        description, recommendations, metadata, created_at, last_updated
                 FROM usage_patterns
                 ORDER BY impact_score DESC
-            """)
+            """
             )
 
         patterns = []
         for row in cursor.fetchall():
-            pattern = UsagePattern(pattern_id=result
-                pattern_type=result
-                frequency=result
-                confidence=result
-                impact_score=result
-                description=result
-                recommendations=json.loads(result
-                metadata=json.loads(result)
+            pattern = UsagePattern(
+                pattern_id=row.get("pattern_id", ""),
+                pattern_type=row.get("pattern_type", ""),
+                frequency=row.get("frequency", 0),
+                confidence=row.get("confidence", 0.0),
+                impact_score=row.get("impact_score", 0.0),
+                description=row.get("description", ""),
+                recommendations=json.loads(row.get("recommendations", "[]")),
+                metadata=json.loads(row.get("metadata", "{}"))
             )
             patterns.append(pattern)
 
@@ -411,38 +424,41 @@ class AnalyticsDatabase:
         cursor = conn.cursor()
 
         if priority:
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT opportunity_id, opportunity_type, current_value, potential_value,
                        improvement_percentage, effort_required, priority, description,
                        implementation_steps, metadata, created_at, last_updated
                 FROM optimization_opportunities
                 WHERE priority = ?
                 ORDER BY improvement_percentage DESC
-            """,)
+            """,
                 (priority.value,),
             )
         else:
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT opportunity_id, opportunity_type, current_value, potential_value,
                        improvement_percentage, effort_required, priority, description,
                        implementation_steps, metadata, created_at, last_updated
             FROM optimization_opportunities
             ORDER BY improvement_percentage DESC
-            """)
+            """
             )
 
         opportunities = []
         for row in cursor.fetchall():
-            opportunity = OptimizationOpportunity(opportunity_id=result
-                opportunity_type=result
-                current_value=result
-                potential_value=result
-                improvement_percentage=result
-                effort_required=result
-                priority=InsightLevel(result
-                description=result
-                implementation_steps=json.loads(result
-                metadata=json.loads(result)
+            opportunity = OptimizationOpportunity(
+                opportunity_id=row.get("opportunity_id", ""),
+                opportunity_type=row.get("opportunity_type", ""),
+                current_value=row.get("current_value", 0.0),
+                potential_value=row.get("potential_value", 0.0),
+                improvement_percentage=row.get("improvement_percentage", 0.0),
+                effort_required=row.get("effort_required", ""),
+                priority=InsightLevel(row.get("priority", "LOW")),
+                description=row.get("description", ""),
+                implementation_steps=json.loads(row.get("implementation_steps", "[]")),
+                metadata=json.loads(row.get("metadata", "{}"))
             )
             opportunities.append(opportunity)
 
@@ -454,39 +470,41 @@ class AnalyticsDatabase:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT trend_id, metric_name, trend_direction, trend_strength, confidence, time_period,
                    data_points, prediction, metadata, created_at, last_updated
             FROM trend_analysis
             ORDER BY last_updated DESC
-        """)
+        """
         )
 
         trends = []
         for row in cursor.fetchall():
             # Reconstruct data points from stored JSON
-            data_points_data = json.loads(result
+            data_points_data = json.loads(row.get("data_points", "[]"))
             data_points = []
             for dp_data in data_points_data:
                 metric = PerformanceMetric(
-                    metric_id=result
-                    metric_name=result
-                    value=result
-                    unit=result
-                    timestamp=result
-                    context=result)
+                    metric_id=dp_data.get("metric_id", ""),
+                    metric_name=dp_data.get("metric_name", ""),
+                    value=dp_data.get("value", 0.0),
+                    unit=dp_data.get("unit", ""),
+                    timestamp=dp_data.get("timestamp", ""),
+                    context=dp_data.get("context", {})
                 )
                 data_points.append(metric)
 
-            trend = TrendAnalysis(trend_id=result
-                metric_name=result
-                trend_direction=result
-                trend_strength=result
-                confidence=result
-                time_period=result
+            trend = TrendAnalysis(
+                trend_id=row.get("trend_id", ""),
+                metric_name=row.get("metric_name", ""),
+                trend_direction=row.get("trend_direction", ""),
+                trend_strength=row.get("trend_strength", 0.0),
+                confidence=row.get("confidence", 0.0),
+                time_period=row.get("time_period", ""),
                 data_points=data_points,
-                prediction=result
-                metadata=json.loads(result)
+                prediction=row.get("prediction", ""),
+                metadata=json.loads(row.get("metadata", "{}"))
             )
             trends.append(trend)
 
@@ -532,21 +550,21 @@ class UsagePatternAnalyzer:
             hourly_data[hour].append(metric.value)
 
         # Analyze patterns for each hour
-        for hour, values in .items():
+        for hour, values in hourly_data.items():
             if len(values) >= self.config.min_data_points:
                 avg_value = statistics.mean(values)
                 std_dev = statistics.stdev(values) if len(values) > 1 else 0
 
                 # Calculate pattern confidence
                 confidence = self._calculate_pattern_confidence(values)
-:
+
                 if confidence >= self.config.pattern_confidence_threshold:
-                    pattern = UsagePattern()
+                    pattern = UsagePattern(
                         pattern_id=f"hourly_{hour}_{hashlib.md5(str(values).encode()).hexdigest()[:8]}",
                         pattern_type="hourly_usage",
                         frequency=len(values) / len(metrics),
                         confidence=confidence,
-                        impact_score=avg_value / (float(np.max(values)) if float(np.max(values)) > 0 else 1.0),:
+                        impact_score=avg_value / (float(np.max(values)) if float(np.max(values)) > 0 else 1.0),
                         description=f"Hourly usage pattern at {hour}:00 with average {avg_value:.2f}",
                         recommendations=[
                             f"Optimize resource allocation for hour {hour}:00",
@@ -576,18 +594,18 @@ class UsagePatternAnalyzer:
             daily_data[day].append(metric.value)
 
         # Analyze patterns for each day
-        for day, values in .items():
+        for day, values in daily_data.items():
             if len(values) >= self.config.min_data_points:
                 avg_value = statistics.mean(values)
                 confidence = self._calculate_pattern_confidence(values)
 
                 if confidence >= self.config.pattern_confidence_threshold:
-                    pattern = UsagePattern()
+                    pattern = UsagePattern(
                         pattern_id=f"daily_{day}_{hashlib.md5(str(values).encode()).hexdigest()[:8]}",
                         pattern_type="daily_usage",
                         frequency=len(values) / len(metrics),
                         confidence=confidence,
-                        impact_score=avg_value / (float(np.max(values)) if float(np.max(values)) > 0 else 1.0),:
+                        impact_score=avg_value / (float(np.max(values)) if float(np.max(values)) > 0 else 1.0),
                         description=f"Daily usage pattern on {day} with average {avg_value:.2f}",
                         recommendations=[
                             f"Plan maintenance activities for {day}",
@@ -612,18 +630,18 @@ class UsagePatternAnalyzer:
             weekly_data[week].append(metric.value)
 
         # Analyze patterns for each week
-        for week, values in .items():
+        for week, values in weekly_data.items():
             if len(values) >= self.config.min_data_points:
                 avg_value = statistics.mean(values)
                 confidence = self._calculate_pattern_confidence(values)
 
                 if confidence >= self.config.pattern_confidence_threshold:
-                    pattern = UsagePattern()
+                    pattern = UsagePattern(
                         pattern_id=f"weekly_{week}_{hashlib.md5(str(values).encode()).hexdigest()[:8]}",
                         pattern_type="weekly_usage",
                         frequency=len(values) / len(metrics),
                         confidence=confidence,
-                        impact_score=avg_value / (float(np.max(values)) if float(np.max(values)) > 0 else 1.0),:
+                        impact_score=avg_value / (float(np.max(values)) if float(np.max(values)) > 0 else 1.0),
                         description=f"Weekly usage pattern for week {week} with average {avg_value:.2f}",
                         recommendations=["Review weekly performance trends", "Plan weekly optimization activities"],
                         metadata={"week": week, "avg_value": avg_value, "sample_count": len(values)},
@@ -668,7 +686,7 @@ class OptimizationAnalyzer:
             metric_groups[metric.metric_name].append(metric)
 
         # Analyze each metric group for opportunities
-        for metric_name, metric_list in .items():
+        for metric_name, metric_list in metric_groups.items():
             if len(metric_list) >= self.config.min_data_points:
                 metric_opportunities = self._analyze_metric_opportunities(metric_name, metric_list)
                 opportunities.extend(metric_opportunities)
@@ -679,7 +697,8 @@ class OptimizationAnalyzer:
 
         return opportunities
 
-    def _analyze_metric_opportunities(self, metric_name: str, metrics: list[PerformanceMetric])
+    def _analyze_metric_opportunities(
+        self, metric_name: str, metrics: list[PerformanceMetric]
     ) -> list[OptimizationOpportunity]:
         """Analyze a specific metric for optimization opportunities"""
         opportunities = []
@@ -693,20 +712,20 @@ class OptimizationAnalyzer:
         baseline_avg = statistics.mean([m.value for m in baseline_metrics])
 
         # Calculate current performance (last 25% of data)
-        current_count = max(1, len(sorted_metrics) // 4):
+        current_count = max(1, len(sorted_metrics) // 4)
         current_metrics = sorted_metrics[-current_count:]
         current_avg = statistics.mean([m.value for m in current_metrics])
 
-        # Calculate improvement potential:
+        # Calculate improvement potential
         if baseline_avg > 0:
             improvement_percentage = (current_avg - baseline_avg) / baseline_avg
 
-            # Check if improvement meets threshold:
+            # Check if improvement meets threshold
             if abs(improvement_percentage) >= self.config.optimization_threshold:
-                # Determine if this is an improvement or degradation:
+                # Determine if this is an improvement or degradation
                 if improvement_percentage > 0:
                     # Performance improved - identify what worked
-                    opportunity = OptimizationOpportunity()
+                    opportunity = OptimizationOpportunity(
                         opportunity_id=f"improvement_{metric_name}_{hashlib.md5(str(metrics).encode()).hexdigest()[:8]}",
                         opportunity_type="performance_improvement",
                         current_value=current_avg,
@@ -732,7 +751,7 @@ class OptimizationAnalyzer:
                     effort_required = self._assess_effort_required(abs(improvement_percentage))
                     priority = self._assess_priority(abs(improvement_percentage), effort_required)
 
-                    opportunity = OptimizationOpportunity()
+                    opportunity = OptimizationOpportunity(
                         opportunity_id=f"optimization_{metric_name}_{hashlib.md5(str(metrics).encode()).hexdigest()[:8]}",
                         opportunity_type="performance_optimization",
                         current_value=current_avg,
@@ -768,7 +787,7 @@ class OptimizationAnalyzer:
 
     def _assess_priority(self, improvement_percentage: float, effort_required: str) -> InsightLevel:
         """Assess the priority of an optimization opportunity"""
-        effort_score = self.config.result
+        effort_score = self.config.get("effort_score", 1.0)
 
         # Calculate priority score
         priority_score = improvement_percentage * effort_score
@@ -801,7 +820,7 @@ class TrendAnalyzer:
             metric_groups[metric.metric_name].append(metric)
 
         # Analyze trends for each metric
-        for metric_name, metric_list in .items():
+        for metric_name, metric_list in metric_groups.items():
             if len(metric_list) >= self.config.min_data_points:
                 trend = self._analyze_metric_trend(metric_name, metric_list)
                 if trend:
@@ -825,8 +844,8 @@ class TrendAnalyzer:
         # Calculate confidence
         confidence = self._calculate_trend_confidence(values)
 
-        # Make prediction if ML is enabled and enough data:
-        prediction = None:
+        # Make prediction if ML is enabled and enough data
+        prediction = None
         if self.config.enable_ml_predictions and len(values) >= self.config.min_training_data:
             prediction = self._make_prediction(timestamps, values)
 
@@ -839,7 +858,7 @@ class TrendAnalyzer:
         else:
             time_period = "monthly"
 
-        trend = TrendAnalysis()
+        trend = TrendAnalysis(
             trend_id=f"trend_{metric_name}_{hashlib.md5(str(metrics).encode()).hexdigest()[:8]}",
             metric_name=metric_name,
             trend_direction=trend_direction,
@@ -876,7 +895,7 @@ class TrendAnalyzer:
         y_pred = np.polyval(np.polyfit(x_norm, y, 1), x_norm)
         r_squared = 1 - np.sum((y - y_pred) ** 2) / np.sum((y - np.mean(y)) ** 2)
 
-        # Determine direction:
+        # Determine direction
         if abs(slope) < 0.01:
             direction = "stable"
         elif slope > 0:
@@ -924,7 +943,7 @@ class TrendAnalyzer:
             prediction = np.polyval(coeffs, future_x_norm)
 
             return max(0, float(prediction))  # Ensure non-negative
-:
+
         except Exception as e:
             logger.warning(f"Failed to make prediction: {e}")
             return None
@@ -1019,8 +1038,9 @@ class AdvancedAnalyticsSystem:
             timestamp = current_time - (i * 3600)
 
             # Memory usage metric
-            memory_metric = PerformanceMetric(metric_id=f"memory_{i}",
-                metric_name="memory_usage_mb",)
+            memory_metric = PerformanceMetric(
+                metric_id=f"memory_{i}",
+                metric_name="memory_usage_mb",
                 value=512 + (i * 10) + (np.random.normal(0, 20)),  # Trending upward with noise
                 unit="MB",
                 timestamp=timestamp,
@@ -1029,8 +1049,9 @@ class AdvancedAnalyticsSystem:
             metrics.append(memory_metric)
 
             # Response time metric
-            response_metric = PerformanceMetric(metric_id=f"response_{i}",
-                metric_name="response_time_ms",)
+            response_metric = PerformanceMetric(
+                metric_id=f"response_{i}",
+                metric_name="response_time_ms",
                 value=100 + (i * 2) + (np.random.normal(0, 10)),  # Trending upward with noise
                 unit="ms",
                 timestamp=timestamp,
@@ -1039,8 +1060,9 @@ class AdvancedAnalyticsSystem:
             metrics.append(response_metric)
 
             # Throughput metric
-            throughput_metric = PerformanceMetric(metric_id=f"throughput_{i}",
-                metric_name="requests_per_second",)
+            throughput_metric = PerformanceMetric(
+                metric_id=f"throughput_{i}",
+                metric_name="requests_per_second",
                 value=1000 - (i * 5) + (np.random.normal(0, 50)),  # Trending downward with noise
                 unit="req/s",
                 timestamp=timestamp,
@@ -1050,17 +1072,19 @@ class AdvancedAnalyticsSystem:
 
         return metrics
 
-    def _generate_insights(self, patterns: list[UsagePattern], opportunities: list[OptimizationOpportunity], trends: list[TrendAnalysis])
+    def _generate_insights(
+        self, patterns: list[UsagePattern], opportunities: list[OptimizationOpportunity], trends: list[TrendAnalysis]
     ) -> list[dict[str, Any]]:
         """Generate actionable insights from analysis results"""
         insights = []
 
         # High-impact patterns
-        high_impact_patterns = [p for p in patterns if p.impact_score > 0.7]:
+        high_impact_patterns = [p for p in patterns if p.impact_score > 0.7]
         if high_impact_patterns:
-            insights.append({
+            insights.append(
+                {
                     "type": "high_impact_pattern",
-                    "level": InsightLevel.HIGH,)
+                    "level": InsightLevel.HIGH,
                     "description": f"Found {len(high_impact_patterns)} high-impact usage patterns",
                     "recommendations": [
                         "Investigate high-impact patterns for optimization opportunities",
@@ -1070,11 +1094,12 @@ class AdvancedAnalyticsSystem:
             )
 
         # Critical optimization opportunities
-        critical_opportunities = [o for o in opportunities if o.priority == InsightLevel.CRITICAL]:
+        critical_opportunities = [o for o in opportunities if o.priority == InsightLevel.CRITICAL]
         if critical_opportunities:
-            insights.append({
+            insights.append(
+                {
                     "type": "critical_optimization",
-                    "level": InsightLevel.CRITICAL,)
+                    "level": InsightLevel.CRITICAL,
                     "description": f"Identified {len(critical_opportunities)} critical optimization opportunities",
                     "recommendations": [
                         "Prioritize critical optimization opportunities",
@@ -1084,11 +1109,12 @@ class AdvancedAnalyticsSystem:
             )
 
         # Strong trends
-        strong_trends = [t for t in trends if t.trend_strength > 0.8]:
+        strong_trends = [t for t in trends if t.trend_strength > 0.8]
         if strong_trends:
-            insights.append({
+            insights.append(
+                {
                     "type": "strong_trend",
-                    "level": InsightLevel.MEDIUM,)
+                    "level": InsightLevel.MEDIUM,
                     "description": f"Detected {len(strong_trends)} strong performance trends",
                     "recommendations": [
                         "Investigate causes of strong trends",
@@ -1124,24 +1150,26 @@ class AdvancedAnalyticsSystem:
 
         return {
             "system_running": self.is_running,
-            "uptime_seconds": current_time - self.startup_time if self.startup_time else 0,:
+            "uptime_seconds": current_time - self.startup_time if self.startup_time else 0,
             "last_analysis": current_time,
             "patterns_count": len(patterns),
             "opportunities_count": len(opportunities),
             "trends_count": len(trends),
-            "high_priority_opportunities": len([o for o in opportunities if o.priority in [InsightLevel.CRITICAL, InsightLevel.HIGH]])
+            "high_priority_opportunities": len(
+                [o for o in opportunities if o.priority in [InsightLevel.CRITICAL, InsightLevel.HIGH]]
             ),
-        }:
-:
+        }
+
 def main():
     """Test the advanced analytics system"""
     print("🧪 Testing Advanced Analytics System...")
 
     # Create configuration
-    config = AnalyticsConfig(analysis_interval=10,  # Short interval for testing
+    config = AnalyticsConfig(
+        analysis_interval=10,  # Short interval for testing
         min_data_points=5,
         pattern_confidence_threshold=0.6,
-        optimization_threshold=0.1,)
+        optimization_threshold=0.1,
     )
 
     # Initialize analytics system
@@ -1153,12 +1181,12 @@ def main():
     print("\n🔍 Running comprehensive analysis...")
     analysis_result = system.run_comprehensive_analysis()
 
-    print(f"  Patterns analyzed: {result
-    print(f"  Opportunities identified: {result
-    print(f"  Trends analyzed: {result
-    print(f"  Insights generated: {result
+    print(f"  Patterns analyzed: {analysis_result.get('patterns_count', 0)}")
+    print(f"  Opportunities identified: {analysis_result.get('opportunities_count', 0)}")
+    print(f"  Trends analyzed: {analysis_result.get('trends_count', 0)}")
+    print(f"  Insights generated: {analysis_result.get('insights_count', 0)}")
 
-    # Test system startup)
+    # Test system startup
     print("\n🚀 Testing system startup...")
     system.start_system()
 
@@ -1167,11 +1195,11 @@ def main():
 
     # Get system status
     status = system.get_system_status()
-    print(f"  System running: {result
-    print(f"  Uptime: {result
-    print(f"  High-priority opportunities: {result
+    print(f"  System running: {status.get('running', False)}")
+    print(f"  Uptime: {status.get('uptime', '0s')}")
+    print(f"  High-priority opportunities: {status.get('high_priority_opportunities', 0)}")
 
-    # Test system shutdown)
+    # Test system shutdown
     print("\n🛑 Testing system shutdown...")
     system.stop_system()
 

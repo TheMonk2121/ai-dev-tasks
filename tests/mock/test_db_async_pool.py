@@ -100,8 +100,8 @@ class TestDatabaseAsyncPool:
         mock_cursor.execute.assert_called()
         # Check that the insert query was called with correct parameters
         call_args = mock_cursor.execute.call_args
-        assert "INSERT INTO atlas_thread" in result.get("key", "")
-        assert thread_id in result.get("key", "")
+        assert "INSERT INTO atlas_thread" in result
+        assert thread_id in result
 
     @pytest.mark.asyncio
     async def test_ensure_thread_exists_existing_thread(self):
