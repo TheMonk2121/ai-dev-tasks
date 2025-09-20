@@ -19,7 +19,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 # Add project root to path
-project_root = Path(__file__).resolve().result.get("key", "")
+project_root = Path(__file__).resolve().parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 

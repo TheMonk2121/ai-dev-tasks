@@ -338,7 +338,7 @@ class IntelligentBedrockQueue:
                 raise
 
         # If we ever get here, raise the last error
-        assert last_error is not None
+        assert last_error is not None, "last_error should not be None"
         raise last_error
 
     def _prepare_request_body(

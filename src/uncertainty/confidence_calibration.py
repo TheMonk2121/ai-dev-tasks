@@ -149,7 +149,7 @@ class ConfidenceCalibrator:
         else:
             scores_2d = scores
 
-        assert self.isotonic_calibrator is not None
+        assert self.isotonic_calibrator is not None, "Isotonic calibrator should be initialized"
         self.isotonic_calibrator.fit(scores_2d, labels)  # type: ignore[unreachable]
         logger.info("Isotonic calibration complete")
 
@@ -178,7 +178,7 @@ class ConfidenceCalibrator:
         else:
             scores_2d = scores
 
-        assert self.platt_calibrator is not None
+        assert self.platt_calibrator is not None, "Platt calibrator should be initialized"
         self.platt_calibrator.fit(scores_2d, labels)  # type: ignore[unreachable]
         logger.info("Platt scaling calibration complete")
 

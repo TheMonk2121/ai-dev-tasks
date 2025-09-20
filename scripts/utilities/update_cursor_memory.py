@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from __future__ import annotations
 
 import argparse
@@ -9,9 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from few_shot_integration import FewShotExampleLoader
-
-#!/usr/bin/env python3
+# from few_shot_integration import FewShotExampleLoader
 """
 Cursor Memory Context Auto-Update Helper (B-061)
 
@@ -27,7 +26,7 @@ Features:
 
 # Import few-shot integration framework
 try:
-
+    from few_shot_integration import FewShotExampleLoader
     FEW_SHOT_AVAILABLE = True
 except ImportError:
     FEW_SHOT_AVAILABLE = False
@@ -41,7 +40,7 @@ FENCE_HEALTH_END = "<!-- AUTO:doc_health:end -->"
 FENCE_COMPLETED_START = "<!-- AUTO:recently_completed:start -->"
 FENCE_COMPLETED_END = "<!-- AUTO:recently_completed:end -->"
 
-def parse_backlog_item(line: str, few_shot_loader: FewShotExampleLoader | None = None) -> dict[str, str] | None:
+def parse_backlog_item(line: str, few_shot_loader: Any = None) -> dict[str, str] | None:
     """Parse a single backlog item line with improved error handling and few-shot enhancement"""
     if not line.strip() or "| B-" not in line:
         return None
@@ -108,7 +107,7 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> list[dict[str, s
     # Initialize few-shot loader if enabled
     if enable_few_shot and FEW_SHOT_AVAILABLE:
         try:
-            few_shot_loader = FewShotExampleLoader()
+            few_shot_loader = FewShotExampleLoader()  # type: ignore
             print("✅ Few-shot enhancement enabled for backlog parsing")
         except Exception as e:
             print(f"⚠️  Failed to initialize few-shot loader: {e}")

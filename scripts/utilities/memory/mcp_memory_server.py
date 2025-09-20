@@ -558,7 +558,7 @@ async def get_precision_eval_result(args: Mapping[str, object]) -> MemoryRespons
             return MemoryResponse(success=False, data={}, error="Unknown job_id")
 
     try:
-        assert job is not None
+        assert job is not None, "Job should not be None"
         with open(str(job.get("stdout", "")), encoding="utf-8", errors="replace") as fo:
             stdout = fo.read()
         with open(str(job.get("stderr", "")), encoding="utf-8", errors="replace") as fe:

@@ -66,9 +66,9 @@ def main() -> int:
             "timestamp": ts,
             "eval_file": Path(latest).name,
             "env": {
-                "EVAL_MODE": os.result.get("key", "")
-                "CACHE_DISABLED": os.result.get("key", "")
-                "AWS_REGION": os.result.get("key", "")
+                "EVAL_MODE": os.environ.get("EVAL_MODE", "development"),
+                "CACHE_DISABLED": os.environ.get("CACHE_DISABLED", "false"),
+                "AWS_REGION": os.environ.get("AWS_REGION", "us-east-1")
             },
         }
         with open(run_dir / "manifest.json", "w") as f:

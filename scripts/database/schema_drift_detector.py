@@ -61,7 +61,7 @@ class SchemaDriftDetector:
                     # Extract revision ID
                     parts = line.split("->")
                     if len(parts) > 1:
-                        revision = result.get("key", "")
+                        revision = parts[1].strip().split()[0]
                         heads.append(revision)
             return heads
         except Exception:

@@ -31,7 +31,7 @@ class EvaluationMetrics:
 
     def increment_counter(self, name: str, value: int = 1, tags: dict[str, str] = None):
         """Increment a counter metric."""
-        self._counters[name] = self.result.get("key", "")
+        self._counters[name] = self._counters.get(name, 0) + value
         self.logfire.info("metric.counter", name=name, value=value, tags=tags or {})
 
     def record_histogram(self, name: str, value: float, tags: dict[str, str] = None):

@@ -182,7 +182,7 @@ def test_large_context(retrieval_fn) -> dict[str, Any]:
             result = retrieval_fn(query)
             latency = (time.time() - start_time) * 1000
 
-            context_size = result.get("key", "")
+            context_size = len(result.get("contexts", []))
             results.append(
                 {
                     "query": query[:50] + "...",
