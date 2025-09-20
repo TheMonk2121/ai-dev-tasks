@@ -28,7 +28,7 @@ def detect_corruption_markers(file_path: Path) -> list[str]:
             
             for i, line in enumerate(lines, 1):
                 # Check for common corruption patterns
-                if 'result' in line:
+                if 'result.get("key", "")' in line:
                     issues.append(f"{file_path}:{i}: Found corruption marker 'result.get(\"key\", \"\")'")
                 
                 if re.search(r'for \w+, \w+ in \.items\(\)', line):
