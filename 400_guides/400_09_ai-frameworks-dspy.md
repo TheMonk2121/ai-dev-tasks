@@ -14,6 +14,7 @@
 ## 📋 **Table of Contents**
 
 ### **Core DSPy Framework**
+- [🔬 What is DSPy?](#what-is-dspy)
 - [🧠 DSPy Role Communication & Memory Access](#-dspy-role-communication--memory-access)
 - [🤖 DSPy Framework Integration](#-dspy-framework-integration)
 - [🚀 DSPy Role Integration with Vector-Based System Mapping](#-dspy-role-integration-with-vector-based-system-mapping)
@@ -34,6 +35,7 @@
 
 ### **Technical Reference**
 - [🔧 Technical Reference](#-technical-reference)
+- [📝 Sentence Selection Pipeline](#sentence-selection-pipeline)
 - [📚 References](#-references)
 
 ## ⚡ **5-Minute Quick Start**
@@ -123,6 +125,13 @@ Are you implementing AI features?
 ### **I'm a... (Choose Your Role)**
 
 **I'm a Developer** → Start with Quick Start above, then read `400_10_integrations-models.md` for model managemen
+
+## 🔬 What is DSPy? {#what-is-dspy}
+
+- **Definition**: DSPy is a framework for programming with foundation models that gives us declarative modules, optimization loops, and evaluation tooling for reliable AI applications.
+- **Core Capabilities**: Built-in prompt optimization, few-shot selection workflows, and schema-aware responses make it easier to harden reasoning chains.
+- **Integration Hooks**: DSPy modules plug into our retrieval stack, accept memory bundles, and expose evaluators so we can measure quality before shipping changes.
+- **Why It Matters**: Treating AI behaviors as code lets us version, test, and roll back model logic the same way we manage traditional services.
 
 ## 🧠 **DSPy Role Communication & Memory Access**
 
@@ -1749,6 +1758,13 @@ if not validation_result["is_safe"]:
 - Pydantic validation and type safety
 - Performance optimization techniques
 - Integration patterns and APIs
+
+### 📝 Sentence Selection Pipeline {#sentence-selection-pipeline}
+
+- **Implementation**: `src/dspy_modules/reader/sentence_select.py` scores candidate sentences using token overlap, phrase hits, and filename-token boosts to surface the most answerable spans.
+- **Budget Controls**: `evals/stable_build/config/reader_limits.yaml` defines per-case budgets—`READER_DOCS_BUDGET`, `CONTEXT_BUDGET_TOKENS`, and `SENTENCE_MAX_PER_DOC`—so extraction stays deterministic across runs.
+- **Scoring Stack**: Sentence scores blend lexical overlap with query keywords, N-gram phrase matches, and heuristic boosts for filenames or code identifiers that match the prompt.
+- **Operational Tip**: When evaluations miss answers, inspect the sentence-level debug output and adjust the config thresholds before modifying reader code.
 
 ### **API Reference**
 

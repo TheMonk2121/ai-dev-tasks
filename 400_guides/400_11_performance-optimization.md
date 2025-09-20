@@ -72,6 +72,7 @@ ls -la metrics/baseline_evaluations/
 - [🧪 Comprehensive Testing & Evaluation Systems](#-comprehensive-testing--evaluation-systems)
 - [📊 Performance Monitoring Framework](#-performance-monitoring-framework)
 - [🎯 RAGChecker Performance Baseline](#-ragchecker-performance-baseline-september-2-2025)
+- [🐦 Canary Deployment Guardrails](#canary-deployment-guardrails)
 - [🔧 System Optimization](#-system-optimization)
 - [🧠 Memory Context System Optimization](#-memory-context-system-optimization)
 
@@ -151,6 +152,14 @@ uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile moc
 ```
 
 **🚨 CRITICAL**: This is the single source of truth for performance requirements. All other references to RED LINE or RAGChecker baselines should point to this section.
+
+## 🐦 Canary Deployment Guardrails {#canary-deployment-guardrails}
+
+- **Default Limit**: `check_canary_percentage` in `evals/scripts/evaluation/canary_percentage_check.py` keeps canary rollouts at **≤ 50% traffic** unless you explicitly pass a lower `max_percentage`.
+- **Risk Envelope**: Holding the line at 50% ensures half the fleet stays on the last stable release, limiting blast radius while we monitor metrics and telemetry.
+- **Change Control**: Any adjustment to `max_percentage` requires SRE approval plus an entry in `configs/canary/rollout_policy.yaml` (or the active profile) so automation remains consistent.
+- **Companion Scripts**: `scripts/deployment_blocking.py` and monitoring hooks in `scripts/monitoring/canary_rollout.py` consume the same limit—breaches stop promotion until percentages and eval passes recover.
+- **Operational Runbook**: Rollouts follow 10% → 50% → 100% phases; stay at 50% while validation runs, then advance only when metrics hit green and deployment gate reports success.
 
 ---
 

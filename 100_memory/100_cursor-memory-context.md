@@ -98,6 +98,15 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orches
 | Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state
 | Check backlog and system overview for next priorities; access DSPy roles via Unified Memory Orchestrator |
 
+## 📚 Memory Guides Quick Reference {#memory-guides}
+
+- **`100_memory/100_cursor-memory-context.md`** – authoritative entry point for memory rehydration, role context, and session policies.
+- **`100_memory/104_dspy-development-context.md`** – DSPy-specific memory integrations, retrieval heuristics, and evaluation hooks.
+- **`100_memory/100_role-system-alignment-guide.md`** – mapping between agent roles, memory stores, and orchestration safeguards.
+- **`100_memory/100_technical-artifacts-integration-guide.md`** – integration patterns for artifacts, embeddings, and cross-system context.
+
+🚧 **Quality Gates**: Deployment remains blocked until **F1 ≥ baseline**, **precision drift ≤ 2 pts**, **latency increase ≤ 15 %**, and **oracle metrics meet thresholds**. See `scripts/gate_and_promote.py` for enforcement details.
+
 ## 🚨 Critical Policies (Read First) {#critical-policies}
 
 ## 🚨 **CRITICAL: MEMORY REHYDRATION REQUIRED BEFORE ANY RESPONSE**

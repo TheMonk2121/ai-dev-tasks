@@ -72,6 +72,15 @@ This guide covers comprehensive integration patterns and model management includ
 - **Resource optimization**: Optimize resource usage for models
 - **Quality assurance**: Ensure model quality and reliability
 
+## 🧭 API Design Approach {#api-design-approach}
+
+- **REST-first Philosophy**: Every integration exposes predictable RESTful resources with standard verbs, pagination, and idempotent retry guards.
+- **Input & Output Discipline**: Pydantic schemas and middleware validators sanitize input, enforce types, and shape responses consistently across services.
+- **Error Handling Contracts**: Error payloads include machine-readable codes plus remediation hints so clients can recover gracefully.
+- **Versioning & Compatibility**: `/v{n}` namespaces plus deprecation headers keep breaking changes isolated while we run overlapping releases.
+- **Security Posture**: JWT- or API-key authentication, role checks, and audit logging are mandatory at the gateway tier.
+- **Documentation Loop**: OpenAPI specs and integration playbooks live with the code, ensuring engineers ship docs alongside endpoints.
+
 ## 🔌 **API Design Principles**
 
 ### **RESTful API Design**
@@ -1013,6 +1022,13 @@ curl -X POST http://localhost:3000/mcp/tools/call \
   -H "Content-Type: application/json" \
   -d '{"tool_name": "get_project_context", "arguments": {}}'
 ```
+
+### 🔍 MCP Server Testing {#mcp-server-testing}
+
+- **Automated Check**: `uv run python scripts/utilities/test_mcp_server.py` exercises the UnifiedMemoryOrchestrator path and validates Cursor tool wiring end-to-end.
+- **Live Health Probe**: `curl http://localhost:3000/health` confirms the FastAPI service is responding.
+- **Tool Inventory**: `curl http://localhost:3000/mcp/tools` lists registered tools; ensure `get_project_context` and `run_precision_eval` appear.
+- **Tool Invocation**: Use `curl -X POST http://localhost:3000/mcp/tools/call` with a sample payload to make sure responses flow back through the HTTP adapter.
 
 ### **🔧 Troubleshooting**
 

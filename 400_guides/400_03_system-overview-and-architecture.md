@@ -95,6 +95,14 @@ uv run python scripts/unified_memory_orchestrator.py --systems cursor --role pla
 - Observability & Security
   - Health checks, metrics, tracing, access control, validation
 
+## 🗄️ Database Schema Overview {#database-schema-overview}
+
+- **documents** holds canonical source files and guides; `document_chunks` stores embedding-ready segments linked back via foreign keys.
+- **code_files** and **code_symbols** capture static analysis of the repository so retrieval can reference functions, classes, and modules precisely.
+- **conversation_memory** (plus session/support tables) persists dialogue context for agents and dashboards.
+- **pgvector** powers semantic retrieval with HNSW indexes on `document_chunks.embedding`; GIN indexes support text search on key columns.
+- **Consistency Rules**: migrations must use `common.db_dsn.resolve_dsn`, preserve vector dimensions, and keep HNSW `ef_search` tuned for low-latency similarity lookups.
+
 ## 🔄 Core Flows
 
 - Development Flow: Backlog → Plan → Implement → Test → Deploy → Observe

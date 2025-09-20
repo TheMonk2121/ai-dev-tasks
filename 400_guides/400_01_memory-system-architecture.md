@@ -74,6 +74,14 @@ uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cl
 - [📚 Examples](#-examples)
 - [🔗 Related Guides](#-related-guides)
 
+## 🧩 Architecture Snapshot {#memory-architecture-snapshot}
+
+- **LTST (Long-term Semantic Tracking)** keeps durable cross-session context so agents remember past work and commitments.
+- **Cursor Memory Integration** streams IDE events into the memory graph for real-time editing awareness.
+- **Go CLI Memory** captures terminal activity and task execution metadata for command-line workflows.
+- **Prime Orchestrator** coordinates the other stores, resolves conflicts, and serves as the canonical interface for read/write memory operations.
+- **Streaming Context Bus** links LTST, Cursor, Go CLI, and Prime so each surface shares updates without manual sync steps.
+
 ## 🗺️ **Choose Your Path**
 
 ### **What Are You Trying to Do?**
@@ -2438,4 +2446,3 @@ python3 scripts/generate_workflow_report.py --workflow-id WF-001 --output workfl
 - **Configuration Quality**: Workflow configurations must be complete and valid
 - **Execution Monitoring**: Workflow execution must be monitored and controlled
 - **Error Handling**: Proper error handling and recovery mechanisms must be implemented
-
