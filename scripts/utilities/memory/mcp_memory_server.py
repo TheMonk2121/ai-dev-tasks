@@ -43,7 +43,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Ensure repository root is on sys.path for absolute package imports
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+# NOTE: the file lives in scripts/utilities/memory/, so we need parents[3]
+# (four `.parent` hops) to reach the repository root and keep imports like
+# `scripts.utilities.*` working even when the server launches from this
+# subdirectory.
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 # Import systems using absolute package paths to avoid implicit relative imports
@@ -357,7 +361,7 @@ async def get_project_context(args: Mapping[str, object]) -> MemoryResponse:
     try:
         _ = args  # silence unused parameter in strict type checking
         # Read key project files
-        project_root = Path(__file__).parent.parent
+        project_root = PROJECT_ROOT
 
         context = {
             "project_root": str(project_root),
@@ -399,7 +403,7 @@ async def run_precision_evaluation(args: Mapping[str, object]) -> MemoryResponse
         timeout_sec = int(cast(int | str, args.get("timeout_sec", 1800)))
         fast_mode = args.get("fast_mode")
 
-        project_root = Path(__file__).parent.parent
+        project_root = PROJECT_ROOT
 
         if async_mode:
             job_id = str(uuid.uuid4())
@@ -599,7 +603,7 @@ async def process_files(args: Mapping[str, object]) -> MemoryResponse:
       - max_bytes: int (optional, default 4000)
     """
     try:
-        project_root = Path(__file__).parent.parent
+        project_root = PROJECT_ROOT
         raw_paths = args.get("paths")
         max_bytes = int(cast(int | str, args.get("max_bytes", 4000)))
         if not isinstance(raw_paths, list) or not raw_paths:
