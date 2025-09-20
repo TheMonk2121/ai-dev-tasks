@@ -71,3 +71,52 @@ UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_officia
 Notes:
 - Repository-standard: `UV_PROJECT_ENVIRONMENT=.venv`
 - Prefer gold for PR gates; real for development; mock for fast plumbing tests
+
+## MCP Memory Server
+
+The MCP (Model Context Protocol) Memory Server provides tool integration for Cursor and other AI agents.
+
+### Server Management
+```bash
+# Start MCP Memory Server
+make mcp-start
+
+# Stop MCP Memory Server  
+make mcp-stop
+
+# Restart MCP Memory Server
+make mcp-restart
+
+# Check server status
+make mcp-status
+
+# Test server functionality
+make mcp-test
+
+# View server logs
+make mcp-logs
+```
+
+### Server Details
+- **URL**: http://localhost:3000
+- **Health Check**: http://localhost:3000/health
+- **MCP Tools**: http://localhost:3000/mcp/tools
+- **Logs**: mcp_server.log
+- **Process**: scripts/utilities/memory/mcp_memory_server.py
+
+### Available MCP Tools
+- `record_chat_history` - MANDATORY tool for Cursor integration
+- `query_memory` - Query the memory system using unified orchestrator
+- `get_hot_context` - Fetch recent high-signal context
+- `search_hot_memory` - Search within recent hot memory window
+- `pin_hot_item` - Pin specific item into hot pool
+- `get_project_context` - Get current project context and status
+- `process_files` - Read and summarize repo-relative files
+- `analyze_file_content` - Analyze dropped file content
+
+### Integration Status
+- ✅ Server health checks passing
+- ✅ Cursor integration fully functional
+- ✅ Memory systems operational
+- ✅ Database connectivity established
+- ✅ All MCP tools available

@@ -95,6 +95,47 @@ validate-github-actions:
 	@echo "✅ GitHub Actions workflows validated successfully"
 	@echo "   All context usage follows project standards"
 
+# Fix missing Any imports in Python files
+fix-any-imports:
+	@echo "Fixing missing Any imports in Python files..."
+	@python3 scripts/fix_any_imports.py
+	@echo "✅ Any import fixes completed"
+
+# MCP Memory Server Management
+mcp-start:
+	@echo "Starting MCP Memory Server..."
+	@cd /Users/danieljacobs/Code/ai-dev-tasks && UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/utilities/memory/mcp_memory_server.py &
+	@echo "✅ MCP Memory Server started on localhost:3000"
+
+mcp-stop:
+	@echo "Stopping MCP Memory Server..."
+	@pkill -f mcp_memory_server || true
+	@echo "✅ MCP Memory Server stopped"
+
+mcp-restart: mcp-stop mcp-start
+	@echo "✅ MCP Memory Server restarted"
+
+mcp-status:
+	@echo "Checking MCP Memory Server status..."
+	@if curl -s http://localhost:3000/health > /dev/null 2>&1; then \
+		echo "✅ MCP Memory Server is running on localhost:3000"; \
+		curl -s http://localhost:3000/health | python3 -m json.tool; \
+	else \
+		echo "❌ MCP Memory Server is not running"; \
+	fi
+
+mcp-test:
+	@echo "Testing MCP Memory Server functionality..."
+	@curl -X POST http://localhost:3000/mcp/tools/call \
+		-H "Content-Type: application/json" \
+		-d '{"tool_name": "record_chat_history", "arguments": {"user_input": "MCP server test", "system_output": "Testing MCP server functionality", "project_dir": "/Users/danieljacobs/Code/ai-dev-tasks", "file_operations": "MCP server test", "llm_name": "cursor-ai"}}' \
+		| python3 -m json.tool
+	@echo "✅ MCP Memory Server test completed"
+
+mcp-logs:
+	@echo "Showing MCP Memory Server logs..."
+	@tail -20 mcp_server.log
+
 # Help target
 help:
 	@echo "Available targets:"
@@ -110,4 +151,11 @@ help:
 	@echo "  test-profiles    - Run profile configuration tests"
 	@echo "  dsn-resolver-info - Show centralized DSN resolver guidance"
 	@echo "  validate-github-actions - Validate GitHub Actions workflows for context issues"
+	@echo "  fix-any-imports  - Fix missing Any imports in Python files"
+	@echo "  mcp-start        - Start MCP Memory Server on localhost:3000"
+	@echo "  mcp-stop         - Stop MCP Memory Server"
+	@echo "  mcp-restart      - Restart MCP Memory Server"
+	@echo "  mcp-status       - Check MCP Memory Server status"
+	@echo "  mcp-test         - Test MCP Memory Server functionality"
+	@echo "  mcp-logs         - Show MCP Memory Server logs"
 	@echo "  help             - Show this help message"

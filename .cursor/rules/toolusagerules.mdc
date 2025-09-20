@@ -21,6 +21,25 @@ applyIntelligently: true
 - memory-refresh — query MCP memory (LTST, Cursor, Go CLI)
   - runs: curl POST /mcp/tools/call tool_name=query_memory (prompts for query/role)
 
+### MCP Server Management
+- mcp-start — start MCP Memory Server
+  - runs: make mcp-start
+
+- mcp-stop — stop MCP Memory Server
+  - runs: make mcp-stop
+
+- mcp-restart — restart MCP Memory Server
+  - runs: make mcp-restart
+
+- mcp-status — check MCP Memory Server status
+  - runs: make mcp-status
+
+- mcp-test — test MCP Memory Server functionality
+  - runs: make mcp-test
+
+- mcp-logs — view MCP Memory Server logs
+  - runs: make mcp-logs
+
 ### Eval Smoke (fast, unpinned)
 - eval-smoke-mock — harness mock profile
   - runs: UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/evaluation/ragchecker_official_evaluation.py --profile mock

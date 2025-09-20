@@ -50,6 +50,7 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/utilities/unified_mem
 - Ensure all tests pass: `make test-all`
 - Verify database health: `make db-health`
 - Check linting: `make lint`
+- Verify MCP server status: `make mcp-status`
 
 ### **Tool Usage**
 - Prefer `codebase_search` over `grep` for semantic searches
@@ -65,6 +66,16 @@ export POSTGRES_DSN="mock://test" && uv run python scripts/utilities/unified_mem
 - DSPy integration for neural program synthesis
 - PostgreSQL with pgvector for conversation storage
 - MCP server for tool integration
+
+### **MCP Memory Server**
+- **URL**: http://localhost:3000
+- **Health Check**: http://localhost:3000/health
+- **MCP Tools**: http://localhost:3000/mcp/tools
+- **Management**: Use `make mcp-start`, `make mcp-stop`, `make mcp-restart`
+- **Status**: `make mcp-status` to check server health
+- **Testing**: `make mcp-test` to verify functionality
+- **Logs**: `make mcp-logs` to view server logs
+- **Integration**: Fully functional with Cursor and all memory systems
 
 ### **Code Quality Standards**
 - Type hints required in all Python files
@@ -97,6 +108,8 @@ Fold new content into existing 400_ guides using anchors rather than creating ne
 - `make quality-check` - Complete quality gates
 - `make db-health` - Database health check
 - `make eval-gold` - Production baseline evaluation
+- `make mcp-status` - Check MCP server status
+- `make mcp-test` - Test MCP server functionality
 
 **Key Files:**
 - `400_guides/` - Project documentation

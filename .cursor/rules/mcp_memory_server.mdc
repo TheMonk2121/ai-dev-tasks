@@ -1,0 +1,63 @@
+---
+description: "MCP Memory Server management and integration for Cursor AI agents"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# MCP Memory Server Integration
+
+## Server Management Commands
+
+### Start/Stop/Restart
+- `make mcp-start` - Start MCP Memory Server on localhost:3000
+- `make mcp-stop` - Stop MCP Memory Server
+- `make mcp-restart` - Restart MCP Memory Server
+
+### Status and Testing
+- `make mcp-status` - Check MCP Memory Server status and health
+- `make mcp-test` - Test MCP Memory Server functionality
+- `make mcp-logs` - View MCP Memory Server logs
+
+## Server Details
+
+- **URL**: http://localhost:3000
+- **Health Check**: http://localhost:3000/health
+- **MCP Tools**: http://localhost:3000/mcp/tools
+- **Logs**: mcp_server.log
+- **Process**: scripts/utilities/memory/mcp_memory_server.py
+
+## Available MCP Tools
+
+### Core Tools
+- `record_chat_history` - **MANDATORY** tool for Cursor integration
+- `query_memory` - Query the memory system using unified orchestrator
+- `get_hot_context` - Fetch recent high-signal context
+- `search_hot_memory` - Search within recent hot memory window
+- `pin_hot_item` - Pin specific item into hot pool
+
+### Project Tools
+- `get_project_context` - Get current project context and status
+- `process_files` - Read and summarize repo-relative files
+- `analyze_file_content` - Analyze dropped file content
+
+## Integration Status
+
+- ✅ Server health checks passing
+- ✅ Cursor integration fully functional
+- ✅ Memory systems operational (LTST, Cursor, Go CLI, Prime)
+- ✅ Database connectivity established
+- ✅ All MCP tools available
+
+## Usage Requirements
+
+- MCP Memory Server must be running at http://localhost:3000 for memory tools
+- Use `UV_PROJECT_ENVIRONMENT=.venv` for all Python execution
+- Always call `record_chat_history` before concluding any turn
+- Verify server status with `make mcp-status` before using memory tools
+
+## Troubleshooting
+
+- If server fails to start: Check logs with `make mcp-logs`
+- If tools unavailable: Restart server with `make mcp-restart`
+- If import errors: Ensure server is running from project root directory
+- If database errors: Verify POSTGRES_DSN is set correctly
