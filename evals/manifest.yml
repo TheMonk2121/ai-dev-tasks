@@ -9,7 +9,7 @@ entrypoints:
       # Core evaluator (actual implementation)
       - evals/scripts/evaluation/dspy_evaluator.py
       - evals/scripts/evaluation/core/**
-      
+
       # Performance and health evaluation scripts
       - evals/scripts/evaluation/health_gated_evaluation.py
       - evals/scripts/evaluation/performance/nightly_smoke_evaluation.py

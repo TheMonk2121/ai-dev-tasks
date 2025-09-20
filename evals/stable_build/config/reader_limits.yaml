@@ -1,16 +1,16 @@
 ---
 # Reader sentence budgets and limits
 default:
-  per_chunk: 2
-  total_sentences: 12
-  min_sentence_score: 0.1
+  per_chunk: 1
+  total_sentences: 6 # Reduced from 8 for speed
+  min_sentence_score: 0.2
   abstain_threshold: 0.05
 
 tags:
   db_workflows:
-    per_chunk: 2
-    total_sentences: 10
-    min_sentence_score: 0.15
+    per_chunk: 1
+    total_sentences: 7
+    min_sentence_score: 0.25
     abstain_threshold: 0.05
   ops_health:
     per_chunk: 3
