@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from importlib import import_module
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import yaml
 
@@ -16,12 +18,17 @@ SRC_PATH = PROJECT_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-try:
+if TYPE_CHECKING:  # pragma: no cover - typing only
     from src.evaluation.contracts import DatasetConfig
     from src.evaluation.adapters.ragchecker import RagCheckerAdapter
-except ImportError:
-    from eval.contracts import DatasetConfig  # type: ignore  # pragma: no cover
-    from eval.ragchecker_adapter import RAGCheckerAdapter as RagCheckerAdapter  # type: ignore  # pragma: no cover
+else:
+    try:
+        from src.evaluation.contracts import DatasetConfig
+        from src.evaluation.adapters.ragchecker import RagCheckerAdapter
+    except ImportError:  # pragma: no cover - legacy fallback
+        contracts_module = import_module("eval.contracts")
+        DatasetConfig = getattr(contracts_module, "DatasetConfig")
+        RagCheckerAdapter = getattr(import_module("eval.ragchecker_adapter"), "RAGCheckerAdapter")
 
 # Production quality targets; values are floats so we can cast metrics safely.
 TARGETS: dict[str, float] = {
@@ -53,7 +60,7 @@ def main() -> None:
         cfg_data = yaml.safe_load(Path(args.dataset_config).read_text())
         cfg = DatasetConfig(**cfg_data)
 
-        adapter = RAGCheckerAdapter()
+        adapter = RagCheckerAdapter()
         result = adapter.evaluate_faithfulness(dataset=cfg)
 
         artifact = {

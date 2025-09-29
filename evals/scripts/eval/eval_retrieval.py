@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from importlib import import_module
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, Protocol
 
 import yaml
 
@@ -15,17 +17,27 @@ SRC_PATH = PROJECT_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-try:
-    from src.evaluation.contracts import DatasetConfig
+if TYPE_CHECKING:  # pragma: no cover - assist static typing
     from src.evaluation.adapters.ragchecker import RagCheckerAdapter
-except ImportError:
-    # Fallback for legacy environments that still ship the old eval package
-    from eval.contracts import DatasetConfig, RunMetrics  # type: ignore  # pragma: no cover
-    from eval.ragchecker_adapter import RAGCheckerAdapter as RagCheckerAdapter  # type: ignore  # pragma: no cover
-else:
-    from typing import Any
+    from src.evaluation.contracts import DatasetConfig
 
-    RunMetrics = Any
+    class RunMetrics(Protocol):
+        mode: str
+        dataset: str
+        metrics: dict[str, float]
+        samples_evaluated: int
+        timestamp: str
+else:
+    try:
+        from src.evaluation.contracts import DatasetConfig
+        from src.evaluation.adapters.ragchecker import RagCheckerAdapter
+    except ImportError:  # pragma: no cover - legacy fallback
+        contracts_module = import_module("eval.contracts")
+        DatasetConfig = getattr(contracts_module, "DatasetConfig")
+        RunMetrics = getattr(contracts_module, "RunMetrics")
+        RagCheckerAdapter = getattr(import_module("eval.ragchecker_adapter"), "RAGCheckerAdapter")
+    else:
+        RunMetrics = Any
 
 TARGETS: dict[str, float] = {
     "R@20": 0.65,
@@ -43,7 +55,7 @@ def run(cfg_path: str) -> list[RunMetrics]:
     cfg_data = yaml.safe_load(Path(cfg_path).read_text())
     dataset_cfg = DatasetConfig(**cfg_data)
 
-    adapter = RAGCheckerAdapter()
+    adapter = RagCheckerAdapter()
     runs: list[RunMetrics] = []
     runs.append(adapter.evaluate_retrieval(dataset=dataset_cfg, mode="dense"))
     runs.append(adapter.evaluate_retrieval(dataset=dataset_cfg, mode="hybrid_rerank"))
