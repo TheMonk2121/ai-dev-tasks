@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ContextBundle(BaseModel):
@@ -24,8 +24,7 @@ class ContextBundle(BaseModel):
     next: str = Field(..., description="Next action to take")
     context: dict[str, Any] = Field(default_factory=dict, description="Additional context data")
 
-    class Config:
-        extra = "allow"  # Allow additional fields for future extensibility
+    model_config: ConfigDict = ConfigDict(extra="allow")  # Allow additional fields for future extensibility
 
 
 class BacklogIdea(BaseModel):

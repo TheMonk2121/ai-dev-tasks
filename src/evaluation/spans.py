@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import AsyncGenerator, Callable, Mapping, Sequence
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from time import perf_counter
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any
 
 try:
     import logfire  # type: ignore
@@ -65,7 +66,7 @@ class RunSpanContext:
         self,
         case_id: str,
         attributes: Mapping[str, Any] | None = None,
-    ) -> CaseSpanContext:
+    ) -> AsyncGenerator[CaseSpanContext, None]:
         start = perf_counter()
         lf_span = _enter_span("eval.case", parent=self._span, attributes={"case_id": case_id, **(attributes or {})})
         context = CaseSpanContext(_exit_span, lf_span, [])

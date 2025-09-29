@@ -8,10 +8,11 @@ from both legacy wrappers and upcoming unified implementations.
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Mapping, Protocol, Sequence
+from typing import Any, Protocol
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,12 +81,15 @@ class Evaluator(Protocol):
 
     async def prepare(self, config: RunConfig) -> None:
         """Perform any one-time setup prior to case execution."""
+        ...
 
     async def run_case(self, case: CaseInput) -> CaseResult:
         """Execute the adapter against an individual case."""
+        ...
 
     async def finalize(self, results: Sequence[CaseResult]) -> Mapping[str, float]:
         """Return aggregated metrics after all cases complete."""
+        ...
 
 
 class Reporter(Protocol):

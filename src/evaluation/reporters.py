@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
 
-from src.evaluation.contracts import CaseResult, EvalSummary, RunConfig, Reporter
+from src.evaluation.contracts import CaseResult, EvalSummary, Reporter, RunConfig
 
 
 class ConsoleReporter(Reporter):

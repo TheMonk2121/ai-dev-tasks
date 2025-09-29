@@ -27,7 +27,7 @@ class ArrayF32WithShape:
     def __init__(self, shape: int | tuple[int, ...]) -> None:
         self.shape: Any = shape if isinstance(shape, tuple) else (shape,)
 
-    def __get_pydantic_core_schema__(self, source_type: type, handler: GetCoreSchemaHandler) -> CoreSchema:
+    def __get_pydantic_core_schema__(self, source_type: type[Any], handler: GetCoreSchemaHandler | None = None) -> CoreSchema:
         def validate_array(value: object) -> np.ndarray:
             if not isinstance(value, np.ndarray):
                 raise ValueError("Expected numpy array")
@@ -35,7 +35,7 @@ class ArrayF32WithShape:
             if value.dtype != np.float32:
                 # Convert to float32 if possible
                 try:
-                    value: Any = value.astype(np.float32)
+                    value = value.astype(np.float32)
                 except (ValueError, TypeError) as e:
                     raise ValueError(f"Cannot convert to float32: {e}")
 
@@ -44,10 +44,13 @@ class ArrayF32WithShape:
 
             return value
 
-        return core_schema.no_info_plain_validator_function(
-            validate_array,
+        # Build a plain validator schema; handler is optional for compatibility
+        schema = core_schema.no_info_plain_validator_function(validate_array)
+        return core_schema.json_or_python_schema(
+            json_schema=core_schema.list_schema(items_schema=core_schema.float_schema()),
+            python_schema=schema,
             serialization=core_schema.wrap_serializer_function_ser_schema(
-                lambda x, handler: x.tolist() if isinstance(x, np.ndarray) else x
+                lambda x, h: x.tolist() if isinstance(x, np.ndarray) else x
             ),
         )
 

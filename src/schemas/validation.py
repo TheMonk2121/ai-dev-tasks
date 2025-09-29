@@ -32,13 +32,13 @@ class ValidationConfig(BaseModel):
         """Sync with global settings if not explicitly set."""
         # Only sync if values are still at defaults
         if self.allow_missing_files is False and settings.allow_missing_files:
-            self.allow_missing_files: Any = settings.allow_missing_files
+            self.allow_missing_files = settings.allow_missing_files
         if self.unknown_tag_warning is True and not settings.unknown_tag_warning:
-            self.unknown_tag_warning: Any = settings.unknown_tag_warning
+            self.unknown_tag_warning = settings.unknown_tag_warning
         if self.check_file_existence is True and not settings.check_file_existence:
-            self.check_file_existence: Any = settings.check_file_existence
+            self.check_file_existence = settings.check_file_existence
         if not self.known_tags or self.known_tags == set(settings.known_tags):
-            self.known_tags: Any = set(settings.known_tags)
+            self.known_tags = set(settings.known_tags)
         return self
 
     def is_tag_known(self, tag: str) -> bool:
@@ -65,7 +65,7 @@ class ValidationResult(BaseModel):
     def add_error(self, message: str) -> None:
         """Add an error message."""
         self.errors.append(message)
-        self.is_valid: Any = False
+        self.is_valid = False
 
     def add_warning(self, message: str) -> None:
         """Add a warning message."""

@@ -84,6 +84,7 @@ dependencies = [
     "hypothesis>=6.135.24,<6.140.0",
     "asyncpg>=0.30.0",
     "openai>=1.107.1",
+    "pytest-asyncio>=1.1.0",
 ]
 
 [project.optional-dependencies]

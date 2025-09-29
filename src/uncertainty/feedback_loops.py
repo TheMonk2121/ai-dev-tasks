@@ -87,7 +87,7 @@ class UserFeedback(BaseModel):
     @classmethod
     def validate_feedback_value(cls, v: Any) -> bool | int | float | str:
         """Validate feedback value is appropriate type."""
-        if isinstance(v, (bool, int, float, str)):
+        if isinstance(v, bool | int | float | str):
             return v
         raise ValueError("feedback_value must be bool, int, float, or str")
 

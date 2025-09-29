@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from pydantic import Field, field_validator
+from pydantic import ConfigDict, Field, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -158,11 +158,12 @@ class EvaluationSettings(BaseSettings):
             # If not JSON, split by comma
             return [tag.strip() for tag in v.split(",") if tag.strip()]
 
-    class Config:
-        env_file: str = ".env"
-        env_prefix: str = "EVAL_"
-        case_sensitive: bool = False
-        extra: str = "ignore"
+    model_config: ConfigDict = ConfigDict(
+        env_file=".env",
+        env_prefix="EVAL_",
+        case_sensitive=False,
+        extra="ignore"
+    )  # type: ignore
 
     def get_gold_cases_path(self) -> Path:
         """Get gold cases path as Path object."""

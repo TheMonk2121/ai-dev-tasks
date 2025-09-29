@@ -138,7 +138,7 @@ def _to_case_inputs(raw_cases: Sequence[Mapping[str, Any]]) -> list[CaseInput]: 
         query = str(record.get("query", ""))
         gt_answer = str(record.get("gt_answer", ""))
         tags_data = record.get("tags")
-        if isinstance(tags_data, (list, tuple)):
+        if isinstance(tags_data, list | tuple):
             tags = tuple(str(tag) for tag in tags_data)
         else:
             tags = ()
@@ -179,13 +179,13 @@ def _case_metrics(record: Mapping[str, Any]) -> Mapping[str, float]:
     metrics: dict[str, float] = {}
     for key in ("precision", "recall", "f1", "f1_score", "faithfulness"):
         value = record.get(key)
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             metrics[key] = float(value)
     # fold nested metrics
     nested = record.get("metrics")
     if isinstance(nested, Mapping):
         for key, value in nested.items():
-            if isinstance(value, (int, float)):
+            if isinstance(value, int | float):
                 metrics[f"metrics.{key}"] = float(value)
     return metrics
 
@@ -193,7 +193,7 @@ def _case_metrics(record: Mapping[str, Any]) -> Mapping[str, float]:
 def _overall_metrics(record: Mapping[str, Any]) -> Mapping[str, float]:
     metrics: dict[str, float] = {}
     for key, value in record.items():
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             metrics[key] = float(value)
     return metrics
 

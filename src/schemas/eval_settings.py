@@ -66,6 +66,54 @@ class EvalSettings(BaseSettings):
         description="Directory for evaluation results"
     )
 
+    # === Validation Configuration ===
+    VALIDATION_STRICT: bool = Field(
+        default=True,
+        description="Enable strict validation (fail on errors vs warnings)"
+    )
+    ALLOW_MISSING_FILES: bool = Field(
+        default=False,
+        description="Allow cases with missing target files"
+    )
+    UNKNOWN_TAG_WARNING: bool = Field(
+        default=True,
+        description="Show warnings for unknown tags"
+    )
+    CHECK_FILE_EXISTENCE: bool = Field(
+        default=True,
+        description="Check if expected files actually exist"
+    )
+
+    # === Evaluation Limits ===
+    MAX_CASES_PER_EVAL: int = Field(
+        default=100,
+        ge=1,
+        le=10000,
+        description="Maximum number of cases per evaluation run"
+    )
+    DEFAULT_SAMPLE_SIZE: int = Field(
+        default=50,
+        ge=1,
+        le=1000,
+        description="Default sample size for evaluation runs"
+    )
+    TIMEOUT_SECONDS: int = Field(
+        default=300,
+        ge=30,
+        le=3600,
+        description="Timeout in seconds for evaluation runs"
+    )
+
+    # === Model Configuration ===
+    DEFAULT_MODEL: str = Field(
+        default="openai:gpt-4o-mini",
+        description="Default model for evaluation runs"
+    )
+    FALLBACK_MODEL: str = Field(
+        default="openai:gpt-3.5-turbo",
+        description="Fallback model for evaluation runs"
+    )
+
     # === Performance Configuration ===
     EVAL_CONCURRENCY: int = Field(
         default=8,

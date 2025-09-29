@@ -12,6 +12,7 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from common.cache_separation_manager import CacheSeparationManager
+from common.psycopg3_config import Psycopg3Config
 from common.role_guc_manager import RoleGUCManager
 
 logger = logging.getLogger(__name__)

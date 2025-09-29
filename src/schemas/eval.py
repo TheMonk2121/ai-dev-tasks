@@ -163,11 +163,12 @@ class GoldCase(BaseModel):
 
     # --- Aliases / normalization bridge (legacy fields) ---
     # We accept extra and remap in a root validator.
-    class Config:
-        validate_by_name: bool = True
-        str_strip_whitespace: bool = False  # Don't strip whitespace to preserve carriage returns
-        validate_assignment: bool = True
-        extra: str = "allow"  # tolerate legacy keys; we'll normalize below
+    model_config: ConfigDict = ConfigDict(
+        validate_by_name=True,
+        str_strip_whitespace=False,  # Don't strip whitespace to preserve carriage returns
+        validate_assignment=True,
+        extra="allow"  # tolerate legacy keys; we'll normalize below
+    )
 
     @model_validator(mode="before")
     @classmethod

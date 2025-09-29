@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import Callable
+from collections.abc import Callable
 
 
 def _b(*names: str, default: bool = False) -> bool:
@@ -69,10 +69,13 @@ RERANK_CACHE_BACKEND = _s("RERANK_CACHE_BACKEND", default="sqlite")  # sqlite|po
 RERANK_CACHE_DSN = _s("RERANK_CACHE_DSN", default="")
 RERANK_CACHE_PATH = _s("RERANK_CACHE_PATH", default=".cache/rerank.sqlite")
 
-
 def get_reranker_model() -> str:
     """Get reranker model from environment variable."""
     return os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3")
+
+
+# Add the missing RERANKER_MODEL constant
+RERANKER_MODEL = get_reranker_model()
 
 
 def rerank_enabled() -> bool:
