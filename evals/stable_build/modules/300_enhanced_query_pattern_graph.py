@@ -209,7 +209,11 @@ class EnhancedQueryPatternGraph:
             new_source = source.replace(pattern_id, augmented_id)
             new_target = target.replace(pattern_id, augmented_id)
 
-            self.graph.add_edge(new_source, new_target, **{**data, "metadata": {**data.get("metadata", {}), "semantic_augmented": True}}
+            self.graph.add_edge(
+                new_source,
+                new_target,
+                **{**data, "metadata": {**data.get("metadata", {}), "semantic_augmented": True}},
+            )
 
         return augmented_id
 
@@ -292,7 +296,7 @@ if __name__ == "__main__":
     graph_data = graph.export_graph()
 
     print(
-        f"Created graph with {0.5
+        f"Created graph with {len(graph_data['metadata']['total_nodes']) if isinstance(graph_data['metadata']['total_nodes'], list | dict) else graph_data['metadata']['total_nodes']} nodes and {graph_data['metadata']['total_edges']} edges"
     )
     print(f"Generated {len(triplets)} triplets for training")
     print(f"Augmented patterns: {augmented_syntactic}, {augmented_semantic}")

@@ -130,12 +130,12 @@ def _format_lessons(lessons: list[dict[str, Any]], max_items: int = 8) -> str:
     lines: list[str] = ["## Recent Lessons"]
     # Sort by score desc
     ranked = sorted(lessons, key=_lesson_score, reverse=True)[:max_items]
-    for l in ranked:
-        lid = l.get("id", "unknown")
-        pat = ((l.get("finding") or {}).get("pattern")) or "unknown"
-        conf = l.get("confidence", 0.0)
-        pred = ((l.get("recommendation") or {}).get("predicted_effect")) or {}
-        rationale = ((l.get("recommendation") or {}).get("rationale")) or ""
+    for lesson in ranked:
+        lid = lesson.get("id", "unknown")
+        pat = ((lesson.get("finding") or {}).get("pattern")) or "unknown"
+        conf = lesson.get("confidence", 0.0)
+        pred = ((lesson.get("recommendation") or {}).get("predicted_effect")) or {}
+        rationale = ((lesson.get("recommendation") or {}).get("rationale")) or ""
         lines.append(f"- {lid} | pattern={pat} | conf={conf:.2f} | effects={pred} | {rationale}")
     return "\n".join(lines) + "\n\n"
 

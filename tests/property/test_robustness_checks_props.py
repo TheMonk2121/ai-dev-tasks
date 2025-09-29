@@ -55,8 +55,8 @@ def test_component_health_latency_degraded(delay_ms: float) -> None:
 @settings(max_examples=15, deadline=200)
 def test_performance_metrics_bounds(latencies: list[float]) -> None:
     rc = RobustnessChecker()
-    for l in latencies:
-        rc.record_query_performance(l, success=True)
+    for latency in latencies:
+        rc.record_query_performance(latency, success=True)
     m = rc.get_performance_metrics()
     assert m.avg_latency_ms >= 0
     assert 0.0 <= m.success_rate <= 1.0

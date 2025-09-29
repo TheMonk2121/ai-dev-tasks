@@ -291,10 +291,10 @@ def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "
                 _add_edge(run_node, mnode, "observed", value=overall.get(m_key))
 
         # Lessons: link param changes and predicted effects
-        for l in lessons:
-            lnode = _add_node("lesson", l.id, pattern=l.finding.get("pattern"), confidence=l.confidence)
+        for lesson in lessons:
+            lnode = _add_node("lesson", lesson.id, pattern=lesson.finding.get("pattern"), confidence=lesson.confidence)
             # Link lesson to params changed
-            for ch in l.recommendation.get("changes", []):
+            for ch in lesson.recommendation.get("changes", []):
                 p = ch.get("key")
                 if not p:
                     continue
@@ -302,7 +302,7 @@ def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "
                 _add_edge(lnode, pnode, "changes", op=ch.get("op"), value=ch.get("value"))
 
             # Link predicted metric effects
-            predicted = l.recommendation.get("predicted_effect", {}) or {}
+            predicted = lesson.recommendation.get("predicted_effect", {}) or {}
             for metric, effect in predicted.items():
                 mnode = _add_node("metric", metric)
                 # Try to parse range for direction
@@ -328,9 +328,9 @@ def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "
                 _add_edge(lnode, mnode, "predicts", effect=str(effect), direction=sign)
 
             # Supersedes/conflicts metadata
-            for sup in l.supersedes:
+            for sup in lesson.supersedes:
                 _add_edge(lnode, f"lesson:{sup}", "supersedes")
-            for con in getattr(l, "conflicts_with", []) or []:
+            for con in getattr(lesson, "conflicts_with", []) or []:
                 _add_edge(lnode, f"lesson:{con}", "conflicts")
 
         # Persist CRKG
@@ -340,22 +340,22 @@ def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "
 
         # Simple pattern cards: summarize recent lessons' changes → predicted effects
         cards: list[dict[str, Any]] = []
-        for l in lessons:
+        for lesson in lessons:
             changes = (
-                ", ".join(f"{c.get('key')} {c.get('op')} {c.get('value')}" for c in l.recommendation.get("changes", []))
+                ", ".join(f"{c.get('key')} {c.get('op')} {c.get('value')}" for c in lesson.recommendation.get("changes", []))
                 or "(no param changes)"
             )
-            effects = l.recommendation.get("predicted_effect", {}) or {}
+            effects = lesson.recommendation.get("predicted_effect", {}) or {}
             scope = (
-                l.scope.level
-                if hasattr(l.scope, "level")
-                else (l.scope.get("level") if isinstance(l.scope, dict) else "")
+                lesson.scope.level
+                if hasattr(lesson.scope, "level")
+                else (lesson.scope.get("level") if isinstance(lesson.scope, dict) else "")
             )
             summary = (
-                f"Pattern {l.finding.get('pattern','?')} → {changes}; predicted: {effects}; "
-                f"scope={scope}; conf={l.confidence:.2f}"
+                f"Pattern {lesson.finding.get('pattern','?')} → {changes}; predicted: {effects}; "
+                f"scope={scope}; conf={lesson.confidence:.2f}"
             )
-            cards.append({"lesson_id": l.id, "summary": summary})
+            cards.append({"lesson_id": lesson.id, "summary": summary})
 
         # Merge with existing cards (keep last 100)
         existing_cards = []
