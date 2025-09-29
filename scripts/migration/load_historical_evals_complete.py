@@ -304,7 +304,7 @@ class CompleteHistoricalEvalMigrator:
             return 0.0
         if isinstance(value, bool):
             return 1.0 if value else 0.0
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             return float(value)
         if isinstance(value, str):
             try:
@@ -714,7 +714,7 @@ class CompleteHistoricalEvalMigrator:
             # Log latency metrics
             latency = data.get("latency", {})
             for metric_name, metric_value in latency.items():
-                if isinstance(metric_value, (int, float)):
+                if isinstance(metric_value, int | float):
                     events.append(
                         (
                             timestamp,
@@ -733,7 +733,7 @@ class CompleteHistoricalEvalMigrator:
             # Log reranker metrics
             reranker = data.get("reranker", {})
             for metric_name, metric_value in reranker.items():
-                if isinstance(metric_value, (int, float)):
+                if isinstance(metric_value, int | float):
                     events.append(
                         (
                             timestamp,
@@ -752,7 +752,7 @@ class CompleteHistoricalEvalMigrator:
             # Log health metrics
             health = data.get("health", {})
             for metric_name, metric_value in health.items():
-                if isinstance(metric_value, (int, float, bool)):
+                if isinstance(metric_value, int | float | bool):
                     events.append(
                         (
                             timestamp,

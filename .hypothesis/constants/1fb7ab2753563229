@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/monitoring/observability.py
+# hypothesis_version: 6.138.15
+
+['ENV', 'ai-dev-tasks', 'all', 'answer_len', 'candidates', 'case_id', 'dev', 'eval.metrics', 'f1', 'if-token-present', 'latency_ms', 'ok', 'precision', 'query_len', 'reader.extractive', 'recall', 'retrieval.hybrid', 'scoring']

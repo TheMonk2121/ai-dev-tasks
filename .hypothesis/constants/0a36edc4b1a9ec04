@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/settings.py
+# hypothesis_version: 6.138.15
+
+['.env', 'default', 'ignore', 'llama3.1:8b', 'local', 'openai:gpt-4o-mini']

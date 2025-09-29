@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/reader/span_picker.py
+# hypothesis_version: 6.138.15
+
+[177, 180, 200, 297, 300, '"([^"]+)"', '...', ';+$', '=.*postgresql://', '===', "I don't know", '\\s+', '^    ', '^[A-Za-z0-9_\\-\\.]+$', '`+$', 'command', 'db_workflows', 'doc', 'document', 'evaluate', 'file', 'guide', 'how', 'how do i run', 'location', 'path', 'profile', 'run the gold', 'what', 'when', 'where', 'who', 'why']

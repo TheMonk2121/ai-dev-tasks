@@ -8,7 +8,7 @@ Enhances memory context with active session information.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime, timezone
 from typing import Any
 
 from scripts.utilities.session_registry import (
@@ -97,7 +97,7 @@ class SessionContextIntegrator:
         # Add session registry information
         enhanced_context["scribe_sessions"] = self.get_active_sessions_context()
         enhanced_context["session_summary"] = self.get_session_summary()
-        enhanced_context["integration_timestamp"] = datetime.now(timezone.utc).isoformat()
+        enhanced_context["integration_timestamp"] = datetime.now(UTC).isoformat()
         
         return enhanced_context
 
@@ -109,5 +109,5 @@ def integrate_with_memory_rehydrator() -> dict[str, Any]:
     return {
         "session_registry": integrator.get_active_sessions_context(),
         "session_summary": integrator.get_session_summary(),
-        "integration_timestamp": datetime.now(timezone.utc).isoformat(),
+        "integration_timestamp": datetime.now(UTC).isoformat(),
     }

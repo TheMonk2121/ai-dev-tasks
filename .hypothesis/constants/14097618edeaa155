@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/common/psycopg3_config.py
+# hypothesis_version: 6.138.15
+
+[1.0, '-c work_mem=256MB', '100', '16', '200', 'ai-dev-tasks', 'application_name', 'connect_timeout', 'default', 'ltst', 'options', 'psycopg.connect', 'retrieval', 'row_factory', 'row_factory=dict_row', 'slow_queries', 'slow_query_details', 'total_connections', 'type: ignore', 'vector', 'vector.hnsw_m']

@@ -33,12 +33,12 @@ def diversify_query_patterns():
     changes_made = 0
     
     for case in cases:
-        query = result
+        query = case.get("query", "")
         
         if query in pattern_replacements:
-            result
+            case["query"] = pattern_replacements[query]
             changes_made += 1
-            print(f"Improved: '{query}' → '{result
+            print(f"Improved: '{query}' → '{case['query']}'")
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:

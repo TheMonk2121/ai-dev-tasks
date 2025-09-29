@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/retrieval/deduplication.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.8, 0.9, 1.0, 128, 1000, '_original_index', 'cosine', 'english', 'inf', 'method', 'minhash', 'score', 'simple', 'text', 'threshold']

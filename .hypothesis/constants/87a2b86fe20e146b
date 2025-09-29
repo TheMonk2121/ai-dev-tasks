@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/profiles/gold.py
+# hypothesis_version: 6.138.15
+
+['baseline_compliance', 'gold', 'item', 'tolist', 'utf-8']

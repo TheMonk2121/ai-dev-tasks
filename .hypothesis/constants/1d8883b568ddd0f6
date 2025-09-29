@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/utils/prompt_sanitizer.py
+# hypothesis_version: 6.138.15
+
+[1024, '.', '..%2f', '..%5c', '../', '..\\', '<script>', 'SECURITY_MAX_FILE_MB', 'allowed_ext', 'csv', 'data:', 'file://', 'file_extension_valid', 'file_path_valid', 'file_size_valid', 'file_validation', 'ftp://', 'http://', 'https://', 'javascript:', 'max_size_mb', 'md', 'overall_valid', 'pdf', 'prompt_blocklist', 'prompt_sanitized', 'prompt_whitelist', 'txt', '{{', '}}']

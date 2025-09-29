@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/memory/db_async_pool.py
+# hypothesis_version: 6.138.15
+
+['DATABASE_URL', 'POSTGRES_DSN', 'final', 'role', 'thread', 'thread_id', 'turn', 'turn_id', 'user']

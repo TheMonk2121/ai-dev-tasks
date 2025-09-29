@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/uncertainty/confidence_calibration.py
+# hypothesis_version: 6.138.15
+
+[0.0, 1e-10, 0.01, 0.1, 0.3, 0.95, 1.0, 10.0, -500, 100, 500, '.json', 'L-BFGS-B', '_isotonic.pkl', '_platt.pkl', 'calibration_error', 'confidence_score', 'config', 'ece_score', 'ensemble', 'is_calibrated', 'is_correct', 'isotonic', 'mean_predicted_value', 'method', 'metrics/calibration/', 'models/calibration/', 'platt', 'reliability_diagram', 'sigmoid', 'temperature', 'w']

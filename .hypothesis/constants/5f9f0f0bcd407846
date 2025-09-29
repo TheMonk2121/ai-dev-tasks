@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/retriever/feature_schema.py
+# hypothesis_version: 6.138.15
+
+[0.0, 384, 768, 1024, 1536, 'forbid']

@@ -64,17 +64,14 @@ class EnhancedQueryPatternGraph:
             node_id=f"{pattern_id}_query",
             node_type=NodeType.QUERY,
             content=query,
-            metadata={"original_query": query, "timestamp": result
+            metadata={"original_query": query, "timestamp": context.get("timestamp")},
         )
 
         intent_node = SemanticNode(
             node_id=f"{pattern_id}_intent",
             node_type=NodeType.INTENT,
             content=intent,
-            metadata={
-                "intent_type": result
-                "confidence": result
-            },
+            metadata={"intent_type": context.get("intent_type"), "confidence": context.get("confidence")},
         )
 
         # Add nodes to graph
@@ -86,7 +83,7 @@ class EnhancedQueryPatternGraph:
             source_id=query_node.node_id,
             target_id=intent_node.node_id,
             edge_type=EdgeType.SEMANTIC_SIMILARITY,
-            weight=result
+            weight=context.get("similarity_score", 0.8),
             metadata={"relationship": "expresses_intent"},
         )
 
@@ -120,16 +117,16 @@ class EnhancedQueryPatternGraph:
             new_node_id = node_id.replace(pattern_id, augmented_id)
 
             # Apply syntactic variations
-            augmented_content = self._generate_syntactic_variant(result
-            augmented_metadata = result
-            result
-            result
+            augmented_content = self._generate_syntactic_variant(original_data["content"])
+            augmented_metadata = original_data["metadata"].copy()
+            augmented_metadata["augmentation_type"] = "syntactic"
+            augmented_metadata["original_pattern"] = pattern_id
 
             self.graph.add_node(
                 new_node_id,
                 **{
                     "node_id": new_node_id,
-                    "node_type": result
+                    "node_type": original_data["node_type"],
                     "content": augmented_content,
                     "metadata": augmented_metadata,
                 },
@@ -147,16 +144,12 @@ class EnhancedQueryPatternGraph:
             new_target = target.replace(pattern_id, augmented_id)
 
             # Slightly modify edge weight for variation
-            modified_weight = result
+            modified_weight = data["weight"] * (0.9 + 0.2 * hash(augmented_id) % 100 / 100)
 
             self.graph.add_edge(
                 new_source,
                 new_target,
-                **{
-                    **data,
-                    "weight": modified_weight,
-                    "metadata": {**result
-                },
+                **{**data, "weight": modified_weight, "metadata": {**data["metadata"], "augmented": True}},
             )
 
         return augmented_id
@@ -194,13 +187,7 @@ class EnhancedQueryPatternGraph:
 
             self.graph.add_node(
                 new_node_id,
-                **{
-                    **original_data,
-                    "metadata": {
-                        **result
-                        "augmentation_type": "semantic",
-                    },
-                },
+                **{**original_data, "metadata": {**original_data["metadata"], "augmentation_type": "semantic"}},
             )
 
         # Copy edges (excluding those connected to deleted nodes)
@@ -219,11 +206,7 @@ class EnhancedQueryPatternGraph:
             new_source = source.replace(pattern_id, augmented_id)
             new_target = target.replace(pattern_id, augmented_id)
 
-            self.graph.add_edge(
-                new_source,
-                new_target,
-                **{**data, "metadata": {**result
-            )
+            self.graph.add_edge(new_source, new_target, **{**data, "metadata": {**data["metadata"], "augmented": True}})
 
         return augmented_id
 
@@ -252,7 +235,7 @@ class EnhancedQueryPatternGraph:
 
             # Find positive (augmented version of same pattern)
             positives = [pid for pid in pattern_ids if pid.startswith(anchor) and pid != anchor]
-            positive = result
+            positive = positives[0] if positives else anchor
 
             # Find negative (different pattern)
             negatives = [pid for pid in pattern_ids if not pid.startswith(anchor)]
@@ -270,8 +253,8 @@ class EnhancedQueryPatternGraph:
             "metadata": {
                 "total_nodes": len(self.graph.nodes),
                 "total_edges": len(self.graph.edges),
-                "node_types": list(set([result
-                "edge_types": list(set([result
+                "node_types": list(set([data.get("node_type") for _, data in self.graph.nodes(data=True)])),
+                "edge_types": list(set([data.get("edge_type") for _, _, data in self.graph.edges(data=True)])),
             },
         }
 
@@ -306,7 +289,7 @@ if __name__ == "__main__":
     graph_data = graph.export_graph()
 
     print(
-        f"Created graph with {result
+        f"Created graph with {graph_data['metadata']['total_nodes']} nodes and {graph_data['metadata']['total_edges']} edges"
     )
     print(f"Generated {len(triplets)} triplets for training")
     print(f"Augmented patterns: {augmented_syntactic}, {augmented_semantic}")

@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/similarity_scoring_algorithms.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.01, 0.1, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 100.0, 1000, '__main__', 'algorithm_breakdown', 'avg_time_ms', 'cache_hits', 'cache_misses', 'cache_performance', 'cached', 'cosine', 'cosine_score', 'count', 'english', 'error', 'fallback', 'hit_rate', 'hybrid', 'jaccard', 'jaccard_score', 'max_time_ms', 'min_time_ms', 'score_difference', 'total_calculations', 'total_time_ms']

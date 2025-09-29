@@ -131,7 +131,7 @@ def get_reranker_env_vars(config: dict[str, Any]) -> dict[str, str]:
     return env_vars
 
 
-def apply_reranker_config() -> Any:
+def apply_reranker_config(config: dict[str, Any]) -> Any:
     """
     Apply reranker configuration by setting environment variables.
 

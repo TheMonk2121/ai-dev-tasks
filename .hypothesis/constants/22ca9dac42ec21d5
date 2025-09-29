@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/common/workload_isolation_orchestrator.py
+# hypothesis_version: 6.138.15
+
+['=', 'SELECT 1', '__main__', 'base_dir', 'cache_configurations', 'cache_info', 'cache_separation', 'current_role', 'default', 'dsn', 'guc_application', 'guc_configurations', 'guc_settings', 'isolation_statuses', 'ltst_memory', 'not_applied', 'overall_success', 'project_root', 'ragchecker_eval', 'role', 'status', 'system_info', 'timestamp', 'vector.', 'w', '✅ Active', '✅ PASS', '❌ FAIL', '❌ Inactive']

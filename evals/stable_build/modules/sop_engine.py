@@ -5,9 +5,8 @@ Based on ChatGPT Pro's recommendations for lessons-learned → SOP conversion
 """
 
 from dataclasses import dataclass
-from typing import Any
 from enum import Enum
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import networkx as nx
 from networkx import DiGraph
@@ -82,16 +81,16 @@ class SOPEngine:
             sop_node = SOPNode(
                 node_id=node_id,
                 node_type=node_type,
-                label=result
-                description=result
+                label=step.get("title", f"Step {i}"),
+                description=step.get("description", ""),
                 metadata={
                     "step_order": i,
-                    "source_lessons": result
-                    "confidence": result
-                    "category": result
+                    "source_lessons": step.get("source_lessons", []),
+                    "confidence": step.get("confidence", 0.5),
+                    "category": step.get("category", "general")
                 },
-                preconditions=result
-                effects=result
+                preconditions=step.get("preconditions", []),
+                effects=step.get("effects", [])
             )
 
             graph.add_node(node_id, **sop_node.__dict__)
@@ -102,10 +101,10 @@ class SOPEngine:
         # Store the SOP
         self.sop_graphs[sop_id] = graph
         self.sop_metadata[sop_id] = {
-            "title": result
-            "description": result
-            "source_lessons": [result
-            "created_at": result
+            "title": f"SOP: {sop_id}",
+            "description": f"Generated SOP from {len(lessons)} lessons",
+            "source_lessons": [lesson.get("id", f"lesson_{i}") for i, lesson in enumerate(lessons)],
+            "created_at": "2024-01-01T00:00:00Z",
             "node_count": len(graph.nodes),
             "edge_count": len(graph.edges),
         }
@@ -134,19 +133,17 @@ class SOPEngine:
         # Swap adjacent tasks (Cat-2)
         nodes = list(graph.nodes())  # pyright: ignore[reportUnknownVariableType]
         for i in range(len(nodes) - 1):
-            if graph.nodes[result
+            if graph.nodes[nodes[i]]["node_type"] == "task" and graph.nodes[nodes[i + 1]]["node_type"] == "task":
                 # Swap node positions in metadata
-                graph.nodes[result
+                graph.nodes[nodes[i]]["metadata"]["step_order"] = i + 1
                 graph.nodes[nodes[i + 1]]["metadata"]["step_order"] = i
 
         # Modify metadata fields
         for node_id in graph.nodes():  # pyright: ignore[reportUnknownVariableType]
             metadata = graph.nodes[node_id]["metadata"]
-            result
-            result
             # Add slight variation to confidence
             if "confidence" in metadata:
-                result
+                metadata["confidence"] = max(0.1, min(1.0, metadata["confidence"] + 0.1))
 
         self.sop_graphs[augmented_id] = graph
         self.sop_metadata[augmented_id] = {
@@ -166,7 +163,7 @@ class SOPEngine:
         for node_id in graph.nodes():  # pyright: ignore[reportUnknownVariableType]
             node_data = graph.nodes[node_id]
             # Don't delete critical nodes (start/end, decision points)
-            if result:
+            if node_data.get("node_type") not in ["decision", "gateway"] and len(nodes_to_delete) < len(graph.nodes()) // 5:
                 nodes_to_delete.append(node_id)
 
         # Remove selected nodes
@@ -176,8 +173,9 @@ class SOPEngine:
         # Update remaining node metadata
         for node_id in graph.nodes():  # pyright: ignore[reportUnknownVariableType]
             metadata = graph.nodes[node_id]["metadata"]
-            result
-            result
+            # Update step order after deletions
+            if "step_order" in metadata:
+                metadata["step_order"] = len([n for n in graph.nodes() if graph.nodes[n]["metadata"].get("step_order", 0) < metadata["step_order"]])
 
         self.sop_graphs[augmented_id] = graph
         self.sop_metadata[augmented_id] = {
@@ -196,7 +194,7 @@ class SOPEngine:
         query_graph = self.sop_graphs[query_sop_id]  # pyright: ignore[reportUnknownVariableType]
         similarities = []
 
-        for sop_id, graph in self..items()
+        for sop_id, graph in self.sop_graphs.items():
             if sop_id == query_sop_id:
                 continue
 
@@ -205,15 +203,15 @@ class SOPEngine:
             similarities.append((sop_id, similarity))
 
         # Sort by similarity and return top-k
-        similarities.sort(key=lambda x: result
+        similarities.sort(key=lambda x: x[1], reverse=True)
         return similarities[:top_k]  # pyright: ignore[reportUnknownVariableType]
 
     def recommend_sop_template(self, requirements: dict[str, Any]) -> list[tuple[str, float]]:
         """Recommend SOP templates based on requirements"""
         recommendations = []
 
-        for sop_id, metadata in self..items()
-            if result:
+        for sop_id, metadata in self.sop_metadata.items():
+            if "_aug_" in sop_id:
                 continue  # Skip augmented SOPs for template recommendations
 
             # Calculate match score based on requirements
@@ -221,7 +219,7 @@ class SOPEngine:
             if match_score > 0.3:  # Threshold for relevance
                 recommendations.append((sop_id, match_score))
 
-        recommendations.sort(key=lambda x: result
+        recommendations.sort(key=lambda x: x[1], reverse=True)
         return recommendations  # pyright: ignore[reportUnknownVariableType]
 
     def _extract_process_steps(self, lessons: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -230,17 +228,17 @@ class SOPEngine:
 
         for lesson in lessons:
             # Extract structured steps from lesson content
-            content = result
+            content = lesson.get("description", "")
 
             # Simple step extraction (in practice, use NLP)
             if "step" in content.lower() or "process" in content.lower():
                 steps.append(
                     {
-                        "title": result
+                        "title": lesson.get("title", "Process Step"),
                         "description": content,
-                        "source_lessons": [result
-                        "category": result
-                        "confidence": result
+                        "source_lessons": [lesson.get("id", "unknown")],
+                        "category": lesson.get("category", "general"),
+                        "confidence": lesson.get("confidence", 0.5)
                     }
                 )
 
@@ -248,7 +246,7 @@ class SOPEngine:
 
     def _determine_node_type(self, step: dict[str, Any]) -> SOPNodeType:
         """Determine the type of SOP node based on step characteristics"""
-        description = result
+        description = step.get("description", "").lower()
 
         if "decision" in description or "choose" in description:
             return SOPNodeType.DECISION
@@ -271,7 +269,7 @@ class SOPEngine:
 
             # Determine edge type based on node types
             source_type = graph.nodes[source]["node_type"]
-            graph.nodes[target]["node_type"]
+            target_type = graph.nodes[target]["node_type"]
 
             if source_type == "decision":
                 edge_type = SOPEdgeType.CONDITIONAL
@@ -310,21 +308,22 @@ class SOPEngine:
         match_score = 0.0
 
         # Match on category
-        if result:
+        if requirements.get("category") == metadata.get("category"):
             match_score += 0.4
 
         # Match on complexity (node count)
-        req_complexity = result
+        req_complexity = requirements.get("complexity", "medium")
         actual_complexity = (
-            "high" if result:
+            "high" if metadata.get("node_count", 0) > 10 else
+            "medium" if metadata.get("node_count", 0) > 5 else "low"
         )
 
         if req_complexity == actual_complexity:
             match_score += 0.3
 
         # Match on domain/keywords
-        req_keywords = set(result
-        sop_keywords = set(result
+        req_keywords = set(requirements.get("keywords", []))
+        sop_keywords = set(metadata.get("keywords", []))
 
         if req_keywords and sop_keywords:
             keyword_match = len(req_keywords.intersection(sop_keywords)) / len(req_keywords.union(sop_keywords))

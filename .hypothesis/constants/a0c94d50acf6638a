@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/cursor_working_integration.py
+# hypothesis_version: 6.138.15
+
+[1.0, 384, '..', '=', 'BEGIN', '__main__', 'active', 'ai', 'all-MiniLM-L6-v2', 'assistant', 'authentication', 'capture_type', 'complexity', 'content', 'content_length', 'conversation', 'created_at', 'cursor_ai', 'cursor_tab', 'cursor_user', 'feature', 'follow_up', 'human', 'intermediate', 'isoformat', 'last_activity', 'message', 'message_count', 'message_index', 'metadata', 'mock', 'mock://', 'mock_mode', 'node_count', 'parent_turn_id', 'password_reset', 'query_response', 'realtime', 'relationship', 'responds_to', 'response_type', 'role', 'session_id', 'status', 'steps', 'thread_id', 'timestamp', 'topic', 'turn_count', 'turn_id', 'tutorial', 'user', 'word_count']

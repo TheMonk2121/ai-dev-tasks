@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/update_baseline_manifest.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.3, '*.json', '--gates', '--out-dir', '--profile', '--results-dir', '--window', '__main__', 'config/baselines', 'ema', 'f1', 'f1_score', 'gates', 'latency_ms', 'max', 'median_f1', 'median_latency_ms', 'median_precision', 'median_recall', 'min', 'overall_metrics', 'precision', 'recall', 'targets', 'utf-8', 'w', 'window']

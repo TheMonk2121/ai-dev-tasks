@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/evaluation/adapters/ragchecker.py
+# hypothesis_version: 6.138.15
+
+[0.0, 1000.0, '.jsonl', 'RagCheckerAdapter', 'case_id', 'case_results', 'cases', 'cases.limited.jsonl', 'data', 'f1', 'f1_score', 'faithfulness', 'gt_answer', 'id', 'latency_sec', 'metrics', 'overall_metrics', 'precision', 'query', 'query_id', 'r', 'raw', 'recall', 'status', 'success', 'tags', 'unknown', 'utf-8', 'w']

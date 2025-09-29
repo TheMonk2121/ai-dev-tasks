@@ -15,8 +15,17 @@ SRC_PATH = PROJECT_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from eval.contracts import DatasetConfig, RunMetrics  # type: ignore[import-not-found]
-from eval.ragchecker_adapter import RAGCheckerAdapter  # type: ignore[import-not-found]
+try:
+    from src.evaluation.contracts import DatasetConfig
+    from src.evaluation.adapters.ragchecker import RagCheckerAdapter
+except ImportError:
+    # Fallback for legacy environments that still ship the old eval package
+    from eval.contracts import DatasetConfig, RunMetrics  # type: ignore  # pragma: no cover
+    from eval.ragchecker_adapter import RAGCheckerAdapter as RagCheckerAdapter  # type: ignore  # pragma: no cover
+else:
+    from typing import Any
+
+    RunMetrics = Any
 
 TARGETS: dict[str, float] = {
     "R@20": 0.65,

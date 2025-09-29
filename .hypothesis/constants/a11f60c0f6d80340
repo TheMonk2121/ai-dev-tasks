@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/pocketflow/integration.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.2, 0.5, '1', "I don't know", 'READER_COMPACT', '_RAG_PROGRAM', 'answer', 'bm25', 'chunk_id', 'content', 'content_hash', 'default_answer_flow', 'default_capture_flow', 'default_session', 'file_path', 'filename', 'hybrid', 'k', 'label', 'memory', 'metadata', 'queries', 'rag_qa_single', 'rerank_score', 'retrieval_stage', 'score', 'short', 'summary', 'tag', 'text', 'text_for_reader', 'title', 'yes']

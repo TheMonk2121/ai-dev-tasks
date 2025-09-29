@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/../pocketflow/shared_state.py
+# hypothesis_version: 6.138.15
+
+['2024-09-19', 'ConversationSummary', 'ConversationTurn', 'RetrievalState', 'RetrievedHit', 'SCHEMA_VERSION', 'SharedState']

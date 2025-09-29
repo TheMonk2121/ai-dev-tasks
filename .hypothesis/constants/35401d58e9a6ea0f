@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/retrieval/intent_router.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.1, 0.2, 0.3, 0.35, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 4294967295, '; ', '\\b(\\d{4})\\b', '\\b(\\w+)\\s+#(\\w+)\\b', '\\b(\\w+)\\s+(\\d{3,})\\b', 'aggregate', 'analytical_query', 'avg', 'compare', 'connected', 'connection', 'count', 'data_retrieval', 'database', 'date_type', 'describe', 'difference', 'entity', 'exists', 'explain', 'file', 'graph', 'how', 'hybrid', 'id_type', 'identifier_lookup', 'kg', 'linked', 'lookup', 'lookup_type', 'metric', 'metric_type', 'neighbor', 'organization', 'path', 'person', 'rag', 'related', 'relationship', 'select', 'similar', 'sql', 'structured', 'sum', 'table', 'temporal_query', 'text_rag', 'traverse', 'versus', 'walk', 'what is', 'where', 'why']

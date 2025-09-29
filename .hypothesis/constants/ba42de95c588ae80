@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/check_baseline_metrics.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.2, 0.6, 0.65, 1.0, 2.0, 4.0, 1000.0, '=', 'DEVELOPMENT_PHASE', '__main__', '_e2e', 'case_results', 'database_connection', 'faithfulness', 'health', 'latency', 'overall_metrics', 'p', 'p50_e2e', 'p50_ms', 'p95_e2e', 'p95_ms', 'precision', 'precision_at_k', 'recall', 'recall_at_20', 'reranker', 'reranker_lift', 'system_health', '✅', '❌']

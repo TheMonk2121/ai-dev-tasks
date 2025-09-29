@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/../pocketflow/flows.py
+# hypothesis_version: 6.138.15
+
+['Flow', 'Parallel', 'build_answer_flow', 'build_capture_flow']

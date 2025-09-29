@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/utils/memory_rehydrator.py
+# hypothesis_version: 6.138.15
+
+[0.5, 0.6, 0.7, 0.8, 0.9, 1000.0, 300, 4000, 8192, 10000, '...', '0', '1', '100_memory', '400_guides', 'USER', '[SIMILAR CONTEXTS]', 'adapter', 'cache_hit', 'content', 'context_id', 'conversation', 'dedupe', 'degraded', 'expand_query', 'fallback_source', 'flags', 'ignore', 'metadata', 'mode', 'normal', 'planner', 'preference', 'processing_time', 'project', 'rehydrator', 'role', 'session_id', 'similarity_score', 'stability', 'total_chunks', 'use_entity_expansion', 'use_rrf', 'user_id', 'user_info', 'utf-8']

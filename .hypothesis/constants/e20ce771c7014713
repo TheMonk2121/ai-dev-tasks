@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/core/production_runbook.py
+# hypothesis_version: 6.138.15
+
+['%Y%m%d_%H%M%S', '-', '--duration', '--format', '--help', '--noop', '--stable', '--use-bedrock', '-h', '-lc', '48', '=', 'Production Runbook', 'Unknown error', '__main__', 'bash', 'error', 'failed', 'failed_phases', 'output', 'returncode', 'run_id', 'status', 'store_true', 'success', 'yaml']

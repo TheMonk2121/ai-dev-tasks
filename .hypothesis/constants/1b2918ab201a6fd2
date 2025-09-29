@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/cursor_realtime_monitor.py
+# hypothesis_version: 6.138.15
+
+['\nCommands:', '**/*chat*.json', '**/*history*.json', '--start', '--status', '--stop', '--test', '..', '.cursor', '=', 'Cursor', 'Show status', 'Start monitoring', 'Stop monitoring', 'Unknown', '__main__', 'a', 'active', 'ai', 'ai_messages', 'answer', 'assistant', 'cmdline', 'content', 'conversation', 'created_at', 'cursor_processes', 'cursor_realtime', 'human', 'message', 'message_count', 'messages', 'monitoring_active', 'name', 'pid', 'question', 'response', 'role', 'session_active', 'session_id', 'source', 'source_file', 'start', 'started_at', 'status', 'stop', 'store_true', 'test', 'text', 'thread_id', 'timestamp', 'turns', 'type', 'unknown', 'user', 'user_messages', 'utf-8', 'w', '{', '}', '✅ Monitoring started', '✅ Monitoring stopped']

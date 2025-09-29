@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/evaluation/spans.py
+# hypothesis_version: 6.138.15
+
+[1000, 'CaseSpanContext', 'RunSpanContext', 'case_id', 'eval.case', 'eval.run', 'eval_run_span', 'profile', 'run_id', 'set_attribute']

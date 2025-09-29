@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/common/role_guc_manager.py
+# hypothesis_version: 6.138.15
+
+[0.8, '-Atqc', '100', '16MB', '256MB', '32MB', '4GB', '50', '64MB', '75', '8GB', '=', 'DATABASE_URL', '__main__', 'default', 'effective_cache_size', 'ltst_memory', 'maintenance_work_mem', 'psql', 'ragchecker_eval', 'vector.', 'vector.ef_search', 'w', 'work_mem']

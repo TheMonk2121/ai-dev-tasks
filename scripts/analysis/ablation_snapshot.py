@@ -6,13 +6,14 @@ import sys
 from typing import Any, Optional, Union
 
 from _bootstrap import ROOT, SRC  # noqa: F401
-from evals.gold import gold_hit
-# FIXME: Update this import path after reorganization
-# from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
 from dspy_modules.retriever.rerank import per_file_cap
+from evals.gold import gold_hit
+
+# FIXME: Update this import path after reorganization
+from scripts.migrate_to_pydantic_evals import load_eval_cases
 
 #!/usr/bin/env python3
 """
@@ -119,11 +120,14 @@ def eval_stage(stage: dict[str, Any], cases: list[Any]) -> dict[str, Any]:
                 tags_list = getattr(case, "tags", []) or []
                 tag = tags_list[0] if tags_list else "rag_qa_single"
             qs = build_channel_queries(case.query, tag)
+            qvec = getattr(case, "qvec", None)
+            if qvec is None:
+                qvec = []
             rows = run_fused_query(
                 qs["short"],
                 qs["title"],
                 qs["bm25"],
-                getattr(case, "qvec", None),
+                qvec,
                 k=25,
                 use_mmr=True,
                 weights={k: v for k, v in config.items() if k.startswith("w_")},

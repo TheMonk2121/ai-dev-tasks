@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import Callable
+from collections.abc import Callable
 
 
 def _b(*names: str, default: bool = False) -> bool:

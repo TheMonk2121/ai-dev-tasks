@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/codex_evaluator.py
+# hypothesis_version: 6.138.15
+
+[0.0, 1000, '--adapter', '--concurrency', '--dataset', '--limit', '--out', '--profile', '--reporter', '--run-id', '--seed', '--verbose', 'DSPY_', 'EVAL_', 'Evaluation profile', 'Random seed', 'Result', 'Run identifier', '__main__', 'adapter', 'adapters', 'append', 'artifacts', 'case_id', 'case_results', 'console', 'console-verbose', 'dspy', 'f1', 'f1_score', 'faithfulness', 'fallback', 'gold', 'id', 'json', 'latency_ms', 'latency_sec', 'legacy.adapter', 'metrics', 'mock', 'overall_metrics', 'precision', 'query', 'ragchecker', 'raw', 'real', 'recall', 'run_%Y%m%d_%H%M%S', 'status', 'store_true', 'success', 'unknown', 'verdict']

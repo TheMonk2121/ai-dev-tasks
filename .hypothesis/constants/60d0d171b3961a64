@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/common/cache_separation_manager.py
+# hypothesis_version: 6.138.15
+
+[0.7, 0.8, 100, 256, 512, 1024, 2048, '*', '.ragcache_default', '.ragcache_eval', '.ragcache_ltst', '=', '__main__', 'base_dir', 'caches', 'cleanup_threshold', 'context_cache', 'current_size_mb', 'default', 'embedding_cache', 'general_cache', 'healthy', 'ltst_memory', 'max_size_mb', 'metric_cache', 'needs_cleanup', 'overall_status', 'pyproject.toml', 'query_cache', 'ragchecker_eval', 'requirements.txt', 'result_cache', 'role', 'session_cache', 'subdir_sizes', 'subdirs', 'temp_cache', 'total_caches', 'total_size_mb', 'usage_percent', 'vector_cache', 'w']

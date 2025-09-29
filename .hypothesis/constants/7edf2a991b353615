@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/metrics_guard.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.05, 0.2, 0.22, 0.45, 0.6, 0.7, 0.72, 0.75, '--help', '--results-file', '-h', '.', 'Metrics guard', '__main__', 'baseline_metrics', 'case_results', 'claim_recall', 'context_precision', 'context_utilization', 'error', 'f1_score', 'faithfulness', 'hallucination_rate', 'noise_sensitivity', 'overall_metrics', 'precision', 'recall', 'results_file', 'score', 'self_knowledge', 'status', 'timestamp', '✅', '❌', '📋 Focus areas:']

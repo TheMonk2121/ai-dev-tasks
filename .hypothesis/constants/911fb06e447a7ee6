@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/config/settings.py
+# hypothesis_version: 6.138.15
+
+['.env', 'APP_', 'APP_ENV', 'SECRETS_DIR', '__', 'aws_access_key_id', 'configs/base.yaml', 'dev', 'ignore', 'logfire_token', 'obs', 'openai_api_key', 'security']

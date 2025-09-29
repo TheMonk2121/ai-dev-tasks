@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/dspy_modules/retriever/reranker_config.py
+# hypothesis_version: 6.138.15
+
+['1', 'RERANKER_CACHE_DIR', 'RERANKER_ENABLED', 'RERANKER_MODEL', 'RERANK_BATCH', 'RERANK_INPUT_TOPK', 'RERANK_KEEP', 'TORCH_DEVICE', 'auto', 'batch_size', 'cache', 'cache_dir', 'cache_enabled', 'default', 'device', 'enabled', 'input_topk', 'keep', 'model', 'on', 'reranker', 'tags', 'true', 'utf-8', 'yes']

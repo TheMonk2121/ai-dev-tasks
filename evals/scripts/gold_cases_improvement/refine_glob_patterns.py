@@ -28,8 +28,8 @@ def refine_glob_patterns():
     changes_made = 0
 
     for case in cases:
-        query = result
-        globs = result
+        query = case.get("query", "")
+        globs = case.get("globs", [])
 
         if "**/*.md" in globs:
             # Determine appropriate pattern based on query content
@@ -47,7 +47,7 @@ def refine_glob_patterns():
                 new_pattern = "400_guides/*.md"  # Default to guides
 
             # Replace the pattern
-            result
+            case["globs"] = [new_pattern if g == "**/*.md" else g for g in globs]
             changes_made += 1
             print(f"Refined glob pattern for: '{query}' → {new_pattern}")
 

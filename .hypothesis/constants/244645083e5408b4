@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/ragchecker_official_evaluation.py
+# hypothesis_version: 6.138.15
+
+['%Y%m%d_%H%M%S', '--help', '--outdir', '--profile', '-h', 'EVAL_PROFILE', 'Profiles:', 'RAGCheckerInput', 'SourceFileLoader', '__main__', 'ai-dev-tasks', 'importlib.machinery', 'scripts/lib', 'utf-8']

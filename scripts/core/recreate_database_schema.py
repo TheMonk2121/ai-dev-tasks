@@ -9,6 +9,7 @@ import os
 import sys
 
 import psycopg
+from psycopg import sql
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from src.common.db_dsn import resolve_dsn
@@ -32,7 +33,7 @@ def recreate_database_schema():
 
                 for view in views_to_drop:
                     try:
-                        cur.execute(f"DROP VIEW IF EXISTS {view} CASCADE")
+                        cur.execute(sql.SQL("DROP VIEW IF EXISTS {} CASCADE").format(sql.Identifier(view)))
                         print(f"   ✅ {view}: Dropped view")
                     except Exception as e:
                         print(f"   ⚠️  {view}: Could not drop view: {e}")
@@ -51,7 +52,7 @@ def recreate_database_schema():
 
                 for table in tables_to_drop:
                     try:
-                        cur.execute(f"DROP TABLE IF EXISTS {table} CASCADE")
+                        cur.execute(sql.SQL("DROP TABLE IF EXISTS {} CASCADE").format(sql.Identifier(table)))
                         print(f"   ✅ {table}: Dropped table")
                     except Exception as e:
                         print(f"   ⚠️  {table}: Could not drop table: {e}")
@@ -237,10 +238,10 @@ def recreate_database_schema():
                 for table in tables_with_embeddings:
                     try:
                         cur.execute(
-                            f"""
-                            CREATE INDEX IF NOT EXISTS {table}_embedding_idx 
-                            ON {table} USING hnsw (embedding vector_cosine_ops)
-                        """
+                            sql.SQL("""
+                            CREATE INDEX IF NOT EXISTS {}_embedding_idx 
+                            ON {} USING hnsw (embedding vector_cosine_ops)
+                        """).format(sql.Identifier(f"{table}_embedding_idx"), sql.Identifier(table))
                         )
                         print(f"   ✅ {table}: Created HNSW vector index")
                     except Exception as e:

@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/retrieval/reranker.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.1, 0.2, 0.5, 0.7, 1.0, '->', '::', 'INSERT ', 'SELECT ', '[A-Za-z0-9_]+', '`', '```', 'class ', 'def ', 'import ', '{', '}']

@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/health_check_helpers.py
+# hypothesis_version: 6.138.15
+
+[100, 384, 1000, 1024, '-', '/', '1', '16', '4500', '=', 'DSPY_RAG_PATH', 'EMBEDDING_MODEL', 'EVAL_CASES_FILE', 'EVAL_DRIVER', 'EVAL_PROFILE', 'READER_DOCS_BUDGET', 'RERANKER_MODEL', 'RERANK_ENABLE', 'RETR_TOPK_BM25', 'RETR_TOPK_VEC', 'SELECT 1', 'all-MiniLM-L6-v2', 'document', 'embedding', 'error', 'fail', 'failed_checks', 'health_percentage', 'index_presence', 'message', 'mock', 'mock://', 'model_availability', 'overall_healthy', 'pass', 'passed_checks', 'prefix_leakage', 'query', 'rerank', 'src', 'status', 'synthetic', 'test', 'timestamp', 'token_budget', 'total_checks', 'warn', 'warning', 'warning_checks', '⚠️', '✅', '❌']

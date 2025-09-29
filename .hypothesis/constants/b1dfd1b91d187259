@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/http_migration.py
+# hypothesis_version: 6.138.15
+
+[0.5, 5.0, 'migrate_requests_get', 'migrate_requests_put', 'requests.delete', 'requests.get', 'requests.head', 'requests.options', 'requests.patch', 'requests.post', 'requests.put']

@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/run_eval.py
+# hypothesis_version: 6.138.15
+
+['%Y%m%d_%H%M%S', '--output-root', '--tag', '--use-bedrock', '1', 'AWS_REGION', 'B-1059', 'CACHE_DISABLED', 'EVAL_MODE', '__main__', 'bedrock_only', 'env', 'eval_file', 'manifest.json', 'python3', 'tag', 'timestamp', 'us-east-1', 'w']

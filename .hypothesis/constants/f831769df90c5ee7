@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/utilities/cache_invalidation_system.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.7, 0.8, 100.0, 100, 10000, '..', 'POSTGRES_DSN', 'Unknown', '__main__', 'avg_similarity', 'cache_hit_rate_after', 'cache_hits', 'cache_misses', 'cache_size_mb', 'cleanup_duration', 'configuration', 'current_cache_stats', 'final_cache_size', 'frequency_based', 'id', 'initial_cache_size', 'last_cleanup', 'manual', 'manual_invalidations', 'max_cache_size_mb', 'newest_verification', 'oldest_verification', 'postgresql://', 'recommendations', 'similarity_threshold', 'system_stats', 'table_size', 'timestamp', 'total_entries', 'total_invalidated', 'total_invalidations', 'ttl_based', 'ttl_hours', 'ttl_invalidations']

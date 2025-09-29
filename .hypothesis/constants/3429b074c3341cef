@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/scripts/evaluation/migrate_to_pydantic_evals.py
+# hypothesis_version: 6.138.15
+
+['.jsonl', 'CASES_FILE', 'GOLD_FILE', '__main__', 'case_id', 'cases', 'category', 'forbid', 'gold', 'has_expected_files', 'has_globs', 'has_gt_answer', 'mode', 'notes', 'r', 'retrieval', 'tags', 'utf-8', 'value']

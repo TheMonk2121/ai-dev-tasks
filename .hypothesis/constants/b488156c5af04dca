@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/evaluation/reporters.py
+# hypothesis_version: 6.138.15
+
+[', ', ':', 'ConsoleReporter', 'JsonReporter', 'build_reporters', 'cases', 'console', 'console-verbose', 'dataset', 'finished_at', 'json', 'json:', 'json_path', 'metrics', 'notify_begin', 'notify_case', 'notify_complete', 'profile', 'run_id', 'started_at', 'utf-8']

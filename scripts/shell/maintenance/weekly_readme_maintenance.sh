@@ -71,39 +71,96 @@ archive_old_entries() {
         return 0
     fi
 
-    # Create archive directory if it doesn't exist
+    if [[ "${FORCE_ARCHIVE:-false}" != "true" ]] && is_ci_environment; then
+        log_info "Skipping archive in CI environment (use FORCE_ARCHIVE=true to override)"
+        return 0
+    fi
+
     mkdir -p "600_archives"
 
-    # Find entries older than 90 days
-    local old_entries
-    old_entries=$(grep -B 2 -A 10 "#### \*\*B-" README.md | grep -E "[0-9]{4}-[0-9]{2}-[0-9]{2}" | while read -r line; do
-        local date_part
-        date_part=$(echo "$line" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" || echo "")
-        if [[ -n "$date_part" ]]; then
-            local entry_date
-            entry_date=$(date -d "$date_part" +%s 2>/dev/null || echo "0")
-            local ninety_days_ago
-            ninety_days_ago=$(date -d "90 days ago" +%s 2>/dev/null || echo "0")
+    local archive_output
+    archive_output=$(uv run python - "$(pwd)/README.md" "$(pwd)/600_archives/README-context-history.md" 90 <<'PY'
+import json
+import re
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any
 
-            if [[ $entry_date -lt $ninety_days_ago ]]; then
-                echo "$date_part"
-            fi
-        fi
-    done | sort | uniq)
+readme_path = Path(sys.argv[1])
+archive_path = Path(sys.argv[2])
+threshold_days = int(sys.argv[3])
 
-    if [[ -n "$old_entries" ]]; then
-        log_warning "Found old entries to archive:"
-        echo "$old_entries" | while read -r date; do
-            echo "  - $date"
-        done
+if not readme_path.exists():
+    print(json.dumps({"archived_count": 0, "archived_entries": []}))
+    sys.exit(0)
 
-        if [[ "${FORCE_ARCHIVE:-false}" == "true" ]] || ! is_ci_environment; then
-            log_info "Archiving old entries..."
-            # TODO: Implement actual archiving logic
-            log_success "Old entries archived to 600_archives/README-context-history.md"
-        else
-            log_info "Skipping archive in CI environment (use FORCE_ARCHIVE=true to override)"
-        fi
+content = readme_path.read_text(encoding="utf-8")
+pattern = re.compile(r"(^#### \*\*B-[^\n]+\n(?:.*?))(?:^#### \*\*B-|^## |\Z)", re.MULTILINE | re.DOTALL)
+threshold_date = datetime.now().date() - timedelta(days=threshold_days)
+
+archived_blocks: list[str] = []
+archived_entries: list[dict[str, Any]] = []
+new_parts: list[str] = []
+last_end = 0
+
+for match in pattern.finditer(content):
+    new_parts.append(content[last_end:match.start()])
+    block = match.group(1)
+    date_match = re.search(r"(\d{4}-\d{2}-\d{2})", block)
+    should_archive = False
+    block_date = None
+    if date_match:
+        try:
+            block_date = datetime.strptime(date_match.group(1), "%Y-%m-%d").date()
+            should_archive = block_date <= threshold_date
+        except ValueError:
+            should_archive = False
+
+    if should_archive:
+        archived_blocks.append(block.strip("\n") + "\n")
+        archived_entries.append({
+            "heading": block.splitlines()[0].strip(),
+            "date": block_date.isoformat() if block_date else None,
+        })
+    else:
+        new_parts.append(block)
+    last_end = match.end()
+
+new_parts.append(content[last_end:])
+
+if archived_blocks:
+    new_content = "".join(new_parts)
+    new_content = re.sub(r"\n{3,}", "\n\n", new_content).strip("\n") + "\n"
+    readme_path.write_text(new_content, encoding="utf-8")
+
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    with archive_path.open("a", encoding="utf-8") as handle:
+        handle.write(f"\n<!-- Archived on {datetime.now().isoformat()} -->\n\n")
+        for block in archived_blocks:
+            handle.write(block.rstrip("\n") + "\n\n")
+
+print(json.dumps({
+    "archived_count": len(archived_entries),
+    "archived_entries": archived_entries,
+    "archive_path": str(archive_path),
+}))
+PY
+)
+
+    if [[ $? -ne 0 ]]; then
+        log_error "Archiving script failed"
+        echo "$archive_output"
+        return 1
+    fi
+
+    local archived_count
+    archived_count=$(echo "$archive_output" | jq '.archived_count' 2>/dev/null || echo "0")
+
+    if [[ "$archived_count" -gt 0 ]]; then
+        log_success "Archived $archived_count README context entries"
+        echo "$archive_output" | jq -r '.archived_entries[] | "  - \(.heading)"' 2>/dev/null || true
+        log_info "Archive file: $(echo "$archive_output" | jq -r '.archive_path')"
     else
         log_success "No old entries found for archiving"
     fi

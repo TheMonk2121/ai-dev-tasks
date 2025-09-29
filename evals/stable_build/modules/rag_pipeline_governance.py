@@ -199,7 +199,7 @@ class RAGPipelineGovernance:
         for node_id in graph.nodes():
             if graph.nodes[node_id]["node_type"] == "parameter":
                 params = graph.nodes[node_id]["parameters"]
-                if "value" in params and isinstance(params["value"], (int, float)):
+                if "value" in params and isinstance(params["value"], int | float):
                     # Add small variation to numeric parameters
                     params["value"] = params["value"] * 1.01
 
@@ -444,7 +444,7 @@ class RAGPipelineGovernance:
             PipelineStage.VALIDATE: {"min_length": 10, "max_length": 5000},
         }
 
-        return stage_ranges
+        return defaults
 
     def export_pipeline(self, pipeline_id: str) -> dict[str, Any]:
         """Export pipeline for analysis or persistence"""

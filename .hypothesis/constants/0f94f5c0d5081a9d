@@ -1,0 +1,4 @@
+# file: /Users/danieljacobs/Code/ai-dev-tasks/src/schemas/eval_settings.py
+# hypothesis_version: 6.138.15
+
+[0.0, 0.28, 0.3, 0.6, 0.75, 0.85, 1.0, 2.0, 100, 200, 1000, 4500, 8000, ',', '.env', '0', '1', 'AWS access key ID', 'DATABASE_URL', 'EVAL_CONCURRENCY', 'EVAL_DRIVER', 'EVAL_MAX_WORKERS', 'EVAL_PROFILE', 'PATH_ALLOWLIST', 'POSTGRES_DSN', 'after', 'dspy_rag', 'gold', 'ignore', 'mock', 'mock://', 'mock://test', 'postgres://', 'postgresql://', 'real', 'synthetic', 'us-east-1', 'utf-8']
