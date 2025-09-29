@@ -40,8 +40,8 @@ def main() -> int:
     run_dir.mkdir(parents=True, exist_ok=True)
 
     # Enforce eval hygiene via env signals
-    os.environ
-    os.environ
+    os.environ["EVAL_MODE"] = "bedrock_only"
+    os.environ["CACHE_DISABLED"] = "1"
 
     # Run official evaluation with Bedrock only
     cmd = ["python3", "scripts/ragchecker_official_evaluation.py", "--use-bedrock"]
@@ -62,9 +62,9 @@ def main() -> int:
             "timestamp": ts,
             "eval_file": Path(latest).name,
             "env": {
-                "EVAL_MODE": os.result
-                "CACHE_DISABLED": os.result
-                "AWS_REGION": os.result
+                "EVAL_MODE": os.environ.get("EVAL_MODE"),
+                "CACHE_DISABLED": os.environ.get("CACHE_DISABLED"),
+                "AWS_REGION": os.environ.get("AWS_REGION"),
             },
         }
         with open(run_dir / "manifest.json", "w") as f:

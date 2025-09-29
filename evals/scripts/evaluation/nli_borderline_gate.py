@@ -6,6 +6,7 @@ from typing import Any
 from transformers import pipeline
 import argparse
 import sys
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 Borderline NLI Gate for Final RAGAS Push
@@ -79,8 +80,8 @@ class BorderlineNLIGate:
             # Extract entailment score
             entailment_score = 0.0
             for item in result:
-                if result:
-                    entailment_score = result
+                if item["label"] == "ENTAILMENT":
+                    entailment_score = item["score"]
                     break
 
             # Cache the result
@@ -240,14 +241,14 @@ def main():
     args = parser.parse_args()
 
     # Enable NLI gate
-    os.environ
+    os.environ["RAGCHECKER_NLI_ENABLE"] = "1"
 
     nli_gate = BorderlineNLIGate()
 
     if args.stats:
         stats = nli_gate.get_cache_stats()
         print("📊 NLI Gate Statistics:")
-        for key, value in .items()
+        for key, value in stats.items():
             print(f"  {key}: {value}")
 
     if args.clear_cache:
