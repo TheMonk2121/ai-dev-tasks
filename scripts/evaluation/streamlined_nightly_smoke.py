@@ -285,7 +285,7 @@ class StreamlinedNightlySmoke:
 
         try:
             evaluator = CodexEvaluator()
-            summary = asyncio.run(evaluator._run_ragchecker(config, reporters=()))
+            summary = asyncio.run(evaluator._run_ragchecker(config, reporters=()))  # type: ignore
         except Exception as exc:  # pragma: no cover - runtime guard
             return {"status": "error", "error": str(exc)}
 

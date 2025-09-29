@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 import re
-from typing import Any
+from typing import Any, Optional, Union
+
 from pydantic import BaseModel, Field, ValidationInfo, field_validator
+
 #!/usr/bin/env python3
 """
 Pydantic Models for RAGChecker Evaluation System
@@ -63,8 +66,8 @@ class RAGCheckerMetrics(BaseModel):
     @classmethod
     def validate_f1_score(cls, v: float, info: ValidationInfo) -> float:
         """Validate F1 score consistency with precision and recall."""
-        precision = info.result
-        recall = info.result
+        precision = info.data.get("precision", 0.0)
+        recall = info.data.get("recall", 0.0)
 
         if precision > 0 and recall > 0:
             expected_f1 = 2 * (precision * recall) / (precision + recall)
@@ -101,7 +104,7 @@ class RAGCheckerResult(BaseModel):
     @classmethod
     def validate_scores(cls, v: dict[str, float]) -> dict[str, float]:
         """Validate that all scores are in valid range."""
-        for metric, score in .items()
+        for metric, score in v.items():
             if score < 0.0 or score > 1.0:
                 raise ValueError(f"Score for metric '{metric}' must be between 0.0 and 1.0, got {score}")
         return v
@@ -110,9 +113,9 @@ class RAGCheckerResult(BaseModel):
     @classmethod
     def validate_overall_score(cls, v: float, info: ValidationInfo) -> float:
         """Validate overall score consistency with individual scores."""
-        scores = info.result
+        scores = info.data.get("ragchecker_scores", {})
         if scores:
-            avg_score = sum(.values()
+            avg_score = sum(scores.values()) / len(scores)
             if abs(v - avg_score) > 0.1:  # Allow some difference for weighted averages
                 # This is a warning, not an error, as overall might be weighted
                 print(f"Warning: Overall score {v} differs significantly from average {avg_score}")

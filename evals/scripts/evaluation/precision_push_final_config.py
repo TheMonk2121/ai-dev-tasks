@@ -1,7 +1,9 @@
 from __future__ import annotations
+
+import argparse
 import logging
 import os
-import argparse
+
 #!/usr/bin/env python3
 """
 Precision Push Final Configuration
@@ -85,11 +87,11 @@ class PrecisionPushFinalConfig:
         """Apply all precision push configurations."""
         applied_configs = {}
 
-        for section_name, config in self..items()
+        for section_name, config in self.config_sections.items():
             logger.info(f"🔧 Applying {section_name} configuration...")
 
             # Apply to environment
-            for key, value in .items()
+            for key, value in config.items():
                 os.environ[key] = str(value)
 
             applied_configs[section_name] = config.copy()
@@ -100,7 +102,7 @@ class PrecisionPushFinalConfig:
     def merged_env(self) -> dict[str, str]:
         """Return a single dict of all env keys we manage (union of sections)."""
         merged: dict[str, str] = {}
-        for _name, cfg in self..items()
+        for _name, cfg in self.config_sections.items():
             merged.update(cfg)
         return merged
 
@@ -109,7 +111,7 @@ class PrecisionPushFinalConfig:
         lines = []
         for k, v in self.merged_env().items():
             # Quote values conservatively
-            vq = str(v).replace("", "").replace('"', '"')
+            vq = str(v).replace("\\", "\\\\").replace('"', '\\"')
             lines.append(f'export {k}="{vq}"')
         return "\n".join(lines) + "\n"
 
@@ -118,9 +120,9 @@ class PrecisionPushFinalConfig:
         print("\n🔧 Precision Push Final Configuration")
         print("=" * 60)
 
-        for section_name, config in self..items()
+        for section_name, config in self.config_sections.items():
             print(f"\n📊 {section_name.upper()}:")
-            for key, value in .items()
+            for key, value in config.items():
                 actual_value = os.getenv(key, "NOT_SET")
                 status = "✅" if str(actual_value) == str(value) else "❌"
                 print(f"  {status} {key}: {actual_value}")
@@ -169,7 +171,7 @@ def main():
     if args.apply:
         applied_configs = config_manager.apply_all_configs()
         print(
-            f"✅ Applied precision push configuration: {sum(len(config) for config in .values()
+            f"✅ Applied precision push configuration: {sum(len(config) for config in applied_configs.values())} parameters"
         )
 
     if args.print_config:
@@ -177,7 +179,7 @@ def main():
 
     if args.telemetry:
         telemetry_config = config_manager.get_telemetry_config()
-        for key, value in .items()
+        for key, value in telemetry_config.items():
             os.environ[key] = value
         print("📊 Telemetry enabled")
 

@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 import json
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Comprehensive validation script for Coder Role implementation.
@@ -42,18 +44,18 @@ class CoderRoleValidator:
         # Check script existence
         script_path = self.project_root / "scripts" / "memory_up.sh"
         if script_path.exists():
-            result
+            results["checks"]["script_exists"] = True
         else:
-            result
-            result
+            results["checks"]["script_exists"] = False
+            results["errors"].append("Memory rehydrator script not found")
 
         # Check DSPy memory rehydrator
         dspy_path = self.project_root / "src" / "utils" / "memory_rehydrator.py"
         if dspy_path.exists():
-            result
+            results["checks"]["dspy_rehydrator_exists"] = True
         else:
-            result
-            result
+            results["checks"]["dspy_rehydrator_exists"] = False
+            results["errors"].append("DSPy memory rehydrator not found")
 
         # Test command execution
         try:
@@ -65,21 +67,21 @@ class CoderRoleValidator:
             )
 
             if cmd_result.returncode == 0:
-                result
-                result
+                results["checks"]["command_execution"] = True
+                results["checks"]["output_produced"] = "MEMORY REHYDRATION BUNDLE" in cmd_result.stdout
             else:
-                result
-                result
+                results["checks"]["command_execution"] = False
+                results["errors"].append(f"Command execution failed: {cmd_result.stderr}")
 
         except Exception as e:
-            result
-            result
+            results["checks"]["command_execution"] = False
+            results["errors"].append(f"Command execution error: {e}")
 
         # Determine overall status
-        if all(result
-            result
+        if all(results["checks"].values()) and not results["errors"]:
+            results["status"] = "PASS"
         else:
-            result
+            results["status"] = "FAIL"
 
         return results
 
@@ -92,25 +94,25 @@ class CoderRoleValidator:
         rehydrator_path = self.project_root / "src" / "utils" / "memory_rehydrator.py"
 
         if not rehydrator_path.exists():
-            result
-            result
+            results["status"] = "FAIL"
+            results["errors"].append("Memory rehydrator file not found")
             return results
 
         content = rehydrator_path.read_text()
 
         # Check for ROLE_INSTRUCTIONS
         if "ROLE_INSTRUCTIONS" in content:
-            result
+            results["checks"]["role_instructions_exists"] = True
         else:
-            result
-            result
+            results["checks"]["role_instructions_exists"] = False
+            results["errors"].append("ROLE_INSTRUCTIONS dictionary not found")
 
         # Check for coder role
         if '"coder"' in content:
-            result
+            results["checks"]["coder_role_defined"] = True
         else:
-            result
-            result
+            results["checks"]["coder_role_defined"] = False
+            results["errors"].append("Coder role not defined in ROLE_INSTRUCTIONS")
 
         # Check for required categories
         required_categories = [
@@ -126,17 +128,17 @@ class CoderRoleValidator:
 
         for category in required_categories:
             if f'"{category}":' in content:
-                result
+                results["checks"][f"category_{category}"] = True
             else:
-                result
-                result
+                results["checks"][f"category_{category}"] = False
+                results["errors"].append(f"Missing category: {category}")
 
         # Check for ROLE_FILES
         if "ROLE_FILES" in content:
-            result
+            results["checks"]["role_files_exists"] = True
         else:
-            result
-            result
+            results["checks"]["role_files_exists"] = False
+            results["errors"].append("ROLE_FILES dictionary not found")
 
         # Check for required files in coder role
         required_files = [
@@ -147,16 +149,16 @@ class CoderRoleValidator:
 
         for file_path in required_files:
             if file_path in content:
-                result
+                results["checks"][f"file_{file_path.replace('/', '_').replace('.', '_')}"] = True
             else:
-                result
-                result
+                results["checks"][f"file_{file_path.replace('/', '_').replace('.', '_')}"] = False
+                results["errors"].append(f"Required file not found in ROLE_FILES: {file_path}")
 
         # Determine overall status
-        if all(result
-            result
+        if all(results["checks"].values()) and not results["errors"]:
+            results["status"] = "PASS"
         else:
-            result
+            results["status"] = "FAIL"
 
         return results
 
@@ -184,20 +186,20 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result
+                    results["checks"][f"context_{section.replace(' ', '_').replace('-', '_')}"] = True
                 else:
-                    result
-                    result
+                    results["checks"][f"context_{section.replace(' ', '_').replace('-', '_')}"] = False
+                    results["errors"].append(f"Missing section in DSPy context: {section}")
 
             # Check ROLE_PINS
             if '"coder"' in content:
-                result
+                results["checks"]["context_role_pins"] = True
             else:
-                result
-                result
+                results["checks"]["context_role_pins"] = False
+                results["errors"].append("Missing coder role in ROLE_PINS for DSPy context")
         else:
-            result
-            result
+            results["checks"]["context_file_exists"] = False
+            results["errors"].append("DSPy development context file not found")
 
         # Check comprehensive coding best practices
         best_practices_file = self.project_root / "400_guides" / "400_comprehensive-coding-best-practices.md"
@@ -215,13 +217,13 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result
+                    results["checks"][f"best_practices_{section.replace(' ', '_').replace('-', '_')}"] = True
                 else:
-                    result
-                    result
+                    results["checks"][f"best_practices_{section.replace(' ', '_').replace('-', '_')}"] = False
+                    results["errors"].append(f"Missing section in best practices: {section}")
         else:
-            result
-            result
+            results["checks"]["best_practices_file_exists"] = False
+            results["errors"].append("Comprehensive coding best practices file not found")
 
         # Check file analysis guide
         file_analysis_file = self.project_root / "400_guides" / "400_file-analysis-guide.md"
@@ -239,13 +241,13 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result
+                    results["checks"][f"file_analysis_{section.replace(' ', '_').replace('-', '_')}"] = True
                 else:
-                    result
-                    result
+                    results["checks"][f"file_analysis_{section.replace(' ', '_').replace('-', '_')}"] = False
+                    results["errors"].append(f"Missing section in file analysis: {section}")
         else:
-            result
-            result
+            results["checks"]["file_analysis_file_exists"] = False
+            results["errors"].append("File analysis guide not found")
 
         # Check testing strategy guide
         testing_strategy_file = self.project_root / "400_guides" / "400_testing-strategy-guide.md"
@@ -263,19 +265,19 @@ class CoderRoleValidator:
 
             for section in required_sections:
                 if section in content:
-                    result
+                    results["checks"][f"testing_strategy_{section.replace(' ', '_').replace('-', '_')}"] = True
                 else:
-                    result
-                    result
+                    results["checks"][f"testing_strategy_{section.replace(' ', '_').replace('-', '_')}"] = False
+                    results["errors"].append(f"Missing section in testing strategy: {section}")
         else:
-            result
-            result
+            results["checks"]["testing_strategy_file_exists"] = False
+            results["errors"].append("Testing strategy guide not found")
 
         # Determine overall status
-        if all(result
-            result
+        if all(results["checks"].values()) and not results["errors"]:
+            results["status"] = "PASS"
         else:
-            result
+            results["status"] = "FAIL"
 
         return results
 
@@ -298,25 +300,25 @@ class CoderRoleValidator:
                 content = full_path.read_text()
 
                 if required_tag in content:
-                    result
+                    results["checks"][f"tag_{file_path.replace('/', '_').replace('.', '_')}"] = True
                 else:
-                    result
-                    result
+                    results["checks"][f"tag_{file_path.replace('/', '_').replace('.', '_')}"] = False
+                    results["errors"].append(f"Missing {required_tag} in {file_path}")
 
                 if '"coder"' in content:
-                    result
+                    results["checks"][f"coder_role_{file_path.replace('/', '_').replace('.', '_')}"] = True
                 else:
-                    result
-                    result
+                    results["checks"][f"coder_role_{file_path.replace('/', '_').replace('.', '_')}"] = False
+                    results["errors"].append(f"Missing coder role in {required_tag} for {file_path}")
             else:
-                result
-                result
+                results["checks"][f"file_exists_{file_path.replace('/', '_').replace('.', '_')}"] = False
+                results["errors"].append(f"File not found: {file_path}")
 
         # Determine overall status
-        if all(result
-            result
+        if all(results["checks"].values()) and not results["errors"]:
+            results["status"] = "PASS"
         else:
-            result
+            results["status"] = "FAIL"
 
         return results
 
@@ -329,8 +331,8 @@ class CoderRoleValidator:
         test_file = self.project_root / "tests" / "test_coder_role_integration.py"
 
         if not test_file.exists():
-            result
-            result
+            results["status"] = "FAIL"
+            results["errors"].append("Integration test file not found")
             return results
 
         try:
@@ -346,25 +348,25 @@ class CoderRoleValidator:
 
             for line in output_lines:
                 if "PASSED" in line:
-                    result
-                    result
+                    results["tests_passed"] += 1
+                    results["total_tests"] += 1
                 elif "FAILED" in line:
-                    result
-                    result
+                    results["tests_failed"] += 1
+                    results["total_tests"] += 1
                 elif "ERROR" in line:
-                    result
-                    result
+                    results["tests_failed"] += 1
+                    results["total_tests"] += 1
 
-            if cmd_result.returncode == 0 and result
-                result
+            if cmd_result.returncode == 0 and results["tests_failed"] == 0:
+                results["status"] = "PASS"
             else:
-                result
+                results["status"] = "FAIL"
                 if cmd_result.stderr:
-                    result
+                    results["errors"].append(f"Test execution errors: {cmd_result.stderr}")
 
         except Exception as e:
-            result
-            result
+            results["status"] = "FAIL"
+            results["errors"].append(f"Test execution error: {e}")
 
         return results
 
@@ -373,55 +375,55 @@ class CoderRoleValidator:
         print("📊 Generating Validation Report...")
 
         # Run all validations
-        self.result
-        self.result
-        self.result
-        self.result
-        self.result
+        self.results["validation_results"]["memory_rehydration"] = self.validate_memory_rehydration_system()
+        self.results["validation_results"]["role_instructions"] = self.validate_role_instructions()
+        self.results["validation_results"]["documentation"] = self.validate_documentation_enhancements()
+        self.results["validation_results"]["metadata_tags"] = self.validate_metadata_tags()
+        self.results["validation_results"]["integration_tests"] = self.run_integration_tests()
 
         # Calculate overall status
-        all_passed = all(result
+        all_passed = all(result["status"] == "PASS" for result in self.results["validation_results"].values())
 
-        self.result
+        self.results["overall_status"] = "PASS" if all_passed else "FAIL"
 
         # Count tests
-        integration_results = self.result
-        self.result
-        self.result
-        self.result
+        integration_results = self.results["validation_results"]["integration_tests"]
+        self.results["tests_passed"] = integration_results["tests_passed"]
+        self.results["tests_failed"] = integration_results["tests_failed"]
+        self.results["total_tests"] = integration_results["total_tests"]
 
         # Generate report
         report = f"""
 ================================================================================
 🧠 CODER ROLE IMPLEMENTATION VALIDATION REPORT
 ================================================================================
-Timestamp: {self.result
-Overall Status: {self.result
+Timestamp: {self.results['timestamp']}
+Overall Status: {self.results['overall_status']}
 
 📊 SUMMARY
-- Integration Tests: {self.result
-- Validation Categories: {len(self.result
+- Integration Tests: {self.results['tests_passed']}/{self.results['total_tests']} passed
+- Validation Categories: {len(self.results['validation_results'])} checked
 
 🔍 DETAILED RESULTS
 """
 
-        for category, result in self.result
-            status_emoji = "✅" if result:
-            report += f"\n{status_emoji} {category.replace('_', ' ').title()}: {result
+        for category, result in self.results["validation_results"].items():
+            status_emoji = "✅" if result["status"] == "PASS" else "❌"
+            report += f"\n{status_emoji} {category.replace('_', ' ').title()}: {result['status']}"
 
-            if result:
-                report += f"\n   Errors: {len(result
-                for error in result.items()
+            if result.get("errors"):
+                report += f"\n   Errors: {len(result['errors'])}"
+                for error in result["errors"][:3]:  # Show first 3 errors
                     report += f"\n     - {error}"
-                if len(result
-                    report += f"\n     ... and {len(result
+                if len(result["errors"]) > 3:
+                    report += f"\n     ... and {len(result['errors']) - 3} more"
 
         report += """
 
 🎯 RECOMMENDATIONS
 """
 
-        if self.result
+        if self.results["overall_status"] == "PASS":
             report += """
 ✅ All validations passed! The Coder Role implementation is complete and ready for use.
 
@@ -482,7 +484,7 @@ def main():
     print(report)
 
     # Exit with appropriate code
-    if validator.result
+    if validator.results["overall_status"] == "PASS":
         sys.exit(0)
     else:
         sys.exit(1)

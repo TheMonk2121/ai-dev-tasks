@@ -1,19 +1,29 @@
 from __future__ import annotations
+
 import asyncio
+import gc
 import logging
 import os
 import sys
 import time
 from dataclasses import dataclass, field
-from typing import Any
-# FIXME: Update this import path after reorganization
-# from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
-# FIXME: Update this import path after reorganization
-# from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
-# FIXME: Update this import path after reorganization
-# from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
-import gc
+from typing import Any, Optional, Union
+
 import psutil
+
+from scripts.utilities.cache_invalidation_integration import (
+    CacheInvalidationIntegration,
+    IntegrationConfig,
+)
+from scripts.utilities.postgresql_cache_service import (
+    CacheConfig,
+    PostgreSQLCacheService,
+)
+from scripts.utilities.similarity_scoring_algorithms import (
+    SimilarityConfig,
+    SimilarityScoringEngine,
+)
+
 #!/usr/bin/env python3
 """
 Performance Optimization for Generation Cache Implementation
@@ -242,33 +252,33 @@ class PerformanceOptimizer:
                 health_check = await self.cache_service.health_check()
 
                 # Update response time metrics
-                service_metrics = result
-                self.metrics.avg_response_time_ms = result
-                self.metrics.total_requests = result
+                service_metrics = cache_stats.get("service_metrics", {})
+                self.metrics.avg_response_time_ms = service_metrics.get("avg_response_time_ms", 0.0)
+                self.metrics.total_requests = service_metrics.get("total_requests", 0)
 
                 # Update cache performance metrics
-                self.metrics.cache_hit_rate = result
-                self.metrics.cache_miss_rate = result
+                self.metrics.cache_hit_rate = service_metrics.get("hit_rate", 0.0)
+                self.metrics.cache_miss_rate = service_metrics.get("miss_rate", 0.0)
 
                 # Update cache size
-                table_size_str = result
+                table_size_str = cache_stats.get("table_size", "0 bytes")
                 self.metrics.cache_size_mb = self._parse_size_to_mb(table_size_str)
 
                 # Update connection pool metrics
-                pool_status = result
-                self.metrics.active_connections = result
-                self.metrics.idle_connections = result
+                pool_status = health_check.get("connection_pool", {})
+                self.metrics.active_connections = pool_status.get("pool_size", 0) - pool_status.get("pool_free_size", 0)
+                self.metrics.idle_connections = pool_status.get("pool_free_size", 0)
                 self.metrics.connection_usage_rate = self.metrics.active_connections / max(
-                    result
+                    pool_status.get("pool_size", 1), 1
                 )
 
             # Collect similarity engine metrics
             if self.similarity_engine:
                 algo_metrics = self.similarity_engine.get_performance_metrics()
-                self.metrics.algorithm_processing_time_ms = result
+                self.metrics.algorithm_processing_time_ms = algo_metrics.get("processing_performance", {}).get(
                     "avg_time_ms", 0.0
                 )
-                self.metrics.algorithm_cache_hit_rate = result
+                self.metrics.algorithm_cache_hit_rate = algo_metrics.get("cache_performance", {}).get("hit_rate", 0.0)
 
             # Collect memory usage
             if self.config.enable_memory_monitoring:
@@ -289,26 +299,26 @@ class PerformanceOptimizer:
                 return
 
             # Check response time threshold
-            if self.metrics.avg_response_time_ms > self.config.result
-                alert = f"Response time exceeded threshold: {self.metrics.avg_response_time_ms:.2f}ms > {self.config.result
+            if self.metrics.avg_response_time_ms > self.config.performance_thresholds["max_response_time_ms"]:
+                alert = f"Response time exceeded threshold: {self.metrics.avg_response_time_ms:.2f}ms > {self.config.performance_thresholds['max_response_time_ms']}ms"
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
             # Check cache hit rate threshold
-            if self.metrics.cache_hit_rate < self.config.result
-                alert = f"Cache hit rate below threshold: {self.metrics.cache_hit_rate:.2%} < {self.config.result
+            if self.metrics.cache_hit_rate < self.config.performance_thresholds["min_cache_hit_rate"]:
+                alert = f"Cache hit rate below threshold: {self.metrics.cache_hit_rate:.2%} < {self.config.performance_thresholds['min_cache_hit_rate']:.2%}"
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
             # Check memory usage threshold
-            if self.metrics.memory_usage_mb > self.config.result
-                alert = f"Memory usage exceeded threshold: {self.metrics.memory_usage_mb:.2f}MB > {self.config.result
+            if self.metrics.memory_usage_mb > self.config.performance_thresholds["max_memory_usage_mb"]:
+                alert = f"Memory usage exceeded threshold: {self.metrics.memory_usage_mb:.2f}MB > {self.config.performance_thresholds['max_memory_usage_mb']:.2f}MB"
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
             # Check connection usage threshold
-            if self.metrics.connection_usage_rate > self.config.result
-                alert = f"Connection usage exceeded threshold: {self.metrics.connection_usage_rate:.2%} > {self.config.result
+            if self.metrics.connection_usage_rate > self.config.performance_thresholds["max_connection_usage"]:
+                alert = f"Connection usage exceeded threshold: {self.metrics.connection_usage_rate:.2%} > {self.config.performance_thresholds['max_connection_usage']:.2%}"
                 self.metrics.alerts.append(alert)
                 logger.warning(alert)
 
@@ -431,20 +441,20 @@ class PerformanceOptimizer:
             # Benchmark cache service
             if self.cache_service:
                 cache_benchmark = await self._benchmark_cache_service(iterations)
-                result
+                benchmark_results["cache_service"] = cache_benchmark
 
             # Benchmark similarity engine
             if self.similarity_engine:
                 similarity_benchmark = await self._benchmark_similarity_engine(iterations)
-                result
+                benchmark_results["similarity_engine"] = similarity_benchmark
 
             # Benchmark integration
             if self.integration:
                 integration_benchmark = await self._benchmark_integration(iterations)
-                result
+                benchmark_results["integration"] = integration_benchmark
 
             # Calculate overall metrics
-            result
+            benchmark_results["overall"] = self._calculate_overall_benchmark(benchmark_results)
 
             logger.info("Performance benchmark completed successfully")
             return benchmark_results
@@ -567,15 +577,15 @@ class PerformanceOptimizer:
             }
 
             # Aggregate metrics from all components
-            for component, results in .items()
+            for component, results in benchmark_results.items():
                 if component != "overall" and "error" not in results:
-                    result
-                    result
-                    result
+                    overall["total_operations"] += results.get("iterations", 0)
+                    overall["total_time_ms"] += results.get("total_time_ms", 0.0)
+                    overall["total_operations_per_second"] += results.get("operations_per_second", 0.0)
 
             # Calculate averages
-            if result:
-                result
+            if overall["total_operations"] > 0:
+                overall["avg_response_time_ms"] = overall["total_time_ms"] / overall["total_operations"]
 
             return overall
 

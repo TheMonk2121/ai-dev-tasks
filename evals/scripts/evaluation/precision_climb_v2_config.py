@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Any
+
 import argparse
 import logging
 import os
 import sys
+from typing import Any, Optional, Union
 
 #!/usr/bin/env python3
 """
@@ -135,12 +136,12 @@ class PrecisionClimbV2Config:
 
         # Add cross-encoder config if requested
         if enable_cross_encoder and layer_name in ["layer2", "layer3"]:
-            ce_config = self.result
-            result
+            ce_config = self.config_layers["cross_encoder"]
+            ce_config["RAGCHECKER_CROSS_ENCODER_ENABLED"] = "1"
             config.update(ce_config)
 
         # Apply to environment
-        for key, value in .items()
+        for key, value in config.items():
             os.environ[key] = str(value)
 
         return config
@@ -154,8 +155,8 @@ class PrecisionClimbV2Config:
 
         # Add cross-encoder config if requested
         if enable_cross_encoder and layer_name in ["layer2", "layer3"]:
-            ce_config = self.result
-            result
+            ce_config = self.config_layers["cross_encoder"]
+            ce_config["RAGCHECKER_CROSS_ENCODER_ENABLED"] = "1"
             config.update(ce_config)
 
         return config
@@ -179,7 +180,7 @@ class PrecisionClimbV2Config:
     def _log_effective_config(self, layer_name: str, config: dict[str, str]) -> None:
         """Log the effective configuration for debugging."""
         logger.info(f"📊 Effective {layer_name} configuration:")
-        for key, value in sorted(.items()
+        for key, value in sorted(config.items()):
             logger.info(f"  {key}={value}")
 
     def validate_configuration(self) -> bool:
@@ -299,15 +300,15 @@ def main():
         sequence = config_manager.get_rollout_sequence()
         print("📋 Recommended Rollout Sequence:")
         for i, step in enumerate(sequence, 1):
-            print(f"{i}. {result
-            print(f"   Expected: {result
-            print(f"   Target: {result
+            print(f"{i}. {step['layer']}: {step['description']}")
+            print(f"   Expected: {step['expected_improvement']}")
+            print(f"   Target: {step['validation_target']}")
             print()
         sys.exit(0)
 
     if args.telemetry:
         telemetry_config = config_manager.generate_telemetry_config()
-        for key, value in .items()
+        for key, value in telemetry_config.items():
             os.environ[key] = value
         print("📊 Telemetry configuration enabled")
 
@@ -319,7 +320,7 @@ def main():
     elif args.progressive:
         applied_configs = config_manager.apply_progressive_config(args.progressive, args.enable_cross_encoder)
         print(f"✅ Applied progressive configuration: {args.progressive}")
-        total_params = sum(len(config) for config in .values()
+        total_params = sum(len(config) for config in applied_configs.values())
         print(f"📊 Total parameters set: {total_params}")
 
     else:

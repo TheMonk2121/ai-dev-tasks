@@ -65,7 +65,7 @@ def check_baseline_compliance(results_file: str) -> bool:
 
     # Define baseline requirements: prefer per-file baseline metrics if present
     baseline_requirements = {
-        k: float(v) for k, v in (baseline_metrics or {}).items() if isinstance(v, (int, float)) or str(v).replace(".", "", 1).isdigit()
+        k: float(v) for k, v in (baseline_metrics or {}).items() if isinstance(v, int | float) or str(v).replace(".", "", 1).isdigit()
     }
     # Fallback to legacy floors only for missing keys in provided baseline
     legacy_floors = {"precision": 0.20, "recall": 0.45, "f1_score": 0.22, "faithfulness": 0.60}

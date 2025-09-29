@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import json
 import os
 import sys
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Detailed Gold Cases Verification - Question by Question
@@ -47,12 +49,12 @@ def verify_case_group(cases: list[dict], start_idx: int, end_idx: int) -> list[d
 
     for i in range(start_idx, min(end_idx, len(cases))):
         case = cases[i]
-        case_id = result
-        mode = result
-        query = result
-        expected_files = result
-        globs = result
-        tags = result
+        case_id = case.get("id", f"Case_{i+1}")
+        mode = case.get("mode", "unknown")
+        query = case.get("query", "")
+        expected_files = case.get("expected_files", [])
+        globs = case.get("globs", [])
+        tags = case.get("tags", [])
 
         print(f"\n📋 Case {i+1}: {case_id}")
         print(f"   Mode: {mode}")
@@ -124,11 +126,11 @@ def verify_all_cases():
     if all_issues:
         print(f"❌ Found {len(all_issues)} issues:")
         for issue in all_issues:
-            print(f"  - {result
-            if result:
-                print(f"    Missing: {result
-            elif result:
-                print(f"    Query: {result
+            print(f"  - {issue['case_id']}: {issue['issue']}")
+            if issue["issue"] == "missing_file":
+                print(f"    Missing: {issue['file_path']}")
+            elif issue["issue"] in ["short_query", "unclear_phrasing"]:
+                print(f"    Query: {issue['query']}")
     else:
         print("✅ No issues found!")
 

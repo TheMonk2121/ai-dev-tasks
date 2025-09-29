@@ -48,7 +48,10 @@ def run_enhanced_evaluation(profile: str = "gold", limit: int = 5):
 
         # Run evaluation with enhanced tracing
         with logger.tracer.trace_evaluation_phase("evaluation_execution", profile=profile):
-            results = evaluator.run_evaluation(limit=limit)
+            if evaluator is not None:
+                results = evaluator.run_evaluation(limit=limit)
+            else:
+                results = {"precision": 0.0, "recall": 0.0, "f1_score": 0.0, "faithfulness": 0.0}
 
         # Log evaluation completion with enhanced metrics
         overall_metrics = {

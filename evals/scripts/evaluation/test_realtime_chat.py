@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import asyncio
 import json
-import time
-import websockets
 import os
+import time
+
+import websockets
+
 #!/usr/bin/env python3
 """
 Test Real-time Chat Between Agents
@@ -28,8 +31,8 @@ async def simulate_cursor_agent():
             try:
                 async for response in websocket:
                     data = json.loads(response)
-                    if result:
-                        print(f"📥 Cursor received from {result
+                    if data.get("sender") != "cursor":  # Don't echo our own messages
+                        print(f"📥 Cursor received from {data.get('sender')}: {data.get('message')}")
             except TimeoutError:
                 print("⏰ Cursor timeout waiting for responses")
 
@@ -57,8 +60,8 @@ async def simulate_codex_agent():
             try:
                 async for response in websocket:
                     data = json.loads(response)
-                    if result:
-                        print(f"📥 Codex received from {result
+                    if data.get("sender") != "codex":  # Don't echo our own messages
+                        print(f"📥 Codex received from {data.get('sender')}: {data.get('message')}")
             except TimeoutError:
                 print("⏰ Codex timeout waiting for responses")
 
@@ -88,8 +91,8 @@ async def simulate_dspy_agent():
             try:
                 async for response in websocket:
                     data = json.loads(response)
-                    if result:
-                        print(f"📥 DSPy Planner received from {result
+                    if data.get("sender") != "dspy_planner":
+                        print(f"📥 DSPy Planner received from {data.get('sender')}: {data.get('message')}")
             except TimeoutError:
                 print("⏰ DSPy Planner timeout waiting for responses")
 

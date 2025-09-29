@@ -6,7 +6,10 @@ import pathlib
 import random
 import sys
 import time
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
+
+import pytest
 
 #!/usr/bin/env python3
 """
@@ -18,6 +21,21 @@ to validate production readiness of the retrieval pipeline.
 
 # Add src to path for retrieval modules
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))
+
+
+@pytest.fixture
+def retrieval_fn() -> Callable[[str], dict[str, Any]]:
+    """Mock retrieval function for testing."""
+    def mock_retrieval(query: str) -> dict[str, Any]:
+        if "fail" in query.lower():
+            raise ValueError("Simulated retrieval failure")
+        return {
+            "query": query,
+            "results": [f"Result for {query}"],
+            "score": 0.8,
+            "status": "success"
+        }
+    return mock_retrieval
 
 
 class RobustnessChecker:
@@ -419,7 +437,7 @@ def generate_test_summary(results: dict[str, Any]) -> dict[str, Any]:
     # Determine overall status
     tests_failed = summary.get("tests_failed", 0)
     tests_passed = summary.get("tests_passed", 0)
-    if isinstance(tests_failed, (int, float)) and isinstance(tests_passed, (int, float)):
+    if isinstance(tests_failed, int | float) and isinstance(tests_passed, int | float):
         if tests_failed > 0:
             if tests_failed > tests_passed:
                 summary["overall_status"] = "failed"

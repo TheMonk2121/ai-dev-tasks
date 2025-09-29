@@ -1,3 +1,5 @@
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Final RAGAS Push Evaluation Script
@@ -19,7 +21,6 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
 
 # Add the precision climb config - use absolute path and check for duplicates
 scripts_path = Path(__file__).parent.resolve()
@@ -159,31 +160,31 @@ class FinalRAGASPushEvaluator:
         cosine_threshold = float(os.getenv("COS_FLOOR", "0.58"))
 
         # Count passing signals
-        jaccard_pass = result
-        rouge_pass = result
-        cosine_pass = result
+        jaccard_pass = signals["jaccard"] >= jaccard_threshold
+        rouge_pass = signals["rouge"] >= rouge_threshold
+        cosine_pass = signals["cosine"] >= cosine_threshold
 
         passing_signals = sum([jaccard_pass, rouge_pass, cosine_pass])
 
         if is_risky:
             # Risky sentences: require 3-of-3 signals
             required_signals = 3
-            self.result
+            self.telemetry_data["risky_sentences_total"].append(1)
             if passing_signals >= required_signals:
-                self.result
+                self.telemetry_data["risky_sentences_passed"].append(1)
                 return True
             else:
-                self.result
+                self.telemetry_data["risky_sentences_failed"].append(1)
                 return False
         else:
             # Non-risky sentences: require 2-of-3 signals
             required_signals = 2
-            self.result
+            self.telemetry_data["non_risky_sentences_total"].append(1)
             if passing_signals >= required_signals:
-                self.result
+                self.telemetry_data["non_risky_sentences_passed"].append(1)
                 return True
             else:
-                self.result
+                self.telemetry_data["non_risky_sentences_failed"].append(1)
                 return False
 
     def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
@@ -238,11 +239,11 @@ class FinalRAGASPushEvaluator:
         # Apply all moves configuration
         if self.config_manager:
             applied_configs = self.config_manager.apply_all_moves()
-            print(f"📊 Applied all moves: {sum(len(config) for config in .values()
+            print(f"📊 Applied all moves: {sum(len(config) for config in applied_configs.values())} parameters")
 
             # Enable telemetry
             telemetry_config = self.config_manager.get_telemetry_config()
-            for key, value in .items()
+            for key, value in telemetry_config.items():
                 os.environ[key] = value
             print("📊 Telemetry enabled")
 
@@ -255,14 +256,14 @@ class FinalRAGASPushEvaluator:
             results = self._run_basic_evaluation()
 
         # Add final RAGAS push specific metrics
-        result
-        result
+        results["final_ragas_metrics"] = self._calculate_final_ragas_metrics()
+        results["telemetry_summary"] = self._get_telemetry_summary()
 
         # Validate against RAGAS targets
         if self.config_manager:
-            validation = self.config_manager.validate_targets(result
-            result
-            result
+            validation = self.config_manager.validate_targets(results.get("overall_metrics", {}))
+            results["ragas_validation"] = validation
+            results["next_actions"] = self.config_manager.get_next_actions(validation)
 
         return results
 
@@ -282,17 +283,17 @@ class FinalRAGASPushEvaluator:
         metrics = {}
 
         # Risk-aware metrics
-        risky_total = len(self.result
-        risky_passed = len(self.result
+        risky_total = len(self.telemetry_data.get("risky_sentences_total", []))
+        risky_passed = len(self.telemetry_data.get("risky_sentences_passed", []))
         risky_pass_rate = risky_passed / risky_total if risky_total > 0 else 0.0
 
-        non_risky_total = len(self.result
-        non_risky_passed = len(self.result
+        non_risky_total = len(self.telemetry_data.get("non_risky_sentences_total", []))
+        non_risky_passed = len(self.telemetry_data.get("non_risky_sentences_passed", []))
         non_risky_pass_rate = non_risky_passed / non_risky_total if non_risky_total > 0 else 0.0
 
-        result
-        result
-        result
+        metrics["risky_pass_rate"] = risky_pass_rate
+        metrics["non_risky_pass_rate"] = non_risky_pass_rate
+        metrics["overall_pass_rate"] = (
             (risky_passed + non_risky_passed) / (risky_total + non_risky_total)
             if (risky_total + non_risky_total) > 0
             else 0.0
@@ -301,35 +302,35 @@ class FinalRAGASPushEvaluator:
         # Cross-encoder metrics
         if self.cross_encoder:
             ce_stats = self.cross_encoder.get_cache_stats()
-            result
-            result
-            result
+            metrics["cross_encoder_enabled"] = ce_stats.get("model_loaded", False)
+            metrics["cross_encoder_cache_size"] = ce_stats.get("cache_size", 0)
+            metrics["cross_encoder_weight"] = ce_stats.get("weight", 0.0)
         else:
-            result
-            result
-            result
+            metrics["cross_encoder_enabled"] = False
+            metrics["cross_encoder_cache_size"] = 0
+            metrics["cross_encoder_weight"] = 0.0
 
         # NLI gate metrics
         if self.nli_gate:
             nli_stats = self.nli_gate.get_cache_stats()
-            result
-            result
-            result
+            metrics["nli_gate_enabled"] = nli_stats.get("model_loaded", False)
+            metrics["nli_gate_cache_size"] = nli_stats.get("cache_size", 0)
+            metrics["nli_threshold"] = nli_stats.get("nli_threshold", 0.0)
         else:
-            result
-            result
-            result
+            metrics["nli_gate_enabled"] = False
+            metrics["nli_gate_cache_size"] = 0
+            metrics["nli_threshold"] = 0.0
 
         return metrics
 
     def _get_telemetry_summary(self) -> dict[str, Any]:
         """Get summary of telemetry data."""
         summary = {}
-        for key, values in self..items()
+        for key, values in self.telemetry_data.items():
             if values:
                 summary[key] = {
                     "count": len(values),
-                    "total": sum(values) if isinstance(result
+                    "total": sum(values) if isinstance(values[0], int | float) else len(values),
                 }
         return summary
 
@@ -358,11 +359,11 @@ def main():
         }
 
         print("📊 Component Availability:")
-        for component, available in .items()
+        for component, available in components.items():
             status = "✅ Available" if available else "❌ Not Available"
             print(f"  {component}: {status}")
 
-        if all(.values()
+        if all(components.values()):
             print("🎉 All components available - ready for final RAGAS push!")
         else:
             print("⚠️ Some components missing - evaluation may use fallbacks")
@@ -380,25 +381,25 @@ def main():
 
     # Print summary
     if "overall_metrics" in results:
-        metrics = result
+        metrics = results["overall_metrics"]
         print("\n📈 Final RAGAS Push Results:")
-        print(f"  Precision: {result
-        print(f"  Recall: {result
-        print(f"  F1 Score: {result
-        print(f"  Faithfulness: {result
-        print(f"  Unsupported: {result
+        print(f"  Precision: {metrics.get('precision', 0):.3f}")
+        print(f"  Recall: {metrics.get('recall', 0):.3f}")
+        print(f"  F1 Score: {metrics.get('f1_score', 0):.3f}")
+        print(f"  Faithfulness: {metrics.get('faithfulness', 0):.3f}")
+        print(f"  Unsupported: {metrics.get('unsupported_percent', 0):.1f}%")
 
         # Show RAGAS validation
         if "ragas_validation" in results:
-            validation = result
+            validation = results["ragas_validation"]
             print("\n🎯 RAGAS Target Validation:")
-            for metric, passed in .items()
+            for metric, passed in validation.items():
                 status = "✅ PASS" if passed else "❌ FAIL"
                 print(f"  {metric}: {status}")
 
             # Show next actions
             if "next_actions" in results:
-                actions = result
+                actions = results["next_actions"]
                 if actions:
                     print("\n🔄 Next Actions:")
                     for action in actions:

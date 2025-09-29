@@ -1,22 +1,30 @@
 from __future__ import annotations
 
 import argparse
-import glob
 import json
 import os
 import shutil
 import subprocess
-from datetime import datetime
+import sys
+from datetime import datetime as _Datetime
+from glob import glob as glob
 from pathlib import Path
+from types import SimpleNamespace as _SimpleNamespace
 
 #!/usr/bin/env python3
 """
 Run official RAGChecker evaluation in Bedrock-only, cache-off mode, and export artifacts
 """
 
+# Monkeypatchable datetime shim for tests
+datetime = _SimpleNamespace(
+    now=lambda: _Datetime.now(),
+    strptime=lambda s, fmt: _Datetime.strptime(s, fmt),
+)
+
 
 def _latest_eval_file(pattern: str) -> str | None:
-    files = glob.glob(pattern)
+    files = glob(pattern)
     if not files:
         return None
     return max(files, key=os.path.getctime)
@@ -34,7 +42,7 @@ def main() -> int:
         default="B-1059",
         help="Tag to include in the artifact directory name",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(sys.argv[1:])
 
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -43,9 +51,9 @@ def main() -> int:
     run_dir = output_root / args.tag / ts
     run_dir.mkdir(parents=True, exist_ok=True)
 
-    # Enforce eval hygiene via env signals
-    os.environ
-    os.environ
+    # Enforce eval hygiene via env signals expected by downstream tooling
+    os.environ["EVAL_MODE"] = "bedrock_only"
+    os.environ["CACHE_DISABLED"] = "1"
 
     # Run official evaluation with Bedrock only
     cmd = ["python3", "scripts/ragchecker_official_evaluation.py", "--use-bedrock"]
@@ -66,9 +74,9 @@ def main() -> int:
             "timestamp": ts,
             "eval_file": Path(latest).name,
             "env": {
-                "EVAL_MODE": os.environ.get("EVAL_MODE", "development"),
-                "CACHE_DISABLED": os.environ.get("CACHE_DISABLED", "false"),
-                "AWS_REGION": os.environ.get("AWS_REGION", "us-east-1")
+                "EVAL_MODE": os.environ.get("EVAL_MODE", "bedrock_only"),
+                "CACHE_DISABLED": os.environ.get("CACHE_DISABLED", "1"),
+                "AWS_REGION": os.environ.get("AWS_REGION", "us-east-1"),
             },
         }
         with open(run_dir / "manifest.json", "w") as f:

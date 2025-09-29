@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 import functools
+import hashlib
 import logging
 import os
 import sys
@@ -8,9 +10,10 @@ from collections import OrderedDict, defaultdict
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any
-import hashlib
+from typing import Any, Optional, Union
+
 import psutil
+
 #!/usr/bin/env python3
 """
 Performance Optimization System for RAGChecker Validation Workflows
@@ -68,7 +71,7 @@ class ValidationCache:
         """Generate cache key from data and validation type"""
 
         # Create a stable representation of the data
-        data_str = str(sorted(.items()
+        data_str = str(sorted(data.items()))
         key_data = f"{validation_type}:{data_str}"
 
         # Generate hash for consistent key length
@@ -82,17 +85,17 @@ class ValidationCache:
             cached_item = self.cache[cache_key]
 
             # Check if item is expired
-            if datetime.now() - result
+            if datetime.now() - cached_item["timestamp"] < timedelta(seconds=self.ttl_seconds):
                 # Move to end (LRU)
                 self.cache.move_to_end(cache_key)
-                self.result
-                return result
+                self.stats["hits"] += 1
+                return cached_item["result"]
             else:
                 # Remove expired item
                 del self.cache[cache_key]
-                self.result
+                self.stats["size"] -= 1
 
-        self.result
+        self.stats["misses"] += 1
         return None
 
     def set(self, data: dict[str, Any], validation_type: str, result: dict[str, Any]) -> None:
@@ -104,35 +107,35 @@ class ValidationCache:
             # Remove oldest item
             oldest_key = next(iter(self.cache))
             del self.cache[oldest_key]
-            self.result
-            self.result
+            self.stats["evictions"] += 1
+            self.stats["size"] -= 1
 
         # Add new item
         self.cache[cache_key] = {"result": result, "timestamp": datetime.now()}
-        self.result
+        self.stats["size"] += 1
 
     def clear(self) -> None:
         """Clear all cached items"""
         self.cache.clear()
-        self.result
+        self.stats["size"] = 0
         self.logger.info("Validation cache cleared")
 
     def get_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         hit_rate = (
-            (self.result
-            if (self.result
+            (self.stats["hits"] / (self.stats["hits"] + self.stats["misses"]) * 100)
+            if (self.stats["hits"] + self.stats["misses"]) > 0
             else 0.0
         )
 
         return {
-            "size": self.result
+            "size": self.stats["size"],
             "max_size": self.max_size,
-            "hits": self.result
-            "misses": self.result
-            "evictions": self.result
+            "hits": self.stats["hits"],
+            "misses": self.stats["misses"],
+            "evictions": self.stats["evictions"],
             "hit_rate": hit_rate,
-            "utilization": (self.result
+            "utilization": (self.stats["size"] / self.max_size * 100) if self.max_size > 0 else 0.0,
         }
 
 class ValidationOptimizer:
@@ -173,7 +176,7 @@ class ValidationOptimizer:
         cache_misses = 0
 
         if self.enable_caching and self.cache:
-            cached_result = self.result
+            cached_result = self.cache.get(data, validation_type)
             if cached_result:
                 cache_hits = 1
                 self.logger.info(f"Cache hit for {validation_type} validation")
@@ -205,7 +208,7 @@ class ValidationOptimizer:
             # Execute validation with original arguments but optimized data
             if len(args) > 1:
                 # For method calls, replace the data argument with optimized data
-                optimized_args = (result
+                optimized_args = (args[0], optimized_data) + args[2:]
                 result = validation_func(*optimized_args, **kwargs)
             else:
                 # For function calls, use optimized data
@@ -253,7 +256,7 @@ class ValidationOptimizer:
         optimized_data = data.copy()
 
         # Strategy 1: Data size optimization
-        if self.result
+        if self.optimization_config["validation_depth"] == "minimal":
             optimized_data = self._minimize_data_for_validation(optimized_data, validation_type)
 
         # Strategy 2: Field prioritization
@@ -270,17 +273,17 @@ class ValidationOptimizer:
         if validation_type == "input_validation":
             # Keep only essential fields for input validation
             essential_fields = ["query_id", "query", "gt_answer", "response", "retrieved_context"]
-            return {k: v for k, v in .items()
+            return {k: v for k, v in data.items() if k in essential_fields}
 
         elif validation_type == "metrics_validation":
             # Keep only numeric fields for metrics validation
             numeric_fields = ["precision", "recall", "f1_score", "custom_score"]
-            return {k: v for k, v in .items()
+            return {k: v for k, v in data.items() if k in numeric_fields}
 
         elif validation_type == "result_validation":
             # Keep only result-specific fields
             result_fields = ["test_case_name", "query", "custom_score", "ragchecker_scores", "recommendation"]
-            return {k: v for k, v in .items()
+            return {k: v for k, v in data.items() if k in result_fields}
 
         return data
 
@@ -298,14 +301,14 @@ class ValidationOptimizer:
 
         # Reorder data based on priority
         reordered_data = {}
-        for field in priority_order:
-            if field in data:
-                reordered_data[field] = data[field]
+        for field_name in priority_order:
+            if field_name in data:
+                reordered_data[field_name] = data[field_name]
 
         # Add remaining fields
-        for field, value in .items()
-            if field not in reordered_data:
-                reordered_data[field] = value
+        for field_name, value in data.items():
+            if field_name not in reordered_data:
+                reordered_data[field_name] = value
 
         return reordered_data
 
@@ -313,7 +316,7 @@ class ValidationOptimizer:
         """Optimize type conversions for validation"""
         optimized_data = {}
 
-        for key, value in .items()
+        for key, value in data.items():
             if isinstance(value, str):
                 # Optimize string validation
                 if len(value) > 1000:
@@ -418,27 +421,27 @@ class ValidationOptimizer:
             # Group by query length ranges
             groups = defaultdict(list)
             for data in data_batch:
-                query_length = len(result
+                query_length = len(data.get("query", ""))
                 if query_length < 50:
-                    result
+                    groups["short"].append(data)
                 elif query_length < 200:
-                    result
+                    groups["medium"].append(data)
                 else:
-                    result
-            return list(.values()
+                    groups["long"].append(data)
+            return list(groups.values())
 
         elif validation_type == "metrics_validation":
             # Group by metric types
             groups = defaultdict(list)
             for data in data_batch:
-                metric_types = [k for k in .keys()
+                metric_types = [k for k in data.keys() if isinstance(data[k], int | float)]
                 if "precision" in metric_types and "recall" in metric_types:
-                    result
+                    groups["precision_recall"].append(data)
                 elif "f1_score" in metric_types:
-                    result
+                    groups["f1_score"].append(data)
                 else:
-                    result
-            return list(.values()
+                    groups["other"].append(data)
+            return list(groups.values())
 
         else:
             # Default grouping by data size
@@ -446,12 +449,12 @@ class ValidationOptimizer:
             for data in data_batch:
                 data_size = len(str(data))
                 if data_size < 500:
-                    result
+                    groups["small"].append(data)
                 elif data_size < 2000:
-                    result
+                    groups["medium"].append(data)
                 else:
-                    result
-            return list(.values()
+                    groups["large"].append(data)
+            return list(groups.values())
 
     def _process_validation_group(
         self, validation_func: Callable, group: list[dict[str, Any]], validation_type: str, **kwargs
@@ -530,17 +533,17 @@ def optimize_validation(validation_type: str = "general"):
         def wrapper(*args, **kwargs):
             # Try to get optimizer from self if it exists
             optimizer = None
-            if args and hasattr(result
-                optimizer = result
+            if args and hasattr(args[0], "validation_optimizer"):
+                optimizer = args[0].validation_optimizer
 
             if optimizer is None:
                 optimizer = create_validation_optimizer()
 
             # For method calls, the first argument is self, second is the data
             if len(args) > 1:
-                data = result
+                data = args[1]  # evaluation_data is the second argument
             else:
-                data = result
+                data = kwargs.get("evaluation_data", {})
 
             if isinstance(data, dict):
                 # Single validation
@@ -578,7 +581,7 @@ if __name__ == "__main__":
         test_result = {"valid": True, "score": 0.85}
 
         optimizer.cache.set(test_data, "input_validation", test_result)
-        cached = optimizer.result
+        cached = optimizer.cache.get(test_data, "input_validation")
         print("Cache test:", "✅" if cached else "❌")
 
     # Test performance summary

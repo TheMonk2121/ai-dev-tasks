@@ -1,7 +1,10 @@
 from __future__ import annotations
-from typing import Any
-from precision_lift_pack_config import PrecisionLiftPackConfig
+
 import os
+from typing import Any, Optional, Union
+
+from precision_lift_pack_config import PrecisionLiftPackConfig
+
 #!/usr/bin/env python3
 """
 Final Precision Push Configuration
@@ -113,17 +116,17 @@ if __name__ == "__main__":
     summary = config.get_final_precision_push_summary()
 
     print("\n📊 Final Precision Push Changes:")
-    for category, changes in result
+    for category, changes in summary["final_precision_push"].items():
         print(f"\n{category.replace('_', ' ').title()}:")
-        for key, value in .items()
+        for key, value in changes.items():
             print(f"   {key}: {value}")
 
     print("\n🎯 Expected Impact:")
-    for key, value in result
+    for key, value in summary["expected_impact"].items():
         print(f"   {key}: {value}")
 
     print("\n⚠️ Risk Assessment:")
-    for key, value in result
+    for key, value in summary["risk_assessment"].items():
         print(f"   {key}: {value}")
 
     print("\n✅ Ready for final precision push evaluation!")

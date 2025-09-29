@@ -24,15 +24,17 @@ def setup_missing_tables():
     print("=" * 50)
 
     try:
-        # Add project paths
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-from src.common.psycopg3_config import Psycopg3Config
+        import psycopg2
+        from psycopg2.extras import RealDictCursor
+
         # Connect to database
-        with Psycopg3Config.get_cursor("default") as cur:
-            # Create conv_chunks table (48-hour hot memory pool)
-            print("📝 Creating conv_chunks table...")
-            cur.execute(
+        dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        conn = psycopg2.connect(dsn)
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+
+        # Create conv_chunks table (48-hour hot memory pool)
+        print("📝 Creating conv_chunks table...")
+        cur.execute(
             """
             CREATE TABLE IF NOT EXISTS conv_chunks (
                 id BIGSERIAL PRIMARY KEY,
@@ -114,9 +116,9 @@ from src.common.psycopg3_config import Psycopg3Config
         )
 
         columns = cur.fetchall()
-        print(f"\n📋 conv_chunks table structure:")
+        print("\n📋 conv_chunks table structure:")
         for col in columns:
-            print(f"   • {result
+            print(f"   • {col['column_name']}: {col['data_type']}")
 
         conn.close()
         return True

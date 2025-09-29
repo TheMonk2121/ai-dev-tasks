@@ -1,10 +1,13 @@
 from __future__ import annotations
-import sys
-from pathlib import Path
+
 import random
 import string
+import sys
 import unicodedata
+from pathlib import Path
+
 from llm.token_count import _HFFast, _LlamaCpp, _OpenAIBPE, make_counter
+
 #!/usr/bin/env python3
 """
 Benchmark script to measure monotonicity improvement with Unicode normalization.
@@ -231,29 +234,29 @@ def main():
 
     # Display results
     print("\n📈 Results:")
-    print(f"Total test cases: {result
+    print(f"Total test cases: {results['total_cases']}")
     print(
-        f"Violations without normalization: {result
+        f"Violations without normalization: {results['violations_without_norm']} ({results['violation_rate_without']:.1%})"
     )
-    print(f"Violations with normalization: {result
+    print(f"Violations with normalization: {results['violations_with_norm']} ({results['violation_rate_with']:.1%})")
     print(
-        f"Severe violations without normalization: {result
+        f"Severe violations without normalization: {results['severe_violations_without_norm']} ({results['severe_violation_rate_without']:.1%})"
     )
     print(
-        f"Severe violations with normalization: {result
+        f"Severe violations with normalization: {results['severe_violations_with_norm']} ({results['severe_violation_rate_with']:.1%})"
     )
 
     # Calculate improvement
-    if result:
-        violation_reduction = (result
+    if results["violations_without_norm"] > 0:
+        violation_reduction = (results["violations_without_norm"] - results["violations_with_norm"]) / results[
             "violations_without_norm"
         ]
         print(f"\n🎯 Violation reduction: {violation_reduction:.1%}")
 
-    if result:
+    if results["severe_violations_without_norm"] > 0:
         severe_reduction = (
-            result
-        ) / result
+            results["severe_violations_without_norm"] - results["severe_violations_with_norm"]
+        ) / results["severe_violations_without_norm"]
         print(f"🎯 Severe violation reduction: {severe_reduction:.1%}")
 
     print("\n✅ Benchmark complete!")

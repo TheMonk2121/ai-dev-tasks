@@ -663,6 +663,113 @@ class EndToEndSystemValidator:
             timestamp=datetime.now(),
         )
 
+    def validate_dependencies(self) -> ValidationResult:
+        """Validate system dependencies are available."""
+        start_time = time.time()
+        try:
+            import importlib
+            # Check for critical dependencies
+            required_modules = ["psycopg", "numpy", "pydantic"]
+            for module in required_modules:
+                importlib.import_module(module)
+            status = "PASS"
+            details = "All dependencies available"
+        except ImportError as e:
+            status = "FAIL"
+            details = f"Missing dependencies: {e}"
+        except Exception as e:
+            status = "FAIL"
+            details = f"Dependency check failed: {e}"
+        duration = (time.time() - start_time) * 1000
+        return ValidationResult(
+            test_name="dependencies",
+            status=status,
+            details=details,
+            duration_ms=duration,
+            timestamp=datetime.now(),
+        )
+
+    def _generate_validation_report(self, results: list[ValidationResult]) -> SystemValidationReport:
+        """Generate validation report from results."""
+        total_tests = len(results)
+        passed_tests = len([r for r in results if r.status == "PASS"])
+        failed_tests = len([r for r in results if r.status == "FAIL"])
+        warning_tests = len([r for r in results if r.status == "WARNING"])
+        
+        overall_score = passed_tests / total_tests if total_tests > 0 else 0.0
+        
+        if overall_score >= 0.9:
+            overall_status = "EXCELLENT"
+        elif overall_score >= 0.7:
+            overall_status = "GOOD"
+        elif overall_score >= 0.5:
+            overall_status = "FAIR"
+        else:
+            overall_status = "FAIL"
+        
+        return SystemValidationReport(
+            overall_status=overall_status,
+            overall_score=overall_score,
+            total_tests=total_tests,
+            passed_tests=passed_tests,
+            failed_tests=failed_tests,
+            warning_tests=warning_tests,
+            validation_results=results,
+            timestamp=datetime.now(),
+        )
+
+    def _save_validation_report(self, report: SystemValidationReport, output_file: str):
+        """Save validation report to file."""
+        import json
+        from pathlib import Path
+        
+        output_path = Path(output_file)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump({
+                "overall_status": report.overall_status,
+                "overall_score": report.overall_score,
+                "total_tests": report.total_tests,
+                "passed_tests": report.passed_tests,
+                "failed_tests": report.failed_tests,
+                "warning_tests": report.warning_tests,
+                "validation_results": [
+                    {
+                        "test_name": r.test_name,
+                        "status": r.status,
+                        "details": r.details,
+                        "duration_ms": r.duration_ms,
+                        "timestamp": r.timestamp.isoformat()
+                    }
+                    for r in report.validation_results
+                ],
+                "timestamp": report.timestamp.isoformat()
+            }, f, indent=2)
+
+    def _print_validation_summary(self, report: SystemValidationReport):
+        """Print validation summary to console."""
+        print("System Validation Summary:")
+        print(f"  Overall Status: {report.overall_status}")
+        print(f"  Overall Score: {report.overall_score:.2%}")
+        print(f"  Total Tests: {report.total_tests}")
+        print(f"  Passed: {report.passed_tests}")
+        print(f"  Failed: {report.failed_tests}")
+        print(f"  Warnings: {report.warning_tests}")
+        print(f"  Timestamp: {report.timestamp}")
+        
+        if report.failed_tests > 0:
+            print("\nFailed Tests:")
+            for result in report.validation_results:
+                if result.status == "FAIL":
+                    print(f"  - {result.test_name}: {result.details}")
+        
+        if report.warning_tests > 0:
+            print("\nWarning Tests:")
+            for result in report.validation_results:
+                if result.status == "WARNING":
+                    print(f"  - {result.test_name}: {result.details}")
+
     def run_comprehensive_validation(self) -> SystemValidationReport:
         """Run comprehensive system validation"""
         logger.info("🚀 Starting comprehensive end-to-end system validation...")

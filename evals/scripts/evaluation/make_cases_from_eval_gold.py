@@ -12,6 +12,7 @@ sys.path.insert(0, str(SRC))
 # import the existing gold
 from eval_gold import ADDITIONAL_GOLD, GOLD  # existing dicts
 
+
 def guess_tag(paths):
     p = " ".join(paths).lower()
     if any(x in p for x in ["/db/", ".sql", "migrations", "ivfflat", "index.sql"]):

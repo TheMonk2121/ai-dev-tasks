@@ -72,10 +72,10 @@ def normalize_item(raw: str | dict[str, Any] | Any) -> EvalItem:
         return EvalItem(response=raw, gt_answer="", query="", query_id=None)
     elif isinstance(raw, dict):
         return EvalItem(
-            response=str(result
-            gt_answer=str(result
-            query=str(result
-            query_id=result
+            response=str(raw.get("response", raw.get("answer", ""))),
+            gt_answer=str(raw.get("gt_answer", raw.get("gold", ""))),
+            query=str(raw.get("query", raw.get("question", ""))),
+            query_id=raw.get("query_id", None),
         )
     else:
         # Handle any other type by converting to string
@@ -189,31 +189,31 @@ class PrecisionClimbV2Evaluator:
         cosine_threshold = float(os.getenv("COS_FLOOR", "0.58"))
 
         # Count passing signals
-        jaccard_pass = result
-        rouge_pass = result
-        cosine_pass = result
+        jaccard_pass = signals["jaccard"] >= jaccard_threshold
+        rouge_pass = signals["rouge"] >= rouge_threshold
+        cosine_pass = signals["cosine"] >= cosine_threshold
 
         passing_signals = sum([jaccard_pass, rouge_pass, cosine_pass])
 
         if is_risky:
             # Risky sentences: require 3-of-3 signals
             required_signals = 3
-            self.result
+            self.telemetry_data["risky_sentences_total"].append(1)
             if passing_signals >= required_signals:
-                self.result
+                self.telemetry_data["risky_sentences_passed"].append(1)
                 return True
             else:
-                self.result
+                self.telemetry_data["risky_sentences_failed"].append(1)
                 return False
         else:
             # Non-risky sentences: require 2-of-3 signals
             required_signals = 2
-            self.result
+            self.telemetry_data["non_risky_sentences_total"].append(1)
             if passing_signals >= required_signals:
-                self.result
+                self.telemetry_data["non_risky_sentences_passed"].append(1)
                 return True
             else:
-                self.result
+                self.telemetry_data["non_risky_sentences_failed"].append(1)
                 return False
 
     def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
@@ -269,9 +269,9 @@ class PrecisionClimbV2Evaluator:
             weights = [0.4, 0.3, 0.3]  # Default weights
 
         # Calculate confidence components
-        cosine_component = result
-        anchor_component = result
-        spans_component = min(len(contexts) / top_k, 1.0) * result
+        cosine_component = signals["cosine"] * weights[0]
+        anchor_component = signals["jaccard"] * weights[1]  # Using jaccard as anchor proxy
+        spans_component = min(len(contexts) / top_k, 1.0) * weights[2]
 
         confidence = cosine_component + anchor_component + spans_component
         return confidence
@@ -295,7 +295,7 @@ class PrecisionClimbV2Evaluator:
             claim_confidences.append((sent, confidence))
 
         # Sort by confidence (descending)
-        claim_confidences.sort(key=lambda x: result
+        claim_confidences.sort(key=lambda x: x[1], reverse=True)
 
         # Keep top claims until minimum words threshold is met
         min_words = int(os.getenv("RAGCHECKER_MIN_WORDS_AFTER_BINDING", "160"))
@@ -322,7 +322,7 @@ class PrecisionClimbV2Evaluator:
 
         # Enable telemetry
         telemetry_config = self.config_manager.generate_telemetry_config()
-        for key, value in .items()
+        for key, value in telemetry_config.items():
             os.environ[key] = value
 
         # Run base evaluation if available
@@ -337,8 +337,8 @@ class PrecisionClimbV2Evaluator:
         results = self._run_basic_evaluation()
 
         # Add precision-climb specific metrics
-        result
-        result
+        results["precision_climb_metrics"] = self._calculate_precision_climb_metrics()
+        results["telemetry_summary"] = self._get_telemetry_summary()
 
         return results
 
@@ -360,17 +360,17 @@ class PrecisionClimbV2Evaluator:
         metrics = {}
 
         # Risk-aware metrics
-        risky_total = len(self.result
-        risky_passed = len(self.result
+        risky_total = len(self.telemetry_data.get("risky_sentences_total", []))
+        risky_passed = len(self.telemetry_data.get("risky_sentences_passed", []))
         risky_pass_rate = risky_passed / risky_total if risky_total > 0 else 0.0
 
-        non_risky_total = len(self.result
-        non_risky_passed = len(self.result
+        non_risky_total = len(self.telemetry_data.get("non_risky_sentences_total", []))
+        non_risky_passed = len(self.telemetry_data.get("non_risky_sentences_passed", []))
         non_risky_pass_rate = non_risky_passed / non_risky_total if non_risky_total > 0 else 0.0
 
-        result
-        result
-        result
+        metrics["risky_pass_rate"] = risky_pass_rate
+        metrics["non_risky_pass_rate"] = non_risky_pass_rate
+        metrics["overall_pass_rate"] = (
             (risky_passed + non_risky_passed) / (risky_total + non_risky_total)
             if (risky_total + non_risky_total) > 0
             else 0.0
@@ -379,24 +379,24 @@ class PrecisionClimbV2Evaluator:
         # Cross-encoder metrics
         if self.cross_encoder:
             ce_stats = self.cross_encoder.get_cache_stats()
-            result
-            result
-            result
+            metrics["cross_encoder_enabled"] = ce_stats.get("model_loaded", False)
+            metrics["cross_encoder_cache_size"] = ce_stats.get("cache_size", 0)
+            metrics["cross_encoder_weight"] = ce_stats.get("weight", 0.0)
         else:
-            result
-            result
-            result
+            metrics["cross_encoder_enabled"] = False
+            metrics["cross_encoder_cache_size"] = 0
+            metrics["cross_encoder_weight"] = 0.0
 
         return metrics
 
     def _get_telemetry_summary(self) -> dict[str, Any]:
         """Get summary of telemetry data."""
         summary = {}
-        for key, values in self..items()
+        for key, values in self.telemetry_data.items():
             if values:
                 summary[key] = {
                     "count": len(values),
-                    "total": sum(values) if isinstance(result
+                    "total": sum(values) if isinstance(values[0], int | float) else len(values),
                 }
         return summary
 
@@ -414,7 +414,7 @@ class PrecisionClimbV2Evaluator:
             results[layer] = layer_results
 
             # Check if we've reached the target precision
-            precision = result
+            precision = layer_results.get("precision", 0.0)
             if precision >= 0.20:
                 print(f"🎯 Target precision (≥0.20) achieved with {layer}: {precision:.3f}")
                 break
@@ -455,17 +455,17 @@ def main():
     # Print summary
     if isinstance(results, dict) and "precision" in results:
         print("\n📈 Evaluation Summary:")
-        print(f"  Precision: {result
-        print(f"  Recall: {result
-        print(f"  F1 Score: {result
-        print(f"  Faithfulness: {result
-        print(f"  Unsupported: {result
+        print(f"  Precision: {results['precision']:.3f}")
+        print(f"  Recall: {results['recall']:.3f}")
+        print(f"  F1 Score: {results['f1_score']:.3f}")
+        print(f"  Faithfulness: {results['faithfulness']:.3f}")
+        print(f"  Unsupported: {results['unsupported_percent']:.1f}%")
     elif isinstance(results, dict):
         print("\n📈 Staged Evaluation Summary:")
-        for layer, layer_results in .items()
+        for layer, layer_results in results.items():
             if isinstance(layer_results, dict) and "precision" in layer_results:
                 print(
-                    f"  {layer}: P={result
+                    f"  {layer}: P={layer_results['precision']:.3f}, R={layer_results['recall']:.3f}, F1={layer_results['f1_score']:.3f}"
                 )
 
 

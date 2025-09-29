@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import json
 import os
 import subprocess
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Test script for enhanced RAGChecker with RRF, MMR, and claim binding.
@@ -19,7 +21,7 @@ def run_test_configuration(config_name: str, env_vars: dict, description: str):
     env.update(env_vars)
 
     # Convert all values to strings
-    for key, value in .items()
+    for key, value in env_vars.items():
         env[key] = str(value)
 
     # Run the evaluation
@@ -152,7 +154,7 @@ def main():
     # Run tests
     results = []
     for config in test_configs:
-        result = run_test_configuration(result
+        result = run_test_configuration(config["name"], config["env"], config["description"])
         results.append(result)
 
     # Save results
@@ -166,13 +168,13 @@ def main():
     print("=" * 80)
 
     for result in results:
-        status_emoji = {"success": "✅", "failed": "❌", "timeout": "⏰", "crashed": "💥"}.get(result
+        status_emoji = {"success": "✅", "failed": "❌", "timeout": "⏰", "crashed": "💥"}.get(result["status"], "❓")
 
-        print(f"{status_emoji} {result
+        print(f"{status_emoji} {result['config']}: {result['status']}")
 
-        if result:
+        if result["status"] == "success" and "case_results" in result:
             # Extract some key metrics
-            case_results = result
+            case_results = result["case_results"]
             if case_results:
                 print(f"   📈 Completed {len(case_results)} test cases")
                 # Show a few sample results

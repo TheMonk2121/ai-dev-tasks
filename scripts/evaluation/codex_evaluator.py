@@ -8,7 +8,7 @@ import asyncio
 import os
 import sys
 from collections.abc import Iterable
-from datetime import datetime, timezone
+from datetime import UTC, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -123,16 +123,16 @@ except ImportError as e:
             self.profile: str = profile
             self.metadata: dict[str, Any] = metadata
         
-        async def __aenter__(self) -> 'eval_run_span':
+        async def __aenter__(self) -> eval_run_span:
             return self
         
         async def __aexit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: Any) -> None:
             pass
         
-        def case(self, case_id: str, metadata: dict[str, Any] | None = None) -> 'eval_run_span':
+        def case(self, case_id: str, metadata: dict[str, Any] | None = None) -> eval_run_span:
             return self
         
-        def phase(self, name: str) -> 'eval_run_span':
+        def phase(self, name: str) -> eval_run_span:
             return self
         
         @property
@@ -159,12 +159,12 @@ def _case_metrics(raw: dict[str, Any]) -> dict[str, float]:
     metrics: dict[str, float] = {}
     for key in ("precision", "recall", "f1", "f1_score", "faithfulness"):
         value = raw.get(key)
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             metrics[key] = float(value)
     nested = raw.get("metrics")
     if isinstance(nested, dict):
         for key, value in nested.items():
-            if isinstance(value, (int, float)):
+            if isinstance(value, int | float):
                 metrics[f"metrics.{key}"] = float(value)
     return metrics
 
@@ -172,7 +172,7 @@ def _case_metrics(raw: dict[str, Any]) -> dict[str, float]:
 def _overall_metrics(raw: dict[str, Any]) -> dict[str, float]:
     metrics: dict[str, float] = {}
     for key, value in raw.items():
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             metrics[key] = float(value)
     return metrics
 
@@ -191,7 +191,7 @@ def _verdict(raw: dict[str, Any]) -> str:
 
 
 async def _run_dspy(config: RunConfig, reporters: list[Reporter]) -> EvalSummary:
-    start = datetime.now(timezone.utc)
+    start = datetime.now(UTC)
     evaluator = CleanDSPyEvaluator(profile=config.profile)
 
     await notify_begin(reporters, config)
@@ -229,7 +229,7 @@ async def _run_dspy(config: RunConfig, reporters: list[Reporter]) -> EvalSummary
     summary = EvalSummary(
         run_id=config.run_id,
         started_at=start,
-        finished_at=datetime.now(timezone.utc),
+        finished_at=datetime.now(UTC),
         config=config,
         results=tuple(case_results),
         metrics=overall,
@@ -241,7 +241,7 @@ async def _run_dspy(config: RunConfig, reporters: list[Reporter]) -> EvalSummary
 
 
 async def _run_ragchecker(config: RunConfig, reporters: list[Reporter]) -> EvalSummary:
-    start = datetime.now(timezone.utc)
+    start = datetime.now(UTC)
     await notify_begin(reporters, config)
 
     adapter = RagCheckerAdapter()
@@ -271,7 +271,7 @@ async def _run_ragchecker(config: RunConfig, reporters: list[Reporter]) -> EvalS
     summary = EvalSummary(
         run_id=config.run_id,
         started_at=start,
-        finished_at=datetime.now(timezone.utc),
+        finished_at=datetime.now(UTC),
         config=config,
         results=tuple(results),
         metrics=dict(metrics_mapping),
@@ -289,7 +289,7 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Unified evaluation runner (beta)")
     _ = parser.add_argument("--dataset", default="evals/data/gold/v1/gold_cases_121.jsonl", help="Path to dataset JSONL")
     _ = parser.add_argument("--profile", default="gold", choices=["gold", "real", "mock"], help="Evaluation profile")
-    _ = parser.add_argument("--run-id", default=datetime.now(timezone.utc).strftime("run_%Y%m%d_%H%M%S"), help="Run identifier")
+    _ = parser.add_argument("--run-id", default=datetime.now(UTC).strftime("run_%Y%m%d_%H%M%S"), help="Run identifier")
     _ = parser.add_argument("--adapter", default="dspy", choices=["dspy", "ragchecker"], help="Evaluation adapter to use")
     _ = parser.add_argument("--limit", type=int, default=None, help="Limit number of cases")
     _ = parser.add_argument("--seed", type=int, default=42, help="Random seed")

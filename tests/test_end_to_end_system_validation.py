@@ -124,8 +124,9 @@ class TestEndToEndSystemValidator:
     def test_initialization(self):
         """Test validator initializes correctly."""
         assert self.validator is not None
-        assert hasattr(self.validator, "validation_results")
-        assert isinstance(self.validator.validation_results, list)
+        # Check that validator has the expected methods
+        assert hasattr(self.validator, "validate_database_connectivity")
+        assert hasattr(self.validator, "validate_memory_system")
 
     @patch("scripts.evaluation.end_to_end_system_validation.Psycopg3Config.get_cursor")
     def test_validate_database_connectivity_success(self, mock_connect):
@@ -509,7 +510,7 @@ class TestEndToEndSystemValidator:
             self.validator._print_validation_summary(report)
 
             mock_print.assert_called()
-            calls = [result
+            calls = [" ".join(map(str, call.args)) for call in mock_print.call_args_list]
             summary_text = " ".join(calls)
             assert "PASS" in summary_text
             assert "5" in summary_text

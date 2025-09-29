@@ -41,15 +41,15 @@ def analyze_current_state():
     issue_categories = {"unclear_phrasing": [], "short_query": [], "missing_file": [], "content_relevance": []}
 
     for issue in issues:
-        issue_type = result
+        issue_type = issue.get("issue", "unknown")
         if issue_type in issue_categories:
             issue_categories[issue_type].append(issue)
 
     print("📊 Current Issues Analysis:")
-    print(f"  - Unclear phrasing: {len(result
-    print(f"  - Short queries: {len(result
-    print(f"  - Missing files: {len(result
-    print(f"  - Content relevance: {len(result
+    print(f"  - Unclear phrasing: {len(issue_categories['unclear_phrasing'])} cases")
+    print(f"  - Short queries: {len(issue_categories['short_query'])} cases")
+    print(f"  - Missing files: {len(issue_categories['missing_file'])} cases")
+    print(f"  - Content relevance: {len(issue_categories['content_relevance'])} cases")
 
     return issue_categories
 
@@ -199,23 +199,23 @@ def create_improvement_plan():
 
 def print_execution_plan(plan):
     """Print the execution plan in a readable format."""
-    for phase_key, phase in .items()
-        print(f"\n{result
-        print(f"Priority: {result
+    for phase_key, phase in plan.items():
+        print(f"\n{phase['title']}")
+        print(f"Priority: {phase['priority']} | Effort: {phase['effort']} | Impact: {phase['impact']}")
         print("-" * 60)
 
-        for i, task in enumerate(result
-            print(f"\n{i}. {result
-            print(f"   Description: {result
-            print(f"   Script: {result
-            print(f"   Estimated Time: {result
+        for i, task in enumerate(phase["tasks"], 1):
+            print(f"\n{i}. {task['task']}")
+            print(f"   Description: {task['description']}")
+            print(f"   Script: {task['script']}")
+            print(f"   Estimated Time: {task['estimated_time']}")
 
             if "examples" in task:
                 print("   Examples:")
-                for example in result.items()
+                for example in task["examples"][:2]:  # Show first 2 examples
                     print(f"     - {example}")
-                if len(result
-                    print(f"     ... and {len(result
+                if len(task["examples"]) > 2:
+                    print(f"     ... and {len(task['examples']) - 2} more")
 
 
 def create_implementation_scripts(plan):
@@ -235,7 +235,7 @@ def create_implementation_scripts(plan):
     create_improve_content_relevance_script()
     create_refine_glob_patterns_script()
 
-    print("✅ Implementation scripts created in evals/scripts/gold_cases_improvement/")
+    print("✅ Implementation scripts created in 300_evals/scripts/gold_cases_improvement/")
 
 
 def create_fix_unclear_phrasing_script():
@@ -264,35 +264,35 @@ def fix_unclear_phrasing():
     changes_made = 0
     
     for case in cases:
-        original_query = result
+        original_query = case.get("query", "")
         new_query = original_query
         
         # Apply fixes
-        for old_phrase, new_phrase in .items()
+        for old_phrase, new_phrase in phrasing_fixes.items():
             if old_phrase in new_query.lower():
                 new_query = re.sub(old_phrase, new_phrase, new_query, flags=re.IGNORECASE)
         
         # Fix grammar
-        new_query = re.sub(r"?$", "?", new_query)  # Ensure ends with ?
-        new_query = re.sub(r"s+", " ", new_query)  # Fix spacing
+        new_query = re.sub(r"\\?$", "?", new_query)  # Ensure ends with ?
+        new_query = re.sub(r"\\s+", " ", new_query)  # Fix spacing
         
         if new_query != original_query:
-            result
+            case["query"] = new_query
             changes_made += 1
             print(f"Fixed: '{original_query}' → '{new_query}'")
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:
         for case in cases:
-            f.write(json.dumps(case) + "n")
+            f.write(json.dumps(case) + "\\n")
     
-    print(f"n✅ Fixed {changes_made} cases with unclear phrasing")
+    print(f"\\n✅ Fixed {changes_made} cases with unclear phrasing")
 
 if __name__ == "__main__":
     fix_unclear_phrasing()
 '''
 
-    with open("evals/scripts/gold_cases_improvement/fix_unclear_phrasing.py", "w") as f:
+    with open("300_evals/scripts/gold_cases_improvement/fix_unclear_phrasing.py", "w") as f:
         f.write(script_content)
 
 
@@ -320,38 +320,38 @@ def fix_short_queries():
     changes_made = 0
     
     for case in cases:
-        query = result
+        query = case.get("query", "")
         
         if len(query) < 10:
             # Try to expand based on context
             if "dspy" in query.lower():
-                result
+                case["query"] = "What is DSPy and how is it used in this project?"
                 changes_made += 1
             elif "db" in query.lower() or "database" in query.lower():
-                result
+                case["query"] = "How does the database system work in this project?"
                 changes_made += 1
             elif "memory" in query.lower():
-                result
+                case["query"] = "How does the memory system work in this project?"
                 changes_made += 1
             else:
                 # Generic expansion
-                result
+                case["query"] = f"What is {query} and how is it used in this project?"
                 changes_made += 1
             
-            print(f"Expanded: '{query}' → '{result
+            print(f"Expanded: '{query}' → '{case['query']}'")
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:
         for case in cases:
-            f.write(json.dumps(case) + "n")
+            f.write(json.dumps(case) + "\\n")
     
-    print(f"n✅ Expanded {changes_made} short queries")
+    print(f"\\n✅ Expanded {changes_made} short queries")
 
 if __name__ == "__main__":
     fix_short_queries()
 '''
 
-    with open("evals/scripts/gold_cases_improvement/fix_short_queries.py", "w") as f:
+    with open("300_evals/scripts/gold_cases_improvement/fix_short_queries.py", "w") as f:
         f.write(script_content)
 
 
@@ -385,25 +385,25 @@ def diversify_query_patterns():
     changes_made = 0
     
     for case in cases:
-        query = result
+        query = case.get("query", "")
         
         if query in pattern_replacements:
-            result
+            case["query"] = pattern_replacements[query]
             changes_made += 1
-            print(f"Improved: '{query}' → '{result
+            print(f"Improved: '{query}' → '{case['query']}'")
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:
         for case in cases:
-            f.write(json.dumps(case) + "n")
+            f.write(json.dumps(case) + "\\n")
     
-    print(f"n✅ Diversified {changes_made} query patterns")
+    print(f"\\n✅ Diversified {changes_made} query patterns")
 
 if __name__ == "__main__":
     diversify_query_patterns()
 '''
 
-    with open("evals/scripts/gold_cases_improvement/diversify_query_patterns.py", "w") as f:
+    with open("300_evals/scripts/gold_cases_improvement/diversify_query_patterns.py", "w") as f:
         f.write(script_content)
 
 
@@ -443,7 +443,7 @@ def improve_content_relevance():
     changes_made = 0
     
     for case in cases:
-        query = result
+        query = case.get("query", "")
         
         if query in relevance_improvements:
             improvements = relevance_improvements[query]
@@ -451,14 +451,14 @@ def improve_content_relevance():
             # Add specific files
             if "add_files" in improvements:
                 if "expected_files" not in case:
-                    result
-                result
+                    case["expected_files"] = []
+                case["expected_files"].extend(improvements["add_files"])
             
             # Remove overly broad globs
             if "remove_globs" in improvements and "globs" in case:
-                for glob_to_remove in result.items()
-                    if glob_to_remove in result
-                        result
+                for glob_to_remove in improvements["remove_globs"]:
+                    if glob_to_remove in case["globs"]:
+                        case["globs"].remove(glob_to_remove)
             
             changes_made += 1
             print(f"Improved relevance for: '{query}'")
@@ -466,15 +466,15 @@ def improve_content_relevance():
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:
         for case in cases:
-            f.write(json.dumps(case) + "n")
+            f.write(json.dumps(case) + "\\n")
     
-    print(f"n✅ Improved content relevance for {changes_made} cases")
+    print(f"\\n✅ Improved content relevance for {changes_made} cases")
 
 if __name__ == "__main__":
     improve_content_relevance()
 '''
 
-    with open("evals/scripts/gold_cases_improvement/improve_content_relevance.py", "w") as f:
+    with open("300_evals/scripts/gold_cases_improvement/improve_content_relevance.py", "w") as f:
         f.write(script_content)
 
 
@@ -505,8 +505,8 @@ def refine_glob_patterns():
     changes_made = 0
     
     for case in cases:
-        query = result
-        globs = result
+        query = case.get("query", "")
+        globs = case.get("globs", [])
         
         if "**/*.md" in globs:
             # Determine appropriate pattern based on query content
@@ -524,22 +524,22 @@ def refine_glob_patterns():
                 new_pattern = "400_guides/*.md"  # Default to guides
             
             # Replace the pattern
-            result
+            case["globs"] = [new_pattern if g == "**/*.md" else g for g in globs]
             changes_made += 1
             print(f"Refined glob pattern for: '{query}' → {new_pattern}")
     
     # Save updated cases
     with open("evals/gold/v1/gold_cases.jsonl", "w") as f:
         for case in cases:
-            f.write(json.dumps(case) + "n")
+            f.write(json.dumps(case) + "\\n")
     
-    print(f"n✅ Refined {changes_made} glob patterns")
+    print(f"\\n✅ Refined {changes_made} glob patterns")
 
 if __name__ == "__main__":
     refine_glob_patterns()
 '''
 
-    with open("evals/scripts/gold_cases_improvement/refine_glob_patterns.py", "w") as f:
+    with open("300_evals/scripts/gold_cases_improvement/refine_glob_patterns.py", "w") as f:
         f.write(script_content)
 
 

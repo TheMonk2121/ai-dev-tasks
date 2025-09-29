@@ -20,7 +20,8 @@ def tmp_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def test_latest_eval_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     first = tmp_path / "a.json"
     second = tmp_path / "b.json"
-    first.write_text("{}"); second.write_text("{}")
+    first.write_text("{}")
+    second.write_text("{}")
     monkeypatch.setattr(run_eval, "glob", lambda pattern: [str(first), str(second)])
     monkeypatch.setattr(run_eval.os.path, "getctime", lambda path: 10 if path == str(second) else 5)
 

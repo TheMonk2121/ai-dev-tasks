@@ -1,10 +1,14 @@
 from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
-from cross_encoder_reranker import CrossEncoderReranker, EnhancedEvidenceFilter
-from sentence_transformers import CrossEncoder
+
 from ragchecker_precision_climb_v2_evaluation import PrecisionClimbV2Evaluator
+from sentence_transformers import CrossEncoder
+
+from cross_encoder_reranker import CrossEncoderReranker, EnhancedEvidenceFilter
+
 #!/usr/bin/env python3
 """
 Test Cross-Encoder Integration with Precision-Climb v2
@@ -105,7 +109,7 @@ def test_cross_encoder_functionality():
     print("=" * 50)
 
     # Enable cross-encoder
-    os.environ
+    os.environ["RAGCHECKER_CROSS_ENCODER_ENABLED"] = "1"
 
     try:
 
@@ -133,7 +137,7 @@ def test_cross_encoder_functionality():
 
         # Test cache stats
         stats = reranker.get_cache_stats()
-        print(f"\n📊 Cache Stats: {result
+        print(f"\n📊 Cache Stats: {stats['cache_size']} entries")
 
         return True
     except Exception as e:
@@ -146,7 +150,7 @@ def test_enhanced_filtering():
     print("=" * 50)
 
     # Enable cross-encoder
-    os.environ
+    os.environ["RAGCHECKER_CROSS_ENCODER_ENABLED"] = "1"
 
     try:
 
@@ -197,10 +201,10 @@ def main():
     print("\n📊 Test Results Summary")
     print("=" * 60)
 
-    passed = sum(.values()
+    passed = sum(results.values())
     total = len(results)
 
-    for test_name, result in .items()
+    for test_name, result in results.items():
         status = "✅ PASS" if result else "❌ FAIL"
         print(f"  {test_name}: {status}")
 

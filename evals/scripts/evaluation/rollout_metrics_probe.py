@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import argparse
 import json
 import statistics
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 
 def load_latest(results_dir: Path) -> dict[str, Any]:
@@ -14,8 +16,8 @@ def load_latest(results_dir: Path) -> dict[str, Any]:
         return json.load(f)
 
 def p50_p95_latency(results: dict[str, Any]) -> tuple[float, float]:
-    cases = result
-    vals = [float(result
+    cases = results.get("case_results", [])
+    vals = [float(c.get("timing_sec", 0.0)) for c in cases if c.get("timing_sec") is not None]
     if not vals:
         return 0.0, 0.0
     vals_sorted = sorted(vals)
@@ -36,15 +38,15 @@ def main() -> int:
     # Print summary for latest run under each profile dir
     for run_file in runs[-3:]:
         results = json.loads(Path(run_file).read_text())
-        overall = result
+        overall = results.get("overall_metrics", {})
         p50, p95 = p50_p95_latency(results)
         print(
             json.dumps(
                 {
                     "file": str(run_file),
-                    "precision": result
-                    "recall": result
-                    "f1": result
+                    "precision": overall.get("precision", 0.0),
+                    "recall": overall.get("recall", 0.0),
+                    "f1": overall.get("f1_score", 0.0),
                     "p50": p50,
                     "p95": p95,
                 }

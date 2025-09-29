@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import asyncio
 import json
 import os
 import sys
 import time
+
 # FIXME: Update this import path after reorganization
 # from scripts.enhanced_bedrock_client import create_enhanced_bedrock_client
 #!/usr/bin/env python3
@@ -20,6 +22,8 @@ async def test_single_key_performance():
     """Test performance with single API key."""
     print("🔑 Testing Single Key Performance")
     print("=" * 50)
+
+    from scripts.utilities.enhanced_bedrock_client import create_enhanced_bedrock_client
 
     client = create_enhanced_bedrock_client()
 
@@ -76,6 +80,8 @@ async def test_multi_key_load_balancing():
         print("⚠️ Only one API key available - multi-key testing limited")
         print("   Set AWS_ACCESS_KEY_ID_1, AWS_SECRET_ACCESS_KEY_1, etc. for full testing")
 
+    from scripts.utilities.enhanced_bedrock_client import create_enhanced_bedrock_client
+
     client = create_enhanced_bedrock_client(api_keys=api_keys)
 
     # Test concurrent requests to demonstrate load balancing
@@ -110,8 +116,8 @@ async def test_multi_key_load_balancing():
     total_time = time.time() - start_time
 
     # Analyze results
-    successful_requests = [r for r in results if result:
-    failed_requests = [r for r in results if not result
+    successful_requests = [r for r in results if r["success"]]
+    failed_requests = [r for r in results if not r["success"]]
 
     print("📊 Results Summary:")
     print(f"   Total time: {total_time:.2f}s")
@@ -119,8 +125,8 @@ async def test_multi_key_load_balancing():
     print(f"   Failed requests: {len(failed_requests)}")
 
     if successful_requests:
-        avg_response_time = sum(result
-        total_tokens = sum(result
+        avg_response_time = sum(r["response_time"] for r in successful_requests) / len(successful_requests)
+        total_tokens = sum(r["tokens"] for r in successful_requests)
         print(f"   Average response time: {avg_response_time:.2f}s")
         print(f"   Total tokens processed: {total_tokens}")
         print(f"   Throughput: {len(successful_requests)/total_time:.2f} requests/second")
@@ -128,18 +134,18 @@ async def test_multi_key_load_balancing():
     # Show individual results
     print("\n📋 Individual Request Results:")
     for result in results:
-        status = "✅" if result:
-        print(f"   {status} Request {result
-        if result:
-            print(f"      Response: {result
+        status = "✅" if result["success"] else "❌"
+        print(f"   {status} Request {result['request_id']}: {result['response_time']:.2f}s")
+        if result["success"]:
+            print(f"      Response: {result['response']}")
         else:
-            print(f"      Error: {result
+            print(f"      Error: {result['error']}")
 
     # Get final status
     final_status = client.get_status()
     print("\n🔍 Final Client Status:")
-    print(f"   Load Balancer: {json.dumps(result
-    print(f"   Rate Limiter: {json.dumps(result
+    print(f"   Load Balancer: {json.dumps(final_status['load_balancer'], indent=2)}")
+    print(f"   Rate Limiter: {json.dumps(final_status['rate_limiter'], indent=2)}")
 
     print()
 
@@ -147,6 +153,8 @@ async def test_rate_limiting_and_resilience():
     """Test rate limiting and resilience features."""
     print("🛡️ Testing Rate Limiting and Resilience")
     print("=" * 50)
+
+    from scripts.utilities.enhanced_bedrock_client import create_enhanced_bedrock_client
 
     client = create_enhanced_bedrock_client()
 
@@ -172,8 +180,8 @@ async def test_rate_limiting_and_resilience():
     results = await asyncio.gather(*tasks)
     total_time = time.time() - start_time
 
-    successful = [r for r in results if result:
-    failed = [r for r in results if not result
+    successful = [r for r in results if r["success"]]
+    failed = [r for r in results if not r["success"]]
 
     print("📊 Rapid Request Results:")
     print(f"   Total time: {total_time:.2f}s")
@@ -182,7 +190,7 @@ async def test_rate_limiting_and_resilience():
     print(f"   Rate: {len(results)/total_time:.2f} requests/second")
 
     if successful:
-        avg_time = sum(result
+        avg_time = sum(r["response_time"] for r in successful) / len(successful)
         print(f"   Average response time: {avg_time:.2f}s")
 
     # Test circuit breaker behavior
@@ -190,12 +198,12 @@ async def test_rate_limiting_and_resilience():
 
     # Get current status
     status = client.get_status()
-    rate_limiter_status = result
+    rate_limiter_status = status["rate_limiter"]
 
-    print(f"   Current RPS: {result
-    print(f"   Circuit open: {result
-    print(f"   Failure count: {result
-    print(f"   Success count: {result
+    print(f"   Current RPS: {rate_limiter_status['current_rps']:.2f}")
+    print(f"   Circuit open: {rate_limiter_status['circuit_open']}")
+    print(f"   Failure count: {rate_limiter_status['failure_count']}")
+    print(f"   Success count: {rate_limiter_status['success_count']}")
 
     print()
 
@@ -217,10 +225,14 @@ async def test_configuration_loading():
 
     try:
         # Test with default config
+        from scripts.utilities.enhanced_bedrock_client import create_enhanced_bedrock_client
+
         client1 = create_enhanced_bedrock_client()
         print("   ✅ Default configuration: OK")
 
         # Test with custom config
+        from scripts.utilities.enhanced_bedrock_client import create_enhanced_bedrock_client
+
         client2 = create_enhanced_bedrock_client(max_retries=6, timeout=600)
         print("   ✅ Custom configuration: OK")
 
@@ -230,7 +242,7 @@ async def test_configuration_loading():
         print(f"   ✅ Status reporting: {len(status1)} components (default), {len(status2)} components (custom)")
 
         # Verify custom config was applied
-        if result:
+        if status2.get("rate_limiter", {}).get("max_retries") == 6:
             print("   ✅ Custom max_retries configuration verified")
         else:
             print("   ⚠️ Custom max_retries configuration not reflected in status")

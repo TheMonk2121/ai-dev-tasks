@@ -37,11 +37,11 @@ def main() -> None:
             return
         first = cases[0]
 
-        sid = persist.snapshot_node({"stage": "retrieve", "query": first.get("query", "")})
+        sid = persist.snapshot_node({"stage": "retrieve", "query": first.get("query", "")}, "retrieve")
         with persist.record_run(sid):
             cands = g.retrieve(first.get("query", ""))
 
-        sid2 = persist.snapshot_node({"stage": "score", "case_id": first.get("id", "")})
+        sid2 = persist.snapshot_node({"stage": "score", "case_id": first.get("id", "")}, "score")
         with persist.record_run(sid2):
             result = g.score(
                 case_id=str(first.get("id", "")),

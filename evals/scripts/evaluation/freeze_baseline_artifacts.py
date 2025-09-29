@@ -1,13 +1,15 @@
 from __future__ import annotations
+
+import argparse
 import hashlib
 import json
 import os
 import shutil
+import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-import argparse
-import sys
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Freeze Baseline Artifacts
@@ -78,7 +80,7 @@ class BaselineArtifactFreezer:
 
         print("✅ Baseline artifacts frozen successfully")
         print(f"📋 Manifest: {manifest_file}")
-        print(f"🔒 Baseline checksum: {result
+        print(f"🔒 Baseline checksum: {baseline_manifest['integrity']['baseline_checksum']}")
 
         return baseline_manifest
 
@@ -101,18 +103,18 @@ class BaselineArtifactFreezer:
         with open(results_baseline) as f:
             results_data = json.load(f)
 
-        metrics = result
+        metrics = results_data.get("summary", {})
 
         return {
             "source_file": results_json,
             "baseline_file": str(results_baseline),
             "checksum": checksum,
             "metrics": {
-                "f1_score": result
-                "precision": result
-                "recall": result
-                "oracle_prefilter_rate": result
-                "reader_used_gold_rate": result
+                "f1_score": metrics.get("f1_score", 0.0),
+                "precision": metrics.get("precision", 0.0),
+                "recall": metrics.get("recall", 0.0),
+                "oracle_prefilter_rate": metrics.get("oracle_prefilter_rate", 0.0),
+                "reader_used_gold_rate": metrics.get("reader_used_gold_rate", 0.0),
             },
         }
 
@@ -186,8 +188,8 @@ class BaselineArtifactFreezer:
 
         return {
             "config_file": str(config_file),
-            "config_hash": result
-            "ingest_run_id": result
+            "config_hash": config_vars["CONFIG_HASH"],
+            "ingest_run_id": config_vars["INGEST_RUN_ID"],
             "environment_vars": config_vars,
         }
 
@@ -233,30 +235,30 @@ class BaselineArtifactFreezer:
         }
 
         # Verify results JSON
-        results_info = result
-        if os.path.exists(result
-            with open(result
+        results_info = manifest["artifacts"]["results_json"]
+        if os.path.exists(results_info["baseline_file"]):
+            with open(results_info["baseline_file"], "rb") as f:
                 current_checksum = hashlib.sha256(f.read()).hexdigest()
-            result
-                "expected": result
+            verification_results["checksums"]["results_json"] = {
+                "expected": results_info["checksum"],
                 "actual": current_checksum,
-                "valid": current_checksum == result
+                "valid": current_checksum == results_info["checksum"],
             }
 
         # Verify eval manifest
-        manifest_info = result
-        if os.path.exists(result
-            with open(result
+        manifest_info = manifest["artifacts"]["eval_manifest"]
+        if os.path.exists(manifest_info["baseline_file"]):
+            with open(manifest_info["baseline_file"], "rb") as f:
                 current_checksum = hashlib.sha256(f.read()).hexdigest()
-            result
-                "expected": result
+            verification_results["checksums"]["eval_manifest"] = {
+                "expected": manifest_info["checksum"],
                 "actual": current_checksum,
-                "valid": current_checksum == result
+                "valid": current_checksum == manifest_info["checksum"],
             }
 
         # Overall validity
-        all_valid = all(result
-        result
+        all_valid = all(checksum_info["valid"] for checksum_info in verification_results["checksums"].values())
+        verification_results["valid"] = all_valid
 
         return verification_results
 
@@ -273,17 +275,17 @@ class BaselineArtifactFreezer:
 
                     baselines.append(
                         {
-                            "baseline_id": result
-                            "timestamp": result
-                            "freeze_time": result
-                            "config_hash": result
-                            "ingest_run_id": result
-                            "metrics": result
+                            "baseline_id": manifest["baseline_id"],
+                            "timestamp": manifest["timestamp"],
+                            "freeze_time": manifest["freeze_time"],
+                            "config_hash": manifest["artifacts"]["configuration"]["config_hash"],
+                            "ingest_run_id": manifest["artifacts"]["configuration"]["ingest_run_id"],
+                            "metrics": manifest["artifacts"]["results_json"]["metrics"],
                         }
                     )
 
         # Sort by timestamp (newest first)
-        baselines.sort(key=lambda x: result
+        baselines.sort(key=lambda x: x["timestamp"], reverse=True)
         return baselines
 
 def main():
@@ -315,7 +317,7 @@ def main():
             ingest_run_id=args.ingest_run_id,
         )
 
-        print(f"✅ Baseline frozen: {result
+        print(f"✅ Baseline frozen: {result['baseline_id']}")
 
     elif args.action == "verify":
         if not args.baseline_id:
@@ -323,20 +325,20 @@ def main():
             sys.exit(1)
 
         result = freezer.verify_baseline_integrity(args.baseline_id)
-        if result:
+        if result["valid"]:
             print(f"✅ Baseline {args.baseline_id} integrity verified")
         else:
-            print(f"❌ Baseline {args.baseline_id} integrity check failed: {result
+            print(f"❌ Baseline {args.baseline_id} integrity check failed: {result.get('error', 'Unknown error')}")
             sys.exit(1)
 
     elif args.action == "list":
         baselines = freezer.list_baselines()
         print("📋 Frozen Baselines:")
         for baseline in baselines:
-            print(f"  • {result
-            print(f"    Config: {result
+            print(f"  • {baseline['baseline_id']} - {baseline['freeze_time']}")
+            print(f"    Config: {baseline['config_hash']}, Run: {baseline['ingest_run_id']}")
             print(
-                f"    F1: {result
+                f"    F1: {baseline['metrics']['f1_score']:.3f}, Oracle: {baseline['metrics']['oracle_prefilter_rate']:.2%}"
             )
 
 if __name__ == "__main__":

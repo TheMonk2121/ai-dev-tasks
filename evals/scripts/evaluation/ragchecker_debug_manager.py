@@ -41,11 +41,11 @@ except ImportError as e:
         pass
 
     def _fallback_field(*args, **kwargs):  # returns a sentinel None/default
-        default: Any = result
+        default: Any = None
         # If default_factory provided, prefer callable() at runtime when used
         if "default_factory" in kwargs:
             try:
-                return result
+                return kwargs["default_factory"]()
             except Exception:
                 return None
         return default
@@ -306,7 +306,7 @@ class RAGCheckerDebugManager:
         # Add enhanced debugging summary if available
         if self.enhanced_debugging_enabled and self.debug_manager:
             enhanced_summary = self.debug_manager.get_debugging_summary()
-            result
+            summary["enhanced_debugging"] = enhanced_summary
 
         return summary
 
@@ -361,7 +361,7 @@ def ragchecker_debug_logging() -> Any:
             # Fallback to basic logging
             def basic_wrapper(*args, **kwargs: Any):
                 logger: Any = logging.getLogger("ragchecker_debug")
-                logger.info(f"Executing {func.__name__} for {evaluation_type}")
+                logger.info(f"Executing {func.__name__} for evaluation")
                 try:
                     result = func(*args, **kwargs)
                     logger.info(f"Successfully executed {func.__name__}")

@@ -63,13 +63,13 @@ def analyze_specific_issues():
     file_types = defaultdict(list)
     for case_id, file_path in missing_files:
         if file_path.endswith(".py"):
-            result
+            file_types["Python files"].append((case_id, file_path))
         elif file_path.endswith(".md"):
-            result
+            file_types["Markdown files"].append((case_id, file_path))
         else:
-            result
+            file_types["Other files"].append((case_id, file_path))
 
-    for file_type, files in .items():
+    for file_type, files in file_types.items():
         print(f"\n  {file_type}:")
         for case_id, file_path in files[:5]:  # Show first 5
             print(f"    ❌ {case_id}: {file_path}")
@@ -88,18 +88,18 @@ def analyze_specific_issues():
         query_counts[query] += 1
 
         if len(query) < 10:
-            result
+            query_issues["Short queries"].append(f"Case {case.id}: '{query}'")
         if not query.endswith("?"):
-            result
+            query_issues["Non-question queries"].append(f"Case {case.id}: '{query}'")
         if any(pattern in query.lower() for pattern in [".md", ".py", "according to"]):
-            result
+            query_issues["File reference queries"].append(f"Case {case.id}: '{query}'")
 
     # Find duplicates
-    for query, count in .items():
+    for query, count in query_counts.items():
         if count > 1:
-            result
+            query_issues["Duplicate queries"].append(f"'{query}' appears {count} times")
 
-    for issue_type, issues in .items():
+    for issue_type, issues in query_issues.items():
         if issues:
             print(f"\n  {issue_type.upper()}:")
             for issue in issues[:5]:  # Show first 5
@@ -199,8 +199,8 @@ def analyze_specific_issues():
         mode_counts[case.mode] += 1
 
     print("Mode distribution:")
-    for mode, count in .items()
-        percentage = (count / len(cases)) * 100:
+    for mode, count in mode_counts.items():
+        percentage = (count / len(cases)) * 100
         print(f"  {mode}: {count} cases ({percentage:.1f}%)")
 
     # 6. Specific Problem Cases
@@ -236,7 +236,7 @@ def analyze_specific_issues():
     return {
         "schema_issues": len(schema_issues),
         "missing_files": len(missing_files),
-        "query_issues": sum(len(issues) for issues in .values():
+        "query_issues": sum(len(issues) for issues in query_issues.values()),
         "unknown_tags": len(unknown_tags),
         "problem_cases": len(problem_cases),
     }
@@ -286,12 +286,11 @@ def main():
     print("\n" + "=" * 60)
     print("📊 ANALYSIS SUMMARY")
     print("=" * 60)
-    print(f"Schema issues: {result
-    print(f"Missing files: {result
-    print(f"Query issues: {result
-    print(f"Unknown tags: {result
-    print(f"Problem cases: {result
-)
+    print(f"Schema issues: {results['schema_issues']}")
+    print(f"Missing files: {results['missing_files']}")
+    print(f"Query issues: {results['query_issues']}")
+    print(f"Unknown tags: {results['unknown_tags']}")
+    print(f"Problem cases: {results['problem_cases']}")
     print("\n🎯 NEXT STEPS:")
     print("1. Run the validation script to see current status")
     print("2. Fix schema violations first (most critical)")

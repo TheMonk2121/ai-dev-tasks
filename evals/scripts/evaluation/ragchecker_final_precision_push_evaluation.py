@@ -1,3 +1,5 @@
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 RAGChecker Final Precision Push Evaluation
@@ -6,12 +8,11 @@ Aggressive precision improvements to achieve P ≥ 0.135 target.
 
 import json
 import os
+import random
 import sys
 import time
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
-import random
 
 # Add src to path for imports - use absolute path and check for duplicates
 scripts_path = Path(__file__).parent.resolve()
@@ -20,6 +21,7 @@ if str(scripts_path) not in sys.path:
 
 from final_precision_push_config import apply_final_precision_push
 from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+
 
 class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
     """Enhanced RAGChecker evaluator with final precision push features."""
@@ -87,10 +89,10 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
             ragchecker_result = self.create_fallback_evaluation(eval_data)
 
             # Extract metrics
-            overall_metrics = result
-            precision = result
-            recall = result
-            f1_score = result
+            overall_metrics = ragchecker_result.get("overall_metrics", {})
+            precision = overall_metrics.get("precision", 0.0)
+            recall = overall_metrics.get("recall", 0.0)
+            f1_score = overall_metrics.get("f1_score", 0.0)
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -152,10 +154,10 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
     def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], final_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
-            "precision": result
-            "recall": result
-            "f1_score": result
-            "evaluation_time": result
+            "precision": case_result.get("precision", 0.0),
+            "recall": case_result.get("recall", 0.0),
+            "f1_score": case_result.get("f1_score", 0.0),
+            "evaluation_time": case_result.get("evaluation_time", 0.0),
             "final_metrics": final_metrics,
         }
 
@@ -165,9 +167,9 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
         """Generate comprehensive final precision push evaluation report."""
 
         # Calculate overall metrics
-        precisions = [result
-        recalls = [result
-        f1_scores = [result
+        precisions = [r.get("precision", 0.0) for r in results]
+        recalls = [r.get("recall", 0.0) for r in results]
+        f1_scores = [r.get("f1_score", 0.0) for r in results]
 
         overall_metrics = {
             "precision": sum(precisions) / len(precisions) if precisions else 0.0,
@@ -180,9 +182,9 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
 
         # Check baseline compliance
         baseline_compliance = {
-            "precision": result
-            "recall": result
-            "f1_score": result
+            "precision": overall_metrics["precision"] >= judge_floors["precision"],
+            "recall": overall_metrics["recall"] >= judge_floors["recall"],
+            "f1_score": overall_metrics["f1_score"] >= judge_floors["f1_score"],
         }
 
         # Calculate final precision push summary statistics
@@ -212,34 +214,34 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
             return {}
 
         # Aggressive tightening analysis
-        redundancy_pruned = [result
-        per_chunk_capped = [result
-        evidence_improved = [result
-        penalties_applied = [result
+        redundancy_pruned = [f["aggressive_tightening"]["redundancy_pruned"] for f in final_metrics_summary]
+        per_chunk_capped = [f["aggressive_tightening"]["per_chunk_capped"] for f in final_metrics_summary]
+        evidence_improved = [f["aggressive_tightening"]["evidence_improved"] for f in final_metrics_summary]
+        penalties_applied = [f["aggressive_tightening"]["penalty_applied"] for f in final_metrics_summary]
 
         # Claim binding tightening analysis
-        claims_kept = [result
-        min_words_met = [result
-        strong_cases_boosted = [result
+        claims_kept = [f["claim_binding_tightening"]["claims_kept"] for f in final_metrics_summary]
+        min_words_met = [f["claim_binding_tightening"]["min_words_met"] for f in final_metrics_summary]
+        strong_cases_boosted = [f["claim_binding_tightening"]["strong_cases_boosted"] for f in final_metrics_summary]
 
         # Facet influence tightening analysis
         high_yield_facets_kept = [
-            result
+            f["facet_influence_tightening"]["high_yield_facets_kept"] for f in final_metrics_summary
         ]
-        facet_downweighted = [result
+        facet_downweighted = [f["facet_influence_tightening"]["facet_downweighted"] for f in final_metrics_summary]
 
         # Additional precision gates analysis
         strict_semantic_matches = [
-            result
+            f["additional_precision_gates"]["strict_semantic_matches"] for f in final_metrics_summary
         ]
         query_anchors_required = [
-            result
+            f["additional_precision_gates"]["query_anchors_required"] for f in final_metrics_summary
         ]
         weak_support_penalized = [
-            result
+            f["additional_precision_gates"]["weak_support_penalized"] for f in final_metrics_summary
         ]
         sentence_length_capped = [
-            result
+            f["additional_precision_gates"]["sentence_length_capped"] for f in final_metrics_summary
         ]
 
         return {
@@ -281,7 +283,7 @@ def main():
 
     # Set fast mode if requested
     if args.fast_mode:
-        os.environ
+        os.environ["RAGCHECKER_FAST_MODE"] = "1"
 
     # Initialize evaluator
     evaluator = FinalPrecisionPushEvaluator()
@@ -304,19 +306,19 @@ def main():
 
     # For now, just print the results instead of saving to JSON to avoid serialization issues
     print("\n📊 Final Precision Push Evaluation Results:")
-    print(f"   Total Cases: {result
-    print(f"   Overall Metrics: {result
-    print(f"   Baseline Compliance: {result
-    print(f"   Final Precision Push Statistics: {result
+    print(f"   Total Cases: {evaluation_report['total_cases']}")
+    print(f"   Overall Metrics: {evaluation_report['overall_metrics']}")
+    print(f"   Baseline Compliance: {evaluation_report['baseline_compliance']}")
+    print(f"   Final Precision Push Statistics: {evaluation_report['final_precision_push_statistics']}")
 
     # Try to save a simplified version
     try:
         simplified_report = {
-            "evaluation_type": result
-            "total_cases": result
-            "overall_metrics": result
-            "baseline_compliance": result
-            "timestamp": result
+            "evaluation_type": evaluation_report["evaluation_type"],
+            "total_cases": evaluation_report["total_cases"],
+            "overall_metrics": evaluation_report["overall_metrics"],
+            "baseline_compliance": evaluation_report["baseline_compliance"],
+            "timestamp": evaluation_report["timestamp"],
         }
 
         with open(output_file, "w") as f:
@@ -330,39 +332,39 @@ def main():
     print("\n📊 Final Precision Push Evaluation Complete")
     print("=" * 60)
     print("📈 Overall Metrics:")
-    overall = result
-    print(f"   Precision: {result
-    print(f"   Recall: {result
-    print(f"   F1 Score: {result
+    overall = evaluation_report["overall_metrics"]
+    print(f"   Precision: {overall['precision']:.3f}")
+    print(f"   Recall: {overall['recall']:.3f}")
+    print(f"   F1 Score: {overall['f1_score']:.3f}")
 
     print("\n🎯 Baseline Compliance:")
-    compliance = result
-    floors = result
-    for metric, passed in .items()
+    compliance = evaluation_report["baseline_compliance"]
+    floors = evaluation_report["judge_floors"]
+    for metric, passed in compliance.items():
         status = "✅ PASS" if passed else "❌ FAIL"
         target = floors[metric]
         current = overall[metric]
         print(f"   {metric}: {status} ({current:.3f} vs {target:.3f})")
 
     print("\n🔧 Final Precision Push Features:")
-    final_stats = result
+    final_stats = evaluation_report["final_precision_push_statistics"]
     print(
-        f"   Aggressive Tightening: {result
+        f"   Aggressive Tightening: {final_stats['aggressive_tightening']['total_redundancy_pruned']} redundancy, {final_stats['aggressive_tightening']['total_per_chunk_capped']} per-chunk"
     )
     print(
-        f"   Claim Binding: {result
+        f"   Claim Binding: {final_stats['claim_binding_tightening']['avg_claims_kept']:.1f} avg kept, {final_stats['claim_binding_tightening']['total_strong_cases_boosted']} strong boosted"
     )
     print(
-        f"   Facet Influence: {result
+        f"   Facet Influence: {final_stats['facet_influence_tightening']['avg_high_yield_facets_kept']:.1f} high-yield kept, {final_stats['facet_influence_tightening']['total_facet_downweighted']} downweighted"
     )
     print(
-        f"   Additional Gates: {result
+        f"   Additional Gates: {final_stats['additional_precision_gates']['total_strict_semantic_matches']} strict matches, {final_stats['additional_precision_gates']['total_weak_support_penalized']} weak penalized"
     )
 
     print(f"\n📁 Results saved to: {output_file}")
 
     # Return exit code based on compliance
-    all_passed = all(.values()
+    all_passed = all(compliance.values())
     return 0 if all_passed else 2
 
 if __name__ == "__main__":

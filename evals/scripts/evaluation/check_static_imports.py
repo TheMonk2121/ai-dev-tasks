@@ -1,11 +1,3 @@
-from __future__ import annotations
-import argparse
-import ast
-import importlib
-import sys
-from pathlib import Path
-import csv
-import os
 #!/usr/bin/env python3
 """
 Static import checker for scripts to identify missing dependencies.
@@ -13,7 +5,18 @@ Static import checker for scripts to identify missing dependencies.
 This script parses Python files in the scripts directory and attempts to import
 top-level modules to identify missing dependencies and internal module issues.
 """
-:
+
+from __future__ import annotations
+
+import argparse
+import ast
+import csv
+import importlib
+import os
+import sys
+from pathlib import Path
+
+
 def extract_imports(file_path: Path) -> set[str]:
     """Extract all import statements from a Python file."""
     imports = set()
@@ -38,7 +41,7 @@ def extract_imports(file_path: Path) -> set[str]:
     return imports
 
 def check_import_availability(module_name: str) -> tuple[bool, str]:
-    """Check if a module can be imported.""":
+    """Check if a module can be imported."""
     try:
         importlib.import_module(module_name)
         return True, ""
@@ -79,7 +82,7 @@ def analyze_scripts_directory(scripts_dir: Path, exclude_tests: bool = True) -> 
             file_imports[file_path] = imports
             all_imports.update(imports)
         except Exception as e:
-            result
+            results["parse_errors"].append((str(file_path), str(e)))
 
     print(f"Found {len(all_imports)} unique top-level modules to check")
 
@@ -93,19 +96,17 @@ def analyze_scripts_directory(scripts_dir: Path, exclude_tests: bool = True) -> 
 
         if available:
             # Find which files use this module
-            using_files = [str(f) for f, imports in .items()
-            result:
+            using_files = [str(f) for f, imports in file_imports.items() if module_name in imports]
+            results["available"].append((module_name, ", ".join(using_files)))
         else:
             # Categorize the error
             if any(keyword in error.lower() for keyword in ["no module named", "cannot import"]):
-                if any(prefix in module_name:
-                    for prefix in ["dspy_modules", "src.", "utils.", "monitoring", "n8n_workflows"]:)
-                ):
-                    result
+                if any(prefix in module_name for prefix in ["dspy_modules", "src.", "utils.", "monitoring", "n8n_workflows"]):
+                    results["missing_internal"].append((module_name, error))
                 else:
-                    result
+                    results["missing_external"].append((module_name, error))
             else:
-                result
+                results["missing_external"].append((module_name, error))
 
     return results
 
@@ -117,41 +118,40 @@ def print_results(results: dict[str, list[tuple[str, str]]], verbose: bool = Fal
     print("=" * 60)
 
     # Available modules
-    if result:
-        print(f"\n✅ AVAILABLE MODULES ({len(result
-        for module, files in result:
-            if verbose:)
+    if results["available"]:
+        print(f"\n✅ AVAILABLE MODULES ({len(results['available'])}):")
+        for module, files in results["available"]:
+            if verbose:
                 print(f"  {module} (used in: {files})")
             else:
                 print(f"  {module}")
 
     # Missing external dependencies
-    if result:
-        print(f"\n❌ MISSING EXTERNAL DEPENDENCIES ({len(result
-        for module, error in result:)
+    if results["missing_external"]:
+        print(f"\n❌ MISSING EXTERNAL DEPENDENCIES ({len(results['missing_external'])}):")
+        for module, error in results["missing_external"]:
             print(f"  {module}: {error}")
 
     # Missing internal modules
-    if result:
-        print(f"\n⚠️  MISSING INTERNAL MODULES ({len(result
-        for module, error in result:)
+    if results["missing_internal"]:
+        print(f"\n⚠️  MISSING INTERNAL MODULES ({len(results['missing_internal'])}):")
+        for module, error in results["missing_internal"]:
             print(f"  {module}: {error}")
 
     # Parse errors
-    if result:
-        print(f"\n🔧 PARSE ERRORS ({len(result
-        for file, error in result:)
+    if results["parse_errors"]:
+        print(f"\n🔧 PARSE ERRORS ({len(results['parse_errors'])}):")
+        for file, error in results["parse_errors"]:
             print(f"  {file}: {error}")
 
     # Summary
-    total_missing = len(result)
+    total_missing = len(results["missing_external"]) + len(results["missing_internal"])
     print("\n📊 SUMMARY:")
-    print(f"  Available modules: {len(result
-    print(f"  Missing external: {len(result
-    print(f"  Missing internal: {len(result
-    print(f"  Parse errors: {len(result
-    print(f"  Total issues: {total_missing + len(result
-)
+    print(f"  Available modules: {len(results['available'])}")
+    print(f"  Missing external: {len(results['missing_external'])}")
+    print(f"  Missing internal: {len(results['missing_internal'])}")
+    print(f"  Parse errors: {len(results['parse_errors'])}")
+    print(f"  Total issues: {total_missing + len(results['parse_errors'])}")
 def generate_csv_report(results: dict[str, list[tuple[str, str]]], output_file: Path):
     """Generate a CSV report of missing dependencies."""
 
@@ -160,20 +160,19 @@ def generate_csv_report(results: dict[str, list[tuple[str, str]]], output_file: 
         writer.writerow(["Module", "Type", "Error", "Status"])
 
         # Missing external
-        for module, error in result
+        for module, error in results["missing_external"]:
             writer.writerow([module, "external", error, "missing"])
 
         # Missing internal
-        for module, error in result
+        for module, error in results["missing_internal"]:
             writer.writerow([module, "internal", error, "missing"])
 
         # Available
-        for module, files in result
+        for module, files in results["available"]:
             writer.writerow([module, "external", "", "available"])
-:
 def main():
     parser = argparse.ArgumentParser(description="Check static imports in scripts directory")
-    parser.add_argument()
+    parser.add_argument(
         "--scripts-dir", default="scripts", help="Directory containing scripts to analyze (default: scripts)"
     )
     parser.add_argument("--include-tests", action="store_true", help="Include test files in analysis")

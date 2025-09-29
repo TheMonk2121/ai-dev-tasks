@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from src.utils.config_lock import ConfigLockManager, LockedConfig
+
 #!/usr/bin/env python3
 """
 CI Parity Tests Script
@@ -22,10 +25,10 @@ sys.path.insert(0, str(project_root))
 # Add dspy-rag-system to path
 dspy_rag_path = project_root / "dspy-rag-system"
 sys.path.insert(0, str(dspy_rag_path))
-:
+
 def check_eval_path(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check that eval_path is correct"""
-    eval_path = result
+    eval_path = eval_data.get("eval_path", "")
 
     if eval_path != "dspy_rag":
         return {"valid": False, "error": f"Wrong eval_path: {eval_path} (expected 'dspy_rag')"}
@@ -34,17 +37,17 @@ def check_eval_path(eval_data: dict[str, Any]) -> dict[str, Any]:
 
 def check_retrieval_snapshot_size(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check retrieval snapshot size"""
-    case_results = result
+    case_results = eval_data.get("case_results", [])
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
-    snapshot_sizes = [len(result)
+    snapshot_sizes = [len(case.get("retrieval_snapshot", [])) for case in case_results]
     min_snapshot_size = min(snapshot_sizes) if snapshot_sizes else 0
     max_snapshot_size = max(snapshot_sizes) if snapshot_sizes else 0
     avg_snapshot_size = sum(snapshot_sizes) / len(snapshot_sizes) if snapshot_sizes else 0
 
     issues = []
-:
+
     if min_snapshot_size < 20:
         issues.append(f"Min retrieval snapshot size too low: {min_snapshot_size} (expected ≥20)")
 
@@ -61,7 +64,7 @@ def check_retrieval_snapshot_size(eval_data: dict[str, Any]) -> dict[str, Any]:
 
 def check_oracle_metrics(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check oracle metrics are present"""
-    case_results = result
+    case_results = eval_data.get("case_results", [])
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -88,7 +91,7 @@ def check_oracle_metrics(eval_data: dict[str, Any]) -> dict[str, Any]:
 
 def check_token_budget_compliance(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check token budget compliance"""
-    case_results = result
+    case_results = eval_data.get("case_results", [])
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -97,10 +100,10 @@ def check_token_budget_compliance(eval_data: dict[str, Any]) -> dict[str, Any]:
     max_embedding_tokens = 0
 
     for case in case_results:
-        retrieval_snapshot = result
+        retrieval_snapshot = case.get("retrieval_snapshot", [])
         for chunk in retrieval_snapshot:
             total_chunks += 1
-            embedding_tokens = result
+            embedding_tokens = chunk.get("embedding_token_count", 0)
             max_embedding_tokens = max(max_embedding_tokens, embedding_tokens)
 
             if embedding_tokens > 1024:
@@ -121,7 +124,7 @@ def check_token_budget_compliance(eval_data: dict[str, Any]) -> dict[str, Any]:
 
 def check_prefix_leakage(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check for prefix leakage in BM25"""
-    case_results = result:
+    case_results = eval_data.get("case_results", [])
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -129,10 +132,10 @@ def check_prefix_leakage(eval_data: dict[str, Any]) -> dict[str, Any]:
     total_chunks = 0
 
     for case in case_results:
-        retrieval_snapshot = result
+        retrieval_snapshot = case.get("retrieval_snapshot", [])
         for chunk in retrieval_snapshot:
             total_chunks += 1
-            bm25_text = result
+            bm25_text = chunk.get("bm25_text", "")
             if bm25_text.startswith("Document:"):
                 bm25_with_prefix += 1
 
@@ -150,7 +153,7 @@ def check_prefix_leakage(eval_data: dict[str, Any]) -> dict[str, Any]:
 
 def check_chunk_id_determinism(eval_data: dict[str, Any], config: LockedConfig) -> dict[str, Any]:
     """Check chunk ID determinism"""
-    case_results = result
+    case_results = eval_data.get("case_results", [])
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -159,9 +162,9 @@ def check_chunk_id_determinism(eval_data: dict[str, Any], config: LockedConfig) 
     duplicate_ids = 0
 
     for case in case_results:
-        retrieval_snapshot = result
+        retrieval_snapshot = case.get("retrieval_snapshot", [])
         for chunk in retrieval_snapshot:
-            chunk_id = result
+            chunk_id = chunk.get("id", "")
 
             # Check for duplicate IDs
             if chunk_id in chunk_ids:
@@ -186,7 +189,7 @@ def check_chunk_id_determinism(eval_data: dict[str, Any], config: LockedConfig) 
 
 def check_configuration_consistency(eval_data: dict[str, Any], config: LockedConfig) -> dict[str, Any]:
     """Check configuration consistency"""
-    case_results = result
+    case_results = eval_data.get("case_results", [])
     if not case_results:
         return {"valid": False, "error": "No case results found"}
 
@@ -194,19 +197,21 @@ def check_configuration_consistency(eval_data: dict[str, Any], config: LockedCon
 
     # Check first few chunks for configuration consistency
     for i, case in enumerate(case_results[:3]):
-        retrieval_snapshot = result
+        retrieval_snapshot = case.get("retrieval_snapshot", [])
         for j, chunk in enumerate(retrieval_snapshot[:5]):
             # Check chunk version
-            chunk_version = result
+            chunk_version = chunk.get("chunk_version", "")
             if chunk_version != config.chunk_version:
-                issues.append(f"Case {i}, chunk {j}: Wrong chunk_version. Expected {config.chunk_version}, got {chunk_version}")
+                issues.append(
+                    f"Case {i}, chunk {j}: Wrong chunk_version. Expected {config.chunk_version}, got {chunk_version}"
                 )
 
             # Check ingest run ID
-            ingest_run_id = result
+            ingest_run_id = chunk.get("ingest_run_id", "")
             expected_run_id = f"{config.chunk_version}-{config.get_config_hash()[:8]}"
             if ingest_run_id != expected_run_id:
-                issues.append(f"Case {i}, chunk {j}: Wrong ingest_run_id. Expected {expected_run_id}, got {ingest_run_id}")
+                issues.append(
+                    f"Case {i}, chunk {j}: Wrong ingest_run_id. Expected {expected_run_id}, got {ingest_run_id}"
                 )
 
     return {
@@ -230,14 +235,14 @@ def run_parity_tests(eval_data: dict[str, Any], config: LockedConfig) -> dict[st
     }
 
     # Overall validation
-    all_valid = all(result
-    total_issues = sum(len(result
+    all_valid = all(test.get("valid", False) for test in tests.values())
+    total_issues = sum(len(test.get("issues", [])) for test in tests.values())
 
     return {
         "valid": all_valid,
         "total_issues": total_issues,
         "tests": tests,
-        "config_version": config.chunk_version,)
+        "config_version": config.chunk_version,
         "config_hash": config.get_config_hash(),
     }
 
@@ -262,7 +267,8 @@ def load_evaluation_results(results_dir: Path) -> dict[str, Any] | None:
 
 def main():
     parser = argparse.ArgumentParser(description="Run CI parity tests")
-    parser.add_argument("--results-dir", default="metrics/baseline_evaluations", help="Directory containing evaluation results")
+    parser.add_argument(
+        "--results-dir", default="metrics/baseline_evaluations", help="Directory containing evaluation results"
     )
     parser.add_argument("--output", help="Output file for test results")
     parser.add_argument("--quiet", action="store_true", help="Quiet mode")
@@ -297,26 +303,26 @@ def main():
     if not args.quiet:
         print("\n📊 CI Parity Test Results")
         print("=" * 40)
-        print(f"Overall Valid: {'✅' if result:
-        print(f"Total Issues: {result
-        print(f"Config Version: {result
-        print(f"Config Hash: {result
-)
+        print(f"Overall Valid: {'✅' if test_results['valid'] else '❌'}")
+        print(f"Total Issues: {test_results['total_issues']}")
+        print(f"Config Version: {test_results['config_version']}")
+        print(f"Config Hash: {test_results['config_hash']}")
+
         print("\n🧪 Test Details:")
-        for test_name, test_result in result:
-            status = "✅" if result:
+        for test_name, test_result in test_results["tests"].items():
+            status = "✅" if test_result.get("valid", False) else "❌"
             print(f"  {test_name}: {status}")
 
-            if result:
-                for issue in result.items()
+            if test_result.get("issues"):
+                for issue in test_result["issues"]:
                     print(f"    🚨 {issue}")
 
     # Exit with error code if tests failed
-    if not result
+    if not test_results["valid"]:
         print("\n❌ CI Parity Tests Failed - Build should fail")
         sys.exit(1)
 
-    print("\n✅ CI Parity Tests Passed - Build can proceed"):
-:
+    print("\n✅ CI Parity Tests Passed - Build can proceed")
+
 if __name__ == "__main__":
     main()

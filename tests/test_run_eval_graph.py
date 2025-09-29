@@ -21,11 +21,11 @@ def graph_mocks(monkeypatch: pytest.MonkeyPatch) -> tuple[MagicMock, MagicMock, 
     graph.nodes = [load_node, retrieve_node, score_node]
     monkeypatch.setattr(run_eval_graph, "PgStatePersistence", lambda run_id: persistence)
     monkeypatch.setattr(run_eval_graph, "build_graph", lambda: graph)
-    return persistence, load_node, retrieve_node, score_node
+    return load_node, retrieve_node, score_node
 
 
 def test_main_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, graph_mocks) -> None:
-    persistence, load_node, retrieve_node, score_node = graph_mocks
+    load_node, retrieve_node, score_node = graph_mocks
 
     load_node.run.return_value = [
         {"id": "case1", "query": "q", "mode": "m", "tags": ["t"]},

@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any
+
 # FIXME: Update this import path after reorganization
 # from scripts.episodic_workflow_integration import EpisodicWorkflowIntegration
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 RAGChecker Episodic Integration
@@ -25,6 +28,8 @@ class RAGCheckerEpisodicIntegration:
 
     def __init__(self):
         """Initialize the integration."""
+        from scripts.utilities.episodic_workflow_integration import EpisodicWorkflowIntegration
+
         self.episodic_integration = EpisodicWorkflowIntegration()
         print("🧠 RAGChecker Episodic Integration initialized")
 
@@ -35,21 +40,21 @@ class RAGCheckerEpisodicIntegration:
             context = self.episodic_integration.get_context_for_task(query, agent)
 
             if context and "episodic_context" in context:
-                episodic = result
+                episodic = context["episodic_context"]
 
                 # Create enhanced query with episodic context
                 enhanced_query = {
                     "original_query": query,
                     "episodic_context": {
-                        "what_worked": result
-                        "what_to_avoid": result
-                        "confidence_score": result
-                        "similar_episodes_count": len(result
+                        "what_worked": episodic["what_worked_bullets"],
+                        "what_to_avoid": episodic["what_to_avoid_bullets"],
+                        "confidence_score": episodic["confidence_score"],
+                        "similar_episodes_count": len(episodic["similar_episodes"]),
                     },
                     "enhanced_query": self._create_enhanced_query(query, episodic),
                 }
 
-                print(f"✅ Enhanced query with episodic context (confidence: {result
+                print(f"✅ Enhanced query with episodic context (confidence: {episodic['confidence_score']:.2f})")
                 return enhanced_query
             else:
                 print("🧠 No episodic context available for query")
@@ -63,14 +68,14 @@ class RAGCheckerEpisodicIntegration:
         """Create an enhanced query that includes episodic context."""
         enhanced_parts = [original_query]
 
-        if result:
+        if episodic_context["what_worked_bullets"]:
             enhanced_parts.append("\n\nConsider these successful patterns from similar tasks:")
-            for item in result.items()
+            for item in episodic_context["what_worked_bullets"]:
                 enhanced_parts.append(f"- {item}")
 
-        if result:
+        if episodic_context["what_to_avoid_bullets"]:
             enhanced_parts.append("\n\nAvoid these patterns from similar tasks:")
-            for item in result.items()
+            for item in episodic_context["what_to_avoid_bullets"]:
                 enhanced_parts.append(f"- {item}")
 
         return "\n".join(enhanced_parts)
@@ -92,17 +97,17 @@ class RAGCheckerEpisodicIntegration:
             what_worked = []
             what_to_avoid = []
 
-            if result:
+            if metrics.get("precision", 0) > 0.2:
                 what_worked.append("Episodic context improved precision")
             else:
                 what_to_avoid.append("Episodic context did not improve precision")
 
-            if result:
+            if metrics.get("recall", 0) > 0.4:
                 what_worked.append("Episodic context improved recall")
             else:
                 what_to_avoid.append("Episodic context did not improve recall")
 
-            if result:
+            if metrics.get("f1_score", 0) > 0.22:
                 what_worked.append("Episodic context improved F1 score")
             else:
                 what_to_avoid.append("Episodic context did not improve F1 score")
@@ -145,19 +150,19 @@ class RAGCheckerEpisodicIntegration:
             # Get episodic context
             enhanced_query_data = self.enhance_query_with_episodic_context(query, agent)
 
-            if result:
-                result
+            if enhanced_query_data["episodic_context"]:
+                results["with_episodic"] += 1
                 print("   ✅ Enhanced with episodic context")
             else:
-                result
+                results["without_episodic"] += 1
                 print("   ⚠️  No episodic context available")
 
-            result
+            results["results"].append(enhanced_query_data)
 
         print("\n📊 Ablation Study Results:")
-        print(f"   Total queries: {result
-        print(f"   With episodic context: {result
-        print(f"   Without episodic context: {result
+        print(f"   Total queries: {results['total_queries']}")
+        print(f"   With episodic context: {results['with_episodic']}")
+        print(f"   Without episodic context: {results['without_episodic']}")
 
         return results
 
@@ -185,13 +190,13 @@ def main():
             print(json.dumps(enhanced_query, indent=2))
         else:
             print("📝 Enhanced Query:")
-            print(result
-            if result:
+            print(enhanced_query["enhanced_query"])
+            if enhanced_query["episodic_context"]:
                 print(
-                    f"\n🧠 Episodic Context (confidence: {result
+                    f"\n🧠 Episodic Context (confidence: {enhanced_query['episodic_context']['confidence_score']:.2f}):"
                 )
-                print(f"   What worked: {result
-                print(f"   What to avoid: {result
+                print(f"   What worked: {enhanced_query['episodic_context']['what_worked']}")
+                print(f"   What to avoid: {enhanced_query['episodic_context']['what_to_avoid']}")
 
     elif args.command == "ablation":
         if not args.queries_file:
@@ -208,7 +213,7 @@ def main():
                 print(json.dumps(results, indent=2))
             else:
                 print("\n📊 Ablation Study Complete")
-                print(f"   Enhanced queries: {result
+                print(f"   Enhanced queries: {results['with_episodic']}/{results['total_queries']}")
 
         except FileNotFoundError:
             print(f"❌ File not found: {args.queries_file}")
@@ -221,10 +226,10 @@ def main():
         test_query = "implement error handling for database connections"
         enhanced_query = integration.enhance_query_with_episodic_context(test_query, args.agent)
 
-        if result:
+        if enhanced_query["episodic_context"]:
             print("✅ Query enhancement test passed")
-            print(f"   Enhanced query length: {len(result
-            print(f"   Confidence score: {result
+            print(f"   Enhanced query length: {len(enhanced_query['enhanced_query'])} chars")
+            print(f"   Confidence score: {enhanced_query['episodic_context']['confidence_score']:.2f}")
         else:
             print("⚠️  Query enhancement test - no episodic context found")
 

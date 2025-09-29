@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 import json
 import logging
+import os
 import sys
 import time
 from pathlib import Path
+
 from common.workload_isolation_orchestrator import WorkloadIsolationOrchestrator
-import os
+
 #!/usr/bin/env python3
 """Comprehensive RAG benchmark comparison: Your system vs Vanilla RAG."""
 
@@ -119,12 +122,12 @@ def calculate_improvements(your_results: dict, baseline: dict) -> dict:
 
     # Latency comparison (lower is better)
     if "latency_ms" in your_results and "latency_ms" in baseline:
-        your_latency = result
-        baseline_latency = result
+        your_latency = your_results["latency_ms"]
+        baseline_latency = baseline["latency_ms"]
 
         if baseline_latency > 0:
             latency_ratio = your_latency / baseline_latency
-            result
+            improvements["latency"] = {
                 "baseline": baseline_latency,
                 "your_system": your_latency,
                 "ratio": latency_ratio,
@@ -154,11 +157,11 @@ def generate_comparison_report(your_results: dict) -> dict:
     best_score = -1
     worst_score = float("inf")
 
-    for baseline_name, baseline_data in .items()
+    for baseline_name, baseline_data in VANILLA_RAG_BENCHMARKS.items():
         logger.info(f"Comparing against: {baseline_name}")
 
         improvements = calculate_improvements(your_results, baseline_data)
-        result
+        report["comparisons"][baseline_name] = {"baseline_data": baseline_data, "improvements": improvements}
 
         # Track improvements for summary
         for metric in ["precision", "recall", "f1_score"]:
@@ -166,7 +169,7 @@ def generate_comparison_report(your_results: dict) -> dict:
                 total_improvements[metric].append(improvements[metric]["percentage_improvement"])
 
         # Track best/worst baselines
-        baseline_f1 = result
+        baseline_f1 = baseline_data.get("f1_score", 0)
         if baseline_f1 > best_score:
             best_score = baseline_f1
             best_baseline = baseline_name
@@ -178,19 +181,19 @@ def generate_comparison_report(your_results: dict) -> dict:
     for metric in ["precision", "recall", "f1_score"]:
         if total_improvements[metric]:
             avg_improvement = sum(total_improvements[metric]) / len(total_improvements[metric])
-            result
+            report["summary"]["average_improvement"][metric] = round(avg_improvement, 2)
 
-    result
-    result
+    report["summary"]["best_performing_baseline"] = best_baseline
+    report["summary"]["worst_performing_baseline"] = worst_baseline
 
     # Count exceeded baselines
     exceeded_count = 0
-    for baseline_name, comparison in result
-        improvements = result
-        if all(result
+    for baseline_name, comparison in report["comparisons"].items():
+        improvements = comparison["improvements"]
+        if all(imp["status"] == "✅ EXCEEDS" for imp in improvements.values() if "status" in imp):
             exceeded_count += 1
 
-    result
+    report["summary"]["exceeded_baselines"] = exceeded_count
 
     return report
 
@@ -200,50 +203,50 @@ def print_comparison_summary(report: dict):
     print("🚀 RAG SYSTEM PERFORMANCE COMPARISON: YOUR SYSTEM vs VANILLA RAG")
     print("=" * 80)
 
-    your_results = result
+    your_results = report["your_system_results"]
     print("\n📊 YOUR OPTIMIZED SYSTEM RESULTS:")
-    print(f"   Precision: {result
-    print(f"   Recall: {result
-    print(f"   F1 Score: {result
-    print(f"   Latency: {result
-    print(f"   Context Utilization: {result
-    print(f"   Hallucination Rate: {result
+    print(f"   Precision: {your_results['precision']:.3f}")
+    print(f"   Recall: {your_results['recall']:.3f}")
+    print(f"   F1 Score: {your_results['f1_score']:.3f}")
+    print(f"   Latency: {your_results['latency_ms']/1000:.1f}s per query")
+    print(f"   Context Utilization: {your_results['context_utilization']:.1%}")
+    print(f"   Hallucination Rate: {your_results['hallucination_rate']:.1%}")
 
     print("\n🔧 SYSTEM FEATURES:")
-    print(f"   ✅ Workload Isolation: {result
-    print(f"   ✅ DSN Unified: {result
-    print(f"   ✅ Cache Separated: {result
-    print(f"   ✅ Role Optimized: {result
+    print(f"   ✅ Workload Isolation: {your_results['workload_isolation']}")
+    print(f"   ✅ DSN Unified: {your_results['dsn_unified']}")
+    print(f"   ✅ Cache Separated: {your_results['cache_separated']}")
+    print(f"   ✅ Role Optimized: {your_results['role_optimized']}")
 
     print("\n📈 PERFORMANCE COMPARISON SUMMARY:")
-    summary = result
-    print(f"   Total Baselines Compared: {result
-    print(f"   Baselines Exceeded: {result
+    summary = report["summary"]
+    print(f"   Total Baselines Compared: {summary['total_baselines']}")
+    print(f"   Baselines Exceeded: {summary['exceeded_baselines']}/{summary['total_baselines']}")
 
     if "average_improvement" in summary:
-        avg_imp = result
+        avg_imp = summary["average_improvement"]
         print("   Average Improvement:")
-        for metric, improvement in .items()
+        for metric, improvement in avg_imp.items():
             print(f"     {metric.title()}: {improvement:+.1f}%")
 
     print("\n🏆 BASELINE RANKINGS:")
-    print(f"   Best Vanilla RAG: {result
-    print(f"   Worst Vanilla RAG: {result
+    print(f"   Best Vanilla RAG: {summary['best_performing_baseline']}")
+    print(f"   Worst Vanilla RAG: {summary['worst_performing_baseline']}")
 
     print("\n🔍 DETAILED COMPARISONS:")
-    for baseline_name, comparison in result
-        baseline_data = result
-        improvements = result
+    for baseline_name, comparison in report["comparisons"].items():
+        baseline_data = comparison["baseline_data"]
+        improvements = comparison["improvements"]
 
         print(f"\n   📋 {baseline_name.upper().replace('_', ' ')}:")
-        print(f"      Description: {result
-        print(f"      F1 Score: {result
+        print(f"      Description: {baseline_data['description']}")
+        print(f"      F1 Score: {baseline_data['f1_score']:.3f}")
 
         if "f1_score" in improvements:
-            imp = result
-            status_icon = "🚀" if result:
-            print(f"      {status_icon} Your System: {result
-            print(f"         Improvement: {result
+            imp = improvements["f1_score"]
+            status_icon = "🚀" if imp["status"] == "✅ EXCEEDS" else "⚠️"
+            print(f"      {status_icon} Your System: {imp['your_system']:.3f} vs {imp['baseline']:.3f}")
+            print(f"         Improvement: {imp['percentage_improvement']:+.1f}%")
 
 def save_comparison_report(report: dict, filepath: str | None = None) -> str:
     """Save the comparison report to a file."""

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import glob
 import json
@@ -7,6 +8,7 @@ import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Run official RAGChecker evaluation in Bedrock-only, cache-off mode, and export artifacts

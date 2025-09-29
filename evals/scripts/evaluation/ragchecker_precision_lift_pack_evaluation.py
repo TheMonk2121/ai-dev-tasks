@@ -1,4 +1,5 @@
 from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 RAGChecker Precision Lift Pack Evaluation
@@ -7,12 +8,11 @@ Surgical precision improvements with minimal recall loss.
 
 import json
 import os
+import random
 import sys
 import time
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
-import random
 
 # Add src to path for imports - use absolute path and check for duplicates
 scripts_path = Path(__file__).parent.resolve()
@@ -21,6 +21,7 @@ if str(scripts_path) not in sys.path:
 
 from precision_lift_pack_config import apply_precision_lift_pack
 from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+
 
 class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
     """Enhanced RAGChecker evaluator with precision lift pack features."""

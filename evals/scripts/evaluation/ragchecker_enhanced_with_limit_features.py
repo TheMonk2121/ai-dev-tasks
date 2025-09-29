@@ -1,15 +1,18 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import sys
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 import numpy as np
 from final_precision_push_config import FinalPrecisionPushConfig
 from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
-import argparse
+
 #!/usr/bin/env python3
 """
 RAGChecker Enhanced with LIMIT Features Implementation
@@ -106,11 +109,11 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         current_mode = "include"
 
         for token in tokens:
-            if token.lower() in self.result
+            if token.lower() in self.boolean_parser["include_patterns"]:
                 current_mode = "include"
-            elif token.lower() in self.result
+            elif token.lower() in self.boolean_parser["exclude_patterns"]:
                 current_mode = "exclude"
-            elif token.lower() in self.result
+            elif token.lower() in self.boolean_parser["or_patterns"]:
                 current_mode = "or"
             else:
                 clean_token = "".join(c for c in token if c.isalnum())
@@ -132,7 +135,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         """Generate facets with yield-based selection."""
         # Simulate facet generation (in real implementation, this would use LLM)
         facets = []
-        for i in range(self.result
+        for i in range(self.facet_selector["max_facets"]):
             facet = {
                 "id": f"facet_{i}",
                 "query": f"{query} facet {i}",
@@ -143,15 +146,15 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
             facets.append(facet)
 
         # Sort by yield and keep only high-yield facets
-        facets.sort(key=lambda x: result
+        facets.sort(key=lambda x: x["yield_score"], reverse=True)
         kept_facets = [
             f
-            for f in facets[: self.result
-            if result:
+            for f in facets[: self.facet_selector["keep_facets"]]
+            if f["yield_score"] >= self.facet_selector["min_yield"]
         ]
 
         print(
-            f"[facets] total={len(facets)} kept={len(kept_facets)} yields={[round(result
+            f"[facets] total={len(facets)} kept={len(kept_facets)} yields={[round(f['yield_score'],2) for f in kept_facets]}"
         )
         return kept_facets
 
@@ -169,8 +172,8 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         # Geometry routing decision
         if (
-            margin < self.result
-            and rewrite_agreement < self.result
+            margin < self.geometry_router["margin_threshold"]
+            and rewrite_agreement < self.geometry_router["agreement_threshold"]
         ):
             route = "bm25_only"
         else:
@@ -196,7 +199,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         else:
             # Regular queries have more peaked scores
             scores = [np.random.uniform(0.1, 0.9) for _ in range(20)]
-            result
+            scores[0] = max(scores) + 0.1
 
         return sorted(scores, reverse=True)
 
@@ -206,7 +209,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
             return 0.0
 
         top10 = scores[:10]
-        top1 = result
+        top1 = top10[0]
         median_top10 = np.median(top10)
         std_top10 = np.std(top10)
         epsilon = 1e-8
@@ -248,7 +251,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
             }
             docs.append(doc)
 
-        return sorted(docs, key=lambda x: result
+        return sorted(docs, key=lambda x: x["score"], reverse=True)
 
     def _simulate_hybrid_retrieval(
         self, query: str, boolean_logic: dict[str, list[str]], facets: list[dict[str, Any]]
@@ -274,11 +277,11 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         for facet in facets:
             for i in range(3):  # Few docs per facet
                 doc = {
-                    "id": f"facet_{result
-                    "content": f"Facet {result
+                    "id": f"facet_{facet['id']}_doc_{i}",
+                    "content": f"Facet {facet['id']} content for {query} - document {i}",
                     "score": np.random.uniform(0.4, 0.7),
                     "has_query_anchors": np.random.choice([True, False], p=[0.5, 0.5]),
-                    "source": f"facet_{result
+                    "source": f"facet_{facet['id']}",
                 }
                 facet_docs.append(doc)
 
@@ -288,10 +291,10 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         # Apply anchor boost and facet downweight
         for doc in fused_docs:
-            if not result
-                result
+            if not doc["has_query_anchors"]:
+                doc["score"] *= float(os.getenv("RAGCHECKER_FACET_DOWNWEIGHT_NO_ANCHOR", "0.80"))
             else:
-                result
+                doc["score"] *= float(os.getenv("RAGCHECKER_BM25_BOOST_ANCHORS", "1.6"))
 
         # Apply MMR diversification
         diversified_docs = self._apply_mmr_diversification(fused_docs, query)
@@ -312,7 +315,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         doc_objects = {}
 
         for doc in docs:
-            doc_id = result
+            doc_id = doc["id"]
             doc_objects[doc_id] = doc
 
             # Simulate rank (in real implementation, this would be actual rank)
@@ -321,7 +324,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
             doc_scores[doc_id] += rrf_score
 
         # Sort by RRF score
-        sorted_docs = sorted(.items()
+        sorted_docs = sorted(doc_scores.items(), key=lambda x: x[1], reverse=True)
         return [doc_objects[doc_id] for doc_id, _ in sorted_docs]
 
     def _apply_mmr_diversification(self, docs: list[dict[str, Any]], query: str) -> list[dict[str, Any]]:
@@ -334,15 +337,15 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         for doc in docs:
             # Simulate content similarity check
-            content_hash = hash(result
+            content_hash = hash(doc["content"][:50])  # Use first 50 chars as similarity proxy
             if content_hash not in used_content:
                 diversified.append(doc)
                 used_content.add(content_hash)
             else:
                 # Apply MMR penalty
-                result
+                doc["score"] *= 1 - mmr_lambda
 
-        return sorted(diversified, key=lambda x: result
+        return sorted(diversified, key=lambda x: x["score"], reverse=True)
 
     def _enforce_per_doc_line_cap(self, docs: list[dict[str, Any]], cap: int) -> list[dict[str, Any]]:
         """Enforce per-document line cap."""
@@ -350,7 +353,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         result = []
 
         for doc in docs:
-            doc_id = result
+            doc_id = doc["id"].split("_")[0]  # Extract base doc ID
             if doc_counts[doc_id] < cap:
                 result.append(doc)
                 doc_counts[doc_id] += 1
@@ -369,11 +372,11 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
             # Apply two-of-three rule
             votes = 0
-            if jaccard >= self.result
+            if jaccard >= self.support_validator["evidence_jaccard"]:
                 votes += 1
             if rouge_l >= 0.20:  # ROUGE floor
                 votes += 1
-            if cosine >= self.result
+            if cosine >= self.support_validator["cosine_floor"]:
                 votes += 1
 
             if votes >= 2:
@@ -387,16 +390,16 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
     def _validate_numeric_entity_match(self, doc: dict[str, Any], query: str) -> bool:
         """Validate numeric and entity must-match requirements."""
         # Simulate validation (in real implementation, this would check actual content)
-        if self.result
+        if self.support_validator["numeric_must_match"]:
             # Check if doc contains numbers that match query
-            has_numbers = any(c.isdigit() for c in result.items()
+            has_numbers = any(c.isdigit() for c in doc["content"])
             if has_numbers:
                 # Simulate validation result
                 return np.random.choice([True, False], p=[0.8, 0.2])
 
-        if self.result
+        if self.support_validator["entity_must_match"]:
             # Check if doc contains entities that match query
-            has_entities = any(word.istitle() for word in result.items()
+            has_entities = any(word.istitle() for word in doc["content"].split())
             if has_entities:
                 # Simulate validation result
                 return np.random.choice([True, False], p=[0.7, 0.3])
@@ -409,7 +412,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         enhanced_query = f"""ENHANCED CONTEXT AVAILABLE: {query}
 
 The following validated documents were retrieved using LIMIT-inspired features:
-{json.dumps([{"id": result
+{json.dumps([{"id": doc["id"], "content": doc["content"][:200]} for doc in validated_docs[:5]], indent=2)}
 
 Please provide a comprehensive response that utilizes this enhanced context."""
 
@@ -426,18 +429,18 @@ Please provide a comprehensive response that utilizes this enhanced context."""
 
         for case in input_data:
             # Use enhanced response generation
-            enhanced_response = self.get_memory_system_response_with_limit_features(result
+            enhanced_response = self.get_memory_system_response_with_limit_features(case["query"])
 
             # Calculate metrics using enhanced response
-            precision = self.calculate_precision(enhanced_response, result
-            recall = self.calculate_recall(enhanced_response, result
+            precision = self.calculate_precision(enhanced_response, case["gt_answer"], case["query"])
+            recall = self.calculate_recall(enhanced_response, case["gt_answer"])
             f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
             case_result = {
                 "query_id": f"enhanced_case_{len(case_results) + 1}",
-                "query": result
+                "query": case["query"],
                 "response": enhanced_response,
-                "gt_answer": result
+                "gt_answer": case["gt_answer"],
                 "precision": precision,
                 "recall": recall,
                 "f1_score": f1_score,
@@ -503,16 +506,16 @@ def main():
     result = evaluator.create_fallback_evaluation_with_limit_features(test_data)
 
     print("\n📊 Enhanced Evaluation Results:")
-    overall = result
-    print(f"   Precision: {result
-    print(f"   Recall: {result
-    print(f"   F1 Score: {result
+    overall = result["overall_metrics"]
+    print(f"   Precision: {overall['precision']:.3f}")
+    print(f"   Recall: {overall['recall']:.3f}")
+    print(f"   F1 Score: {overall['f1_score']:.3f}")
 
     print("\n🎯 LIMIT Features Applied:")
-    features = result
-    print(f"   Geometry Router: margin_threshold={result
-    print(f"   Facet Selector: min_yield={result
-    print(f"   Support Validator: evidence_jaccard={result
+    features = result["limit_features"]
+    print(f"   Geometry Router: margin_threshold={features['geometry_router']['margin_threshold']}")
+    print(f"   Facet Selector: min_yield={features['facet_selector']['min_yield']}")
+    print(f"   Support Validator: evidence_jaccard={features['support_validator']['evidence_jaccard']}")
 
     # Save results if requested
     if args.output:

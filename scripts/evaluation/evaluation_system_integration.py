@@ -162,7 +162,8 @@ class EvaluationSystemIntegration:
 
         # Initialize RAGChecker Evaluator
         try:
-            self.rag_evaluator = CleanRAGCheckerEvaluator()
+            from src.evaluation.ragchecker_official_impl import OfficialRAGCheckerEvaluator
+            self.rag_evaluator = OfficialRAGCheckerEvaluator()
             results["ragchecker_evaluator"] = "✅ Initialized"
             print("   ✅ RAGChecker Evaluator: Initialized")
         except Exception as e:

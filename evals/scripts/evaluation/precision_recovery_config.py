@@ -1,8 +1,10 @@
 from __future__ import annotations
-import os
-from typing import Any
-import sys
+
 import json
+import os
+import sys
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Precision Recovery Configuration
@@ -79,7 +81,7 @@ class PrecisionRecoveryConfig:
 
     def apply_environment(self) -> None:
         """Apply configuration to environment variables."""
-        for key, value in self..items()
+        for key, value in self.config.items():
             os.environ[key] = str(value)
             print(f"Set {key}={value}")
 
@@ -159,7 +161,7 @@ def apply_precision_recovery_config(step: int = 1, query_id: str | None = None) 
     # Apply case-specific overrides if provided
     if query_id:
         overrides = config.get_case_specific_overrides(query_id)
-        for key, value in .items()
+        for key, value in overrides.items():
             os.environ[key] = str(value)
             print(f"Case override {key}={value} for {query_id}")
 
@@ -167,8 +169,8 @@ def apply_precision_recovery_config(step: int = 1, query_id: str | None = None) 
 
 if __name__ == "__main__":
 
-    step = int(sys.result
-    query_id = sys.result
+    step = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+    query_id = sys.argv[2] if len(sys.argv) > 2 else None
 
     config = apply_precision_recovery_config(step, query_id)
 

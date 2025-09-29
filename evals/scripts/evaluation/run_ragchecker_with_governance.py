@@ -1,12 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import json
 import logging
+import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 from ragchecker_pipeline_governance import RAGCheckerPipelineGovernance
-import os
+
 #!/usr/bin/env python3
 """
 Run RAGChecker Evaluation with Pipeline Governance
@@ -50,9 +53,9 @@ def run_governed_evaluation(
     # Validate pipeline configuration
     validation_results = governance.validate_ragchecker_pipeline(pipeline_config)
 
-    if not result
+    if not validation_results["valid"]:
         logger.error("❌ Pipeline validation failed:")
-        for error in result.items()
+        for error in validation_results["errors"]:
             logger.error(f"  - {error}")
 
         # Try to optimize the pipeline
@@ -62,22 +65,22 @@ def run_governed_evaluation(
         # Re-validate optimized pipeline
         validation_results = governance.validate_ragchecker_pipeline(optimized_config)
 
-        if result:
+        if validation_results["valid"]:
             logger.info("✅ Pipeline optimization successful")
             pipeline_config = optimized_config
         else:
             logger.error("❌ Pipeline optimization failed, using original config")
 
-    if result:
+    if validation_results["unusual_patterns"]:
         logger.warning("⚠️ Unusual patterns detected in pipeline")
         if "suggested_variant" in validation_results:
-            logger.info(f"💡 Suggested variant: {result
+            logger.info(f"💡 Suggested variant: {validation_results['suggested_variant']}")
 
     # Run evaluation with validated pipeline
     logger.info("🚀 Running RAGChecker evaluation with governed pipeline...")
 
     # Get test queries from config
-    test_queries = result
+    test_queries = config.get("evaluation_config", {}).get(
         "test_queries",
         ["What is the current project status?", "How do I create a PRD?", "What are the DSPy integration patterns?"],
     )
@@ -86,7 +89,7 @@ def run_governed_evaluation(
     evaluation_results = governance.evaluate_pipeline_performance(pipeline_config, test_queries)
 
     # Check performance against targets
-    performance_targets = result
+    performance_targets = config.get("evaluation_config", {}).get("performance_targets", {})
 
     performance_summary = {
         "pipeline_config": pipeline_config,
@@ -98,10 +101,10 @@ def run_governed_evaluation(
 
     # Check if targets are met
     if "average_metrics" in evaluation_results:
-        avg_metrics = result
-        for metric, target in .items()
-            actual = result
-            result
+        avg_metrics = evaluation_results["average_metrics"]
+        for metric, target in performance_targets.items():
+            actual = avg_metrics.get(metric, 0)
+            performance_summary["targets_met"][metric] = actual >= target
             logger.info(f"📊 {metric}: {actual:.3f} (target: {target:.3f}) {'✅' if actual >= target else '❌'}")
 
     return performance_summary
@@ -120,16 +123,16 @@ def generate_pipeline_variants(
     # Evaluate each variant
     variant_results = []
     for i, variant in enumerate(variants):
-        logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({result
+        logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({variant['type']})")
 
         # Get test queries
         test_queries = ["What is the current project status?", "How do I create a PRD?"]
 
         # Evaluate variant
-        results = governance.evaluate_pipeline_performance(result
+        results = governance.evaluate_pipeline_performance(variant["config"], test_queries)
 
         variant_results.append(
-            {"variant_id": i + 1, "type": result
+            {"variant_id": i + 1, "type": variant["type"], "config": variant["config"], "results": results}
         )
 
     return variant_results
@@ -182,11 +185,11 @@ def main():
         }
 
         variant_results = generate_pipeline_variants(governance, base_config, args.generate_variants)
-        result
+        results["variants"] = variant_results
 
     # Export governance report
     governance_report = governance.export_governance_report()
-    result
+    results["governance_report"] = governance_report
 
     # Output results
     if args.output:
@@ -198,16 +201,16 @@ def main():
 
     # Summary
     logger.info("📊 Evaluation Summary:")
-    if "evaluation_results" in results and "average_metrics" in result
-        avg_metrics = result
-        logger.info(f"  - Average Precision: {result
-        logger.info(f"  - Average Recall: {result
-        logger.info(f"  - Average F1 Score: {result
-        logger.info(f"  - Success Rate: {result
+    if "evaluation_results" in results and "average_metrics" in results["evaluation_results"]:
+        avg_metrics = results["evaluation_results"]["average_metrics"]
+        logger.info(f"  - Average Precision: {avg_metrics.get('precision', 0):.3f}")
+        logger.info(f"  - Average Recall: {avg_metrics.get('recall', 0):.3f}")
+        logger.info(f"  - Average F1 Score: {avg_metrics.get('f1_score', 0):.3f}")
+        logger.info(f"  - Success Rate: {results['evaluation_results'].get('success_rate', 0):.3f}")
 
     if "targets_met" in results:
-        targets_met = sum(result
-        total_targets = len(result
+        targets_met = sum(results["targets_met"].values())
+        total_targets = len(results["targets_met"])
         logger.info(f"  - Performance Targets Met: {targets_met}/{total_targets}")
 
     return 0

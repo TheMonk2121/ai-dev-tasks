@@ -160,6 +160,9 @@ def create_pydantic_evals_dataset(cases: list[Any]) -> Any:
             )
 
             # Create a comprehensive input/output structure for Pydantic Evals
+            if Case is None:
+                print("Warning: Case class not available, skipping case creation")
+                continue
             eval_case = Case(
                 name=case.id,
                 inputs=eval_input,

@@ -1,8 +1,11 @@
 from __future__ import annotations
+
+import os
 import sys
 from pathlib import Path
+
 from ragchecker_pipeline_governance import RAGCheckerPipelineGovernance
-import os
+
 #!/usr/bin/env python3
 """
 Simple test of RAG Pipeline Governance system
@@ -41,13 +44,13 @@ def test_governance():
     print(f"Evaluation successful: {'error' not in evaluation}")
 
     if "error" not in evaluation:
-        print(f"Average metrics: {result
-        print(f"Success rate: {result
+        print(f"Average metrics: {evaluation.get('average_metrics', {})}")
+        print(f"Success rate: {evaluation.get('success_rate', 0)}")
 
     print("\n📊 Testing governance report...")
     report = governance.export_governance_report()
-    print(f"Total pipelines managed: {result
-    print(f"Known good patterns: {result
+    print(f"Total pipelines managed: {report['governance_system']['total_pipelines']}")
+    print(f"Known good patterns: {report['governance_system']['known_good_patterns']}")
 
     print("\n✅ Governance system test completed!")
 

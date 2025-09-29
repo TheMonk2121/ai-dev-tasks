@@ -1,20 +1,22 @@
+#!/usr/bin/env python3
+
 from __future__ import annotations
+
 import argparse
 import json
 from pathlib import Path
-#!/usr/bin/env python3
+
 
 def read_micro_f1(path: Path) -> float:
     data = json.loads(path.read_text())
     # Prefer our overall_metrics->f1_score; fallback to metrics.micro_f1
     if isinstance(data, dict):
         if "overall_metrics" in data:
-            return float(result
-        if "metrics" in data and isinstance(result
-            if "micro_f1" in result
-                return float(result)
+            return float(data["overall_metrics"]["f1_score"])
+        if "metrics" in data and isinstance(data["metrics"], dict):
+            if "micro_f1" in data["metrics"]:
+                return float(data["metrics"]["micro_f1"])
     raise KeyError("No F1 metric found in summary JSON")
-:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("off_summary")

@@ -10,6 +10,7 @@ to human judgments.
 Reference: https://arxiv.org/abs/2408.08067
 """
 
+import copy
 import json
 import os
 import subprocess
@@ -21,6 +22,20 @@ from typing import Any
 from pydantic import BaseModel, Field, field_validator
 from ragchecker.container import RetrievedDoc  # type: ignore[import-untyped]
 from ragchecker.evaluator import RAGChecker, RAGResult, RAGResults  # type: ignore[import-untyped]
+
+try:
+    from .ragchecker_constitution_validator import (  # type: ignore[attr-defined]
+        RAGCheckerConstitutionValidator,
+    )
+except Exception:  # pragma: no cover - fallback when optional dependency missing
+    RAGCheckerConstitutionValidator = None  # type: ignore[assignment]
+
+try:
+    from scripts.evaluation.ragchecker_official_evaluation import (  # type: ignore[import-untyped]
+        OfficialRAGCheckerEvaluator,
+    )
+except Exception:  # pragma: no cover - optional runtime dependency
+    OfficialRAGCheckerEvaluator = None  # type: ignore[assignment]
 
 # Use canonical schemas
 from src.schemas.eval import EvaluationResult, GoldCase, Mode
@@ -78,6 +93,21 @@ class RAGCheckerEvaluator:
         # Note: RAGChecker requires LLM access for claim extraction and checking
         # We'll use it in a limited capacity for metrics that don't require LLM
         self.ragchecker = RAGChecker()
+        self.constitution_validator: RAGCheckerConstitutionValidator | None = None
+        if RAGCheckerConstitutionValidator is not None:
+            try:
+                self.constitution_validator = RAGCheckerConstitutionValidator()
+            except Exception as exc:  # pragma: no cover - best-effort optional feature
+                print(f"⚠️ Constitution validator unavailable: {exc}")
+                self.constitution_validator = None
+
+        self.official_evaluator: OfficialRAGCheckerEvaluator | None = None
+        if OfficialRAGCheckerEvaluator is not None:
+            try:
+                self.official_evaluator = OfficialRAGCheckerEvaluator()
+            except Exception as exc:  # pragma: no cover - best-effort optional feature
+                print(f"⚠️ Official RAGChecker evaluator unavailable: {exc}")
+                self.official_evaluator = None
 
     def run_memory_query(self, query: str, role: str = "planner") -> dict[str, Any]:
         """Run memory query using our existing orchestrator."""
@@ -214,72 +244,32 @@ class RAGCheckerEvaluator:
 
     def validate_with_constitution(self, evaluation_data: dict[str, Any]) -> dict[str, Any]:
         """Validate RAGChecker evaluation data with constitution awareness."""
-        # Create debug context for validation
-        evaluation_id = f"eval_{int(time.time())}"
-        
-        validation_results = {
-            "input_validation": None,
-            "metrics_validation": None,
-            "result_validation": None,
-            "overall_compliance": True,
-            "total_violations": 0,
-            "total_warnings": 0,
-        }
+        validation_results = self._create_empty_validation_results()
+
+        if "input" in evaluation_data:
+            validation_results["input_validation"] = self._basic_input_validation(
+                evaluation_data.get("input", {})
+            )
+
+        if "metrics" in evaluation_data:
+            validation_results["metrics_validation"] = self._basic_metrics_validation(
+                evaluation_data.get("metrics", {})
+            )
+
+        if "result" in evaluation_data:
+            validation_results["result_validation"] = self._basic_result_validation(
+                evaluation_data.get("result", {})
+            )
 
         try:
-            # Validate input data if present
-            if "input" in evaluation_data:
-                start_time = time.time()
-                # Basic input validation
-                input_validation = {"is_valid": True, "errors": [], "warnings": []}
-                validation_time = time.time() - start_time
-
-                validation_results["input_validation"] = input_validation
-                if not input_validation["is_valid"]:
-                    validation_results["overall_compliance"] = False
-                    validation_results["total_violations"] += len(input_validation["errors"])
-                validation_results["total_warnings"] += len(input_validation["warnings"])
-
-            # Validate metrics data if present
-            if "metrics" in evaluation_data:
-                start_time = time.time()
-                # Basic metrics validation
-                metrics_validation = {"is_valid": True, "errors": [], "warnings": []}
-                validation_time = time.time() - start_time
-
-                validation_results["metrics_validation"] = metrics_validation
-                if not metrics_validation["is_valid"]:
-                    validation_results["overall_compliance"] = False
-                    validation_results["total_violations"] += len(metrics_validation["errors"])
-                validation_results["total_warnings"] += len(metrics_validation["warnings"])
-
-            # Validate result data if present
-            if "result" in evaluation_data:
-                start_time = time.time()
-                # Basic result validation
-                result_validation = {"is_valid": True, "errors": [], "warnings": []}
-                validation_time = time.time() - start_time
-
-                validation_results["result_validation"] = result_validation
-                if not result_validation["is_valid"]:
-                    validation_results["overall_compliance"] = False
-                    validation_results["total_violations"] += len(result_validation["errors"])
-                validation_results["total_warnings"] += len(result_validation["warnings"])
-
-            # Add constitution compliance summary
-            validation_results["compliance_summary"] = {
-                "is_compliant": validation_results["overall_compliance"],
-                "compliance_score": 1.0 if validation_results["overall_compliance"] else 0.5,
-                "total_violations": validation_results["total_violations"],
-                "total_warnings": validation_results["total_warnings"],
-                "recommendations": self._extract_recommendations(validation_results),
-            }
-
-        except Exception as e:
+            if self.constitution_validator is not None:
+                self._apply_constitution_validator(validation_results, evaluation_data)
+        except Exception as exc:  # pragma: no cover - optional path
             validation_results["overall_compliance"] = False
-            validation_results["error"] = str(e)
-            print(f"Constitution validation error: {e}")
+            validation_results.setdefault("errors", []).append(str(exc))
+            print(f"Constitution validator integration failed: {exc}")
 
+        self._finalize_validation_summary(validation_results)
         return validation_results
 
     def validate_with_constitution_and_taxonomy(self, evaluation_data: dict[str, Any]) -> dict[str, Any]:
@@ -287,9 +277,18 @@ class RAGCheckerEvaluator:
         # First, perform constitution validation
         validation_results = self.validate_with_constitution(evaluation_data)
 
-        # For now, return the basic validation results
-        # TODO: Add error taxonomy enhancement when available
-        return validation_results
+        validator = self.constitution_validator
+        if validator is None:
+            return validation_results
+
+        try:
+            enhanced = validator.enhance_validation_with_taxonomy(copy.deepcopy(validation_results))
+            self._finalize_validation_summary(enhanced)
+            return enhanced
+        except Exception as exc:  # pragma: no cover - optional path
+            validation_results.setdefault("taxonomy_warning", str(exc))
+            print(f"Error taxonomy enhancement failed: {exc}")
+            return validation_results
 
     def _extract_compliance_score(self, validation_result: dict[str, Any]) -> float:
         """Extract compliance score from validation result safely."""
@@ -316,6 +315,114 @@ class RAGCheckerEvaluator:
                             recommendations.append(warning["recommendation"])
 
         return list(set(recommendations))  # Remove duplicates
+
+    def _create_empty_validation_results(self) -> dict[str, Any]:
+        """Create a base validation result structure."""
+        return {
+            "input_validation": None,
+            "metrics_validation": None,
+            "result_validation": None,
+            "overall_compliance": True,
+            "total_violations": 0,
+            "total_warnings": 0,
+        }
+
+    def _basic_input_validation(self, input_data: dict[str, Any]) -> dict[str, Any]:
+        """Perform lightweight input validation as a baseline."""
+        _ = input_data  # Placeholder for future enhancements
+        return {"is_valid": True, "errors": [], "warnings": [], "compliance": None}
+
+    def _basic_metrics_validation(self, metrics_data: dict[str, Any]) -> dict[str, Any]:
+        """Perform lightweight metrics validation as a baseline."""
+        _ = metrics_data
+        return {"is_valid": True, "errors": [], "warnings": [], "compliance": None}
+
+    def _basic_result_validation(self, result_data: dict[str, Any]) -> dict[str, Any]:
+        """Perform lightweight result validation as a baseline."""
+        _ = result_data
+        return {"is_valid": True, "errors": [], "warnings": [], "compliance": None}
+
+    def _merge_validation_sections(
+        self,
+        base: dict[str, Any] | None,
+        extra: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Merge baseline validation with constitution-aware results."""
+
+        merged: dict[str, Any] = {
+            "is_valid": True,
+            "errors": [],
+            "warnings": [],
+        }
+
+        if base:
+            merged["is_valid"] = bool(base.get("is_valid", True))
+            merged["errors"] = list(base.get("errors", []))
+            merged["warnings"] = list(base.get("warnings", []))
+            if "compliance" in base:
+                merged["compliance"] = base.get("compliance")
+
+        merged["is_valid"] = merged["is_valid"] and bool(extra.get("valid", True))
+        merged["errors"].extend(extra.get("errors", []))
+        merged["warnings"].extend(extra.get("warnings", []))
+
+        if extra.get("compliance") is not None:
+            merged["compliance"] = extra.get("compliance")
+
+        return merged
+
+    def _apply_constitution_validator(
+        self, validation_results: dict[str, Any], evaluation_data: dict[str, Any]
+    ) -> None:
+        """Apply constitution validator outputs onto baseline validation data."""
+
+        validator = self.constitution_validator
+        if validator is None:
+            return
+
+        if "input" in evaluation_data:
+            validator_result = validator.validate_ragchecker_input(evaluation_data.get("input", {}))
+            validation_results["input_validation"] = self._merge_validation_sections(
+                validation_results.get("input_validation"), validator_result
+            )
+
+        if "metrics" in evaluation_data:
+            validator_result = validator.validate_ragchecker_metrics(evaluation_data.get("metrics", {}))
+            validation_results["metrics_validation"] = self._merge_validation_sections(
+                validation_results.get("metrics_validation"), validator_result
+            )
+
+        if "result" in evaluation_data:
+            validator_result = validator.validate_ragchecker_result(evaluation_data.get("result", {}))
+            validation_results["result_validation"] = self._merge_validation_sections(
+                validation_results.get("result_validation"), validator_result
+            )
+
+    def _finalize_validation_summary(self, validation_results: dict[str, Any]) -> None:
+        """Recompute aggregate validation summary fields."""
+
+        overall = True
+        total_violations = 0
+        total_warnings = 0
+
+        for section_key in ["input_validation", "metrics_validation", "result_validation"]:
+            section = validation_results.get(section_key)
+            if not section:
+                continue
+            overall = overall and bool(section.get("is_valid", True))
+            total_violations += len(section.get("errors", []))
+            total_warnings += len(section.get("warnings", []))
+
+        validation_results["overall_compliance"] = overall
+        validation_results["total_violations"] = total_violations
+        validation_results["total_warnings"] = total_warnings
+        validation_results["compliance_summary"] = {
+            "is_compliant": overall,
+            "compliance_score": 1.0 if overall else 0.5,
+            "total_violations": total_violations,
+            "total_warnings": total_warnings,
+            "recommendations": self._extract_recommendations(validation_results),
+        }
 
     def get_debugging_summary(self) -> dict[str, Any]:
         """Get debugging summary for RAGChecker evaluation workflows"""
@@ -431,7 +538,58 @@ class RAGCheckerEvaluator:
         else:
             return 0.0
 
-    def compare_evaluations(self, custom_score: float, ragchecker_overall: float) -> dict[str, Any]:
+    def _compute_custom_score(
+        self, response_text: str, rag_result: RAGResult, query: str
+    ) -> tuple[float, dict[str, float]]:
+        """Compute a custom evaluation score using official evaluator heuristics when available."""
+
+        if not response_text:
+            return 0.0, {}
+
+        retrieved_payload: list[dict[str, Any]] = []
+        for doc in getattr(rag_result, "retrieved_context", []) or []:
+            payload = {
+                "doc_id": getattr(doc, "doc_id", ""),
+                "text": getattr(doc, "text", ""),
+            }
+            score = getattr(doc, "score", None)
+            if score is not None:
+                payload["score"] = score
+            retrieved_payload.append(payload)
+
+        if self.official_evaluator is not None and retrieved_payload:
+            try:
+                faithfulness = float(
+                    self.official_evaluator._compute_faithfulness(response_text, retrieved_payload)
+                )
+                length_score = min(len(response_text) / 100.0, 1.0)
+                composite = ((faithfulness * 0.7) + (length_score * 0.3)) * 100.0
+                return composite, {
+                    "faithfulness": round(faithfulness, 4),
+                    "length_score": round(length_score, 4),
+                }
+            except Exception as exc:  # pragma: no cover - optional path
+                print(f"Official evaluator scoring failed: {exc}")
+
+        # Fallback heuristic that blends response length and query overlap
+        length_score = min(len(response_text) / 100.0, 1.0)
+        query_tokens = set(query.lower().split())
+        response_tokens = set(response_text.lower().split())
+        overlap_score = (
+            len(query_tokens & response_tokens) / len(query_tokens) if query_tokens else 0.0
+        )
+        composite = ((length_score * 0.6) + (overlap_score * 0.4)) * 100.0
+        return composite, {
+            "length_score": round(length_score, 4),
+            "query_overlap": round(overlap_score, 4),
+        }
+
+    def compare_evaluations(
+        self,
+        custom_score: float,
+        ragchecker_overall: float,
+        custom_metrics: dict[str, float] | None = None,
+    ) -> dict[str, Any]:
         """Compare custom vs RAGChecker evaluation results."""
         difference = custom_score - ragchecker_overall
         percentage_diff = (difference / custom_score * 100) if custom_score > 0 else 0
@@ -449,12 +607,15 @@ class RAGCheckerEvaluator:
             agreement = "Moderate Agreement"
             recommendation = "Consider using RAGChecker as industry standard"
 
-        return {
+        comparison: dict[str, Any] = {
             "difference": difference,
             "percentage_diff": percentage_diff,
             "agreement": agreement,
             "recommendation": recommendation,
         }
+        if custom_metrics:
+            comparison["custom_metrics"] = custom_metrics
+        return comparison
 
     def evaluate_test_case(self, case_name: str, query: str, role: str = "planner") -> RAGCheckerResult:
         """Evaluate a single test case using both custom and RAGChecker evaluation."""
@@ -473,29 +634,19 @@ class RAGCheckerEvaluator:
                 recommendation="Query failed",
             )
 
-        # For now, use a simple custom evaluation
-        # TODO: Integrate with official evaluator when available
-        try:
-            # Simple custom evaluation based on response length and content
-            response_text = response.get("output", "")
-            if response_text:
-                # Basic scoring based on response quality
-                custom_score = min(len(response_text) / 100.0, 1.0) * 100  # Scale to 0-100
-            else:
-                custom_score = 0.0
-        except Exception as e:
-            print(f"Custom evaluation failed: {e}")
-            custom_score = 0.0
-
-        # Extract RAGChecker data
+        response_text = response.get("output", "")
+        # Extract RAGChecker data for downstream scoring
         rag_result = self.extract_ragchecker_data(response, query)
+
+        # Compute custom evaluation score leveraging official evaluator heuristics when available
+        custom_score, custom_metrics = self._compute_custom_score(response_text, rag_result, query)
 
         # Run RAGChecker evaluation
         ragchecker_scores = self.run_ragchecker_evaluation(rag_result)
         ragchecker_overall = self.calculate_ragchecker_overall(ragchecker_scores)
 
         # Compare evaluations
-        comparison = self.compare_evaluations(custom_score, ragchecker_overall)
+        comparison = self.compare_evaluations(custom_score, ragchecker_overall, custom_metrics)
 
         return RAGCheckerResult(
             test_case_name=case_name,

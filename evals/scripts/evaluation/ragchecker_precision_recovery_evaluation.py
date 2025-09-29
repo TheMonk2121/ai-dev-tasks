@@ -1,3 +1,5 @@
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 RAGChecker Precision Recovery Evaluation
@@ -10,7 +12,6 @@ import sys
 import time
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
 
 # Add src to path for imports - use absolute path and check for duplicates
 scripts_path = Path(__file__).parent.resolve()
@@ -19,6 +20,7 @@ if str(scripts_path) not in sys.path:
 
 from precision_recovery_config import PrecisionRecoveryConfig
 from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+
 
 class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
     """Enhanced RAGChecker evaluator with precision recovery features."""
@@ -52,7 +54,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             case_overrides = self.config.get_case_specific_overrides(test_case.query_id)
             if case_overrides:
                 print("   🔧 Applying case-specific overrides for weak case")
-                for key, value in .items()
+                for key, value in case_overrides.items():
                     os.environ[key] = str(value)
 
             # Evaluate with enhanced logging
@@ -112,10 +114,10 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             ragchecker_result = self.create_fallback_evaluation(eval_data)
 
             # Extract metrics
-            overall_metrics = result
-            precision = result
-            recall = result
-            f1_score = result
+            overall_metrics = ragchecker_result.get("overall_metrics", {})
+            precision = overall_metrics.get("precision", 0.0)
+            recall = overall_metrics.get("recall", 0.0)
+            f1_score = overall_metrics.get("f1_score", 0.0)
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -223,26 +225,26 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
     def _log_case_metrics(self, query_id: str, case_result: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
-            "precision": result
-            "recall": result
-            "f1_score": result
-            "evaluation_time": result
-            "retrieval_metrics": result
-            "facet_metrics": result
-            "fusion_metrics": result
-            "dynamic_k_metrics": result
-            "binding_metrics": result
-            "pruning_metrics": result
-            "judge_metrics": result
+            "precision": case_result.get("precision", 0.0),
+            "recall": case_result.get("recall", 0.0),
+            "f1_score": case_result.get("f1_score", 0.0),
+            "evaluation_time": case_result.get("evaluation_time", 0.0),
+            "retrieval_metrics": case_result.get("retrieval_metrics", {}),
+            "facet_metrics": case_result.get("facet_metrics", {}),
+            "fusion_metrics": case_result.get("fusion_metrics", {}),
+            "dynamic_k_metrics": case_result.get("dynamic_k_metrics", {}),
+            "binding_metrics": case_result.get("binding_metrics", {}),
+            "pruning_metrics": case_result.get("pruning_metrics", {}),
+            "judge_metrics": case_result.get("judge_metrics", {}),
         }
 
     def _generate_evaluation_report(self, results: list[dict[str, Any]]) -> dict[str, Any]:
         """Generate comprehensive evaluation report."""
 
         # Calculate overall metrics
-        precisions = [result
-        recalls = [result
-        f1_scores = [result
+        precisions = [r.get("precision", 0.0) for r in results]
+        recalls = [r.get("recall", 0.0) for r in results]
+        f1_scores = [r.get("f1_score", 0.0) for r in results]
 
         overall_metrics = {
             "precision": sum(precisions) / len(precisions) if precisions else 0.0,
@@ -255,9 +257,9 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
 
         # Check baseline compliance
         baseline_compliance = {
-            "precision": result
-            "recall": result
-            "f1_score": result
+            "precision": overall_metrics["precision"] >= judge_floors["precision"],
+            "recall": overall_metrics["recall"] >= judge_floors["recall"],
+            "f1_score": overall_metrics["f1_score"] >= judge_floors["f1_score"],
         }
 
         # Generate summary statistics
@@ -286,41 +288,41 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
         # Identify weak cases
         weak_cases = ["advanced_features_001", "architecture_001", "role_context_001"]
 
-        weak_case_results = [r for r in results if result:
-        strong_case_results = [r for r in results if result:
+        weak_case_results = [r for r in results if r["query_id"] in weak_cases]
+        strong_case_results = [r for r in results if r["query_id"] not in weak_cases]
 
         # Calculate metrics by case type
         def calc_metrics(case_list):
             if not case_list:
                 return {"precision": 0.0, "recall": 0.0, "f1_score": 0.0}
             return {
-                "precision": sum(result
-                "recall": sum(result
-                "f1_score": sum(result
+                "precision": sum(r.get("precision", 0.0) for r in case_list) / len(case_list),
+                "recall": sum(r.get("recall", 0.0) for r in case_list) / len(case_list),
+                "f1_score": sum(r.get("f1_score", 0.0) for r in case_list) / len(case_list),
             }
 
         return {
             "weak_cases": {
                 "count": len(weak_case_results),
                 "metrics": calc_metrics(weak_case_results),
-                "case_ids": [result
+                "case_ids": [r["query_id"] for r in weak_case_results],
             },
             "strong_cases": {
                 "count": len(strong_case_results),
                 "metrics": calc_metrics(strong_case_results),
-                "case_ids": [result
+                "case_ids": [r["query_id"] for r in strong_case_results],
             },
             "fusion_gains": {
-                "total_fusion_gain": sum(result
+                "total_fusion_gain": sum(r.get("fusion_metrics", {}).get("fusion_gain", 0) for r in results),
                 "cases_with_fusion_gain": len(
-                    [r for r in results if result:
+                    [r for r in results if r.get("fusion_metrics", {}).get("fusion_gain", 0) > 0]
                 ),
             },
             "facet_yields": {
-                "total_facets_generated": sum(result
-                "total_facets_kept": sum(result
+                "total_facets_generated": sum(r.get("facet_metrics", {}).get("facets_generated", 0) for r in results),
+                "total_facets_kept": sum(r.get("facet_metrics", {}).get("facets_kept", 0) for r in results),
                 "cases_with_facet_yield": len(
-                    [r for r in results if result:
+                    [r for r in results if r.get("facet_metrics", {}).get("unique_docs_added", 0) > 0]
                 ),
             },
         }
@@ -343,7 +345,7 @@ def main():
 
     # Set fast mode if requested
     if args.fast_mode:
-        os.environ
+        os.environ["RAGCHECKER_FAST_MODE"] = "1"
 
     # Initialize evaluator
     evaluator = PrecisionRecoveryEvaluator(args.step)
@@ -371,15 +373,15 @@ def main():
     print(f"\n📊 Precision Recovery Evaluation Complete (Step {args.step})")
     print("=" * 60)
     print("📈 Overall Metrics:")
-    overall = result
-    print(f"   Precision: {result
-    print(f"   Recall: {result
-    print(f"   F1 Score: {result
+    overall = evaluation_report["overall_metrics"]
+    print(f"   Precision: {overall['precision']:.3f}")
+    print(f"   Recall: {overall['recall']:.3f}")
+    print(f"   F1 Score: {overall['f1_score']:.3f}")
 
     print("\n🎯 Baseline Compliance:")
-    compliance = result
-    floors = result
-    for metric, passed in .items()
+    compliance = evaluation_report["baseline_compliance"]
+    floors = evaluation_report["judge_floors"]
+    for metric, passed in compliance.items():
         status = "✅ PASS" if passed else "❌ FAIL"
         target = floors[metric]
         current = overall[metric]
@@ -388,7 +390,7 @@ def main():
     print(f"\n📁 Results saved to: {output_file}")
 
     # Return exit code based on compliance
-    all_passed = all(.values()
+    all_passed = all(compliance.values())
     return 0 if all_passed else 2
 
 if __name__ == "__main__":

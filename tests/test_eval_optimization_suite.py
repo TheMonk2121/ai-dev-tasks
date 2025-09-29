@@ -333,17 +333,17 @@ class TestEvalOptimizationSuiteCLI:
     @patch("json.dump")
     def test_main_success(
         self,
-        mock_json_dump,
-        mock_file,
-        mock_generate_report,
-        mock_few_shot_eval,
-        mock_baseline_eval,
-        mock_memory,
-        mock_observability,
-        mock_tool,
-        mock_dataset,
-        mock_determinism,
         mock_config_manager,
+        mock_determinism,
+        mock_dataset,
+        mock_tool,
+        mock_observability,
+        mock_memory,
+        mock_baseline_eval,
+        mock_few_shot_eval,
+        mock_generate_report,
+        mock_file,
+        mock_json_dump,
     ):
         """Test main function runs successfully."""
         # Mock config manager

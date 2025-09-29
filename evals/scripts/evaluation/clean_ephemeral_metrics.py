@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import argparse
 import json
 import os
 import shutil
 from pathlib import Path
+
 #!/usr/bin/env python3
 """
 Clean up ephemeral metrics files that accumulate during development and testing.
@@ -73,7 +75,7 @@ def quarantine_file(file_path: Path, quarantine_dir: Path) -> None:
     base_name = file_path.name
     while (quarantine_dir / base_name).exists():
         name_parts = file_path.stem, counter, file_path.suffix
-        base_name = f"{result
+        base_name = f"{name_parts[0]}_{name_parts[1]}{name_parts[2]}"
         counter += 1
 
     quarantine_path = quarantine_dir / base_name
@@ -82,18 +84,21 @@ def quarantine_file(file_path: Path, quarantine_dir: Path) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="Clean up ephemeral metrics files")
-    parser.add_argument("--directories",
+    parser.add_argument(
+        "--directories",
         nargs="+",
-        default=["metrics", "datasets"],)
+        default=["metrics", "datasets"],
         help="Directories to clean (default: metrics datasets)",
     )
-    parser.add_argument("--quarantine-invalid",
+    parser.add_argument(
+        "--quarantine-invalid",
         action="store_true",
-        help="Move invalid JSON files to quarantine directory instead of deleting",)
+        help="Move invalid JSON files to quarantine directory instead of deleting",
     )
     parser.add_argument("--apply", action="store_true", help="Actually perform the cleanup (default is dry-run)")
-    parser.add_argument("--quarantine-dir",
-        default="metrics/_invalid",)
+    parser.add_argument(
+        "--quarantine-dir",
+        default="metrics/_invalid",
         help="Directory for quarantined files (default: metrics/_invalid)",
     )
 

@@ -6,6 +6,7 @@ Integrates semantic process augmentation with existing RAGChecker evaluation sys
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 import logging
 import sys
@@ -26,17 +27,29 @@ from scripts.evaluation.ragchecker_official_evaluation import (
 # sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 
 # Import the RAG Pipeline Governance system
-sys.path.insert(0, str(Path(__file__).parent.parent / "testing"))
+def _load_rag_pipeline_governance_module() -> tuple[Any, Any]:
+    """Locate and import the rag pipeline governance module from known paths."""
 
-spec = importlib.util.spec_from_file_location(
-    "rag_pipeline_governance", str(Path(__file__).parent.parent / "testing" / "300_rag_pipeline_governance.py")
-)
-if spec is None or spec.loader is None:
-    raise ImportError("Could not load spec for 300_rag_pipeline_governance.py")
-rag_governance_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(rag_governance_module)
-RAGPipelineGovernance = rag_governance_module.RAGPipelineGovernance
-PipelineStage = rag_governance_module.PipelineStage
+    candidate_files = [
+        Path(__file__).parent.parent / "testing" / "300_rag_pipeline_governance.py",
+        Path(__file__).resolve().parents[2] / "stable_build" / "modules" / "300_rag_pipeline_governance.py",
+        project_root / "evals" / "stable_build" / "modules" / "300_rag_pipeline_governance.py",
+    ]
+
+    for candidate in candidate_files:
+        if candidate.exists():
+            module_name = f"rag_pipeline_governance_{candidate.stem}"
+            spec = importlib.util.spec_from_file_location(module_name, str(candidate))
+            if spec and spec.loader:
+                module = importlib.util.module_from_spec(spec)
+                sys.modules[module_name] = module
+                spec.loader.exec_module(module)
+                return module.RAGPipelineGovernance, module.PipelineStage
+
+    raise ImportError("Could not locate 300_rag_pipeline_governance.py in known locations")
+
+
+RAGPipelineGovernance, PipelineStage = _load_rag_pipeline_governance_module()
 
 # Import after path modification
 
@@ -172,31 +185,73 @@ class RAGCheckerPipelineGovernance:
     def optimize_ragchecker_pipeline(self, current_config: dict[str, Any]) -> dict[str, Any]:
         """Optimize a RAGChecker pipeline configuration using governance insights"""
 
-        # Validate current configuration
-        _ = self.validate_ragchecker_pipeline(current_config)
+        validation = self.validate_ragchecker_pipeline(current_config)
+        optimized_config = copy.deepcopy(current_config)
+        adjustments: list[str] = []
 
-        # TODO: Implement proper optimization logic
-        # if validation_passes:
-        #     logger.info("Pipeline is already optimal")
-        #     return current_config
-
-        # Find the best matching known-good pattern
         temp_id = f"temp_optimization_{int(time.time())}"
-        pipeline_id = self.governance.create_pipeline_graph(current_config, temp_id)
+        pipeline_id = self.governance.create_pipeline_graph(optimized_config, temp_id)
 
-        best_match = self.governance.suggest_pipeline_variant(pipeline_id)
+        try:
+            if validation.get("errors"):
+                logger.info("Pipeline validation reported errors; attempting to auto-fill missing stages")
+                _ = self.governance.auto_fill_missing_steps(pipeline_id)
+                optimized_config = copy.deepcopy(self.governance.pipeline_metadata[pipeline_id]["config"])
+                adjustments.append("auto_fill_missing_steps")
 
-        if best_match:
-            # Get the known-good configuration
-            best_config = self.governance.pipeline_metadata[best_match]["config"]
-            logger.info(f"Optimized pipeline using variant: {best_match}")
-            return best_config
+            best_match = self.governance.suggest_pipeline_variant(pipeline_id)
+            if best_match:
+                reference_config = copy.deepcopy(self.governance.pipeline_metadata[best_match]["config"])
+                merged_config = self._merge_pipeline_configs(reference_config, optimized_config)
+                if merged_config != optimized_config:
+                    optimized_config = merged_config
+                    adjustments.append(f"merged_with_variant:{best_match}")
+
+            revalidation = self.validate_ragchecker_pipeline(optimized_config)
+            if not revalidation.get("valid", True) and best_match:
+                logger.info("Optimized pipeline still invalid; falling back to known-good configuration")
+                optimized_config = copy.deepcopy(self.governance.pipeline_metadata[best_match]["config"])
+                adjustments.append("fallback_to_known_variant")
+        finally:
+            # Clean up temporary artifacts
+            if temp_id in self.governance.pipeline_graphs:
+                del self.governance.pipeline_graphs[temp_id]
+            if temp_id in self.governance.pipeline_metadata:
+                del self.governance.pipeline_metadata[temp_id]
+
+        if adjustments:
+            logger.info(f"Pipeline optimization adjustments applied: {', '.join(adjustments)}")
         else:
-            # Auto-fill missing steps
-            optimized_id = self.governance.auto_fill_missing_steps(pipeline_id)
-            optimized_config = self.governance.pipeline_metadata[optimized_id]["config"]
-            logger.info("Optimized pipeline by auto-filling missing steps")
-            return optimized_config
+            logger.info("Pipeline configuration already aligned with known-good patterns")
+
+        return optimized_config
+
+    def _merge_pipeline_configs(
+        self, reference_config: dict[str, Any], candidate_config: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Merge pipeline configurations, giving precedence to candidate overrides."""
+
+        merged = copy.deepcopy(reference_config)
+
+        for stage_name, stage_config in candidate_config.items():
+            if not isinstance(stage_config, dict):
+                merged[stage_name] = stage_config
+                continue
+
+            stage_entry = merged.setdefault(stage_name, {"parameters": {}})
+            if "parameters" not in stage_entry or not isinstance(stage_entry["parameters"], dict):
+                stage_entry["parameters"] = {}
+
+            candidate_params = stage_config.get("parameters", {})
+            if isinstance(candidate_params, dict):
+                stage_entry["parameters"].update(candidate_params)
+
+            for key, value in stage_config.items():
+                if key == "parameters":
+                    continue
+                stage_entry[key] = value
+
+        return merged
 
     def generate_pipeline_variants(self, base_config: dict[str, Any], num_variants: int = 5) -> list[dict[str, Any]]:
         """Generate augmented pipeline variants for training and optimization"""
@@ -223,56 +278,92 @@ class RAGCheckerPipelineGovernance:
     def evaluate_pipeline_performance(self, pipeline_config: dict[str, Any], test_queries: list[str]) -> dict[str, Any]:
         """Evaluate pipeline performance using RAGChecker metrics"""
 
-        # Validate pipeline first
-        validation = self.validate_ragchecker_pipeline(pipeline_config)
+        baseline_config = copy.deepcopy(pipeline_config)
+        baseline_validation = self.validate_ragchecker_pipeline(baseline_config)
 
-        # TODO: Implement proper validation logic
-        # if not validation_passes:
-        #     # Try to optimize the pipeline first
-        #     logger.info("Pipeline validation failed, attempting optimization...")
-        #     optimized_config = self.optimize_ragchecker_pipeline(pipeline_config)
-        #
-        #     # Re-validate optimized pipeline
-        #     validation = self.validate_ragchecker_pipeline(optimized_config)
-        #
-        #     if not validation_passes:
-        #         return {
-        #             "error": "Invalid pipeline configuration even after optimization",
-        #             "validation_results": validation,
-        #         }
-        #
-        #     # Use optimized config for evaluation
-        #     pipeline_config = optimized_config
+        baseline_eval = self._run_simulated_evaluation(baseline_config, test_queries)
+        if baseline_eval is None:
+            return {"error": "All evaluations failed", "pipeline_config": baseline_config}
 
-        # Run evaluation with the pipeline configuration
+        best_config = baseline_config
+        best_validation = baseline_validation
+        best_eval = baseline_eval
+        best_score = self._select_score(baseline_eval["average_metrics"])
+
+        optimization_attempted = False
+        optimized_choice_details: dict[str, Any] | None = None
+        optimized_used = False
+
+        candidate_config = self.optimize_ragchecker_pipeline(copy.deepcopy(baseline_config))
+        if candidate_config != baseline_config:
+            optimization_attempted = True
+            candidate_validation = self.validate_ragchecker_pipeline(candidate_config)
+            candidate_eval = self._run_simulated_evaluation(candidate_config, test_queries)
+
+            if candidate_eval is not None:
+                candidate_score = self._select_score(candidate_eval["average_metrics"])
+                # Prefer the optimized configuration when it is not worse than baseline
+                if candidate_score >= best_score - 1e-6:
+                    best_config = candidate_config
+                    best_validation = candidate_validation
+                    best_eval = candidate_eval
+                    best_score = candidate_score
+                    optimized_used = True
+                optimized_choice_details = candidate_eval
+
+        result_payload: dict[str, Any] = {
+            "pipeline_config": best_config,
+            "validation_results": best_validation,
+            "evaluation_results": best_eval["results"],
+            "average_metrics": best_eval["average_metrics"],
+            "success_rate": best_eval["success_rate"],
+            "optimized": optimized_used,
+            "optimization_attempted": optimization_attempted,
+            "baseline_metrics": baseline_eval["average_metrics"],
+        }
+
+        if optimization_attempted and optimized_choice_details is not None:
+            result_payload["optimized_metrics"] = optimized_choice_details["average_metrics"]
+            result_payload["optimized_success_rate"] = optimized_choice_details["success_rate"]
+        else:
+            result_payload["optimized_metrics"] = None
+            result_payload["optimized_success_rate"] = None
+
+        return result_payload
+
+    def _select_score(self, avg_metrics: dict[str, float]) -> float:
+        """Select the comparison score used to choose between pipeline variants."""
+
+        for key in ("f1_score", "f1", "precision", "recall"):
+            if key in avg_metrics and isinstance(avg_metrics[key], (int, float)):
+                return float(avg_metrics[key])
+        return 0.0
+
+    def _run_simulated_evaluation(
+        self, pipeline_config: dict[str, Any], test_queries: list[str]
+    ) -> dict[str, Any] | None:
+        """Run the simulated evaluation workflow and aggregate metrics."""
+
         results: list[dict[str, Any]] = []
-
         for query in test_queries:
             try:
-                # This would integrate with your actual RAGChecker evaluation
-                # For now, we'll simulate the evaluation
-                result = self._simulate_ragchecker_evaluation(query, pipeline_config)
-                results.append(result)
-            except Exception as e:
-                logger.error(f"Evaluation failed for query: {query}, error: {e}")
-                results.append({"query": query, "error": str(e)})
+                simulated = self._simulate_ragchecker_evaluation(query, pipeline_config)
+                results.append(simulated)
+            except Exception as exc:  # pragma: no cover - logging path
+                logger.error(f"Evaluation failed for query: %s, error: %s", query, exc)
+                results.append({"query": query, "error": str(exc)})
 
-        # Calculate aggregate metrics
         successful_results = [r for r in results if "error" not in r]
-
         if not successful_results:
-            return {"error": "All evaluations failed", "results": results}
+            return None
 
-        # Calculate average metrics
         avg_metrics: dict[str, float] = {}
-        for metric in ["precision", "recall", "f1_score", "context_utilization"]:
+        for metric in ("precision", "recall", "f1_score", "context_utilization"):
             values = [float(r.get(metric, 0.0)) for r in successful_results]
             avg_metrics[metric] = sum(values) / len(values) if values else 0.0
 
         return {
-            "pipeline_config": pipeline_config,
-            "validation_results": validation,
-            "evaluation_results": successful_results,
+            "results": successful_results,
             "average_metrics": avg_metrics,
             "success_rate": len(successful_results) / len(test_queries),
         }
@@ -423,4 +514,3 @@ if __name__ == "__main__":
     # Export report
     report = governance.export_governance_report()
     print(f"Governance report: {report}")
-    # TODO: Verify this assignment

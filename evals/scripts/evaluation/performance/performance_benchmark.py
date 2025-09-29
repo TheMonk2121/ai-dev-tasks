@@ -1,14 +1,17 @@
 from __future__ import annotations
+
 import argparse
 import json
+import os
 import subprocess
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+
 import psutil  # type: ignore[import-untyped]
-import sys
-import os
+
 #!/usr/bin/env python3
 """
 Performance Benchmark Script for Critical Scripts
@@ -168,7 +171,7 @@ class ScriptBenchmarker:
             try:
                 # Run the script
                 result = subprocess.run(
-                    result
+                    script_config["command"],
                     capture_output=True,
                     text=True,
                     timeout=300,  # 5 minute timeout
@@ -186,8 +189,8 @@ class ScriptBenchmarker:
                 benchmark_result = BenchmarkResult(
                     script_name=script_name,
                     execution_time=end_time - start_time,
-                    memory_usage_mb=result
-                    cpu_percent=result
+                    memory_usage_mb=end_metrics["memory_mb"] - start_metrics["memory_mb"],
+                    cpu_percent=end_metrics["cpu_percent"],
                     success=is_success,
                     error_message=result.stderr if not is_success else None,
                     timestamp=datetime.now(),
@@ -247,7 +250,7 @@ class ScriptBenchmarker:
 
         # Convert results to serializable format
         serializable_results = {}
-        for script_name, script_results in .items()
+        for script_name, script_results in results.items():
             serializable_results[script_name] = []
             for result in script_results:
                 serializable_results[script_name].append(
@@ -274,7 +277,7 @@ class ScriptBenchmarker:
         print("BENCHMARK SUMMARY")
         print("=" * 60)
 
-        for script_name, script_results in .items()
+        for script_name, script_results in results.items():
             if not script_results:
                 continue
 
@@ -314,7 +317,7 @@ def main():
     if args.script:
         if args.script not in benchmarker.critical_scripts:
             print(f"Unknown script: {args.script}")
-            print(f"Available scripts: {list(benchmarker..keys()
+            print(f"Available scripts: {list(benchmarker.critical_scripts.keys())}")
             return
 
         results = {args.script: benchmarker.benchmark_script(args.script, args.iterations)}

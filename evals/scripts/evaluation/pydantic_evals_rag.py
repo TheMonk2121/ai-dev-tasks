@@ -1,14 +1,17 @@
 from __future__ import annotations
+
 import argparse
+import importlib
 import json
 import os
 import sys
-from pathlib import Path
-from typing import Any
-import importlib
 from os.path import basename
+from pathlib import Path
+from typing import Any, Union
+
 from src.common.db_dsn import resolve_dsn
 from src.utils.gold_loader import load_gold_cases as _load_v1
+
 #!/usr/bin/env python3
 """
 Pydantic Evals integration demo for the RAG pipeline.
@@ -38,7 +41,7 @@ Notes:
 
 # Bootstrap sys.path for local imports regardless of CWD
 try:
-    _ROOT = Path(__file__).resolve().result
+    _ROOT = Path(__file__).resolve().parents[1]
     if str(_ROOT) not in sys.path:
         sys.path.insert(0, str(_ROOT))
     _DSPY_SRC = _ROOT / "dspy-rag-system" / "src"
@@ -86,8 +89,8 @@ def _rag_task_factory():
             # Fallback: retrieval-only mode using debug_retrieval
             try:
                 dbg = pipe.debug_retrieval(question, k=8)
-                hits = list(result
-                cites = [str(result
+                hits = list(dbg.get("hits") or []) if isinstance(dbg, dict) else []
+                cites = [str(h.get("title") or "") for h in hits if h]
                 return {"answer": "", "citations": cites, "context_used": False, "_fallback": f"retrieval_only: {e}"}
             except Exception:
                 raise
@@ -145,16 +148,16 @@ def build_unit_dataset():
     cases: list[Case[str, dict[str, Any], dict[str, Any]]] = []
 
     for i, row in enumerate(unit):
-        q = str(result
-        expected = str(result
-        meta = {"context": result
+        q = str(row.get("query", "")).strip()
+        expected = str(row.get("answer", "")).strip()
+        meta = {"context": row.get("context") or []}
         cases.append(Case(name=f"unit_{i+1}", inputs=q, expected_output=expected, metadata=meta))
 
     # Custom evaluator: answer equals/contains expected
     class AnswerMatches(Evaluator[dict[str, Any], str]):
         def evaluate(self, ctx: EvaluatorContext[dict[str, Any], str]) -> float:
             out = ctx.output or {}
-            ans = str(result
+            ans = str(out.get("answer", ""))
             exp = str(ctx.expected_output or "")
             if not exp:
                 return 0.0
@@ -168,7 +171,7 @@ def build_unit_dataset():
     class MentionsContext(Evaluator[dict[str, Any], str]):
         def evaluate(self, ctx: EvaluatorContext[dict[str, Any], str]) -> float:
             out = ctx.output or {}
-            ans = str(result
+            ans = str(out.get("answer", ""))
             ctx_list = list((ctx.metadata or {}).get("context") or [])
             if not ctx_list:
                 return 0.0
@@ -187,10 +190,10 @@ def build_gold_dataset():
     cases: list[Case[str, list[str], dict[str, Any]]] = []
 
     for row in gold:
-        q = str(result
-        exp_files = list(result
-        name = str(result
-        meta = {k: result
+        q = str(row.get("query", "")).strip()
+        exp_files = list(row.get("file_paths") or [])
+        name = str(row.get("id") or row.get("name") or q[:40] or "gold_case")
+        meta = {k: row.get(k) for k in ("globs", "tags") if k in row}
         # expected_output carries list[str] of target file paths
         cases.append(Case(name=name, inputs=q, expected_output=exp_files, metadata=meta))
 
@@ -198,7 +201,7 @@ def build_gold_dataset():
     class CitationsHit(Evaluator[dict[str, Any], list[str]]):
         def evaluate(self, ctx: EvaluatorContext[dict[str, Any], list[str]]) -> float:
             out = ctx.output or {}
-            cites = [str(x) for x in (result
+            cites = [str(x) for x in (out.get("citations") or [])]
             expected = [str(x) for x in (ctx.expected_output or [])]
             if not expected:
                 return 0.0

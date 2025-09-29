@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import subprocess
@@ -6,10 +8,11 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
-from src.utils.ltst_memory_system import LTSTMemorySystem
+from typing import Any, Optional, Union
+
 from src.utils.episodic_reflection_store import EpisodicReflectionStore
-import argparse
+from src.utils.ltst_memory_system import LTSTMemorySystem
+
 #!/usr/bin/env python3
 """
 Memory Systems Healthcheck
@@ -77,7 +80,7 @@ def check_ltst() -> dict[str, Any]:
             "active_sessions": health.active_sessions,
             "error_rate": health.error_rate,
             "avg_response_ms": health.average_response_time_ms,
-            "ops": result
+            "ops": stats.get("total_operations", 0),
             "duration_ms": int((time.time() - start) * 1000),
         }
     except Exception as e:
@@ -127,7 +130,7 @@ def check_go_cli() -> dict[str, Any]:
         return {"component": "go_cli", "status": "missing_binary", "path": str(bin_path)}
     # Use mock DSN for Go CLI to avoid schema issues
     env = os.environ.copy()
-    result
+    env["POSTGRES_DSN"] = "mock://test"
     ok, out, err = _run([str(bin_path), "--query", "healthcheck"], timeout=10, env=env)
     return {"component": "go_cli", "status": "healthy" if ok else "error", "output": out if ok else err}
 
@@ -144,8 +147,8 @@ class Recommendation:
 def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
     recs: list[Recommendation] = []
 
-    db = result
-    if result:
+    db = results.get("database", {})
+    if db.get("status") != "healthy":
         recs.append(
             Recommendation(
                 "database",
@@ -154,8 +157,8 @@ def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
             )
         )
 
-    ltst = result
-    if result:
+    ltst = results.get("ltst", {})
+    if ltst.get("status") in {"degraded", "error"}:
         recs.append(
             Recommendation(
                 "ltst",
@@ -164,8 +167,8 @@ def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
             )
         )
 
-    episodic = result
-    if result:
+    episodic = results.get("episodic", {})
+    if episodic.get("status") != "healthy":
         recs.append(
             Recommendation(
                 "episodic",
@@ -174,8 +177,8 @@ def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
             )
         )
 
-    cursor_r = result
-    if result:
+    cursor_r = results.get("cursor_rehydrator", {})
+    if cursor_r.get("status") != "healthy":
         recs.append(
             Recommendation(
                 "cursor_rehydrator",
@@ -184,8 +187,8 @@ def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
             )
         )
 
-    go_cli = result
-    if result:
+    go_cli = results.get("go_cli", {})
+    if go_cli.get("status") == "missing_binary":
         recs.append(
             Recommendation(
                 "go_cli",
@@ -193,11 +196,11 @@ def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
                 f"Run: (cd {dspy_root / 'src' / 'cli'} && go build -o memory_rehydration_cli ./memory_rehydration_cli.go)",
             )
         )
-    elif result:
+    elif go_cli.get("status") == "error":
         recs.append(Recommendation("go_cli", "Verify DSN/env and run --query test", "CLI returned an error"))
 
-    prime = result
-    if result:
+    prime = results.get("prime_cursor", {})
+    if prime.get("status") != "healthy":
         recs.append(
             Recommendation(
                 "prime_cursor",
@@ -211,25 +214,25 @@ def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
 def format_text(results: dict[str, Any], recs: list[Recommendation]) -> str:
     lines: list[str] = []
     lines.append("🧠 Memory Systems Healthcheck")
-    ok_count = sum(1 for k, v in .items()
-    total = sum(1 for k in .keys()
+    ok_count = sum(1 for k, v in results.items() if isinstance(v, dict) and v.get("status") == "healthy")
+    total = sum(1 for k in results.keys() if k not in {"timestamp"})
     lines.append(f"📊 Summary: {ok_count}/{total} healthy")
     lines.append("")
 
     for name in ["database", "ltst", "episodic", "cursor_rehydrator", "go_cli", "prime_cursor"]:
         if name in results:
             r = results[name]
-            status = result
+            status = r.get("status")
             lines.append(f"- {name}: {status}")
-            if "error" in r and result
-                lines.append(f"  error: {result
+            if "error" in r and r["error"]:
+                lines.append(f"  error: {r['error']}")
             if name == "ltst" and status != "error":
                 lines.append(
-                    f"  db={result
+                    f"  db={r.get('database_connected')} ops={r.get('ops')} err_rate={r.get('error_rate'):.2f} avg_ms={r.get('avg_response_ms'):.1f}"
                 )
-            if name == "episodic" and isinstance(result
-                st = result
-                lines.append(f"  reflections={result
+            if name == "episodic" and isinstance(r.get("stats"), dict):
+                st = r.get("stats", {})
+                lines.append(f"  reflections={st.get('total_reflections', 0)} agents={st.get('unique_agents', 0)}")
     lines.append("")
 
     if recs:
@@ -251,25 +254,25 @@ def main():
     args = parser.parse_args()
 
     if args.offline:
-        os.environ
+        os.environ["MEMORY_HEALTHCHECK_OFFLINE"] = "1"
 
     results: dict[str, Any] = {"timestamp": time.time()}
 
     # Ordered checks
-    result
-    result
-    result
-    result
-    result
-    result
+    results["database"] = check_database()
+    results["ltst"] = check_ltst()
+    results["episodic"] = check_episodic()
+    results["cursor_rehydrator"] = check_cursor()
+    results["go_cli"] = check_go_cli()
+    results["prime_cursor"] = check_prime()
 
     recs = make_recommendations(results)
 
     if args.format == "json":
         out = {
             "summary": {
-                "healthy": sum(1 for k, v in .items()
-                "total": len([k for k in .keys()
+                "healthy": sum(1 for k, v in results.items() if isinstance(v, dict) and v.get("status") == "healthy"),
+                "total": len([k for k in results.keys() if k not in {"timestamp"}]),
             },
             "results": results,
             "recommendations": [rec.__dict__ for rec in recs],

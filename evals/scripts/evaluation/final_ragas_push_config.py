@@ -1,7 +1,9 @@
 from __future__ import annotations
+
+import argparse
 import logging
 import os
-import argparse
+
 #!/usr/bin/env python3
 """
 Final RAGAS Push Configuration
@@ -108,7 +110,7 @@ class FinalRAGASPushConfig:
         config = self.move_configs[move_name].copy()
 
         # Apply to environment
-        for key, value in .items()
+        for key, value in config.items():
             os.environ[key] = str(value)
 
         logger.info(f"✅ Applied {move_name} configuration: {len(config)} parameters")
@@ -120,7 +122,7 @@ class FinalRAGASPushConfig:
 
         # Apply recall health first (foundation)
         logger.info("🏗️ Applying recall health foundation...")
-        result
+        applied_configs["recall_health"] = self.apply_move("recall_health")
 
         # Apply moves in sequence
         for move in ["move1", "move2", "move3"]:
@@ -170,7 +172,7 @@ class FinalRAGASPushConfig:
         targets = self.get_ragas_targets()
         validation = {}
 
-        for metric, target in .items()
+        for metric, target in targets.items():
             if metric in results:
                 validation[metric] = results[metric] >= target
             else:
@@ -182,15 +184,15 @@ class FinalRAGASPushConfig:
         """Get recommended next actions based on validation results."""
         actions = []
 
-        if not result
+        if not validation.get("precision", False):
             actions.append(
                 "Apply precision fallback: Drop TARGET_K_STRONG by 1 or raise EVIDENCE_COVERAGE to 0.22 for risky sentences"
             )
 
-        if not result
+        if not validation.get("recall_at_20", False):
             actions.append("Apply recall fallback: Raise CONTEXT_TOPK to 18 only when REWRITE_AGREE_STRONG ≥ 0.50")
 
-        if all(.values()
+        if all(validation.values()):
             actions.append("🎉 SUCCESS: All RAGAS targets met! Repeat once (two-run rule) and raise Haiku floors")
 
         return actions
@@ -214,20 +216,20 @@ def main():
     if args.targets:
         targets = config_manager.get_ragas_targets()
         print("🎯 RAGAS Target Metrics:")
-        for metric, target in .items()
+        for metric, target in targets.items():
             print(f"  {metric}: {target}")
         return
 
     if args.fallbacks:
         fallbacks = config_manager.get_fallback_configs()
         print("🔄 Fallback Configurations:")
-        for scenario, config in .items()
+        for scenario, config in fallbacks.items():
             print(f"  {scenario}: {config}")
         return
 
     if args.telemetry:
         telemetry_config = config_manager.get_telemetry_config()
-        for key, value in .items()
+        for key, value in telemetry_config.items():
             os.environ[key] = value
         print("📊 Telemetry configuration enabled")
 
@@ -239,12 +241,12 @@ def main():
     elif args.all_moves:
         applied_configs = config_manager.apply_all_moves()
         print("✅ Applied all moves configuration")
-        total_params = sum(len(config) for config in .values()
+        total_params = sum(len(config) for config in applied_configs.values())
         print(f"📊 Total parameters set: {total_params}")
 
         # Enable telemetry
         telemetry_config = config_manager.get_telemetry_config()
-        for key, value in .items()
+        for key, value in telemetry_config.items():
             os.environ[key] = value
         print("📊 Telemetry enabled")
 

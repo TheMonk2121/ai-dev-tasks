@@ -1,12 +1,15 @@
 from __future__ import annotations
+
+import argparse
 import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 import numpy as np
 from ragchecker_enhanced_with_limit_features import EnhancedRAGCheckerWithLimitFeatures
-import argparse
+
 #!/usr/bin/env python3
 """
 RAGChecker Precision Optimization
@@ -80,18 +83,18 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
         }
 
         # Apply configuration
-        for key, value in .items()
+        for key, value in precision_config.items():
             os.environ[key] = value
             print(f"Set {key}={value}")
 
         # Update internal configuration
-        self.result
-        self.result
-        self.result
-        self.result
-        self.result
-        self.result
-        self.result
+        self.geometry_router["margin_threshold"] = float(precision_config["RAGCHECKER_ROUTE_BM25_MARGIN"])
+        self.geometry_router["agreement_threshold"] = float(precision_config["RAGCHECKER_REWRITE_AGREE_STRONG"])
+        self.facet_selector["max_facets"] = int(precision_config["RAGCHECKER_REWRITE_K"])
+        self.facet_selector["keep_facets"] = int(precision_config["RAGCHECKER_REWRITE_KEEP"])
+        self.facet_selector["min_yield"] = float(precision_config["RAGCHECKER_REWRITE_YIELD_MIN"])
+        self.support_validator["evidence_jaccard"] = float(precision_config["RAGCHECKER_EVIDENCE_JACCARD"])
+        self.support_validator["evidence_coverage"] = float(precision_config["RAGCHECKER_EVIDENCE_COVERAGE"])
 
     def _apply_support_validation(self, docs: list[dict[str, Any]], query: str) -> list[dict[str, Any]]:
         """Apply enhanced support validation with precision focus."""
@@ -105,7 +108,7 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
 
             # Apply stricter two-of-three rule
             votes = 0
-            if jaccard >= self.result
+            if jaccard >= self.support_validator["evidence_jaccard"]:
                 votes += 1
             if rouge_l >= 0.22:  # Higher ROUGE floor
                 votes += 1
@@ -122,14 +125,14 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
 
     def _validate_numeric_entity_match_strict(self, doc: dict[str, Any], query: str) -> bool:
         """Apply stricter numeric and entity validation."""
-        if self.result
-            has_numbers = any(c.isdigit() for c in result.items()
+        if self.support_validator["numeric_must_match"]:
+            has_numbers = any(c.isdigit() for c in doc["content"])
             if has_numbers:
                 # Stricter validation - require 2+ evidence spans
                 return np.random.choice([True, False], p=[0.6, 0.4])
 
-        if self.result
-            has_entities = any(word.istitle() for word in result.items()
+        if self.support_validator["entity_must_match"]:
+            has_entities = any(word.istitle() for word in doc["content"].split())
             if has_entities:
                 # Stricter validation - require 2+ evidence spans
                 return np.random.choice([True, False], p=[0.5, 0.5])
@@ -160,11 +163,11 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
         for facet in facets:
             for i in range(2):  # Reduced from 3
                 doc = {
-                    "id": f"facet_{result
-                    "content": f"Facet {result
+                    "id": f"facet_{facet['id']}_doc_{i}",
+                    "content": f"Facet {facet['id']} content for {query} - document {i}",
                     "score": np.random.uniform(0.5, 0.8),
                     "has_query_anchors": np.random.choice([True, False], p=[0.7, 0.3]),
-                    "source": f"facet_{result
+                    "source": f"facet_{facet['id']}",
                 }
                 facet_docs.append(doc)
 
@@ -174,10 +177,10 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
 
         # Apply stricter anchor boost and facet downweight
         for doc in fused_docs:
-            if not result
-                result
+            if not doc["has_query_anchors"]:
+                doc["score"] *= float(os.getenv("RAGCHECKER_FACET_DOWNWEIGHT_NO_ANCHOR", "0.70"))
             else:
-                result
+                doc["score"] *= float(os.getenv("RAGCHECKER_BM25_BOOST_ANCHORS", "1.8"))
 
         # Apply stricter MMR diversification
         diversified_docs = self._apply_mmr_diversification(fused_docs, query)
@@ -219,17 +222,17 @@ def main():
     result = evaluator.create_fallback_evaluation_with_limit_features(test_data)
 
     print("\n📊 Precision-Optimized Evaluation Results:")
-    overall = result
-    print(f"   Precision: {result
-    print(f"   Recall: {result
-    print(f"   F1 Score: {result
+    overall = result["overall_metrics"]
+    print(f"   Precision: {overall['precision']:.3f} (target: ≥0.20)")
+    print(f"   Recall: {overall['recall']:.3f}")
+    print(f"   F1 Score: {overall['f1_score']:.3f}")
 
     print("\n🎯 Precision Optimization Features:")
-    features = result
-    print(f"   Evidence Jaccard: {result
-    print(f"   Evidence Coverage: {result
-    print(f"   Facet Min Yield: {result
-    print(f"   Geometry Margin: {result
+    features = result["limit_features"]
+    print(f"   Evidence Jaccard: {features['support_validator']['evidence_jaccard']}")
+    print(f"   Evidence Coverage: {features['support_validator']['evidence_coverage']}")
+    print(f"   Facet Min Yield: {features['facet_selector']['min_yield']}")
+    print(f"   Geometry Margin: {features['geometry_router']['margin_threshold']}")
 
     # Save results if requested
     if args.output:
