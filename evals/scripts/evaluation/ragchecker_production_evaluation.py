@@ -162,32 +162,47 @@ class ProductionRAGASEvaluator:
         rouge_threshold = float(os.getenv("ROUGE_FLOOR", "0.20"))
         cosine_threshold = float(os.getenv("COS_FLOOR", "0.58"))
 
+        # Extract scores from signals
+        jaccard_score = signals.get("jaccard", 0.0)
+        rouge_score = signals.get("rouge", 0.0)
+        cosine_score = signals.get("cosine", 0.0)
+
         # Count passing signals
-        jaccard_pass = result
-        rouge_pass = result
-        cosine_pass = result
+        jaccard_pass = jaccard_score >= jaccard_threshold
+        rouge_pass = rouge_score >= rouge_threshold
+        cosine_pass = cosine_score >= cosine_threshold
 
         passing_signals = sum([jaccard_pass, rouge_pass, cosine_pass])
 
         if is_risky:
             # Risky sentences: require 3-of-3 signals
             required_signals = 3
-            self.result
+            self.risky_cases.append({
+                "jaccard_pass": jaccard_pass,
+                "rouge_pass": rouge_pass,
+                "cosine_pass": cosine_pass,
+                "passing_signals": passing_signals,
+                "required_signals": required_signals
+            })
             if passing_signals >= required_signals:
-                self.result
+                self.risky_passed += 1
                 return True
             else:
-                self.result
                 return False
         else:
             # Non-risky sentences: require 2-of-3 signals
             required_signals = 2
-            self.result
+            self.non_risky_cases.append({
+                "jaccard_pass": jaccard_pass,
+                "rouge_pass": rouge_pass,
+                "cosine_pass": cosine_pass,
+                "passing_signals": passing_signals,
+                "required_signals": required_signals
+            })
             if passing_signals >= required_signals:
-                self.result
+                self.non_risky_passed += 1
                 return True
             else:
-                self.result
                 return False
 
     def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
@@ -247,18 +262,18 @@ class ProductionRAGASEvaluator:
         if self.config_manager:
             applied_configs = self.config_manager.apply_production_config()
             print(
-                f"📊 Applied production configuration: {sum(len(config) for config in .values()
+                f"📊 Applied production configuration: {sum(len(config) for config in applied_configs.values())}"
             )
 
             # Enable telemetry
             telemetry_config = self.config_manager.get_telemetry_config()
-            for key, value in .items()
+            for key, value in telemetry_config.items():
                 os.environ[key] = value
             print("📊 Telemetry enabled")
 
             # Validate configuration
             validation = self.config_manager.validate_config()
-            invalid_sections = [section for section, valid in .items()
+            invalid_sections = [section for section, valid in validation.items() if not valid]
             if invalid_sections:
                 print(f"⚠️ Invalid configuration sections: {invalid_sections}")
             else:
@@ -275,8 +290,8 @@ class ProductionRAGASEvaluator:
 
             # Harden: if metrics are missing or cases are zero, re-evaluate via fallback
             try:
-                missing_overall = not isinstance(result
-                zero_cases = not result
+                missing_overall = not isinstance(results, dict) or "overall_metrics" not in results
+                zero_cases = results.get("total_cases", 0) == 0
             except Exception:
                 missing_overall, zero_cases = True, True
 
@@ -285,11 +300,11 @@ class ProductionRAGASEvaluator:
                 try:
                     input_data = base_evaluator.prepare_official_input_data()
                     results = base_evaluator.create_fallback_evaluation(
-                        result
+                        input_data
                         if isinstance(input_data, dict) and "results" in input_data
                         else input_data
                     )
-                    result
+                    print("✅ Fallback evaluation completed")
                 except Exception as e:
                     print(f"❌ Fallback evaluation failed: {e}")
                     results = self._run_basic_evaluation()
@@ -299,40 +314,43 @@ class ProductionRAGASEvaluator:
 
         # Add production-specific metrics
         try:
-            result
-        except Exception:
-            result
+            results["production_metrics"] = self._calculate_production_metrics(results)
+        except Exception as e:
+            print(f"⚠️ Could not calculate production metrics: {e}")
+            results["production_metrics"] = {}
+
         try:
-            result
-        except Exception:
-            result
+            results["telemetry_data"] = self._collect_telemetry_data()
+        except Exception as e:
+            print(f"⚠️ Could not collect telemetry data: {e}")
+            results["telemetry_data"] = {}
 
         # Validate against RAGAS targets
         if self.config_manager:
             validation = self.config_manager.validate_config()
-            result
+            results["config_validation"] = validation
 
             targets = self.config_manager.get_ragas_targets()
-            result
+            results["ragas_targets"] = targets
 
             # Check if results meet targets
             if "overall_metrics" in results:
-                metrics = result
+                metrics = results["overall_metrics"]
                 target_validation = {}
-                for metric, target in .items()
+                for metric, target in targets.items():
                     if metric in metrics:
                         target_validation[metric] = metrics[metric] >= target
                     else:
                         target_validation[metric] = False
-                result
+                results["target_validation"] = target_validation
 
         # Normalize result shape so downstream tools never see empty/unknown metadata
         if not isinstance(results, dict):
             results = {}
-        cases = result
+        cases = results.get("cases", [])
         if not isinstance(cases, list):
             cases = []
-            result
+            results["cases"] = cases
         results.setdefault("total_cases", len(cases))
         results.setdefault("evaluation_type", "production_ragas")
 
@@ -349,22 +367,24 @@ class ProductionRAGASEvaluator:
             "evaluation_mode": "basic_fallback",
         }
 
-    def _calculate_production_metrics(self) -> dict[str, Any]:
+    def _calculate_production_metrics(self, results: dict[str, Any]) -> dict[str, Any]:
         """Calculate production-specific metrics."""
         metrics = {}
 
         # Risk-aware metrics
-        risky_total = len(self.result
-        risky_passed = len(self.result
+        risky_cases = results.get("risky_cases", [])
+        risky_total = len(risky_cases)
+        risky_passed = len([case for case in risky_cases if case.get("passed", False)])
         risky_pass_rate = risky_passed / risky_total if risky_total > 0 else 0.0
 
-        non_risky_total = len(self.result
-        non_risky_passed = len(self.result
+        non_risky_cases = results.get("non_risky_cases", [])
+        non_risky_total = len(non_risky_cases)
+        non_risky_passed = len([case for case in non_risky_cases if case.get("passed", False)])
         non_risky_pass_rate = non_risky_passed / non_risky_total if non_risky_total > 0 else 0.0
 
-        result
-        result
-        result
+        metrics["risky_pass_rate"] = risky_pass_rate
+        metrics["non_risky_pass_rate"] = non_risky_pass_rate
+        metrics["overall_pass_rate"] = (
             (risky_passed + non_risky_passed) / (risky_total + non_risky_total)
             if (risky_total + non_risky_total) > 0
             else 0.0
@@ -373,37 +393,44 @@ class ProductionRAGASEvaluator:
         # Cross-encoder metrics
         if self.cross_encoder:
             ce_stats = self.cross_encoder.get_cache_stats()
-            result
-            result
-            result
+            metrics["ce_hit_rate"] = ce_stats.get("hit_rate", 0.0)
+            metrics["ce_cache_size"] = ce_stats.get("cache_size", 0)
+            metrics["ce_total_queries"] = ce_stats.get("total_queries", 0)
         else:
-            result
-            result
-            result
+            metrics["ce_hit_rate"] = 0.0
+            metrics["ce_cache_size"] = 0
+            metrics["ce_total_queries"] = 0
 
         # NLI gate metrics
         if self.nli_gate:
             nli_stats = self.nli_gate.get_cache_stats()
-            result
-            result
-            result
+            metrics["nli_hit_rate"] = nli_stats.get("hit_rate", 0.0)
+            metrics["nli_cache_size"] = nli_stats.get("cache_size", 0)
+            metrics["nli_total_queries"] = nli_stats.get("total_queries", 0)
         else:
-            result
-            result
-            result
+            metrics["nli_hit_rate"] = 0.0
+            metrics["nli_cache_size"] = 0
+            metrics["nli_total_queries"] = 0
 
         return metrics
 
-    def _get_telemetry_summary(self) -> dict[str, Any]:
-        """Get summary of telemetry data."""
-        summary = {}
-        for key, values in self..items()
-            if values:
-                summary[key] = {
-                    "count": len(values),
-                    "total": sum(values) if isinstance(result
-                }
-        return summary
+    def _collect_telemetry_data(self) -> dict[str, Any]:
+        """Collect telemetry data from various sources."""
+        telemetry = {}
+
+        # Collect telemetry from cross-encoder if available
+        if self.cross_encoder:
+            telemetry["cross_encoder"] = self.cross_encoder.get_cache_stats()
+
+        # Collect telemetry from NLI gate if available
+        if self.nli_gate:
+            telemetry["nli_gate"] = self.nli_gate.get_cache_stats()
+
+        # Collect telemetry from config manager if available
+        if self.config_manager:
+            telemetry["config"] = self.config_manager.get_telemetry_config()
+
+        return telemetry
 
 def main():
     """Main function for production RAGAS evaluation."""
@@ -435,11 +462,11 @@ def main():
         }
 
         print("📊 Component Availability:")
-        for component, available in .items()
+        for component, available in components.items():
             status = "✅ Available" if available else "❌ Not Available"
             print(f"  {component}: {status}")
 
-        if all(.values()
+        if all(components.values()):
             print("🎉 All components available - ready for production RAGAS evaluation!")
         else:
             print("⚠️ Some components missing - evaluation may use fallbacks")
@@ -451,10 +478,8 @@ def main():
         print("⛔ Forcing simplified in-process fallback evaluation")
         base = OfficialRAGCheckerEvaluator()
         input_data = base.prepare_official_input_data()
-        results = base.create_fallback_evaluation(
-            result
-        )
-        result
+        results = base.create_fallback_evaluation(input_data)
+        print("✅ Fallback evaluation completed")
     else:
         results = evaluator.run_production_evaluation()
 
@@ -466,28 +491,28 @@ def main():
 
     # Print summary
     if "overall_metrics" in results:
-        metrics = result
+        metrics = results["overall_metrics"]
         print("\n📈 Production RAGAS Results:")
-        print(f"  Precision: {result
-        print(f"  Recall: {result
-        print(f"  F1 Score: {result
-        print(f"  Faithfulness: {result
-        print(f"  Unsupported: {result
+        print(f"  Precision: {metrics.get('precision', 0.0):.3f}")
+        print(f"  Recall: {metrics.get('recall', 0.0):.3f}")
+        print(f"  F1 Score: {metrics.get('f1_score', 0.0):.3f}")
+        print(f"  Faithfulness: {metrics.get('faithfulness', 0.0):.3f}")
+        print(f"  Unsupported: {metrics.get('unsupported_percent', 0.0):.1f}%")
 
         # Show target validation
         if "target_validation" in results:
-            validation = result
+            validation = results["target_validation"]
             print("\n🎯 RAGAS Target Validation:")
-            for metric, passed in .items()
+            for metric, passed in validation.items():
                 status = "✅ PASS" if passed else "❌ FAIL"
                 print(f"  {metric}: {status}")
 
             # Show next actions if targets not met
-            if not all(.values()
+            if not all(validation.values()):
                 print("\n🔄 Next Actions:")
-                if not result
+                if not validation.get("precision", False):
                     print("  • Apply precision knob: --precision-knob ce_weight_boost")
-                if not result
+                if not validation.get("recall", False):
                     print("  • Apply recall knob: --recall-knob adaptive_topk")
 
 if __name__ == "__main__":

@@ -1,18 +1,22 @@
-from __future__ import annotations
-import sys
-import boto3
-from botocore.exceptions import ClientError, NoCredentialsError, PartialCredentialsError
-import os
 #!/usr/bin/env python3
 """
 AWS Bedrock Connection Test Script
 Tests basic connectivity and Claude 3.5 Sonnet model access
 """
 
+from __future__ import annotations
+
+import os
+import sys
+
+import boto3
+from botocore.exceptions import ClientError, NoCredentialsError, PartialCredentialsError
+
+
 def test_aws_credentials() -> bool:
     """Test if AWS credentials are properly configured."""
     print("🔐 Testing AWS credentials...")
-:
+
     try:
         # Try to get AWS credentials
         session = boto3.Session()
@@ -32,10 +36,10 @@ def test_aws_credentials() -> bool:
         # Test basic AWS connectivity with STS
         sts_client = boto3.client("sts")
         identity = sts_client.get_caller_identity()
-        print(f"✅ AWS identity verified: {result
+        print(f"✅ AWS identity verified: {identity['Arn']}")
 
         return True
-)
+
     except (NoCredentialsError, PartialCredentialsError) as e:
         print(f"❌ AWS credential error: {e}")
         return False
@@ -58,32 +62,32 @@ def test_bedrock_access() -> bool:
         print("📋 Listing available foundation models...")
         response = bedrock_client.list_foundation_models()
 
-        models = result
+        models = response['modelSummaries']
         print(f"✅ Found {len(models)} available models")
 
         # Check for Claude 3.5 Sonnet specifically
         claude_models = [
             model
             for model in models
-            if "claude" in result
-        ]:
-:
+            if "claude" in model['modelId'].lower()
+        ]
+
         if claude_models:
             for model in claude_models:
-                model_id = result
-                print(f"✅ Claude 3.5 Sonnet available: {model_id}")
+                model_id = model['modelId']
+                print(f"✅ Claude model available: {model_id}")
             return True
         else:
-            print("❌ Claude 3.5 Sonnet not found in available models")
+            print("❌ Claude models not found in available models")
             print("💡 Available Claude models:")
-            claude_all = [model for model in models if "claude" in result:
+            claude_all = [model for model in models if "claude" in model['modelId'].lower()]
             for model in claude_all[:5]:  # Show first 5
-                print(f"   - {result
+                print(f"   - {model['modelId']}")
             return False
 
     except ClientError as e:
-        error_code = e.result
-        if error_code == "UnauthorizedOperation":)
+        error_code = e.response['Error']['Code']
+        if error_code == "UnauthorizedOperation":
             print("❌ Access denied to Bedrock service")
             print("💡 Ensure your AWS account has Bedrock access enabled")
             print("💡 Check IAM permissions for bedrock:ListFoundationModels")
@@ -100,7 +104,7 @@ def test_bedrock_runtime() -> bool:
 
     try:
         # Create Bedrock Runtime client
-        boto3.client("bedrock-runtime", region_name="us-east-1")
+        bedrock_runtime_client = boto3.client("bedrock-runtime", region_name="us-east-1")
 
         # Test with a simple prompt (without actually invoking to avoid costs)
         print("✅ Bedrock Runtime client created successfully")
@@ -140,8 +144,8 @@ def main():
     print("=" * 50)
 
     all_passed = True
-    for test_name, passed in .items()
-        status = "✅ PASS" if passed else "❌ FAIL":
+    for test_name, passed in results.items():
+        status = "✅ PASS" if passed else "❌ FAIL"
         print(f"{test_name}: {status}")
         if not passed:
             all_passed = False

@@ -166,6 +166,24 @@ def _insert_row(backlog_id: str, title: str) -> None:
     lines.insert(insert_at, new_row)
     BACKLOG_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
+def detect_duplicates(description: str, existing_titles: list[tuple[str, str]]) -> tuple[list[str], list[str]]:
+    """Detect exact and fuzzy duplicates in backlog items."""
+    exact_duplicates = []
+    fuzzy_duplicates = []
+
+    # Check for exact matches
+    for bid, title in existing_titles:
+        if description.lower().strip() == title.lower().strip():
+            exact_duplicates.append(bid)
+
+    # Check for fuzzy matches (simple similarity)
+    for bid, title in existing_titles:
+        if description.lower().strip() in title.lower().strip() or title.lower().strip() in description.lower().strip():
+            if bid not in exact_duplicates:  # Don't double-count exact matches
+                fuzzy_duplicates.append(bid)
+
+    return exact_duplicates, fuzzy_duplicates
+
 def intake(description: str, no_roadmap_advisory: bool = False) -> str:
     # Enhanced: Load ALL backlog items to check for duplicates and ID conflicts
     all_items = _load_all_backlog_ids()

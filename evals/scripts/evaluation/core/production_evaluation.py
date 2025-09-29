@@ -16,7 +16,7 @@ project_root = Path(__file__).parent.parent.resolve()
 dspy_rag_path = project_root / "dspy-rag-system"
 
 # Add paths only if not already present
-paths_to_add = [project_root, dspy_rag_path]:
+paths_to_add = [project_root, dspy_rag_path]
 for path in paths_to_add:
     path_str = str(path)
     if path_str not in sys.path:
@@ -39,7 +39,7 @@ def run_evaluation_pass(pass_name: str, config: dict[str, Any], output_file: str
     print("=" * 60)
 
     # Set environment variables for this pass
-    for key, value in .items()
+    for key, value in config.items():
         os.environ[key] = str(value)
         print(f"   {key}={value}")
 
@@ -64,7 +64,7 @@ def run_evaluation_pass(pass_name: str, config: dict[str, Any], output_file: str
                 "scripts/ragchecker_official_evaluation.py",
                 "--cases",
                 test_cases_file,
-                "--outdir",)
+                "--outdir",
                 str(pass_output_dir),
                 "--use-bedrock",
                 "--bypass-cli",
@@ -120,8 +120,8 @@ def analyze_results(results: list[dict[str, Any]]) -> dict[str, Any]:
 
     analysis = {
         "total_passes": len(results),
-        "successful_passes": sum(1 for r in results if result:
-        "failed_passes": sum(1 for r in results if result:
+        "successful_passes": sum(1 for r in results if r.get("return_code") == 0),
+        "failed_passes": sum(1 for r in results if r.get("return_code") != 0),
         "pass_criteria": {
             "oracle_retrieval_hit_prefilter": "≥ +5-15 pts vs baseline",
             "reader_used_gold": "≥ baseline",
@@ -134,22 +134,26 @@ def analyze_results(results: list[dict[str, Any]]) -> dict[str, Any]:
 
     # Check each pass
     for result in results:
-        if result:
-            print(f"✅ {result
+        if result.get("return_code") == 0:
+            print(f"✅ {result['pass_name']} completed successfully")
         else:
-            print(f"❌ {result
-            result
+            print(f"❌ {result['pass_name']} failed")
+            if "error" in result:
+                print(f"   Error: {result['error']}")
 
     # Overall assessment
-    if result:)
+    successful_count = analysis["successful_passes"]
+    total_count = analysis["total_passes"]
+
+    if successful_count == total_count:
         print("🎉 ALL PASSES SUCCESSFUL - Ready for production!")
-        result
-    elif result:
+        analysis["overall_status"] = "success"
+    elif successful_count > 0:
         print("⚠️  PARTIAL SUCCESS - Review failed passes")
-        result
+        analysis["overall_status"] = "partial"
     else:
         print("❌ ALL PASSES FAILED - Fix issues before proceeding")
-        result
+        analysis["overall_status"] = "failed"
 
     return analysis
 
@@ -194,12 +198,16 @@ def main():
 
     # Run each pass
     for i, pass_config in enumerate(passes, 1):
-        output_file = results_dir / f"pass_{i}_{result
+        output_file = results_dir / f"pass_{i}_{pass_config['name'].lower().replace(' ', '_')}.json"
 
-        print(f"\n📋 PASS {i}: {result
-        print(f"   {result
+        print(f"\n📋 PASS {i}: {pass_config['name']}")
+        print(f"   {pass_config['description']}")
 
-        result = run_evaluation_pass(result)
+        result = run_evaluation_pass(
+            pass_config['name'],
+            pass_config['config'],
+            str(output_file)
+        )
         results.append(result)
 
     # Analyze results
@@ -214,7 +222,7 @@ def main():
     print(f"📊 Analysis saved to: {analysis_file}")
 
     # Exit with appropriate code
-    if result:
+    if analysis.get("overall_status") == "success":
         print("\n🎯 NEXT STEPS:")
         print("   1. Review evaluation results")
         print("   2. Proceed with canary rollout")
