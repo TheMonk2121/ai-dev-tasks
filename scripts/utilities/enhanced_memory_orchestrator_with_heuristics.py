@@ -7,9 +7,9 @@ import time
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.enhanced_memory_orchestrator import EnhancedMemoryOrchestrator
-# from scripts.heuristics_pack_generator import HeuristicsPack, HeuristicsPackGenerator
+from scripts.core.enhanced_memory_orchestrator import EnhancedMemoryOrchestrator  # noqa: E402
+from scripts.utilities.heuristics_pack_generator import HeuristicsPack, HeuristicsPackGenerator  # noqa: E402
+
 #!/usr/bin/env python3
 """
 Enhanced Memory Orchestrator with Heuristics Pack

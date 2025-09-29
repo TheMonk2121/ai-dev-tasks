@@ -53,7 +53,7 @@ class RetrievalState(BaseModel):
 class SharedState(BaseModel):
     """Shared store passed between PocketFlow nodes."""
 
-    schema_version: Literal[SCHEMA_VERSION] = SCHEMA_VERSION
+    schema_version: Literal["2024-09-19"] = SCHEMA_VERSION
     session_id: str | None = None
     user_id: str | None = None
     idempotency_key: str | None = None

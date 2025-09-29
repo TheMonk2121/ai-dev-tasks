@@ -6,8 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.episodic_memory_mock import MockEpisodicReflectionStore
+from scripts.utilities.episodic_memory_mock import MockEpisodicReflectionStore
 
 #!/usr/bin/env python3
 """

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 import json
 import logging
@@ -9,6 +10,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Optional, Union
 from uuid import uuid4
+
 try:
     from cursor_ai_agent_types import AgentType  # type: ignore[import-untyped]
 except Exception:

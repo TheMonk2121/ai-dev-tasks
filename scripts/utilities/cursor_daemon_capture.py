@@ -28,9 +28,9 @@ class CursorDaemonCapture:
     def __init__(self, dsn_param: str | None = None) -> None:
         resolved_dsn = resolve_dsn()
         if dsn_param is not None:
-            self.dsn: Any = dsn_param
+            self.dsn = dsn_param
         else:
-            self.dsn: Any = resolved_dsn
+            self.dsn = resolved_dsn
         self.pid_file: str = os.path.expanduser("~/.cursor_capture_daemon.pid")
         self.session_file: str = os.path.expanduser("~/.cursor_active_session.json")
         self.log_file: str = os.path.expanduser("~/.cursor_capture.log")
@@ -107,7 +107,7 @@ class CursorDaemonCapture:
             if os.path.exists(self.pid_file):
                 os.remove(self.pid_file)
 
-            self.running: Any = False
+            self.running = False
             print("✅ Daemon stopped")
             return True
 
@@ -135,7 +135,7 @@ class CursorDaemonCapture:
 
     def _daemon_loop(self) -> None:
         """Main daemon loop."""
-        self.running: Any = True
+        self.running = True
         self._log("Daemon started")
 
         try:
@@ -147,7 +147,7 @@ class CursorDaemonCapture:
         except Exception as e:
             self._log(f"Daemon error: {e}")
         finally:
-            self.running: Any = False
+            self.running = False
             self._log("Daemon stopped")
 
     def _check_for_conversations(self) -> None:
@@ -156,7 +156,7 @@ class CursorDaemonCapture:
             # This is where you would implement the actual conversation detection
             # For now, we'll just maintain the session
             if not self.current_integration:
-                self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+                self.current_integration = CursorWorkingIntegration(self.dsn)
                 self._log(f"New session started: {self.current_integration.session_id}")
 
         except Exception as e:
@@ -178,7 +178,7 @@ class CursorDaemonCapture:
     ) -> str | None:
         """Capture a user query."""
         if not self.current_integration:
-            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+            self.current_integration = CursorWorkingIntegration(self.dsn)
 
         try:
             turn_id = self.current_integration.capture_user_query(query, metadata or {})
@@ -196,7 +196,7 @@ class CursorDaemonCapture:
     ) -> str | None:
         """Capture an AI response."""
         if not self.current_integration:
-            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+            self.current_integration = CursorWorkingIntegration(self.dsn)
 
         try:
             turn_id = self.current_integration.capture_ai_response(response, query_turn_id, metadata or {})

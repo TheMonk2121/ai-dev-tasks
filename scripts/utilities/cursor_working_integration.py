@@ -105,6 +105,10 @@ class CursorWorkingIntegration:
 
     def _ensure_thread_exists(self, thread_id: str) -> bool:
         """Ensure a thread exists in the database, creating it if necessary."""
+        if self.is_mock:
+            print(f"🔍 Mock: Thread {thread_id} exists (mock mode)")
+            return True
+
         try:
             with psycopg.connect(self.dsn) as conn:
                 with conn.cursor() as cur:
@@ -311,6 +315,12 @@ class CursorWorkingIntegration:
     ) -> str | None:
         """Capture an AI response with full processing."""
         print(f"🤖 Capturing AI response: {response[:50]}...")
+
+        if self.is_mock:
+            # Return a mock turn ID for testing
+            turn_id = f"mock_turn_{self.thread_id}_{int(time.time())}_{uuid.uuid4().hex[:8]}"
+            print(f"🔍 Mock: Captured AI response: {response[:50]}... -> {turn_id}")
+            return turn_id
 
         try:
             with psycopg.connect(self.dsn) as conn:

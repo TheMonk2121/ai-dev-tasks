@@ -7,6 +7,7 @@ import logging
 import os
 import time
 import uuid
+from collections.abc import Sequence
 from dataclasses import asdict
 from datetime import UTC, datetime, timezone
 from typing import Any
@@ -106,7 +107,7 @@ def _persist_turn(state: SharedState, turn: ConversationTurn) -> ConversationTur
     return turn
 
 
-def _memory_summarizer(turns: list[ConversationTurn]) -> ConversationSummary:
+def _memory_summarizer(turns: Sequence[ConversationTurn]) -> ConversationSummary:
     memory_turns = [
         MemoryTurn(role=t.role, content=t.content, timestamp=(t.created_at.timestamp() if t.created_at else None))
         for t in turns
@@ -116,7 +117,7 @@ def _memory_summarizer(turns: list[ConversationTurn]) -> ConversationSummary:
     return ConversationSummary(text=summary_text, token_count=token_count)
 
 
-def _extract_structured_facts(turns: list[ConversationTurn], summary_text: str) -> list[dict]:
+def _extract_structured_facts(turns: Sequence[ConversationTurn], summary_text: str) -> list[dict]:
     memory_turns = [
         MemoryTurn(role=t.role, content=t.content, timestamp=(t.created_at.timestamp() if t.created_at else None))
         for t in turns
@@ -206,15 +207,16 @@ def _hybrid_retriever(state: SharedState) -> list[RetrievedHit]:
 
     hits: list[RetrievedHit] = []
     for row in rows:
-        metadata = row.get("metadata") or {}
+        raw_metadata = row.get("metadata") or {}
+        metadata = {str(k): v for k, v in raw_metadata.items()} if isinstance(raw_metadata, dict) else {}
         hits.append(
             RetrievedHit(
                 source=str(row.get("retrieval_stage") or "hybrid"),
-                score=float(row.get("rerank_score") or row.get("score") or 0.0),
-                document_id=(row.get("filename") or row.get("file_path") or None),
-                file_path=row.get("file_path"),
+                score=float(str(row.get("rerank_score") or row.get("score") or 0.0)),
+                document_id=str(row.get("filename") or row.get("file_path")) if row.get("filename") or row.get("file_path") else None,
+                file_path=str(row.get("file_path")) if row.get("file_path") else None,
                 chunk_id=str(row.get("chunk_id")) if row.get("chunk_id") is not None else None,
-                content=row.get("text_for_reader") or row.get("content") or "",
+                content=str(row.get("text_for_reader") or row.get("content") or ""),
                 metadata=metadata,
             )
         )

@@ -6,8 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.enhanced_memory_orchestrator_with_heuristics import EnhancedMemoryOrchestratorWithHeuristics
+from scripts.memory.enhanced_memory_orchestrator_with_heuristics import EnhancedMemoryOrchestratorWithHeuristics
 
 #!/usr/bin/env python3
 """

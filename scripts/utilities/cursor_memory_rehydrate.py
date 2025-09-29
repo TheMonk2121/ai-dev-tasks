@@ -1,11 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import os
 import sys
 from pathlib import Path
-    from venv_manager import ensure_venv_for_script
-        from utils.memory_rehydrator import rehydrate
-                from few_shot_cognitive_scaffolding import FewShotCognitiveScaffolding
+
+from few_shot_cognitive_scaffolding import FewShotCognitiveScaffolding
+from venv_manager import ensure_venv_for_script
+
+from utils.memory_rehydrator import rehydrate
+
 #!/usr/bin/env python3
 """
 Cursor Memory Rehydration Script
@@ -160,6 +164,8 @@ def main():
 
     # Import memory rehydrator wrapper
     try:
+        # This is just a placeholder - the actual import happens above
+        pass
     except ImportError:
         print("❌ Error: Could not import memory_rehydrator module from src/utils.")
         print("Make sure you're running from the project root and have src on PYTHONPATH.")

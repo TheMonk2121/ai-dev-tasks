@@ -10,15 +10,26 @@ from psycopg_pool import AsyncConnectionPool  # type: ignore[import-untyped]
 
 # Prefer DATABASE_URL, fallback to POSTGRES_DSN
 DB_DSN = (os.getenv("DATABASE_URL") or os.getenv("POSTGRES_DSN") or "").strip()
-if not DB_DSN:
-    raise RuntimeError("Set DATABASE_URL or POSTGRES_DSN")
 
-pool: AsyncConnectionPool = AsyncConnectionPool(
-    DB_DSN,
-    min_size=1,
-    max_size=10,
-    max_idle=300,
-)
+pool: AsyncConnectionPool | None = None
+
+def get_pool() -> AsyncConnectionPool:
+    global pool
+    if pool is not None:
+        return pool
+    if not DB_DSN:
+        raise RuntimeError("Set DATABASE_URL or POSTGRES_DSN")
+    pool = AsyncConnectionPool(
+        DB_DSN,
+        min_size=1,
+        max_size=10,
+    )
+    return pool
+
+
+# Backwards-compatible async accessor expected by tests
+async def aget_pool() -> AsyncConnectionPool:
+    return get_pool()
 
 
 def _new_id(prefix: str) -> str:

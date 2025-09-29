@@ -40,7 +40,7 @@ class CursorFileTrigger:
             print("🎯 Starting new conversation session...")
 
             # Initialize integration
-            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+            self.current_integration = CursorWorkingIntegration(self.dsn)
 
             # Save session info
             session_data = {
@@ -131,7 +131,7 @@ class CursorFileTrigger:
 
             # Close session
             self.current_integration.close_session()
-            self.current_integration: Any = None
+            self.current_integration = None
 
             # Clear session file
             if self.session_file.exists():
@@ -153,7 +153,7 @@ class CursorFileTrigger:
 
                 if session_data.get("active", False):  # type: ignore[arg-type]
                     # Recreate integration with existing session
-                    self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+                    self.current_integration = CursorWorkingIntegration(self.dsn)
                     self.current_integration.session_id = str(session_data.get("session_id", ""))
                     self.current_integration.thread_id = str(session_data.get("thread_id", ""))
                     print(f"📂 Loaded session: {session_data['session_id']}")

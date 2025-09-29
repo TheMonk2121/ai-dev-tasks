@@ -8,12 +8,9 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
-# FIXME: Update this import path after reorganization
-# from scripts.postgresql_cache_service import CacheConfig, CacheEntry, PostgreSQLCacheService
-# FIXME: Update this import path after reorganization
-# from scripts.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
+from scripts.utilities.cache_invalidation_integration import CacheInvalidationIntegration, IntegrationConfig
+from scripts.utilities.postgresql_cache_service import CacheConfig, CacheEntry, PostgreSQLCacheService
+from scripts.utilities.similarity_scoring_algorithms import SimilarityConfig, SimilarityScoringEngine
 
 #!/usr/bin/env python3
 """
@@ -375,7 +372,7 @@ class LTSTMemoryIntegration:
         """Create LTST context from cache entry"""
         return LTSTContext(
             context_id=str(cache_entry.id),
-            content=cache_entry.response,
+            content=cache_entry.response or "",
             metadata={
                 "model_type": cache_entry.model_type,
                 "tokens_used": cache_entry.tokens_used,

@@ -13,6 +13,7 @@ Provides MCP endpoints for:
 
 import argparse
 import asyncio
+import copy
 import json
 import logging
 import os
@@ -21,6 +22,8 @@ import sys
 import tempfile
 import time
 import uuid
+from dataclasses import dataclass
+from collections import OrderedDict
 from collections.abc import Mapping
 from pathlib import Path
 from typing import cast
@@ -185,11 +188,14 @@ class HealthResponse(BaseModel):
     )
 
     status: str = Field(..., description="Service status")
-    timestamp: float = Field(..., ge=0.0, description="Response timestamp")
+    timestamp: str = Field(..., min_length=1, description="Response timestamp (string)")
     service: str = Field(..., min_length=1, description="Service name")
-    uptime: str = Field(..., description="Service uptime")
+    version: str = Field(default="1.0.0", description="Service version")
+    uptime: float = Field(..., ge=0.0, description="Service uptime seconds")
     error_rate: float = Field(..., ge=0.0, le=1.0, description="Error rate (0.0-1.0)")
     cache_hit_rate: float = Field(..., ge=0.0, le=1.0, description="Cache hit rate (0.0-1.0)")
+    memory_usage: dict[str, float] = Field(default_factory=dict, description="Basic memory usage stats")
+    database_status: str = Field(default="unknown", description="Database connectivity status")
 
 
 # Global state
@@ -197,8 +203,26 @@ class HealthResponse(BaseModel):
 start_time = time.monotonic()
 request_count = 0
 error_count = 0
+# Simple in-memory cache for memory queries
+CACHE_MAX_ENTRIES = 64
+memory_query_cache: OrderedDict[tuple[str, str, tuple[str, ...]], Mapping[str, object]] = OrderedDict()
+cache_hits = 0
+cache_misses = 0
+cache_lock = asyncio.Lock()
 # Track running jobs with a minimally-typed dictionary
-JOBS: dict[str, dict[str, object]] = {}
+@dataclass
+class PrecisionEvalJob:
+    pid: int
+    process: subprocess.Popen[str]
+    stdout: str
+    stderr: str
+    start_time: float
+    timeout_sec: int
+    config_file: str
+    script: str
+
+
+JOBS: dict[str, PrecisionEvalJob] = {}
 JOB_DIR = Path(tempfile.gettempdir()) / "mcp_jobs"
 JOB_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -207,15 +231,44 @@ JOB_DIR.mkdir(parents=True, exist_ok=True)
 async def health_check():
     """Health check endpoint for Cursor integration"""
     uptime_seconds = time.monotonic() - start_time
-    uptime_str = f"{int(uptime_seconds // 86400)} days, {int((uptime_seconds % 86400) // 3600)}:{int((uptime_seconds % 3600) // 60):02d}:{int(uptime_seconds % 60):02d}"
+
+    # Basic memory snapshot (lightweight and portable)
+    try:
+        import resource  # posix-only; fallback if unavailable
+
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        rss_mb = float(getattr(usage, "ru_maxrss", 0)) / 1024.0
+        mem_info: dict[str, float] = {"rss_mb": rss_mb}
+    except Exception:
+        mem_info = {}
+
+    # Basic DB status probe (do not raise on failure)
+    db_status = "unknown"
+    try:
+        from src.common.psycopg3_config import Psycopg3Config
+
+        cfg = Psycopg3Config()
+        conn = cfg.create_connection()
+        try:
+            _ = conn.execute("SELECT 1")
+            db_status = "ok"
+        finally:
+            conn.close()
+    except Exception:
+        db_status = "degraded"
+
+    total_cache_requests = max(cache_hits + cache_misses, 1)
 
     return HealthResponse(
         status="healthy",
-        timestamp=time.time(),
+        timestamp=str(int(time.time())),
         service="mcp-memory-rehydrator",
-        uptime=uptime_str,
+        version="1.0.0",
+        uptime=uptime_seconds,
         error_rate=error_count / max(request_count, 1),
-        cache_hit_rate=0.0,  # TODO: Implement caching
+        cache_hit_rate=cache_hits / total_cache_requests,
+        memory_usage=mem_info,
+        database_status=db_status,
     )
 
 
@@ -333,9 +386,25 @@ async def query_memory_system(args: Mapping[str, object]) -> MemoryResponse:
         return MemoryResponse(success=False, data={}, error="Memory system not available")
 
     try:
+        global cache_hits, cache_misses
+
         query = cast(str, args.get("query", ""))
         role = cast(str, args.get("role", "general"))
-        systems = cast(list[str], args.get("systems", ["ltst", "cursor", "prime"]))
+
+        systems_arg = args.get("systems", ["ltst", "cursor", "prime"])
+        if isinstance(systems_arg, (list, tuple, set)):
+            systems = [str(system) for system in systems_arg]
+        else:
+            systems = ["ltst", "cursor", "prime"]
+        systems_tuple = tuple(sorted(systems))
+        cache_key = (query.strip(), role, systems_tuple)
+
+        async with cache_lock:
+            cached_bundle = memory_query_cache.get(cache_key)
+            if cached_bundle is not None:
+                cache_hits += 1
+                memory_query_cache.move_to_end(cache_key)
+                return MemoryResponse(success=True, data=copy.deepcopy(cached_bundle), error=None)
 
         # Use your existing unified orchestrator
         ltst_result = memory_orchestrator.get_ltst_memory(query, role)
@@ -350,6 +419,14 @@ async def query_memory_system(args: Mapping[str, object]) -> MemoryResponse:
             "role": role,
             "systems": systems,
         }
+
+        cache_entry = copy.deepcopy(bundle)
+        async with cache_lock:
+            cache_misses += 1
+            memory_query_cache[cache_key] = cache_entry
+            memory_query_cache.move_to_end(cache_key)
+            if len(memory_query_cache) > CACHE_MAX_ENTRIES:
+                memory_query_cache.popitem(last=False)
 
         return MemoryResponse(success=True, data=bundle, error=None)
     except Exception as e:
@@ -427,16 +504,21 @@ async def run_precision_evaluation(args: Mapping[str, object]) -> MemoryResponse
                 env=env,
             )
 
-            JOBS[job_id] = {
-                "pid": proc.pid,
-                "process": proc,
-                "stdout": str(stdout_path),
-                "stderr": str(stderr_path),
-                "start_time": asyncio.get_event_loop().time() if asyncio.get_event_loop().is_running() else 0,
-                "timeout_sec": timeout_sec,
-                "config_file": config_file,
-                "script": script,
-            }
+            try:
+                loop_time = asyncio.get_running_loop().time()
+            except RuntimeError:
+                loop_time = time.monotonic()
+
+            JOBS[job_id] = PrecisionEvalJob(
+                pid=proc.pid,
+                process=proc,
+                stdout=str(stdout_path),
+                stderr=str(stderr_path),
+                start_time=loop_time,
+                timeout_sec=timeout_sec,
+                config_file=config_file,
+                script=script,
+            )
 
             # Persist job metadata so status/result survive process reloads
             try:
@@ -491,27 +573,34 @@ async def get_precision_eval_status(args: Mapping[str, object]) -> MemoryRespons
         return MemoryResponse(success=False, data={}, error="Unknown job_id")
     job_id = cast(str, raw_job_id)
 
+    stdout_path: str = ""
+    stderr_path: str = ""
+
     if job_id in JOBS:
-        job: dict[str, object] = JOBS[job_id]
-        proc = cast(subprocess.Popen[str], job["process"])  # type: ignore[type-arg]
+        job = JOBS[job_id]
+        proc = job.process
         running = proc.poll() is None
         returncode = None if running else proc.returncode
+        stdout_path = job.stdout
+        stderr_path = job.stderr
     else:
         # Fallback to persisted store
         try:
             with open(JOB_DIR / f"{job_id}.json", encoding="utf-8") as jf:
-                job = cast(dict[str, object], json.load(jf))
+                job_data = cast(dict[str, object], json.load(jf))
         except Exception:
             return MemoryResponse(success=False, data={}, error="Unknown job_id")
         # Try to determine liveness via PID (POSIX)
         running = False
         returncode = None
         try:
-            pid = int(cast(int | str, job.get("pid", 0)))
+            pid = int(cast(int | str, job_data.get("pid", 0)))
             _ = os.kill(pid, 0)
             running = True
         except Exception:
             running = False
+        stdout_path = str(job_data.get("stdout", ""))
+        stderr_path = str(job_data.get("stderr", ""))
 
     def tail(path: str, nbytes: int = 2048) -> str:
         try:
@@ -529,8 +618,8 @@ async def get_precision_eval_status(args: Mapping[str, object]) -> MemoryRespons
             "job_id": job_id,
             "running": running,
             "returncode": returncode,
-            "stdout_tail": tail(str(job.get("stdout", ""))),
-            "stderr_tail": tail(str(job.get("stderr", ""))),
+            "stdout_tail": tail(stdout_path),
+            "stderr_tail": tail(stderr_path),
         },
         error=None,
     )
@@ -543,25 +632,27 @@ async def get_precision_eval_result(args: Mapping[str, object]) -> MemoryRespons
     job_id = cast(str, raw_job_id)
 
     rc: int | None = None
-    job: dict[str, object] | None = None
+    job_dict: dict[str, object] | None = None
+    job_obj: PrecisionEvalJob | None = None
     if job_id in JOBS:
-        job = JOBS[job_id]
-        proc = cast(subprocess.Popen[str], job["process"])  # type: ignore[type-arg]
+        job_obj = JOBS[job_id]
+        proc = job_obj.process
         if proc.poll() is None:
             return MemoryResponse(success=False, data={}, error="Job is still running")
         rc = proc.returncode
     else:
         try:
             with open(JOB_DIR / f"{job_id}.json", encoding="utf-8") as jf:
-                job = cast(dict[str, object], json.load(jf))
+                job_dict = cast(dict[str, object], json.load(jf))
         except Exception:
             return MemoryResponse(success=False, data={}, error="Unknown job_id")
 
     try:
-        assert job is not None, "Job should not be None"
-        with open(str(job.get("stdout", "")), encoding="utf-8", errors="replace") as fo:
+        stdout_path = job_obj.stdout if job_obj else str(job_dict.get("stdout", ""))
+        stderr_path = job_obj.stderr if job_obj else str(job_dict.get("stderr", ""))
+        with open(stdout_path, encoding="utf-8", errors="replace") as fo:
             stdout = fo.read()
-        with open(str(job.get("stderr", "")), encoding="utf-8", errors="replace") as fe:
+        with open(stderr_path, encoding="utf-8", errors="replace") as fe:
             stderr = fe.read()
     except Exception as e:
         stdout, stderr = "", f"Failed to read logs: {e}"
@@ -573,7 +664,7 @@ async def get_precision_eval_result(args: Mapping[str, object]) -> MemoryRespons
             "returncode": rc,
             "stdout": stdout,
             "stderr": stderr,
-            "config_file": job.get("config_file") if job else None,
+            "config_file": job_obj.config_file if job_obj else job_dict.get("config_file") if job_dict else None,
         },
         error=stderr if rc not in (None, 0) else None,
     )
@@ -585,7 +676,7 @@ async def cancel_precision_eval(args: Mapping[str, object]) -> MemoryResponse:
     if not job_id or job_id not in JOBS:
         return MemoryResponse(success=False, data={}, error="Unknown job_id")
     job = JOBS[job_id]
-    proc = cast(subprocess.Popen[str], job["process"])  # type: ignore[type-arg]
+    proc = job.process
     if proc.poll() is None:
         try:
             proc.terminate()
@@ -1071,21 +1162,20 @@ async def record_chat_history(args: Mapping[str, object]) -> MemoryResponse:
 
         # Use the existing cursor integration methods for compatibility
         try:
-            # Record user input
-            _ = cursor_integration.capture_user_query(user_input)
+            # Record user input and get turn ID
+            query_turn_id = cursor_integration.capture_user_query(user_input)
 
-            # Record AI response
-            _ = cursor_integration.capture_ai_response(system_output)
-
-            # Generate turn IDs for compatibility
-            query_turn_id = f"turn_{uuid.uuid4().hex[:8]}"
-            response_turn_id = f"turn_{uuid.uuid4().hex[:8]}"
+            # Record AI response and get turn ID
+            response_turn_id = cursor_integration.capture_ai_response(system_output)
         except Exception as e:
             return MemoryResponse(success=False, data={}, error=str(e))
 
         # Also write to .chat_history file for compatibility
         chat_history_file = Path(project_dir) / ".chat_history"
         timestamp = int(time.time())
+
+        # Ensure the directory exists
+        chat_history_file.parent.mkdir(parents=True, exist_ok=True)
 
         # Create or append to .chat_history file
         with open(chat_history_file, "a", encoding="utf-8") as f:

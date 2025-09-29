@@ -6,7 +6,8 @@ import sys
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# from src.utils.episodic_reflection_store import EpisodicReflectionStore, create_episodic_reflections_table
+from scripts.utilities.episodic_memory_mock import MockEpisodicReflectionStore  # noqa: E402
+
 #!/usr/bin/env python3
 """
 Episodic Memory Integration
@@ -24,12 +25,7 @@ dspy_rag_path = project_root / "dspy-rag-system"
 if str(dspy_rag_path) not in sys.path:
     sys.path.insert(0, str(dspy_rag_path))
 
-try:
-
-    EPISODIC_AVAILABLE = True
-except ImportError as e:
-    print(f"⚠️  Could not import episodic reflection store: {e}")
-    EPISODIC_AVAILABLE = False
+EPISODIC_AVAILABLE = True
 
 class EpisodicMemoryIntegration:
     """Integrates episodic memory with existing workflows."""
@@ -39,7 +35,7 @@ class EpisodicMemoryIntegration:
         self.store = None
         if EPISODIC_AVAILABLE:
             try:
-                self.store = EpisodicReflectionStore()
+                self.store = MockEpisodicReflectionStore()
             except Exception as e:
                 print(f"⚠️  Could not initialize episodic store: {e}")
 
@@ -49,16 +45,9 @@ class EpisodicMemoryIntegration:
             print("❌ Episodic memory not available")
             return False
 
-        try:
-            success = create_episodic_reflections_table()
-            if success:
-                print("✅ Episodic reflections table created successfully")
-            else:
-                print("❌ Failed to create episodic reflections table")
-            return success
-        except Exception as e:
-            print(f"❌ Database setup failed: {e}")
-            return False
+        # Mock mode: no database setup required
+        print("ℹ️  Episodic reflections use mock store; no DB setup needed")
+        return True
 
     def store_task_completion(
         self,

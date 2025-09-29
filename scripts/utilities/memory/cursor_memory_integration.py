@@ -75,7 +75,7 @@ class CursorMemoryIntegration:
                                 meta = {}
                         elif isinstance(metadata, str):
                             try:
-                                meta: Any = json.loads(metadata)
+                                meta = json.loads(metadata)
                             except Exception:
                                 meta = {}
                         elif isinstance(metadata, dict):

@@ -7,10 +7,8 @@ import time
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.enhanced_memory_orchestrator import EnhancedMemoryOrchestrator
-# FIXME: Update this import path after reorganization
-# from scripts.heuristics_pack_generator import HeuristicsPack, HeuristicsPackGenerator
+from scripts.core.enhanced_memory_orchestrator import EnhancedMemoryOrchestrator
+from scripts.utilities.heuristics_pack_generator import HeuristicsPack, HeuristicsPackGenerator
 
 #!/usr/bin/env python3
 """

@@ -41,8 +41,8 @@ class SimpleAutoCapture:
             print("🎯 Starting conversation capture...")
 
             # Initialize new integration
-            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
-            self.capture_active: Any = True
+            self.current_integration = CursorWorkingIntegration(self.dsn)
+            self.capture_active = True
 
             # Save session info
             self._save_session()
@@ -77,8 +77,8 @@ class SimpleAutoCapture:
                 # Close session
                 self.current_integration.close_session()
 
-            self.capture_active: Any = False
-            self.current_integration: Any = None
+            self.capture_active = False
+            self.current_integration = None
 
             # Clear session file
             self._clear_session()
@@ -230,8 +230,8 @@ def main() -> None:
                 print("✅ Test capture successful!")
 
                 # Show status
-                status: Any = auto_capture.get_status()
-                print(f"📊 Status: {status}")
+                status_data = auto_capture.get_status()
+                print(f"📊 Status: {status_data}")
             else:
                 print("❌ Failed to capture response")
         else:

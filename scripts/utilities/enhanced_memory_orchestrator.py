@@ -7,9 +7,9 @@ import time
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.unified_memory_orchestrator import UnifiedMemoryOrchestrator  # noqa: E402
-# from scripts.dynamic_few_shot_injector import DynamicFewShotInjector
+from scripts.utilities.ai_models.dynamic_few_shot_injector import DynamicFewShotInjector  # noqa: E402
+from scripts.utilities.unified_memory_orchestrator import UnifiedMemoryOrchestrator  # noqa: E402
+
 #!/usr/bin/env python3
 """
 Enhanced Memory Orchestrator with Episodic Context

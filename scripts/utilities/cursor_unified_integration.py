@@ -46,7 +46,7 @@ class CursorUnifiedIntegration:
             # Check if we should run consolidation
             stats = self.capture.get_session_stats()
             turn_count = stats.get("turn_count", 0)
-            if isinstance(turn_count, (int, float)) and turn_count >= self.consolidation_threshold:
+            if isinstance(turn_count, int | float) and turn_count >= self.consolidation_threshold:
                 print("🧠 Running memory consolidation...")
                 _ = self.memory.process_conversation_turns(self.capture.thread_id, self.capture.session_id)
 
@@ -68,7 +68,7 @@ class CursorUnifiedIntegration:
             # Check if we should run consolidation
             stats = self.capture.get_session_stats()
             turn_count = stats.get("turn_count", 0)
-            if isinstance(turn_count, (int, float)) and turn_count >= self.consolidation_threshold:
+            if isinstance(turn_count, int | float) and turn_count >= self.consolidation_threshold:
                 print("🧠 Running memory consolidation...")
                 _ = self.memory.process_conversation_turns(self.capture.thread_id, self.capture.session_id)
 
@@ -291,7 +291,7 @@ def main() -> None:
         role = result.get("role", "")
         content = result.get("content", "")
         similarity = result.get("similarity", 0.0)
-        if isinstance(role, str) and isinstance(content, str) and isinstance(similarity, (int, float)):
+        if isinstance(role, str) and isinstance(content, str) and isinstance(similarity, int | float):
             print(f"   {role}: {content[:60]}... (similarity: {similarity:.3f})")
         else:
             print(f"   {role}: {content} (similarity: {similarity})")

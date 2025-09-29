@@ -26,9 +26,9 @@ class CursorExtensionAPI:
     def __init__(self, dsn: str | None = None) -> None:
         resolved_dsn = resolve_dsn()
         if dsn is not None:
-            self.dsn: Any = dsn
+            self.dsn = dsn
         else:
-            self.dsn: Any = resolved_dsn
+            self.dsn = resolved_dsn
         self.session_file: str = os.path.expanduser("~/.cursor_active_session.json")
         self.current_integration: CursorWorkingIntegration | None = None
         self._load_active_session()
@@ -42,7 +42,7 @@ class CursorExtensionAPI:
 
                 if session_data.get("active", False):
                     # Recreate integration with existing session
-                    self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+                    self.current_integration = CursorWorkingIntegration(self.dsn)
                     self.current_integration.session_id = session_data["session_id"]
                     self.current_integration.thread_id = session_data["thread_id"]
         except Exception as e:
@@ -72,7 +72,7 @@ class CursorExtensionAPI:
         """Start a new conversation session."""
         try:
             # Initialize new integration
-            self.current_integration: Any = CursorWorkingIntegration(self.dsn)
+            self.current_integration = CursorWorkingIntegration(self.dsn)
 
             # Save session
             self._save_active_session()
@@ -145,7 +145,7 @@ class CursorExtensionAPI:
             self.current_integration.close_session()
 
             # Clear current integration
-            self.current_integration: Any = None
+            self.current_integration = None
             self._save_active_session()
 
             return {"success": True, "final_stats": stats, "message": "Session ended successfully"}
