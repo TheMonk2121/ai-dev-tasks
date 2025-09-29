@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import json
+import os
 import pathlib
 import sys
-import typer
-import os
 from pathlib import Path
+
+import typer
+
 #!/usr/bin/env python3
 """
 Select tests that are impacted by changed files.
@@ -31,12 +34,12 @@ def get_tests_for_files(changed_files: set[str], coverage_data: dict) -> set[str
     """Get test IDs that cover the changed files"""
     impacted_tests = set()
 
-    files = result
-    for file_path, file_data in .items()
+    files = coverage_data.get("files", coverage_data)
+    for file_path, file_data in files.items():
         # Check if this file is in our changed files
         if file_path in changed_files:
-            contexts = result
-            for line_str, tests in .items()
+            contexts = file_data.get("contexts", file_data.get("lines", {}))
+            for line_str, tests in contexts.items():
                 for test in tests:
                     # Clean up test ID format
                     test_id = test.replace("::()::", "::")
