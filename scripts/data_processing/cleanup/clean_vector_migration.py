@@ -9,6 +9,7 @@ import os
 import sys
 
 import psycopg
+from psycopg import sql
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from src.common.db_dsn import resolve_dsn
@@ -32,7 +33,7 @@ def clean_vector_migration():
 
                 for view in views_to_drop:
                     try:
-                        cur.execute(f"DROP VIEW IF EXISTS {view} CASCADE")
+                        cur.execute(sql.SQL("DROP VIEW IF EXISTS {} CASCADE").format(sql.Identifier(view)))
                         print(f"   ✅ {view}: Dropped view")
                     except Exception as e:
                         print(f"   ⚠️  {view}: Could not drop view: {e}")
@@ -151,13 +152,13 @@ def clean_vector_migration():
                     table_name = table_info["name"]
                     try:
                         # Drop old table
-                        cur.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE")
+                        cur.execute(sql.SQL("DROP TABLE IF EXISTS {} CASCADE").format(sql.Identifier(table_name)))
 
                         # Create new table with 384 dimensions
-                        cur.execute(table_info["sql"])
+                        cur.execute(table_info["sql"])  # type: ignore
 
                         # Rename to original name
-                        cur.execute(f"ALTER TABLE {table_name}_new RENAME TO {table_name}")
+                        cur.execute(sql.SQL("ALTER TABLE {} RENAME TO {}").format(sql.Identifier(f"{table_name}_new"), sql.Identifier(table_name)))
 
                         print(f"   ✅ {table_name}: Recreated with vector(384)")
 
@@ -171,10 +172,10 @@ def clean_vector_migration():
                     table_name = table_info["name"]
                     try:
                         cur.execute(
-                            f"""
-                            CREATE INDEX IF NOT EXISTS {table_name}_embedding_idx 
-                            ON {table_name} USING hnsw (embedding vector_cosine_ops)
-                        """
+                            sql.SQL("""
+                            CREATE INDEX IF NOT EXISTS {}_embedding_idx 
+                            ON {} USING hnsw (embedding vector_cosine_ops)
+                        """).format(sql.Identifier(f"{table_name}_embedding_idx"), sql.Identifier(table_name))
                         )
                         print(f"   ✅ {table_name}: Created HNSW vector index")
                     except Exception as e:

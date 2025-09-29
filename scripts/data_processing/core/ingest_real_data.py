@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, cast
 
 import psycopg
-from psycopg.rows import RealDictCursor
+from psycopg.rows import dict_row
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
@@ -277,8 +277,8 @@ class RealDataIngester:
         """Ingest documents into the database."""
         document_map: dict[str, dict[str, Any]] = {}
 
-        with psycopg.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
-            with conn.cursor() as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 for file_path in files:
                     # Skip excluded directories and files
                     if any(exclude in str(file_path) for exclude in self.exclude_dirs):
@@ -339,8 +339,8 @@ class RealDataIngester:
 
     def ingest_chunks(self, files: list[Path], document_map: dict[str, dict[str, Any]]):
         """Ingest document chunks into the database."""
-        with psycopg.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
-            with conn.cursor() as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 for file_path in files:
                     # Skip excluded directories and files
                     if any(exclude in str(file_path) for exclude in self.exclude_dirs):
@@ -422,8 +422,8 @@ class RealDataIngester:
         self.ingest_chunks(files, document_map)
 
         # Print summary
-        with psycopg.connect(self.dsn, cursor_factory=RealDictCursor) as conn:
-            with conn.cursor() as cur:
+        with psycopg.connect(self.dsn) as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
                 cur.execute("SELECT * FROM document_chunk_stats")
                 stats = cur.fetchone()
                 if stats is not None:

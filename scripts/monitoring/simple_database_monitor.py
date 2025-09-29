@@ -10,6 +10,7 @@ from datetime import datetime
 from typing import Any, Optional, Union
 
 import psycopg
+from psycopg.rows import dict_row
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from src.common.psycopg3_config import Psycopg3Config
@@ -29,10 +30,11 @@ class SimpleDatabaseMonitor:
         """Get basic database statistics."""
         try:
             with psycopg.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                with conn.cursor(row_factory=dict_row) as cur:
                     # Database size
                     cur.execute("SELECT pg_size_pretty(pg_database_size(current_database())) as db_size")
-                    db_size = cur.fetchone()["db_size"]
+                    result = cur.fetchone()
+                    db_size = result["db_size"] if result else "Unknown"
 
                     # Table counts
                     cur.execute(
@@ -56,7 +58,8 @@ class SimpleDatabaseMonitor:
                         WHERE datname = current_database()
                     """
                     )
-                    conn_count = cur.fetchone()["connection_count"]
+                    result = cur.fetchone()
+                    conn_count = result["connection_count"] if result else 0
 
                     return {
                         "database_size": db_size,
@@ -76,7 +79,8 @@ class SimpleDatabaseMonitor:
                     # Test 1: Simple count
                     start_time = time.time()
                     cur.execute("SELECT COUNT(*) FROM conversation_context")
-                    count = cur.fetchone()[0]
+                    result = cur.fetchone()
+                    count = result[0] if result else 0
                     results["simple_count"] = {"result": count, "time_ms": round((time.time() - start_time) * 1000, 2)}
 
                     # Test 2: Group by query
@@ -104,7 +108,8 @@ class SimpleDatabaseMonitor:
                         WHERE entities ? 'python'
                     """
                     )
-                    jsonb_count = cur.fetchone()[0]
+                    result = cur.fetchone()
+                    jsonb_count = result[0] if result else 0
                     results["jsonb_query"] = {
                         "result": jsonb_count,
                         "time_ms": round((time.time() - start_time) * 1000, 2),
@@ -138,7 +143,7 @@ class SimpleDatabaseMonitor:
         """Check index usage and performance."""
         try:
             with psycopg.connect(self.dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                with conn.cursor(row_factory=dict_row) as cur:
                     # Get all indexes
                     cur.execute(
                         """
@@ -196,12 +201,20 @@ class SimpleDatabaseMonitor:
                     """
                     )
                     null_check = cur.fetchone()
-                    results["null_checks"] = {
-                        "total_records": null_check[0],
-                        "non_null_session_id": null_check[1],
-                        "non_null_context_type": null_check[2],
-                        "non_null_entities": null_check[3],
-                    }
+                    if null_check:
+                        results["null_checks"] = {
+                            "total_records": null_check[0],
+                            "non_null_session_id": null_check[1],
+                            "non_null_context_type": null_check[2],
+                            "non_null_entities": null_check[3],
+                        }
+                    else:
+                        results["null_checks"] = {
+                            "total_records": 0,
+                            "non_null_session_id": 0,
+                            "non_null_context_type": 0,
+                            "non_null_entities": 0,
+                        }
 
                     # Check data distribution
                     cur.execute(
@@ -231,11 +244,18 @@ class SimpleDatabaseMonitor:
                     """
                     )
                     jsonb_check = cur.fetchone()
-                    results["jsonb_quality"] = {
-                        "total_entities": jsonb_check[0],
-                        "array_entities": jsonb_check[1],
-                        "non_empty_entities": jsonb_check[2],
-                    }
+                    if jsonb_check:
+                        results["jsonb_quality"] = {
+                            "total_entities": jsonb_check[0],
+                            "array_entities": jsonb_check[1],
+                            "non_empty_entities": jsonb_check[2],
+                        }
+                    else:
+                        results["jsonb_quality"] = {
+                            "total_entities": 0,
+                            "array_entities": 0,
+                            "non_empty_entities": 0,
+                        }
 
                     return results
         except Exception as e:
@@ -298,7 +318,7 @@ class SimpleDatabaseMonitor:
         # Data quality
         if "data_quality" in report and "error" not in report["data_quality"]:
             quality = report["data_quality"]
-            if "null_checks" in quality:
+            if "null_checks" in quality and quality["null_checks"]:
                 nulls = quality["null_checks"]
                 print("\n🔍 Data Quality:")
                 print(f"   - Total Records: {nulls['total_records']:,}")
@@ -323,7 +343,7 @@ class SimpleDatabaseMonitor:
             if idx["unused_count"] > 0:
                 print("   - Remove unused indexes to reduce storage overhead")
 
-    def save_report(self, report: dict[str, Any], filename: str = None):
+    def save_report(self, report: dict[str, Any], filename: str | None = None):
         """Save report to JSON file."""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

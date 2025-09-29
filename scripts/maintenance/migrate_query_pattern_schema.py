@@ -7,7 +7,6 @@ import sys
 from pathlib import Path
 
 from utils.database_resilience import execute_query
-
 from utils.logger import setup_logger
 
 #!/usr/bin/env python3

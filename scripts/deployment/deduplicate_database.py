@@ -4,9 +4,11 @@ Remove duplicate files from database, keeping only the most recent version of ea
 """
 
 # Add project paths
+import os
 import sys
 
 import psycopg
+from psycopg.rows import dict_row
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
@@ -16,8 +18,8 @@ def deduplicate_database():
 
     dsn = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
-    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
-        with conn.cursor() as cur:
+    with psycopg.connect(dsn) as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
             print("🔍 Analyzing duplicate files in database...")
 
             # Find files with duplicates
@@ -98,7 +100,8 @@ def deduplicate_database():
 
             # Show final statistics
             cur.execute("SELECT COUNT(*) as total_files FROM documents")
-            total_files = cur.fetchone()["total_files"]
+            result = cur.fetchone()
+            total_files = result["total_files"] if result else 0
 
             cur.execute(
                 """

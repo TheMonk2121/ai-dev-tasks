@@ -46,7 +46,7 @@ except ImportError:
 
 def check_config_health(config: LockedConfig) -> dict[str, Any]:
     """Check configuration health"""
-    guardrails = ProductionGuardrails(config)
+    guardrails = ProductionGuardrails(config)  # type: ignore
     validation = guardrails.validate_config()
 
     return {
@@ -198,7 +198,7 @@ def main():
     args = parser.parse_args()
 
     # Load active configuration
-    manager = ConfigLockManager()
+    manager = ConfigLockManager()  # type: ignore
     config = manager.get_active_config()
 
     if not config:

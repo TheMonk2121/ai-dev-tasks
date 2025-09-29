@@ -124,7 +124,7 @@ class MigrationManager:
         return self.run_alembic_command(["stamp", revision])
 
 
-def main() -> None:
+def main() -> int:
     """Main entry point."""
     parser: Any = argparse.ArgumentParser(description="Database Migration Manager")
     parser.add_argument("--status", action="store_true", help="Show migration status")

@@ -24,7 +24,7 @@ class OnCallReadySystem:
         self.config_dir.mkdir(parents=True, exist_ok=True)
         self.rollback_log_file = self.config_dir / "rollback_log.jsonl"
 
-    def emergency_rollback(self, target_run_id: str = None, reason: str = "Emergency rollback") -> dict[str, Any]:
+    def emergency_rollback(self, target_run_id: str | None = None, reason: str = "Emergency rollback") -> dict[str, Any]:
         """Execute emergency rollback in one command."""
         print("🚨 EMERGENCY ROLLBACK")
         print("=" * 50)
@@ -173,7 +173,7 @@ class OnCallReadySystem:
 
         return dod_result
 
-    def _flip_active_pointer(self, target_run_id: str = None) -> dict[str, Any]:
+    def _flip_active_pointer(self, target_run_id: str | None = None) -> dict[str, Any]:
         """Flip active pointer to prior run."""
         try:
             if target_run_id:

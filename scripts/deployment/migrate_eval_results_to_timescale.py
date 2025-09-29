@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 
 import psycopg
+from psycopg.rows import dict_row
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -301,7 +302,7 @@ def verify_migration(conn):
     """Verify the migration was successful."""
     print("🔍 Verifying migration...")
 
-    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+    with conn.cursor(row_factory=dict_row) as cur:
         # Check hypertables
         cur.execute(
             """

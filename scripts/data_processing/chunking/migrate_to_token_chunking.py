@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import psycopg
+from psycopg.rows import dict_row
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
@@ -80,8 +81,8 @@ def migrate_documents():
     # Get database connection
     dsn = DSN
     
-    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
-        with conn.cursor() as cur:
+    with psycopg.connect(dsn) as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
             # Get all documents that need migration
             cur.execute("""
                 SELECT id, file_path, file_name, content_sha, content_type, metadata

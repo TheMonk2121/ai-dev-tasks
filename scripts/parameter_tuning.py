@@ -45,6 +45,16 @@ class ParameterTuner:
             "eval_concurrency": (1, 16),
         }
 
+        # Parameter to environment variable mapping
+        self.param_env_mapping = {
+            "retr_topk_vec": "RETR_TOPK_VEC",
+            "retr_topk_bm25": "RETR_TOPK_BM25",
+            "rerank_pool": "RERANK_POOL",
+            "rerank_topn": "RERANK_TOPN",
+            "bedrock_max_rps": "BEDROCK_MAX_RPS",
+            "eval_concurrency": "EVAL_CONCURRENCY",
+        }
+
         # Default parameter values
         self.default_params = {
             "retr_topk_vec": 60,

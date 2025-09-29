@@ -4,9 +4,11 @@ Clean up database content by removing low-value files that inhibit RAG performan
 """
 
 # Add project paths
+import os
 import sys
 
 import psycopg
+from psycopg.rows import dict_row
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
@@ -83,8 +85,8 @@ def cleanup_database():
 
     dsn = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
-    with psycopg.connect(dsn, cursor_factory=RealDictCursor) as conn:
-        with conn.cursor() as cur:
+    with psycopg.connect(dsn) as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
             # Get all documents
             cur.execute("SELECT id, file_path, file_name FROM documents")
             documents = cur.fetchall()

@@ -9,6 +9,7 @@ import os
 import sys
 
 import psycopg
+from psycopg import sql
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from src.common.db_dsn import resolve_dsn
@@ -32,7 +33,7 @@ def robust_vector_migration():
 
                 for view in views_to_drop:
                     try:
-                        cur.execute(f"DROP VIEW IF EXISTS {view} CASCADE")
+                        cur.execute(sql.SQL("DROP VIEW IF EXISTS {} CASCADE").format(sql.Identifier(view)))
                         print(f"   ✅ {view}: Dropped view")
                     except Exception as e:
                         print(f"   ⚠️  {view}: Could not drop view: {e}")
@@ -53,7 +54,7 @@ def robust_vector_migration():
                 total_cleared = 0
                 for table in tables_to_clear:
                     try:
-                        cur.execute(f"UPDATE {table} SET embedding = NULL WHERE embedding IS NOT NULL")
+                        cur.execute(sql.SQL("UPDATE {} SET embedding = NULL WHERE embedding IS NOT NULL").format(sql.Identifier(table)))
                         cleared = cur.rowcount
                         total_cleared += cleared
                         print(f"   ✅ {table}: Cleared {cleared} embeddings")
@@ -72,7 +73,7 @@ def robust_vector_migration():
                     try:
                         # Start a new transaction for each table
                         cur.execute("BEGIN")
-                        cur.execute(f"ALTER TABLE {table} ALTER COLUMN embedding TYPE vector(384)")
+                        cur.execute(sql.SQL("ALTER TABLE {} ALTER COLUMN embedding TYPE vector(384)").format(sql.Identifier(table)))
                         cur.execute("COMMIT")
                         print(f"   ✅ {table}: Updated to vector(384)")
                         successful_tables.append(table)
@@ -90,15 +91,15 @@ def robust_vector_migration():
                 for table in successful_tables:
                     try:
                         # Drop existing indexes
-                        cur.execute(f"DROP INDEX IF EXISTS {table}_embedding_idx")
-                        cur.execute(f"DROP INDEX IF EXISTS {table}_embedding_hnsw_idx")
+                        cur.execute(sql.SQL("DROP INDEX IF EXISTS {}_embedding_idx").format(sql.Identifier(f"{table}_embedding_idx")))
+                        cur.execute(sql.SQL("DROP INDEX IF EXISTS {}_embedding_hnsw_idx").format(sql.Identifier(f"{table}_embedding_hnsw_idx")))
 
                         # Create new HNSW index
                         cur.execute(
-                            f"""
-                            CREATE INDEX IF NOT EXISTS {table}_embedding_idx 
-                            ON {table} USING hnsw (embedding vector_cosine_ops)
-                        """
+                            sql.SQL("""
+                            CREATE INDEX IF NOT EXISTS {}_embedding_idx 
+                            ON {} USING hnsw (embedding vector_cosine_ops)
+                        """).format(sql.Identifier(f"{table}_embedding_idx"), sql.Identifier(table))
                         )
                         print(f"   ✅ {table}: Created HNSW vector index")
                     except Exception as e:
@@ -111,7 +112,7 @@ def robust_vector_migration():
                 for table in not_null_tables:
                     if table in successful_tables:
                         try:
-                            cur.execute(f"ALTER TABLE {table} ALTER COLUMN embedding SET NOT NULL")
+                            cur.execute(sql.SQL("ALTER TABLE {} ALTER COLUMN embedding SET NOT NULL").format(sql.Identifier(table)))
                             print(f"   ✅ {table}: Restored NOT NULL constraint")
                         except Exception as e:
                             print(f"   ⚠️  {table}: Could not restore NOT NULL constraint: {e}")
@@ -256,7 +257,7 @@ def robust_vector_migration():
 
                         # Clean up test data
                         cur.execute(
-                            f"DELETE FROM {table} WHERE node_id = %s OR turn_id = %s OR thread_id = %s OR session_id = %s OR document_id = %s",
+                            sql.SQL("DELETE FROM {} WHERE node_id = %s OR turn_id = %s OR thread_id = %s OR session_id = %s OR document_id = %s").format(sql.Identifier(table)),
                             ("test_384_robust", "test_turn", "test_thread", "test_session", 1),
                         )
                         conn.commit()

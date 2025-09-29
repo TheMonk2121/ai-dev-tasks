@@ -28,7 +28,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 def get_db_connection() -> psycopg.Connection[dict[str, Any]]:
     """Get database connection using Psycopg3Config."""
-    return psycopg.connect(resolve_dsn(strict=True))
+    conn = psycopg.connect(resolve_dsn(strict=True))
+    return conn  # type: ignore
 
 
 def get_embedding_model() -> SentenceTransformer:
@@ -142,10 +143,13 @@ def embed_evaluation_code() -> int:
             )
             stats = cur.fetchone()
 
-            print("📊 Final stats:")
-            print(f"   Total chunks: {stats['total_chunks']}")
-            print(f"   With embeddings: {stats['with_embeddings']}")
-            print(f"   Embedding rate: {stats['with_embeddings']/stats['total_chunks']*100:.1f}%")
+            if stats:
+                print("📊 Final stats:")
+                print(f"   Total chunks: {stats['total_chunks']}")
+                print(f"   With embeddings: {stats['with_embeddings']}")
+                print(f"   Embedding rate: {stats['with_embeddings']/stats['total_chunks']*100:.1f}%")
+            else:
+                print("📊 Final stats: No data available")
 
             return 0
 

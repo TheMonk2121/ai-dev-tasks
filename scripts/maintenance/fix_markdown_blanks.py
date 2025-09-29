@@ -44,11 +44,11 @@ def normalize_markdown(content: str) -> str:
     i = 0
     n = len(lines)
 
-    def is_heading(l):
-        return l.lstrip().startswith("#")
+    def is_heading(line: str) -> bool:
+        return line.lstrip().startswith("#")
 
-    def is_list(l):
-        s = l.lstrip()
+    def is_list(line: str) -> bool:
+        s = line.lstrip()
         return bool(re.match(r"(- |\* |\d+\. )", s))
 
     while i < n:

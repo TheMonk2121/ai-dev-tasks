@@ -5,6 +5,8 @@ import sys
 from pathlib import Path
 
 import psycopg
+from psycopg import sql
+from psycopg.rows import dict_row
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -33,7 +35,7 @@ class SchemaConsolidator:
         """Get table schema from source database."""
         try:
             with psycopg.connect(source_dsn) as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                with conn.cursor(row_factory=dict_row) as cur:
                     # Get column information
                     cur.execute(
                         """
@@ -158,7 +160,7 @@ class SchemaConsolidator:
                             if column["column_default"]:
                                 alter_sql += f" DEFAULT {column['column_default']}"
 
-                            cur.execute(alter_sql)
+                            cur.execute(sql.SQL(alter_sql))  # type: ignore
                             self.changes_made.append(f"  ✅ Added column {col_name} to {table_name}")
                         else:
                             self.changes_made.append(f"  ℹ️  Column {col_name} already exists in {table_name}")
@@ -204,13 +206,13 @@ class SchemaConsolidator:
                     create_sql += ",\n".join(column_definitions)
                     create_sql += ")"
 
-                    cur.execute(create_sql)
+                    cur.execute(sql.SQL(create_sql))  # type: ignore
                     self.changes_made.append(f"  ✅ Created table {table_name}")
 
                     # Add indexes
                     for index in schema["indexes"]:
                         try:
-                            cur.execute(index["indexdef"])
+                            cur.execute(sql.SQL(index["indexdef"]))
                             self.changes_made.append(f"  ✅ Added index {index['indexname']} to {table_name}")
                         except Exception as e:
                             self.changes_made.append(f"  ⚠️  Could not add index {index['indexname']}: {e}")
@@ -232,12 +234,12 @@ class SchemaConsolidator:
             with psycopg.connect(dspy_rag_dsn) as conn:
                 with conn.cursor() as cur:
                     cur.execute(
-                        """
+                        sql.SQL("""
                         SELECT table_name 
                         FROM information_schema.tables 
                         WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
                         ORDER BY table_name
-                    """
+                    """)
                     )
                     dspy_tables = [row[0] for row in cur.fetchall()]
         except Exception as e:
@@ -274,22 +276,22 @@ class SchemaConsolidator:
                 with conn.cursor() as cur:
                     # Get table count
                     cur.execute(
-                        """
+                        sql.SQL("""
                         SELECT COUNT(*) 
                         FROM information_schema.tables 
                         WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
-                    """
+                    """)
                     )
                     result = cur.fetchone()
                     table_count = result[0] if result else 0
 
                     # Get column count
                     cur.execute(
-                        """
+                        sql.SQL("""
                         SELECT COUNT(*) 
                         FROM information_schema.columns 
                         WHERE table_schema = 'public'
-                    """
+                    """)
                     )
                     result = cur.fetchone()
                     column_count = result[0] if result else 0

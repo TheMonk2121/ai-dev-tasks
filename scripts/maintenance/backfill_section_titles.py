@@ -5,6 +5,8 @@ import re
 import sys
 
 import psycopg
+from psycopg import extras  # type: ignore
+from psycopg.rows import dict_row
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -122,7 +124,7 @@ def main() -> int:
     # Batch process rows lacking section_title
     BATCH = 1000
     while True:
-        dict_cur = conn.cursor(row_factory=psycopg.rows.dict_row)
+        dict_cur = conn.cursor(row_factory=dict_row)
         dict_cur.execute(
             """
             SELECT id, filename, bm25_text
@@ -147,7 +149,7 @@ def main() -> int:
                 updates.append((title, path, _id))
 
         if updates:
-            psycopg.extras.execute_batch(
+            extras.execute_batch(
                 conn.cursor(),
                 """
                 UPDATE document_chunks

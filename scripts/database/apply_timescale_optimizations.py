@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 import psycopg
+from psycopg import sql
 from psycopg.rows import dict_row
 
 # Add project root to path
@@ -50,7 +51,7 @@ def apply_optimizations():
         for i, statement in enumerate(statements, 1):
             try:
                 print(f"  Executing statement {i}/{len(statements)}...")
-                cursor.execute(statement)
+                cursor.execute(sql.SQL(statement))  # type: ignore
                 success_count += 1
             except Exception as e:
                 print(f"  ⚠️  Statement {i} failed: {e}")

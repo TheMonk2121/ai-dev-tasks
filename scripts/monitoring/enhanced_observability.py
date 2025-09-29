@@ -29,19 +29,19 @@ class EvaluationMetrics:
         self._histograms: dict[str, list[float]] = {}
         self._gauges: dict[str, float] = {}
 
-    def increment_counter(self, name: str, value: int = 1, tags: dict[str, str] = None):
+    def increment_counter(self, name: str, value: int = 1, tags: dict[str, str] | None = None):
         """Increment a counter metric."""
         self._counters[name] = self._counters.get(name, 0) + value
         self.logfire.info("metric.counter", name=name, value=value, tags=tags or {})
 
-    def record_histogram(self, name: str, value: float, tags: dict[str, str] = None):
+    def record_histogram(self, name: str, value: float, tags: dict[str, str] | None = None):
         """Record a histogram value."""
         if name not in self._histograms:
             self._histograms[name] = []
         self._histograms[name].append(value)
         self.logfire.info("metric.histogram", name=name, value=value, tags=tags or {})
 
-    def set_gauge(self, name: str, value: float, tags: dict[str, str] = None):
+    def set_gauge(self, name: str, value: float, tags: dict[str, str] | None = None):
         """Set a gauge metric."""
         self._gauges[name] = value
         self.logfire.info("metric.gauge", name=name, value=value, tags=tags or {})
@@ -49,7 +49,7 @@ class EvaluationMetrics:
     def get_summary_stats(self) -> dict[str, Any]:
         """Get summary statistics for all histograms."""
         stats = {}
-        for name, values in self.histograms.items():
+        for name, values in self._histograms.items():
             if values:
                 stats[name] = {
                     "count": len(values),
@@ -207,7 +207,7 @@ class EvaluationAlerting:
             "faithfulness": {"warning": 0.6, "critical": 0.4},
         }
 
-    def check_thresholds(self, metrics: dict[str, float], run_id: str, case_id: str = None):
+    def check_thresholds(self, metrics: dict[str, float], run_id: str, case_id: str | None = None):
         """Check metrics against thresholds and generate alerts."""
         context = {"run_id": run_id}
         if case_id:
@@ -341,7 +341,7 @@ class EnhancedEvaluationLogger:
         self.metrics.record_histogram("reader.latency_ms", latency_ms)
         self.metrics.record_histogram("reader.response_length", len(response))
 
-    def log_error(self, error: Exception, context: dict[str, Any] = None):
+    def log_error(self, error: Exception, context: dict[str, Any] | None = None):
         """Log structured error information."""
         self.tracer.log_error(message=str(error), error=type(error).__name__, **(context or {}))
         self.metrics.increment_counter("errors", tags={"error_type": type(error).__name__})
@@ -351,7 +351,7 @@ class EnhancedEvaluationLogger:
 _enhanced_logger: EnhancedEvaluationLogger | None = None
 
 
-def get_enhanced_logger(run_id: str = None) -> EnhancedEvaluationLogger:
+def get_enhanced_logger(run_id: str | None = None) -> EnhancedEvaluationLogger:
     """Get or create enhanced evaluation logger."""
     global _enhanced_logger
     if _enhanced_logger is None or (run_id and _enhanced_logger.run_id != run_id):

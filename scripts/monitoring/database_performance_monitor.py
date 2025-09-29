@@ -299,8 +299,7 @@ class DatabasePerformanceMonitor:
     def run_performance_test(self) -> dict[str, Any]:
         """Run a simple performance test."""
         try:
-            with psycopg.connect(self.dsn) as conn:
-                with conn.cursor() as cur:
+            with Psycopg3Config.get_cursor(self.role) as cur:
                     # Test query performance
                     start_time: Any = time.time()
 
@@ -369,7 +368,7 @@ class DatabasePerformanceMonitor:
 
         return report
 
-    def print_summary() -> Any:
+    def print_summary(self, report: dict[str, Any]) -> Any:
         """Print a human-readable summary."""
         print("\n📊 DATABASE PERFORMANCE SUMMARY")
         print("=" * 60)

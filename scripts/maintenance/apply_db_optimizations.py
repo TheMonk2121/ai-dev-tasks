@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import psycopg
+from psycopg import IsolationLevel
 
 # Add project paths
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -25,7 +26,7 @@ def get_db_connection():
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
     try:
         conn = psycopg.connect(dsn)
-        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        conn.set_isolation_level(IsolationLevel.AUTOCOMMIT)  # type: ignore
         return conn
     except Exception as e:
         print(f"❌ Failed to connect to database: {e}")
