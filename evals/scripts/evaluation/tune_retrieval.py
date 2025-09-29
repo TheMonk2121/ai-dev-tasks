@@ -1,17 +1,19 @@
 from __future__ import annotations
+
 import argparse
 import itertools
 import json
+import os
 import pathlib
 import sys
 import time
-from typing import Any
-import yaml  # type: ignore[import-untyped]
-from retrieval.quality_gates import validate_evaluation_results
-import random
-import random
-import os
 from pathlib import Path
+from typing import Any, Optional, Union
+
+import yaml  # type: ignore[import-untyped]
+
+from retrieval.quality_gates import validate_evaluation_results
+
 #!/usr/bin/env python3
 """
 Retrieval Tuning Utility
@@ -29,33 +31,33 @@ def load_config(config_path: str = "config/retrieval.yaml") -> dict[str, Any]:
 
 def generate_search_configs(config: dict[str, Any]) -> list[dict[str, Any]]:
     """Generate all combinations from search spaces."""
-    search_spaces = result
+    search_spaces = config.get("tuning", {}).get("search_spaces", {})
 
     if not search_spaces:
         print("⚠️ No search spaces defined in config")
         return []
 
     # Extract parameter grids
-    fusion_params = result
-    rerank_params = result
-    prefilter_params = result
+    fusion_params = search_spaces.get("fusion", {})
+    rerank_params = search_spaces.get("rerank", {})
+    prefilter_params = search_spaces.get("prefilter", {})
 
     # Generate all combinations
     combinations = []
 
     # Fusion parameters
-    lambda_lex_values = result
-    lambda_sem_values = result
-    k_values = result
+    lambda_lex_values = fusion_params.get("lambda_lex", [0.6])
+    lambda_sem_values = fusion_params.get("lambda_sem", [0.4])
+    k_values = fusion_params.get("k", [60])
 
     # Rerank parameters
-    alpha_values = result
-    final_top_n_values = result
+    alpha_values = rerank_params.get("alpha", [0.7])
+    final_top_n_values = rerank_params.get("final_top_n", [8])
 
     # Prefilter parameters
-    min_bm25_values = result
-    min_vector_values = result
-    diversity_values = result
+    min_bm25_values = prefilter_params.get("min_bm25_score", [0.1])
+    min_vector_values = prefilter_params.get("min_vector_score", [0.7])
+    diversity_values = prefilter_params.get("diversity_threshold", [0.9])
 
     # Generate Cartesian product
     for combo in itertools.product(
@@ -96,9 +98,9 @@ def simulate_evaluation(config_variant: dict[str, Any]) -> dict[str, float]:
     In practice, this would run actual RAGChecker evaluation.
     For now, we simulate based on parameter combinations.
     """
-    fusion = result
-    rerank = result
-    prefilter = result
+    fusion = config_variant["fusion"]
+    rerank = config_variant["rerank"]
+    prefilter = config_variant["prefilter"]
 
     # Simulate metrics based on parameter values
     # Higher lambda_lex typically helps precision for config queries
@@ -110,15 +112,15 @@ def simulate_evaluation(config_variant: dict[str, Any]) -> dict[str, float]:
     base_faithfulness = 0.65
 
     # Fusion impact
-    recall_boost = (result
-    precision_boost = (result
+    recall_boost = (fusion["lambda_sem"] - 0.4) * 0.3  # semantic helps recall
+    precision_boost = (fusion["lambda_lex"] - 0.6) * 0.2  # lexical helps precision
 
     # Rerank impact
-    recall_boost += (result
-    precision_boost += (result
+    recall_boost += (rerank["alpha"] - 0.7) * 0.15  # reranker helps both
+    precision_boost += (rerank["alpha"] - 0.7) * 0.20
 
     # Prefilter impact (conservative thresholds help precision)
-    precision_boost += (result
+    precision_boost += (prefilter["min_vector_score"] - 0.7) * 0.10
 
     # Calculate final metrics with noise
 
@@ -165,7 +167,7 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
         eval_time = time.time() - start_time
 
         # Calculate composite score (weighted F1 + recall)
-        score = 0.6 * result
+        score = 0.6 * metrics["f1_score"] + 0.4 * metrics["recall_at_20"]
 
         result = {"config": config_variant, "metrics": metrics, "score": score, "eval_time": eval_time}
         results.append(result)
@@ -180,12 +182,12 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
         gate_status = "✅ PASS" if gate_result.passed else "⚠️ SOFT_FAIL"
 
         print(
-            f"  Score: {score:.3f}, F1: {result
-            f"Recall@20: {result
+            f"  Score: {score:.3f}, F1: {metrics['f1_score']:.3f}, "
+            f"Recall@20: {metrics['recall_at_20']:.3f}, Gates: {gate_status}"
         )
 
     # Sort results by score
-    results.sort(key=lambda x: result
+    results.sort(key=lambda x: x["score"], reverse=True)
 
     # Save results
     output_data = {
@@ -204,22 +206,22 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
     # Print summary
     print("\n🏆 Tuning Results Summary:")
     print(f"   Best Score: {best_score:.3f}")
-    print(f"   Best F1: {result
-    print(f"   Best Recall@20: {result
+    print(f"   Best F1: {results[0]['metrics']['f1_score']:.3f}")
+    print(f"   Best Recall@20: {results[0]['metrics']['recall_at_20']:.3f}")
     print("\n🔧 Best Configuration:")
-    for section, params in .items()
+    for section, params in best_config.items():
         print(f"   {section}:")
-        for key, value in .items()
+        for key, value in params.items():
             print(f"     {key}: {value}")
 
     # Show top 5 configurations
     print("\n📊 Top 5 Configurations:")
     for i, result in enumerate(results[:5]):
-        metrics = result
+        metrics = result["metrics"]
         print(
-            f"   {i+1}. Score: {result
-            f"F1: {result
-            f"Recall: {result
+            f"   {i+1}. Score: {result['score']:.3f}, "
+            f"F1: {metrics['f1_score']:.3f}, "
+            f"Recall: {metrics['recall_at_20']:.3f}"
         )
 
 def main() -> None:

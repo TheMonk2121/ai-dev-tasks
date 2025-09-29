@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import glob
 import json
@@ -7,7 +8,8 @@ import shutil
 import statistics
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """Dual-path smoke evaluation gate.
 
@@ -47,8 +49,8 @@ def _load_results(path: Path) -> dict[str, Any]:
         return json.load(f)
 
 def _p50_latency(results: dict[str, Any]) -> float:
-    cases = result
-    vals = [float(result
+    cases = results.get("case_results", [])
+    vals = [float(c.get("timing_sec", 0.0)) for c in cases if c.get("timing_sec") is not None]
     if not vals:
         return 0.0
     return statistics.median(sorted(vals))
@@ -93,8 +95,8 @@ def main() -> int:
         )
         res_b = _load_results(res_b_path)
 
-    f1_a = float(result
-    f1_b = float(result
+    f1_a = float(res_a.get("overall_metrics", {}).get("f1_score", 0.0))
+    f1_b = float(res_b.get("overall_metrics", {}).get("f1_score", 0.0))
     p50_a = _p50_latency(res_a)
     p50_b = _p50_latency(res_b)
 

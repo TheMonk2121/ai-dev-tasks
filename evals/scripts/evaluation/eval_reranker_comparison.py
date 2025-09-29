@@ -1,3 +1,5 @@
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Reranker Comparison Evaluation Script
@@ -11,7 +13,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any
+
 
 def run_evaluation_with_config(config_name: str, config_file: str, output_dir: str) -> dict[str, Any]:
     """Run evaluation with a specific configuration"""
@@ -65,9 +67,9 @@ def compare_results(results_with_reranker: dict[str, Any], results_without_reran
         "comparison": {},
     }
 
-    if result:
-        with_reranker = result
-        without_reranker = result
+    if results_with_reranker["status"] == "success" and results_without_reranker["status"] == "success":
+        with_reranker = results_with_reranker["results"]
+        without_reranker = results_without_reranker["results"]
 
         # Compare key metrics
         metrics_to_compare = ["precision", "recall", "f1", "faithfulness"]
@@ -77,7 +79,7 @@ def compare_results(results_with_reranker: dict[str, Any], results_without_reran
                 with_val = with_reranker[metric]
                 without_val = without_reranker[metric]
                 diff = with_val - without_val
-                result
+                comparison["comparison"][metric] = {
                     "with_reranker": with_val,
                     "without_reranker": without_val,
                     "difference": diff,
@@ -107,13 +109,13 @@ def main():
 
     # Run evaluation with reranker enabled
     reranker_enabled_config = config_dir / "reranker_toggle.env"
-    results_with_reranker = run_evaluation_with_config()
+    results_with_reranker = run_evaluation_with_config(
         "reranker_enabled", str(reranker_enabled_config), str(output_dir)
     )
 
     # Run evaluation with reranker disabled
     reranker_disabled_config = config_dir / "reranker_disabled.env"
-    results_without_reranker = run_evaluation_with_config()
+    results_without_reranker = run_evaluation_with_config(
         "reranker_disabled", str(reranker_disabled_config), str(output_dir)
     )
 
@@ -129,9 +131,10 @@ def main():
     print(f"📁 Saved to: {comparison_file}")
 
     if "comparison" in comparison:
-        for metric, data in result:
-            improvement = "📈" if result:
-            print(f"{improvement} {metric}: {result)
+        for metric, data in comparison["comparison"].items():
+            improvement = "📈" if data["improvement"] else "📉"
+            print(
+                f"{improvement} {metric}: {data['with_reranker']:.3f} vs {data['without_reranker']:.3f} (Δ{data['difference']:+.3f})"
             )
 
     return comparison

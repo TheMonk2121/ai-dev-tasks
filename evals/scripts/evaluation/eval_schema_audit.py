@@ -1,4 +1,6 @@
 import os
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Evaluation Schema Audit Script
@@ -10,7 +12,6 @@ import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 sys.path.append(".")
 
@@ -29,7 +30,8 @@ def audit_schemas() -> list[SchemaInfo]:
     schemas = []
 
     # 1. Gold Case Schemas
-    schemas.append(SchemaInfo(
+    schemas.append(
+        SchemaInfo(
             file_path="src/utils/gold_loader.py",
             schema_name="GoldCase",
             schema_type="dataclass",
@@ -45,22 +47,24 @@ def audit_schemas() -> list[SchemaInfo]:
                 "expected_decisions": "list[str] | None",
                 "notes": "str | None",
             },
-            is_evaluation=True,)
+            is_evaluation=True,
         )
     )
 
     # 2. Legacy Case Schema
-    schemas.append(SchemaInfo(
+    schemas.append(
+        SchemaInfo(
             file_path="evals/load_cases.py",
             schema_name="Case",
             schema_type="dataclass",
             fields={"id": "str", "query": "str", "tag": "str", "qvec": "list"},  # Note: singular, not plural
-            is_evaluation=True,)
+            is_evaluation=True,
         )
     )
 
     # 3. RAGChecker Result Schema
-    schemas.append(SchemaInfo(
+    schemas.append(
+        SchemaInfo(
             file_path="scripts/ragchecker_evaluation.py",
             schema_name="RAGCheckerResult",
             schema_type="pydantic",
@@ -73,12 +77,13 @@ def audit_schemas() -> list[SchemaInfo]:
                 "comparison": "dict[str, Any]",
                 "recommendation": "str",
             },
-            is_evaluation=True,)
+            is_evaluation=True,
         )
     )
 
     # 4. DSPy RAG Contracts
-    schemas.append(SchemaInfo(
+    schemas.append(
+        SchemaInfo(
             file_path="src/eval/contracts.py",
             schema_name="QuerySample",
             schema_type="typeddict",
@@ -90,17 +95,18 @@ def audit_schemas() -> list[SchemaInfo]:
                 "claim": "str | None",
                 "expected_answer": "str | None",
             },
-            is_evaluation=True,)
+            is_evaluation=True,
         )
     )
 
     # 5. Official RAGChecker EvalItem
-    schemas.append(SchemaInfo(
+    schemas.append(
+        SchemaInfo(
             file_path="300_experiments/300_testing-scripts/ragchecker_official_evaluation.py",
             schema_name="EvalItem",
             schema_type="typeddict",
             fields={"response": "str", "gt_answer": "str", "query": "str", "query_id": "str | None"},
-            is_evaluation=True,)
+            is_evaluation=True,
         )
     )
 
@@ -123,8 +129,8 @@ def analyze_schema_inconsistencies(schemas: list[SchemaInfo]) -> dict[str, Any]:
     # Check field naming inconsistencies
     id_fields = set()
     query_fields = set()
-    answer_fields = set():
-:
+    answer_fields = set()
+
     for schema in schemas:
         if "id" in schema.fields:
             id_fields.add("id")
@@ -140,18 +146,18 @@ def analyze_schema_inconsistencies(schemas: list[SchemaInfo]) -> dict[str, Any]:
             answer_fields.add("response")
 
     if len(id_fields) > 1:
-        result
+        analysis["field_naming_inconsistencies"].append(f"ID fields: {id_fields}")
     if len(query_fields) > 1:
-        result
+        analysis["field_naming_inconsistencies"].append(f"Query fields: {query_fields}")
     if len(answer_fields) > 1:
-        result
+        analysis["field_naming_inconsistencies"].append(f"Answer fields: {answer_fields}")
 
     # Check for redundant schemas
     if len(gold_schemas) > 1:
-        result
+        analysis["redundant_schemas"].append(f"Multiple gold/case schemas: {[s.schema_name for s in gold_schemas]}")
 
     # Standardization opportunities
-    result
+    analysis["standardization_opportunities"] = [
         "Standardize on 'id' field (not 'case_id' or 'query_id')",
         "Standardize on 'query' field (not 'question')",
         "Standardize on 'gt_answer' field (not 'expected_answer' or 'response')",
@@ -173,10 +179,10 @@ def main():
     print(f"\n📊 Found {len(schemas)} evaluation schemas:")
     for schema in schemas:
         print(f"  - {schema.schema_name} ({schema.schema_type}) in {schema.file_path}")
-        print(f"    Fields: {list(schema..keys()
+        print(f"    Fields: {list(schema.fields.keys())}")
 
     print("\n⚠️  Schema Inconsistencies:")
-    for category, issues in .items():
+    for category, issues in analysis.items():
         if issues:
             print(f"\n{category.replace('_', ' ').title()}:")
             for issue in issues:

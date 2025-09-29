@@ -1,10 +1,11 @@
 from __future__ import annotations
-from typing import Any
-# Add project paths
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-from src.common.psycopg3_config import Psycopg3Config
+
 import os
+from typing import Any, Optional, Union
+
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
 #!/usr/bin/env python3
 """Test database query for reader gold generation."""
 
@@ -44,11 +45,11 @@ def test_query():
                 # Type cast to help the type checker understand this is a dict-like object
                 row_dict: dict[str, Any] = row  # type: ignore
                 print(f"\nRow {i+1}:")
-                print(f"  ID: {result
-                print(f"  File: {result
-                print(f"  Path: {result
-                print(f"  Content length: {result
-                print(f"  Content preview: {result
+                print(f"  ID: {row_dict['id']}")
+                print(f"  File: {row_dict['filename']}")
+                print(f"  Path: {row_dict['file_path']}")
+                print(f"  Content length: {row_dict['content_length']}")
+                print(f"  Content preview: {row_dict['content'][:100]}...")
 
 if __name__ == "__main__":
     test_query()

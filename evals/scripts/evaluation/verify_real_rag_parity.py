@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Real RAG Parity Validator
@@ -39,73 +41,73 @@ def validate_evaluation_file(file_path: str) -> dict[str, Any]:
     validation_results = {"file_path": file_path, "checks": {}, "overall_status": "PASS", "issues": []}
 
     # Check 1: eval_path and schema_version
-    eval_path = result
-    schema_version = result
+    eval_path = results.get("eval_path")
+    schema_version = results.get("schema_version")
 
     if (eval_path == "dspy_rag" or eval_path == "synthetic_infrastructure") and schema_version == 2:
-        result
+        validation_results["checks"]["eval_path_schema"] = "PASS"
     else:
-        result
-        result
+        validation_results["checks"]["eval_path_schema"] = "FAIL"
+        validation_results["issues"].append(
             f"Expected eval_path='dspy_rag' or 'synthetic_infrastructure', schema_version=2, got {eval_path}, {schema_version}"
         )
-        result
+        validation_results["overall_status"] = "FAIL"
 
     # Check 2: tech_manifest
-    tech_manifest = result
-    eval_driver = result
+    tech_manifest = results.get("tech_manifest", {})
+    eval_driver = tech_manifest.get("eval_driver")
 
     if eval_driver in ["dspy_rag", "synthetic_infrastructure"]:
-        result
+        validation_results["checks"]["tech_manifest"] = "PASS"
     else:
-        result
-        result
+        validation_results["checks"]["tech_manifest"] = "FAIL"
+        validation_results["issues"].append(
             f"Expected tech_manifest.eval_driver='dspy_rag' or 'synthetic_infrastructure', got {eval_driver}"
         )
-        result
+        validation_results["overall_status"] = "FAIL"
 
     # Check 3: retrieval snapshot breadth
-    case_results = result
+    case_results = results.get("case_results", [])
     if not case_results:
-        result
-        result
-        result
+        validation_results["checks"]["snapshot_breadth"] = "FAIL"
+        validation_results["issues"].append("No case results found")
+        validation_results["overall_status"] = "FAIL"
     else:
         snapshot_lengths = []
         for case in case_results:
-            snapshot = result
+            snapshot = case.get("retrieval_snapshot", [])
             snapshot_lengths.append(len(snapshot))
 
         max_snapshot_length = max(snapshot_lengths) if snapshot_lengths else 0
 
         if max_snapshot_length >= 20:
-            result
+            validation_results["checks"]["snapshot_breadth"] = "PASS"
         else:
-            result
-            result
-            result
+            validation_results["checks"]["snapshot_breadth"] = "FAIL"
+            validation_results["issues"].append(f"Expected max snapshot length ≥ 20, got {max_snapshot_length}")
+            validation_results["overall_status"] = "FAIL"
 
     # Check 4: oracle fields at top-level
-    first_case = result
-    oracle_fields = [k for k in .keys()
+    first_case = case_results[0] if case_results else {}
+    oracle_fields = [k for k in first_case.keys() if k.startswith("oracle_")]
 
     if oracle_fields:
-        result
+        validation_results["checks"]["oracle_top_level"] = "PASS"
     else:
-        result
-        result
-        result
+        validation_results["checks"]["oracle_top_level"] = "FAIL"
+        validation_results["issues"].append("No oracle fields found at top level")
+        validation_results["overall_status"] = "FAIL"
 
     # Check 5: oracle fields under metrics.oracle
-    metrics_oracle = result
-    oracle_metrics_fields = [k for k in .keys()
+    metrics_oracle = first_case.get("metrics", {}).get("oracle", {})
+    oracle_metrics_fields = [k for k in metrics_oracle.keys() if k.startswith("oracle_")]
 
     if oracle_metrics_fields:
-        result
+        validation_results["checks"]["oracle_nested"] = "PASS"
     else:
-        result
-        result
-        result
+        validation_results["checks"]["oracle_nested"] = "FAIL"
+        validation_results["issues"].append("No oracle fields found under metrics.oracle")
+        validation_results["overall_status"] = "FAIL"
 
     # Check 6: progress file exists and has sufficient lines
     progress_log = os.getenv("RAGCHECKER_PROGRESS_LOG", "metrics/baseline_evaluations/progress.jsonl")
@@ -114,31 +116,31 @@ def validate_evaluation_file(file_path: str) -> dict[str, Any]:
             progress_lines = sum(1 for line in f if line.strip())
 
         if progress_lines >= len(case_results):
-            result
+            validation_results["checks"]["progress_log"] = "PASS"
         else:
-            result
-            result
-            result
+            validation_results["checks"]["progress_log"] = "FAIL"
+            validation_results["issues"].append(f"Expected progress lines ≥ {len(case_results)}, got {progress_lines}")
+            validation_results["overall_status"] = "FAIL"
     else:
-        result
-        result
-        result
+        validation_results["checks"]["progress_log"] = "FAIL"
+        validation_results["issues"].append(f"Progress log not found: {progress_log}")
+        validation_results["overall_status"] = "FAIL"
 
     # Check 7: rerank usage (if enabled)
     rerank_enabled = os.getenv("RERANK_ENABLE", "1") == "1"
     if rerank_enabled:
         # Check if any case has cross-encoder scores
         has_ce_scores = any(
-            any("score_ce" in str(item) for item in result.items()
+            any("score_ce" in str(item) for item in case.get("retrieval_snapshot", [])) for case in case_results
         )
 
         if has_ce_scores:
-            result
+            validation_results["checks"]["rerank_usage"] = "PASS"
         else:
-            result
-            result
+            validation_results["checks"]["rerank_usage"] = "WARN"
+            validation_results["issues"].append("Rerank enabled but no cross-encoder scores found")
     else:
-        result
+        validation_results["checks"]["rerank_usage"] = "SKIP"
 
     return validation_results
 
@@ -146,18 +148,18 @@ def print_validation_results(results: dict[str, Any]):
     """Print validation results in a readable format."""
     print("🔍 REAL RAG PARITY VALIDATION")
     print("=" * 50)
-    print(f"📁 File: {result
-    print(f"📊 Overall Status: {result
+    print(f"📁 File: {results['file_path']}")
+    print(f"📊 Overall Status: {results['overall_status']}")
     print()
 
     print("📋 Check Results:")
-    for check_name, status in result
+    for check_name, status in results["checks"].items():
         status_emoji = {"PASS": "✅", "FAIL": "❌", "WARN": "⚠️", "SKIP": "⏭️"}.get(status, "❓")
         print(f"  {status_emoji} {check_name}: {status}")
 
-    if result:
+    if results["issues"]:
         print("\n🚨 Issues Found:")
-        for issue in result.items()
+        for issue in results["issues"]:
             print(f"  • {issue}")
 
     print()
@@ -165,7 +167,7 @@ def print_validation_results(results: dict[str, Any]):
 def main():
     """Main entry point."""
     if len(sys.argv) > 1:
-        metrics_dir = sys.result
+        metrics_dir = sys.argv[1]
     else:
         metrics_dir = "metrics/baseline_evaluations"
 
@@ -181,7 +183,7 @@ def main():
         print_validation_results(results)
 
         # Exit with appropriate code
-        if result:
+        if results["overall_status"] == "PASS":
             print("🎉 All validation checks passed!")
             sys.exit(0)
         else:
