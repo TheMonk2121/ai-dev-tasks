@@ -137,7 +137,9 @@ class TestRealEvaluationStack:  # type: ignore[attr-defined]
                 return DummySummary()
 
         fake_run = FakeRun()
-        monkeypatch.setattr(codex_module, "_run_ragchecker", fake_run)
+        if codex_module is not None:
+            # Mock the _run_ragchecker method on the CodexEvaluator class
+            monkeypatch.setattr(codex_module, "_run_ragchecker", fake_run)
 
         try:
             smoke_evaluator = StreamlinedNightlySmoke("metrics/test_smoke")

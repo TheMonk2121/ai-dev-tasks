@@ -330,5 +330,21 @@ def main(argv: Iterable[str] | None = None) -> int:
     return 0
 
 
+class CodexEvaluator:
+    """Unified evaluation runner for codex evaluations."""
+    
+    def __init__(self) -> None:
+        """Initialize the codex evaluator."""
+        pass
+    
+    async def _run_ragchecker(self, config: RunConfig, reporters: tuple[Reporter, ...] = ()) -> EvalSummary:
+        """Run ragchecker evaluation."""
+        return await _run_ragchecker(config, list(reporters))
+    
+    async def _run_dspy(self, config: RunConfig, reporters: tuple[Reporter, ...] = ()) -> EvalSummary:
+        """Run DSPy evaluation."""
+        return await _run_dspy(config, list(reporters))
+
+
 if __name__ == "__main__":
     raise SystemExit(main())
