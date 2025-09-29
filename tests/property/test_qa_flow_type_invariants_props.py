@@ -413,9 +413,9 @@ class TestQAFlowTypeInvariants:
             for item in context:
                 for key, value in item.items():
                     assert isinstance(key, str)
-                    assert isinstance(value, (str, int, float, bool, type(None))) or (
+                    assert isinstance(value, str | int | float | bool | type(None)) or (
                         isinstance(value, list)
-                        and all(isinstance(x, (str, int, float, bool, type(None))) for x in value)
+                        and all(isinstance(x, str | int | float | bool | type(None)) for x in value)
                     )
 
         except Exception as e:

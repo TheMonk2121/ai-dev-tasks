@@ -36,8 +36,8 @@ def test_numpy_arrays_serialize_to_lists(q: np.ndarray, d: np.ndarray) -> None:
         r_bm25=0.9,
         r_vec=1.0,
         len_norm=0.5,
-        q_vec=q if q.size == 384 else None,
-        d_vec=d if d.size == 384 else None,
+        q_vec=q if q.size == 384 else None,  # type: ignore
+        d_vec=d if d.size == 384 else None,  # type: ignore
     )
     dumped: Any = ff.model_dump()
     qv: Any = dumped.get("q_vec")

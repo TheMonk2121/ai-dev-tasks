@@ -81,7 +81,7 @@ class TestPydanticArrayTypes:
 
         # Check that all elements are floats
         for val in json_data["v8"]:  # type: ignore[misc]
-            assert isinstance(val, (int, float))
+            assert isinstance(val, int | float)
             assert not math.isnan(val)
             assert not math.isinf(val)
 

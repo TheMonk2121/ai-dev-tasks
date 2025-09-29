@@ -125,16 +125,19 @@ class TestBaselineManifestFunctions:
     @patch("scripts.utilities.update_baseline_manifest._get_overall")
     @patch("scripts.utilities.update_baseline_manifest._ema")
     @patch("scripts.utilities.update_baseline_manifest.json.dump")
-    @patch("builtins.open", mock_open())
+    @patch("builtins.open")
     def test_main_success(
         self,
-        mock_file,
+        mock_open,
         mock_json_dump,
         mock_ema,
         mock_get_overall,
         mock_collect_results,
     ):
         """Test main function runs successfully."""
+        # Configure mock_open
+        mock_open.return_value.__enter__.return_value = mock_open()
+        
         # Mock dependencies
         mock_collect_results.return_value = [
             {"timestamp": "2024-01-01", "overall_metrics": {"precision": 0.8}},

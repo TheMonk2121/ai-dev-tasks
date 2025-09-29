@@ -23,13 +23,13 @@ Property tests for ConfidenceCalibrator bounds and stability.
 @settings(max_examples=5, deadline=500)
 def test_temperature_calibration_bounds(scores, labels: Any):
     n = min(len(scores), len(labels))
-    scores: Any = np.array(scores[:n])
-    labels: Any = np.array([1 if b else 0 for b in labels[:n]])
+    scores_array: Any = np.array(scores[:n])
+    labels_array: Any = np.array([1 if b else 0 for b in labels[:n]])
     if n < 10:
         pytest.skip("need enough samples")
     cfg = CalibrationConfig(temperature_scaling=True, isotonic_calibration=False, platt_calibration=False)
     c = ConfidenceCalibrator(cfg)
-    c.calibrate_confidence(scores, labels, method="temperature")
-    out: Any = c.apply_calibration(scores, method="temperature")
+    c.calibrate_confidence(scores_array, labels_array, method="temperature")
+    out: Any = c.apply_calibration(scores_array, method="temperature")
     assert np.all(np.isfinite(out))
     assert np.all(out >= 0.0) and np.all(out <= 1.0)

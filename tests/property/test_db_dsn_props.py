@@ -7,7 +7,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from src.common.db_dsn import CANON_ENV, FALLBACK_ENV, resolve_dsn
+from src.common.db_dsn import CANON_ENV, FALLBACK_ENV, resolve_dsn  # type: ignore
 
 #!/usr/bin/env python3
 """

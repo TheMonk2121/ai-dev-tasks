@@ -7,6 +7,20 @@ from typing import Any, Optional, Union
 
 from lessons_model import Lesson, append_lesson, new_lesson
 
+try:
+    from scripts.utilities.memory.episodic_memory_system import EpisodicMemorySystem  # type: ignore[import-untyped]
+except Exception:  # pragma: no cover - optional dependency
+    EpisodicMemorySystem = None  # type: ignore[assignment]
+
+try:
+    from scripts.utilities.episodic_memory_mock import (  # type: ignore[import-untyped]
+        EpisodicReflection,
+        MockEpisodicReflectionStore,
+    )
+except Exception:  # pragma: no cover - optional fallback
+    EpisodicReflection = None  # type: ignore[assignment]
+    MockEpisodicReflectionStore = None  # type: ignore[assignment]
+
 #!/usr/bin/env python3
 """
 Lessons Extractor - Post-run analysis to extract lessons from evaluation artifacts
@@ -213,7 +227,96 @@ def generate_lessons(failure_modes: list[dict[str, Any]], run_metrics: dict[str,
 
     return lessons
 
-def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "metrics/lessons/lessons.jsonl") -> None:
+
+def _write_lessons_to_episodic(lessons: list[Lesson]) -> None:
+    """Persist lessons into the episodic memory system when available."""
+
+    if not lessons:
+        return
+
+    def _build_metadata_payload(lesson: Lesson) -> tuple[str, str, str, dict[str, Any], dict[str, Any]]:
+        pattern = lesson.finding.get("pattern", "lesson") if isinstance(lesson.finding, dict) else "lesson"
+        description = f"Lesson {lesson.id}: {pattern}"
+
+        input_payload = {
+            "finding": lesson.finding,
+            "context": lesson.context,
+        }
+        output_payload = {
+            "recommendation": lesson.recommendation,
+            "confidence": lesson.confidence,
+            "status": lesson.status,
+        }
+
+        outcome_metrics = {
+            "confidence": lesson.confidence,
+            "status": lesson.status,
+            "pattern": pattern,
+        }
+        source_refs = {
+            "scope": lesson.scope,
+            "context": lesson.context,
+            "lesson_id": lesson.id,
+        }
+        return description, json.dumps(input_payload, ensure_ascii=False), json.dumps(output_payload, ensure_ascii=False), outcome_metrics, source_refs
+
+    # Prefer the full episodic memory system when available
+    if EpisodicMemorySystem is not None:
+        try:
+            system = EpisodicMemorySystem()
+            for lesson in lessons:
+                description, input_payload, output_payload, outcome_metrics, source_refs = _build_metadata_payload(lesson)
+                system.store_task_completion(
+                    task_description=description,
+                    input_text=input_payload,
+                    output_text=output_payload,  # type: ignore
+                    agent="lessons_engine",
+                    task_type="evaluation_lessons",
+                    outcome_metrics=outcome_metrics,
+                    source_refs=source_refs,
+                )
+            print("🧠 Lessons captured in episodic memory system")
+            return
+        except Exception as exc:  # pragma: no cover - optional path
+            print(f"⚠️ Failed to store lessons via episodic memory system: {exc}")
+
+    if MockEpisodicReflectionStore is None or EpisodicReflection is None:
+        return
+
+    try:
+        store = MockEpisodicReflectionStore()
+        for lesson in lessons:
+            pattern = lesson.finding.get("pattern", "lesson") if isinstance(lesson.finding, dict) else "lesson"
+            recommendation_changes = lesson.recommendation.get("changes", []) if isinstance(lesson.recommendation, dict) else []
+            what_worked = [
+                f"{change.get('key', 'param')} {change.get('op', 'set')} {change.get('value')}"
+                for change in recommendation_changes
+                if isinstance(change, dict)
+            ] or ["Documented evaluation lesson"]
+            severity = ""
+            if isinstance(lesson.finding, dict):
+                severity = str(lesson.finding.get("severity", ""))
+            what_to_avoid = [
+                f"Avoid recurrence of {pattern}{f' (severity: {severity})' if severity else ''}"
+            ]
+
+            description, input_payload, output_payload, outcome_metrics, source_refs = _build_metadata_payload(lesson)
+            reflection = EpisodicReflection(
+                agent="lessons_engine",
+                task_type="evaluation_lessons",
+                summary=description,
+                what_worked=what_worked,
+                what_to_avoid=what_to_avoid,
+                outcome_metrics=outcome_metrics,
+                source_refs=source_refs,
+                span_hash=lesson.id,
+            )
+            store.store_reflection(reflection)
+        print("🧠 Lessons captured in mock episodic store")
+    except Exception as exc:  # pragma: no cover - optional path
+        print(f"⚠️ Failed to store lessons via mock episodic store: {exc}")
+
+def main(run_json_path: str, progress_jsonl_path: str | None = None, out_jsonl: str = "metrics/lessons/lessons.jsonl") -> None:
     """Main extraction function"""
     print(f"🧠 Extracting lessons from {run_json_path}")
 
@@ -246,7 +349,7 @@ def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "
         append_lesson(out_jsonl, lesson)
         print(f"✅ Saved lesson: {lesson.id} ({lesson.finding['pattern']})")
 
-    # TODO: Also write to episodic store via existing utility
+    _write_lessons_to_episodic(lessons)
     print(f"📝 Lessons written to {out_jsonl}")
 
     # --- CRKG (Cross-Run Knowledge Graph) lightweight update ---
@@ -347,9 +450,7 @@ def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "
             )
             effects = lesson.recommendation.get("predicted_effect", {}) or {}
             scope = (
-                lesson.scope.level
-                if hasattr(lesson.scope, "level")
-                else (lesson.scope.get("level") if isinstance(lesson.scope, dict) else "")
+                lesson.scope.get("level") if isinstance(lesson.scope, dict) else ""
             )
             summary = (
                 f"Pattern {lesson.finding.get('pattern','?')} → {changes}; predicted: {effects}; "

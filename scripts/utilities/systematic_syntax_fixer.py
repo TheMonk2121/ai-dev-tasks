@@ -169,7 +169,7 @@ class SystematicSyntaxFixer:
         
         return '\n'.join(lines)
     
-    def process_directory(self, directory: Path, max_files: int = None) -> dict[str, Any]:
+    def process_directory(self, directory: Path, max_files: int | None = None) -> dict[str, Any]:
         """Process all Python files in a directory."""
         results = {
             'files_processed': 0,

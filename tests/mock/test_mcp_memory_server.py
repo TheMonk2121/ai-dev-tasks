@@ -69,14 +69,14 @@ class TestMCPServerModels:
         """Test HealthResponse model creation."""
         response = HealthResponse(
             status="healthy",
-            timestamp=1234567890.0,
+            timestamp="2024-01-01T12:00:00Z",
             service="test-service",
-            uptime="1 day, 2:30:45",
+            uptime=86400.0,  # 1 day in seconds
             error_rate=0.1,
             cache_hit_rate=0.8,
         )
         assert response.status == "healthy"
-        assert response.timestamp == 1234567890.0
+        assert response.timestamp == "2024-01-01T12:00:00Z"
         assert response.service == "test-service"
 
 
@@ -86,7 +86,7 @@ class TestMCPServerEndpoints:
 
     def __init__(self) -> None:
         """Initialize test class."""
-        self.client: TestClient[Any] = TestClient(app)
+        self.client: TestClient = TestClient(app)
 
     def setup_method(self) -> None:
         """Set up test client."""
@@ -279,48 +279,33 @@ class TestMCPServerFunctions:
     @pytest.mark.asyncio
     async def test_record_chat_history_success(self) -> None:
         """Test successful chat history recording."""
-        with patch("scripts.utilities.memory.mcp_memory_server.get_cursor_integration") as mock_get_integration:
-            mock_integration = MagicMock()
-            mock_integration.thread_id = "test_thread"
-            mock_integration.session_id = "test_session"
-            mock_get_integration.return_value = mock_integration
+        import os
+        import tempfile
 
-            with patch("scripts.utilities.memory.db_async_pool.get_pool") as mock_get_pool:
-                mock_pool = AsyncMock()
-                mock_conn = AsyncMock()
-                mock_pool.connection = MagicMock(return_value=mock_conn)
-                mock_conn.__aenter__ = AsyncMock(return_value=mock_conn)
-                mock_conn.__aexit__ = AsyncMock(return_value=None)
-                mock_get_pool.return_value = mock_pool
+        # Create a temporary directory for the test
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Mock cursor integration methods to return mock turn IDs
+            with patch("scripts.utilities.memory.mcp_memory_server.get_cursor_integration") as mock_get_integration:
+                mock_integration = MagicMock()
+                mock_integration.thread_id = "test_thread"
+                mock_integration.session_id = "test_session"
+                mock_integration.capture_user_query.return_value = "mock_turn_user_123"
+                mock_integration.capture_ai_response.return_value = "mock_turn_ai_456"
+                mock_get_integration.return_value = mock_integration
 
-                # Mock the transaction context manager
-                mock_transaction = AsyncMock()
-                mock_conn.transaction = MagicMock(return_value=mock_transaction)
-                mock_transaction.__aenter__ = AsyncMock(return_value=mock_transaction)
-                mock_transaction.__aexit__ = AsyncMock(return_value=None)
+                result = await record_chat_history(
+                    {
+                        "user_input": "test input",
+                        "system_output": "test output",
+                        "project_dir": temp_dir,
+                        "file_operations": "test operations",
+                        "llm_name": "test-llm",
+                    }
+                )
 
-                with patch("scripts.utilities.memory.db_async_pool.ensure_thread_exists") as mock_ensure_thread:
-                    with patch("scripts.utilities.memory.db_async_pool.insert_user_turn") as mock_insert_user:
-                        with patch("scripts.utilities.memory.db_async_pool.insert_ai_turn") as mock_insert_ai:
-                            mock_ensure_thread.return_value = "test_thread"
-                            mock_insert_user.return_value = ("turn_123", 1)
-                            mock_insert_ai.return_value = ("turn_456", "test_thread", 2)
-
-                            with patch("builtins.open", create=True) as mock_open:
-                                mock_file = MagicMock()
-                                mock_open.return_value.__enter__.return_value = mock_file
-
-                                result = await record_chat_history(
-                                    {
-                                        "user_input": "test input",
-                                        "system_output": "test output",
-                                        "project_dir": "/test/project",
-                                        "file_operations": "test operations",
-                                        "llm_name": "test-llm",
-                                    }
-                                )
-
-                                assert isinstance(result, MemoryResponse)
-                                assert result.success is True
-                                assert "query_turn_id" in result.data
-                                assert "response_turn_id" in result.data
+                assert isinstance(result, MemoryResponse)
+                assert result.success is True
+                assert "query_turn_id" in result.data
+                assert "response_turn_id" in result.data
+                assert result.data["query_turn_id"] == "mock_turn_user_123"
+                assert result.data["response_turn_id"] == "mock_turn_ai_456"

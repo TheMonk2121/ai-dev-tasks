@@ -14,7 +14,7 @@ from src.dspy_modules.retriever.rerank import mmr_rerank
 def create_retrieval_candidate(
     content: str,
     score: float,
-    metadata: dict = None,
+    metadata: dict | None = None,
 ) -> dict:
     """Create a retrieval candidate for testing."""
     if metadata is None:

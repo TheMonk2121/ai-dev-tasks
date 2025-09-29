@@ -186,7 +186,7 @@ class TestRetrievalTypeInvariants:
                 # Ensure score is float
                 if isinstance(row["score"], int):
                     row["score"] = float(row["score"])
-                elif not isinstance(row["score"], (int, float)):
+                elif not isinstance(row["score"], int | float):
                     row["score"] = 0.5
 
                 # Ensure file_path/filename are strings
@@ -196,7 +196,7 @@ class TestRetrievalTypeInvariants:
                     row["filename"] = str(row["filename"])
 
                 # Ensure embedding is a list/tuple
-                if not isinstance(row["embedding"], (list, tuple)):
+                if not isinstance(row["embedding"], list | tuple):
                     row["embedding"] = [0.1, 0.2, 0.3]
 
             result = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k, tag=tag)
@@ -221,13 +221,13 @@ class TestRetrievalTypeInvariants:
                         # If it's a dict, check that all its values are serializable
                         for sub_key, sub_value in value.items():  # type: ignore[misc]
                             assert isinstance(sub_key, str)
-                            assert isinstance(sub_value, (str, int, float, bool, type(None)))
+                            assert isinstance(sub_value, str | int | float | bool | type(None))
                     elif isinstance(value, list):
                         # If it's a list, check that all elements are serializable
                         for x in value:  # type: ignore[misc]
-                            assert isinstance(x, (str, int, float, bool, type(None)))
+                            assert isinstance(x, str | int | float | bool | type(None))
                     else:
-                        assert isinstance(value, (str, int, float, bool, type(None)))
+                        assert isinstance(value, str | int | float | bool | type(None))
 
         except Exception as e:
             record_case(

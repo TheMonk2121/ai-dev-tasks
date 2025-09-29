@@ -24,6 +24,8 @@ from tests.property.hypothesis_strategies import (
     CRITICAL_MEMORY_SYSTEMS,
     CRITICAL_MESSAGE_EXAMPLES,
     STATEFUL_MACHINES,
+    DatabaseStateMachine,
+    MemorySystemStateMachine,
     conversation_message_strategy,
     critical_examples,
     database_dsn_strategy,
@@ -207,13 +209,13 @@ class TestStatefulTesting:
     @settings(max_examples=5, deadline=1000)
     def test_memory_system_state_machine(self) -> None:
         """Test memory system state machine."""
-        run_state_machine_as_test()
+        run_state_machine_as_test(MemorySystemStateMachine)
 
     @pytest.mark.prop
     @settings(max_examples=5, deadline=1000)
     def test_database_state_machine(self) -> None:
         """Test database state machine."""
-        run_state_machine_as_test()
+        run_state_machine_as_test(DatabaseStateMachine)
 
 
 class TestAdvancedFeatures:

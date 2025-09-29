@@ -33,7 +33,7 @@ def changed_test_files(base_ref):
         text=True,
         capture_output=True,
     )
-    files = [l.strip() for l in res.stdout.splitlines() if l.strip().startswith("tests/") and l.strip().endswith(".py")]
+    files = [line.strip() for line in res.stdout.splitlines() if line.strip().startswith("tests/") and line.strip().endswith(".py")]
 
     # count only added as "new tests"
     resA = subprocess.run(
@@ -42,7 +42,7 @@ def changed_test_files(base_ref):
         capture_output=True,
     )
     added = [
-        l.strip() for l in resA.stdout.splitlines() if l.strip().startswith("tests/") and l.strip().endswith(".py")
+        line.strip() for line in resA.stdout.splitlines() if line.strip().startswith("tests/") and line.strip().endswith(".py")
     ]
 
     return files, added

@@ -107,7 +107,7 @@ class CodeReviewIntegration:
         if self.config.enable_n8n_workflows:
             try:
 
-                self.n8n_manager = N8nWorkflowManager()
+                self.n8n_manager = N8nWorkflowManager()  # type: ignore
                 logger.info("✅ n8n workflow manager initialized")
             except ImportError:
                 logger.warning("n8n workflow manager not available")
@@ -116,7 +116,7 @@ class CodeReviewIntegration:
         if self.config.enable_cursor_ai:
             try:
 
-                self.cursor_ai_framework = CursorAIIntegrationFramework()
+                self.cursor_ai_framework = CursorAIIntegrationFramework()  # type: ignore
                 logger.info("✅ Cursor AI integration framework initialized")
             except ImportError:
                 logger.warning("Cursor AI integration framework not available")
@@ -134,7 +134,7 @@ class CodeReviewIntegration:
         if self.config.enable_database_logging:
             try:
 
-                self.db_manager = get_database_manager()
+                self.db_manager = get_database_manager()  # type: ignore
                 logger.info("✅ Database manager initialized")
             except ImportError:
                 logger.warning("Database manager not available")

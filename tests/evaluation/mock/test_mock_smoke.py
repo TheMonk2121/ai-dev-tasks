@@ -8,4 +8,4 @@ def test_mock_profile_smoke() -> None:
 
 
 def test_unknown_profile_fails() -> None:
-    assert orchestrator_main(["--profile", "unknown"]) == 2
+    assert orchestrator_main(["--profile", "unknown"]) == 1

@@ -283,9 +283,9 @@ def make_request():
         suggestions = get_migration_suggestions(file_content)
 
         assert len(suggestions) == 2
-        assert any("requests.get" in suggestion for suggestion in .keys()
-        assert any("requests.post" in suggestion for suggestion in .keys()
-        assert all("migrate_requests_" in suggestion for suggestion in .values()
+        assert any("requests.get" in suggestion for suggestion in suggestions.keys())
+        assert any("requests.post" in suggestion for suggestion in suggestions.keys())
+        assert all("migrate_requests_" in suggestion for suggestion in suggestions.values())
 
     def test_timeout_configuration(self):
         """Test that timeout is properly configured in all methods."""
@@ -301,8 +301,8 @@ def make_request():
 
             # Verify timeout was passed to _get_client
             mock_get_client.assert_called_once()
-            call_kwargs = mock_get_client.result
-            assert result
+            call_kwargs = mock_get_client.call_args
+            assert "timeout" in call_kwargs.kwargs
 
     def test_headers_passthrough(self):
         """Test that headers are properly passed through all methods."""

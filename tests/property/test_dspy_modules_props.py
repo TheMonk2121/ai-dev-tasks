@@ -15,8 +15,8 @@ from hypothesis import strategies as st
 def create_reader_signature(
     query: str,
     context: str,
-    answer: str = None,
-    confidence: float = None,
+    answer: str | None = None,
+    confidence: float | None = None,
 ) -> dict[str, Any]:
     """Create a reader signature for testing."""
     return {
@@ -333,7 +333,7 @@ class TestDSPyModulesEdgeCases:
                 assert snippet_input["text"] == text
             except Exception as e:
                 # Should be a specific validation error, not a crash
-                assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for short string: {type(e)}"
+                assert isinstance(e, ValueError | TypeError), f"Unexpected exception for short string: {type(e)}"
 
     @pytest.mark.prop
     @given(st.text(min_size=1000, max_size=5000))
@@ -350,7 +350,7 @@ class TestDSPyModulesEdgeCases:
             assert len(snippet_input["text"]) <= len(text)
         except Exception as e:
             # Should be a specific validation error, not a crash
-            assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for long string: {type(e)}"
+            assert isinstance(e, ValueError | TypeError), f"Unexpected exception for long string: {type(e)}"
 
     @pytest.mark.prop
     @given(st.text(min_size=1, max_size=1000))
@@ -370,7 +370,7 @@ class TestDSPyModulesEdgeCases:
             assert snippet_input["text"] == special_text
         except Exception as e:
             # Should be a specific validation error, not a crash
-            assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for special characters: {type(e)}"
+            assert isinstance(e, ValueError | TypeError), f"Unexpected exception for special characters: {type(e)}"
 
     @pytest.mark.prop
     @given(

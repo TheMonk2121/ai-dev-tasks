@@ -8,8 +8,7 @@ import time
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.episodic_workflow_integration import EpisodicWorkflowIntegration
+from scripts.core.episodic_workflow_integration import EpisodicWorkflowIntegration
 
 #!/usr/bin/env python3
 """

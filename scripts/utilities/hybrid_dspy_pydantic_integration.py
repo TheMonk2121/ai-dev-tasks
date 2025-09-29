@@ -13,7 +13,6 @@ from src.observability.logging import init_observability
 # Import from legacy scripts using sys.path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "600_archives" / "legacy_scripts"))
 import logfire
-from dspy_modules.model_switcher import LocalModel, ModelSwitcher
 from migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_ai import Agent
@@ -21,6 +20,8 @@ from pydantic_ai.models.instrumented import InstrumentationSettings
 from pydantic_ai.models.test import TestModel
 from pydantic_evals.dataset import increment_eval_metric, set_eval_attribute
 from pydantic_evals.evaluators import Evaluator, EvaluatorContext
+
+from dspy_modules.model_switcher import LocalModel, ModelSwitcher
 
 #!/usr/bin/env python3
 """
@@ -70,7 +71,7 @@ class LocalOllamaAgent:
     def __init__(self) -> None:
         # Use TestModel for local development (no API keys needed)
 
-        self.agent: Agent = Agent(
+        self.agent: Agent = Agent(  # type: ignore
             TestModel(),
             system_prompt="You are a helpful AI assistant running locally via Ollama.",
             output_type=HybridRAGAnswer,
@@ -92,8 +93,8 @@ class LocalOllamaAgent:
                 response_time_ms = int((end_time - start_time) * 1000)
 
                 return HybridRAGAnswer(
-                    answer=result.output.answer,
-                    confidence=result.output.confidence or 0.8,
+                    answer=result.output.answer,  # type: ignore
+                    confidence=result.output.confidence or 0.8,  # type: ignore
                     sources=["local_ollama"],
                     model_used="ollama:llama3.1:8b",
                     environment="local",
@@ -209,9 +210,9 @@ class HybridRAGAgent:
         print(f"🌍 Detected environment: {self.environment}")
 
         if self.environment == "local":
-            self.agent: LocalOllamaAgent | DockerDSPyAgent = LocalOllamaAgent()
+            self.agent = LocalOllamaAgent()
         else:
-            self.agent: LocalOllamaAgent | DockerDSPyAgent = DockerDSPyAgent()
+            self.agent = DockerDSPyAgent()
 
     async def query(self, inputs: HybridRAGInput) -> HybridRAGAnswer:
         """Query using the appropriate handler for the environment."""

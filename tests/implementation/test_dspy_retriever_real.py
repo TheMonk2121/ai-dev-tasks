@@ -178,7 +178,7 @@ class TestDSPyRetrieverReal:
                     """
                     )
                     columns = cur.fetchall()
-                    column_names = [col[0] for col in columns]  # column_name is first element
+                    column_names = [col[0] for col in columns]  # type: ignore
 
                     # Check for essential columns
                     essential_columns = ["content", "embedding", "slug"]

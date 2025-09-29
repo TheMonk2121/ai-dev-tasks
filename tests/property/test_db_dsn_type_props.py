@@ -4,7 +4,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from src.common.db_dsn import _parse
+from src.common.db_dsn import _parse  # type: ignore
 
 from ._regression_capture import record_case
 

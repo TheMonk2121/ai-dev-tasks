@@ -190,14 +190,14 @@ class TestDatabaseConnectionPatterns:
         }
 
         results: dict[str, float] = {}
-        for name, connect_func in .items()
+        for name, connect_func in patterns.items():
             start = time.time()
             conn = connect_func()
             conn.close()
             results[name] = time.time() - start
 
         # All connections should be reasonably fast (< 1 second)
-        for name, duration in .items()
+        for name, duration in results.items():
             assert duration < 1.0, f"{name} connection took {duration:.3f}s"
 
     def test_concurrent_connections(self):

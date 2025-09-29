@@ -197,10 +197,10 @@ class TestFunctionTypeContracts:
                     # Check that all metadata values are JSON-serializable
                     for key, value in metadata.items():
                         assert isinstance(key, str)
-                        assert isinstance(value, (str, int, float, bool, type(None), list, dict))
+                        assert isinstance(value, str | int | float | bool | type(None) | list | dict)
 
                         # If it's a list or dict, check that it's JSON-serializable
-                        if isinstance(value, (list, dict)):
+                        if isinstance(value, list | dict):
                             try:
                                 import json
 

@@ -41,7 +41,7 @@ class TestSchemaTypeInvariants:
         try:
             case = CaseResult(
                 case_id=case_id,
-                mode=mode,
+                mode=mode,  # type: ignore
                 query=query,
                 precision=precision,
                 recall=recall,
@@ -86,9 +86,9 @@ class TestSchemaTypeInvariants:
         with pytest.raises(ValidationError) as exc_info:
             CaseResult(
                 case_id=case_id,
-                mode=mode,
+                mode=mode,  # type: ignore
                 query=query,
-                precision=precision,  # Invalid type
+                precision=precision,  # type: ignore
             )
 
         # Verify the error message indicates type validation failure
@@ -109,6 +109,7 @@ class TestSchemaTypeInvariants:
                 id=case_id,
                 mode=Mode(mode),
                 query=query,
+                gt_answer="test answer",
                 tags=tags,
             )
 
@@ -144,7 +145,8 @@ class TestSchemaTypeInvariants:
                 id=case_id,
                 mode=Mode(mode),
                 query=query,
-                tags=tags,  # Invalid type
+                gt_answer="test answer",
+                tags=tags,  # type: ignore
             )
 
         # Verify the error message indicates type validation failure
@@ -174,6 +176,7 @@ class TestSchemaTypeInvariants:
                 id=case_id,
                 mode=Mode(mode),
                 query=query,
+                gt_answer="test answer",
                 tags=tags,
             )
             assert case.mode == Mode(mode)
@@ -188,8 +191,9 @@ class TestSchemaTypeInvariants:
         with pytest.raises(ValidationError) as exc_info:
             GoldCase(
                 id=case_id,
-                mode=invalid_mode,  # Invalid mode
+                mode=invalid_mode,  # type: ignore
                 query=query,
+                gt_answer="test answer",
                 tags=tags,
             )
 
@@ -213,7 +217,7 @@ class TestSchemaTypeInvariants:
         try:
             original = CaseResult(
                 case_id=case_id,
-                mode=mode,
+                mode=mode,  # type: ignore
                 query=query,
                 precision=precision,
                 recall=recall,
@@ -257,6 +261,7 @@ class TestSchemaTypeInvariants:
                 id=case_id,
                 mode=Mode(mode),
                 query=query,
+                gt_answer="test answer",
                 tags=tags,
             )
 
@@ -298,7 +303,7 @@ class TestSchemaTypeInvariants:
         try:
             original = CaseResult(
                 case_id=case_id,
-                mode=mode,
+                mode=mode,  # type: ignore
                 query=query,
                 precision=precision,
                 recall=recall,

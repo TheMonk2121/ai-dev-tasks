@@ -13,7 +13,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from src.settings import EvalSettings
+from src.schemas.eval_settings import EvalSettings
 
 
 @pytest.mark.prop
@@ -71,8 +71,8 @@ def test_eval_settings_file_paths(gold_path: str, manifest_path: str, results_di
 
         # Check that paths are correctly set
         assert settings.GOLD_CASES_PATH == gold_path
-        assert settings.MANIFEST_PATH == manifest_path
-        assert settings.RESULTS_OUTPUT_DIR == results_dir
+        assert settings.EVAL_MANIFEST_PATH == manifest_path
+        assert settings.EVAL_RESULTS_OUTPUT_DIR == results_dir
 
         # Test helper methods
         assert settings.get_gold_cases_path().as_posix() == gold_path

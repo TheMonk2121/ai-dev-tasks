@@ -179,7 +179,6 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
     def initialize_memory_system(self, system_name=memory_system_strategy()):
         """Initialize a memory system."""
         self.memory_systems[system_name] = {"initialized": True, "last_accessed": datetime.now(), "message_count": 0}
-        return f"Initialized {system_name}"
 
     @rule()
     def create_conversation_thread(self, thread_id=st.text(min_size=1, max_size=50)):
@@ -187,7 +186,6 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
         assume(thread_id not in self.conversations)
         self.conversations[thread_id] = {"messages": [], "created_at": datetime.now(), "last_updated": datetime.now()}
         self.current_thread_id = thread_id
-        return f"Created thread {thread_id}"
 
     @rule()
     def add_message(self, message=conversation_message_strategy()):
@@ -203,7 +201,6 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
             if self.memory_systems[system_name]["initialized"]:
                 self.memory_systems[system_name]["message_count"] += 1
 
-        return f"Added message to thread {self.current_thread_id}"
 
     @rule()
     def query_memory_system(self, system_name=memory_system_strategy(), query=st.text(min_size=1, max_size=200)):
@@ -215,18 +212,11 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
         thread_count = len(self.conversations)
         message_count = sum(len(conv.get("messages", [])) for conv in self.conversations)
 
-        return {
-            "system": system_name,
-            "query": query,
-            "thread_count": thread_count,
-            "message_count": message_count,
-            "timestamp": datetime.now().isoformat(),
-        }
 
     @rule()
-    def cleanup_old_conversations(self, max_age_hours=st.integers(min_value=1, max_value=24)):
+    def cleanup_old_conversations(self, max_age_hours=st.floats(min_value=1.0, max_value=24.0)):
         """Clean up old conversations."""
-        cutoff_time = datetime.now() - timedelta(hours=max_age_hours)
+        cutoff_time = datetime.now() - timedelta(hours=max_age_hours)  # type: ignore
 
         old_threads = [
             thread_id for thread_id, conv in self.conversations.items()
@@ -236,7 +226,6 @@ class MemorySystemStateMachine(RuleBasedStateMachine):
         for thread_id in old_threads:
             del self.conversations[thread_id]
 
-        return f"Cleaned up {len(old_threads)} old conversations"
 
 
 class DatabaseStateMachine(RuleBasedStateMachine):
@@ -253,7 +242,6 @@ class DatabaseStateMachine(RuleBasedStateMachine):
         """Connect to a database."""
         assume(not self.connection)
         self.connection = f"connected_to_{dsn}"
-        return f"Connected to {dsn}"
 
     @rule()
     def create_table(self, table_name=st.text(min_size=1, max_size=50)):
@@ -262,7 +250,6 @@ class DatabaseStateMachine(RuleBasedStateMachine):
         assume(table_name not in self.tables)
 
         self.tables[table_name] = {"columns": [], "rows": [], "created_at": datetime.now()}
-        return f"Created table {table_name}"
 
     @rule()
     def insert_data(self, table_name=st.text(min_size=1, max_size=50), data=st.dictionaries(st.text(), st.text())):
@@ -271,7 +258,6 @@ class DatabaseStateMachine(RuleBasedStateMachine):
         assume(table_name in self.tables)
 
         self.tables[table_name]["rows"].append(data)
-        return f"Inserted data into {table_name}"
 
     @rule()
     def query_table(self, table_name=st.text(min_size=1, max_size=50)):
@@ -280,7 +266,6 @@ class DatabaseStateMachine(RuleBasedStateMachine):
         assume(table_name in self.tables)
 
         row_count = len(self.tables[table_name]["rows"])
-        return f"Table {table_name} has {row_count} rows"
 
 
 # ============================================================================

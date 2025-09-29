@@ -134,14 +134,18 @@ class AtlasUnifiedSystem:
         self, role: str, content: str, metadata: dict[str, str | int | float | bool | None] | None = None
     ) -> str:
         """Manually capture a conversation turn."""
-        # For now, use the existing capture methods
-        # TODO: Use metadata parameter when implementing full metadata support
-        _ = metadata  # Suppress unused parameter warning
+        meta_payload = dict(metadata or {})
+        parent_turn_id = meta_payload.pop("parent_turn_id", None) or meta_payload.pop("query_turn_id", None)
+
         if role == "user":
-            result = self.auto_capture.capture_user_query(content)
+            result = self.auto_capture.capture_user_query(content, meta_payload)
             return result or "user_query_captured"
         else:
-            result = self.auto_capture.capture_ai_response(content)
+            result = self.auto_capture.capture_ai_response(
+                content,
+                query_turn_id=str(parent_turn_id) if parent_turn_id else None,
+                metadata=meta_payload,
+            )
             return result or "ai_response_captured"
 
     def rehydrate_memory(self, query: str = "current project status and core documentation") -> str:

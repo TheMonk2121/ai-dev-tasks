@@ -6,7 +6,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from src.memory_graphs.consolidate import collect_turns, run, summarize
+from src.graphs.memory_graphs.consolidate import collect_turns, run, summarize
 
 #!/usr/bin/env python3
 """

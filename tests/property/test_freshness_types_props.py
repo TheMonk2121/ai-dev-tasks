@@ -128,10 +128,10 @@ class TestFreshnessTypesProps:
             # Check that all metadata fields are serializable primitives
             for key, value in enhancement_metadata.items():
                 assert isinstance(key, str)
-                assert isinstance(value, (str, int, float, bool, list, dict, type(None)))
+                assert isinstance(value, str | int | float | bool | list | dict | type(None))
 
                 # If it's a list or dict, check that it's JSON-serializable
-                if isinstance(value, (list, dict)):
+                if isinstance(value, list | dict):
                     try:
                         import json
 
@@ -272,10 +272,10 @@ class TestFreshnessTypesProps:
 
                     for key, value in freshness_metadata.items():
                         assert isinstance(key, str)
-                        assert isinstance(value, (int, float, type(None)))
+                        assert isinstance(value, int | float | type(None))
 
                         # If it's a number, check that it's finite
-                        if isinstance(value, (int, float)) and value is not None:
+                        if isinstance(value, int | float) and value is not None:
                             assert math.isfinite(value)
 
         except Exception as e:

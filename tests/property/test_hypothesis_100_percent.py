@@ -31,6 +31,8 @@ from hypothesis.stateful import run_state_machine_as_test
 from tests.property.hypothesis_strategies import (
     COMMON_STRATEGIES,
     STATEFUL_MACHINES,
+    DatabaseStateMachine,
+    MemorySystemStateMachine,
     conversation_message_strategy,
     database_dsn_strategy,
     eval_profile_strategy,
@@ -183,11 +185,11 @@ class TestStatisticsAndReporting:
     def test_with_statistics(self, profile: str, system: str, data_size: int) -> None:
         """Test with statistics collection."""
         # Collect statistics
-        statistics.add("profile_type", profile)
-        statistics.add("system_type", system)
-        statistics.add("data_size", data_size)
-        statistics.add("is_large_data", data_size > 500)
-        statistics.add("is_gold_profile", profile == "gold")
+        statistics.add("profile_type", profile)  # type: ignore
+        statistics.add("system_type", system)  # type: ignore
+        statistics.add("data_size", data_size)  # type: ignore
+        statistics.add("is_large_data", data_size > 500)  # type: ignore
+        statistics.add("is_gold_profile", profile == "gold")  # type: ignore
 
         # Test logic
         assert profile in ["gold", "real", "mock"]
@@ -207,11 +209,11 @@ class TestStatisticsAndReporting:
         total_content_length = sum(len(msg.get('content', '')) for msg in messages)
         avg_content_length = total_content_length / total_messages if total_messages > 0 else 0
 
-        statistics.add("total_messages", total_messages)
-        statistics.add("total_content_length", total_content_length)
-        statistics.add("avg_content_length", avg_content_length)
-        statistics.add("threshold", threshold)
-        statistics.add("messages_above_threshold", sum(1 for msg in messages if len(msg.get('content', '')) > threshold))
+        statistics.add("total_messages", total_messages)  # type: ignore
+        statistics.add("total_content_length", total_content_length)  # type: ignore
+        statistics.add("avg_content_length", avg_content_length)  # type: ignore
+        statistics.add("threshold", threshold)  # type: ignore
+        statistics.add("messages_above_threshold", sum(1 for msg in messages if len(msg.get('content', '')) > threshold))  # type: ignore
 
         # Test processing
         assert total_messages > 0
@@ -275,11 +277,11 @@ class TestCompleteIntegration:
             target(complexity)
 
         # Collect statistics
-        statistics.add("profile", profile)
-        statistics.add("system", system)
-        statistics.add("complexity", complexity)
-        statistics.add("data_length", len(data))
-        statistics.add("is_complex", complexity > 50)
+        statistics.add("profile", profile)  # type: ignore
+        statistics.add("system", system)  # type: ignore
+        statistics.add("complexity", complexity)  # type: ignore
+        statistics.add("data_length", len(data))  # type: ignore
+        statistics.add("is_complex", complexity > 50)  # type: ignore
 
         # Test logic
         assert profile in ["gold", "real", "mock"]
@@ -292,7 +294,7 @@ class TestCompleteIntegration:
         processing_score = len(processed_data) * complexity / 100
 
         note(f"Processing score: {processing_score}")
-        statistics.add("processing_score", processing_score)
+        statistics.add("processing_score", processing_score)  # type: ignore
 
         assert processing_score >= 0
 
@@ -306,7 +308,7 @@ class TestStatefulAdvancedFeatures:
         """Test memory system state machine with advanced features."""
         # This would integrate advanced features with stateful testing
         # For now, we'll run the basic state machine
-        run_state_machine_as_test()
+        run_state_machine_as_test(MemorySystemStateMachine)
 
     @pytest.mark.prop
     @settings(max_examples=3, deadline=2000)
@@ -314,7 +316,7 @@ class TestStatefulAdvancedFeatures:
         """Test database state machine with advanced features."""
         # This would integrate advanced features with stateful testing
         # For now, we'll run the basic state machine
-        run_state_machine_as_test()
+        run_state_machine_as_test(DatabaseStateMachine)
 
 
 # ============================================================================
@@ -338,7 +340,7 @@ def create_statistics_collector():
     """Create a statistics collector for test analysis."""
 
     def collect_stats(name, value):
-        statistics.add(name, value)
+        statistics.add(name, value)  # type: ignore
 
     return collect_stats
 

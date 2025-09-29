@@ -14,7 +14,8 @@ from pathlib import Path
 
 # Type annotations are handled in class definitions
 import pytest
-from scripts.task_generation_automation import (
+
+from scripts.utilities.task_generation_automation import (
     BacklogParser,
     GeneratedTask,
     PRDParser,

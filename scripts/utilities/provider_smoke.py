@@ -11,8 +11,7 @@ from typing import Any, Optional, Union
 import boto3
 import httpx
 
-# FIXME: Update this import path after reorganization
-# from scripts.utils.http_client import create_client, get_with_backoff  # type: ignore[import-untyped]
+from scripts.utils.http_client import create_client, get_with_backoff  # type: ignore[import-untyped]
 
 #!/usr/bin/env python3
 

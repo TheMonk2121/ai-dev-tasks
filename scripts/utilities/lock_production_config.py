@@ -73,7 +73,7 @@ def main():
     print()
 
     # Create and lock configuration
-    config = create_production_config(
+    config = create_production_config(  # type: ignore
         chunk_size=args.chunk_size,
         overlap_ratio=args.overlap_ratio,
         jaccard_threshold=args.jaccard_threshold,
@@ -84,7 +84,7 @@ def main():
 
     # Promote to production if requested
     if args.promote:
-        manager = ConfigLockManager()
+        manager = ConfigLockManager()  # type: ignore
         manager.promote_to_production(config)
 
     # Generate runbook if requested
@@ -92,7 +92,7 @@ def main():
         print("\n" + "=" * 60)
         print("PRODUCTION EVALUATION RUNBOOK")
         print("=" * 60)
-        runbook = get_production_runbook()
+        runbook = get_production_runbook()  # type: ignore
         print(runbook)
 
         # Save runbook to file
@@ -100,7 +100,7 @@ def main():
         with open(runbook_file, "w") as f:
             f.write("#!/bin/bash\n")
             f.write("# Production Evaluation Runbook\n")
-            f.write(f"# Generated: {config.created_at}\n")
+            f.write(f"# Generated: {config.locked_at}\n")
             f.write(f"# Config: {config.chunk_version}\n\n")
             f.write(runbook)
 

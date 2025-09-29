@@ -10,13 +10,13 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 import yaml
-from utils.hybrid_retriever import HybridRetriever, create_hybrid_retriever
 
 from evaluation.enhanced_metrics import EnhancedEvaluator, QueryResult, load_golden_queries
 from retrieval.cross_encoder_client import create_cross_encoder_client
 from retrieval.deduplication import create_deduplicator
 from retrieval.windowing import create_windower
 from telemetry.request_logger import CanaryTagger, RequestLogger, log_rag_request
+from utils.hybrid_retriever import HybridRetriever, create_hybrid_retriever
 
 #!/usr/bin/env python3
 """

@@ -551,8 +551,6 @@ class TestMetricsGuardCLI:
 class TestMetricsGuardIntegration:
     """Integration tests for metrics_guard.py."""
 
-    temp_dir: str = ""
-
     def setup_method(self: Any):
         """Set up test fixtures."""
         self.temp_dir: Any = tempfile.mkdtemp()

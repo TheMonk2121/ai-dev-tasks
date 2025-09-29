@@ -1,372 +1,137 @@
-# 🎯 Evaluation System Entry Poin
+# 🎯 Evaluation System Entry Point
 <!-- keywords: evals, run the evals, evaluations, ragchecker, benchmark -->
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
 |---|---|---|
-| **PRIMARY ENTRY POINT** for all evaluation system usage - agents start here | Any agent needs to run evaluations, check performance, or understand the system | Follow the "Quick Start" section below |
+| **Primary entry point** for running or validating evaluations | Before executing any evaluation or updating baselines | Follow the Quick Start checklist, then choose the workflow below |
 
-## 🚀 **Quick Start (For All Agents)**
+## 🚀 Quick Start Checklist
 
-### **🚨 NEW: Pydantic Evals Framework (Recommended)**
-```bash
-# Run Pydantic Evals integration demo
-python3 scripts/pydantic_evals_integration.py
+1. **Rehydrate memory context** so you inherit the latest evaluation decisions.
+   ```bash
+   export POSTGRES_DSN="mock://test"
+   UV_PROJECT_ENVIRONMENT=.venv uv run python scripts/utilities/unified_memory_orchestrator.py \
+     --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+   ```
+2. **Prime your shell** for repo-relative imports.
+   ```bash
+   export PYTHONPATH=$PWD
+   export UV_PROJECT_ENVIRONMENT=.venv
+   ```
+3. **Run smoke checks** to confirm the stack is healthy.
+   ```bash
+   PYTHONPATH=$PWD uv run python evals/scripts/evaluation/test_governance_simple.py
+   PYTHONPATH=$PWD uv run python -m pytest tests/evaluation/test_canonical_evaluator.py
+   ```
+   Both commands must pass before you run the full evaluations.
+4. **Pick an evaluation profile** (`make eval-gold`, `make eval-real`, or `make eval-mock`) and monitor the output. Detailed workflows are below.
 
-# Run retrieval evaluation with Pydantic Evals
-python3 300_evals/retrieval_eval.py
+## 🧪 Smoke Tests (required before full runs)
 
-# Run legacy compatibility tes
-python3 -c "from scripts.migrate_to_pydantic_evals import load_eval_cases; print(f'Loaded {len(load_eval_cases(\"gold\"))} cases')"
-```
+| command | why it matters |
+|---|---|
+| `PYTHONPATH=$PWD uv run python evals/scripts/evaluation/test_governance_simple.py` | Exercises the governance pipeline and confirms the optimized configuration loads successfully. |
+| `PYTHONPATH=$PWD uv run python -m pytest tests/evaluation/test_canonical_evaluator.py` | Validates the canonical evaluator interface and catches missing imports or environment drift. |
 
-**This is the NEW Pydantic Evals framework with type-safe evaluation, Logfire observability, and full legacy compatibility.**
+If either command fails, stop and fix the issue before attempting a full evaluation.
 
-### **📋 Legacy Evaluation System (Deprecated)**
-```bash
-# Generate evaluation documentation and artifacts
-python -m evals_300.tools.gen
+## 🏃 Standard Evaluation Workflows
 
-# Run specific evaluation passes
-python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
-python -m evals_300.tools.run --suite 300_core --pass deterministic_few_sho
-
-# View generated documentation
-cat evals_300/_generated/300_core.md
-```
-
-**This is the legacy evaluation system. Use Pydantic Evals framework for new development.**
-
-### **📋 Standard Evaluation Command (With Lessons Engine)**
-```bash
-source throttle_free_eval.sh
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
-```
-
-**This is the legacy command for evaluations with automatic lesson learning.**
-
-### **📋 Legacy Evaluation Command (Without Lessons)**
-```bash
-source throttle_free_eval.sh
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
-```
-
-**Use this only if lessons engine is disabled or for baseline comparisons.**
-
-### **💨 Fast Testing Command**
-```bash
-./scripts/run_ragchecker_smoke_test.sh
-```
-
-**Use this for quick iteration and testing changes.**
-
-### **🔍 Quick Status Check (For Stateless Agents)**
-```bash
-# Check system health before running evaluations
-python3 scripts/healthcheck_db.py
-
-# Verify evaluation environment
-source throttle_free_eval.sh
-echo "🔒 Environment loaded. Check banner shows 'lock=True'"
-
-# Check recent evaluation results
-ls -la metrics/baseline_evaluations/ | head -5
-
-# Verify baseline manifest exists
-ls -la metrics/baseline_evaluations/BASELINE_*.md
-```
-
-**Use this to verify system status before running evaluations.**
-
-### **🧭 Cursor Command Palette (Stateless Agents)**
-Use these project commands from the Cursor Command Palette (they are created under `.cursor/commands/`):
+### Preferred: Makefile targets
+Use these targets for consistent environment setup and logging.
 
 ```bash
-# Memory
-memory-remember         # record a conversation turn to MCP memory
-memory-refresh          # query MCP memory (LTST, Cursor, Go CLI)
+# Gold profile (baseline comparisons)
+make eval-gold
 
-# Eval smoke (fast, unpinned)
-eval-smoke-mock         # harness mock profile
-eval-smoke-gold         # strict env; gold --limit 5
-eval-smoke-real         # strict env; real (add --limit locally if desired)
+# Real profile (production parity)
+make eval-real
 
-# Eval full (unpinned)
-eval-full-gold          # strict env; full gold
-eval-full-real          # strict env; full real
+# Mock profile (infra-only smoke)
+make eval-mock
 ```
 
-Notes:
-- All Python invocations use `UV_PROJECT_ENVIRONMENT=.venv uv run ...`.
-- Strict eval runs unset `INGEST_RUN_ID`/`CHUNK_VARIANT` to avoid accidental pinning.
+Each target prints the active command. Logs land in `metrics/baseline_evaluations/` just like the direct invocation.
 
-### **🔧 Environment Setup Command**
+### Direct invocation (when you need custom flags)
+
 ```bash
-# Set up all required environment variables for evaluation system
-source scripts/setup_evaluation_env.sh
-
-# Verify environment is configured
-uv run python scripts/health_gated_evaluation.py --check-only
+PYTHONPATH=$PWD UV_PROJECT_ENVIRONMENT=.venv \
+uv run python scripts/ragchecker_official_evaluation.py --profile gold \
+  --lessons-mode advisory --limit 10
 ```
 
-**Use this to configure the evaluation system environment and verify all components are working.**
+Key flags:
+- `--profile {gold|real|mock}` – chooses dataset + infrastructure profile.
+- `--limit N` – optional subset for quick iteration.
+- `--lessons-mode {off|advisory|apply}` – integrate lessons engine output. Stay on `advisory` unless the decision docket tells you to apply.
 
-### ✅ Standard Evaluation Sequence
-1) `python3 scripts/update_baseline_manifest.py --profile precision_elevated`
-2) `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
-3) `python3 scripts/abp_validation.py --profile precision_elevated`
+## 📂 Where results live
 
-Use this 3‑step flow for any official evaluation run. Step 2 supports Bedrock/stable flags via your sourced env (see Quick Start).
+- **Metrics JSON**: `metrics/baseline_evaluations/*.json`
+- **Decision dockets & derived configs**: `metrics/derived_configs/`
+- **Lessons**: `metrics/lessons/lessons.jsonl`
+- **Logs**: `mcp_server.log` (for MCP) and stdout from the commands above
 
-### **✅ Post-Evaluation Validation (For Stateless Agents)**
+Use `jq` or `python -m json.tool` to inspect the latest metrics file:
+
 ```bash
-# Verify evaluation completed successfully
-echo "✅ Evaluation complete. Checking results..."
-
-# Check results were generated
-ls -la metrics/baseline_evaluations/ | tail -5
-
-# Verify ABP files were created
-ls -la metrics/briefings/ | tail -3
-
-# Check for any error indicators
-grep -i "error\|failed\|exception" metrics/baseline_evaluations/*.json | head -5
-
-# Display latest metrics summary
-python3 scripts/metrics_guard.py
+LATEST=$(ls -t metrics/baseline_evaluations/*.json | head -1)
+jq '.overall_metrics' "$LATEST"
 ```
 
-**Use this to verify evaluation completed successfully and results are valid.**
+## ✅ Post-run checklist
 
-### 🧭 If you were told to "run the evals"
-- **MANDATORY**: Run memory rehydration first: `export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
-- **ABP‑validated quick sequence**:
-  ```bash
-  # 1) Update baseline manifest (fresh targets/EMA)
-  python3 scripts/update_baseline_manifest.py --profile precision_elevated
+- [ ] Did the command finish without stack traces?
+- [ ] Are `precision`, `recall`, and `f1_score` within expected guard rails?
+- [ ] Were new lessons written (`metrics/lessons/lessons.jsonl`)?
+- [ ] If lessons were produced, review the decision docket before applying changes.
+- [ ] Record the metrics path in the backlog or execution log if the run was official.
 
-  # 2) Run evaluation with lessons (advisory)
-  python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+## 📊 Guard rails & remediation
 
-  # 3) Validate ABP generation and context sidecars
-  python3 scripts/abp_validation.py --profile precision_elevated
-  ```
-- **Review the decision docket** printed in the output
-- **Document results** in `000_core/000_backlog.md`
-- If Bedrock credentials are missing, run `./scripts/run_ragchecker_smoke_test.sh` and report results
+| metric | production guard rail | remediation hint |
+|---|---|---|
+| Precision | ≥ 0.20 | Reintroduce precision-focused lessons, tighten reranker top‑k |
+| Recall | ≥ 0.45 | Apply recall improvements, but keep precision ≥ 0.149 while iterating |
+| F1 | ≥ 0.22 | Balance both knobs; rerun smoke test after each change |
 
-### 🧠 **Lessons Engine Integration**
+If a run drops below a guard rail:
+1. Re-run with `--lessons-mode advisory` and inspect the docket.
+2. Apply adjustments manually or rerun with `--lessons-mode apply` only after verifying the docket gates.
+3. Re-run the smoke tests, then the full evaluation profile.
 
-#### **Advisory-First Approach**
+## 🧭 Useful companion commands
+
 ```bash
-# 1. Run with lessons in advisory mode (recommended)
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+# Check MCP memory server
+make mcp-status
 
-# 2. Review decision docke
-cat metrics/derived_configs/*_decision_docket.md
+# Tail latest evaluation metrics summary
+PYTHONPATH=$PWD uv run python scripts/evaluation/metrics_guard.py
 
-# 3. Apply lessons if approved
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode apply --lessons-scope profile
+# Generate lessons from a run (writes to episodic memory automatically)
+PYTHONPATH=$PWD uv run python scripts/utilities/lessons_extractor.py \
+  metrics/baseline_evaluations/<run>.json
 ```
 
-**Note**: Runner prints one-line summary when apply is blocked and exact "Decision docket:" path.
+## 🛠 Troubleshooting quick reference
 
-#### **When To Use `--lessons-mode apply`**
-- Use apply only after reviewing the docket and confirming:
-  - No hard gates will be violated (see Baseline Targets below)
-  - Precision stays above your current guard rail during recall pushes (e.g., ≥ 0.149 interim)
-  - The change is configuration-only and reversible
-- Command: `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode apply --lessons-scope profile`
-- If the script prints "apply_blocked: true", keep using advisory and apply changes manually in `config/retrieval.yaml`.
+| symptom | fix |
+|---|---|
+| `ModuleNotFoundError: src...` | Ensure `export PYTHONPATH=$PWD` and rerun command with `uv run`. |
+| Governance smoke fails to import pipeline module | Run `git status` to confirm repo sync; the loader now reads from `evals/stable_build/modules/`. |
+| Evaluator complains about Bedrock credentials | Use `aws configure` or run the mock profile until credentials are restored. |
+| Lessons file missing | Re-run `lessons_extractor.py`; the script now writes to episodic memory automatically. |
 
-#### **Interpret Output**
-- **Decision docket path**: Printed in output, contains lesson details and parameter changes
-- **Apply blocked**: If quality gates prevent apply, review docket for warnings
-- **Generated files**: Check `metrics/derived_configs/` for candidate configs and dockets
-- **New lessons**: Check `metrics/lessons/lessons.jsonl` for lessons learned
+## 🔗 Reference material
 
-#### **Minimal Resume Checklist**
-```bash
-# Get latest eval → parse .run_config.lessons → if docket present, open; if apply_blocked, keep base env
-LATEST_RESULTS=$(ls -t metrics/baseline_evaluations/*.json | head -1)
-jq '.run_config.lessons' "$LATEST_RESULTS"
-
-# If docket present, open and follow next steps
-# If apply_blocked == true, review gates and fix before applying
-# Attach docket link to backlog commen
-# Run quality checks and evolution tracking
-python3 scripts/lessons_quality_check.py
-python3 scripts/evolution_tracker.py
-```
-
-**Example jq snippet**:
-```bash
-jq '.run_config.lessons' $(ls -t metrics/baseline_evaluations/*.json | head -1)
-```
-
-### 🎯 Baseline Targets (Production)
-- Precision: ≥ 0.20
-- Recall: ≥ 0.45
-- F1 Score: ≥ 0.22
-
-Reference: `metrics/baseline_evaluations/TUNED_BASELINE_20250902.md` and `metrics/baseline_evaluations/RED_LINE_ENFORCEMENT_RULES.md`.
-
-### 🛠 When Metrics Are Below Targe
-- Run with lessons advisory: `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5`
-- Review decision docket in `metrics/derived_configs/` and apply if gates allow: `--lessons-mode apply`
-- Re‑run smoke test for quick iteration: `./scripts/run_ragchecker_smoke_test.sh`
-- Validate baselines and context: `python3 scripts/abp_validation.py --profile precision_elevated`
-- If still below, check retrieval settings and quality gates per `400_guides/400_canonical-evaluation-sop.md`
-
-#### 📈 Recall Improvement Playbook (keep precision ≥ 0.149)
-- Increase breadth, then prune:
-  - In `config/retrieval.yaml` → `candidates.final_limit`: raise from 50 → 80
-  - `rerank.final_top_n`: raise from 8 → 12
-  - `rerank.alpha`: lower from 0.7 → 0.6 (let fused recall influence more)
-- Loosen early filters slightly:
-  - `prefilter.min_bm25_score`: 0.10 → 0.05
-  - `prefilter.min_vector_score`: 0.70 → 0.65
-- Favor semantic coverage when query is conceptual:
-  - Switch fusion profile to `semantic_heavy` or increase `fusion.lambda_sem` (+0.1) for those runs
-- Add diversity for multi-facet queries:
-  - `packing.mmr_lambda`: 0.7 → 0.6 (slightly more diversity)
-- Iterate fast:
-  - Run: `./scripts/run_ragchecker_smoke_test.sh` then full eval
-  - Abort/revert if precision < 0.149 while recall gain < +0.03
-
-Tip: capture each change as a lesson note in the docket or commit message for provenance.
-
-## 📍 **Where to Find Everything**
-
-### **🔧 Configuration Files**
-- **`configs/stable_bedrock.env`** - Locked evaluation settings (DO NOT MODIFY)
-- **`throttle_free_eval.sh`** - Loads stable configuration
-- **`scripts/ragchecker_official_evaluation.py`** - Main evaluation script
-- **`scripts/setup_evaluation_env.sh`** - Environment variables setup for evaluation system
-- **`src/`** - DSPy RAG system components for evaluation
-
-### **📊 Results & Documentation**
-- **`metrics/baseline_evaluations/`** - All evaluation results
-- **`400_guides/400_canonical-evaluation-sop.md`** - Complete SOP documentation
-- **`scripts/baseline_version_manager.py`** - Version management tools
-
-### **🚀 Execution Scripts**
-- **`throttle_free_eval.sh`** - Load stable config
-- **`scripts/run_ragchecker_smoke_test.sh`** - Fast smoke testing
-- **`scripts/ragchecker_official_evaluation.py`** - Full evaluation
-- **`scripts/setup_evaluation_env.sh`** - Environment setup
-- **`src/rag_system.py`** - DSPy RAG system interface
-
-### **🤖 DSPy RAG System Components**
-- **`src/rag_system.py`** - Main RAG system interface
-- **`src/dspy_modules/`** - DSPy-specific modules and programs
-- **`src/rag/`** - RAG pipeline components
-- **`src/schemas/`** - Pydantic data models
-- **`src/common/`** - Common utilities and database connections
-
-## 🎯 **Agent Workflow**
-
-### **🔄 Daily Regression Testing**
-1. **Run standard command** (see Quick Start above)
-2. **Verify banner shows**: `🔒 Loaded env from configs/stable_bedrock.env … lock=True`
-3. **Check results** in `metrics/baseline_evaluations/`
-
-### **💨 Fast Iteration**
-1. **Make changes** to system
-2. **Run smoke test**: `./scripts/run_ragchecker_smoke_test.sh`
-3. **Iterate quickly** until satisfied
-4. **Run full evaluation** when ready
-
-### **🔒 Version New Baseline**
-1. **When intentionally changing** weights/config
-2. **Run**: `python3 scripts/baseline_version_manager.py --full-setup`
-3. **Follow prompts** to create new versioned baseline
-
-## 🚨 **Critical Rules**
-
-### **✅ Always Do**
-- **Use `--stable` flag** for all evaluations
-- **Source `throttle_free_eval.sh`** before running
-- **Verify lock status** in banner output
-- **Check for throttling** - if any, reduce rate limits
-
-### **❌ Never Do**
-- **Modify `configs/stable_bedrock.env`** without versioning
-- **Run evaluations** without stable configuration
-- **Ignore throttling** - fix configuration instead
-- **Skip smoke tests** for major changes
-
-## 📋 **Verification Checklist**
-
-**Before running any evaluation, verify:**
-- [ ] `configs/stable_bedrock.env` exists
-- [ ] Using `--stable` flag
-- [ ] Banner shows lock status
-- [ ] No throttling in previous runs
-- [ ] AWS credentials configured
-
-**After running evaluation, check:**
-- [ ] Results saved to `metrics/baseline_evaluations/`
-- [ ] No throttling errors
-- [ ] Performance metrics within baseline
-- [ ] Configuration provenance recorded
-
-## 🔍 **Troubleshooting**
-
-### **❌ "Stable config not found"**
-```bash
-cp configs/stable_bedrock.env.template configs/stable_bedrock.env
-```
-
-### **❌ Throttling errors**
-```bash
-# Edit configs/stable_bedrock.env
-export BEDROCK_MAX_RPS=0.06  # Reduce from 0.15
-export BEDROCK_COOLDOWN_SEC=45  # Increase from 30
-```
-
-### **❌ AWS credentials issues**
-```bash
-aws configure  # Set up credentials
-python3 scripts/bedrock_connection_test.py  # Test connection
-```
-
-## 📚 **Further Reading**
-
-- **`400_guides/400_canonical-evaluation-sop.md`** - Complete SOP
-- **`scripts/baseline_version_manager.py --help`** - Version managemen
-- **`scripts/ragchecker_official_evaluation.py --help`** - All options
-
-## 🎯 **Agent Memory Integration**
-
-**For Cursor AI agents, remember:**
-- **Entry point**: This file (`000_core/000_evaluation-system-entry-point.md`)
-- **Standard command**: Always use `--stable` flag
-- **Configuration**: Never modify stable config without versioning
-- **Results**: Always check `metrics/baseline_evaluations/`
-
-### 📊 Current RAGChecker Baseline (2025-09-06)
-- Precision: 0.129 (Target ≥ 0.20) — Needs +0.071
-- Recall: 0.157 (Target ≥ 0.45) — Needs +0.293
-- F1 Score: 0.137 (Target ≥ 0.22) — Needs +0.083
-
-Source: latest `metrics/baseline_evaluations/ragchecker_official_evaluation_*.json` overall_metrics.
-
-### 🔄 Baseline Restoration Plan
-- Lock env: `source throttle_free_eval.sh` and verify banner `lock=True`
-- Run Standard Evaluation Sequence (above) with lessons in advisory
-- Apply the Recall Improvement Playbook (small, reversible steps)
-- Gate checks:
-  - Don’t accept any change that drops precision below 0.149 (interim guard)
-  - Prefer changes that add ≥ +0.03 recall per step
-- Validate: `python3 scripts/abp_validation.py --profile precision_elevated`
-- When all production targets are met (P≥0.20, R≥0.45, F1≥0.22):
-  - Version baseline: `python3 scripts/baseline_version_manager.py --full-setup`
-  - Update manifest: `python3 scripts/update_baseline_manifest.py --profile precision_elevated`
-  - Record snapshot in backlog with the result JSON path
+- `400_guides/400_11_performance-optimization.md` – performance tuning patterns.
+- `400_guides/400_12_advanced-configurations.md` – advanced configuration scenarios.
+- `scripts/utilities/memory/mcp_memory_server.py --help` – MCP memory endpoints.
+- `Makefile` – authoritative list of supported eval targets.
 
 ---
-
-**This is the SINGLE SOURCE OF TRUTH for evaluation system usage.**
-**All agents should start here and follow these exact procedures.**
+**All agents should start here before touching the evaluation stack. Keep this document up to date whenever workflows change.**

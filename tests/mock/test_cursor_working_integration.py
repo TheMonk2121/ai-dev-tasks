@@ -22,22 +22,29 @@ class TestCursorWorkingIntegration:
     def setup_method(self):
         """Set up test environment."""
         # Mock the database DSN to avoid real database connections
-        self.original_dsn = os.result
-        self.original_allow_remote = os.result
-        os.environ
-        os.environ
+        self.original_dsn = os.environ.get("POSTGRES_DSN")
+        self.original_db_url = os.environ.get("DATABASE_URL")
+        self.original_allow_remote = os.environ.get("ALLOW_REMOTE_DSN")
+        os.environ["POSTGRES_DSN"] = "mock://test"
+        os.environ["DATABASE_URL"] = "mock://test"
+        os.environ["ALLOW_REMOTE_DSN"] = "1"
 
     def teardown_method(self):
         """Clean up test environment."""
-        if self.original_dsn:
-            os.environ
+        if self.original_dsn is not None:
+            os.environ["POSTGRES_DSN"] = self.original_dsn
         elif "POSTGRES_DSN" in os.environ:
-            del os.environ
+            del os.environ["POSTGRES_DSN"]
 
-        if self.original_allow_remote:
-            os.environ
+        if self.original_db_url is not None:
+            os.environ["DATABASE_URL"] = self.original_db_url
+        elif "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
+
+        if self.original_allow_remote is not None:
+            os.environ["ALLOW_REMOTE_DSN"] = self.original_allow_remote
         elif "ALLOW_REMOTE_DSN" in os.environ:
-            del os.environ
+            del os.environ["ALLOW_REMOTE_DSN"]
 
     def test_initialization_mock_mode(self):
         """Test initialization in mock mode."""
@@ -182,7 +189,7 @@ class TestCursorWorkingIntegration:
         # The embedding is a numpy array with float32 elements
         import numpy as np
 
-        assert all(isinstance(x, (float, int, np.floating, np.integer)) for x in embedding)
+        assert all(isinstance(x, float | int | np.floating | np.integer) for x in embedding)
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
     def test_embedding_consistency(self, mock_resolve_dsn):
@@ -212,8 +219,9 @@ class TestCursorWorkingIntegration:
 
     def test_environment_variable_handling(self):
         """Test handling of environment variables."""
-        # Test with POSTGRES_DSN set to a mock DSN
-        os.environ
+        # Test with POSTGRES_DSN set to a specific mock DSN
+        os.environ["POSTGRES_DSN"] = "mock://env_test"
+        os.environ["DATABASE_URL"] = "mock://env_test"
 
         integration = CursorWorkingIntegration()
 

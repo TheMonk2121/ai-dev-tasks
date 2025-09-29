@@ -26,7 +26,7 @@ def build_where_clause(filters: dict[str, Any]) -> tuple[str, list[Any]]:
             # Handle string values with proper escaping
             conditions.append(f"{key} = %s")
             params.append(value)
-        elif isinstance(value, (int, float)):
+        elif isinstance(value, int | float):
             conditions.append(f"{key} = %s")
             params.append(value)
         elif isinstance(value, list):

@@ -167,10 +167,10 @@ class TestFreshnessEnhancerTypeInvariants:
                 if isinstance(value, list):
                     # Check that all list elements are JSON-serializable primitives
                     for item in value:  # type: ignore[misc]
-                        assert isinstance(item, (str, int, float, bool, type(None)))
+                        assert isinstance(item, str | int | float | bool | type(None))
                 else:
                     # Check that non-list values are JSON-serializable primitives
-                    assert isinstance(value, (str, int, float, bool, type(None)))
+                    assert isinstance(value, str | int | float | bool | type(None))
 
         except Exception as e:
             record_case(

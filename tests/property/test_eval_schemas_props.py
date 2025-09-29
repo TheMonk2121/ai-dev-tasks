@@ -30,7 +30,7 @@ def create_reranker_config(
         input_topk=input_topk,
         keep=keep,
         batch=batch,
-        device=device,
+        device=device if device in ["cpu", "cuda", "mps"] else None,  # type: ignore
         cache=cache,
     )
 
@@ -40,11 +40,11 @@ def create_gold_case(
     mode: Mode,
     query: str,
     tags: list[str],
-    gt_answer: str = None,
-    category: str = None,
-    expected_files: list[str] = None,
-    expected_decisions: list[str] = None,
-    notes: str = None,
+    gt_answer: str | None = None,
+    category: str | None = None,
+    expected_files: list[str] | None = None,
+    expected_decisions: list[str] | None = None,
+    notes: str | None = None,
 ) -> GoldCase:
     """Create a GoldCase with validation."""
     return GoldCase(
@@ -64,17 +64,17 @@ def create_case_result(
     case_id: str,
     mode: str,
     query: str,
-    predicted_answer: str = None,
-    precision: float = None,
-    recall: float = None,
-    f1: float = None,
-    faithfulness: float = None,
-    answer_latency_ms: int = None,
+    predicted_answer: str | None = None,
+    precision: float | None = None,
+    recall: float | None = None,
+    f1: float | None = None,
+    faithfulness: float | None = None,
+    answer_latency_ms: int | None = None,
 ) -> CaseResult:
     """Create a CaseResult with validation."""
     return CaseResult(
         case_id=case_id,
-        mode=mode,
+        mode=mode,  # type: ignore
         query=query,
         predicted_answer=predicted_answer,
         precision=precision,
@@ -89,14 +89,14 @@ def create_evaluation_run(
     profile: str,
     pass_id: str,
     reranker: RerankerConfig,
-    cases: list[CaseResult] = None,
-    artifact_path: str = None,
-    git_sha: str = None,
-    tags: list[str] = None,
-    driver: str = None,
-    seed: int = None,
-    overall: dict[str, float] = None,
-    artifact_paths: dict[str, str] = None,
+    cases: list[CaseResult] | None = None,
+    artifact_path: str | None = None,
+    git_sha: str | None = None,
+    tags: list[str] | None = None,
+    driver: str | None = None,
+    seed: int | None = None,
+    overall: dict[str, float] | None = None,
+    artifact_paths: dict[str, str] | None = None,
 ) -> EvaluationRun:
     """Create an EvaluationRun with validation."""
     if cases is None:
@@ -320,7 +320,7 @@ class TestGoldCaseProperties:
 
         # Test case_id alias for id
         case = GoldCase(
-            case_id=case_id,  # Using case_id instead of id
+            id=case_id,  # Using id parameter
             mode=mode,
             query=query,
             tags=tags,
@@ -594,7 +594,7 @@ class TestSchemaEdgeCases:
                 assert case.query == text
             except Exception as e:
                 # Should be a specific validation error, not a crash
-                assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for short string: {type(e)}"
+                assert isinstance(e, ValueError | TypeError), f"Unexpected exception for short string: {type(e)}"
 
     @pytest.mark.prop
     @given(st.text(min_size=1000, max_size=5000))
@@ -606,7 +606,7 @@ class TestSchemaEdgeCases:
             assert len(case.query) <= len(text)
         except Exception as e:
             # Should be a specific validation error, not a crash
-            assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for long string: {type(e)}"
+            assert isinstance(e, ValueError | TypeError), f"Unexpected exception for long string: {type(e)}"
 
     @pytest.mark.prop
     @given(st.text(min_size=1, max_size=1000))
@@ -623,4 +623,4 @@ class TestSchemaEdgeCases:
             assert result.query == special_text
         except Exception as e:
             # Should be a specific validation error, not a crash
-            assert isinstance(e, (ValueError, TypeError)), f"Unexpected exception for special characters: {type(e)}"
+            assert isinstance(e, ValueError | TypeError), f"Unexpected exception for special characters: {type(e)}"

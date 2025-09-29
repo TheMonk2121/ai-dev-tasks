@@ -134,7 +134,7 @@ class DatabaseConfigManager:
 _database_config_manager = DatabaseConfigManager()
 
 
-def get_database_config() -> DatabaseConfigManager:
+def get_database_config_manager() -> DatabaseConfigManager:
     """
     DEPRECATED: Use common.db_dsn.resolve_dsn() instead.
 

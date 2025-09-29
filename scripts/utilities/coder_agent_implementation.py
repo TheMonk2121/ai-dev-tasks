@@ -89,7 +89,7 @@ class RefactoringSuggestion:
 class CoderDatabase:
     """Database for storing code analysis data and cache."""
 
-    def __init__() -> Any:
+    def __init__(self, db_path: str) -> Any:
         self.db_path: Any = db_path
         self._init_database()
 
@@ -227,7 +227,7 @@ class CoderAgent:
             "refactoring_suggestions",
             "best_practices_validation",
         ]
-        self.database: Any = CoderDatabase()
+        self.database: Any = CoderDatabase("data/coder_agent.db")
         self.analysis_cache: dict[str, CodeAnalysis] = {}
         self.usage_count: Any = 0
         self.error_count: Any = 0

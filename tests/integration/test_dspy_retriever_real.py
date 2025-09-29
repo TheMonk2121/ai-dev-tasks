@@ -63,12 +63,15 @@ class TestDSPyRetrieverReal:
 
     def test_mock_dsn_rejection(self):
         """Test that mock DSNs are properly rejected."""
-        # Temporarily set mock DSN
+        # Temporarily set mock DSN and clear DATABASE_URL to avoid mismatch
         original_dsn = os.environ.get("POSTGRES_DSN")
+        original_database_url = os.environ.get("DATABASE_URL")
         os.environ["POSTGRES_DSN"] = "mock://test"
+        if "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
 
         try:
-            with pytest.raises(RuntimeError, match="Invalid DSN detected"):
+            with pytest.raises(RuntimeError, match="Remote DSN detected"):
                 get_db_connection()
         finally:
             # Restore original DSN
@@ -76,6 +79,9 @@ class TestDSPyRetrieverReal:
                 os.environ["POSTGRES_DSN"] = original_dsn
             elif "POSTGRES_DSN" in os.environ:
                 del os.environ["POSTGRES_DSN"]
+            # Restore original DATABASE_URL
+            if original_database_url is not None:
+                os.environ["DATABASE_URL"] = original_database_url
 
     def test_document_chunks_retrieval(self):
         """Test document chunks retrieval with real database."""
@@ -176,7 +182,7 @@ class TestDSPyRetrieverReal:
                     """
                     )
                     columns = cur.fetchall()
-                    column_names = [col[0] for col in columns]
+                    column_names = [col[0] for col in columns]  # type: ignore
 
                     # Check for essential columns
                     essential_columns = ["content", "embedding", "slug"]

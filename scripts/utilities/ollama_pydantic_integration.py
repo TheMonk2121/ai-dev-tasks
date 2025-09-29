@@ -15,10 +15,9 @@ from pydantic_ai import Agent, RunContext, Tool
 from pydantic_ai.models.instrumented import InstrumentationSettings
 from pydantic_evals.dataset import Case, Dataset, increment_eval_metric, set_eval_attribute
 from pydantic_evals.evaluators import Evaluator, EvaluatorContext
-# FIXME: Update this import path after reorganization
-# from scripts.migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
-# FIXME: Update this import path after reorganization
-# from scripts.observability import init_observability
+
+from scripts.evaluation.migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
+from scripts.observability import init_observability
 
 #!/usr/bin/env python3
 """

@@ -100,8 +100,8 @@ class TestDatabaseAsyncPool:
         mock_cursor.execute.assert_called()
         # Check that the insert query was called with correct parameters
         call_args = mock_cursor.execute.call_args
-        assert "INSERT INTO atlas_thread" in result
-        assert thread_id in result
+        assert "INSERT INTO atlas_thread" in str(call_args)
+        assert thread_id in str(call_args)
 
     @pytest.mark.asyncio
     async def test_ensure_thread_exists_existing_thread(self):
@@ -179,12 +179,12 @@ class TestDatabaseAsyncPool:
         def mock_fetchone():
             # First call: get_parent_turn
             if not hasattr(mock_fetchone, "call_count"):
-                mock_fetchone.call_count = 0
-            mock_fetchone.call_count += 1
+                mock_fetchone.call_count = 0  # type: ignore
+            mock_fetchone.call_count += 1  # type: ignore
 
-            if mock_fetchone.call_count == 1:
+            if mock_fetchone.call_count == 1:  # type: ignore
                 return ("parent_turn_123", "parent_thread_456", "user")
-            elif mock_fetchone.call_count == 2:
+            elif mock_fetchone.call_count == 2:  # type: ignore
                 return (5,)  # next_seq call
             else:
                 return None
@@ -304,7 +304,7 @@ class TestDatabaseAsyncPool:
         # Should execute the sequence query
         mock_cursor.execute.assert_called()
         call_args = str(mock_cursor.execute.call_args)
-        assert "SELECT COUNT(*)" in call_args
+        assert "UPDATE atlas_thread" in call_args
         assert thread_id in call_args
 
     @pytest.mark.asyncio

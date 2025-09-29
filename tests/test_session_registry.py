@@ -136,7 +136,7 @@ class TestSessionRegistry:
         assert "role-validation" not in session.context.tags
         assert "context-preservation" in session.context.tags  # Should remain
 
-    def test_get_active_sessions(self, registry: SessionRegistry, _sample_session_data: dict[str, Any]) -> None:
+    def test_get_active_sessions(self, registry: SessionRegistry, sample_session_data: dict[str, Any]) -> None:
         """Test retrieving active sessions."""
         # Register multiple sessions with different statuses
         registry.register_session(backlog_id="B-999", pid=12345, worklog_path="artifacts/worklogs/B-999.md")
@@ -151,7 +151,7 @@ class TestSessionRegistry:
         assert len(active_sessions) == 1
         assert active_sessions[0].backlog_id == "B-1000"
 
-    def test_get_sessions_by_context(self, registry: SessionRegistry, _sample_session_data: dict[str, Any]) -> None:
+    def test_get_sessions_by_context(self, registry: SessionRegistry, sample_session_data: dict[str, Any]) -> None:
         """Test retrieving sessions by context tags."""
         # Register sessions with different tags
         registry.register_session(
@@ -399,7 +399,7 @@ class TestSessionContextIntegrator:
         assert "session_summary" in enhanced_context
         assert enhanced_context["scribe_sessions"]["session_count"] == 1
 
-    def test_integrate_with_memory_rehydrator(self, _temp_registry_path: Any) -> None:
+    def test_integrate_with_memory_rehydrator(self, temp_registry_path: Any) -> None:
         """Test integration with memory rehydrator."""
         from scripts.session_context_integration import integrate_with_memory_rehydrator
 

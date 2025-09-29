@@ -147,7 +147,7 @@ class PerformanceBasedAdapter:
     def __init__(self, config: AdaptationConfig):
         self.config = config
         self.logger = logging.getLogger(f"{__name__}.PerformanceBasedAdapter")
-        self.performance_history: dict[ModelType, list[float]] = {model: [] for model in ModelType}
+        self.performance_history: dict[ModelType, list[dict[str, Any]]] = {model: [] for model in ModelType}
 
     def record_performance(self, model: ModelType, f1_score: float, latency: float):
         """Record performance metrics for a model"""
@@ -464,9 +464,8 @@ class ModelAdaptationFramework:
 
     def add_custom_model(self, model_type: str, capabilities: ModelCapabilities):
         """Add custom model capabilities"""
-        custom_model = ModelType.CUSTOM
-        custom_model.value = model_type
-        self.model_capabilities[custom_model] = capabilities
+        # Create a custom model entry using the model_type string as key
+        self.model_capabilities[model_type] = capabilities  # type: ignore
         self.logger.info(f"Added custom model: {model_type}")
 
     def get_adaptation_statistics(self) -> dict[str, Any]:

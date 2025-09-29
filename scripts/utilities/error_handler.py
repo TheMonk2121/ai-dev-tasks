@@ -1,7 +1,10 @@
 from __future__ import annotations
+
+import argparse
 import json
 import logging
 import os
+import random
 import sqlite3
 import sys
 import time
@@ -11,11 +14,8 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any
-import random
-import random
-import argparse
 from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Error Handler Module

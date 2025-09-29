@@ -54,7 +54,7 @@ class TestIntentClassificationTypeInvariants:
                 confidence=confidence,
                 reasoning=reasoning,
                 route_target=route_target,
-                structured_fields=structured_fields,
+                structured_fields=structured_fields or {},
                 should_short_circuit=should_short_circuit,
             )
 
@@ -121,7 +121,7 @@ class TestIntentClassificationTypeInvariants:
                 confidence=confidence,
                 reasoning=reasoning,
                 route_target=route_target,
-                structured_fields=structured_fields,
+                structured_fields=structured_fields or {},
                 should_short_circuit=should_short_circuit,
             )
 
@@ -136,9 +136,9 @@ class TestIntentClassificationTypeInvariants:
             for key, value in classification.structured_fields.items():
                 if isinstance(value, list):
                     for item in value:  # type: ignore[var-annotated]
-                        assert isinstance(item, (str, int, float, bool, type(None)))
+                        assert isinstance(item, str | int | float | bool | type(None))
                 else:
-                    assert isinstance(value, (str, int, float, bool, type(None)))
+                    assert isinstance(value, str | int | float | bool | type(None))
 
         except Exception as e:
             record_case(
@@ -193,7 +193,7 @@ class TestIntentClassificationTypeInvariants:
                 confidence=confidence,
                 reasoning=reasoning,
                 route_target=route_target,
-                structured_fields=structured_fields,
+                structured_fields=structured_fields or {},
                 should_short_circuit=should_short_circuit,
             )
 
@@ -254,7 +254,7 @@ class TestIntentClassificationTypeInvariants:
                 confidence=confidence,
                 reasoning=reasoning,
                 route_target=route_target,
-                structured_fields=structured_fields,
+                structured_fields=structured_fields or {},
                 should_short_circuit=should_short_circuit,
             )
 
@@ -315,7 +315,7 @@ class TestIntentClassificationTypeInvariants:
                 confidence=confidence,
                 reasoning=reasoning,
                 route_target=route_target,
-                structured_fields=structured_fields,
+                structured_fields=structured_fields or {},
                 should_short_circuit=should_short_circuit,
             )
 

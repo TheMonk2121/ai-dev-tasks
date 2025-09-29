@@ -9,10 +9,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.cache_invalidation_system import CacheInvalidationSystem, InvalidationConfig
-# FIXME: Update this import path after reorganization
-# from scripts.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
+# Import our existing systems
+from scripts.utilities.cache_invalidation_system import CacheInvalidationSystem, InvalidationConfig
+from scripts.utilities.postgresql_cache_service import CacheConfig, PostgreSQLCacheService
 
 #!/usr/bin/env python3
 """
@@ -157,7 +156,7 @@ class CacheInvalidationIntegration:
         """Start background cleanup task"""
         try:
             self.running: Any = True
-            self.cleanup_task: Any = asyncio.create_task(self._background_cleanup_loop())
+            self.cleanup_task = asyncio.create_task(self._background_cleanup_loop())
             logger.info("Background cleanup task started")
         except Exception as e:
             logger.error(f"Failed to start background cleanup: {e}")

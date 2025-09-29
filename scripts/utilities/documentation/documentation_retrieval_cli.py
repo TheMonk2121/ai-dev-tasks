@@ -1,4 +1,5 @@
 from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Documentation Retrieval CLI
@@ -14,7 +15,6 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any
 
 # Add the dspy-rag-system to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
@@ -31,8 +31,8 @@ except Exception:
     get_relevant_context = None  # type: ignore[assignment]
     search_documentation = None  # type: ignore[assignment]
     get_task_context = None  # type: ignore[assignment]
-# FIXME: Update this import path after reorganization
-# from scripts.documentation_indexer import DocumentationIndexer
+# Import from current codebase
+from scripts.utilities.documentation.documentation_indexer import DocumentationIndexer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

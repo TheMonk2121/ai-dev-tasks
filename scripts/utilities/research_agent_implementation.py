@@ -200,7 +200,7 @@ class ResearchDatabase:
             params.append(research_type)
 
         sql += " ORDER BY timestamp DESC LIMIT ?"
-        params.append(limit)
+        params.append(limit)  # type: ignore
 
         cursor.execute(sql, params)
         rows = cursor.fetchall()

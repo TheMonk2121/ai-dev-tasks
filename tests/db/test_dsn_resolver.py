@@ -30,6 +30,9 @@ def test_fallback_and_tagging(monkeypatch: MonkeyPatch):
 
 def test_remote_dsn_safety(monkeypatch: MonkeyPatch):
     """Test remote DSN safety check."""
+    # Clear both DSN environment variables to avoid mismatch
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.delenv("POSTGRES_DSN", raising=False)
     monkeypatch.setenv("DATABASE_URL", "postgresql://u@remote.example.com:5432/app")
 
     with pytest.raises(RuntimeError, match="Remote DSN detected"):
@@ -51,6 +54,9 @@ def test_no_dsn_raises(monkeypatch: MonkeyPatch):
 
 def test_audit_trail_generation(monkeypatch: MonkeyPatch, tmp_path: Path):
     """Test that an audit trail is generated."""
+    # Clear both DSN environment variables to avoid mismatch
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.delenv("POSTGRES_DSN", raising=False)
     monkeypatch.setenv("DATABASE_URL", "postgresql://u@localhost:5432/app")
     monkeypatch.chdir(tmp_path)
 

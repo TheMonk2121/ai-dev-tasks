@@ -6,8 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any, Optional, Union
 
-# FIXME: Update this import path after reorganization
-# from scripts.dynamic_few_shot_injector import DynamicFewShotInjector
+from scripts.utilities.ai_models.dynamic_few_shot_injector import DynamicFewShotInjector
 
 #!/usr/bin/env python3
 """

@@ -22,15 +22,22 @@ class TestUnifiedMemoryOrchestrator:
     def setup_method(self):
         """Set up test environment."""
         # Mock environment variables
-        self.original_dsn = os.result
-        os.environ
+        self.original_dsn = os.environ.get("POSTGRES_DSN")
+        self.original_db_url = os.environ.get("DATABASE_URL")
+        os.environ["POSTGRES_DSN"] = "mock://test"
+        os.environ["DATABASE_URL"] = "mock://test"
 
     def teardown_method(self):
         """Clean up test environment."""
-        if self.original_dsn:
-            os.environ
+        if self.original_dsn is not None:
+            os.environ["POSTGRES_DSN"] = self.original_dsn
         elif "POSTGRES_DSN" in os.environ:
-            del os.environ
+            del os.environ["POSTGRES_DSN"]
+
+        if self.original_db_url is not None:
+            os.environ["DATABASE_URL"] = self.original_db_url
+        elif "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
 
     def test_initialization(self):
         """Test orchestrator initialization."""

@@ -131,7 +131,7 @@ class ConservativeSyntaxFixer:
         
         return '\n'.join(lines), fixes
     
-    def scan_and_fix_directory(self, directory: Path, exclude_patterns: list[str] = None) -> dict[str, Any]:
+    def scan_and_fix_directory(self, directory: Path, exclude_patterns: list[str] | None = None) -> dict[str, Any]:
         """Scan directory and fix syntax errors conservatively."""
         if exclude_patterns is None:
             exclude_patterns = ['__pycache__', '.git', 'node_modules', '600_archives', 'evals_bundle_']

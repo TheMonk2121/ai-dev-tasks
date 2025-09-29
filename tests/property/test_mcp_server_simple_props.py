@@ -70,7 +70,7 @@ class TestMCPServerSimpleProperties:
             import psycopg
             from psycopg.types.json import Jsonb
 
-            conn = await psycopg.AsyncConnection.connect(self.test_dsn)
+            conn = await psycopg.AsyncConnection.connect(self.test_dsn or "mock://test")
             try:
                 # Create thread first time
                 async with conn.cursor() as cur:
@@ -153,7 +153,7 @@ class TestMCPServerSimpleProperties:
             import psycopg
             from psycopg.types.json import Jsonb
 
-            conn = await psycopg.AsyncConnection.connect(self.test_dsn)
+            conn = await psycopg.AsyncConnection.connect(self.test_dsn or "mock://test")
             try:
                 # Ensure thread exists
                 async with conn.cursor() as cur:
@@ -199,12 +199,12 @@ class TestMCPServerSimpleProperties:
                     )
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist in database"
-                    assert row["turn_id"] == "test_turn_123"
-                    assert row["thread_id"] == "test_thread_456"
-                    assert row["role"] == "user"
-                    assert row["content"] == "Test message"
+                    assert row["turn_id"] == "test_turn_123"  # type: ignore
+                    assert row["thread_id"] == "test_thread_456"  # type: ignore
+                    assert row["role"] == "user"  # type: ignore
+                    assert row["content"] == "Test message"  # type: ignore
                     # Metadata should be properly serialized
-                    assert isinstance(row["metadata"], dict)
+                    assert isinstance(row["metadata"], dict)  # type: ignore
             finally:
                 await conn.close()
 
@@ -257,7 +257,7 @@ class TestMCPServerSimpleProperties:
             import psycopg
             from psycopg.types.json import Jsonb
 
-            conn = await psycopg.AsyncConnection.connect(self.test_dsn)
+            conn = await psycopg.AsyncConnection.connect(self.test_dsn or "mock://test")
             try:
                 # Ensure thread exists
                 async with conn.cursor() as cur:
@@ -317,8 +317,8 @@ class TestMCPServerSimpleProperties:
                     )
                     turns = await cur.fetchall()
                     assert len(turns) == 2, "Both turns should exist"
-                    assert turns[0]["role"] == "user"
-                    assert turns[1]["role"] == "assistant"
+                    assert turns[0]["role"] == "user"  # type: ignore
+                    assert turns[1]["role"] == "assistant"  # type: ignore
             finally:
                 await conn.close()
 
@@ -360,7 +360,7 @@ class TestMCPServerSimpleProperties:
             import psycopg
             from psycopg.types.json import Jsonb
 
-            conn = await psycopg.AsyncConnection.connect(self.test_dsn)
+            conn = await psycopg.AsyncConnection.connect(self.test_dsn or "mock://test")
             try:
                 # Ensure thread exists
                 async with conn.cursor() as cur:
@@ -403,7 +403,7 @@ class TestMCPServerSimpleProperties:
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist"
 
-                    stored_metadata = row["metadata"]
+                    stored_metadata = row["metadata"]  # type: ignore
                     assert isinstance(stored_metadata, dict), "Metadata should be a dictionary"
 
                     # Verify all original metadata keys are present
@@ -445,7 +445,7 @@ class TestMCPServerSimpleProperties:
 
             thread_id = f"thread_{uuid.uuid4().hex[:8]}"
 
-            conn = await psycopg.AsyncConnection.connect(self.test_dsn)
+            conn = await psycopg.AsyncConnection.connect(self.test_dsn or "mock://test")
             try:
                 # Ensure thread exists
                 async with conn.cursor() as cur:

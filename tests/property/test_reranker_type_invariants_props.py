@@ -125,7 +125,7 @@ class TestRerankerTypeInvariants:
                 # Ensure score is float
                 if isinstance(row["score"], int):
                     row["score"] = float(row["score"])
-                elif not isinstance(row["score"], (int, float)):
+                elif not isinstance(row["score"], int | float):
                     row["score"] = 0.5
 
                 # Ensure file_path/filename are strings
@@ -135,7 +135,7 @@ class TestRerankerTypeInvariants:
                     row["filename"] = str(row["filename"])
 
                 # Ensure embedding is a list/tuple
-                if not isinstance(row["embedding"], (list, tuple)):
+                if not isinstance(row["embedding"], list | tuple):
                     row["embedding"] = [0.1, 0.2, 0.3]
 
             result = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k, tag=tag)
@@ -156,9 +156,9 @@ class TestRerankerTypeInvariants:
                 for key, value in item.items():
                     assert isinstance(key, str)
                     if isinstance(value, list):
-                        assert all(isinstance(x, (str, int, float, bool, type(None))) for x in value)  # type: ignore[misc]
+                        assert all(isinstance(x, str | int | float | bool | type(None)) for x in value)  # type: ignore[misc]
                     else:
-                        assert isinstance(value, (str, int, float, bool, type(None)))
+                        assert isinstance(value, str | int | float | bool | type(None))
 
         except Exception as e:
             record_case(
@@ -274,7 +274,7 @@ class TestRerankerTypeInvariants:
                 # Ensure score is float
                 if isinstance(row["score"], int):
                     row["score"] = float(row["score"])
-                elif not isinstance(row["score"], (int, float)):
+                elif not isinstance(row["score"], int | float):
                     row["score"] = 0.5
 
                 # Ensure file_path/filename are strings
@@ -284,7 +284,7 @@ class TestRerankerTypeInvariants:
                     row["filename"] = str(row["filename"])
 
                 # Ensure embedding is a list/tuple
-                if not isinstance(row["embedding"], (list, tuple)):
+                if not isinstance(row["embedding"], list | tuple):
                     row["embedding"] = [0.1, 0.2, 0.3]
 
             result = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k, tag=tag)
@@ -402,7 +402,7 @@ class TestRerankerTypeInvariants:
                 # Ensure score is float
                 if isinstance(row["score"], int):
                     row["score"] = float(row["score"])
-                elif not isinstance(row["score"], (int, float)):
+                elif not isinstance(row["score"], int | float):
                     row["score"] = 0.5
 
                 # Ensure file_path/filename are strings
@@ -412,7 +412,7 @@ class TestRerankerTypeInvariants:
                     row["filename"] = str(row["filename"])
 
                 # Ensure embedding is a list/tuple
-                if not isinstance(row["embedding"], (list, tuple)):
+                if not isinstance(row["embedding"], list | tuple):
                     row["embedding"] = [0.1, 0.2, 0.3]
 
             result = mmr_rerank(rows)
@@ -524,7 +524,7 @@ class TestRerankerTypeInvariants:
                 # Ensure score is float
                 if isinstance(row["score"], int):
                     row["score"] = float(row["score"])
-                elif not isinstance(row["score"], (int, float)):
+                elif not isinstance(row["score"], int | float):
                     row["score"] = 0.5
 
                 # Ensure file_path/filename are strings
@@ -534,7 +534,7 @@ class TestRerankerTypeInvariants:
                     row["filename"] = str(row["filename"])
 
                 # Ensure embedding is a list/tuple
-                if not isinstance(row["embedding"], (list, tuple)):
+                if not isinstance(row["embedding"], list | tuple):
                     row["embedding"] = [0.1, 0.2, 0.3]
 
             # Run twice with same input

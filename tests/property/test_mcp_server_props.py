@@ -129,12 +129,12 @@ class TestMCPServerProperties:
                     )
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist in database"
-                    assert row["turn_id"] == "test_turn_123"
-                    assert row["thread_id"] == "test_thread_456"
-                    assert row["role"] == "user"
-                    assert row["content"] == "Test message"
+                    assert row["turn_id"] == "test_turn_123"  # type: ignore
+                    assert row["thread_id"] == "test_thread_456"  # type: ignore
+                    assert row["role"] == "user"  # type: ignore
+                    assert row["content"] == "Test message"  # type: ignore
                     # Metadata should be properly serialized
-                    assert isinstance(row["metadata"], dict)
+                    assert isinstance(row["metadata"], dict)  # type: ignore
 
         asyncio.run(_test())
 
@@ -238,7 +238,8 @@ class TestMCPServerProperties:
                         "SELECT COUNT(*) FROM atlas_conversation_turn WHERE thread_id = %s",
                         (tid,),
                     )
-                    count = await cur.fetchone()[0]
+                    row = await cur.fetchone()
+                    count = row[0] if row else 0  # type: ignore
                     assert count == 2, "Both turns should exist"
 
         asyncio.run(_test())
@@ -338,7 +339,8 @@ class TestMCPServerProperties:
                         "SELECT COUNT(*) FROM atlas_conversation_turn WHERE thread_id = %s",
                         (tid,),
                     )
-                    count = await cur.fetchone()[0]
+                    row = await cur.fetchone()
+                    count = row[0] if row else 0  # type: ignore
                     assert count == len(sequences), "Turn count should match sequence count"
 
         asyncio.run(_test())
@@ -402,7 +404,7 @@ class TestMCPServerProperties:
                     row = await cur.fetchone()
                     assert row is not None, "Turn should exist"
 
-                    stored_metadata = row["metadata"]
+                    stored_metadata = row["metadata"]  # type: ignore
                     assert isinstance(stored_metadata, dict), "Metadata should be a dictionary"
 
                     # Verify all original metadata keys are present

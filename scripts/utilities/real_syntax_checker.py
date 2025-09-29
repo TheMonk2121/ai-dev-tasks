@@ -47,7 +47,7 @@ def check_file_syntax(file_path: Path) -> list[dict[str, Any]]:
     return errors
 
 
-def scan_directory_for_syntax_errors(directory: Path, exclude_patterns: list[str] = None) -> dict[str, list[dict[str, Any]]]:
+def scan_directory_for_syntax_errors(directory: Path, exclude_patterns: list[str] | None = None) -> dict[str, list[dict[str, Any]]]:
     """Scan directory for files with actual syntax errors."""
     if exclude_patterns is None:
         exclude_patterns = ['__pycache__', '.git', 'node_modules', '600_archives', 'evals_bundle_']

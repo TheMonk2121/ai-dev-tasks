@@ -75,8 +75,8 @@ def fix_deprecated_types(content: str) -> str:
     content = re.sub(r"Union\[([^\]]+)\]", r"\1", content)
 
     # Remove unused imports
-    content: Any = re.sub(r"from typing import.*Optional.*\n", "", content)
-    content: Any = re.sub(r"from typing import.*Union.*\n", "", content)
+    content = re.sub(r"from typing import.*Optional.*\n", "", content)
+    content = re.sub(r"from typing import.*Union.*\n", "", content)
 
     return content
 
