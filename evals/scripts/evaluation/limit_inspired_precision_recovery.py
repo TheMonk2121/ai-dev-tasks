@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 import os
 from typing import Any
+
 import numpy as np
+
 #!/usr/bin/env python3
 """
 LIMIT-Inspired Precision Recovery Configuration
@@ -12,7 +15,7 @@ class GeometryFailureRouter:
     """Detects flat vectors and routes to BM25 when cosine space is geometrically broken."""
 
     def __init__(self, margin_threshold: float = 0.20):
-        self.margin_threshold = margin_threshold
+        self.margin_threshold: float = margin_threshold
 
     def calculate_top1_margin(self, scores: list[float]) -> float:
         """Calculate top-1 margin: (top1 - median(top10)) / (std(top10) + ε)"""
@@ -20,7 +23,7 @@ class GeometryFailureRouter:
             return 0.0
 
         top10 = sorted(scores, reverse=True)[:10]
-        top1 = result
+        top1 = top10[0]
         median_top10 = np.median(top10)
         std_top10 = np.std(top10)
         epsilon = 1e-8
@@ -67,8 +70,8 @@ class FacetYieldCalculator:
     """Calculates facet yield to determine which facets to keep."""
 
     def __init__(self, new_docs_weight: float = 0.6, entity_overlap_weight: float = 0.4):
-        self.new_docs_weight = new_docs_weight
-        self.entity_overlap_weight = entity_overlap_weight
+        self.new_docs_weight: float = new_docs_weight
+        self.entity_overlap_weight: float = entity_overlap_weight
 
     def calculate_facet_yield(self, new_docs_count: int, entity_overlap: float) -> float:
         """Calculate facet yield: 0.6 * (# new docs) + 0.4 * entity overlap."""
@@ -82,9 +85,9 @@ class BooleanQueryParser:
     """Parses Boolean logic from queries for BM25 enforcement."""
 
     def __init__(self):
-        self.include_patterns = ["AND", "and", "+", "must include"]
-        self.exclude_patterns = ["NOT", "not", "-", "exclude", "without"]
-        self.or_patterns = ["OR", "or", "|", "either"]
+        self.include_patterns: list[str] = ["AND", "and", "+", "must include"]
+        self.exclude_patterns: list[str] = ["NOT", "not", "-", "exclude", "without"]
+        self.or_patterns: list[str] = ["OR", "or", "|", "either"]
 
     def parse_boolean_logic(self, query: str) -> dict[str, list[str]]:
         """Parse Boolean logic from query."""
@@ -96,7 +99,7 @@ class BooleanQueryParser:
 
         current_mode = "include"
 
-        for i, token in enumerate(tokens):
+        for token in tokens:
             if token.lower() in self.include_patterns:
                 current_mode = "include"
             elif token.lower() in self.exclude_patterns:
@@ -120,10 +123,10 @@ class LimitInspiredPrecisionRecovery:
     """LIMIT-inspired precision recovery with geometry-failure routing."""
 
     def __init__(self):
-        self.geometry_router = GeometryFailureRouter()
-        self.facet_calculator = FacetYieldCalculator()
-        self.boolean_parser = BooleanQueryParser()
-        self.config = self._get_enhanced_config()
+        self.geometry_router: GeometryFailureRouter = GeometryFailureRouter()
+        self.facet_calculator: FacetYieldCalculator = FacetYieldCalculator()
+        self.boolean_parser: BooleanQueryParser = BooleanQueryParser()
+        self.config: dict[str, Any] = self._get_enhanced_config()
 
     def _get_enhanced_config(self) -> dict[str, Any]:
         """Get enhanced configuration with LIMIT-inspired features."""
@@ -161,7 +164,7 @@ class LimitInspiredPrecisionRecovery:
 
     def apply_environment(self) -> None:
         """Apply enhanced configuration to environment variables."""
-        for key, value in self..items()
+        for key, value in self.config.items():
             os.environ[key] = str(value)
             print(f"Set {key}={value}")
 
@@ -192,8 +195,8 @@ class LimitInspiredPrecisionRecovery:
 
         enhanced_facets = []
         for facet in facets:
-            new_docs = result
-            entity_overlap = result
+            new_docs = facet.get("new_docs_count", 0)
+            entity_overlap = facet.get("entity_overlap", 0.0)
 
             yield_score = self.facet_calculator.calculate_facet_yield(new_docs, entity_overlap)
             should_keep = self.facet_calculator.should_keep_facet(yield_score)
@@ -210,18 +213,18 @@ class LimitInspiredPrecisionRecovery:
 
         return {
             "query_id": query_id,
-            "vector_margin": result
-            "vector_entropy": result
-            "rewrite_agreement": result
+            "vector_margin": geometry_analysis.get("vector_margin", 0.0),
+            "vector_entropy": geometry_analysis.get("vector_entropy", 0.0),
+            "rewrite_agreement": geometry_analysis.get("rewrite_agreement", 0.0),
             "fusion_gain": fusion_gain,
-            "facets_kept": len([f for f in facet_yields if result:
+            "facets_kept": len([f for f in facet_yields if f.get("should_keep", False)]),
             "total_facets": len(facet_yields),
-            "geometry_healthy": result
-            "routed_to_bm25": result
+            "geometry_healthy": geometry_analysis.get("geometry_healthy", False),
+            "routed_to_bm25": geometry_analysis.get("should_route_bm25", False),
             "boolean_terms": {
-                "include": len(result
-                "exclude": len(result
-                "or": len(result
+                "include": len(geometry_analysis.get("boolean_logic", {}).get("include", [])),
+                "exclude": len(geometry_analysis.get("boolean_logic", {}).get("exclude", [])),
+                "or": len(geometry_analysis.get("boolean_logic", {}).get("or", [])),
             },
         }
 
@@ -231,7 +234,7 @@ class LimitInspiredPrecisionRecovery:
         """Determine if retrieval changes should be promoted based on health metrics."""
 
         # Promotion rule: only keep changes if fusion_gain > 0 and floors hold
-        fusion_gain_positive = result
+        fusion_gain_positive = health_metrics.get("fusion_gain", 0) > 0
         floors_hold = precision >= 0.135 and recall >= 0.160 and f1_score >= 0.145
 
         return fusion_gain_positive and floors_hold
@@ -257,7 +260,7 @@ if __name__ == "__main__":
 
     analysis = config.analyze_query_geometry(test_query, test_scores, 0.3)
     print("\n🧪 Test Analysis:")
-    print(f"   Vector Margin: {result
-    print(f"   Vector Entropy: {result
-    print(f"   Route to BM25: {result
-    print(f"   Boolean Logic: {result
+    print(f"   Vector Margin: {analysis['vector_margin']:.3f}")
+    print(f"   Vector Entropy: {analysis['vector_entropy']:.3f}")
+    print(f"   Route to BM25: {analysis['should_route_bm25']}")
+    print(f"   Boolean Logic: {analysis['boolean_logic']}")

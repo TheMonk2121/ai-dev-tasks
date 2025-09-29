@@ -1,20 +1,17 @@
-from __future__ import annotations
-import logging
-import os
-import sys
-import time
-from collections.abc import Callable
-from datetime import datetime
-from functools import wraps
-from typing import Any
 #!/usr/bin/env python3
 """
 Error Recovery Mechanisms for RAGChecker Evaluation System
 Implements intelligent error recovery and fallback strategies for validation failures.
 """
 
-# Add dspy-rag-system to path for imports
-# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
+from __future__ import annotations
+
+import logging
+import time
+from collections.abc import Callable
+from datetime import datetime
+from functools import wraps
+from typing import Any
 
 try:
     from pydantic import BaseModel, Field, ValidationError
@@ -24,28 +21,34 @@ except ImportError as e:
     Field = None
     ValidationError = None
 
+# Type alias for BaseModel to handle fallback case
+if BaseModel is not None:
+    BaseModelType = BaseModel
+else:
+    BaseModelType = type
+
 # Provide runtime-safe fallbacks to satisfy type checker and avoid OptionalCall
 if BaseModel is None:
 
     class BaseModel:  # type: ignore
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *_args: Any, **_kwargs: Any) -> None:
             pass
 
-        def model_dump(self, *args, **kwargs):  # pydantic-compatible API
+        def model_dump(self, *_args: Any, **_kwargs: Any) -> dict[str, Any]:  # pydantic-compatible API
             return {}
 
 if Field is None:
 
-    def Field(*args, **kwargs):  # type: ignore[call-arg]
+    def Field(*_args: Any, **_kwargs: Any) -> Any:  # type: ignore[call-arg]
         return None
 
 if ValidationError is None:
 
     class ValidationError(Exception):  # type: ignore[call-arg]
-        def errors(self):
+        def errors(self) -> list[dict[str, Any]]:
             return []
 
-class RecoveryStrategy(BaseModel):
+class RecoveryStrategy(BaseModelType):  # type: ignore[misc, inheritance]
     """Model for error recovery strategy configuration"""
 
     strategy_name: str = Field(..., description="Name of the recovery strategy")
@@ -55,7 +58,7 @@ class RecoveryStrategy(BaseModel):
     fallback_enabled: bool = Field(default=True, description="Whether fallback mechanisms are enabled")
     recovery_timeout: float = Field(default=30.0, ge=1.0, le=300.0, description="Maximum recovery time in seconds")
 
-class ErrorRecoveryContext(BaseModel):
+class ErrorRecoveryContext(BaseModelType):  # type: ignore[misc, inheritance]
     """Model for error recovery context"""
 
     error_id: str = Field(..., description="Unique error identifier")
@@ -73,7 +76,7 @@ class RAGCheckerErrorRecovery:
 
     def __init__(self, default_strategy: RecoveryStrategy | None = None):
         """Initialize error recovery manager"""
-        self.default_strategy = default_strategy or RecoveryStrategy(
+        self.default_strategy: RecoveryStrategy = default_strategy or RecoveryStrategy(
             strategy_name="default_ragchecker_recovery",
             max_retries=3,
             retry_delay=0.1,
@@ -82,7 +85,7 @@ class RAGCheckerErrorRecovery:
             recovery_timeout=30.0,
         )
 
-        self.logger = logging.getLogger("ragchecker_error_recovery")
+        self.logger: logging.Logger = logging.getLogger("ragchecker_error_recovery")
         self.logger.setLevel(logging.INFO)
 
         # Create console handler if none exists
@@ -94,7 +97,7 @@ class RAGCheckerErrorRecovery:
             self.logger.addHandler(console_handler)
 
         # Recovery strategies registry
-        self.recovery_strategies: dict[str, Callable] = {}
+        self.recovery_strategies: dict[str, Callable[..., dict[str, Any]]] = {}
         self._register_default_strategies()
 
     def _register_default_strategies(self):
@@ -105,7 +108,7 @@ class RAGCheckerErrorRecovery:
         self.register_recovery_strategy("performance_degradation", self._recover_performance_degradation)
         self.register_recovery_strategy("memory_query_failure", self._recover_memory_query_failure)
 
-    def register_recovery_strategy(self, error_type: str, strategy_func: Callable) -> None:
+    def register_recovery_strategy(self, error_type: str, strategy_func: Callable[..., dict[str, Any]]) -> None:
         """Register a recovery strategy for a specific error type"""
         self.recovery_strategies[error_type] = strategy_func
         self.logger.info(f"Registered recovery strategy for error type: {error_type}")
@@ -150,11 +153,11 @@ class RAGCheckerErrorRecovery:
                 result = {"recovery_successful": False, "error": str(recovery_error), "fallback_used": False}
 
         # Add recovery context to result
-        result
+        result["recovery_context"] = recovery_context.model_dump()
         return result
 
     def _execute_recovery_with_retry(
-        self, recovery_func: Callable, error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
+        self, recovery_func: Callable[..., dict[str, Any]], error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
     ) -> dict[str, Any]:
         """Execute recovery function with retry logic"""
         strategy = recovery_context.recovery_strategy
@@ -197,7 +200,7 @@ class RAGCheckerErrorRecovery:
         raise last_error
 
     def _execute_generic_recovery(
-        self, error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
+        self, error: Exception, _context: dict[str, Any], recovery_context: ErrorRecoveryContext
     ) -> dict[str, Any]:
         """Execute generic recovery strategy"""
         recovery_context.recovery_steps.append("Generic recovery: error logging and context preservation")
@@ -212,7 +215,7 @@ class RAGCheckerErrorRecovery:
         }
 
     def _execute_fallback_recovery(
-        self, error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
+        self, _error: Exception, _context: dict[str, Any], recovery_context: ErrorRecoveryContext
     ) -> dict[str, Any]:
         """Execute fallback recovery strategy"""
         recovery_context.fallback_used = True
@@ -239,7 +242,7 @@ class RAGCheckerErrorRecovery:
                 field_errors = error.errors()
 
                 # Attempt to fix common validation issues
-                fixed_data = self._fix_validation_errors(result
+                fixed_data = self._fix_validation_errors(context.get("data", {}), field_errors)
 
                 return {
                     "recovery_successful": True,
@@ -251,7 +254,7 @@ class RAGCheckerErrorRecovery:
                 return {
                     "recovery_successful": False,
                     "error": f"Failed to fix validation errors: {str(fix_error)}",
-                    "fallback_data": result
+                    "fallback_data": context.get("data", {})
                 }
 
         return {
@@ -260,7 +263,7 @@ class RAGCheckerErrorRecovery:
         }
 
     def _recover_constitution_validation(
-        self, error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
+        self, _error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
     ) -> dict[str, Any]:
         """Recover from constitution validation errors"""
         recovery_context.recovery_steps.append("Constitution validation recovery: rule relaxation")
@@ -268,8 +271,8 @@ class RAGCheckerErrorRecovery:
         # Try to relax constitution rules temporarily
         try:
             relaxed_context = context.copy()
-            result
-            result
+            relaxed_context["constitution_mode"] = "warnings_only"
+            relaxed_context["strict_validation"] = False
 
             return {
                 "recovery_successful": True,
@@ -284,7 +287,7 @@ class RAGCheckerErrorRecovery:
             }
 
     def _recover_error_taxonomy_mapping(
-        self, error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
+        self, error: Exception, _context: dict[str, Any], recovery_context: ErrorRecoveryContext
     ) -> dict[str, Any]:
         """Recover from error taxonomy mapping errors"""
         recovery_context.recovery_steps.append("Error taxonomy recovery: fallback categorization")
@@ -305,16 +308,16 @@ class RAGCheckerErrorRecovery:
         }
 
     def _recover_performance_degradation(
-        self, error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
+        self, _error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
     ) -> dict[str, Any]:
         """Recover from performance degradation"""
         recovery_context.recovery_steps.append("Performance recovery: optimization mode")
 
         # Switch to performance optimization mode
         optimization_context = context.copy()
-        result
-        result
-        result
+        optimization_context["performance_mode"] = "optimized"
+        optimization_context["batch_size"] = min(optimization_context.get("batch_size", 10), 5)
+        optimization_context["timeout"] = min(optimization_context.get("timeout", 30), 15)
 
         return {
             "recovery_successful": True,
@@ -324,7 +327,7 @@ class RAGCheckerErrorRecovery:
         }
 
     def _recover_memory_query_failure(
-        self, error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
+        self, _error: Exception, context: dict[str, Any], recovery_context: ErrorRecoveryContext
     ) -> dict[str, Any]:
         """Recover from memory query failures"""
         recovery_context.recovery_steps.append("Memory query recovery: fallback data sources")
@@ -332,7 +335,7 @@ class RAGCheckerErrorRecovery:
         # Try alternative data sources or cached results
         fallback_data = {
             "source": "fallback_cache",
-            "data": result
+            "data": context.get("fallback_data", []),
             "timestamp": datetime.now().isoformat(),
             "reliability": "low",
         }
@@ -349,10 +352,10 @@ class RAGCheckerErrorRecovery:
         fixed_data = data.copy()
 
         for error in field_errors:
-            field_name = result
+            field_name = error.get("loc", [])
             if field_name and len(field_name) > 0:
-                field_path = result
-                error_type = result
+                field_path = ".".join(str(x) for x in field_name)
+                error_type = error.get("type", "unknown")
 
                 # Fix common validation issues
                 if error_type == "missing":
@@ -367,19 +370,19 @@ class RAGCheckerErrorRecovery:
                 elif error_type == "value_error":
                     # Fix value errors
                     if field_path == "custom_score":
-                        score = result
+                        score = error.get("input", 0.5)
                         fixed_data[field_path] = max(0.0, min(1.0, float(score)))
                     elif field_path == "retrieved_context":
-                        context = result
-                        if not isinstance(context, list):
-                            fixed_data[field_path] = [str(context)] if context else ["Default context"]
+                        context_value = error.get("input", [])
+                        if not isinstance(context_value, list):
+                            fixed_data[field_path] = [str(context_value)] if context_value else ["Default context"]
 
         return fixed_data
 
     def get_recovery_statistics(self) -> dict[str, Any]:
         """Get recovery statistics and performance metrics"""
         return {
-            "registered_strategies": list(self..keys()
+            "registered_strategies": list(self.recovery_strategies.keys()),
             "default_strategy": self.default_strategy.model_dump(),
             "total_recovery_attempts": 0,  # Would track this in production
             "success_rate": 0.0,  # Would calculate this in production
@@ -391,13 +394,13 @@ def with_error_recovery(
 ):
     """Decorator for automatic error recovery"""
 
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             # Try to get recovery manager from self if it exists
             recovery_manager = None
-            if args and hasattr(result
-                recovery_manager = result
+            if args and hasattr(args[0], "recovery_manager"):
+                recovery_manager = args[0].recovery_manager
 
             if recovery_manager is None:
                 recovery_manager = RAGCheckerErrorRecovery()
@@ -413,7 +416,7 @@ def with_error_recovery(
                     strategy=recovery_strategy,
                 )
 
-                if result:
+                if recovery_result.get("recovery_successful", False):
                     # Recovery successful, try function again with recovered context
                     try:
                         return func(*args, **kwargs)
@@ -438,7 +441,7 @@ if __name__ == "__main__":
     recovery_manager = RAGCheckerErrorRecovery()
 
     # Test recovery strategy registration
-    print("Registered strategies:", list(recovery_manager..keys()
+    print("Registered strategies:", list(recovery_manager.recovery_strategies.keys()))
 
     # Test recovery statistics
     stats = recovery_manager.get_recovery_statistics()

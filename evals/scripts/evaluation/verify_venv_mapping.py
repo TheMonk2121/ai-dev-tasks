@@ -101,7 +101,7 @@ def verify_scripts():
             continue
 
         # Test script with --help
-        success, stdout, stderr = run_command(["python", script, "--help"])
+        success, _, stderr = run_command(["python", script, "--help"])
         if not success:
             print(f"❌ Script {script} failed: {stderr}")
             continue
@@ -169,7 +169,7 @@ def verify_dependencies():
     key_packages = ["dspy", "torch", "psycopg", "pytest", "black", "ruff"]
 
     for package in key_packages:
-        success, stdout, stderr = run_command(
+        success, _, stderr = run_command(
             ["uv", "run", "python", "-c", f"import {package}; print('{package} available')"]
         )
         if not success:

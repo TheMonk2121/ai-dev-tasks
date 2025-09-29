@@ -28,6 +28,7 @@ dependencies = [
     "torchvision==0.18.1",
     # Database dependencies
     "pgvector==0.2.4",
+    "psycopg[binary]>=3.1.0",
     # Document processing
     "PyMuPDF==1.23.8",
     # Web framework and real-time communication
@@ -194,7 +195,7 @@ python_functions = ["test_*"]
 # Explicitly exclude archived tests and problematic files
 norecursedirs = [
     "600_archives",
-    "300_experiments",
+    "testing",
     "venv",
     "docs/legacy",
     "__pycache__",
@@ -208,32 +209,35 @@ addopts = "--import-mode=importlib --ignore=dspy-rag-system/baseline_rag_perform
 
 # Exclude legacy duplicates that conflict with demo tests
 [tool.basedpyright]
-include = ["scripts", "tests", "src"]
+include = ["scripts", "tests", "src", "evals_bundle_test"]
 exclude = [
     "venv",
-    ".venv",
     "600_archives",
     "docs/legacy",
     "**/__pycache__",
     "scripts/eval",
+    "dspy-rag-system",
 ]
 pythonVersion = "3.12"
 pythonPlatform = "Darwin"
-extraPaths = ["scripts", "src"]
+extraPaths = ["scripts", "src", "evals_bundle_test/src"]
+venvPath = "."
+venv = ".venv"
 
-# Minimal type checking
+# Minimal type checking - relaxed for UV environment
 reportMissingTypeStubs = "none"
 reportUnknownMemberType = "none"
 reportUnknownVariableType = "none"
 reportUnknownArgumentType = "none"
 reportUnknownLambdaType = "none"
 reportOptionalMemberAccess = "none"
-reportMissingImports = "none"
+reportMissingImports = "warning"
 reportAssignmentType = "none"
 reportPossiblyUnboundVariable = "none"
 reportExplicitAny = "none"
 reportAny = "none"
 reportUntypedBaseClass = "none"
+reportGeneralTypeIssues = "warning"
 
 # Suppress type stub errors
 reportIncompatibleVariableOverride = false
@@ -271,4 +275,7 @@ message_template = "{type}{scope}: {subject}\n\n{body}\n\n{footer}"
 # venv-seed = []  # Don't install pip/setuptools/wheel by default
 
 [tool.codespell]
-skip = "600_archives/**,.hypothesis/**,artifacts/**,000_core/**,100_memory/**,200_setup/**,300_experiments/**,400_guides/**,500_research/**,PRD-* ,Task-List-* ,300_evals/datasets/**,docs/**,dashboard/**"
+skip = "600_archives/**,.hypothesis/**,artifacts/**,000_core/**,100_memory/**,200_setup/**,testing/**,400_guides/**,500_research/**,PRD-* ,Task-List-* ,300_evals/datasets/**,docs/**,dashboard/**"
+
+[dependency-groups]
+dev = ["basedpyright>=1.31.5"]

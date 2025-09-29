@@ -51,7 +51,7 @@ class Psycopg3Config:
         return params
 
     @classmethod
-    def create_connection(cls, role: str = "default", **overrides: Any) -> psycopg.Connection[DictRow]:
+    def create_connection(cls, role: str = "default", **overrides: Any) -> Any:
         """
         Create a psycopg3 connection with proper typing and configuration.
 
@@ -67,7 +67,7 @@ class Psycopg3Config:
 
     @classmethod
     @contextmanager
-    def get_connection(cls, role: str = "default", **overrides: Any):
+    def get_connection(cls, role: str = "default", **overrides: Any) -> Any:
         """
         Context manager for database connections with automatic cleanup.
 
@@ -100,12 +100,12 @@ class Psycopg3Config:
 
 
 # Convenience functions for common patterns
-def get_db_connection(role: str = "default") -> psycopg.Connection[DictRow]:
+def get_db_connection(role: str = "default") -> Any:
     """Get a database connection with proper configuration."""
     return Psycopg3Config.create_connection(role)
 
 
-def get_db_cursor(role: str = "default"):
+def get_db_cursor(role: str = "default") -> Any:
     """Get a database cursor with dict_row factory."""
     return Psycopg3Config.get_cursor(role)
 

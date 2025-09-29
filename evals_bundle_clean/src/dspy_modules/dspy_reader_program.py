@@ -6,20 +6,31 @@ import sys
 from dataclasses import replace
 from typing import Any, cast
 
-import dspy
+import dspy  # type: ignore
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 # Import for query embedding generation
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import CrossEncoder, SentenceTransformer  # type: ignore
 
-from dspy_modules.reader.entrypoint import build_reader_context
-from dspy_modules.reader.span_picker import normalize_answer, pick_span
-from dspy_modules.retriever.limits import load_limits
-from dspy_modules.retriever.pg import fetch_doc_chunks_by_slug, run_fused_query
-from dspy_modules.retriever.query_rewrite import build_channel_queries, parse_doc_hint
-from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
+# Import reranker environment and cross-encoder
+_ = os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+_ = os.environ.setdefault("EMBED_DIM", "384")
+# Local module imports (after path setup)
+from dspy_modules.reader.entrypoint import build_reader_context  # noqa: E402
+from dspy_modules.reader.span_picker import normalize_answer, pick_span  # noqa: E402
+from dspy_modules.retriever.limits import load_limits  # noqa: E402
+from dspy_modules.retriever.pg import (  # noqa: E402
+    fetch_doc_chunks_by_slug,
+    run_fused_query,
+)
+from dspy_modules.retriever.query_rewrite import (  # noqa: E402
+    build_channel_queries,
+    parse_doc_hint,
+)
+from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap  # noqa: E402
+from src.rag import reranker_env as RENV  # type: ignore  # noqa: E402
 
 # Cross-encoder singleton handle
 _ce_singleton = None
@@ -28,7 +39,7 @@ _ce_singleton = None
 _query_embedder = None
 
 
-def _get_query_embedder():
+def _get_query_embedder() -> Any:
     """Get or create the query embedding model."""
     global _query_embedder
     if _query_embedder is None:
@@ -45,11 +56,6 @@ def _generate_query_embedding(query: str) -> list[float]:
     embedding = embedder.encode([prefixed_query], normalize_embeddings=True)[0]
     return embedding.tolist()
 
-
-# Import reranker environment and cross-encoder
-_ = os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
-_ = os.environ.setdefault("EMBED_DIM", "384")
-from src.rag import reranker_env as RENV
 
 REQUIRED_META_KEYS = ("ingest_run_id", "chunk_variant")
 REQ_META = REQUIRED_META_KEYS
@@ -268,7 +274,7 @@ def _carry_meta_inplace(dst: dict[str, Any], *sources: Any) -> dict[str, Any]:
 
 
 def _apply_cross_encoder_rerank(
-    query: str, rows: list[dict[str, Any]], input_topk: int, keep: int, conn=None
+    query: str, rows: list[dict[str, Any]], input_topk: int, keep: int, conn: Any = None
 ) -> tuple[list[dict[str, Any]], str]:
     """Apply cross-encoder reranking following best practices.
 
@@ -300,7 +306,6 @@ def _apply_cross_encoder_rerank(
 
         model_id = get_reranker_model()
         print(f"[reranker] Attempting cross-encoder with model: {model_id}")
-        from sentence_transformers import CrossEncoder
 
         # Lazy singleton init
         global _ce_singleton
@@ -393,7 +398,7 @@ def _apply_cross_encoder_rerank(
 
         # Force-include known good files if they're missing
         def union_force_include(
-            conn, candidates: list[dict[str, Any]], force_paths: list[str], limit_per: int = 3
+            conn: Any, candidates: list[dict[str, Any]], force_paths: list[str], limit_per: int = 3
         ) -> list[dict[str, Any]]:
             """Force-include specific files if they're missing from candidates."""
             if conn is None:
@@ -517,7 +522,7 @@ def _apply_cross_encoder_rerank(
 
 
 # ---- Model config (swap as needed)
-def _lm():
+def _lm() -> Any:
     # Examples:
     # return dspy.LM(model="openai/gpt-4o-mini", max_tokens=512, temperature=0.2)
     # return dspy.LM(model="ollama/llama2", max_tokens=512, temperature=0.2)
@@ -564,7 +569,7 @@ class RAGAnswer(dspy.Module):
         self.cls: dspy.Predict = dspy.Predict(IsAnswerableSig)
         self.gen: dspy.Predict = dspy.Predict(GenerateAnswer)
         # Store LM reference to ensure it's available
-        self._lm = lm
+        self._lm: Any = lm
         # Abstention/precision policy (tunable via env)
         # READER_ABSTAIN: 1=enable IsAnswerable gate (default), 0=disable
         # READER_ENFORCE_SPAN: 1=ensure answer substring appears in context (default), 0=disable
@@ -583,7 +588,7 @@ class RAGAnswer(dspy.Module):
         self._last_retrieval_snapshot: list[dict[str, Any]] = []
         self.used_contexts: list[dict[str, Any]] = []
 
-    def forward(self, question: str, tag: str) -> dspy.Prediction:
+    def forward(self, question: str, tag: str) -> Any:
         limits = load_limits(tag)
         qs = build_channel_queries(question, tag)
         # For now, use empty vector - the retrieval system will handle this safely
@@ -793,7 +798,7 @@ def load_jsonl(path: str) -> list[dict[str, Any]]:
     return [json.loads(line) for line in open(path, encoding="utf-8") if line.strip()]
 
 
-def to_examples(rows: list[dict[str, Any]]) -> list[dspy.Example]:
+def to_examples(rows: list[dict[str, Any]]) -> list[Any]:
     # rows should include: id/case_id (ignored here), query, tag, answers
     ex = []
     for r in rows:
@@ -814,9 +819,9 @@ def compile_and_save(
     prog = RAGAnswer()
 
     # Teleprompter: BootstrapFewShot is a robust default
-    from dspy.teleprompt import BootstrapFewShot
+    from dspy.teleprompt import BootstrapFewShot  # type: ignore
 
-    def metric(example: dspy.Example, pred: dspy.Prediction, trace: Any | None = None) -> float:  # noqa: ARG001
+    def metric(example: Any, pred: Any, trace: Any | None = None) -> float:  # noqa: ARG001
         _ = trace  # Suppress unused parameter warning
         return f1(pred.answer, example.answers)
 

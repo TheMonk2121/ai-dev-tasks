@@ -4,14 +4,13 @@ import logging
 import os
 import sys
 from dataclasses import replace
-from typing import Any, cast
-
-import dspy
+from typing import Any
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 # Import for query embedding generation
+import dspy
 from sentence_transformers import SentenceTransformer
 
 from dspy_modules.reader.entrypoint import build_reader_context
@@ -20,6 +19,7 @@ from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import fetch_doc_chunks_by_slug, run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries, parse_doc_hint
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
+from src.rag import reranker_env as renv
 
 # Cross-encoder singleton handle
 _ce_singleton = None
@@ -28,7 +28,7 @@ _ce_singleton = None
 _query_embedder = None
 
 
-def _get_query_embedder():
+def _get_query_embedder() -> Any:
     """Get or create the query embedding model."""
     global _query_embedder
     if _query_embedder is None:
@@ -46,10 +46,8 @@ def _generate_query_embedding(query: str) -> list[float]:
     return embedding.tolist()
 
 
-# Import reranker environment and cross-encoder
 _ = os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 _ = os.environ.setdefault("EMBED_DIM", "384")
-from src.rag import reranker_env as RENV
 
 REQUIRED_META_KEYS = ("ingest_run_id", "chunk_variant")
 REQ_META = REQUIRED_META_KEYS
@@ -268,7 +266,7 @@ def _carry_meta_inplace(dst: dict[str, Any], *sources: Any) -> dict[str, Any]:
 
 
 def _apply_cross_encoder_rerank(
-    query: str, rows: list[dict[str, Any]], input_topk: int, keep: int, conn=None
+    query: str, rows: list[dict[str, Any]], input_topk: int, keep: int, conn: Any = None
 ) -> tuple[list[dict[str, Any]], str]:
     """Apply cross-encoder reranking following best practices.
 
@@ -281,8 +279,8 @@ def _apply_cross_encoder_rerank(
     Returns:
         tuple: (reranked_rows, method_used)
     """
-    print(f"[reranker] RERANK_ENABLE={RENV.RERANK_ENABLE}, input_topk={input_topk}, keep={keep}")
-    if not RENV.RERANK_ENABLE:
+    print(f"[reranker] RERANK_ENABLE={renv.RERANK_ENABLE}, input_topk={input_topk}, keep={keep}")
+    if not renv.RERANK_ENABLE:
         print("[reranker] Reranking disabled, returning original rows")
         return rows, "disabled"
 
@@ -393,7 +391,7 @@ def _apply_cross_encoder_rerank(
 
         # Force-include known good files if they're missing
         def union_force_include(
-            conn, candidates: list[dict[str, Any]], force_paths: list[str], limit_per: int = 3
+            conn: Any, candidates: list[dict[str, Any]], force_paths: list[str], limit_per: int = 3
         ) -> list[dict[str, Any]]:
             """Force-include specific files if they're missing from candidates."""
             if conn is None:
@@ -517,7 +515,7 @@ def _apply_cross_encoder_rerank(
 
 
 # ---- Model config (swap as needed)
-def _lm():
+def _lm() -> Any:
     # Examples:
     # return dspy.LM(model="openai/gpt-4o-mini", max_tokens=512, temperature=0.2)
     # return dspy.LM(model="ollama/llama2", max_tokens=512, temperature=0.2)
@@ -561,10 +559,10 @@ class RAGAnswer(dspy.Module):
         # Configure DSPy with language model
         lm = _lm()
         dspy.settings.configure(lm=lm)
-        self.cls: dspy.Predict = dspy.Predict(IsAnswerableSig)
-        self.gen: dspy.Predict = dspy.Predict(GenerateAnswer)
+        self.cls: Any = dspy.Predict(IsAnswerableSig)
+        self.gen: Any = dspy.Predict(GenerateAnswer)
         # Store LM reference to ensure it's available
-        self._lm = lm
+        self._lm: Any = lm
         # Abstention/precision policy (tunable via env)
         # READER_ABSTAIN: 1=enable IsAnswerable gate (default), 0=disable
         # READER_ENFORCE_SPAN: 1=ensure answer substring appears in context (default), 0=disable
@@ -583,7 +581,7 @@ class RAGAnswer(dspy.Module):
         self._last_retrieval_snapshot: list[dict[str, Any]] = []
         self.used_contexts: list[dict[str, Any]] = []
 
-    def forward(self, question: str, tag: str) -> dspy.Prediction:
+    def forward(self, question: str, tag: str) -> Any:
         limits = load_limits(tag)
         qs = build_channel_queries(question, tag)
         # For now, use empty vector - the retrieval system will handle this safely
@@ -597,7 +595,7 @@ class RAGAnswer(dspy.Module):
                 rows_prefetch = []
 
         # Get more candidates for reranking if enabled
-        input_topk = RENV.RERANK_INPUT_TOPK if RENV.RERANK_ENABLE else limits["shortlist"]
+        input_topk = renv.RERANK_INPUT_TOPK if renv.RERANK_ENABLE else limits["shortlist"]
 
         # Generate query embedding for vector search
         query_text = qs["short"] or qs["title"] or qs["bm25"] or ""
@@ -678,18 +676,18 @@ class RAGAnswer(dspy.Module):
         _assert_provenance(rows, "fusion", strict)
 
         # Apply cross-encoder reranking if enabled
-        print(f"[debug] About to call reranker: RENV.RERANK_ENABLE={RENV.RERANK_ENABLE}, input_topk={input_topk}")
-        rerank_keep = RENV.RERANK_KEEP if RENV.RERANK_ENABLE else limits["shortlist"]
+        print(f"[debug] About to call reranker: renv.RERANK_ENABLE={renv.RERANK_ENABLE}, input_topk={input_topk}")
+        rerank_keep = renv.RERANK_KEEP if renv.RERANK_ENABLE else limits["shortlist"]
         print(f"[debug] rerank_keep={rerank_keep}, calling _apply_cross_encoder_rerank")
         rows, rerank_method = _apply_cross_encoder_rerank(question, rows, input_topk, rerank_keep, conn=None)
         print(f"[debug] Reranker returned: method={rerank_method}")
 
         # Log reranker method for debugging
-        if RENV.RERANK_ENABLE:
+        if renv.RERANK_ENABLE:
             print(f"[reranker] method={rerank_method} input_topk={input_topk} keep={rerank_keep}")
 
         # Apply MMR reranking only if cross-encoder reranking is disabled
-        if not RENV.RERANK_ENABLE:
+        if not renv.RERANK_ENABLE:
             rows = mmr_rerank(
                 rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"], tag=tag
             )
@@ -735,7 +733,7 @@ class RAGAnswer(dspy.Module):
 
         # Stage 1: Optional IsAnswerable gate
         if self.abstain_enabled:
-            cls_pred = cast(Any, self.cls(context=context, question=question))
+            cls_pred = self.cls(context=context, question=question)
             y = str(getattr(cls_pred, "label", "")).strip().lower()
             if y != "yes":
                 return dspy.Prediction(answer="I don't know")
@@ -744,7 +742,7 @@ class RAGAnswer(dspy.Module):
         # Ensure DSPy is properly configured
         if dspy.settings.lm is None:
             dspy.settings.configure(lm=self._lm)
-        gen_pred = cast(Any, self.gen(context=context, question=question))
+        gen_pred = self.gen(context=context, question=question)
         answer_text = str(getattr(gen_pred, "answer", "")).strip()
         # Optional span enforcement: require answer to be in context
         if self.enforce_span and answer_text and (answer_text.lower() not in context.lower()):
@@ -793,7 +791,7 @@ def load_jsonl(path: str) -> list[dict[str, Any]]:
     return [json.loads(line) for line in open(path, encoding="utf-8") if line.strip()]
 
 
-def to_examples(rows: list[dict[str, Any]]) -> list[dspy.Example]:
+def to_examples(rows: list[dict[str, Any]]) -> list[Any]:
     # rows should include: id/case_id (ignored here), query, tag, answers
     ex = []
     for r in rows:
@@ -816,10 +814,10 @@ def compile_and_save(
     # Teleprompter: BootstrapFewShot is a robust default
     from dspy.teleprompt import BootstrapFewShot
 
-    def metric(example: dspy.Example, pred: dspy.Prediction, trace: Any | None = None) -> float:  # noqa: ARG001
+    def metric(example: Any, pred: Any, trace: Any | None = None) -> float:  # noqa: ARG001
         _ = trace  # Suppress unused parameter warning
         return f1(pred.answer, example.answers)
-
+    
     tele = BootstrapFewShot(
         metric=metric,
         max_bootstrapped_demos=min(4, max(2, len(dev) // 3)),

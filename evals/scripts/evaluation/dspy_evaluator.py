@@ -19,19 +19,19 @@ from pathlib import Path
 from typing import Any, TextIO
 
 # Global guard to prevent multiple observability initialization
-_OBS_INIT = False
+_obs_init = False
 
 
 def init_observability_guarded(service: str = "ai-dev-tasks") -> None:
     """Initialize observability with guard against multiple initialization."""
-    global _OBS_INIT
-    if _OBS_INIT:
+    global _obs_init
+    if _obs_init:
         return
     try:
         from scripts.monitoring.observability import init_observability
 
         init_observability(service=service)
-        _OBS_INIT = True
+        _obs_init = True
         print(f"🔍 Observability initialized for service: {service}")
     except Exception as e:
         print(f"⚠️  Observability initialization failed: {e}")
@@ -57,7 +57,7 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 # Import DSPy RAG system
-from dspy_modules.dspy_reader_program import RAGAnswer
+# from dspy_modules.dspy_reader_program import RAGAnswer  # Unused import
 
 try:
     from litellm import RateLimitError
@@ -70,24 +70,17 @@ except Exception:  # pragma: no cover - fallback when litellm not available
 
 
 # Import config logger
-try:
-    from src.utils.config_logger import create_config_logger
-
-    config_logger_available = True
-except ImportError:
-    config_logger_available = False
+# try:
+#     from src.utils.config_logger import create_config_logger
+#     config_logger_available = True
+# except ImportError:
+#     config_logger_available = False
+config_logger_available = False
 
 # Import Logfire for observability
 logfire: Any | None = None
 try:
-    from scripts.monitoring.observability import (
-        get_logfire,
-        init_observability,
-        log_eval_metrics,
-        log_reader_span,
-        log_retrieval_span,
-        log_scoring_span,
-    )
+    from scripts.monitoring.observability import get_logfire
 
     logfire = get_logfire()
     logfire_available = True
@@ -96,12 +89,12 @@ except ImportError:
     logfire_available = False
 
 # Import database telemetry logger
-try:
-    from src.utils.db_telemetry import create_db_telemetry_logger
-
-    db_telemetry_available = True
-except ImportError:
-    db_telemetry_available = False
+# try:
+#     from src.utils.db_telemetry import create_db_telemetry_logger
+#     db_telemetry_available = True
+# except ImportError:
+#     db_telemetry_available = False
+db_telemetry_available = False
 
 
 class CleanDSPyEvaluator:
@@ -113,6 +106,10 @@ class CleanDSPyEvaluator:
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.progress_log: str | None = progress_log
         self._progress_fh: TextIO | None = None
+
+        # Initialize model and adapter attributes
+        self._model_name: str = ""
+        self._adapter_enabled: bool = False
 
         # Initialize reader-related attributes
         self._reader_available: bool = False
@@ -374,7 +371,9 @@ class CleanDSPyEvaluator:
                     import dspy
 
                     # Use the current DSPy reader program, which encapsulates retrieval and reranking
-                    from dspy_modules.dspy_reader_program import RAGAnswer  # type: ignore[import-untyped]
+                    from dspy_modules.dspy_reader_program import (
+                        RAGAnswer,  # type: ignore[import-untyped]
+                    )
 
                     # Configure DSPy with optional completion adapter (structured output)
                     model_name = os.getenv("DSPY_MODEL", "anthropic.claude-3-haiku-20240307-v1:0")
@@ -597,13 +596,10 @@ class CleanDSPyEvaluator:
         """Extract context strings from retrieved context with dual-text support."""
         out = []
         for d in rc:
-            if isinstance(d, dict):
-                # Handle dual-text storage: prefer bm25_text for retrieval
-                s = d.get("text") or d.get("bm25_text") or d.get("embedding_text") or ""
-                if s:
-                    out.append(s)
-            else:
-                out.append(str(d))
+            # Handle dual-text storage: prefer bm25_text for retrieval
+            s = d.get("text") or d.get("bm25_text") or d.get("embedding_text") or ""
+            if s:
+                out.append(s)
         return out
 
     def calculate_metrics(self, response: str, gt_answer: str, query: str = "") -> dict[str, float]:
@@ -807,7 +803,7 @@ class CleanDSPyEvaluator:
                                 wait_for = backoff_base * attempt
                                 print(
                                     f"⚠️ Bedrock rate limit hit (attempt {attempt}/{max_attempts}); "
-                                    f"sleeping {wait_for:.1f}s before retry"
+                                    + f"sleeping {wait_for:.1f}s before retry"
                                 )
                                 time.sleep(wait_for)
                             except RuntimeError as json_err:

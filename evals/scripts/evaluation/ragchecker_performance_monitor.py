@@ -1,17 +1,15 @@
 from __future__ import annotations
+
 import json
 import logging
-import os
-import sys
 import threading
 import time
 from collections import defaultdict, deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from pathlib import Path
 from typing import Any
-import psutil
+
 #!/usr/bin/env python3
 """
 Performance Monitoring System for RAGChecker Validation Workflows
@@ -21,17 +19,7 @@ Implements comprehensive performance monitoring, alerting, and reporting.
 # Add dspy-rag-system to path for imports
 # sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
-try:
-    from pydantic import BaseModel as PydBaseModel
-    from pydantic import Field as PydField
-except ImportError as e:
-    print(f"⚠️  Warning: Could not import Pydantic: {e}")
-
-    class PydBaseModel:  # minimal shim to satisfy type system
-        pass
-
-    def PydField(*args, **kwargs):
-        return None
+# Pydantic is optional - using plain classes instead
 
 @dataclass
 class PerformanceAlert:
@@ -62,15 +50,24 @@ class PerformanceSnapshot:
     cache_hit_rate: float = 0.0
     active_operations: int = 0
 
-class PerformanceThresholds(PydBaseModel):
+class PerformanceThresholds:
     """Configurable performance thresholds for monitoring"""
 
-    max_execution_time: float = PydField(default=1.0, description="Maximum execution time in seconds")
-    min_throughput: float = PydField(default=100.0, description="Minimum throughput in ops/sec")
-    max_error_rate: float = PydField(default=5.0, description="Maximum error rate percentage")
-    max_memory_usage: float = PydField(default=500.0, description="Maximum memory usage in MB")
-    min_cache_hit_rate: float = PydField(default=80.0, description="Minimum cache hit rate percentage")
-    max_response_time: float = PydField(default=2.0, description="Maximum response time in seconds")
+    def __init__(
+        self,
+        max_execution_time: float = 1.0,
+        min_throughput: float = 100.0,
+        max_error_rate: float = 5.0,
+        max_memory_usage: float = 500.0,
+        min_cache_hit_rate: float = 80.0,
+        max_response_time: float = 2.0,
+    ):
+        self.max_execution_time: float = max_execution_time
+        self.min_throughput: float = min_throughput
+        self.max_error_rate: float = max_error_rate
+        self.max_memory_usage: float = max_memory_usage
+        self.min_cache_hit_rate: float = min_cache_hit_rate
+        self.max_response_time: float = max_response_time
 
 class PerformanceMonitor:
     """Comprehensive performance monitoring for RAGChecker workflows"""
@@ -83,13 +80,13 @@ class PerformanceMonitor:
         enable_metrics_export: bool = True,
     ):
         """Initialize performance monitor"""
-        self.thresholds = thresholds or PerformanceThresholds()
-        self.enable_alerting = enable_alerting
-        self.enable_logging = enable_logging
-        self.enable_metrics_export = enable_metrics_export
+        self.thresholds: PerformanceThresholds = thresholds or PerformanceThresholds()
+        self.enable_alerting: bool = enable_alerting
+        self.enable_logging: bool = enable_logging
+        self.enable_metrics_export: bool = enable_metrics_export
 
         # Performance tracking
-        self.performance_history: deque = deque(maxlen=10000)  # Keep last 10k snapshots
+        self.performance_history: deque[PerformanceSnapshot] = deque(maxlen=10000)  # Keep last 10k snapshots
         self.current_metrics: dict[str, Any] = {}
         self.operation_counters: dict[str, int] = defaultdict(int)
         self.error_counters: dict[str, int] = defaultdict(int)
@@ -98,19 +95,19 @@ class PerformanceMonitor:
         # Alerting system
         self.active_alerts: list[PerformanceAlert] = []
         self.alert_history: list[PerformanceAlert] = []
-        self.alert_callbacks: list[Callable] = []
+        self.alert_callbacks: list[Callable[[PerformanceAlert], None]] = []
 
         # Monitoring state
-        self.monitoring_enabled = True
-        self.last_snapshot_time = datetime.now()
-        self.snapshot_interval = 1.0  # seconds
+        self.monitoring_enabled: bool = True
+        self.last_snapshot_time: datetime = datetime.now()
+        self.snapshot_interval: float = 1.0  # seconds
 
         # Threading
-        self._monitor_thread = None
-        self._stop_monitoring = threading.Event()
+        self._monitor_thread: threading.Thread | None = None
+        self._stop_monitoring: threading.Event = threading.Event()
 
         # Logging
-        self.logger = logging.getLogger("performance_monitor")
+        self.logger: logging.Logger = logging.getLogger("performance_monitor")
         self.logger.setLevel(logging.INFO)
 
         # Create console handler if none exists
@@ -159,9 +156,9 @@ class PerformanceMonitor:
         current_time = datetime.now()
 
         # Calculate current metrics
-        total_operations = sum(self..values()
-        total_errors = sum(self..values()
-        total_time = sum(sum(times) for times in self..values()
+        total_operations = sum(self.operation_counters.values())
+        total_errors = sum(self.error_counters.values())
+        total_time = sum(sum(times) for times in self.timing_data.values())
 
         avg_execution_time = total_time / total_operations if total_operations > 0 else 0.0
         throughput = total_operations / (total_time + 0.001)  # Avoid division by zero
@@ -173,7 +170,7 @@ class PerformanceMonitor:
         memory_usage = self._get_memory_usage()
 
         # Get cache hit rate from current metrics
-        cache_hit_rate = self.result
+        cache_hit_rate = self.current_metrics.get("cache_hit_rate", 0.0)
 
         # Create snapshot
         snapshot = PerformanceSnapshot(
@@ -185,7 +182,7 @@ class PerformanceMonitor:
             error_rate=error_rate,
             memory_usage=memory_usage,
             cache_hit_rate=cache_hit_rate,
-            active_operations=len([t for t in self..values()
+            active_operations=len([t for t in self.timing_data.values() if t])
         )
 
         # Store snapshot
@@ -204,61 +201,61 @@ class PerformanceMonitor:
             return
 
         # Check execution time
-        if self.result
+        if self.current_metrics.get("average_execution_time", 0) > self.thresholds.max_execution_time:
             self._create_alert(
                 "threshold",
                 "average_execution_time",
                 self.thresholds.max_execution_time,
-                self.result
+                self.current_metrics.get("average_execution_time", 0),
                 "high",
-                f"Average execution time ({self.result
+                f"Average execution time ({self.current_metrics.get('average_execution_time', 0):.2f}s) exceeds threshold ({self.thresholds.max_execution_time}s)"
             )
 
         # Check throughput
-        if self.result
+        if self.current_metrics.get("throughput", 0) < self.thresholds.min_throughput:
             self._create_alert(
                 "threshold",
                 "throughput",
                 self.thresholds.min_throughput,
-                self.result
+                self.current_metrics.get("throughput", 0),
                 "medium",
-                f"Throughput ({self.result
+                f"Throughput ({self.current_metrics.get('throughput', 0):.2f} ops/s) below threshold ({self.thresholds.min_throughput} ops/s)"
             )
 
         # Check error rate
-        if self.result
+        if self.current_metrics.get("error_rate", 0) > self.thresholds.max_error_rate:
             self._create_alert(
                 "threshold",
                 "error_rate",
                 self.thresholds.max_error_rate,
-                self.result
+                self.current_metrics.get("error_rate", 0),
                 "critical",
-                f"Error rate ({self.result
+                f"Error rate ({self.current_metrics.get('error_rate', 0):.2f}%) exceeds threshold ({self.thresholds.max_error_rate}%)"
             )
 
         # Check memory usage
         if (
-            self.result
-            and self.result
+            self.current_metrics.get("memory_usage") is not None
+            and self.current_metrics.get("memory_usage", 0) > self.thresholds.max_memory_usage
         ):
             self._create_alert(
                 "threshold",
                 "memory_usage",
                 self.thresholds.max_memory_usage,
-                self.result
+                self.current_metrics.get("memory_usage", 0),
                 "high",
-                f"Memory usage ({self.result
+                f"Memory usage ({self.current_metrics.get('memory_usage', 0):.2f}MB) exceeds threshold ({self.thresholds.max_memory_usage}MB)"
             )
 
         # Check cache hit rate
-        if self.result
+        if self.current_metrics.get("cache_hit_rate", 100) < self.thresholds.min_cache_hit_rate:
             self._create_alert(
                 "threshold",
                 "cache_hit_rate",
                 self.thresholds.min_cache_hit_rate,
-                self.result
+                self.current_metrics.get("cache_hit_rate", 100),
                 "medium",
-                f"Cache hit rate ({self.result
+                f"Cache hit rate ({self.current_metrics.get('cache_hit_rate', 100):.2f}%) below threshold ({self.thresholds.min_cache_hit_rate}%)"
             )
 
     def _create_alert(
@@ -324,14 +321,14 @@ class PerformanceMonitor:
             self.timing_data[operation_name] = self.timing_data[operation_name][-1000:]
 
         # Update current metrics
-        self.result
+        self.current_metrics.update({
             "name": operation_name,
             "execution_time": execution_time,
             "success": success,
             "error_type": error_type,
             "timestamp": datetime.now().isoformat(),
             "metadata": metadata or {},
-        }
+        })
 
         if self.enable_logging:
             self.logger.debug(
@@ -344,7 +341,7 @@ class PerformanceMonitor:
 
         # Update cache hit rate if provided
         if "cache_hit_rate" in metrics:
-            self.result
+            self.current_metrics["cache_hit_rate"] = metrics["cache_hit_rate"]
 
     def add_alert_callback(self, callback: Callable[[PerformanceAlert], None]) -> None:
         """Add a callback function for performance alerts"""
@@ -369,6 +366,31 @@ class PerformanceMonitor:
                 self.logger.info(f"Alert resolved: {alert_id}")
                 return True
         return False
+
+    def _get_memory_usage(self) -> float | None:
+        """Get current memory usage in MB"""
+        try:
+            import psutil  # pyright: ignore[reportMissingModuleSource]
+            process = psutil.Process()
+            memory_info = process.memory_info()
+            return memory_info.rss / 1024 / 1024  # Convert to MB
+        except ImportError:
+            return None
+        except Exception:
+            return None
+
+    def _export_metrics(self) -> None:
+        """Export metrics to external systems"""
+        try:
+            # Export to JSON file
+            metrics_file = "performance_metrics.json"
+            with open(metrics_file, "w") as f:
+                json.dump(self.current_metrics, f, indent=2, default=str)
+            
+            if self.enable_logging:
+                self.logger.debug(f"Metrics exported to {metrics_file}")
+        except Exception as e:
+            self.logger.error(f"Failed to export metrics: {e}")
 
     def get_performance_summary(self) -> dict[str, Any]:
         """Get comprehensive performance summary"""
@@ -409,8 +431,8 @@ class PerformanceMonitor:
                 "active_alerts": [asdict(alert) for alert in active_alerts],
             },
             "operation_summary": {
-                "total_operations": sum(self..values()
-                "total_errors": sum(self..values()
+                "total_operations": sum(self.operation_counters.values()),
+                "total_errors": sum(self.error_counters.values()),
                 "operation_breakdown": dict(self.operation_counters),
                 "error_breakdown": dict(self.error_counters),
             },
@@ -464,34 +486,11 @@ class PerformanceMonitor:
             self.logger.error(f"Failed to export metrics: {e}")
             return False
 
-    def _export_metrics(self) -> None:
-        """Export metrics to default location"""
-        try:
-            export_dir = Path("metrics")
-            export_dir.mkdir(exist_ok=True)
 
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"ragchecker_performance_{timestamp}.json"
-            filepath = export_dir / filename
 
-            self.export_metrics_to_file(str(filepath))
-
-        except Exception as e:
-            self.logger.error(f"Failed to export metrics: {e}")
-
-    def _get_memory_usage(self) -> float | None:
-        """Get current memory usage in MB"""
-        try:
-
-            process = psutil.Process()
-            memory_info = process.memory_info()
-            return memory_info.rss / 1024 / 1024  # Convert to MB
-        except ImportError:
-            return None
-
-    def update_thresholds(self, **threshold_updates) -> None:
+    def update_thresholds(self, **threshold_updates: Any) -> None:
         """Update performance thresholds"""
-        for key, value in .items()
+        for key, value in threshold_updates.items():
             if hasattr(self.thresholds, key):
                 setattr(self.thresholds, key, value)
                 self.logger.info(f"Threshold updated: {key} = {value}")
@@ -540,12 +539,12 @@ def create_performance_monitor(
 def monitor_performance(operation_name: str = "unknown"):
     """Decorator for automatic performance monitoring"""
 
-    def decorator(func: Callable) -> Callable:
-        def wrapper(*args, **kwargs):
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             # Try to get monitor from self if it exists
             monitor = None
-            if args and hasattr(result
-                monitor = result
+            if args and hasattr(args[0], 'monitor'):
+                monitor = args[0].monitor
 
             if monitor is None:
                 # Create default monitor
@@ -561,7 +560,7 @@ def monitor_performance(operation_name: str = "unknown"):
 
                 # Record success
                 execution_time = time.time() - start_time
-                monitor.record_operation(
+                _ = monitor.record_operation(
                     operation_name=operation_name, execution_time=execution_time, success=True, metadata=metadata
                 )
 
@@ -570,10 +569,8 @@ def monitor_performance(operation_name: str = "unknown"):
             except Exception as e:
                 # Record failure
                 error_type = type(e).__name__
-                result
-
                 execution_time = time.time() - start_time
-                monitor.record_operation(
+                _ = monitor.record_operation(
                     operation_name=operation_name,
                     execution_time=execution_time,
                     success=False,
@@ -608,7 +605,7 @@ if __name__ == "__main__":
     print("Updated performance summary:", summary)
 
     # Test alert callback
-    def alert_callback(alert):
+    def alert_callback(alert: PerformanceAlert) -> None:
         print(f"Alert received: {alert.message}")
 
     monitor.add_alert_callback(alert_callback)

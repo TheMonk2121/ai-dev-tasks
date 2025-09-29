@@ -1,7 +1,11 @@
 from __future__ import annotations
-from typing import Any
-from limit_inspired_precision_recovery import LimitInspiredPrecisionRecovery
-import os
+
+from typing import Any, override
+
+from evals.scripts.evaluation.limit_inspired_precision_recovery import (
+    LimitInspiredPrecisionRecovery,
+)
+
 #!/usr/bin/env python3
 """
 Precision Lift Pack Configuration
@@ -11,6 +15,7 @@ Surgical tightenings for +0.01-0.03 precision with minimal recall loss.
 class PrecisionLiftPackConfig(LimitInspiredPrecisionRecovery):
     """Precision lift pack with surgical tightenings for precision improvement."""
 
+    @override
     def _get_enhanced_config(self) -> dict[str, Any]:
         """Get enhanced configuration with precision lift pack."""
         # Start with base LIMIT configuration
@@ -110,17 +115,17 @@ if __name__ == "__main__":
     summary = config.get_precision_lift_summary()
 
     print("\n📊 Precision Lift Pack Changes:")
-    for category, changes in result
+    for category, changes in summary["precision_lift_pack"].items():
         print(f"\n{category.replace('_', ' ').title()}:")
-        for key, value in .items()
+        for key, value in changes.items():
             print(f"   {key}: {value}")
 
     print("\n🛡️ Recall Guardrails:")
-    for key, value in result
+    for key, value in summary["recall_guardrails"].items():
         print(f"   {key}: {value}")
 
     print("\n🎯 Expected Impact:")
-    for key, value in result
+    for key, value in summary["expected_impact"].items():
         print(f"   {key}: {value}")
 
     print("\n✅ Ready for precision lift evaluation!")

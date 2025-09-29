@@ -16,16 +16,15 @@ import json
 import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
 try:
-    from sklearn.calibration import calibration_curve
     from sklearn.isotonic import IsotonicRegression
-
-    HAS_SKLEARN = True
+    has_sklearn = True
 except ImportError:
-    HAS_SKLEARN = False
+    has_sklearn = False
 
 
 @dataclass
@@ -161,7 +160,8 @@ class SpanMatcher:
 
             # Calculate overlap between prediction and span
             overlap = len(pred_tokens & span_tokens) / len(pred_tokens)
-            max_support = max(max_support, overlap)
+            if overlap >= min_overlap:
+                max_support = max(max_support, overlap)
 
         return max_support
 
@@ -169,9 +169,9 @@ class SpanMatcher:
 class TemperatureScaler:
     """Temperature scaling for confidence calibration."""
 
-    def __init__(self):
-        self.temperature = 1.0
-        self.fitted = False
+    def __init__(self) -> None:
+        self.temperature: float = 1.0
+        self.fitted: bool = False
 
     def fit(
         self, confidences: list[float], correctness: list[bool], method: str = "isotonic"  # "platt" or "isotonic"
@@ -181,7 +181,7 @@ class TemperatureScaler:
 
         Returns the optimal temperature parameter.
         """
-        if not HAS_SKLEARN:
+        if not has_sklearn:
             # Simple fallback: assume temperature = 1.0
             self.temperature = 1.0
             self.fitted = True
@@ -226,7 +226,7 @@ class TemperatureScaler:
         self.fitted = True
         return self.temperature
 
-    def _apply_temperature(self, confidences: np.ndarray, temperature: float) -> np.ndarray:
+    def _apply_temperature(self, confidences: Any, temperature: float) -> Any:
         """Apply temperature scaling to logits."""
         # Convert confidence to logits
         eps = 1e-7
@@ -240,7 +240,7 @@ class TemperatureScaler:
         scaled_probs = 1 / (1 + np.exp(-scaled_logits))
         return scaled_probs
 
-    def _negative_log_likelihood(self, probs: np.ndarray, targets: np.ndarray) -> float:
+    def _negative_log_likelihood(self, probs: Any, targets: Any) -> float:
         """Calculate negative log likelihood."""
         eps = 1e-7
         probs = np.clip(probs, eps, 1 - eps)
@@ -307,8 +307,8 @@ class ECECalculator:
 class EnhancedEvaluator:
     """Main evaluator implementing all Phase 0 metrics."""
 
-    def __init__(self):
-        self.temperature_scaler = TemperatureScaler()
+    def __init__(self) -> None:
+        self.temperature_scaler: TemperatureScaler = TemperatureScaler()
 
     def evaluate_batch(self, query_results: list[QueryResult], slice_breakdown: bool = True) -> EvaluationMetrics:
         """

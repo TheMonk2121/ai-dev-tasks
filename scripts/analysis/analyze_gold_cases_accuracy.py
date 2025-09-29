@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import json
 import os
-import sys
-from pathlib import Path
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -16,7 +15,7 @@ This script analyzes the gold test cases to identify:
 4. Directory structure changes
 """
 
-def load_gold_cases(file_path: str) -> list[dict]:
+def load_gold_cases(file_path: str) -> list[dict[str, Any]]:
     """Load gold cases from JSONL file."""
     cases = []
     with open(file_path) as f:
@@ -29,11 +28,11 @@ def check_file_exists(file_path: str) -> bool:
     """Check if a file exists."""
     return os.path.exists(file_path)
 
-def find_actual_files(directory: str, pattern: str = "*.md") -> set[str]:
+def find_actual_files(directory: str, _pattern: str = "*.md") -> set[str]:
     """Find all files matching pattern in directory."""
     files = set()
     if os.path.exists(directory):
-        for root, dirs, filenames in os.walk(directory):
+        for root, _dirs, filenames in os.walk(directory):
             for filename in filenames:
                 if filename.endswith(".md"):
                     rel_path = os.path.relpath(os.path.join(root, filename), ".")
@@ -50,7 +49,7 @@ def analyze_gold_cases():
     print(f"📊 Loaded {len(cases)} gold cases")
 
     # Track issues
-    issues: dict[str, list] = {"missing_files": [], "incorrect_paths": [], "moved_files": [], "directory_changes": []}
+    issues: dict[str, list[dict[str, Any]]] = {"missing_files": [], "incorrect_paths": [], "moved_files": [], "directory_changes": []}
 
     # Get all actual files in the project
     all_files = set()
@@ -68,7 +67,7 @@ def analyze_gold_cases():
         all_files.update(find_actual_files(directory))
 
     # Also check root directory
-    for root, dirs, filenames in os.walk("."):
+    for root, _dirs, filenames in os.walk("."):
         for filename in filenames:
             if filename.endswith(".md") and not any(
                 skip in root for skip in ["node_modules", ".git", "__pycache__", "600_archives"]

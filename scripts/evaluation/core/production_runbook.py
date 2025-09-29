@@ -4,7 +4,7 @@ import argparse
 import subprocess
 import sys
 from datetime import datetime, timedelta
-from typing import Literal, TypedDict
+from typing import TypedDict
 
 #!/usr/bin/env python3
 """
@@ -32,6 +32,16 @@ class DeploymentResultFailure(TypedDict):
 
 
 DeploymentResult = DeploymentResultSuccess | DeploymentResultFailure
+
+# Phase order for testing and execution
+PHASE_ORDER = [
+    "run_health_gated_evaluation",
+    "generate_run_manifest", 
+    "setup_deterministic_environment",
+    "run_retrieval_only_evaluation",
+    "run_deterministic_fewshot_evaluation",
+    "start_canary_monitoring"
+]
 
 
 class ProductionRunbook:
@@ -78,45 +88,45 @@ class ProductionRunbook:
         print("-" * 40)
         phase = self._run_health_gated_evaluation()
         if phase.get("status") != "success":
-            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error"), "failed_phases": ["health_gated_evaluation"]}
 
         # Phase 2: Generate Run Manifest
         print("\n📋 Phase 2: Generate Run Manifest")
         print("-" * 40)
         phase = self._generate_run_manifest()
         if phase.get("status") != "success":
-            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error"), "failed_phases": ["generate_run_manifest"]}
 
         # Phase 3: Deterministic Environment Setup
         print("\n⚙️ Phase 3: Deterministic Environment Setup")
         print("-" * 40)
         phase = self._setup_deterministic_environment()
         if phase.get("status") != "success":
-            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error"), "failed_phases": ["setup_deterministic_environment"]}
 
         # Phase 4: Retrieval-Only Baseline Evaluation
         print("\n🔍 Phase 4: Retrieval-Only Baseline Evaluation")
         print("-" * 40)
         phase = self._run_retrieval_only_evaluation()
         if phase.get("status") != "success":
-            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error"), "failed_phases": ["retrieval_only_evaluation"]}
 
         # Phase 5: Deterministic Few-Shot Evaluation
         print("\n🧠 Phase 5: Deterministic Few-Shot Evaluation")
         print("-" * 40)
         phase = self._run_deterministic_fewshot_evaluation()
         if phase.get("status") != "success":
-            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error"), "failed_phases": ["deterministic_fewshot_evaluation"]}
 
         # Phase 6: Start 48-Hour Canary
         print("\n🕐 Phase 6: Start 48-Hour Canary Monitoring")
         print("-" * 40)
         phase = self._start_canary_monitoring()
         if phase.get("status") != "success":
-            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error")}
+            return {"status": "failed", "run_id": self.run_id, "error": phase.get("error", "Unknown error"), "failed_phases": ["start_canary_monitoring"]}
 
         print("\n✅ PRODUCTION DEPLOYMENT COMPLETED SUCCESSFULLY")
-        return {"status": "completed", "run_id": self.run_id}
+        return {"status": "success", "run_id": self.run_id}
 
     def _run_health_gated_evaluation(self) -> PhaseResult:
         """Run health-gated evaluation."""
@@ -164,7 +174,7 @@ def main():
     runbook = ProductionRunbook()
     result = runbook.execute_production_deployment()
 
-    if result.get("status") == "completed":
+    if result.get("status") == "success":
         print("\n🎉 Production deployment completed successfully!")
         sys.exit(0)
     else:

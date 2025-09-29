@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from typing import Union
-
-import numpy as np
-from pydantic import BaseModel, ConfigDict, field_serializer
+from pydantic import BaseModel, ConfigDict
 
 from utils.pyd_ndarray import ArrayF32WithShape
 
@@ -20,7 +17,7 @@ class FusionFeatures(BaseModel):
     Arrays are strongly typed and JSON-serializable.
     """
 
-    model_config = ConfigDict(strict=True, extra="forbid", arbitrary_types_allowed=True)
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid", arbitrary_types_allowed=True)
 
     # scalar signals
     s_bm25: float
@@ -35,13 +32,5 @@ class FusionFeatures(BaseModel):
 
     # optional dense vectors (if you persist them in features)
     # enforce known dims when you know them, else use ArrayF32
-    q_vec: Vector384 | None = None  # type: ignore
-    d_vec: Vector384 | None = None  # type: ignore
-
-    @field_serializer("q_vec", when_used="json")
-    def _ser_q_vec(self, v: np.ndarray | None) -> list[float] | None:
-        return v.tolist() if v is not None else None
-
-    @field_serializer("d_vec", when_used="json")
-    def _ser_d_vec(self, v: np.ndarray | None) -> list[float] | None:
-        return v.tolist() if v is not None else None
+    q_vec: ArrayF32WithShape | None = None
+    d_vec: ArrayF32WithShape | None = None

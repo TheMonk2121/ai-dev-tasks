@@ -10,7 +10,7 @@ try:
     from pydantic_graph.persistence import BaseStatePersistence
 except Exception:  # pragma: no cover - import-safe in environments without pydantic-graph
     # Create a proper base class when pydantic-graph is not available
-    class BaseStatePersistence:  # type: ignore[misc]
+    class BaseStatePersistence:
         def __init__(self) -> None:
             pass
 

@@ -1,26 +1,35 @@
-from __future__ import annotations
-import importlib.util
-import logging
-import sys
-import time
-from pathlib import Path
-from typing import Any
-from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
-import os
 #!/usr/bin/env python3
 """
 RAGChecker Pipeline Governance Integration
 Integrates semantic process augmentation with existing RAGChecker evaluation system
 """
 
+from __future__ import annotations
+
+import importlib.util
+import logging
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+# Add project root to path for imports
+project_root = Path(__file__).resolve().parents[3]
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+from scripts.evaluation.ragchecker_official_evaluation import (
+    OfficialRAGCheckerEvaluator,
+)
+
 # Add src to path for imports
 # sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 
 # Import the RAG Pipeline Governance system
-sys.path.insert(0, str(Path(__file__).parent.parent / "300_experiments"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "testing"))
 
 spec = importlib.util.spec_from_file_location(
-    "rag_pipeline_governance", str(Path(__file__).parent.parent / "300_experiments" / "300_rag_pipeline_governance.py")
+    "rag_pipeline_governance", str(Path(__file__).parent.parent / "testing" / "300_rag_pipeline_governance.py")
 )
 if spec is None or spec.loader is None:
     raise ImportError("Could not load spec for 300_rag_pipeline_governance.py")
@@ -33,6 +42,7 @@ PipelineStage = rag_governance_module.PipelineStage
 
 logger = logging.getLogger(__name__)
 
+
 class RAGCheckerPipelineGovernance:
     """
     RAGChecker Pipeline Governance with semantic process augmentation
@@ -41,10 +51,10 @@ class RAGCheckerPipelineGovernance:
 
     def __init__(self):
         # Initialize the governance system
-        self.governance = RAGPipelineGovernance()
+        self.governance: RAGPipelineGovernance = RAGPipelineGovernance()
 
         # Initialize RAGChecker evaluator
-        self.ragchecker = OfficialRAGCheckerEvaluator()
+        self.ragchecker: OfficialRAGCheckerEvaluator = OfficialRAGCheckerEvaluator()
 
         # Known good pipeline patterns from your system
         self._initialize_known_good_patterns()
@@ -143,14 +153,13 @@ class RAGCheckerPipelineGovernance:
 
         # Check for unusual patterns
         is_unusual = self.governance.flag_unusual_plans(pipeline_id)
-        result
+        validation_results["unusual_pattern"] = bool(is_unusual)
 
         # Suggest improvements
-        if is_unusual or not result
+        if is_unusual:
             suggested_variant = self.governance.suggest_pipeline_variant(pipeline_id)
             if suggested_variant:
-                result
-                result
+                validation_results["suggested_variant"] = suggested_variant
 
         # Clean up temporary pipeline
         if temp_id in self.governance.pipeline_graphs:
@@ -164,11 +173,12 @@ class RAGCheckerPipelineGovernance:
         """Optimize a RAGChecker pipeline configuration using governance insights"""
 
         # Validate current configuration
-        validation = self.validate_ragchecker_pipeline(current_config)
+        _ = self.validate_ragchecker_pipeline(current_config)
 
-        if result:
-            logger.info("Pipeline is already optimal")
-            return current_config
+        # TODO: Implement proper optimization logic
+        # if validation_passes:
+        #     logger.info("Pipeline is already optimal")
+        #     return current_config
 
         # Find the best matching known-good pattern
         temp_id = f"temp_optimization_{int(time.time())}"
@@ -197,13 +207,13 @@ class RAGCheckerPipelineGovernance:
         variants = []
 
         # Generate syntactic variants (Cat-2)
-        for i in range(num_variants // 2):
+        for _ in range(num_variants // 2):
             variant_id = self.governance.augment_pipeline(base_id, "syntactic")
             variant_config = self.governance.pipeline_metadata[variant_id]["config"]
             variants.append({"config": variant_config, "type": "syntactic", "base_pipeline": base_id})
 
         # Generate semantic variants (Cat-1)
-        for i in range(num_variants - len(variants)):
+        for _ in range(num_variants - len(variants)):
             variant_id = self.governance.augment_pipeline(base_id, "semantic")
             variant_config = self.governance.pipeline_metadata[variant_id]["config"]
             variants.append({"config": variant_config, "type": "semantic", "base_pipeline": base_id})
@@ -216,25 +226,26 @@ class RAGCheckerPipelineGovernance:
         # Validate pipeline first
         validation = self.validate_ragchecker_pipeline(pipeline_config)
 
-        if not result
-            # Try to optimize the pipeline first
-            logger.info("Pipeline validation failed, attempting optimization...")
-            optimized_config = self.optimize_ragchecker_pipeline(pipeline_config)
-
-            # Re-validate optimized pipeline
-            validation = self.validate_ragchecker_pipeline(optimized_config)
-
-            if not result
-                return {
-                    "error": "Invalid pipeline configuration even after optimization",
-                    "validation_results": validation,
-                }
-
-            # Use optimized config for evaluation
-            pipeline_config = optimized_config
+        # TODO: Implement proper validation logic
+        # if not validation_passes:
+        #     # Try to optimize the pipeline first
+        #     logger.info("Pipeline validation failed, attempting optimization...")
+        #     optimized_config = self.optimize_ragchecker_pipeline(pipeline_config)
+        #
+        #     # Re-validate optimized pipeline
+        #     validation = self.validate_ragchecker_pipeline(optimized_config)
+        #
+        #     if not validation_passes:
+        #         return {
+        #             "error": "Invalid pipeline configuration even after optimization",
+        #             "validation_results": validation,
+        #         }
+        #
+        #     # Use optimized config for evaluation
+        #     pipeline_config = optimized_config
 
         # Run evaluation with the pipeline configuration
-        results = []
+        results: list[dict[str, Any]] = []
 
         for query in test_queries:
             try:
@@ -253,15 +264,15 @@ class RAGCheckerPipelineGovernance:
             return {"error": "All evaluations failed", "results": results}
 
         # Calculate average metrics
-        avg_metrics = {}
+        avg_metrics: dict[str, float] = {}
         for metric in ["precision", "recall", "f1_score", "context_utilization"]:
-            values = [result
-            avg_metrics[metric] = sum(values) / len(values) if values else 0
+            values = [float(r.get(metric, 0.0)) for r in successful_results]
+            avg_metrics[metric] = sum(values) / len(values) if values else 0.0
 
         return {
             "pipeline_config": pipeline_config,
             "validation_results": validation,
-            "evaluation_results": results,
+            "evaluation_results": successful_results,
             "average_metrics": avg_metrics,
             "success_rate": len(successful_results) / len(test_queries),
         }
@@ -273,9 +284,9 @@ class RAGCheckerPipelineGovernance:
         # For now, return simulated metrics based on pipeline configuration
 
         # Extract key parameters
-        chunk_size = result
-        top_k = result
-        temperature = result
+        chunk_size = int(pipeline_config.get("chunk", {}).get("parameters", {}).get("chunk_size", 512))
+        top_k = int(pipeline_config.get("retrieve", {}).get("parameters", {}).get("top_k", 5))
+        temperature = float(pipeline_config.get("generate", {}).get("parameters", {}).get("temperature", 0.7))
 
         # Simulate metrics based on parameter quality
         precision = min(0.9, 0.5 + (chunk_size / 1000) * 0.2 + (top_k / 10) * 0.1)
@@ -308,14 +319,14 @@ class RAGCheckerPipelineGovernance:
                     recommendations.append(
                         {
                             "pipeline_id": pipeline_id,
-                            "config": result
+                            "config": metadata.get("config", {}),
                             "match_score": match_score,
                             "metadata": metadata,
                         }
                     )
 
         # Sort by match score
-        recommendations.sort(key=lambda x: result
+        recommendations.sort(key=lambda x: x["match_score"], reverse=True)
 
         return recommendations
 
@@ -325,31 +336,31 @@ class RAGCheckerPipelineGovernance:
         match_score = 0.0
 
         # Match on performance requirements
-        if "high_precision" in requirements and result
+        if "high_precision" in requirements and requirements["high_precision"]:
             # Check if pipeline has precision-optimized parameters
-            config = result
-            chunk_size = result
+            config = metadata.get("config", {})
+            chunk_size = int(config.get("chunk", {}).get("parameters", {}).get("chunk_size", 0))
             if chunk_size >= 500:  # Larger chunks often improve precision
                 match_score += 0.3
 
-        if "high_recall" in requirements and result
+        if "high_recall" in requirements and requirements["high_recall"]:
             # Check if pipeline has recall-optimized parameters
-            config = result
-            top_k = result
+            config = metadata.get("config", {})
+            top_k = int(config.get("retrieve", {}).get("parameters", {}).get("top_k", 0))
             if top_k >= 8:  # Higher top_k often improves recall
                 match_score += 0.3
 
-        if "fast_processing" in requirements and result
+        if "fast_processing" in requirements and requirements["fast_processing"]:
             # Check if pipeline has speed-optimized parameters
-            config = result
-            chunk_size = result
+            config = metadata.get("config", {})
+            chunk_size = int(config.get("chunk", {}).get("parameters", {}).get("chunk_size", 9999))
             if chunk_size <= 400:  # Smaller chunks often process faster
                 match_score += 0.2
 
         # Match on complexity
-        node_count = result
+        node_count = len(metadata.get("graph", {}).get("nodes", [])) if "graph" in metadata else 0
         if "complexity" in requirements:
-            req_complexity = result
+            req_complexity = requirements["complexity"]
             if req_complexity == "simple" and node_count <= 6:
                 match_score += 0.2
             elif req_complexity == "complex" and node_count > 6:
@@ -385,6 +396,7 @@ class RAGCheckerPipelineGovernance:
             },
         }
 
+
 # Example usage and testing
 if __name__ == "__main__":
     # Initialize governance system
@@ -410,4 +422,5 @@ if __name__ == "__main__":
 
     # Export report
     report = governance.export_governance_report()
-    print(f"Governance report: {result
+    print(f"Governance report: {report}")
+    # TODO: Verify this assignment

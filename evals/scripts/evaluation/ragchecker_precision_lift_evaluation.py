@@ -1,3 +1,4 @@
+from typing import Any, Optional, Union
 #!/usr/bin/env python3
 """
 RAGChecker Precision Lift Pack Evaluation
@@ -19,7 +20,7 @@ if str(scripts_path) not in sys.path:
     sys.path.insert(0, str(scripts_path))
 
 from precision_lift_pack_config import apply_precision_lift_pack
-from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+from scripts.evaluation.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 
 class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
     """Enhanced RAGChecker evaluator with precision lift pack features."""
@@ -87,10 +88,10 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
             ragchecker_result = self.create_fallback_evaluation(eval_data)
 
             # Extract metrics
-            overall_metrics = result
-            precision = result
-            recall = result
-            f1_score = result
+            overall_metrics = ragchecker_result.get("overall_metrics", {})
+            precision = overall_metrics.get("precision", 0.0)
+            recall = overall_metrics.get("recall", 0.0)
+            f1_score = overall_metrics.get("f1_score", 0.0)
 
         except Exception as e:
             print(f"   ⚠️ RAGChecker evaluation failed: {e}")
@@ -155,10 +156,10 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
     def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], precision_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
-            "precision": result
-            "recall": result
-            "f1_score": result
-            "evaluation_time": result
+            "precision": case_result.get("precision", 0.0),
+            "recall": case_result.get("recall", 0.0),
+            "f1_score": case_result.get("f1_score", 0.0),
+            "evaluation_time": case_result.get("evaluation_time", 0.0),
             "precision_metrics": precision_metrics,
         }
 
@@ -168,9 +169,9 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
         """Generate comprehensive precision lift pack evaluation report."""
 
         # Calculate overall metrics
-        precisions = [result
-        recalls = [result
-        f1_scores = [result
+        precisions = [r.get("precision", 0.0) for r in results]
+        recalls = [r.get("recall", 0.0) for r in results]
+        f1_scores = [r.get("f1_score", 0.0) for r in results]
 
         overall_metrics = {
             "precision": sum(precisions) / len(precisions) if precisions else 0.0,
@@ -183,9 +184,9 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
 
         # Check baseline compliance
         baseline_compliance = {
-            "precision": result
-            "recall": result
-            "f1_score": result
+            "precision": overall_metrics["precision"] >= judge_floors["precision"],
+            "recall": overall_metrics["recall"] >= judge_floors["recall"],
+            "f1_score": overall_metrics["f1_score"] >= judge_floors["f1_score"],
         }
 
         # Calculate precision lift pack summary statistics
@@ -215,34 +216,34 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
             return {}
 
         # Sentence-level support analysis
-        two_of_three_totals = [result
+        two_of_three_totals = [p["sentence_level_support"]["two_of_three_passed"] for p in precision_metrics_summary]
         evidence_jaccard_improvements = [
-            result
+            p["sentence_level_support"]["evidence_jaccard_improved"] for p in precision_metrics_summary
         ]
         evidence_coverage_improvements = [
-            result
+            p["sentence_level_support"]["evidence_coverage_improved"] for p in precision_metrics_summary
         ]
 
         # Hard gates analysis
-        numeric_matches = [result
-        entity_matches = [result
-        penalties_applied = [result
+        numeric_matches = [p["hard_gates"]["numeric_matches"] for p in precision_metrics_summary]
+        entity_matches = [p["hard_gates"]["entity_matches"] for p in precision_metrics_summary]
+        penalties_applied = [p["hard_gates"]["penalty_applied"] for p in precision_metrics_summary]
 
         # Redundancy reduction analysis
-        trigram_pruned = [result
-        per_chunk_capped = [result
+        trigram_pruned = [p["redundancy_reduction"]["trigram_pruned"] for p in precision_metrics_summary]
+        per_chunk_capped = [p["redundancy_reduction"]["per_chunk_capped"] for p in precision_metrics_summary]
         unique_anchors_required = [
-            result
+            p["redundancy_reduction"]["unique_anchors_required"] for p in precision_metrics_summary
         ]
 
         # Claim binding analysis
-        claims_kept = [result
-        min_words_met = [result
-        strong_cases_boosted = [result
+        claims_kept = [p["claim_binding"]["claims_kept"] for p in precision_metrics_summary]
+        min_words_met = [p["claim_binding"]["min_words_met"] for p in precision_metrics_summary]
+        strong_cases_boosted = [p["claim_binding"]["strong_cases_boosted"] for p in precision_metrics_summary]
 
         # Facet influence analysis
-        facet_downweighted = [result
-        high_yield_facets_kept = [result
+        facet_downweighted = [p["facet_influence"]["facet_downweighted"] for p in precision_metrics_summary]
+        high_yield_facets_kept = [p["facet_influence"]["high_yield_facets_kept"] for p in precision_metrics_summary]
 
         return {
             "sentence_level_support": {
@@ -296,7 +297,7 @@ def main():
 
     # Set fast mode if requested
     if args.fast_mode:
-        os.environ
+        os.environ["RAGCHECKER_FAST_MODE"] = "1"
 
     # Initialize evaluator
     evaluator = PrecisionLiftEvaluator()
@@ -319,19 +320,19 @@ def main():
 
     # For now, just print the results instead of saving to JSON to avoid serialization issues
     print("\n📊 Precision Lift Pack Evaluation Results:")
-    print(f"   Total Cases: {result
-    print(f"   Overall Metrics: {result
-    print(f"   Baseline Compliance: {result
-    print(f"   Precision Lift Statistics: {result
+    print(f"   Total Cases: {evaluation_report['total_cases']}")
+    print(f"   Overall Metrics: {evaluation_report['overall_metrics']}")
+    print(f"   Baseline Compliance: {evaluation_report['baseline_compliance']}")
+    print(f"   Precision Lift Statistics: {evaluation_report['precision_lift_statistics']}")
 
     # Try to save a simplified version
     try:
         simplified_report = {
-            "evaluation_type": result
-            "total_cases": result
-            "overall_metrics": result
-            "baseline_compliance": result
-            "timestamp": result
+            "evaluation_type": evaluation_report["evaluation_type"],
+            "total_cases": evaluation_report["total_cases"],
+            "overall_metrics": evaluation_report["overall_metrics"],
+            "baseline_compliance": evaluation_report["baseline_compliance"],
+            "timestamp": evaluation_report["timestamp"],
         }
 
         with open(output_file, "w") as f:
@@ -345,36 +346,36 @@ def main():
     print("\n📊 Precision Lift Pack Evaluation Complete")
     print("=" * 60)
     print("📈 Overall Metrics:")
-    overall = result
-    print(f"   Precision: {result
-    print(f"   Recall: {result
-    print(f"   F1 Score: {result
+    overall = evaluation_report["overall_metrics"]
+    print(f"   Precision: {overall['precision']:.3f}")
+    print(f"   Recall: {overall['recall']:.3f}")
+    print(f"   F1 Score: {overall['f1_score']:.3f}")
 
     print("\n🎯 Baseline Compliance:")
-    compliance = result
-    floors = result
-    for metric, passed in .items()
+    compliance = evaluation_report["baseline_compliance"]
+    floors = evaluation_report["judge_floors"]
+    for metric, passed in compliance.items():
         status = "✅ PASS" if passed else "❌ FAIL"
         target = floors[metric]
         current = overall[metric]
         print(f"   {metric}: {status} ({current:.3f} vs {target:.3f})")
 
     print("\n🔧 Precision Lift Pack Features:")
-    precision_stats = result
-    print(f"   Two-of-Three Support: {result
+    precision_stats = evaluation_report["precision_lift_statistics"]
+    print(f"   Two-of-Three Support: {precision_stats['sentence_level_support']['avg_two_of_three_passed']:.1f} avg")
     print(
-        f"   Hard Gates Applied: {result
+        f"   Hard Gates Applied: {precision_stats['hard_gates']['total_numeric_matches']} numeric, {precision_stats['hard_gates']['total_entity_matches']} entity"
     )
     print(
-        f"   Redundancy Reduced: {result
+        f"   Redundancy Reduced: {precision_stats['redundancy_reduction']['total_trigram_pruned']} trigram, {precision_stats['redundancy_reduction']['total_per_chunk_capped']} per-chunk"
     )
-    print(f"   Claims Optimized: {result
-    print(f"   Facet Influence: {result
+    print(f"   Claims Optimized: {precision_stats['claim_binding']['avg_claims_kept']:.1f} avg kept")
+    print(f"   Facet Influence: {precision_stats['facet_influence']['total_facet_downweighted']} downweighted")
 
     print(f"\n📁 Results saved to: {output_file}")
 
     # Return exit code based on compliance
-    all_passed = all(.values()
+    all_passed = all(compliance.values())
     return 0 if all_passed else 2
 
 if __name__ == "__main__":

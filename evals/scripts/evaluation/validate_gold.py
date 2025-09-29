@@ -1,12 +1,13 @@
+#!/usr/bin/env python3
 from __future__ import annotations
+
 import glob
 import json
-import os
 import sys
 from pathlib import Path
-import sys
+
 from src.utils.gold_loader import load_gold_cases
-#!/usr/bin/env python3
+
 """
 Gold Dataset Validation Script
 
@@ -72,7 +73,7 @@ def validate_gold_dataset() -> list[str]:
         if "views" not in manifest:
             issues.append("Manifest missing 'views' section")
         else:
-            for view_name, view_config in result
+            for view_name, view_config in manifest["views"].items():
                 required_fields = ["seed", "strata", "size"]
                 for field in required_fields:
                     if field not in view_config:
@@ -80,7 +81,7 @@ def validate_gold_dataset() -> list[str]:
 
                 # Validate strata sum to 1.0
                 if "strata" in view_config:
-                    strata_sum = sum(result
+                    strata_sum = sum(view_config["strata"].values())
                     if abs(strata_sum - 1.0) > 0.01:
                         issues.append(f"View '{view_name}' strata sum is {strata_sum}, should be 1.0")
 
@@ -91,7 +92,6 @@ def validate_gold_dataset() -> list[str]:
 
     # Validate gold dataset
     try:
-
         sys.path.insert(0, ".")
 
         cases = load_gold_cases(gold_file)

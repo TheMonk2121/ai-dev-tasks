@@ -12,6 +12,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
+# Type annotations are handled in class definitions
 import pytest
 from scripts.task_generation_automation import (
     BacklogParser,
@@ -83,6 +84,12 @@ class TestGeneratedTask:
 
 class TestPRDParser:
     """Test the PRDParser class."""
+    
+    def __init__(self):
+        # Initialize instance variables with default values
+        self.temp_dir: str = ""
+        self.prd_content: str = ""
+        self.prd_path: str = ""
 
     @pytest.fixture(autouse=True)
     def setup_teardown(self):
@@ -110,7 +117,7 @@ class TestPRDParser:
 
         self.prd_path = os.path.join(self.temp_dir, "test_prd.md")
         with open(self.prd_path, "w") as f:
-            f.write(self.prd_content)
+            _ = f.write(self.prd_content)
 
         yield
 
@@ -239,6 +246,12 @@ class TestPRDParser:
 
 class TestBacklogParser:
     """Test the BacklogParser class."""
+    
+    def __init__(self):
+        # Initialize instance variables with default values
+        self.temp_dir: str = ""
+        self.backlog_content: str = ""
+        self.backlog_path: str = ""
 
     @pytest.fixture(autouse=True)
     def setup_teardown(self):
@@ -257,7 +270,7 @@ class TestBacklogParser:
 
         self.backlog_path = os.path.join(self.temp_dir, "test_backlog.md")
         with open(self.backlog_path, "w") as f:
-            f.write(self.backlog_content)
+            _ = f.write(self.backlog_content)
 
         yield
 
@@ -321,6 +334,11 @@ class TestBacklogParser:
 
 class TestTaskTemplateGenerator:
     """Test the TaskTemplateGenerator class."""
+    
+    def __init__(self):
+        # Initialize instance variables with default values
+        self.generator: TaskTemplateGenerator = None  # type: ignore
+        self.requirement: TaskRequirement = None  # type: ignore
 
     @pytest.fixture(autouse=True)
     def setup_teardown(self):
@@ -502,6 +520,11 @@ class TestTaskTemplateGenerator:
 
 class TestTaskOutputGenerator:
     """Test the TaskOutputGenerator class."""
+    
+    def __init__(self):
+        # Initialize instance variables with default values
+        self.output_generator: TaskOutputGenerator = None  # type: ignore
+        self.task: GeneratedTask = None  # type: ignore
 
     @pytest.fixture(autouse=True)
     def setup_teardown(self):
@@ -574,6 +597,12 @@ class TestTaskOutputGenerator:
 
 class TestIntegration:
     """Integration tests for the complete task generation workflow."""
+    
+    def __init__(self):
+        # Initialize instance variables with default values
+        self.temp_dir: str = ""
+        self.prd_content: str = ""
+        self.prd_path: str = ""
 
     @pytest.fixture(autouse=True)
     def setup_teardown(self):
@@ -600,7 +629,7 @@ class TestIntegration:
 
         self.prd_path = os.path.join(self.temp_dir, "test_prd.md")
         with open(self.prd_path, "w") as f:
-            f.write(self.prd_content)
+            _ = f.write(self.prd_content)
 
         yield
 

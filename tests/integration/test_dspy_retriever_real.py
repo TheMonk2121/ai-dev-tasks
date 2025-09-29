@@ -10,7 +10,6 @@ functionality with actual database operations.
 import os
 import sys
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 import pytest
@@ -27,20 +26,26 @@ from src.dspy_modules.retriever.pg import fetch_doc_chunks_by_slug, get_db_conne
 @pytest.mark.dspy
 class TestDSPyRetrieverReal:
     """Real database integration tests for DSPy Retriever."""
+    
+    dsn: str | None = None
 
     @pytest.fixture(autouse=True)
     def setup_database(self):
         """Set up test database environment."""
-        self.dsn = os.getenv("TEST_POSTGRES_DSN") or os.getenv("POSTGRES_DSN")
-        if not self.dsn or self.dsn.startswith("mock://"):
+        dsn = os.getenv("TEST_POSTGRES_DSN") or os.getenv("POSTGRES_DSN")
+        if not dsn or dsn.startswith("mock://"):
             pytest.skip("Real database required - set TEST_POSTGRES_DSN")
+        
+        # At this point, dsn is guaranteed to be a non-empty string
+        assert dsn is not None
+        self.dsn = dsn
 
         # Set environment for retriever
-        os.environ
+        os.environ["POSTGRES_DSN"] = dsn
         yield
         # Cleanup
         if "POSTGRES_DSN" in os.environ:
-            del os.environ
+            del os.environ["POSTGRES_DSN"]
 
     def test_database_connection_validation(self):
         """Test that database connection validation works correctly."""
@@ -59,8 +64,8 @@ class TestDSPyRetrieverReal:
     def test_mock_dsn_rejection(self):
         """Test that mock DSNs are properly rejected."""
         # Temporarily set mock DSN
-        original_dsn = os.result
-        os.environ
+        original_dsn = os.environ.get("POSTGRES_DSN")
+        os.environ["POSTGRES_DSN"] = "mock://test"
 
         try:
             with pytest.raises(RuntimeError, match="Invalid DSN detected"):
@@ -68,9 +73,9 @@ class TestDSPyRetrieverReal:
         finally:
             # Restore original DSN
             if original_dsn:
-                os.environ
+                os.environ["POSTGRES_DSN"] = original_dsn
             elif "POSTGRES_DSN" in os.environ:
-                del os.environ
+                del os.environ["POSTGRES_DSN"]
 
     def test_document_chunks_retrieval(self):
         """Test document chunks retrieval with real database."""
@@ -83,7 +88,7 @@ class TestDSPyRetrieverReal:
 
             # If we have test data, verify structure
             if chunks:
-                chunk = result
+                chunk = chunks[0]
                 assert "content" in chunk or "text" in chunk
                 assert "embedding" in chunk or "vector" in chunk
 
@@ -97,7 +102,7 @@ class TestDSPyRetrieverReal:
         try:
             with conn.cursor() as cur:
                 # Test vector similarity search
-                test_vector = np.random.rand(384).astype(np.float32)
+                _ = np.random.rand(384).astype(np.float32)
 
                 # Test if pgvector extension is available
                 cur.execute("SELECT extname FROM pg_extension WHERE extname = 'vector'")
@@ -171,7 +176,7 @@ class TestDSPyRetrieverReal:
                     """
                     )
                     columns = cur.fetchall()
-                    column_names = [result
+                    column_names = [col[0] for col in columns]
 
                     # Check for essential columns
                     essential_columns = ["content", "embedding", "slug"]

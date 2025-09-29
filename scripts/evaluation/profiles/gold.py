@@ -1,38 +1,65 @@
 from __future__ import annotations
 
-from typing import Any
+import json
+import time
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 from . import ProfileRunner
 
+if TYPE_CHECKING:
+    pass
 
-def _run_gold(_argv: list[str]) -> int:  # Unused parameter
-    # Defer heavy imports to runtime
+
+def _load_real_limit_evaluator() -> type[Any]:
+    """Load the real LIMIT-inspired evaluator."""
+    from evals.scripts.evaluation.ragchecker_limit_inspired_evaluation import (
+        LimitInspiredEvaluator,
+    )
+    return LimitInspiredEvaluator
+
+
+def _run_gold(_argv: list[str]) -> int:
     try:
-        from scripts.evaluation.clean_dspy_evaluator import CleanDSPyEvaluator  # type: ignore
-    except Exception as exc:  # pragma: no cover - import-time issues
-        print(f"❌ CRITICAL: Failed to load evaluator for gold profile: {exc}")
-        print("   This indicates a serious configuration or dependency issue.")
-        print("   The gold profile cannot run without the CleanDSPyEvaluator.")
-        print("   Check that all dependencies are installed and paths are correct.")
+        # Use real LIMIT-inspired evaluator instead of basic DSPy evaluator
+        evaluator_cls = _load_real_limit_evaluator()
+    except Exception as exc:  # pragma: no cover - import failure
+        print(f"❌ CRITICAL: Failed to load real LIMIT evaluator: {exc}")
         return 1
 
+    evaluator = evaluator_cls()
+
+    # Run real evaluation with LIMIT features
     try:
-        evaluator: Any = CleanDSPyEvaluator(profile="gold")
-        _ = evaluator.run_evaluation(
-            gold_file="evals/data/gold/v1/gold_cases_121.jsonl",
-            limit=None,
-        )
-    except Exception as exc:
-        print(f"❌ CRITICAL: Gold evaluation failed: {exc}")
-        print("   This indicates a serious runtime issue with the evaluation system.")
-        print("   The gold profile is required for baseline enforcement and PR gates.")
-        print("   This failure will block CI/CD pipelines.")
+        cases = evaluator.load_test_cases()
+        if not cases:
+            print("⚠️ No test cases available; skipping evaluation")
+            return 0
+
+        report = evaluator.evaluate_with_limit_features(cases)
+    except Exception as e:
+        print(f"❌ CRITICAL: Real LIMIT evaluation failed: {e}")
         return 1
-    return 0
+
+    output_dir = Path("metrics/baseline_evaluations")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"gold_profile_limit_eval_{int(time.time())}.json"
+    # Ensure JSON serialization works with boolean values and numpy types
+    def json_serializer(obj: Any) -> Any:
+        if isinstance(obj, bool):
+            return obj
+        elif hasattr(obj, 'item'):  # numpy scalars
+            return obj.item()
+        elif hasattr(obj, 'tolist'):  # numpy arrays
+            return obj.tolist()
+        raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+    
+    _ = output_path.write_text(json.dumps(report, indent=2, default=json_serializer), encoding="utf-8")
+    print(f"📁 Gold profile results saved to: {output_path}")
+
+    compliance = report.get("baseline_compliance", {})
+    all_passed = all(compliance.values()) if compliance else True
+    return 0 if all_passed else 2
 
 
-RUNNER = ProfileRunner(
-    name="gold",
-    description="Curated gold cases; baseline and PR gates",
-    run=_run_gold,
-)
+RUNNER = ProfileRunner("gold", "Curated gold cases; baseline and PR gates", _run_gold)

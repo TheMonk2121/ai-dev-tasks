@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import os
 import uuid
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
-import psycopg
-from psycopg_pool import AsyncConnectionPool
+import psycopg  # type: ignore[import-untyped]
+from psycopg_pool import AsyncConnectionPool  # type: ignore[import-untyped]
 
 # Prefer DATABASE_URL, fallback to POSTGRES_DSN
 DB_DSN = (os.getenv("DATABASE_URL") or os.getenv("POSTGRES_DSN") or "").strip()
@@ -25,12 +25,12 @@ def _new_id(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex}"
 
 
-async def advisory_lock(conn: psycopg.AsyncConnection[Any], thread_id: str) -> None:
+async def advisory_lock(conn: Any, thread_id: str) -> None:
     async with conn.cursor() as cur:
         await cur.execute("SELECT pg_advisory_xact_lock(hashtext($1))", (thread_id,))
 
 
-async def ensure_thread_exists(conn: psycopg.AsyncConnection[Any], thread_id: str | None) -> str:
+async def ensure_thread_exists(conn: Any, thread_id: str | None) -> str:
     tid = thread_id or _new_id("thread")
     async with conn.cursor() as cur:
         await cur.execute(
@@ -45,7 +45,7 @@ async def ensure_thread_exists(conn: psycopg.AsyncConnection[Any], thread_id: st
     return tid
 
 
-async def next_seq(conn: psycopg.AsyncConnection[Any], thread_id: str) -> int:
+async def next_seq(conn: Any, thread_id: str) -> int:
     async with conn.cursor() as cur:
         await cur.execute(
             """
@@ -60,7 +60,7 @@ async def next_seq(conn: psycopg.AsyncConnection[Any], thread_id: str) -> int:
         return int(row[0]) if row and row[0] is not None else 0
 
 
-async def get_parent_turn(conn: psycopg.AsyncConnection[Any], turn_id: str) -> dict[str, Any] | None:
+async def get_parent_turn(conn: Any, turn_id: str) -> dict[str, Any] | None:
     async with conn.cursor() as cur:
         await cur.execute(
             """
@@ -77,11 +77,11 @@ async def get_parent_turn(conn: psycopg.AsyncConnection[Any], turn_id: str) -> d
 
 
 async def insert_user_turn(
-    conn: psycopg.AsyncConnection[Any], *, thread_id: str, content: str, metadata: dict[str, Any]
+    conn: Any, *, thread_id: str, content: str, metadata: dict[str, Any]
 ) -> tuple[str, int]:
     async with conn.transaction():
         await advisory_lock(conn, thread_id)
-        await ensure_thread_exists(conn, thread_id)
+        _ = await ensure_thread_exists(conn, thread_id)
         seq = await next_seq(conn, thread_id)
         turn_id = _new_id("turn")
         async with conn.cursor() as cur:
@@ -99,7 +99,7 @@ async def insert_user_turn(
 
 
 async def insert_ai_turn(
-    conn: psycopg.AsyncConnection[Any],
+    conn: Any,
     *,
     parent_turn_id: str,
     content: str,
@@ -119,7 +119,7 @@ async def insert_ai_turn(
 
     async with conn.transaction():
         await advisory_lock(conn, parent_tid)
-        await ensure_thread_exists(conn, parent_tid)
+        _ = await ensure_thread_exists(conn, parent_tid)
         seq = await next_seq(conn, parent_tid)
 
         if allow_supersede and status == "final":

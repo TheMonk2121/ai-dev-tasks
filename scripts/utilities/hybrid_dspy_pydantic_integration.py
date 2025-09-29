@@ -5,7 +5,7 @@ import os
 import sys
 import traceback
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 # Import from the correct locations
 from src.observability.logging import init_observability
@@ -16,10 +16,10 @@ import logfire
 from dspy_modules.model_switcher import LocalModel, ModelSwitcher
 from migrate_to_pydantic_evals import create_pydantic_evals_dataset, load_eval_cases
 from pydantic import BaseModel, ConfigDict, Field
-from pydantic_ai import Agent, RunContext, Tool
+from pydantic_ai import Agent
 from pydantic_ai.models.instrumented import InstrumentationSettings
 from pydantic_ai.models.test import TestModel
-from pydantic_evals.dataset import Case, Dataset, increment_eval_metric, set_eval_attribute
+from pydantic_evals.dataset import increment_eval_metric, set_eval_attribute
 from pydantic_evals.evaluators import Evaluator, EvaluatorContext
 
 #!/usr/bin/env python3
@@ -46,7 +46,7 @@ def detect_environment():
 class HybridRAGInput(BaseModel):
     """Input for hybrid RAG queries."""
 
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid")
     query: str = Field(min_length=1)
     use_dspy: bool = Field(default=False)  # Whether to use DSPy system
     model_preference: str | None = None
@@ -54,7 +54,7 @@ class HybridRAGInput(BaseModel):
 class HybridRAGAnswer(BaseModel):
     """Structured answer from hybrid RAG system."""
 
-    model_config = ConfigDict(strict=True, extra="forbid")
+    model_config: ConfigDict = ConfigDict(strict=True, extra="forbid")
     answer: str = Field(min_length=1)
     confidence: float = Field(ge=0.0, le=1.0)
     sources: list[str] = Field(default_factory=list)
@@ -67,10 +67,10 @@ class HybridRAGAnswer(BaseModel):
 class LocalOllamaAgent:
     """PydanticAI agent for local Ollama models."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Use TestModel for local development (no API keys needed)
 
-        self.agent = Agent(
+        self.agent: Agent = Agent(
             TestModel(),
             system_prompt="You are a helpful AI assistant running locally via Ollama.",
             output_type=HybridRAGAnswer,
@@ -117,13 +117,13 @@ class LocalOllamaAgent:
 class DockerDSPyAgent:
     """DSPy + Pydantic agent for Docker environment."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Try to import DSPy system
         try:
             # sys.path.insert(0, str(project_root / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 
-            self.model_switcher = ModelSwitcher()
-            self.dspy_available = True
+            self.model_switcher: ModelSwitcher = ModelSwitcher()
+            self.dspy_available: bool = True
         except ImportError as e:
             print(f"⚠️  DSPy not available in Docker: {e}")
             self.dspy_available = False
@@ -187,7 +187,7 @@ class DockerDSPyAgent:
                     metadata={"error": str(e)},
                 )
 
-    def _get_model_enum(self, model_name: str):
+    def _get_model_enum(self, model_name: str) -> LocalModel | None:
         """Convert model name to LocalModel enum."""
         try:
 
@@ -204,14 +204,14 @@ class DockerDSPyAgent:
 class HybridRAGAgent:
     """Hybrid agent that works in both local and Docker environments."""
 
-    def __init__(self):
-        self.environment = detect_environment()
+    def __init__(self) -> None:
+        self.environment: str = detect_environment()
         print(f"🌍 Detected environment: {self.environment}")
 
         if self.environment == "local":
-            self.agent = LocalOllamaAgent()
+            self.agent: LocalOllamaAgent | DockerDSPyAgent = LocalOllamaAgent()
         else:
-            self.agent = DockerDSPyAgent()
+            self.agent: LocalOllamaAgent | DockerDSPyAgent = DockerDSPyAgent()
 
     async def query(self, inputs: HybridRAGInput) -> HybridRAGAnswer:
         """Query using the appropriate handler for the environment."""
@@ -226,10 +226,10 @@ class HybridRAGAgent:
             raise RuntimeError("Unsupported agent type")
 
 # Evaluators for both environments
-class HybridRAGQualityEvaluator(Evaluator[HybridRAGInput, HybridRAGAnswer, dict]):
+class HybridRAGQualityEvaluator(Evaluator[HybridRAGInput, HybridRAGAnswer, dict[str, Any]]):
     """Evaluator for hybrid RAG system quality."""
 
-    def evaluate(self, ctx: EvaluatorContext[HybridRAGInput, HybridRAGAnswer, dict]) -> float:
+    def evaluate(self, ctx: EvaluatorContext[HybridRAGInput, HybridRAGAnswer, dict[str, Any]]) -> float:
         """Evaluate hybrid RAG response quality."""
 
         if not ctx.output:
@@ -257,11 +257,11 @@ class HybridRAGQualityEvaluator(Evaluator[HybridRAGInput, HybridRAGAnswer, dict]
         return overall_quality
 
 # Main integration function
-async def run_hybrid_integration():
+async def run_hybrid_integration() -> Any:
     """Run hybrid integration demo."""
 
     # Initialize observability
-    init_observability(service="hybrid-dspy-pydantic", environment="dev")
+    _ = init_observability(service_name="hybrid-dspy-pydantic", environment="dev")
 
     with logfire.span("hybrid_integration_demo"):
         print("🚀 Starting Hybrid DSPy + Pydantic Integration Demo")
@@ -293,7 +293,7 @@ async def run_hybrid_integration():
         print(f"   ✅ Added {len(evaluators)} evaluators")
 
         # Define evaluation task
-        async def hybrid_evaluation_task(inputs):
+        async def hybrid_evaluation_task(inputs: HybridRAGInput) -> HybridRAGAnswer:
             """Evaluation task using hybrid agent."""
             return await agent.query(inputs)
 

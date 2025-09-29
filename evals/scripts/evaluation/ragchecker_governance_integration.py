@@ -1,13 +1,13 @@
 from __future__ import annotations
-import json
+
 import logging
 import sys
 from pathlib import Path
 from typing import Any
-from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
-from ragchecker_pipeline_governance import RAGCheckerPipelineGovernance
-import argparse
-import os
+
+from .ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+from .ragchecker_pipeline_governance import RAGCheckerPipelineGovernance
+
 #!/usr/bin/env python3
 """
 RAGChecker Governance Integration with Real Evaluation
@@ -24,12 +24,12 @@ class RAGCheckerGovernanceIntegration:
     Full integration of RAGChecker evaluation with pipeline governance
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize governance system
-        self.governance = RAGCheckerPipelineGovernance()
+        self.governance: RAGCheckerPipelineGovernance = RAGCheckerPipelineGovernance()
 
         # Initialize RAGChecker evaluator
-        self.ragchecker = OfficialRAGCheckerEvaluator()
+        self.ragchecker: OfficialRAGCheckerEvaluator = OfficialRAGCheckerEvaluator()
 
         logger.info("RAGChecker Governance Integration initialized")
 
@@ -56,41 +56,41 @@ class RAGCheckerGovernanceIntegration:
         # Validate pipeline configuration
         validation_results = self.governance.validate_ragchecker_pipeline(pipeline_config)
 
-        if not result
+        if not validation_results.get("valid", False):
             logger.warning("⚠️ Pipeline validation failed, attempting optimization...")
             optimized_config = self.governance.optimize_ragchecker_pipeline(pipeline_config)
 
             # Re-validate optimized pipeline
             validation_results = self.governance.validate_ragchecker_pipeline(optimized_config)
 
-            if result:
+            if validation_results.get("valid", False):
                 logger.info("✅ Pipeline optimization successful")
                 pipeline_config = optimized_config
             else:
                 logger.error("❌ Pipeline optimization failed, using original config")
 
         # Check for unusual patterns
-        if result:
+        if validation_results.get("unusual_patterns", False):
             logger.warning("⚠️ Unusual patterns detected in pipeline")
             if "suggested_variant" in validation_results:
-                logger.info(f"💡 Suggested variant: {result
+                logger.info(f"💡 Suggested variant: {validation_results['suggested_variant']}")
 
         # Run actual RAGChecker evaluation
         logger.info("🚀 Running RAGChecker evaluation with governed pipeline...")
 
         try:
             # Run the actual RAGChecker evaluation
-            evaluation_results = self.ragchecker.run_official_evaluation(use_local_llm=False, use_bedrock=use_bedrock)
+            evaluation_results = self.ragchecker.run_official_evaluation(use_local_llm=False, use_bedrock=use_bedrock, num_cases=num_cases)
 
             # Extract key metrics
-            overall_metrics = result
+            overall_metrics = evaluation_results.get("overall_metrics", {})
 
             # Check against performance targets
             performance_targets = {"precision": 0.20, "recall": 0.45, "f1_score": 0.22, "context_utilization": 0.60}
 
             targets_met = {}
-            for metric, target in .items()
-                actual = result
+            for metric, target in performance_targets.items():
+                actual = overall_metrics.get(metric, 0.0)
                 targets_met[metric] = actual >= target
                 status = "✅" if actual >= target else "❌"
                 logger.info(f"📊 {metric}: {actual:.3f} (target: {target:.3f}) {status}")
@@ -134,22 +134,22 @@ class RAGCheckerGovernanceIntegration:
         # Evaluate each variant
         variant_results = []
         for i, variant in enumerate(variants):
-            logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({result
+            logger.info(f"🧪 Evaluating variant {i+1}/{len(variants)} ({variant.get('type', 'unknown')})")
 
             try:
                 # Run evaluation for this variant
                 result = self.evaluate_with_governance(
-                    pipeline_config=result
+                    pipeline_config=variant, use_bedrock=use_bedrock, num_cases=num_cases
                 )
 
                 variant_results.append(
-                    {"variant_id": i + 1, "type": result
+                    {"variant_id": i + 1, "type": variant.get("type", "unknown"), "result": result}
                 )
 
             except Exception as e:
                 logger.error(f"❌ Variant {i+1} evaluation failed: {e}")
                 variant_results.append(
-                    {"variant_id": i + 1, "type": result
+                    {"variant_id": i + 1, "type": variant.get("type", "unknown"), "error": str(e)}
                 )
 
         return variant_results
@@ -180,15 +180,16 @@ class RAGCheckerGovernanceIntegration:
             ],
         }
 
-def main():
+def main() -> None:
     """Main execution function"""
+    import argparse
 
     parser = argparse.ArgumentParser(description="RAGChecker Governance Integration")
-    parser.add_argument("--variants", type=int, default=0, help="Generate and evaluate N pipeline variants")
-    parser.add_argument("--use-bedrock", action="store_true", help="Use Bedrock for evaluation")
-    parser.add_argument("--num-cases", type=int, default=5, help="Number of test cases")
-    parser.add_argument("--output", help="Output file for results")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
+    _ = parser.add_argument("--variants", type=int, default=0, help="Generate and evaluate N pipeline variants")
+    _ = parser.add_argument("--use-bedrock", action="store_true", help="Use Bedrock for evaluation")
+    _ = parser.add_argument("--num-cases", type=int, default=5, help="Number of test cases")
+    _ = parser.add_argument("--output", help="Output file for results")
+    _ = parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
 
@@ -228,30 +229,31 @@ def main():
 
         results = integration.evaluate_with_governance(use_bedrock=args.use_bedrock, num_cases=args.num_cases)
 
-        result
-
     # Output results
     if args.output:
+        import json
         with open(args.output, "w") as f:
             json.dump(results, f, indent=2)
         logger.info(f"📄 Results saved to: {args.output}")
     else:
+        import json
         print(json.dumps(results, indent=2))
 
     # Summary
-    if "evaluation_results" in results and result
-        eval_results = result
-        overall_metrics = result
+    if "evaluation_results" in results and results.get("evaluation_results"):
+        eval_results = results["evaluation_results"]
+        if isinstance(eval_results, dict):
+            overall_metrics = eval_results.get("overall_metrics", {})
 
-        logger.info("📊 Evaluation Summary:")
-        logger.info(f"  - Precision: {result
-        logger.info(f"  - Recall: {result
-        logger.info(f"  - F1 Score: {result
-        logger.info(f"  - Total Cases: {result
+            logger.info("📊 Evaluation Summary:")
+            logger.info(f"  - Precision: {overall_metrics.get('precision', 0.0):.3f}")
+            logger.info(f"  - Recall: {overall_metrics.get('recall', 0.0):.3f}")
+            logger.info(f"  - F1 Score: {overall_metrics.get('f1_score', 0.0):.3f}")
+            logger.info(f"  - Total Cases: {eval_results.get('total_cases', 0)}")
 
-        if "targets_met" in results:
-            targets_met = sum(result
-            total_targets = len(result
+        if "targets_met" in results and isinstance(results["targets_met"], dict):
+            targets_met = sum(1 for met in results["targets_met"].values() if met)
+            total_targets = len(results["targets_met"])
             logger.info(f"  - Performance Targets Met: {targets_met}/{total_targets}")
 
 if __name__ == "__main__":

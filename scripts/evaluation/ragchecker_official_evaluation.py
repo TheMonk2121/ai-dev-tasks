@@ -15,17 +15,21 @@ from typing import Any
 
 # Load .env early to ensure environment variables are available
 try:
-    from dotenv import load_dotenv
-
+    from dotenv import load_dotenv  # type: ignore[import-untyped]
     load_dotenv(override=False)  # read .env into process env once
+except ImportError:
+    # dotenv is optional - continue without it
+    pass
 except Exception:
     pass
 
 # Bootstrap imports and observability
 try:
-    from ._bootstrap import init_obs
-
+    from ._bootstrap import init_obs  # type: ignore[import-untyped]
     init_obs()
+except ImportError:
+    # Bootstrap is optional - continue without it
+    pass
 except Exception:
     pass
 
@@ -36,7 +40,10 @@ try:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
-    from scripts.monitoring.observability import get_logfire, init_observability
+    from scripts.monitoring.observability import (  # type: ignore[import-untyped]
+        get_logfire,
+        init_observability,
+    )
 
     logfire = get_logfire()
     try:
@@ -66,7 +73,7 @@ def main(argv: list[str] | None = None) -> int:
         lib_path = Path("scripts/lib").resolve()
         if str(lib_path) not in sys.path:
             sys.path.insert(0, str(lib_path))
-        import config_loader
+        import config_loader  # type: ignore[import-untyped]
 
         try:
             _: Any = config_loader.resolve_config(argv)
@@ -92,10 +99,18 @@ def main(argv: list[str] | None = None) -> int:
             repo_root = Path(__file__).resolve().parents[2]
             if str(repo_root) not in sys.path:
                 sys.path.insert(0, str(repo_root))
-            from scripts.evaluation.profiles import Profile
-            from scripts.evaluation.profiles import gold as _gold
-            from scripts.evaluation.profiles import mock as _mock
-            from scripts.evaluation.profiles import real as _real
+            from scripts.evaluation.profiles import (
+                Profile,  # type: ignore[import-untyped]
+            )
+            from scripts.evaluation.profiles import (
+                gold as _gold,  # type: ignore[import-untyped]
+            )
+            from scripts.evaluation.profiles import (
+                mock as _mock,  # type: ignore[import-untyped]
+            )
+            from scripts.evaluation.profiles import (
+                real as _real,  # type: ignore[import-untyped]
+            )
 
             registry: dict[str, Any] = {
                 Profile.GOLD.value: _gold.RUNNER,
@@ -132,7 +147,9 @@ def main(argv: list[str] | None = None) -> int:
             sys.path.insert(0, str(repo_root))
 
         # Use the DSPy evaluator (renamed from clean_dspy_evaluator)
-        from scripts.evaluation.dspy_evaluator import CleanDSPyEvaluator
+        from scripts.evaluation.dspy_evaluator import (
+            CleanDSPyEvaluator,  # type: ignore[import-untyped]
+        )
 
         # Use a permissive type to allow attribute access without incomplete stubs
         evaluator: Any = CleanDSPyEvaluator()

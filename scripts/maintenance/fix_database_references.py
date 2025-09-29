@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-import json
-import os
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -20,12 +19,12 @@ class DatabaseReferenceFixer:
     """Fixes all database references from dspy_rag to ai_agency."""
 
     def __init__(self):
-        self.project_root = project_root
-        self.changes_made = []
-        self.errors = []
+        self.project_root: Path = project_root
+        self.changes_made: list[str] = []
+        self.errors: list[str] = []
 
         # Database reference patterns to fix
-        self.patterns = [
+        self.patterns: list[tuple[str, str]] = [
             # Hardcoded connection strings
             (
                 r"postgresql://danieljacobs@localhost:5432/ai_agency",
@@ -69,7 +68,7 @@ class DatabaseReferenceFixer:
         ]
 
         # Files to exclude from processing
-        self.exclude_patterns = [
+        self.exclude_patterns: list[str] = [
             "**/__pycache__/**",
             "**/node_modules/**",
             "**/venv/**",
@@ -140,8 +139,8 @@ class DatabaseReferenceFixer:
             # Write back if changes were made
             if content != original_content:
                 with open(file_path, "w", encoding="utf-8") as f:
-                    f.write(content)
-                changes.insert(0, f"✅ Fixed {file_path}")
+                    _ = f.write(content)
+                _ = changes.insert(0, f"✅ Fixed {file_path}")
             else:
                 changes.append("  - No changes needed")
 
@@ -170,7 +169,7 @@ class DatabaseReferenceFixer:
 
     def fix_specific_critical_files(self):
         """Fix specific critical files that need special handling."""
-        critical_fixes = [
+        critical_fixes: list[dict[str, Any]] = [
             # Hardcoded database connections
             {
                 "file": "scripts/documentation_retrieval_cli.py",
@@ -241,8 +240,8 @@ class DatabaseReferenceFixer:
 
                     if content != original_content:
                         with open(file_path, "w", encoding="utf-8") as f:
-                            f.write(content)
-                        self.changes_made.append(f"✅ Fixed critical file: {fix['file']}")
+                            _ = f.write(content)
+                        _ = self.changes_made.append(f"✅ Fixed critical file: {fix['file']}")
                     else:
                         self.changes_made.append(f"ℹ️  No changes needed in: {fix['file']}")
 

@@ -1,40 +1,32 @@
 {
-    "basedpyright.analysis.exclude": [
-        ".venv/**"
+    "python.defaultInterpreterPath": "./.venv/bin/python3",
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.analysis.extraPaths": [
+        "scripts",
+        "src",
+        "evals_bundle_test/src"
     ],
-    "github-actions.workflows.pinned.workflows": [],
-    "yaml.schemas": {
-        "https://json.schemastore.org/github-workflow.json": [
-            ".github/workflows/*.yml",
-            ".github/workflows/*.yaml"
-        ]
-    },
-    "yaml.validate": true,
-    "yaml.schemaStore.enable": true,
-    "yaml.format.enable": true,
-    "yaml.hover": true,
-    "yaml.completion": true,
-    "files.associations": {
-        "*.yml": "yaml",
-        "*.yaml": "yaml"
-    },
-    "yaml.customTags": [
-        "!And",
-        "!If",
-        "!Not",
-        "!Equals",
-        "!Or",
-        "!FindInMap sequence",
-        "!Base64",
-        "!Cidr",
-        "!Ref",
-        "!Sub",
-        "!GetAtt",
-        "!GetAZs",
-        "!ImportValue",
-        "!Select",
-        "!Split",
-        "!Join sequence"
+    "python.analysis.venvPath": ".",
+    "python.analysis.pythonVersion": "3.12",
+    "python.analysis.pythonPlatform": "Darwin",
+    "python.analysis.reportMissingImports": "warning",
+    "python.analysis.reportGeneralTypeIssues": "warning",
+    "basedpyright.analysis.autoImportCompletions": true,
+    "basedpyright.analysis.autoSearchPaths": true,
+    "basedpyright.analysis.extraPaths": [
+        "scripts",
+        "src",
+        "evals_bundle_test/src"
     ],
-    "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json"
+    "basedpyright.analysis.venvPath": ".",
+    "basedpyright.analysis.pythonVersion": "3.12",
+    "basedpyright.analysis.pythonPlatform": "Darwin",
+    "basedpyright.analysis.reportMissingImports": "warning",
+    "basedpyright.analysis.reportGeneralTypeIssues": "warning",
+    "cursorpyright.analysis.extraPaths": [
+        "scripts",
+        "src",
+        "evals_bundle_test/src"
+    ]
 }

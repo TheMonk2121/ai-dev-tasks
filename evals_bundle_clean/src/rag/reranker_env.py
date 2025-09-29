@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Callable
 
 
 def _b(*names: str, default: bool = False) -> bool:
@@ -89,10 +90,10 @@ def rerank_enabled() -> bool:
     return os.getenv("RERANK_ENABLE", "1").lower() not in {"0", "false"}
 
 
-def log_config(logger_print=print):
+def log_config(logger_print: Callable[[str], None] = print) -> None:
     logger_print(
         f"[reranker] enable={int(RERANK_ENABLE)} model={get_reranker_model()} "
-        f"input_topk={RERANK_INPUT_TOPK} keep={RERANK_KEEP} "
-        f"batch={RERANK_BATCH} device={TORCH_DEVICE} "
-        f"cache={RERANK_CACHE_BACKEND} min_score={MIN_RERANK_SCORE}"
+        + f"input_topk={RERANK_INPUT_TOPK} keep={RERANK_KEEP} "
+        + f"batch={RERANK_BATCH} device={TORCH_DEVICE} "
+        + f"cache={RERANK_CACHE_BACKEND} min_score={MIN_RERANK_SCORE}"
     )
