@@ -1,12 +1,11 @@
 from __future__ import annotations
-    from few_shot_integration import FewShotExampleLoader
-import json
-import re
-from pathlib import Path
-from typing import Any
+
 import json
 import os
+import re
+from pathlib import Path
 from typing import Any, Optional, Union
+
 #!/usr/bin/env python3
 """
 Few-Shot Integration Framework

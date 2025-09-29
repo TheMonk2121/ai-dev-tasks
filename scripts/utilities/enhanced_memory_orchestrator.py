@@ -1,14 +1,15 @@
 from __future__ import annotations
+
 import argparse
 import json
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
+
 # FIXME: Update this import path after reorganization
 # from scripts.unified_memory_orchestrator import UnifiedMemoryOrchestrator  # noqa: E402
-    from scripts.dynamic_few_shot_injector import DynamicFewShotInjector
-from typing import Any, Optional, Union
+# from scripts.dynamic_few_shot_injector import DynamicFewShotInjector
 #!/usr/bin/env python3
 """
 Enhanced Memory Orchestrator with Episodic Context
