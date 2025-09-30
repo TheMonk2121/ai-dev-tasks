@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import copy
+import hashlib
 import itertools
 import json
 import os
 import pathlib
 import random
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -93,53 +96,203 @@ def generate_search_configs(config: dict[str, Any]) -> list[dict[str, Any]]:
 
     return combinations
 
-def simulate_evaluation(config_variant: dict[str, Any]) -> dict[str, float]:
-    """Simulate evaluation metrics for a config variant.
+PROVENANCE_ENV_KEYS = [
+    "EVAL_PROFILE",
+    "EVAL_PROVIDER",
+    "EVAL_DRIVER",
+    "DSPY_MODEL",
+    "RERANKER_MODEL",
+    "SEED",
+    "EVAL_SEED",
+    "FEW_SHOT_SELECTOR",
+    "FEW_SHOT_SEED",
+    "RETR_TOPK_VEC",
+    "RETR_TOPK_BM25",
+    "RERANK_POOL",
+    "RERANK_TOPN",
+    "RERANK_KEEP",
+    "MIN_RERANK_SCORE",
+    "READER_PRECHECK_MIN_OVERLAP",
+    "READER_MIN_OVERLAP_RATIO",
+    "READER_MIN_OVERLAP_RATIO_CONFIG",
+    "RETRIEVAL_CONFIG_PATH",
+]
 
-    In practice, this would run actual RAGChecker evaluation.
-    For now, we simulate based on parameter combinations.
+
+def _resolve_git_sha() -> str:
+    try:
+        return (
+            subprocess.check_output(["git", "rev-parse", "HEAD"], stderr=subprocess.DEVNULL)
+            .decode("utf-8")
+            .strip()
+        )
+    except Exception:
+        return "unknown"
+
+
+def _dataset_hash(path: Path) -> str:
+    try:
+        digest = hashlib.md5()
+        with path.open("rb") as fh:
+            for chunk in iter(lambda: fh.read(8192), b""):
+                digest.update(chunk)
+        return digest.hexdigest()
+    except Exception:
+        return "unknown"
+
+
+def _determine_base_config_path(config_path: str) -> Path:
+    """Resolve the base retrieval YAML that includes full settings."""
+    candidate = Path(config_path)
+    if candidate.exists():
+        try:
+            data = yaml.safe_load(candidate.read_text())
+        except Exception:
+            data = None
+        if isinstance(data, dict) and {"fusion", "prefilter", "rerank"} & set(data.keys()):
+            return candidate
+    return Path("evals/stable_build/config/retrieval.yaml")
+
+
+def _run_gold_smoke_eval(
+    limit: int,
+    out_dir: Path,
+    config_variant: dict[str, Any] | None = None,
+    base_config_path: Path | None = None,
+) -> tuple[dict[str, float], Path | None]:
     """
-    fusion = config_variant["fusion"]
-    rerank = config_variant["rerank"]
-    prefilter = config_variant["prefilter"]
+    Run a gold-profile smoke evaluation through the repo dispatcher so the
+    profile controls dataset paths and settings. Returns overall metrics.
+    """
+    import subprocess
 
-    # Simulate metrics based on parameter values
-    # Higher lambda_lex typically helps precision for config queries
-    # Higher lambda_sem helps recall for conceptual queries
-    # Higher alpha gives more weight to reranker
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    base_recall = 0.15
-    base_precision = 0.08
-    base_faithfulness = 0.65
+    env = os.environ.copy()
+    env.pop("INGEST_RUN_ID", None)
+    env.pop("CHUNK_VARIANT", None)
+    env["UV_PROJECT_ENVIRONMENT"] = ".venv"
 
-    # Fusion impact
-    recall_boost = (fusion["lambda_sem"] - 0.4) * 0.3  # semantic helps recall
-    precision_boost = (fusion["lambda_lex"] - 0.6) * 0.2  # lexical helps precision
+    temp_config_path: Path | None = None
+    if config_variant:
+        source_path = base_config_path or Path("evals/stable_build/config/retrieval.yaml")
+        try:
+            base_config = yaml.safe_load(source_path.read_text())
+        except Exception:
+            base_config = {}
+        if not isinstance(base_config, dict):
+            base_config = {}
 
-    # Rerank impact
-    recall_boost += (rerank["alpha"] - 0.7) * 0.15  # reranker helps both
-    precision_boost += (rerank["alpha"] - 0.7) * 0.20
+        merged_config = copy.deepcopy(base_config)
+        for section, overrides in config_variant.items():
+            if not isinstance(overrides, dict):
+                merged_config[section] = overrides
+                continue
+            target = merged_config.get(section)
+            if isinstance(target, dict):
+                target.update(overrides)
+            else:
+                merged_config[section] = overrides
 
-    # Prefilter impact (conservative thresholds help precision)
-    precision_boost += (prefilter["min_vector_score"] - 0.7) * 0.10
+        temp_config_path = out_dir / "retrieval_config.yaml"
+        temp_config_path.write_text(yaml.safe_dump(merged_config, sort_keys=False), encoding="utf-8")
+        env["RETRIEVAL_CONFIG_PATH"] = str(temp_config_path)
+    else:
+        env.pop("RETRIEVAL_CONFIG_PATH", None)
 
-    # Calculate final metrics with noise
+    cmd = [
+        "uv",
+        "run",
+        "python",
+        "scripts/evaluation/ragchecker_official_evaluation.py",
+        "--profile",
+        "gold",
+        "--limit",
+        str(limit),
+        "--outdir",
+        str(out_dir),
+    ]
+    subprocess.run(cmd, check=True, env=env)
 
-    random.seed(hash(str(config_variant)) % 1000)
+    json_candidates = sorted(out_dir.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not json_candidates:
+        return ({"recall_at_20": 0.0, "precision_at_k": 0.0, "f1_score": 0.0, "faithfulness": 0.0}, None)
+    latest = json_candidates[0]
+    try:
+        data = json.loads(latest.read_text())
+        overall = data.get("overall_metrics", data)
+        return (
+            {
+                "recall_at_20": float(overall.get("recall", overall.get("recall_at_20", 0.0))),
+                "precision_at_k": float(overall.get("precision", overall.get("precision_at_k", 0.0))),
+                "f1_score": float(overall.get("f1_score", overall.get("f1", 0.0))),
+                "faithfulness": float(overall.get("faithfulness", 0.0)),
+            },
+            latest,
+        )
+    except Exception:
+        return ({"recall_at_20": 0.0, "precision_at_k": 0.0, "f1_score": 0.0, "faithfulness": 0.0}, latest)
 
-    recall = max(0.05, base_recall + recall_boost + random.uniform(-0.02, 0.02))
-    precision = max(0.01, base_precision + precision_boost + random.uniform(-0.02, 0.02))
-    f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.01
-    faithfulness = max(0.3, base_faithfulness + random.uniform(-0.05, 0.05))
 
-    return {"recall_at_20": recall, "precision_at_k": precision, "f1_score": f1, "faithfulness": faithfulness}
+def _collect_provenance(
+    *,
+    config_variant: dict[str, Any],
+    metrics: dict[str, float],
+    score: float,
+    eval_time: float,
+    metrics_path: Path | None,
+    gold_limit: int,
+    dry_run: bool,
+    run_id: str,
+    run_dir: Path,
+) -> dict[str, Any]:
+    env_overrides = {key: os.getenv(key) for key in PROVENANCE_ENV_KEYS if os.getenv(key) is not None}
+    dataset_path = Path(os.getenv("GOLD_CASES_PATH", "evals/data/gold/v1/gold_cases_121.jsonl"))
+    provider = os.getenv("EVAL_PROVIDER")
+    model = os.getenv("DSPY_MODEL")
+    reranker_model = os.getenv("RERANKER_MODEL")
+    seed = (
+        os.getenv("SEED")
+        or os.getenv("EVAL_SEED")
+        or os.getenv("FEW_SHOT_SEED")
+    )
 
-def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tuning_results.json") -> None:
+    entry = {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "run_id": run_id,
+        "git_sha": _resolve_git_sha(),
+        "profile": "gold",
+        "gold_limit": gold_limit,
+        "dry_run": dry_run,
+        "eval_time_seconds": eval_time,
+        "env_overrides": env_overrides,
+        "provider": provider,
+        "model": model,
+        "reranker_model": reranker_model,
+        "seed": seed,
+        "config": config_variant,
+        "metrics": metrics,
+        "score": score,
+        "metrics_path": str(metrics_path) if metrics_path else None,
+        "dataset_path": str(dataset_path),
+        "dataset_hash": _dataset_hash(dataset_path),
+        "run_dir": str(run_dir),
+    }
+    return entry
+
+def tune_retrieval(
+    config_path: str,
+    max_evals: int = 50,
+    output_path: str = "tuning_results.json",
+    gold_limit: int = 5,
+    dry_run: bool = False,
+) -> None:
     """Perform hyperparameter tuning."""
     print(f"🔧 Starting retrieval tuning with max {max_evals} evaluations")
 
     # Load base config
     config = load_config(config_path)
+    base_config_path = _determine_base_config_path(config_path)
 
     # Generate search configurations
     search_configs = generate_search_configs(config)
@@ -155,16 +308,40 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
         search_configs = random.sample(search_configs, max_evals)
         print(f"🎲 Randomly sampled {max_evals} configurations")
 
+    # Prepare output directories
+    run_id = time.strftime("%Y%m%d_%H%M%S")
+    run_dir = Path("metrics/tuning_runs") / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+
     # Evaluate each configuration
-    results = []
-    best_score = 0.0
-    best_config = None
+    results: list[dict[str, Any]] = []
+    best_score: float | None = None
+    best_config: dict[str, Any] | None = None
+    best_metrics: dict[str, float] | None = None
+
+    # Prepare manifest output
+    manifest_path = Path("metrics/parameter_tuning/manifest.jsonl")
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    run_manifest_path = run_dir / "run_manifest.jsonl"
 
     for i, config_variant in enumerate(search_configs):
         print(f"⚡ Evaluating configuration {i+1}/{len(search_configs)}")
 
         start_time = time.time()
-        metrics = simulate_evaluation(config_variant)
+        trial_dir = run_dir / f"trial_{i+1:03d}"
+
+        if dry_run:
+            metrics, metrics_path = (
+                {"recall_at_20": 0.0, "precision_at_k": 0.0, "f1_score": 0.0, "faithfulness": 0.0},
+                None,
+            )
+        else:
+            metrics, metrics_path = _run_gold_smoke_eval(
+                gold_limit,
+                trial_dir,
+                config_variant=config_variant,
+                base_config_path=base_config_path,
+            )
         eval_time = time.time() - start_time
 
         # Calculate composite score (weighted F1 + recall)
@@ -173,10 +350,54 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
         result = {"config": config_variant, "metrics": metrics, "score": score, "eval_time": eval_time}
         results.append(result)
 
-        # Track best
-        if score > best_score:
+        # Append manifest entry (one JSON object per line)
+        manifest_entry = _collect_provenance(
+            config_variant=config_variant,
+            metrics=metrics,
+            score=score,
+            eval_time=eval_time,
+            metrics_path=metrics_path,
+            gold_limit=gold_limit,
+            dry_run=dry_run,
+            run_id=run_id,
+            run_dir=run_dir,
+        )
+        with manifest_path.open("a", encoding="utf-8") as mf:
+            mf.write(json.dumps(manifest_entry) + "\n")
+        with run_manifest_path.open("a", encoding="utf-8") as rm:
+            rm.write(json.dumps(manifest_entry) + "\n")
+
+    # Optionally write a simple before/after comparison artifact if baseline is known
+    try:
+        baseline_candidates = list((Path("metrics/baseline_evaluations")).glob("*.json"))
+        if baseline_candidates and results:
+            baseline_path = max(baseline_candidates, key=lambda p: p.stat().st_mtime)
+            baseline = json.loads(baseline_path.read_text())
+            baseline_overall = baseline.get("overall_metrics", baseline)
+            best = max(results, key=lambda r: r["score"])
+            comparison = {
+                "baseline": {
+                    "path": str(baseline_path),
+                    "precision": float(baseline_overall.get("precision", baseline_overall.get("precision_at_k", 0.0))),
+                    "recall": float(baseline_overall.get("recall", baseline_overall.get("recall_at_20", 0.0))),
+                    "f1": float(baseline_overall.get("f1_score", baseline_overall.get("f1", 0.0))),
+                },
+                "candidate_best": {
+                    "precision": float(best["metrics"].get("precision_at_k", 0.0)),
+                    "recall": float(best["metrics"].get("recall_at_20", 0.0)),
+                    "f1": float(best["metrics"].get("f1_score", 0.0)),
+                    "config": best["config"],
+                },
+            }
+            (run_dir / "comparison.json").write_text(json.dumps(comparison, indent=2))
+    except Exception:
+        pass
+
+        # Track best (keep first-on-tie to preserve deterministic ordering)
+        if best_score is None or score > best_score:
             best_score = score
             best_config = config_variant
+            best_metrics = metrics
 
         # Validate against quality gates
         gate_result = validate_evaluation_results(metrics)
@@ -187,30 +408,58 @@ def tune_retrieval(config_path: str, max_evals: int = 50, output_path: str = "tu
             f"Recall@20: {metrics['recall_at_20']:.3f}, Gates: {gate_status}"
         )
 
+    if not results:
+        print("❌ No tuning results captured; aborting summary.")
+        return
+
     # Sort results by score
     results.sort(key=lambda x: x["score"], reverse=True)
+
+    best_score_value = best_score if best_score is not None else results[0]["score"]
+    best_config_value = best_config or results[0]["config"]
+    best_metrics_value = best_metrics or results[0]["metrics"]
+
+    score_set = {r["score"] for r in results}
+    all_scores_tied = len(score_set) == 1
 
     # Save results
     output_data = {
         "tuning_summary": {
             "total_configs": len(results),
-            "best_score": best_score,
-            "best_config": best_config,
+            "best_score": best_score_value,
+            "best_config": best_config_value,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "all_scores_tied": all_scores_tied,
         },
         "results": results,
     }
 
     pathlib.Path(output_path).write_text(json.dumps(output_data, indent=2))
     print(f"💾 Results saved to {output_path}")
+    # Final JSON line for downstream tooling
+    final_payload = {
+        **output_data,
+        "run_id": run_id,
+        "run_dir": str(run_dir),
+        "manifest": str(run_manifest_path),
+        "provider": os.getenv("EVAL_PROVIDER"),
+        "model": os.getenv("DSPY_MODEL"),
+        "reranker_model": os.getenv("RERANKER_MODEL"),
+        "seed": os.getenv("SEED")
+        or os.getenv("EVAL_SEED")
+        or os.getenv("FEW_SHOT_SEED"),
+    }
+    print(json.dumps(final_payload))
 
     # Print summary
     print("\n🏆 Tuning Results Summary:")
-    print(f"   Best Score: {best_score:.3f}")
-    print(f"   Best F1: {results[0]['metrics']['f1_score']:.3f}")
-    print(f"   Best Recall@20: {results[0]['metrics']['recall_at_20']:.3f}")
+    print(f"   Best Score: {best_score_value:.3f}")
+    print(f"   Best F1: {best_metrics_value['f1_score']:.3f}")
+    print(f"   Best Recall@20: {best_metrics_value['recall_at_20']:.3f}")
+    if all_scores_tied:
+        print("   ⚠️ All candidates produced identical scores; reporting first configuration.")
     print("\n🔧 Best Configuration:")
-    for section, params in best_config.items():
+    for section, params in best_config_value.items():
         print(f"   {section}:")
         for key, value in params.items():
             print(f"     {key}: {value}")
@@ -231,10 +480,12 @@ def main() -> None:
     parser.add_argument("--config", default="config/retrieval.yaml", help="Path to retrieval config file")
     parser.add_argument("--max-evals", type=int, default=50, help="Maximum number of evaluations to run")
     parser.add_argument("--output", default="tuning_results.json", help="Output file for results")
+    parser.add_argument("--gold-limit", type=int, default=5, help="Gold profile limit per trial")
+    parser.add_argument("--dry-run", action="store_true", help="Skip real evals and emit zeroed metrics")
 
     args = parser.parse_args()
 
-    tune_retrieval(args.config, args.max_evals, args.output)
+    tune_retrieval(args.config, args.max_evals, args.output, args.gold_limit, args.dry_run)
 
 if __name__ == "__main__":
     main()

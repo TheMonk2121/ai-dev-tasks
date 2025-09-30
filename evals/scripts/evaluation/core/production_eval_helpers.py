@@ -8,16 +8,100 @@ behaviour. All functions are designed with type hints and minimal side effects
 so they can be consumed in environments that need dry runs or custom logging.
 """
 
-from dataclasses import dataclass, field
+import hashlib
 import json
-from pathlib import Path
+import os
 import subprocess
 import sys
 import time
-from typing import Callable, Mapping, MutableMapping, Sequence
+from collections.abc import Callable, Mapping, MutableMapping, Sequence
+from dataclasses import dataclass, field
+from pathlib import Path
+
+
+def _append_manifest(entry: Mapping[str, object], *paths: Path | None) -> None:
+    for path in paths:
+        if path is None:
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry) + "\n")
+
+
+def _resolve_git_sha() -> str:
+    try:
+        return (
+            subprocess.check_output(["git", "rev-parse", "HEAD"], stderr=subprocess.DEVNULL)
+            .decode("utf-8")
+            .strip()
+        )
+    except Exception:
+        return "unknown"
+
+
+def _dataset_hash(path: Path) -> str:
+    try:
+        digest = hashlib.md5()
+        with path.open("rb") as fh:
+            for chunk in iter(lambda: fh.read(8192), b""):
+                digest.update(chunk)
+        return digest.hexdigest()
+    except Exception:
+        return "unknown"
 
 DEFAULT_CASES_FILE = "evals/legacy/test_cases.json"
 DEFAULT_RESULTS_DIR = Path("metrics/production_evaluations")
+
+
+def _collect_pass_provenance(
+    *,
+    run_id: str | None,
+    pass_config: EvaluationPassConfig,
+    env: Mapping[str, str],
+    output_file: Path,
+    artifacts_dir: Path,
+    duration: float | None,
+    return_code: int | None,
+    project_root: Path,
+    error: str | None,
+) -> dict[str, object]:
+    provider = env.get("EVAL_PROVIDER") or os.getenv("EVAL_PROVIDER")
+    model = env.get("DSPY_MODEL") or os.getenv("DSPY_MODEL")
+    reranker_model = env.get("RERANKER_MODEL") or os.getenv("RERANKER_MODEL")
+    seed = (
+        env.get("SEED")
+        or env.get("EVAL_SEED")
+        or env.get("FEW_SHOT_SEED")
+        or os.getenv("SEED")
+        or os.getenv("EVAL_SEED")
+        or os.getenv("FEW_SHOT_SEED")
+    )
+    profile = env.get("EVAL_PROFILE") or os.getenv("EVAL_PROFILE")
+
+    dataset_path = Path(pass_config.cases_file)
+    if not dataset_path.is_absolute():
+        dataset_path = (project_root / dataset_path).resolve()
+    dataset_hash = _dataset_hash(dataset_path) if dataset_path.exists() else "unknown"
+
+    return {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "run_id": run_id or "unknown",
+        "git_sha": _resolve_git_sha(),
+        "pass_name": pass_config.name,
+        "profile": profile,
+        "provider": provider,
+        "model": model,
+        "reranker_model": reranker_model,
+        "seed": seed,
+        "cases_file": str(dataset_path),
+        "dataset_hash": dataset_hash,
+        "env_overrides": dict(pass_config.env),
+        "output_file": str(output_file),
+        "artifacts_dir": str(artifacts_dir),
+        "duration_seconds": duration,
+        "return_code": return_code,
+        "error": error,
+    }
 
 
 @dataclass(slots=True)
@@ -60,6 +144,9 @@ class ProductionEvaluationSummary:
     skipped_passes: int
     total_passes: int
     overall_status: str
+    run_id: str
+    run_dir: Path
+    manifest_path: Path
 
 
 def default_production_passes() -> tuple[EvaluationPassConfig, ...]:
@@ -101,6 +188,9 @@ def run_evaluation_pass(
     capture_output: bool = True,
     logger: Callable[[str], None] | None = None,
     base_env: Mapping[str, str] | None = None,
+    run_id: str | None = None,
+    run_manifest_path: Path | None = None,
+    global_manifest_path: Path | None = None,
 ) -> EvaluationPassResult:
     """Execute a single evaluation pass.
 
@@ -143,7 +233,7 @@ def run_evaluation_pass(
     output_file = resolved_results_dir / f"pass_{safe_pass_name}.json"
     artifacts_dir = resolved_results_dir / f"pass_{safe_pass_name}_artifacts"
     artifacts_dir.mkdir(parents=True, exist_ok=True)
-    logger("\n🔄 Running %s" % pass_config.name)
+    logger(f"\n🔄 Running {pass_config.name}")
     logger("=" * 60)
     logger(pass_config.description)
 
@@ -197,6 +287,18 @@ def run_evaluation_pass(
         if capture_output:
             logger(f"Return code: {result.returncode}")
 
+        provenance = _collect_pass_provenance(
+            run_id=run_id,
+            pass_config=pass_config,
+            env=env,
+            output_file=output_file,
+            artifacts_dir=artifacts_dir,
+            duration=duration,
+            return_code=result.returncode,
+            project_root=project_root,
+            error=None,
+        )
+
         payload: dict[str, object] = {
             "pass_name": pass_config.name,
             "config": dict(pass_config.env),
@@ -205,9 +307,11 @@ def run_evaluation_pass(
             "stdout": stdout,
             "stderr": stderr,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "provenance": provenance,
         }
 
         output_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        _append_manifest(provenance, run_manifest_path, global_manifest_path)
 
         return EvaluationPassResult(
             config=pass_config,
@@ -223,13 +327,27 @@ def run_evaluation_pass(
     except Exception as exc:  # pragma: no cover - subprocess failures
         duration = time.time() - start_time
         logger(f"❌ {pass_config.name} failed: {exc}")
+        provenance = _collect_pass_provenance(
+            run_id=run_id,
+            pass_config=pass_config,
+            env=env,
+            output_file=output_file,
+            artifacts_dir=artifacts_dir,
+            duration=duration,
+            return_code=None,
+            project_root=project_root,
+            error=str(exc),
+        )
+
         payload = {
             "pass_name": pass_config.name,
             "config": dict(pass_config.env),
             "error": str(exc),
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "provenance": provenance,
         }
         output_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        _append_manifest(provenance, run_manifest_path, global_manifest_path)
 
         return EvaluationPassResult(
             config=pass_config,
@@ -244,7 +362,13 @@ def run_evaluation_pass(
         )
 
 
-def analyse_pass_results(results: Sequence[EvaluationPassResult]) -> ProductionEvaluationSummary:
+def analyse_pass_results(
+    results: Sequence[EvaluationPassResult],
+    *,
+    run_id: str,
+    run_dir: Path,
+    manifest_path: Path,
+) -> ProductionEvaluationSummary:
     """Compute aggregate summary data for evaluation pass results."""
 
     successful = sum(1 for result in results if result.succeeded)
@@ -269,6 +393,9 @@ def analyse_pass_results(results: Sequence[EvaluationPassResult]) -> ProductionE
         skipped_passes=skipped,
         total_passes=len(results),
         overall_status=overall,
+        run_id=run_id,
+        run_dir=run_dir,
+        manifest_path=manifest_path,
     )
 
 
@@ -281,25 +408,44 @@ def run_production_evaluation(
     capture_output: bool = True,
     logger: Callable[[str], None] | None = None,
     base_env: Mapping[str, str] | None = None,
+    run_id: str | None = None,
+    global_manifest_path: Path | None = None,
 ) -> ProductionEvaluationSummary:
     """Run all configured production evaluation passes and return a summary."""
 
     passes_to_run = list(passes or default_production_passes())
+    root_results_dir = Path(results_dir) if results_dir else DEFAULT_RESULTS_DIR
+    root_results_dir.mkdir(parents=True, exist_ok=True)
+
+    resolved_run_id = run_id or time.strftime("%Y%m%d_%H%M%S")
+    run_dir = root_results_dir / resolved_run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+    run_manifest_path = run_dir / "run_manifest.jsonl"
+    manifest_path = global_manifest_path or (root_results_dir / "manifest.jsonl")
+
     results: list[EvaluationPassResult] = []
 
     for pass_config in passes_to_run:
         result = run_evaluation_pass(
             pass_config,
             project_root=project_root,
-            results_dir=results_dir,
+            results_dir=run_dir,
             execute=execute,
             capture_output=capture_output,
             logger=logger,
             base_env=base_env,
+            run_id=resolved_run_id,
+            run_manifest_path=run_manifest_path,
+            global_manifest_path=manifest_path,
         )
         results.append(result)
 
-    return analyse_pass_results(results)
+    return analyse_pass_results(
+        results,
+        run_id=resolved_run_id,
+        run_dir=run_dir,
+        manifest_path=manifest_path,
+    )
 
 
 DEFAULT_PRODUCTION_PASSES = default_production_passes()

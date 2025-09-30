@@ -2758,6 +2758,31 @@ print(f"Estimated time savings: {optimization_result['time_savings']:.2f}s")
 - **🧠 Memory Context System Optimization** - Research-based memory system optimization
 - **🔧 System Optimization** - General system performance optimization
 - **📊 Performance Monitoring** - Monitoring frameworks and metrics collection
+- **🧪 Deterministic Evaluation Tuning Workflow** - End-to-end script pipeline for retrieval tuning
+
+### **🧪 Deterministic Evaluation Tuning Workflow**
+
+Use this runbook when you need concrete, reproducible steps to tune retrieval and reader parameters without breaking the RED LINE baseline.
+
+1. **Pin the evaluation environment**
+   - Run the Clean DSPy harness to ensure the profile, DSNs, and retrieval knobs are loaded: `uv run python evals/scripts/evaluation/dspy_evaluator.py --profile gold`
+   - The script normalizes env vars for the ParameterTuner and grid-search utilities (`evals/scripts/evaluation/dspy_evaluator.py`).
+2. **Local parameter sweeps (`scripts/parameter_tuning.py`)**
+   - Command: `uv run python scripts/parameter_tuning.py --iterations 12`
+   - SciPy (`L-BFGS-B`) mutates `RETR_TOPK_VEC`, `RERANK_POOL`, and related knobs, executes a trimmed gold slice through `RAGAnswer`, and records precision/recall/F1 in `metrics/parameter_tuning/`.
+   - Use this to converge on promising regions before launching broader searches.
+3. **Grid search with quality gates (`evals/scripts/evaluation/tune_retrieval.py`)**
+   - Command: `uv run python evals/scripts/evaluation/tune_retrieval.py --config evals/stable_build/config/retrieval.yaml --max-evals 60 --gold-limit 5`
+   - Each trial shells out through the gold dispatcher, produces a metrics JSON, and appends provenance (git SHA, env overrides, dataset hash) to both `metrics/parameter_tuning/manifest.jsonl` and `metrics/tuning_runs/<run_id>/run_manifest.jsonl` while emitting a final JSON line for downstream tooling.
+   - Update `evals/stable_build/config/retrieval.yaml` targets before running so soft/hard gates reflect the current RED LINE.
+4. **Baseline enforcement (`scripts/evaluation/metrics_guard.py`)**
+   - After selecting a candidate configuration, run `uv run python scripts/evaluation/metrics_guard.py metrics/baseline_evaluations/<latest>.json`.
+   - The guard treats any metric below the stored baseline as a release blocker and lists the gap you must close.
+5. **Promote final settings**
+   - Snap the chosen parameters into the production profile helper: `uv run python evals/scripts/evaluation/production_ragas_config.py --precision-knob ce_weight_boost` (or the relevant knob).
+   - Commit the config diff alongside the evaluation artifact so the baseline and tuning history stay in lockstep.
+
+📓 **Notebook parity**: `evals/notebooks/evaluation_analysis.ipynb` now includes a “Tuning Workflow” markdown cell that links to these scripts, so evaluators get the same checklist when running interactive passes. When archiving results, keep the manifest files alongside the metrics JSON in `metrics/tuning_runs/<run_id>/` so provenance remains intact.
 
 ### **Error Handling and Recovery**
 

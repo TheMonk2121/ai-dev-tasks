@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-import time
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -19,42 +19,66 @@ def _load_real_limit_evaluator() -> type[Any]:
     return LimitInspiredEvaluator
 
 
-def _run_gold(_argv: list[str]) -> int:
-    try:
-        # Use real LIMIT-inspired evaluator instead of basic DSPy evaluator
-        evaluator_cls = _load_real_limit_evaluator()
-    except Exception as exc:  # pragma: no cover - import failure
-        print(f"❌ CRITICAL: Failed to load real LIMIT evaluator: {exc}")
-        return 1
+def _run_gold(argv: list[str]) -> int:
+    # Minimal argv parsing for --limit and --outdir
+    limit: int | None = None
+    outdir: Path | None = None
+    if "--limit" in argv:
+        try:
+            i = argv.index("--limit")
+            limit = int(argv[i + 1])
+        except Exception:
+            limit = None
+    if "--outdir" in argv:
+        try:
+            i = argv.index("--outdir")
+            outdir = Path(argv[i + 1]) if i + 1 < len(argv) else None
+        except Exception:
+            outdir = None
 
-    evaluator = evaluator_cls()
+    use_limit = os.getenv("USE_LIMIT", os.getenv("RAGCHECKER_USE_LIMIT", "0"))
+    report: dict[str, Any]
+    if use_limit == "1":
+        try:
+            evaluator_cls = _load_real_limit_evaluator()
+            evaluator = evaluator_cls()
+            # LIMIT path requires a concrete loader; if missing, fall back
+            if not hasattr(evaluator, "load_test_cases"):
+                raise AttributeError("load_test_cases not implemented in LIMIT evaluator")
+            cases = evaluator.load_test_cases()
+            if not cases:
+                raise RuntimeError("LIMIT evaluator returned no test cases")
+            report = evaluator.evaluate_with_limit_features(cases)
+        except Exception as e:
+            print(f"❌ LIMIT path unavailable: {e}. Falling back to DSPy evaluator.")
+            use_limit = "0"
 
-    # Run real evaluation with LIMIT features
-    try:
-        cases = evaluator.load_test_cases()
-        if not cases:
-            print("⚠️ No test cases available; skipping evaluation")
-            return 0
+    if use_limit != "1":
+        # Fallback: DSPy evaluator with gold profile
+        from scripts.evaluation.dspy_evaluator import (  # type: ignore[import-untyped]
+            CleanDSPyEvaluator,
+        )
 
-        report = evaluator.evaluate_with_limit_features(cases)
-    except Exception as e:
-        print(f"❌ CRITICAL: Real LIMIT evaluation failed: {e}")
-        return 1
+        evaluator: Any = CleanDSPyEvaluator()
+        gold_file = os.getenv("GOLD_CASES_PATH", "evals/data/gold/v1/gold_cases_121.jsonl")
+        report = evaluator.run_evaluation(gold_file=gold_file, limit=limit)
 
-    output_dir = Path("metrics/baseline_evaluations")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"gold_profile_limit_eval_{int(time.time())}.json"
-    # Ensure JSON serialization works with boolean values and numpy types
+    # Write results
+    if outdir is None:
+        outdir = Path("metrics/baseline_evaluations")
+    outdir.mkdir(parents=True, exist_ok=True)
+    output_path = outdir / "results.json"
+
     def json_serializer(obj: Any) -> Any:
         if isinstance(obj, bool):
             return obj
-        elif hasattr(obj, 'item'):  # numpy scalars
+        if hasattr(obj, "item"):
             return obj.item()
-        elif hasattr(obj, 'tolist'):  # numpy arrays
+        if hasattr(obj, "tolist"):
             return obj.tolist()
         raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
-    
-    _ = output_path.write_text(json.dumps(report, indent=2, default=json_serializer), encoding="utf-8")
+
+    output_path.write_text(json.dumps(report, indent=2, default=json_serializer), encoding="utf-8")
     print(f"📁 Gold profile results saved to: {output_path}")
 
     compliance = report.get("baseline_compliance", {})

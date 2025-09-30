@@ -81,6 +81,12 @@ class ExtractiveReader(dspy.Module):
                 min_overlap = float(os.getenv("READER_MIN_OVERLAP_RATIO", "0.3"))
             except ValueError:
                 min_overlap = 0.3
+            try:
+                config_overlap = float(os.getenv("READER_MIN_OVERLAP_RATIO_CONFIG", str(min_overlap)))
+            except ValueError:
+                config_overlap = min_overlap
+            if "config" in tag.lower():
+                min_overlap = config_overlap
             if overlap_ratio < max(0.0, min_overlap):
                 ans = "NOT_ANSWERABLE"
         return {"answer": ans}

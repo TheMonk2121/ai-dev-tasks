@@ -1,0 +1,243 @@
+candidates:
+  bm25_limit: 100
+  vector_limit: 100
+  final_limit: 50
+  min_candidates: 10
+fusion:
+  k: 120
+  lambda_lex: 0.6666666666666666
+  lambda_sem: 0.3333333333333333
+  profiles:
+    balanced:
+      lambda_lex: 0.5
+      lambda_sem: 0.5
+    lexical_heavy:
+      lambda_lex: 0.8
+      lambda_sem: 0.2
+    semantic_heavy:
+      lambda_lex: 0.3
+      lambda_sem: 0.7
+prefilter:
+  min_bm25_score: 0.1
+  min_vector_score: 0.6
+  min_doc_length: 50
+  max_doc_length: 8000
+  enable_diversity: true
+  diversity_threshold: 0.85
+performance:
+  enable_cache: true
+  cache_ttl_seconds: 3600
+  max_workers: 4
+  timeout_seconds: 30
+  max_cache_size: 1000
+rerank:
+  enabled: true
+  alpha: 0.9
+  final_top_n: 8
+  method: cross_encoder
+  cross_encoder:
+    model_name: BAAI/bge-reranker-base
+    onnx_path: models/reranker.onnx
+    micro_batch_size: 32
+    timeout_ms: 400
+    max_timeout_ms: 600
+    fallback_to_heuristic: true
+    workers: 3
+  windowing:
+    enabled: true
+    window_size_tokens: 150
+    overlap_pct: 33
+    preserve_doc_boundaries: true
+  dedup:
+    enabled: true
+    method: cosine
+    threshold: 0.9
+    before_rerank: true
+packing:
+  mmr_lambda: 0.7
+  context_cap_tokens: 2000
+  max_snippets: 3
+  evidence_first: true
+intent_routing:
+  enabled: true
+  structured_confidence_threshold: 0.7
+  hybrid_confidence_threshold: 0.5
+  enable_structured_routing: true
+  enable_hybrid_routing: true
+  prefer_sql_for:
+  - count
+  - exists
+  - lookup
+  - aggregate
+  - metric
+  prefer_kg_for:
+  - relationship
+  - connection
+  - path
+  - graph
+  - entity
+tuning:
+  targets:
+    recall_at_20: 0.35
+    precision_at_k: 0.12
+    f1_score: 0.22
+    faithfulness: 0.6
+  quality_gates:
+    soft:
+      recall_at_20: 0.25
+      f1_score: 0.15
+      faithfulness: 0.5
+    hard:
+      recall_at_20: 0.2
+      f1_score: 0.1
+      faithfulness: 0.4
+  search_spaces:
+    fusion:
+      lambda_lex:
+      - 0.3
+      - 0.4
+      - 0.5
+      - 0.6
+      - 0.7
+      - 0.8
+      lambda_sem:
+      - 0.2
+      - 0.3
+      - 0.4
+      - 0.5
+      - 0.6
+      - 0.7
+      k:
+      - 30
+      - 45
+      - 60
+      - 75
+      - 90
+    rerank:
+      alpha:
+      - 0.5
+      - 0.6
+      - 0.7
+      - 0.8
+      - 0.9
+      final_top_n:
+      - 6
+      - 8
+      - 10
+      - 12
+      - 15
+    prefilter:
+      min_bm25_score:
+      - 0.05
+      - 0.1
+      - 0.15
+      - 0.2
+      min_vector_score:
+      - 0.6
+      - 0.65
+      - 0.7
+      - 0.75
+      - 0.8
+      diversity_threshold:
+      - 0.85
+      - 0.9
+      - 0.95
+evaluation:
+  golden_sets:
+    base_path: configs/eval/golden/
+    slices:
+    - name: novice_vs_expert
+      path: novice_expert_queries.jsonl
+    - name: single_vs_multi_hop
+      path: hop_complexity_queries.jsonl
+    - name: structured_vs_unstructured
+      path: data_type_queries.jsonl
+    - name: freshness_sensitive_vs_evergreen
+      path: temporal_queries.jsonl
+  metrics:
+    enabled:
+    - ndcg_10
+    - coverage
+    - exact_match
+    - span_support
+    - f1
+    - ece
+    temperature_scaling: true
+    confidence_threshold: 0.6
+telemetry:
+  enabled: true
+  per_request_logging: true
+  log_path: metrics/logs/requests.jsonl
+  log_fields:
+  - query
+  - candidates
+  - fusion_ranks
+  - rerank_scores
+  - selected_spans
+  - answer
+  - confidence
+  - user_action
+  stage_timing: true
+  stages:
+  - bm25
+  - vector
+  - fusion
+  - prefilter
+  - rerank
+  - generate
+  timing_percentiles:
+  - 50
+  - 95
+canary:
+  enabled: false
+  sample_pct: 10
+  tag_requests: true
+  store_ranks: true
+  comparison_metrics:
+  - ndcg_10
+  - latency_p95
+  - user_satisfaction
+resilience:
+  singleflight:
+    enabled: true
+    ttl_seconds: 30
+  fallback:
+    bm25_only_on_timeout: true
+    max_retries: 1
+    circuit_breaker: true
+multihop:
+  enabled: true
+  max_hops: 2
+  token_budget: 512
+  coverage_threshold: 0.7
+  concentration_threshold: 0.6
+  novelty_threshold: 0.8
+  min_evidence_score: 0.3
+  midgen_callbacks:
+    enabled: true
+    uncertainty_threshold: 0.4
+    max_followup_queries: 2
+  complexity:
+    word_count_threshold: 15
+    multihop_indicators:
+    - and
+    - or
+    - but
+    - compare
+    - versus
+    - why
+    - how
+    complexity_score_threshold: 2
+  performance:
+    max_subqueries_per_hop: 3
+    retrieval_timeout_ms: 2000
+    synthesis_timeout_ms: 1000
+freshness:
+  enabled: true
+  enable_time_decay: true
+  decay_half_life_days: 30.0
+  max_decay_factor: 0.3
+  enable_recency_prior: true
+  recency_boost_factor: 1.2
+  recency_threshold_days: 7
+  freshness_threshold: 0.6

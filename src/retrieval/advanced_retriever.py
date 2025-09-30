@@ -9,8 +9,7 @@ with the existing DSPy RAG system while maintaining compatibility.
 
 import logging
 import os
-from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from collections.abc import Callable
 from typing import Any, cast
 
 import numpy as np
@@ -24,6 +23,16 @@ from sentence_transformers import SentenceTransformer
 from common.embedding_validation import assert_embedding_dim
 from dspy_modules.retriever.weights import load_weights
 from src.retrieval import prefilter as _prefilter_module
+from src.retrieval.config_loader import (
+    CandidateLimits,
+    FusionSettings,
+    RerankSettings,
+    get_candidate_limits,
+    get_fusion_settings,
+    get_rerank_settings,
+    load_retrieval_config,
+    resolve_config_path,
+)
 from src.retrieval.fusion import weighted_rrf
 from src.retrieval.prefilter import RecallFriendlyPrefilter
 from src.retrieval.quality_gates import QualityGateValidator
@@ -33,115 +42,6 @@ logger = logging.getLogger(__name__)
 
 # Query embedding model singleton
 _query_embedder: SentenceTransformer | None = None
-
-
-def _as_mapping(value: object) -> Mapping[str, Any] | None:
-    """Return a mapping view if ``value`` is mapping-like."""
-    if isinstance(value, Mapping):
-        return cast(Mapping[str, Any], value)
-    return None
-
-
-def _coerce_int(value: object, default: int) -> int:
-    """Best-effort conversion of config values to integers."""
-    if isinstance(value, bool):
-        return int(value)
-    if isinstance(value, int):
-        return value
-    if isinstance(value, float):
-        return int(value)
-    if isinstance(value, str):
-        try:
-            return int(value.strip())
-        except ValueError:
-            return default
-    return default
-
-
-def _coerce_float(value: object, default: float) -> float:
-    """Best-effort conversion of config values to floats."""
-    if isinstance(value, bool):
-        return float(value)
-    if isinstance(value, int | float):
-        return float(value)
-    if isinstance(value, str):
-        try:
-            return float(value.strip())
-        except ValueError:
-            return default
-    return default
-
-
-def _coerce_bool(value: object, default: bool) -> bool:
-    """Best-effort conversion of config values to booleans."""
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, str):
-        lowered = value.strip().lower()
-        if lowered in {"1", "true", "yes", "on"}:
-            return True
-        if lowered in {"0", "false", "no", "off"}:
-            return False
-    return default
-
-
-@dataclass(frozen=True)
-class CandidateLimits:
-    """Typed view of candidate selection limits."""
-
-    bm25_limit: int = 100
-    vector_limit: int = 100
-    final_limit: int = 50
-    min_candidates: int = 10
-
-    @classmethod
-    def from_mapping(cls, data: Mapping[str, Any] | None) -> "CandidateLimits":
-        if data is None:
-            return cls()
-        return cls(
-            bm25_limit=_coerce_int(data.get("bm25_limit", 100), 100),
-            vector_limit=_coerce_int(data.get("vector_limit", 100), 100),
-            final_limit=_coerce_int(data.get("final_limit", 50), 50),
-            min_candidates=_coerce_int(data.get("min_candidates", 10), 10),
-        )
-
-
-@dataclass(frozen=True)
-class FusionSettings:
-    """Typed settings for weighted fusion."""
-
-    k: int = 60
-    lambda_lex: float = 0.6
-    lambda_sem: float = 0.4
-
-    @classmethod
-    def from_mapping(cls, data: Mapping[str, Any] | None) -> "FusionSettings":
-        if data is None:
-            return cls()
-        return cls(
-            k=_coerce_int(data.get("k", 60), 60),
-            lambda_lex=_coerce_float(data.get("lambda_lex", 0.6), 0.6),
-            lambda_sem=_coerce_float(data.get("lambda_sem", 0.4), 0.4),
-        )
-
-
-@dataclass(frozen=True)
-class RerankSettings:
-    """Typed settings for heuristic reranking."""
-
-    enabled: bool = True
-    alpha: float = 0.7
-    top_m: int = 25
-
-    @classmethod
-    def from_mapping(cls, data: Mapping[str, Any] | None) -> "RerankSettings":
-        if data is None:
-            return cls()
-        return cls(
-            enabled=_coerce_bool(data.get("enabled", True), True),
-            alpha=_coerce_float(data.get("alpha", 0.7), 0.7),
-            top_m=_coerce_int(data.get("top_m", 25), 25),
-        )
 
 
 def _get_query_embedder() -> SentenceTransformer:
@@ -197,7 +97,9 @@ class AdvancedRetriever:
 
     def __init__(self, config_path: str | None = None):
         """Initialize the advanced retriever with configuration."""
-        self.config_path: str = config_path or "evals/stable_build/config/retrieval.yaml"
+        resolved = resolve_config_path(config_path)
+        self.config_path: str = str(resolved)
+        self._config_cache: dict[str, Any] | None = None
         # Local typed alias to avoid Unknown on imported function type
         _creator = cast(
             Callable[[dict[str, Any]], RecallFriendlyPrefilter],
@@ -208,35 +110,9 @@ class AdvancedRetriever:
 
     def _load_config(self) -> dict[str, Any]:
         """Load configuration from YAML file."""
-        try:
-            import yaml
-
-            with open(self.config_path) as f:
-                data = yaml.safe_load(f)
-                if not isinstance(data, dict):
-                    raise ValueError("Config file did not contain a mapping")
-                return cast(dict[str, Any], data)
-        except Exception as e:
-            logger.warning(f"Failed to load config from {self.config_path}: {e}")
-            # Return default config
-            return {
-                "candidates": {
-                    "bm25_limit": 100,
-                    "vector_limit": 100,
-                    "final_limit": 50,
-                    "min_candidates": 10,
-                },
-                "fusion": {"k": 60, "lambda_lex": 0.6, "lambda_sem": 0.4},
-                "prefilter": {
-                    "min_bm25_score": 0.1,
-                    "min_vector_score": 0.7,
-                    "min_doc_length": 50,
-                    "max_doc_length": 8000,
-                    "enable_diversity": True,
-                    "diversity_threshold": 0.9,
-                },
-                "rerank": {"enabled": True, "alpha": 0.7, "top_m": 25},
-            }
+        if self._config_cache is None:
+            self._config_cache = load_retrieval_config(self.config_path)
+        return dict(self._config_cache)
 
     def fetch_doc_chunks_by_slug(self, doc_slug: str, limit: int = 12) -> list[dict[str, object]]:
         """Prefetch top chunks from a specific document identified by slug."""
@@ -287,8 +163,8 @@ class AdvancedRetriever:
 
         # Load configuration
         config = self._load_config()
-        fusion_settings = FusionSettings.from_mapping(_as_mapping(config.get("fusion")))
-        rerank_settings = RerankSettings.from_mapping(_as_mapping(config.get("rerank")))
+        fusion_settings = get_fusion_settings(config)
+        rerank_settings = get_rerank_settings(config)
 
         # Mark intentionally unused params to satisfy linters without changing behavior
         _ = (k, return_components)
@@ -298,7 +174,7 @@ class AdvancedRetriever:
             weights = load_weights(tag, weights_file)
 
         # Get candidate limits
-        candidates_limits = CandidateLimits.from_mapping(_as_mapping(config.get("candidates")))
+        candidates_limits = get_candidate_limits(config)
         bm25_limit = candidates_limits.bm25_limit
         vector_limit = candidates_limits.vector_limit
 
@@ -349,7 +225,7 @@ class AdvancedRetriever:
                             fused_results,
                             all_docs,
                             alpha=rerank_settings.alpha,
-                            top_m=rerank_settings.top_m,
+                            top_m=rerank_settings.final_top_n if rerank_settings.final_top_n > 0 else None,
                         )
 
                     # Convert to expected format

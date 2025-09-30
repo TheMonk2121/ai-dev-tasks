@@ -23,6 +23,7 @@ from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import fetch_doc_chunks_by_slug, run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries, parse_doc_hint
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
+from src.retrieval.config_loader import get_rerank_settings
 
 # Cross-encoder singleton handle
 _ce_singleton = None
@@ -1293,6 +1294,7 @@ class RAGAnswer(dspy.Module):
 
     def forward(self, question: str, tag: str) -> dspy.Prediction:
         limits = load_limits(tag)
+        rerank_settings = get_rerank_settings()
         qs = build_channel_queries(question, tag)
         # For now, use empty vector - the retrieval system will handle this safely
         # Detect slug hint and prefetch its chunks to guarantee coverage for filename queries
@@ -1455,8 +1457,23 @@ class RAGAnswer(dspy.Module):
 
         # Apply MMR reranking only if cross-encoder reranking is disabled
         if not RENV.RERANK_ENABLE:
+            alpha_env = os.getenv("MMR_ALPHA")
+            per_file_env = os.getenv("MMR_PER_FILE_PENALTY")
+            try:
+                mmr_alpha = float(alpha_env) if alpha_env is not None else rerank_settings.alpha
+            except ValueError:
+                mmr_alpha = rerank_settings.alpha
+            try:
+                per_file_penalty = float(per_file_env) if per_file_env is not None else rerank_settings.per_file_penalty
+            except ValueError:
+                per_file_penalty = rerank_settings.per_file_penalty
+
             rows = mmr_rerank(
-                rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"], tag=tag
+                rows,
+                alpha=mmr_alpha,
+                per_file_penalty=per_file_penalty,
+                k=limits["shortlist"],
+                tag=tag,
             )
         # Respect document budget and per-file diversity constraints before reader consumption
         try:

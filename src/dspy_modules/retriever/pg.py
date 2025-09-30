@@ -18,6 +18,19 @@ from psycopg.rows import DictRow
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from common.embedding_validation import assert_embedding_dim, get_embedding_dim, suggest_dimension_fix
 from src.common.psycopg3_config import Psycopg3Config
+from src.retrieval.prefilter import RecallFriendlyPrefilter, create_prefilter_from_config
+
+from src.retrieval.config_loader import (
+    CandidateLimits,
+    FusionSettings,
+    PrefilterSettings,
+    RerankSettings,
+    get_candidate_limits,
+    get_fusion_settings,
+    get_prefilter_settings,
+    get_rerank_settings,
+    load_retrieval_config,
+)
 
 from .rerank import mmr_rerank
 from .weights import load_weights
@@ -26,6 +39,118 @@ from .weights import load_weights
 def get_db_connection() -> psycopg.Connection[DictRow]:
     """Get database connection using Psycopg3Config."""
     return Psycopg3Config.create_connection("retrieval")
+
+
+def _env_int(name: str, default: int) -> int:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    try:
+        return int(raw)
+    except ValueError:
+        return default
+
+
+def _env_float(name: str, default: float) -> float:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    try:
+        return float(raw)
+    except ValueError:
+        return default
+
+
+def _scale_weights_for_fusion(weights: dict[str, float], fusion: FusionSettings) -> dict[str, float]:
+    """Return a new weights mapping scaled according to fusion lambdas."""
+    scaled = dict(weights)
+    lexical_keys = ("w_path", "w_short", "w_title", "w_bm25")
+    semantic_keys = ("w_vec",)
+
+    lambda_lex = fusion.lambda_lex
+    lambda_sem = fusion.lambda_sem
+    total_lambda = lambda_lex + lambda_sem
+    if total_lambda <= 0:
+        lambda_lex = 0.5
+        lambda_sem = 0.5
+    else:
+        lambda_lex /= total_lambda
+        lambda_sem /= total_lambda
+
+    lex_sum = sum(max(scaled.get(key, 0.0), 0.0) for key in lexical_keys)
+    if lex_sum <= 0 and lambda_lex > 0:
+        per = lambda_lex / len(lexical_keys)
+        for key in lexical_keys:
+            scaled[key] = per
+    elif lex_sum > 0:
+        factor = lambda_lex / lex_sum if lambda_lex > 0 else 0.0
+        for key in lexical_keys:
+            scaled[key] = scaled.get(key, 0.0) * factor
+
+    sem_sum = sum(max(scaled.get(key, 0.0), 0.0) for key in semantic_keys)
+    if sem_sum <= 0 and lambda_sem > 0:
+        per = lambda_sem / len(semantic_keys)
+        for key in semantic_keys:
+            scaled[key] = per
+    elif sem_sum > 0:
+        factor = lambda_sem / sem_sum if lambda_sem > 0 else 0.0
+        for key in semantic_keys:
+            scaled[key] = scaled.get(key, 0.0) * factor
+
+    return scaled
+
+
+def _apply_prefilter(
+    rows: list[dict[str, Any]],
+    weights: dict[str, float],
+    prefilter: RecallFriendlyPrefilter,
+    *,
+    candidates: CandidateLimits,
+    prefilter_settings: PrefilterSettings,
+) -> list[dict[str, Any]]:
+    if not rows:
+        return rows
+
+    documents: dict[str, str] = {}
+    bm25_results: list[tuple[str, float]] = []
+    vector_results: list[tuple[str, float]] = []
+
+    bm25_weight = weights.get("w_bm25", 0.0)
+    vec_weight = weights.get("w_vec", 0.0)
+
+    for row in rows:
+        chunk_id = str(row.get("chunk_id"))
+        text = (
+            (row.get("text_for_reader") or "")
+            or (row.get("embedding_text") or "")
+            or (row.get("content") or "")
+        )
+        documents[chunk_id] = text
+
+        if bm25_weight > 0:
+            score = float(row.get("s_bm25", 0.0)) / bm25_weight
+            bm25_results.append((chunk_id, score))
+        if vec_weight > 0:
+            score = float(row.get("s_vec", 0.0)) / vec_weight
+            vector_results.append((chunk_id, score))
+
+    if not bm25_results and not vector_results:
+        return rows
+
+    filtered_bm25, filtered_vector = prefilter.prefilter_all(bm25_results, vector_results, documents)
+    allowed = {doc_id for doc_id, _ in filtered_bm25} | {doc_id for doc_id, _ in filtered_vector}
+
+    if len(allowed) < candidates.min_candidates:
+        return rows
+
+    filtered_rows = [row for row in rows if str(row.get("chunk_id")) in allowed]
+
+    if not filtered_rows and prefilter_settings.enable_diversity:
+        return rows
+    if not filtered_rows:
+        return rows
+
+    return filtered_rows
 
 
 def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, Any]]:
@@ -153,19 +278,34 @@ def run_fused_query(
         else "websearch_to_tsquery('simple', %(q_short)s)"
     )
 
+    config = load_retrieval_config()
+    candidate_limits: CandidateLimits = get_candidate_limits(config)
+    fusion_settings: FusionSettings = get_fusion_settings(config)
+    rerank_settings: RerankSettings = get_rerank_settings(config)
+    prefilter_settings: PrefilterSettings = get_prefilter_settings(config)
+    prefilter = create_prefilter_from_config(config)
+
     # Default or YAML-derived weights if not provided
     if weights is None:
         weights = load_weights(tag=tag, file_path=weights_file)
+    weights = _scale_weights_for_fusion(weights, fusion_settings)
 
     # Use larger pool for MMR reranking
-    pool_size = 60 if use_mmr else k
+    pool_baseline = max(k, candidate_limits.final_limit, candidate_limits.min_candidates)
+    pool_size = pool_baseline
+    if use_mmr:
+        pool_size = rerank_settings.recommended_input_pool(pool_baseline)
+    pool_size = max(pool_size, k)
+    pool_size = min(pool_size, 500)
 
     # Determine minimum character length for retrieval
-    MIN_CHARS = int(os.getenv("RETRIEVER_MIN_CHARS", "140"))
+    default_min_chars = max(prefilter_settings.min_doc_length, 40)
+    MIN_CHARS = _env_int("RETRIEVER_MIN_CHARS", default_min_chars)
 
     # Relax minimum character length for very short queries
     q_len = len(q_short.strip() or q_title.strip() or q_bm25.strip())
-    min_chars = MIN_CHARS if q_len >= 25 else int(os.getenv("RETRIEVER_MIN_CHARS_SHORT_QUERY", "80"))
+    short_min_default = max(prefilter_settings.min_doc_length // 2, 20)
+    min_chars = MIN_CHARS if q_len >= 25 else _env_int("RETRIEVER_MIN_CHARS_SHORT_QUERY", short_min_default)
 
     # Build SQL query without dynamic modification - use direct string execution
     # This avoids psycopg3 LiteralString typing issues while maintaining functionality
@@ -290,11 +430,11 @@ def run_fused_query(
         "q_short": q_short,
         "q_title": q_title,
         "q_bm25": q_bm25,
-        "w_path": weights["w_path"],
-        "w_short": weights["w_short"],
-        "w_title": weights["w_title"],
-        "w_bm25": weights["w_bm25"],
-        "w_vec": weights["w_vec"],
+        "w_path": weights.get("w_path", 0.0),
+        "w_short": weights.get("w_short", 0.0),
+        "w_title": weights.get("w_title", 0.0),
+        "w_bm25": weights.get("w_bm25", 0.0),
+        "w_vec": weights.get("w_vec", 0.0),
         "qvec": qvec_literal,
         "has_vec": has_vec,
         "fname_regex": fname_regex or "^$",
@@ -307,7 +447,15 @@ def run_fused_query(
         with Psycopg3Config.get_cursor("retrieval") as cur:
             # Cast to LiteralString to satisfy psycopg3 typing requirements
             _ = cur.execute(cast("LiteralString", sql_template), params)
-            rows = cur.fetchall()
+            raw_rows = cur.fetchall()
+            rows = [dict(row) for row in raw_rows]
+            rows = _apply_prefilter(
+                rows,
+                weights,
+                prefilter,
+                candidates=candidate_limits,
+                prefilter_settings=prefilter_settings,
+            )
     except Exception as e:
         if "path_tsv" in str(e).lower():
             # Fallback: compute path_tsv on the fly
@@ -402,7 +550,15 @@ def run_fused_query(
             with Psycopg3Config.get_cursor("retrieval") as cur2:
                 # Cast to LiteralString to satisfy psycopg3 typing requirements
                 _ = cur2.execute(cast("LiteralString", fallback_template), params)
-                rows = cur2.fetchall()
+                raw_rows = cur2.fetchall()
+                rows = [dict(row) for row in raw_rows]
+                rows = _apply_prefilter(
+                    rows,
+                    weights,
+                    prefilter,
+                    candidates=candidate_limits,
+                    prefilter_settings=prefilter_settings,
+                )
         else:
             raise
 
@@ -434,8 +590,10 @@ def run_fused_query(
             logger.warning(f"Fusion head failed, falling back to original scoring: {e}")
 
     # Apply MMR reranking if requested (only if fusion head not used)
-    if use_mmr and len(rows) > k and not (enabled and ckpt and os.path.exists(ckpt)):
-        return mmr_rerank(rows, k=k)
+    if use_mmr and rerank_settings.enabled and len(rows) > k and not (enabled and ckpt and os.path.exists(ckpt)):
+        mmr_alpha = _env_float("MMR_ALPHA", rerank_settings.alpha)
+        per_file_penalty = _env_float("MMR_PER_FILE_PENALTY", rerank_settings.per_file_penalty)
+        return mmr_rerank(rows, alpha=mmr_alpha, per_file_penalty=per_file_penalty, k=k, tag=tag)
 
     return rows[:k]
 

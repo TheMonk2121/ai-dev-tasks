@@ -1,0 +1,20 @@
+# Overlay for retrieval tuning with expanded search grids.
+# Applies on top of evals/stable_build/config/retrieval.yaml
+# to explore more extreme lexical/semantic mixes and looser
+# prefilter thresholds for tie-breaking sweeps.
+
+tuning:
+  search_spaces:
+    fusion:
+      lambda_lex: [0.0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0]
+      lambda_sem: [0.0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1.0]
+      k: [20, 30, 45, 60, 75, 90, 120]
+
+    rerank:
+      alpha: [0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+      final_top_n: [4, 6, 8, 10, 12, 15, 18]
+
+    prefilter:
+      min_bm25_score: [0.0, 0.05, 0.1, 0.15, 0.2]
+      min_vector_score: [0.5, 0.6, 0.65, 0.7, 0.75, 0.8]
+      diversity_threshold: [0.8, 0.85, 0.9, 0.95]

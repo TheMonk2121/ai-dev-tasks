@@ -6,8 +6,8 @@
 
 ## 🔍 TL;DR
 
-| what this file is | read when | do next |
-|---|---|---|
+| what this file is                                       | read when                                                                          | do next                                                     |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | Complete advanced configuration and system tuning guide | Configuring complex systems, tuning performance, or implementing advanced features | Apply the configuration patterns to your specific use cases |
 
 - **what this file is**: Comprehensive advanced configuration and system tuning guide.
@@ -350,6 +350,19 @@ class SystemTuningConfig:
         return {"status": "applied", "settings": settings}
 ```
 
+#### **Evaluation Tuning Pipeline (RAGChecker)**
+
+- **Use case**: Apply structured retrieval/reader tuning while preserving RED LINE baselines.
+- **Start here**: `400_11_performance-optimization.md` → “Deterministic Evaluation Tuning Workflow.”
+- **Core components**:
+  1. `evals/scripts/evaluation/dspy_evaluator.py` – locks the evaluation profile and DSNs; every tuning run inherits identical knobs.
+  2. `scripts/parameter_tuning.py` – SciPy optimizer that mutates environment variables and executes a trimmed gold slice through `RAGAnswer`.
+  3. `evals/scripts/evaluation/tune_retrieval.py` – enumerates fusion/rerank/prefilter combinations from `evals/stable_build/config/retrieval.yaml` and validates each run through `src/retrieval/quality_gates.py`.
+  4. `scripts/evaluation/metrics_guard.py` – enforces the locked baseline before any change ships.
+- **Provenance logging**: Every tuning batch writes enriched manifest rows (git SHA, env overrides, dataset hash) to `metrics/parameter_tuning/manifest.jsonl` plus a run-local `metrics/tuning_runs/<run_id>/run_manifest.jsonl`; keep these with the metrics artifacts.
+- **Promotion helpers**: Apply the winning deltas via `evals/scripts/evaluation/production_ragas_config.py` and commit the paired evaluation artifact.
+- **Notebook parity**: `evals/notebooks/evaluation_analysis.ipynb` now includes the same checklist so interactive tuning matches CLI automation.
+
 ## 🔒 **Security and Compliance Configuration**
 
 ### **Security Configuration Framework**
@@ -513,6 +526,88 @@ class MonitoringConfigManager:
 
         self.monitoring_configs[system_name] = monitoring_config
 
+### **Production Evaluation Notebook Configuration**
+
+#### **Notebook Overview**
+The production evaluation notebook (`evals/notebooks/evaluation_analysis.ipynb`) provides an interactive interface for running production evaluations using the same shared helpers that power the CLI workflow. This notebook integrates with the production evaluation pipeline for comprehensive analysis and monitoring.
+
+#### **Quick Start**
+```bash
+# Navigate to the notebook directory
+cd evals/notebooks
+
+# Launch Jupyter (or use VS Code's notebook UI)
+jupyter notebook evaluation_analysis.ipynb
+# OR
+code evaluation_analysis.ipynb
+```
+
+#### **Notebook Features**
+- **Interactive Analysis**: Run evaluations step-by-step with immediate feedback
+- **Dry Run Mode**: Verify configuration without executing full evaluations
+- **Real Evaluation Mode**: Execute complete production evaluations
+- **Environment Integration**: Respects same environment variables as CLI
+- **Artifact Generation**: Creates comprehensive evaluation artifacts
+
+#### **Execution Modes**
+
+**Dry Run (Default)**:
+```python
+# Cell 4: Verify configuration without execution
+summary = run_production_evaluation(
+    passes,
+    project_root=PROJECT_ROOT,
+    results_dir=RESULTS_DIR,
+    execute=False,  # Dry run mode
+    capture_output=False,
+)
+```
+
+**Real Evaluation**:
+```python
+# Cell 4: Execute full production evaluation
+summary = run_production_evaluation(
+    passes,
+    project_root=PROJECT_ROOT,
+    results_dir=RESULTS_DIR,
+    execute=True,  # Real evaluation
+    capture_output=False,
+)
+```
+
+#### **Production Passes**
+The notebook runs two canonical evaluation passes:
+
+1. **Retrieval-Only Baseline**
+   - Confirms retrieval, rerank, and chunk config (450/10%/J=0.8/prefix-A)
+   - Environment: `FEW_SHOT_K=0`, `EVAL_COT=0`, `TEMPERATURE=0`
+
+2. **Deterministic Few-Shot**
+   - Records prompt_audit.few_shot_ids, prompt_hash, cot_enabled=false
+   - Environment: `FEW_SHOT_K=5`, `FEW_SHOT_SELECTOR=knn`, `FEW_SHOT_SEED=42`
+
+#### **Output Artifacts**
+After execution, results are written to:
+- **Per-pass JSON**: `metrics/production_evaluations/pass_*.json`
+- **Analysis summary**: `metrics/production_evaluations/analysis_<timestamp>.json`
+- **Artifacts directory**: `metrics/production_evaluations/pass_*_artifacts/`
+
+#### **Fully Executed Notebook**
+Generate a complete executed notebook artifact:
+```bash
+uv run python -m jupyter nbconvert --to notebook --execute evals/notebooks/evaluation_analysis.ipynb \
+  --output metrics/notebooks/evaluation_analysis-executed.ipynb
+```
+
+#### **Environment Variables**
+The notebook respects the same environment variables as the CLI:
+- `DATABASE_URL` - Database connection
+- `POSTGRES_DSN` - Alternative database DSN
+- `UV_PROJECT_ENVIRONMENT=.venv` - UV environment
+- Model configuration variables (AWS credentials, etc.)
+
+**Note**: The MCP Memory Server now uses stdio communication instead of HTTP endpoints. Ensure the server is running with `make mcp-start` before using memory-dependent features.
+
 ### **Document Management Dashboard Configuration**
 
 #### **Dashboard Overview**
@@ -561,17 +656,17 @@ python3 dashboard.py
 - `GET /health` - System health check
 
 #### **Metadata Categories**
-| Category | Keywords | Priority |
-|----------|----------|----------|
-| **Pricing & Billing** | pricing, price, cost, billing | High |
-| **Legal & Contracts** | contract, agreement, legal, terms | High |
-| **Marketing & Campaigns** | marketing, campaign, ad, promotion | Medium |
-| **Client & Customer Data** | client, customer, user, profile | Medium |
-| **Reports & Analytics** | report, analytics, data, metrics | Medium |
-| **Technical & Code** | source, code, script, config | Medium |
-| **Testing & Samples** | test, sample, example | Low |
-| **Documentation & Guides** | manual, guide, documentation, help | Medium |
-| **Financial Records** | invoice, receipt, payment | High |
+| Category                   | Keywords                           | Priority |
+| -------------------------- | ---------------------------------- | -------- |
+| **Pricing & Billing**      | pricing, price, cost, billing      | High     |
+| **Legal & Contracts**      | contract, agreement, legal, terms  | High     |
+| **Marketing & Campaigns**  | marketing, campaign, ad, promotion | Medium   |
+| **Client & Customer Data** | client, customer, user, profile    | Medium   |
+| **Reports & Analytics**    | report, analytics, data, metrics   | Medium   |
+| **Technical & Code**       | source, code, script, config       | Medium   |
+| **Testing & Samples**      | test, sample, example              | Low      |
+| **Documentation & Guides** | manual, guide, documentation, help | Medium   |
+| **Financial Records**      | invoice, receipt, payment          | High     |
 
 #### **Content Type Badges**
 - **📊 Structured Data** (CSV files)

@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 from collections.abc import Callable
 
+from src.retrieval.config_loader import get_candidate_limits, get_rerank_settings
+
 
 def _b(*names: str, default: bool = False) -> bool:
     for n in names:
@@ -57,21 +59,28 @@ def _device(spec: str) -> str:
     return "cpu"
 
 
-RERANK_ENABLE = _b("RERANK_ENABLE", "RERANKER_ENABLED", default=False)
-RERANK_INPUT_TOPK = _i("RERANK_INPUT_TOPK", "RERANK_POOL", default=120)
-RERANK_KEEP = _i("RERANK_KEEP", "RERANK_TOPN", default=24)
-RERANK_BATCH = _i("RERANK_BATCH", default=8)
+_CANDIDATE_LIMITS = get_candidate_limits()
+_RERANK_SETTINGS = get_rerank_settings()
+
+_shortlist_baseline = max(_CANDIDATE_LIMITS.final_limit, _CANDIDATE_LIMITS.min_candidates)
+_pool_default = _RERANK_SETTINGS.recommended_input_pool(_shortlist_baseline)
+
+RERANK_ENABLE = _b("RERANK_ENABLE", "RERANKER_ENABLED", default=_RERANK_SETTINGS.enabled)
+RERANK_INPUT_TOPK = _i("RERANK_INPUT_TOPK", "RERANK_POOL", default=_pool_default)
+RERANK_KEEP = _i("RERANK_KEEP", "RERANK_TOPN", default=max(_RERANK_SETTINGS.final_top_n, 1))
+RERANK_BATCH = _i("RERANK_BATCH", default=_RERANK_SETTINGS.cross_encoder.micro_batch_size)
 # Use get_reranker_model() for consistent model resolution
-MIN_RERANK_SCORE = _f("MIN_RERANK_SCORE", default=0.30)
+MIN_RERANK_SCORE = _f("MIN_RERANK_SCORE", default=_RERANK_SETTINGS.min_score)
 TORCH_DEVICE = _device(_s("TORCH_DEVICE", default="auto"))
 
 RERANK_CACHE_BACKEND = _s("RERANK_CACHE_BACKEND", default="sqlite")  # sqlite|postgres
 RERANK_CACHE_DSN = _s("RERANK_CACHE_DSN", default="")
 RERANK_CACHE_PATH = _s("RERANK_CACHE_PATH", default=".cache/rerank.sqlite")
 
+
 def get_reranker_model() -> str:
     """Get reranker model from environment variable."""
-    return os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3")
+    return os.getenv("RERANKER_MODEL", _RERANK_SETTINGS.cross_encoder.model_name)
 
 
 # Add the missing RERANKER_MODEL constant

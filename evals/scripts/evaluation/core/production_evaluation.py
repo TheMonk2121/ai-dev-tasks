@@ -120,22 +120,25 @@ def main() -> None:
         print(f"❌ Configuration validation failed: {exc}")
         sys.exit(1)
 
-    results_dir = DEFAULT_RESULTS_DIR
+    results_root = DEFAULT_RESULTS_DIR
+    run_id = time.strftime("%Y%m%d_%H%M%S")
 
     summary = run_production_evaluation(
         DEFAULT_PRODUCTION_PASSES,
         project_root=PROJECT_ROOT,
-        results_dir=results_dir,
+        results_dir=results_root,
         execute=True,
         capture_output=True,
         logger=print,
         base_env=os.environ,
+        run_id=run_id,
     )
 
     _print_summary(summary)
-    analysis_file = _write_analysis(summary, results_dir)
+    analysis_file = _write_analysis(summary, summary.run_dir)
 
-    print(f"\n📁 Results saved to: {results_dir}")
+    print(f"\n📁 Results root: {results_root}")
+    print(f"📁 Run directory: {summary.run_dir}")
     print(f"📊 Analysis saved to: {analysis_file}")
 
     if summary.overall_status == "success":
@@ -143,12 +146,26 @@ def main() -> None:
         print("   1. Review evaluation results")
         print("   2. Proceed with canary rollout")
         print("   3. Monitor production metrics")
+        print(json.dumps({
+            "run_id": summary.run_id,
+            "run_dir": str(summary.run_dir),
+            "manifest": str(summary.manifest_path),
+            "analysis_file": str(analysis_file),
+            "overall_status": summary.overall_status,
+        }))
         sys.exit(0)
 
     print("\n🔧 NEXT STEPS:")
     print("   1. Fix failed evaluation passes")
     print("   2. Re-run production evaluation")
     print("   3. Address any issues before production")
+    print(json.dumps({
+        "run_id": summary.run_id,
+        "run_dir": str(summary.run_dir),
+        "manifest": str(summary.manifest_path),
+        "analysis_file": str(analysis_file),
+        "overall_status": summary.overall_status,
+    }))
     sys.exit(1)
 
 
