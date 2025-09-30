@@ -20,7 +20,7 @@ import time
 import warnings
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 # Setup observability if available
 try:
@@ -107,9 +107,9 @@ if dspy_rag_path and dspy_rag_path not in sys.path:
 try:
     from src.rag import reranker_env as _renv  # type: ignore[import-untyped]
 
-    RENV = _renv
+    renv_module = _renv
 except Exception:  # noqa: F401 - keep a sentinel for type checkers
-    RENV = None  # type: ignore[assignment]
+    renv_module = None  # type: ignore[assignment]
 
 # Reader + snippetizer
 try:
@@ -178,9 +178,9 @@ class DspyRagDriver:
             # Configure DSPy with language model and a stable completion adapter
             model_name = os.getenv("DSPY_MODEL", "anthropic.claude-3-haiku-20240307-v1:0")
             try:
-                from dspy.adapters import CompletionAdapter  # type: ignore[import-untyped]
+                from dspy.adapters import Adapter  # type: ignore[import-untyped]
 
-                dspy.configure(lm=dspy.LM(model_name), adapter=CompletionAdapter())
+                dspy.configure(lm=dspy.LM(model_name), adapter=Adapter())
             except ImportError:
                 # Fallback: configure without explicit adapter (keeps previous behavior)
                 dspy.configure(lm=dspy.LM(model_name))
@@ -534,15 +534,15 @@ class OfficialRAGCheckerEvaluator:
 
         # Include resolved reranker config
         try:
-            if RENV is not None:
+            if renv_module is not None:
                 results["reranker_config"] = {
-                    "enable": int(getattr(RENV, "RERANK_ENABLE", False)),
-                    "model": getattr(RENV, "RERANKER_MODEL", None),
-                    "input_topk": getattr(RENV, "RERANK_INPUT_TOPK", None),
-                    "keep": getattr(RENV, "RERANK_KEEP", None),
-                    "batch": getattr(RENV, "RERANK_BATCH", None),
-                    "device": getattr(RENV, "TORCH_DEVICE", None),
-                    "cache": getattr(RENV, "RERANK_CACHE_BACKEND", None),
+                    "enable": int(getattr(renv_module, "RERANK_ENABLE", False)),
+                    "model": getattr(renv_module, "RERANKER_MODEL", None),
+                    "input_topk": getattr(renv_module, "RERANK_INPUT_TOPK", None),
+                    "keep": getattr(renv_module, "RERANK_KEEP", None),
+                    "batch": getattr(renv_module, "RERANK_BATCH", None),
+                    "device": getattr(renv_module, "TORCH_DEVICE", None),
+                    "cache": getattr(renv_module, "RERANK_CACHE_BACKEND", None),
                 }
         except Exception:
             pass
@@ -684,7 +684,9 @@ class OfficialRAGCheckerEvaluator:
         total_precision = total_recall = total_f1 = 0.0
 
         for i, case in enumerate(cases, 1):
-            query_preview = case.get("query", "") if case else ""
+            if case is None:
+                continue
+            query_preview = case.get("query", "") or ""
             print(f"🔍 Processing case {i}/{len(cases)}: {query_preview[:50]}...")
 
             query = str(case.get("query", ""))
@@ -764,7 +766,7 @@ class OfficialRAGCheckerEvaluator:
             pred_txt = to_pred_text(response)
             preview = (pred_txt[:120] + "…") if len(pred_txt) > 120 else pred_txt
 
-            case_result = {
+            case_result: dict[str, Any] = {
                 "query_id": case.get("query_id", f"case_{i}"),
                 "query": query,
                 "response": response,
@@ -809,8 +811,9 @@ class OfficialRAGCheckerEvaluator:
                     )
                     case_result.update(file_oracle)
                     # Also mirror under metrics.file_oracle now; _normalize will ensure persistence
-                    fr = dict(case_result.get("metrics", {}) or {})
-                    fr["file_oracle"] = {k: case_result[k] for k in file_oracle.keys()}
+                    metrics = case_result.get("metrics", {})
+                    fr = dict(metrics) if isinstance(metrics, dict) else {}
+                    fr["file_oracle"] = {k: case_result[k] for k in file_oracle.keys() if k in case_result}
                     case_result["metrics"] = fr
             except Exception:
                 pass
@@ -875,30 +878,30 @@ class OfficialRAGCheckerEvaluator:
         try:
             if EvaluationRun is not None and RerankerConfig is not None:
                 # Build reranker config from env/optional RENV, falling back to defaults
-                rr_cfg = {
+                rr_cfg: dict[str, Any] = {
                     "enable": bool(
-                        int(getattr(RENV, "RERANK_ENABLE", int(os.getenv("RERANK_ENABLE", "1")))) == 1
-                        if RENV is not None
+                        int(getattr(renv_module, "RERANK_ENABLE", int(os.getenv("RERANK_ENABLE", "1")))) == 1
+                        if renv_module is not None
                         else (os.getenv("RERANK_ENABLE", "1") == "1")
                     ),
                     "model": str(
-                        getattr(RENV, "RERANKER_MODEL", os.getenv("RERANK_MODEL", "bge-reranker-base"))
-                        if RENV is not None
+                        getattr(renv_module, "RERANKER_MODEL", os.getenv("RERANK_MODEL", "bge-reranker-base"))
+                        if renv_module is not None
                         else os.getenv("RERANK_MODEL", "bge-reranker-base")
                     ),
                     "input_topk": int(
-                        getattr(RENV, "RERANK_INPUT_TOPK", int(os.getenv("RERANK_POOL", "60")))
-                        if RENV is not None
+                        getattr(renv_module, "RERANK_INPUT_TOPK", int(os.getenv("RERANK_POOL", "60")))
+                        if renv_module is not None
                         else int(os.getenv("RERANK_POOL", "60"))
                     ),
                     "keep": int(
-                        getattr(RENV, "RERANK_KEEP", int(os.getenv("RERANK_TOPN", "18")))
-                        if RENV is not None
+                        getattr(renv_module, "RERANK_KEEP", int(os.getenv("RERANK_TOPN", "18")))
+                        if renv_module is not None
                         else int(os.getenv("RERANK_TOPN", "18"))
                     ),
                     "batch": int(
-                        getattr(RENV, "RERANK_BATCH", int(os.getenv("RERANK_BATCH", "8")))
-                        if RENV is not None
+                        getattr(renv_module, "RERANK_BATCH", int(os.getenv("RERANK_BATCH", "8")))
+                        if renv_module is not None
                         else int(os.getenv("RERANK_BATCH", "8"))
                     ),
                     "device": str(os.getenv("TORCH_DEVICE", "cpu")),
@@ -912,7 +915,7 @@ class OfficialRAGCheckerEvaluator:
                     seed=int(os.getenv("SEED", str(getattr(args, "seed", 0) or 0))) or None,
                     started_at=start_wall,
                     finished_at=datetime.now(),
-                    overall=results.get("overall_metrics", {}) or {},
+                    overall=cast(dict[str, float] | None, results.get("overall_metrics") if isinstance(results.get("overall_metrics"), dict) else None),
                     artifact_paths={
                         "results_json": str(out_file),
                     },

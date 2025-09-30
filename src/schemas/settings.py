@@ -163,7 +163,7 @@ class EvaluationSettings(BaseSettings):
         env_prefix="EVAL_",
         case_sensitive=False,
         extra="ignore"
-    )  # type: ignore
+    )  # type: ignore[call-arg,arg-type,assignment]
 
     def get_gold_cases_path(self) -> Path:
         """Get gold cases path as Path object."""

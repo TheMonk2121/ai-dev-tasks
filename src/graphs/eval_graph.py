@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Literal
 if TYPE_CHECKING:
     from pydantic_graph.graph import Graph  # type: ignore
     from pydantic_graph.nodes import (
-        Node,  # type: ignore[import-untyped,import-not-found,reportUnknownImportSymbol,reportAttributeAccessIssue,reportGeneralTypeIssues,reportUnknownSymbol,reportUnknownImportSymbol]
+        BaseNode as Node,  # type: ignore[import-untyped,import-not-found,reportUnknownImportSymbol,reportAttributeAccessIssue,reportGeneralTypeIssues,reportUnknownSymbol,reportUnknownImportSymbol]
     )
 else:
     # Runtime fallbacks for when pydantic_graph is not available
@@ -90,7 +90,7 @@ class Score(Node):  # type: ignore
 
 
 def build_graph() -> Any:
-    g = Graph(nodes=[LoadCases(), Retrieve(), Score()])  # type: ignore
+    g = Graph(nodes=[LoadCases, Retrieve, Score])  # type: ignore[arg-type]
     return g
 
 
