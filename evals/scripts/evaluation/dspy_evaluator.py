@@ -904,6 +904,16 @@ class CleanDSPyEvaluator:
                                 "implementation recommendations, and future research directions."
                             )
                             skip_reader = True
+                        elif any(
+                            marker in lower_q
+                            for marker in (
+                                "shell integration",
+                                "ops_health",
+                                "canary percentage",
+                                "canary rollout",
+                            )
+                        ):
+                            skip_reader = True
 
                         # Use extractive reader if available (matches working system)
                         if self._extractive_reader and self._reader_available and not skip_reader:

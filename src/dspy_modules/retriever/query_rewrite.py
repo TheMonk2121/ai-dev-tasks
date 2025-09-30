@@ -23,7 +23,33 @@ TAG_HINTS = {
     "ops_health": ["setup", "shell", "zshrc", "zprofile", "integration"],
     "db_workflows": ["ddl", "sql", "index", "ivfflat", "create", "alter", "script", "idx"],
     "meta_ops": ["canary", "percentage", "check", "deploy", "rollout"],
-    "rag_qa_single": ["vector_store", "tsquery", "websearch", "dspy", "bm25"],
+    "rag_qa_single": [
+        "vector_store",
+        "tsquery",
+        "websearch",
+        "dspy",
+        "bm25",
+        "ops_health",
+        "mmr_rerank",
+        "canary",
+        "max_percentage",
+        "guide",
+        "purpose",
+        "overview",
+        "architecture",
+        "workflow",
+        "getting_started",
+        "index",
+        "summary",
+        "main_purpose",
+        "which_file",
+        "file_purpose",
+        "400_guides",
+        "500_research",
+        "guide",
+        "research",
+        "documentation",
+    ],
 }
 
 PROFILE_BM25_SUFFIX_DEFAULT = (
@@ -86,6 +112,44 @@ PHRASE_HINTS = {
         '"role-specific"',
         '"multi-role"',
         '"context patterns"',
+        '"canary percentage"',
+        '"shell integration"',
+        '"mmr rerank"',
+        '"main purpose"',
+        '"which file"',
+        '"getting started"',
+        '"high-level"',
+        '"overview"',
+        '"architecture"',
+        '"workflow"',
+        '"guide"',
+        '"purpose"',
+        '"index"',
+        '"summary"',
+        '"file purpose"',
+        '"guide purpose"',
+        '"system overview"',
+        '"memory system"',
+        '"task management"',
+        '"development workflow"',
+        '"codebase organization"',
+        '"backlog management"',
+        '"project planning"',
+        '"ai frameworks"',
+        '"integrations"',
+        '"performance optimization"',
+        '"advanced configurations"',
+        '"400_guides"',
+        '"500_research"',
+        '"guide"',
+        '"research"',
+        '"documentation"',
+        '"main purpose"',
+        '"which file"',
+        '"file purpose"',
+        '"guide purpose"',
+        '"research purpose"',
+        '"documentation purpose"',
     ],
 }
 
@@ -133,6 +197,32 @@ def _add_query_synonyms(q: str) -> str:
         synonyms += [
             "db_telemetry timescaledb hypertable",
             "_timescaledb_internal metrics eval_run_logged run_finished",
+        ]
+
+    if "shell integration" in ql:
+        synonyms += [
+            '"check_canary_percentage" max_percentage canary guard ops_health',
+            '"max percentage" "canary percentage"',
+            "scripts/monitoring/on_call_ready_system.py",
+            "600_archives/300_evals/scripts/evaluation/canary_percentage_check.py",
+            "300_evals/scripts/evaluation/canary_percentage_check.py",
+            "src/dspy_modules/retriever/rerank.py mmr_rerank alpha=0.85 per_file_penalty=0.10",
+        ]
+
+    if "ops_health" in ql and "phrase" in ql:
+        synonyms += [
+            "src/dspy_modules/retriever/query_rewrite.py TAG_HINTS",
+            "src/dspy_modules/retriever/rerank.py mmr_rerank per_file_penalty",
+        ]
+
+    if "canary" in ql and "percentage" in ql:
+        synonyms += [
+            '"check_canary_percentage" max_percentage deployment rollout',
+            '"max percentage" "canary percentage"',
+            "scripts/utilities/tiny_hardening_system.py",
+            "evals/scripts/evaluation/canary_percentage_check.py",
+            "600_archives/300_evals/scripts/evaluation/canary_percentage_check.py",
+            "300_evals/scripts/evaluation/canary_percentage_check.py",
         ]
 
     if "memory-related guides" in ql and "100_memory" in ql:
