@@ -1,127 +1,80 @@
 #!/usr/bin/env python3
+"""Clean production evaluation entrypoint.
+
+This script delegates the heavy lifting to ``production_eval_helpers`` so that
+other environments (for example notebooks) can reuse the exact same
+configuration and execution semantics.
 """
-Production Evaluation - Clean & Reproducible
-Runs two passes: retrieval-only baseline and deterministic few-shot
-"""
+
+from __future__ import annotations
 
 import json
 import os
 import sys
 import time
 from pathlib import Path
-from typing import Any
+
+from evals.scripts.evaluation.core.production_eval_helpers import (
+    DEFAULT_PRODUCTION_PASSES,
+    DEFAULT_RESULTS_DIR,
+    ProductionEvaluationSummary,
+    run_production_evaluation,
+)
 
 # Add project paths - use absolute paths and check for duplicates
-project_root = Path(__file__).parent.parent.resolve()
-dspy_rag_path = project_root / "dspy-rag-system"
+PROJECT_ROOT = Path(__file__).parent.parent.resolve()
+DSPY_RAG_PATH = PROJECT_ROOT / "dspy-rag-system"
 
-# Add paths only if not already present
-paths_to_add = [project_root, dspy_rag_path]
-for path in paths_to_add:
-    path_str = str(path)
-    if path_str not in sys.path:
-        sys.path.insert(0, path_str)
+for candidate in (PROJECT_ROOT, DSPY_RAG_PATH):
+    candidate_str = str(candidate)
+    if candidate_str not in sys.path:
+        sys.path.insert(0, candidate_str)
 
-# Import settings to validate configuration
-from src.config import get_settings
+# Import settings to validate configuration early
+from src.config import get_settings  # noqa: E402
 
-# Validate configuration on import
-try:
-    settings = get_settings()
-    print(f"✅ Configuration loaded successfully for environment: {settings.env}")
-except Exception as e:
-    print(f"❌ Configuration validation failed: {e}")
-    sys.exit(1)
 
-def run_evaluation_pass(pass_name: str, config: dict[str, Any], output_file: str) -> dict[str, Any]:
-    """Run a single evaluation pass with specific configuration."""
-    print(f"\n🔄 Running {pass_name}")
-    print("=" * 60)
+def _print_summary(summary: ProductionEvaluationSummary) -> None:
+    """Emit a human-readable summary for CLI usage."""
 
-    # Set environment variables for this pass
-    for key, value in config.items():
-        os.environ[key] = str(value)
-        print(f"   {key}={value}")
-
-    # Import and run evaluation:
-    try:
-        from scripts.ragchecker_official_evaluation import main as run_eval
-
-        # Capture the evaluation results
-        start_time = time.time()
-
-        # Run the evaluation with required arguments
-        import subprocess
-        # Create output directory for this pass
-        pass_output_dir = Path("metrics/production_evaluations") / f"pass_{pass_name.lower().replace(' ', '_')}"
-        pass_output_dir.mkdir(parents=True, exist_ok=True)
-
-        # Use existing test cases
-        test_cases_file = "evals/legacy/test_cases.json"
-
-        result = subprocess.run([
-                sys.executable,
-                "scripts/ragchecker_official_evaluation.py",
-                "--cases",
-                test_cases_file,
-                "--outdir",
-                str(pass_output_dir),
-                "--use-bedrock",
-                "--bypass-cli",
-            ],
-            capture_output=True,
-            text=True,
-            cwd=project_root,
-        )
-
-        eval_time = time.time() - start_time
-
-        # Parse results from the output
-        results = {
-            "pass_name": pass_name,
-            "config": config,
-            "eval_time_seconds": eval_time,
-            "return_code": result.returncode,
-            "stdout": result.stdout,
-            "stderr": result.stderr,
-            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-        }
-
-        # Save results
-        with open(output_file, "w") as f:
-            json.dump(results, f, indent=2)
-
-        if result.returncode == 0:
-            print(f"✅ {pass_name} completed successfully")
-        else:
-            print(f"❌ {pass_name} failed with return code {result.returncode}")
-            print(f"STDERR: {result.stderr}")
-
-        return results
-
-    except Exception as e:
-        error_result = {
-            "pass_name": pass_name,
-            "config": config,
-            "error": str(e),
-            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-        }
-
-        with open(output_file, "w") as f:
-            json.dump(error_result, f, indent=2)
-
-        print(f"❌ {pass_name} failed with exception: {e}")
-        return error_result
-
-def analyze_results(results: list[dict[str, Any]]) -> dict[str, Any]:
-    """Analyze evaluation results and check pass criteria."""
     print("\n📊 Analysis Results")
     print("=" * 60)
+    for result in summary.results:
+        name = result.config.name
+        if not result.executed:
+            print(f"⏭️  {name} skipped (dry-run)")
+            continue
+        if result.succeeded:
+            print(f"✅ {name} completed successfully")
+        else:
+            print(f"❌ {name} failed")
+            if result.error:
+                print(f"   Error: {result.error}")
+            elif result.stderr:
+                print("   STDERR captured; inspect result payload for details.")
 
-    analysis = {
-        "total_passes": len(results),
-        "successful_passes": sum(1 for r in results if r.get("return_code") == 0),
-        "failed_passes": sum(1 for r in results if r.get("return_code") != 0),
+    if summary.overall_status == "success":
+        print("🎉 ALL PASSES SUCCESSFUL - Ready for production!")
+    elif summary.overall_status == "dry-run":
+        print("ℹ️  Dry-run completed; no passes executed.")
+    elif summary.overall_status == "partial":
+        print("⚠️  PARTIAL SUCCESS - Review failed or skipped passes")
+    else:
+        print("❌ ALL EXECUTED PASSES FAILED - Fix issues before proceeding")
+
+
+def _write_analysis(summary: ProductionEvaluationSummary, results_dir: Path) -> Path:
+    """Persist aggregate analysis to disk."""
+
+    analysis_payload: dict[str, object] = {
+        "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "summary": {
+            "total_passes": summary.total_passes,
+            "successful_passes": summary.successful_passes,
+            "failed_passes": summary.failed_passes,
+            "skipped_passes": summary.skipped_passes,
+            "overall_status": summary.overall_status,
+        },
         "pass_criteria": {
             "oracle_retrieval_hit_prefilter": "≥ +5-15 pts vs baseline",
             "reader_used_gold": "≥ baseline",
@@ -129,111 +82,75 @@ def analyze_results(results: list[dict[str, Any]]) -> dict[str, Any]:
             "precision_drift": "≤ 2 pts",
             "p95_latency": "≤ +15%",
         },
-        "recommendations": [],
+        "passes": [],
     }
 
-    # Check each pass
-    for result in results:
-        if result.get("return_code") == 0:
-            print(f"✅ {result['pass_name']} completed successfully")
-        else:
-            print(f"❌ {result['pass_name']} failed")
-            if "error" in result:
-                print(f"   Error: {result['error']}")
+    for result in summary.results:
+        pass_entry = {
+            "name": result.config.name,
+            "description": result.config.description,
+            "env": dict(result.config.env),
+            "cases_file": result.config.cases_file,
+            "output_file": str(result.output_file),
+            "return_code": result.return_code,
+            "duration_seconds": result.duration_seconds,
+            "error": result.error,
+            "executed": result.executed,
+        }
+        analysis_payload["passes"].append(pass_entry)
 
-    # Overall assessment
-    successful_count = analysis["successful_passes"]
-    total_count = analysis["total_passes"]
+    results_dir.mkdir(parents=True, exist_ok=True)
+    analysis_file = results_dir / f"analysis_{int(time.time())}.json"
+    analysis_file.write_text(json.dumps(analysis_payload, indent=2), encoding="utf-8")
+    return analysis_file
 
-    if successful_count == total_count:
-        print("🎉 ALL PASSES SUCCESSFUL - Ready for production!")
-        analysis["overall_status"] = "success"
-    elif successful_count > 0:
-        print("⚠️  PARTIAL SUCCESS - Review failed passes")
-        analysis["overall_status"] = "partial"
-    else:
-        print("❌ ALL PASSES FAILED - Fix issues before proceeding")
-        analysis["overall_status"] = "failed"
 
-    return analysis
+def main() -> None:
+    """Run production evaluation with the canonical pass set."""
 
-def main():
-    """Run production evaluation with two passes."""
     print("🚀 PRODUCTION EVALUATION - Clean & Reproducible")
     print("=" * 80)
     print(f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
 
-    # Create results directory
-    results_dir = Path("metrics/production_evaluations")
-    results_dir.mkdir(parents=True, exist_ok=True)
+    # Validate configuration early; exit fast on misconfiguration
+    try:
+        settings = get_settings()
+        print(f"✅ Configuration loaded successfully for environment: {settings.env}")
+    except Exception as exc:  # pragma: no cover - configuration failure path
+        print(f"❌ Configuration validation failed: {exc}")
+        sys.exit(1)
 
-    # Define evaluation passes
-    passes = [
-        {
-            "name": "Retrieval-Only Baseline",
-            "config": {
-                "FEW_SHOT_K": "0",
-                "EVAL_COT": "0",
-                "TEMPERATURE": "0",
-                "EVAL_DISABLE_CACHE": "1",
-                "DSPY_TELEPROMPT_CACHE": "false",
-            },
-            "description": "Confirms retrieval, rerank, and chunk config (450/10%/J=0.8/prefix-A)",
-        },
-        {
-            "name": "Deterministic Few-Shot",
-            "config": {
-                "FEW_SHOT_K": "5",
-                "FEW_SHOT_SELECTOR": "knn",
-                "FEW_SHOT_SEED": "42",
-                "EVAL_COT": "0",
-                "EVAL_DISABLE_CACHE": "1",
-                "DSPY_TELEPROMPT_CACHE": "false",
-            },
-            "description": "Records prompt_audit.few_shot_ids, prompt_hash, cot_enabled=false",
-        },
-    ]
+    results_dir = DEFAULT_RESULTS_DIR
 
-    results = []
+    summary = run_production_evaluation(
+        DEFAULT_PRODUCTION_PASSES,
+        project_root=PROJECT_ROOT,
+        results_dir=results_dir,
+        execute=True,
+        capture_output=True,
+        logger=print,
+        base_env=os.environ,
+    )
 
-    # Run each pass
-    for i, pass_config in enumerate(passes, 1):
-        output_file = results_dir / f"pass_{i}_{pass_config['name'].lower().replace(' ', '_')}.json"
-
-        print(f"\n📋 PASS {i}: {pass_config['name']}")
-        print(f"   {pass_config['description']}")
-
-        result = run_evaluation_pass(
-            pass_config['name'],
-            pass_config['config'],
-            str(output_file)
-        )
-        results.append(result)
-
-    # Analyze results
-    analysis = analyze_results(results)
-
-    # Save analysis
-    analysis_file = results_dir / f"analysis_{int(time.time())}.json"
-    with open(analysis_file, "w") as f:
-        json.dump(analysis, f, indent=2)
+    _print_summary(summary)
+    analysis_file = _write_analysis(summary, results_dir)
 
     print(f"\n📁 Results saved to: {results_dir}")
     print(f"📊 Analysis saved to: {analysis_file}")
 
-    # Exit with appropriate code
-    if analysis.get("overall_status") == "success":
+    if summary.overall_status == "success":
         print("\n🎯 NEXT STEPS:")
         print("   1. Review evaluation results")
         print("   2. Proceed with canary rollout")
         print("   3. Monitor production metrics")
         sys.exit(0)
-    else:
-        print("\n🔧 NEXT STEPS:")
-        print("   1. Fix failed evaluation passes")
-        print("   2. Re-run production evaluation")
-        print("   3. Address any issues before production")
-        sys.exit(1)
+
+    print("\n🔧 NEXT STEPS:")
+    print("   1. Fix failed evaluation passes")
+    print("   2. Re-run production evaluation")
+    print("   3. Address any issues before production")
+    sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

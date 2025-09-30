@@ -19,12 +19,12 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
-    from src.evaluation.contracts import DatasetConfig
     from src.evaluation.adapters.ragchecker import RagCheckerAdapter
+    from src.evaluation.contracts import DatasetConfig
 else:
     try:
-        from src.evaluation.contracts import DatasetConfig
         from src.evaluation.adapters.ragchecker import RagCheckerAdapter
+        from src.evaluation.contracts import DatasetConfig
     except ImportError:  # pragma: no cover - legacy fallback
         contracts_module = import_module("eval.contracts")
         DatasetConfig = getattr(contracts_module, "DatasetConfig")

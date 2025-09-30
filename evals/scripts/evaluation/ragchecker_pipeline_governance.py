@@ -335,7 +335,7 @@ class RAGCheckerPipelineGovernance:
         """Select the comparison score used to choose between pipeline variants."""
 
         for key in ("f1_score", "f1", "precision", "recall"):
-            if key in avg_metrics and isinstance(avg_metrics[key], (int, float)):
+            if key in avg_metrics and isinstance(avg_metrics[key], int | float):
                 return float(avg_metrics[key])
         return 0.0
 
@@ -350,7 +350,7 @@ class RAGCheckerPipelineGovernance:
                 simulated = self._simulate_ragchecker_evaluation(query, pipeline_config)
                 results.append(simulated)
             except Exception as exc:  # pragma: no cover - logging path
-                logger.error(f"Evaluation failed for query: %s, error: %s", query, exc)
+                logger.error("Evaluation failed for query: %s, error: %s", query, exc)
                 results.append({"query": query, "error": str(exc)})
 
         successful_results = [r for r in results if "error" not in r]

@@ -29,8 +29,8 @@ if TYPE_CHECKING:  # pragma: no cover - assist static typing
         timestamp: str
 else:
     try:
-        from src.evaluation.contracts import DatasetConfig
         from src.evaluation.adapters.ragchecker import RagCheckerAdapter
+        from src.evaluation.contracts import DatasetConfig
     except ImportError:  # pragma: no cover - legacy fallback
         contracts_module = import_module("eval.contracts")
         DatasetConfig = getattr(contracts_module, "DatasetConfig")
