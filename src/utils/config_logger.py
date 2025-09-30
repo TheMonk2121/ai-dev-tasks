@@ -183,7 +183,7 @@ class ConfigLogger:
 
             # Test connection and get info
             with psycopg.connect(dsn) as conn:
-                with conn.cursor(row_factory=dict_row) as cur:  # type: ignore
+                with conn.cursor(row_factory=dict_row) as cur:  # type: ignore[arg-type,assignment,call-overload]
                     # Test connection
                     cur.execute("SELECT 1")
                     db_config["connection_test"] = True
@@ -306,7 +306,7 @@ class ConfigLogger:
 
         try:
             with psycopg.connect(dsn) as conn:
-                with conn.cursor(row_factory=dict_row) as cur:  # type: ignore
+                with conn.cursor(row_factory=dict_row) as cur:  # type: ignore[arg-type,assignment,call-overload]
                     # Check if eval tables exist
                     cur.execute(
                         """

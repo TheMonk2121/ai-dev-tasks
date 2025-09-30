@@ -148,7 +148,7 @@ class WorkloadIsolationOrchestrator:
 
         return status
 
-    def get_all_isolation_statuses(self) -> dict:
+    def get_all_isolation_statuses(self) -> dict[str, Any]:
         """Get isolation status for all roles."""
         all_statuses = {}
 
@@ -193,7 +193,7 @@ class WorkloadIsolationOrchestrator:
         # Ensure directory exists
         Path(filepath).parent.mkdir(parents=True, exist_ok=True)
 
-        report = {
+        report: dict[str, Any] = {
             "timestamp": time.time(),
             "current_role": self.current_role,
             "isolation_statuses": self.get_all_isolation_statuses(),

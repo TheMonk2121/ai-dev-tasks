@@ -13,7 +13,7 @@ class Database(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
 
     dsn: PostgresDsn = Field(
-        default_factory=lambda: cast(PostgresDsn, "postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable")
+        default="postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable"
     )
     pool_size: int = Field(ge=1, le=64, default=8)
     timeout_ms: int = Field(ge=100, le=60_000, default=5_000)

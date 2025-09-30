@@ -8,6 +8,7 @@ import logging
 import os
 import re
 from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -282,7 +283,7 @@ def validate_url(url: str, allowed_domains: list[str] | None = None) -> bool:
     return True
 
 
-def validate_json_structure(data: dict, required_fields: list[str], optional_fields: list[str] | None = None) -> bool:
+def validate_json_structure(data: dict[str, Any], required_fields: list[str], optional_fields: list[str] | None = None) -> bool:
     """
     Validate JSON structure to ensure required fields are present.
 
@@ -361,7 +362,7 @@ def validate_integer_range(value: int, min_value: int, max_value: int, field_nam
     return True
 
 
-def validate_list_length(items: list, max_items: int, field_name: str = "list") -> bool:
+def validate_list_length(items: list[Any], max_items: int, field_name: str = "list") -> bool:
     """
     Validate list length to prevent memory issues.
 
@@ -417,7 +418,7 @@ def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
         raise ValidationError(f"Error reading file: {e}")
 
 
-def validate_config_structure(config: dict, required_sections: list[str]) -> bool:
+def validate_config_structure(config: dict[str, Any], required_sections: list[str]) -> bool:
     """
     Validate configuration structure.
 

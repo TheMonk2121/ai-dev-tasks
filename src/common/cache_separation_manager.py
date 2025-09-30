@@ -7,6 +7,7 @@ import os
 import shutil
 import time
 from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +60,7 @@ class CacheSeparationManager:
     def _initialize_cache_dirs(self):
         """Initialize cache directory structure."""
         for role, config in CACHE_CONFIGS.items():
-            base_dir = self.project_root / config["base_dir"]
+            base_dir = self.project_root / str(config["base_dir"])
             self.cache_dirs[role] = base_dir
 
             # Create base directory if it doesn't exist
@@ -102,7 +103,7 @@ class CacheSeparationManager:
 
         return cache_dir
 
-    def get_cache_info(self, role: str | None = None) -> dict:
+    def get_cache_info(self, role: str | None = None) -> dict[str, Any]:
         """Get information about a cache directory."""
         if role is None:
             role = self.current_role
@@ -126,10 +127,10 @@ class CacheSeparationManager:
             "base_dir": str(cache_dir),
             "current_size_mb": round(total_size_mb, 2),
             "max_size_mb": config["max_size_mb"],
-            "usage_percent": round((total_size_mb / config["max_size_mb"]) * 100, 1),
+            "usage_percent": round((total_size_mb / float(config["max_size_mb"])) * 100, 1) if isinstance(config["max_size_mb"], (int, float)) else 0.0,
             "cleanup_threshold": config["cleanup_threshold"],
             "subdir_sizes": subdir_sizes,
-            "needs_cleanup": total_size_mb > (config["max_size_mb"] * config["cleanup_threshold"]),
+            "needs_cleanup": total_size_mb > (float(config["max_size_mb"]) * float(config["cleanup_threshold"])) if isinstance(config["max_size_mb"], (int, float)) and isinstance(config["cleanup_threshold"], (int, float)) else False,
         }
 
     def _calculate_dir_size(self, directory: Path) -> int:
@@ -231,9 +232,9 @@ class CacheSeparationManager:
 
         return success
 
-    def get_cache_status_summary(self) -> dict:
+    def get_cache_status_summary(self) -> dict[str, Any]:
         """Get a summary of all cache statuses."""
-        summary = {"total_caches": len(CACHE_CONFIGS), "caches": {}, "total_size_mb": 0, "overall_status": "healthy"}
+        summary: dict[str, Any] = {"total_caches": len(CACHE_CONFIGS), "caches": {}, "total_size_mb": 0, "overall_status": "healthy"}
 
         for role in CACHE_CONFIGS.keys():
             cache_info = self.get_cache_info(role)

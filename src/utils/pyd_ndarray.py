@@ -54,7 +54,7 @@ class ArrayF32WithShape:
             ),
         )
 
-    def __get_pydantic_json_schema__(self, core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> dict:
+    def __get_pydantic_json_schema__(self, core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> dict[str, Any]:
         return {
             "type": "array",
             "items": {"type": "number"},

@@ -79,7 +79,7 @@ class RequestLogger:
 
         self._buffer: list[RequestLog] = []
         self._buffer_lock = asyncio.Lock()
-        self._flush_task: asyncio.Task | None = None
+        self._flush_task: asyncio.Task[None] | None = None
 
         # Ensure log directory exists
         if self.enabled:
