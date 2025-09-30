@@ -39,14 +39,14 @@ from pocketflow.shared_state import ConversationSummary, ConversationTurn, Retri
 from src.common.db_sync import connect
 
 logger = logging.getLogger(__name__)
-_RAG_PROGRAM: RAGAnswer | None = None
+_rag_program_cache: RAGAnswer | None = None
 
 
 def _get_rag_program() -> RAGAnswer:
-    global _RAG_PROGRAM
-    if _RAG_PROGRAM is None:
-        _RAG_PROGRAM = RAGAnswer()
-    return _RAG_PROGRAM
+    global _rag_program_cache
+    if _rag_program_cache is None:
+        _rag_program_cache = RAGAnswer()
+    return _rag_program_cache
 
 
 def _session_id_from_state(state: SharedState, turn: ConversationTurn | None = None) -> str:
@@ -117,7 +117,7 @@ def _memory_summarizer(turns: Sequence[ConversationTurn]) -> ConversationSummary
     return ConversationSummary(text=summary_text, token_count=token_count)
 
 
-def _extract_structured_facts(turns: Sequence[ConversationTurn], summary_text: str) -> list[dict]:
+def _extract_structured_facts(turns: Sequence[ConversationTurn], summary_text: str) -> list[dict[str, Any]]:
     memory_turns = [
         MemoryTurn(role=t.role, content=t.content, timestamp=(t.created_at.timestamp() if t.created_at else None))
         for t in turns
@@ -126,7 +126,7 @@ def _extract_structured_facts(turns: Sequence[ConversationTurn], summary_text: s
     return [asdict(fact) for fact in facts]
 
 
-def _index_facts(facts: list[dict], state: SharedState) -> None:
+def _index_facts(facts: list[dict[str, Any]], state: SharedState) -> None:
     if not facts:
         return
 
@@ -287,7 +287,7 @@ def _default_composer(state: SharedState) -> str:
 
                 if prog._lm is None:
                     prog_local = RAGAnswer()
-                    globals()["_RAG_PROGRAM"] = prog_local
+                    globals()["_rag_program_cache"] = prog_local
                     prog = prog_local
 
                 if dspy.settings.lm is None and prog._lm is not None:

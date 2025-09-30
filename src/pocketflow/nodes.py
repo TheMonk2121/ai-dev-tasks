@@ -15,8 +15,8 @@ from pocketflow.shared_state import (
 
 PersistTurnFn = Callable[[SharedState, ConversationTurn], ConversationTurn]
 SummarizeFn = Callable[[Sequence[ConversationTurn]], ConversationSummary | str]
-ExtractFactsFn = Callable[[Sequence[ConversationTurn], str], list[dict]]
-IndexFactsFn = Callable[[list[dict], SharedState], None]
+ExtractFactsFn = Callable[[Sequence[ConversationTurn], str], list[dict[str, Any]]]
+IndexFactsFn = Callable[[list[dict[str, Any]], SharedState], None]
 RetrieveFn = Callable[[SharedState], list[RetrievedHit]]
 ComposeAnswerFn = Callable[[SharedState], str]
 

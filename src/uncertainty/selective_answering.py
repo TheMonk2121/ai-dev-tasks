@@ -355,7 +355,7 @@ class SelectiveAnswering:
 
         return (avg_supporting_score + support_ratio) / 2
 
-    def _chunk_supports_answer(self, chunk_text: str, answer_keywords: set) -> bool:
+    def _chunk_supports_answer(self, chunk_text: str, answer_keywords: set[str]) -> bool:
         """Check if a chunk supports the answer content."""
         # Simple keyword overlap check
         chunk_words = set(chunk_text.split())
