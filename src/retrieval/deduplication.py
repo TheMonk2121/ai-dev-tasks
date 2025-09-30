@@ -18,9 +18,9 @@ try:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
 
-    HAS_SKLEARN = True
+    has_sklearn = True
 except ImportError:
-    HAS_SKLEARN = False
+    has_sklearn = False
     from typing import Any as _Any
 
     cosine_similarity: _Any = None
@@ -34,7 +34,7 @@ class CosineDeduplicator:
     def __init__(
         self, threshold: float = 0.9, max_features: int = 1000, min_df: int = 1, ngram_range: tuple[int, int] = (1, 2)
     ):
-        if not HAS_SKLEARN:
+        if not has_sklearn:
             raise ImportError("sklearn required for CosineDeduplicator")
 
         self.threshold = threshold
@@ -236,7 +236,7 @@ class NearDuplicateFilter:
         self.threshold = threshold
 
         # Initialize appropriate deduplicator
-        if method == "cosine" and HAS_SKLEARN:
+        if method == "cosine" and has_sklearn:
             self.deduplicator = CosineDeduplicator(threshold=threshold, **kwargs)
         elif method == "minhash":
             self.deduplicator = MinHashDeduplicator(threshold=threshold, **kwargs)
@@ -288,7 +288,7 @@ def create_deduplicator(config: dict[str, Any] | None = None) -> NearDuplicateFi
 
     if not config:
         # Default configuration
-        return NearDuplicateFilter(method="cosine" if HAS_SKLEARN else "simple")
+        return NearDuplicateFilter(method="cosine" if has_sklearn else "simple")
 
     return NearDuplicateFilter(
         method=config.get("method", "cosine"),

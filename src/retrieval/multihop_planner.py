@@ -21,9 +21,9 @@ try:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
 
-    HAS_SKLEARN = True
+    has_sklearn = True
 except ImportError:
-    HAS_SKLEARN = False
+    has_sklearn = False
 
 
 @dataclass
@@ -88,7 +88,7 @@ class MultiHopPlanner:
         self.min_evidence_score = min_evidence_score
 
         # Initialize TF-IDF for novelty checks
-        if HAS_SKLEARN:
+        if has_sklearn:
             self.vectorizer = TfidfVectorizer(max_features=200, stop_words="english", ngram_range=(1, 2))
         else:
             self.vectorizer = None
@@ -278,7 +278,7 @@ class MultiHopPlanner:
         if not current_questions or not previous_questions:
             return 1.0
 
-        if not HAS_SKLEARN or not self.vectorizer:
+        if not has_sklearn or not self.vectorizer:
             # Fallback: simple token overlap
             return self._compute_token_novelty(current_questions, previous_questions)
 

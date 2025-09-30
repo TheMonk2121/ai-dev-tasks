@@ -211,7 +211,7 @@ class RecallFriendlyPrefilter:
         }
 
 
-def create_prefilter_from_config(config_dict: dict) -> RecallFriendlyPrefilter:
+def create_prefilter_from_config(config_dict: dict[str, Any]) -> RecallFriendlyPrefilter:
     """Create prefilter from configuration dictionary."""
     prefilter_config = config_dict.get("prefilter", {})
 

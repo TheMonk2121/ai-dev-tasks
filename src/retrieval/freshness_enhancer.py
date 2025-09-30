@@ -222,7 +222,7 @@ class FreshnessEnhancer:
         # Detect freshness sensitivity
         is_freshness_sensitive, confidence, reasoning = self.detector.detect_freshness_sensitivity(query)
 
-        enhancement_metadata = {
+        enhancement_metadata: dict[str, Any] = {
             "is_freshness_sensitive": is_freshness_sensitive,
             "confidence": confidence,
             "reasoning": reasoning,

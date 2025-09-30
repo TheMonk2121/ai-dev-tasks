@@ -89,7 +89,7 @@ class MemoryIntegrator:
 
     def get_retrieval_context(self) -> dict[str, Any]:
         """Get retrieval-relevant context from memory systems."""
-        context = {"current_priorities": [], "system_status": {}, "configuration_state": {}, "recent_changes": []}
+        context: dict[str, Any] = {"current_priorities": [], "system_status": {}, "configuration_state": {}, "recent_changes": []}
 
         # Extract relevant context from each system
         for system_name, memory_context in self.memory_contexts.items():
@@ -195,7 +195,7 @@ class GovernanceAutomator:
         except Exception as e:
             return {"valid": False, "error": f"Failed to load config: {e}"}
 
-        validation_result = {"valid": True, "errors": [], "warnings": [], "compliance_score": 1.0}
+        validation_result: dict[str, Any] = {"valid": True, "errors": [], "warnings": [], "compliance_score": 1.0}
 
         rules = self.governance_rules["configuration_validation"]
 
@@ -248,7 +248,7 @@ class GovernanceAutomator:
 
     def generate_compliance_report(self) -> dict[str, Any]:
         """Generate comprehensive compliance report."""
-        report = {
+        report: dict[str, Any] = {
             "timestamp": time.time(),
             "system": "retrieval_system",
             "compliance_checks": {},
@@ -294,7 +294,7 @@ class GovernanceAutomator:
             if not pathlib.Path(test_file).exists():
                 missing_files.append(test_file)
 
-        compliance = {
+        compliance: dict[str, Any] = {
             "compliant": len(missing_files) == 0,
             "test_coverage": len(test_files) - len(missing_files),
             "total_tests": len(test_files),
@@ -313,7 +313,7 @@ class GovernanceAutomator:
 
         # This would normally check actual system metrics
         # For now, we'll simulate compliance checking
-        compliance = {
+        compliance: dict[str, Any] = {
             "compliant": True,
             "metrics": {
                 "avg_latency_ms": 1500,  # Simulated
@@ -340,7 +340,7 @@ class GovernanceAutomator:
 
     def automated_maintenance(self) -> dict[str, Any]:
         """Perform automated maintenance tasks."""
-        maintenance_results = {
+        maintenance_results: dict[str, Any] = {
             "timestamp": time.time(),
             "tasks_completed": [],
             "tasks_failed": [],

@@ -123,7 +123,7 @@ def generate_edge_cases() -> list[dict[str, Any]]:
 
 def test_retrieval_robustness(retrieval_fn, test_cases: list[dict[str, Any]]) -> dict[str, Any]:
     """Test retrieval pipeline robustness with edge cases."""
-    results = {"total_cases": len(test_cases), "passed": 0, "failed": 0, "errors": 0, "case_results": []}
+    results: dict[str, Any] = {"total_cases": len(test_cases), "passed": 0, "failed": 0, "errors": 0, "case_results": []}
 
     for case in test_cases:
         case_id = case["query_id"]
@@ -205,7 +205,7 @@ def validate_pipeline_components(config_path: str = "config/retrieval.yaml") -> 
     except Exception as e:
         return {"valid": False, "error": f"Config loading failed: {e}"}
 
-    validation_results = {"valid": True, "warnings": [], "errors": [], "component_status": {}}
+    validation_results: dict[str, Any] = {"valid": True, "warnings": [], "errors": [], "component_status": {}}
 
     # Validate fusion config
     fusion = config.get("fusion", {})
@@ -299,7 +299,7 @@ def run_comprehensive_tests(retrieval_fn, output_path: str = "test_hardening_res
     config_validation = validate_pipeline_components()
 
     # Compile results
-    results = {
+    results: dict[str, Any] = {
         "test_summary": {
             "total_edge_cases": len(edge_cases),
             "robustness_passed": robustness_results["passed"],

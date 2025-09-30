@@ -20,18 +20,18 @@ from typing import Any
 try:
     import numpy as np
     import onnxruntime as ort
-    HAS_ONNX = True
+    has_onnx = True
 except ImportError:
-    HAS_ONNX = False
+    has_onnx = False
     ort = None
     np = None
 
 try:
     from transformers import AutoTokenizer
 
-    HAS_TRANSFORMERS = True
+    has_transformers = True
 except ImportError:
-    HAS_TRANSFORMERS = False
+    has_transformers = False
     AutoTokenizer = None
 
 
@@ -97,9 +97,9 @@ class ONNXCrossEncoder:
         max_length: int = 512,
         device: str = "cpu",
     ):
-        if not HAS_ONNX:
+        if not has_onnx:
             raise ImportError("onnxruntime required for ONNXCrossEncoder")
-        if not HAS_TRANSFORMERS:
+        if not has_transformers:
             raise ImportError("transformers required for tokenizer")
 
         self.model_path = model_path
@@ -198,7 +198,7 @@ class CrossEncoderClient:
         self.cross_encoder: ONNXCrossEncoder | None = None
 
         # Initialize ONNX model if available
-        if onnx_path and HAS_ONNX and HAS_TRANSFORMERS:
+        if onnx_path and has_onnx and has_transformers:
             try:
                 self.cross_encoder = ONNXCrossEncoder(model_path=onnx_path, tokenizer_name=model_name)
             except Exception as e:
