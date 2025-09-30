@@ -11,9 +11,9 @@ from typing import Any
 import yaml
 
 try:
-    from src.rag import reranker_env as RENV
+    from src.rag import reranker_env as reranker_env_module
 except Exception:
-    RENV = None
+    reranker_env_module = None
 
 DEFAULT_RERANKER_CONFIG = {
     "enabled": False,
@@ -65,14 +65,14 @@ def load_reranker_config(tag: str = "", file_path: str | None = None) -> dict[st
         pass
 
     # Override with environment variables
-    if RENV:
+    if reranker_env_module:
         env_overrides = {
-            "enabled": str(int(RENV.RERANK_ENABLE)),
-            "model": RENV.RERANKER_MODEL,
-            "input_topk": str(RENV.RERANK_INPUT_TOPK),
-            "keep": str(RENV.RERANK_KEEP),
-            "batch_size": str(RENV.RERANK_BATCH),
-            "device": RENV.TORCH_DEVICE,
+            "enabled": str(int(reranker_env_module.RERANK_ENABLE)),
+            "model": reranker_env_module.RERANKER_MODEL,
+            "input_topk": str(reranker_env_module.RERANK_INPUT_TOPK),
+            "keep": str(reranker_env_module.RERANK_KEEP),
+            "batch_size": str(reranker_env_module.RERANK_BATCH),
+            "device": reranker_env_module.TORCH_DEVICE,
             "cache_enabled": "1",
             "cache_dir": os.getenv("RERANKER_CACHE_DIR", "cache"),
         }

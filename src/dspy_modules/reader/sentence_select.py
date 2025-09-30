@@ -106,7 +106,7 @@ def select_sentences(
     returns (compact_context, selections_meta)
     """
     q_uni = set(_norm_tokens(query))
-    picks: list[tuple[float, dict]] = []
+    picks: list[tuple[float, dict[str, Any]]] = []
     for r in rows:
         text = r.get("text_for_reader") or r.get("embedding_text") or r.get("bm25_text") or r.get("content") or ""
         if not text:

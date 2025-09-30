@@ -774,7 +774,7 @@ def _apply_cross_encoder_rerank(
                     }
                     if excerpt and len(excerpt) < len(normalized):
                         md["force_excerpt"] = True
-                        md["force_original_length"] = len(normalized)
+                        md["force_original_length"] = str(len(normalized))
 
                     row = {
                         "chunk_index": 0,
