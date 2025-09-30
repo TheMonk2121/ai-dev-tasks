@@ -37,7 +37,7 @@ class TestCursorRealtimeMonitor:
             del os.environ["POSTGRES_DSN"]
 
     @patch("scripts.utilities.cursor_realtime_monitor.resolve_dsn")
-    def test_initialization(self, __mock_resolve_dsn: Any) -> None:
+    def test_initialization(self, _mock_resolve_dsn: Any) -> None:
         """Test monitor initialization."""
         monitor = CursorRealtimeMonitor()
 

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
@@ -22,7 +20,7 @@ Property-based tests for reranker_env helpers.
 @pytest.mark.prop
 @given(val=st.one_of(st.booleans(), st.integers(), st.text(max_size=5)))
 @settings(max_examples=20, deadline=100, suppress_health_check=[HealthCheck.function_scoped_fixture])
-def test_bool_int_str_resolve_precedence(monkeypatch: pytest.MonkeyPatch, val) -> None:
+def test_bool_int_str_resolve_precedence(monkeypatch: pytest.MonkeyPatch, val: bool | int | str) -> None:
     # Precedence: first present wins
     for name in ("A", "B", "C"):
         monkeypatch.delenv(name, raising=False)

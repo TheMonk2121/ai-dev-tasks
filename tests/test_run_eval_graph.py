@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -24,7 +25,7 @@ def graph_mocks(monkeypatch: pytest.MonkeyPatch) -> tuple[MagicMock, MagicMock, 
     return load_node, retrieve_node, score_node
 
 
-def test_main_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, graph_mocks) -> None:
+def test_main_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, graph_mocks: tuple[MagicMock, MagicMock, MagicMock]) -> None:
     load_node, retrieve_node, score_node = graph_mocks
 
     load_node.run.return_value = [
@@ -45,7 +46,7 @@ def test_main_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, graph_moc
         str(tmp_path),
     ]
     monkeypatch.setattr(run_eval_graph, "sys", type("S", (), {"argv": args}))
-    monkeypatch.setattr(run_eval_graph.time, "time", lambda: 1234)
+    monkeypatch.setattr(time, "time", lambda: 1234)
 
     run_eval_graph.main()
 
@@ -56,7 +57,7 @@ def test_main_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, graph_moc
     assert log_path.exists()
 
 
-def test_main_no_cases(monkeypatch: pytest.MonkeyPatch, graph_mocks) -> None:
+def test_main_no_cases(monkeypatch: pytest.MonkeyPatch, graph_mocks: tuple[MagicMock, MagicMock, MagicMock]) -> None:
     _, load_node, *_ = graph_mocks
     load_node.run.return_value = []
 

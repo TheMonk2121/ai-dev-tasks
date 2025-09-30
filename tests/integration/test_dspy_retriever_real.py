@@ -54,7 +54,7 @@ class TestDSPyRetrieverReal:
         assert conn is not None
 
         with conn.cursor() as cur:
-            cur.execute("SELECT current_database()")
+            _ = cur.execute("SELECT current_database()")
             result = cur.fetchone()
             assert result is not None
             assert result
@@ -72,7 +72,7 @@ class TestDSPyRetrieverReal:
 
         try:
             with pytest.raises(RuntimeError, match="Remote DSN detected"):
-                get_db_connection()
+                _ = get_db_connection()
         finally:
             # Restore original DSN
             if original_dsn:
@@ -111,12 +111,12 @@ class TestDSPyRetrieverReal:
                 _ = np.random.rand(384).astype(np.float32)
 
                 # Test if pgvector extension is available
-                cur.execute("SELECT extname FROM pg_extension WHERE extname = 'vector'")
+                _ = cur.execute("SELECT extname FROM pg_extension WHERE extname = 'vector'")
                 vector_ext = cur.fetchone()
 
                 if vector_ext:
                     # Test vector operations
-                    cur.execute(
+                    _ = cur.execute(
                         """
                         SELECT 1 as test_value,
                                '[1,2,3]'::vector <-> '[1,2,3]'::vector as distance
@@ -161,7 +161,7 @@ class TestDSPyRetrieverReal:
         try:
             with conn.cursor() as cur:
                 # Check for document_chunks table
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT table_name
                     FROM information_schema.tables
@@ -173,7 +173,7 @@ class TestDSPyRetrieverReal:
 
                 if result:
                     # Table exists, check structure
-                    cur.execute(
+                    _ = cur.execute(
                         """
                         SELECT column_name, data_type
                         FROM information_schema.columns
@@ -243,7 +243,7 @@ class TestDSPyRetrieverReal:
                 test_embedding = np.random.rand(384).astype(np.float32)
 
                 # Check if we have a test table for embeddings
-                cur.execute(
+                _ = cur.execute(
                     """
                     SELECT table_name
                     FROM information_schema.tables
@@ -255,7 +255,7 @@ class TestDSPyRetrieverReal:
 
                 if tables:
                     # Test embedding operations
-                    cur.execute(
+                    _ = cur.execute(
                         "SELECT %s::vector as test_embedding",
                         (test_embedding.tolist(),),
                     )
@@ -312,7 +312,7 @@ class TestDSPyRetrieverReal:
         conn = get_db_connection()
         try:
             with conn.cursor() as cur:
-                cur.execute("SELECT 1")
+                _ = cur.execute("SELECT 1")
                 result = cur.fetchone()
                 assert result
         finally:

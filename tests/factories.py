@@ -20,7 +20,7 @@ def make_chunk(i: int = 0) -> ContextChunk:
     )
 
 
-def make_candidate(q: str = "q", i: int = 0) -> RetrievalCandidate:
+def make_candidate(_q: str = "q", i: int = 0) -> RetrievalCandidate:
     chunk = make_chunk(i)
     return RetrievalCandidate(
         doc_id=f"doc_{i}",

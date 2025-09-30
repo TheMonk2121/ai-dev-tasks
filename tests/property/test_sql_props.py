@@ -177,13 +177,13 @@ class TestSQLProperties:
     @settings(max_examples=25, deadline=50)
     def test_sql_parameter_types(self, filters: dict[str, Any]) -> None:
         """SQL should handle different parameter types correctly"""
-        where_clause, params = build_where_clause(filters)
+        _, params = build_where_clause(filters)
 
         # All parameters should be in the params list
         assert len(params) == len(filters), f"Parameter count mismatch: {len(params)} vs {len(filters)}"
 
         # Parameters should match filter values
-        for i, (key, value) in enumerate(filters.items()):
+        for _, (_, value) in enumerate(filters.items()):
             if isinstance(value, list):
                 # For lists, check that all values are in params
                 assert all(v in params for v in value), f"List values not in params: {value}"

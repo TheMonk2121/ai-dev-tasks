@@ -6,21 +6,19 @@ compatibility and performance across all database access methods.
 """
 
 #!/usr/bin/env python3
+# type: ignore[misc]
 
 import asyncio
 import os
 import sys
 from pathlib import Path
-from typing import Any
 
 import pytest
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from scripts.utilities.memory.db_async_pool import get_pool
 from src.common.db_async import aconnect as async_connect
-from src.common.db_dsn import resolve_dsn
 from src.common.db_sync import connect as sync_connect
 from src.utils.db_telemetry import DatabaseTelemetryLogger
 
@@ -48,7 +46,7 @@ class TestDatabaseConnectionPatterns:
         yield
         # Cleanup handled by test isolation
 
-    def test_psycopg_sync_connection(self):
+    def test_psycopg_sync_connection(self):  # type: ignore[misc]
         """Test psycopg (v3) synchronous connection pattern with dict rows."""
         import psycopg
         from psycopg.rows import dict_row
@@ -57,10 +55,10 @@ class TestDatabaseConnectionPatterns:
             pytest.skip("No database DSN available")
         
         # Use proper typing for psycopg connection with dict rows
-        conn = psycopg.connect(self.dsn, row_factory=dict_row)  # pyright: ignore[reportArgumentType]
+        conn = psycopg.connect(self.dsn, row_factory=dict_row)  # type: ignore[arg-type, assignment, reportArgumentType]
         try:
             with conn.cursor() as cur:
-                cur.execute("SELECT 1 as test_value, current_database() as db_name")
+                _ = cur.execute("SELECT 1 as test_value, current_database() as db_name")
                 result = cur.fetchone()
                 assert result is not None
                 assert result
@@ -77,13 +75,13 @@ class TestDatabaseConnectionPatterns:
 
         with psycopg.connect(self.dsn) as conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT 1 as test_value, current_database() as db_name")
+                _ = cur.execute("SELECT 1 as test_value, current_database() as db_name")
                 result = cur.fetchone()
                 assert result is not None
                 assert result
                 assert result
 
-    def test_psycopg_async_connection(self):
+    def test_psycopg_async_connection(self):  # type: ignore[misc]
         """Test psycopg3 asynchronous connection pattern."""
         import psycopg
 
@@ -92,9 +90,9 @@ class TestDatabaseConnectionPatterns:
 
         async def _test():
             # AsyncConnection.connect returns a coroutine; await it before using as context manager
-            async with await psycopg.AsyncConnection.connect(self.dsn) as conn:  # pyright: ignore[reportArgumentType]
+            async with await psycopg.AsyncConnection.connect(self.dsn) as conn:  # type: ignore[arg-type]
                 async with conn.cursor() as cur:
-                    await cur.execute("SELECT 1 as test_value, current_database() as db_name")
+                    _ = await cur.execute("SELECT 1 as test_value, current_database() as db_name")
                     result = await cur.fetchone()
                     assert result is not None
                     assert result
@@ -110,9 +108,9 @@ class TestDatabaseConnectionPatterns:
             pytest.skip("No database DSN available")
 
         async def _test():
-            conn = await asyncpg.connect(self.dsn)  # pyright: ignore[reportUnknownVariableType]
+            conn = await asyncpg.connect(self.dsn)
             try:
-                result = await conn.fetchrow("SELECT 1 as test_value, current_database() as db_name")  # pyright: ignore[reportUnknownVariableType]
+                result = await conn.fetchrow("SELECT 1 as test_value, current_database() as db_name")
                 assert result is not None
                 assert result
                 assert result
@@ -131,7 +129,7 @@ class TestDatabaseConnectionPatterns:
             pool = await aget_pool()
             async with pool.connection() as conn:
                 async with conn.cursor() as cur:
-                    await cur.execute("SELECT 1 as test_value, current_database() as db_name")
+                    _ = await cur.execute("SELECT 1 as test_value, current_database() as db_name")
                     result = await cur.fetchone()
                     assert result is not None
                     assert result
@@ -144,7 +142,7 @@ class TestDatabaseConnectionPatterns:
         conn = sync_connect()
         try:
             with conn.cursor() as cur:
-                cur.execute("SELECT 1 as test_value, current_database() as db_name")
+                _ = cur.execute("SELECT 1 as test_value, current_database() as db_name")
                 result = cur.fetchone()
                 assert result is not None
                 assert result
@@ -158,7 +156,7 @@ class TestDatabaseConnectionPatterns:
         async def _test():
             conn = await async_connect()  # type: ignore[assignment]
             try:
-                result = await conn.fetchrow("SELECT 1 as test_value, current_database() as db_name")  # pyright: ignore[reportUnknownVariableType]
+                result = await conn.fetchrow("SELECT 1 as test_value, current_database() as db_name")
                 assert result is not None
                 assert result
                 assert result
@@ -176,7 +174,7 @@ class TestDatabaseConnectionPatterns:
             success = logger.log_eval_run(tag="integration_test", model="test_model", meta={"test": True})
             assert success is True
 
-    def test_connection_performance(self):
+    def test_connection_performance(self):  # type: ignore[misc]
         """Test connection performance across different patterns."""
         import time
 
@@ -186,7 +184,7 @@ class TestDatabaseConnectionPatterns:
             pytest.skip("No database DSN available")
 
         patterns = {
-            "psycopg": lambda: psycopg.connect(self.dsn),  # pyright: ignore[reportArgumentType]
+            "psycopg": lambda: psycopg.connect(self.dsn),  # type: ignore[arg-type]
         }
 
         results: dict[str, float] = {}
@@ -200,7 +198,7 @@ class TestDatabaseConnectionPatterns:
         for name, duration in results.items():
             assert duration < 1.0, f"{name} connection took {duration:.3f}s"
 
-    def test_concurrent_connections(self):
+    def test_concurrent_connections(self):  # type: ignore[misc]
         """Test concurrent database access patterns."""
         import queue
         import threading
@@ -215,9 +213,9 @@ class TestDatabaseConnectionPatterns:
                 import psycopg
                 from psycopg.rows import dict_row
 
-                conn = psycopg.connect(self.dsn, row_factory=dict_row)  # pyright: ignore[reportArgumentType]
+                conn = psycopg.connect(self.dsn, row_factory=dict_row)  # type: ignore[arg-type, assignment, reportArgumentType]
                 with conn.cursor() as cur:
-                    cur.execute(
+                    _ = cur.execute(
                         "SELECT %s as worker_id, current_database() as db_name",
                         (worker_id,),
                     )

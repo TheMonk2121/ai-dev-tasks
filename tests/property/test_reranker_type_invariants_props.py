@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import math
-from typing import Any, Optional, Union
+from typing import Any
 
 import pytest
 from hypothesis import HealthCheck, given, settings

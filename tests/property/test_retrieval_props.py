@@ -3,6 +3,8 @@
 Property-based tests for retrieval system invariants.
 """
 
+from typing import Any
+
 import numpy as np
 import pytest
 from hypothesis import given, settings
@@ -14,8 +16,8 @@ from src.dspy_modules.retriever.rerank import mmr_rerank
 def create_retrieval_candidate(
     content: str,
     score: float,
-    metadata: dict | None = None,
-) -> dict:
+    metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Create a retrieval candidate for testing."""
     if metadata is None:
         metadata = {}
@@ -48,7 +50,7 @@ class TestRerankingProperties:
         st.integers(min_value=1, max_value=10),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_preserves_input_count(self, rows: list[dict], alpha: float, penalty: float, k: int) -> None:
+    def test_mmr_rerank_preserves_input_count(self, rows: list[dict[str, Any]], alpha: float, penalty: float, k: int) -> None:
         """MMR reranking should not change the total number of items."""
         original_count = len(rows)
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
@@ -72,7 +74,7 @@ class TestRerankingProperties:
         st.integers(min_value=1, max_value=10),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_respects_k_limit(self, rows: list[dict], alpha: float, penalty: float, k: int) -> None:
+    def test_mmr_rerank_respects_k_limit(self, rows: list[dict[str, Any]], alpha: float, penalty: float, k: int) -> None:
         """MMR reranking should respect the k limit."""
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
 
@@ -94,7 +96,7 @@ class TestRerankingProperties:
         st.integers(min_value=1, max_value=10),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_preserves_content(self, rows: list[dict], alpha: float, penalty: float, k: int) -> None:
+    def test_mmr_rerank_preserves_content(self, rows: list[dict[str, Any]], alpha: float, penalty: float, k: int) -> None:
         """MMR reranking should preserve content integrity."""
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
 
@@ -120,7 +122,7 @@ class TestRerankingProperties:
         st.integers(min_value=1, max_value=10),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_deterministic(self, rows: list[dict], alpha: float, penalty: float, k: int) -> None:
+    def test_mmr_rerank_deterministic(self, rows: list[dict[str, Any]], alpha: float, penalty: float, k: int) -> None:
         """MMR reranking should be deterministic for the same inputs."""
         reranked1 = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
         reranked2 = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
@@ -147,7 +149,7 @@ class TestRerankingProperties:
         st.integers(min_value=1, max_value=10),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_handles_empty_input(self, rows: list[dict], alpha: float, penalty: float, k: int) -> None:
+    def test_mmr_rerank_handles_empty_input(self, rows: list[dict[str, Any]], alpha: float, penalty: float, k: int) -> None:
         """MMR reranking should handle edge cases gracefully."""
         if not rows:
             # Empty input should return empty output
@@ -175,7 +177,7 @@ class TestRerankingProperties:
         st.integers(min_value=1, max_value=10),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_preserves_metadata(self, rows: list[dict], alpha: float, penalty: float, k: int) -> None:
+    def test_mmr_rerank_preserves_metadata(self, rows: list[dict[str, Any]], alpha: float, penalty: float, k: int) -> None:
         """MMR reranking should preserve metadata integrity."""
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=penalty, k=k)
 

@@ -3,6 +3,8 @@
 Comprehensive property-based tests for retrieval system invariants.
 """
 
+from typing import Any
+
 import numpy as np
 import pytest
 from hypothesis import given, settings
@@ -19,8 +21,8 @@ def create_retrieval_candidate(
     doc_id: str | None = None,
     title: str | None = None,
     url: str | None = None,
-    metadata: dict | None = None,
-) -> dict:
+    metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Create a retrieval candidate for testing."""
     if doc_id is None:
         doc_id = f"doc_{hash(content) % 10000}"
@@ -42,8 +44,8 @@ def create_weights(
     semantic: float = 0.5,
     lexical: float = 0.3,
     freshness: float = 0.2,
-    custom: dict | None = None,
-) -> dict:
+    custom: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Create a weights dict for testing."""
     if custom is None:
         custom = {}
@@ -61,7 +63,7 @@ def create_limits(
     max_tokens: int = 4000,
     max_chars: int = 8000,
     timeout_ms: int = 5000,
-) -> dict:
+) -> dict[str, Any]:
     """Create a limits dict for testing."""
     return {
         "max_results": max_results,
@@ -95,7 +97,7 @@ class TestMMRRerankingProperties:
     )
     @settings(max_examples=25, deadline=50)
     def test_mmr_rerank_preserves_input_count(
-        self, rows: list[dict], alpha: float, per_file_penalty: float, k: int
+        self, rows: list[dict[str, Any]], alpha: float, per_file_penalty: float, k: int
     ) -> None:
         """MMR reranking should not change the total number of items."""
         original_count = len(rows)
@@ -120,7 +122,7 @@ class TestMMRRerankingProperties:
         st.integers(min_value=1, max_value=20),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_respects_k_limit(self, rows: list[dict], alpha: float, per_file_penalty: float, k: int) -> None:
+    def test_mmr_rerank_respects_k_limit(self, rows: list[dict[str, Any]], alpha: float, per_file_penalty: float, k: int) -> None:
         """MMR reranking should respect the k limit."""
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k)
 
@@ -143,7 +145,7 @@ class TestMMRRerankingProperties:
     )
     @settings(max_examples=25, deadline=50)
     def test_mmr_rerank_preserves_content(
-        self, rows: list[dict], alpha: float, per_file_penalty: float, k: int
+        self, rows: list[dict[str, Any]], alpha: float, per_file_penalty: float, k: int
     ) -> None:
         """MMR reranking should preserve content integrity."""
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k)
@@ -170,7 +172,7 @@ class TestMMRRerankingProperties:
         st.integers(min_value=1, max_value=20),
     )
     @settings(max_examples=25, deadline=50)
-    def test_mmr_rerank_deterministic(self, rows: list[dict], alpha: float, per_file_penalty: float, k: int) -> None:
+    def test_mmr_rerank_deterministic(self, rows: list[dict[str, Any]], alpha: float, per_file_penalty: float, k: int) -> None:
         """MMR reranking should be deterministic for the same inputs."""
         reranked1 = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k)
         reranked2 = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k)
@@ -198,7 +200,7 @@ class TestMMRRerankingProperties:
     )
     @settings(max_examples=25, deadline=50)
     def test_mmr_rerank_handles_edge_cases(
-        self, rows: list[dict], alpha: float, per_file_penalty: float, k: int
+        self, rows: list[dict[str, Any]], alpha: float, per_file_penalty: float, k: int
     ) -> None:
         """MMR reranking should handle edge cases gracefully."""
         if not rows:
@@ -229,14 +231,14 @@ class TestMMRRerankingProperties:
     )
     @settings(max_examples=25, deadline=50)
     def test_mmr_rerank_preserves_metadata(
-        self, rows: list[dict], alpha: float, per_file_penalty: float, k: int
+        self, rows: list[dict[str, Any]], alpha: float, per_file_penalty: float, k: int
     ) -> None:
         """MMR reranking should preserve metadata integrity."""
         reranked = mmr_rerank(rows, alpha=alpha, per_file_penalty=per_file_penalty, k=k)
 
         # Create lookup for original metadata by content + score + doc_id combination
         # (since multiple rows can have same content and score but different metadata)
-        original_metadata = {(row["content"], row["score"], row.get("doc_id", "")): row["metadata"] for row in rows}
+        _ = {(row["content"], row["score"], row.get("doc_id", "")): row["metadata"] for row in rows}
 
         for row in reranked:
             content = row["content"]
@@ -277,7 +279,7 @@ class TestMMRRerankingProperties:
     )
     @settings(max_examples=25, deadline=50)
     def test_mmr_rerank_improves_diversity(
-        self, rows: list[dict], alpha: float, per_file_penalty: float, k: int
+        self, rows: list[dict[str, Any]], alpha: float, per_file_penalty: float, k: int
     ) -> None:
         """MMR reranking should improve diversity compared to simple score-based ranking."""
         if len(rows) < 2:
@@ -309,7 +311,7 @@ class TestWeightsProperties:
         st.dictionaries(st.text(min_size=1, max_size=20), st.floats(min_value=0.0, max_value=1.0), max_size=5),
     )
     @settings(max_examples=25, deadline=50)
-    def test_weights_creation(self, semantic: float, lexical: float, freshness: float, custom: dict) -> None:
+    def test_weights_creation(self, semantic: float, lexical: float, freshness: float, custom: dict[str, Any]) -> None:
         """Weights should be creatable with valid inputs."""
         weights = create_weights(semantic, lexical, freshness, custom)
 

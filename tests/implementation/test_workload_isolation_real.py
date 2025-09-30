@@ -72,13 +72,13 @@ class TestWorkloadIsolationReal:
             assert isinstance(success, bool)
 
             # Test status retrieval
-            status = orchestrator.get_isolation_status(role)  # pyright: ignore[reportAttributeAccessIssue]
+            status = orchestrator.get_isolation_status(role)
             assert isinstance(status, dict)
             assert "role" in status
             assert "status" in status
 
             # Test reset to default
-            reset_success = orchestrator.reset_to_default()  # pyright: ignore[reportAttributeAccessIssue]
+            reset_success = orchestrator.reset_to_default()
             assert isinstance(reset_success, bool)
 
     def test_database_connectivity_verification(self):
@@ -102,7 +102,7 @@ class TestWorkloadIsolationReal:
         orchestrator: WorkloadIsolationOrchestrator = WorkloadIsolationOrchestrator(self.dsn)
 
         # Test getting all statuses
-        all_statuses = orchestrator.get_all_isolation_statuses()  # pyright: ignore[reportAttributeAccessIssue]
+        all_statuses = orchestrator.get_all_isolation_statuses()
         assert isinstance(all_statuses, dict)
 
         # Should have status for all roles
@@ -214,7 +214,7 @@ class TestWorkloadIsolationReal:
 
         # Test report generation
         try:
-            report = orchestrator.create_isolation_report()  # pyright: ignore[reportAttributeAccessIssue]
+            report = orchestrator.create_isolation_report()
             assert isinstance(report, str)
             assert len(report) > 0
 
@@ -237,7 +237,7 @@ class TestWorkloadIsolationReal:
         assert connectivity_ok is True
 
         # Reset to default
-        reset_success = orchestrator.reset_to_default()  # pyright: ignore[reportAttributeAccessIssue]
+        reset_success = orchestrator.reset_to_default()
         assert isinstance(reset_success, bool)
 
         # Test connectivity after reset
@@ -254,7 +254,7 @@ class TestWorkloadIsolationReal:
         assert isinstance(success, bool)  # Should return False, not raise exception
 
         # Test status retrieval for invalid role
-        status = orchestrator.get_isolation_status("invalid_role")  # pyright: ignore[reportAttributeAccessIssue]
+        status = orchestrator.get_isolation_status("invalid_role")
         assert isinstance(status, dict)
         assert "status" in status
 

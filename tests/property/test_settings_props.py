@@ -20,20 +20,20 @@ Property tests for EvaluationSettings parsing behavior.
 @settings(max_examples=10, deadline=100)
 def test_known_tags_parsing_variants(tags: Any):
     csv = ",".join(tags)
-    os.environ.pop("EVAL_KNOWN_TAGS", None)
+    _ = os.environ.pop("EVAL_KNOWN_TAGS", None)
     s1 = EvaluationSettings(known_tags=tags)
     assert s1.known_tags == tags
     # CSV via env
     os.environ["EVAL_KNOWN_TAGS"] = csv
     s2 = EvaluationSettings()
     assert set(s2.known_tags) == set(tags)
-    os.environ.pop("EVAL_KNOWN_TAGS", None)
+    _ = os.environ.pop("EVAL_KNOWN_TAGS", None)
 
 
 @pytest.mark.prop
 def test_settings_defaults_nonempty_known_tags() -> Any:
     # Ensure env is not forcing empty
-    os.environ.pop("EVAL_KNOWN_TAGS", None)
+    _ = os.environ.pop("EVAL_KNOWN_TAGS", None)
     s = EvaluationSettings()
     assert isinstance(s.known_tags, list)
     assert len(s.known_tags) > 0

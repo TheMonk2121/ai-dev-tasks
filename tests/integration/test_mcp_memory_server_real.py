@@ -8,12 +8,10 @@ including conversation capture, thread management, and memory retrieval.
 #!/usr/bin/env python3
 
 import asyncio
-import json
 import os
 import sys
 import time
 from pathlib import Path
-from typing import Any
 
 import pytest
 
@@ -28,7 +26,6 @@ from scripts.utilities.memory.db_async_pool import (
     get_parent_turn,
     insert_ai_turn,
     insert_user_turn,
-    next_seq,
 )
 from scripts.utilities.memory.mcp_memory_server import (
     app,
@@ -87,7 +84,7 @@ class TestMCPMemoryServerReal:
         pool = await aget_pool()
         async with pool.connection() as conn:
             # Ensure thread exists
-            await ensure_thread_exists(conn, thread_id)
+            _ = await ensure_thread_exists(conn, thread_id)
 
             # Test user turn insertion
             user_content = "What is the current status of the project?"
@@ -190,7 +187,7 @@ class TestMCPMemoryServerReal:
         async def insert_turn(turn_num: int):
             pool = await aget_pool()
             async with pool.connection() as conn:
-                await ensure_thread_exists(conn, thread_id)
+                _ = await ensure_thread_exists(conn, thread_id)
 
                 content = f"Test message {turn_num}"
                 metadata = {"turn_num": turn_num, "concurrent": True}
@@ -215,7 +212,7 @@ class TestMCPMemoryServerReal:
 
         pool = await aget_pool()
         async with pool.connection() as conn:
-            await ensure_thread_exists(conn, thread_id)
+            _ = await ensure_thread_exists(conn, thread_id)
 
             # Measure insertion performance
             start_time = time.time()
@@ -224,7 +221,7 @@ class TestMCPMemoryServerReal:
                 content = f"Performance test message {i}"
                 metadata = {"performance_test": True, "iteration": i}
 
-                turn_id, seq = await insert_user_turn(conn, thread_id=thread_id, content=content, metadata=metadata)
+                turn_id, _ = await insert_user_turn(conn, thread_id=thread_id, content=content, metadata=metadata)
                 assert turn_id is not None
 
             end_time = time.time()
@@ -237,7 +234,7 @@ class TestMCPMemoryServerReal:
             start_time = time.time()
 
             for i in range(10):
-                parent_turn = await get_parent_turn(conn, f"test_turn_{i}")
+                _ = await get_parent_turn(conn, f"test_turn_{i}")
                 # May be None for non-existent turns, that's OK
 
             end_time = time.time()
@@ -258,7 +255,7 @@ class TestMCPMemoryServerReal:
 
             # Test with invalid parent turn ID for AI turn
             try:
-                await insert_ai_turn(
+                _ = await insert_ai_turn(
                     conn,
                     explicit_thread_id="test_error_thread",
                     content="Test content",
@@ -276,7 +273,7 @@ class TestMCPMemoryServerReal:
 
         pool = await aget_pool()
         async with pool.connection() as conn:
-            await ensure_thread_exists(conn, thread_id)
+            _ = await ensure_thread_exists(conn, thread_id)
 
             # Test complex metadata serialization
             complex_metadata = {
@@ -287,7 +284,7 @@ class TestMCPMemoryServerReal:
                 "null_value": None,
             }
 
-            turn_id, seq = await insert_user_turn(
+            turn_id, _ = await insert_user_turn(
                 conn,
                 thread_id=thread_id,
                 content="Test with complex metadata",

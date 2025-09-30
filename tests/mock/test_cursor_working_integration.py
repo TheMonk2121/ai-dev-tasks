@@ -5,6 +5,7 @@ Unit tests for Cursor Working Integration component.
 import os
 import sys
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -18,6 +19,10 @@ from scripts.utilities.cursor_working_integration import CursorWorkingIntegratio
 @pytest.mark.unit
 class TestCursorWorkingIntegration:
     """Test Cursor Working Integration functionality."""
+    
+    original_dsn: str | None = None
+    original_db_url: str | None = None
+    original_allow_remote: str | None = None
 
     def setup_method(self):
         """Set up test environment."""
@@ -84,7 +89,7 @@ class TestCursorWorkingIntegration:
         assert len(timestamp_part) >= 10  # Unix timestamp length
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_thread_id_format(self, mock_resolve_dsn):
+    def test_thread_id_format(self, _mock_resolve_dsn: Any):
         """Test that thread ID follows expected format."""
         integration = CursorWorkingIntegration()
 
@@ -95,7 +100,7 @@ class TestCursorWorkingIntegration:
         assert all(c in "0123456789abcdef" for c in hex_part)
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_embedder_initialization(self, mock_resolve_dsn):
+    def test_embedder_initialization(self, _mock_resolve_dsn: Any):
         """Test that the sentence transformer is properly initialized."""
         integration = CursorWorkingIntegration()
 
@@ -104,21 +109,21 @@ class TestCursorWorkingIntegration:
         assert callable(integration.embedder.encode)
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_message_index_initialization(self, mock_resolve_dsn):
+    def test_message_index_initialization(self, _mock_resolve_dsn: Any):
         """Test that message index starts at 0."""
         integration = CursorWorkingIntegration()
 
         assert integration.message_index == 0
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_embedding_dimension(self, mock_resolve_dsn):
+    def test_embedding_dimension(self, _mock_resolve_dsn: Any):
         """Test that embedding dimension is correct for the model."""
         integration = CursorWorkingIntegration()
 
         assert integration.embedding_dim == 384  # all-MiniLM-L6-v2 dimension
 
     @patch("scripts.utilities.cursor_working_integration.psycopg.connect")
-    def test_database_initialization_real_mode(self, mock_connect):
+    def test_database_initialization_real_mode(self, mock_connect: Any):
         """Test database initialization in real mode."""
         mock_conn = MagicMock()
         mock_cursor = MagicMock()
@@ -140,7 +145,7 @@ class TestCursorWorkingIntegration:
         # No exceptions should be raised
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_multiple_instances_unique_ids(self, mock_resolve_dsn):
+    def test_multiple_instances_unique_ids(self, _mock_resolve_dsn: Any):
         """Test that multiple instances have unique session and thread IDs."""
         integration1 = CursorWorkingIntegration()
         integration2 = CursorWorkingIntegration()
@@ -149,7 +154,7 @@ class TestCursorWorkingIntegration:
         assert integration1.thread_id != integration2.thread_id
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_thread_id_uniqueness(self, mock_resolve_dsn):
+    def test_thread_id_uniqueness(self, _mock_resolve_dsn: Any):
         """Test that thread IDs are unique across multiple instances."""
         integrations = [CursorWorkingIntegration() for _ in range(10)]
         thread_ids = [integration.thread_id for integration in integrations]
@@ -158,7 +163,7 @@ class TestCursorWorkingIntegration:
         assert len(set(thread_ids)) == len(thread_ids)
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_session_id_uniqueness(self, mock_resolve_dsn):
+    def test_session_id_uniqueness(self, _mock_resolve_dsn: Any):
         """Test that session IDs are unique across multiple instances."""
         integrations = [CursorWorkingIntegration() for _ in range(10)]
         session_ids = [integration.session_id for integration in integrations]
@@ -167,7 +172,7 @@ class TestCursorWorkingIntegration:
         assert len(set(session_ids)) == len(session_ids)
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_embedder_consistency(self, mock_resolve_dsn):
+    def test_embedder_consistency(self, _mock_resolve_dsn: Any):
         """Test that the same embedder model is used across instances."""
         integration1 = CursorWorkingIntegration()
         integration2 = CursorWorkingIntegration()
@@ -192,7 +197,7 @@ class TestCursorWorkingIntegration:
         assert all(isinstance(x, float | int | np.floating | np.integer) for x in embedding)
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_embedding_consistency(self, mock_resolve_dsn):
+    def test_embedding_consistency(self, _mock_resolve_dsn: Any):
         """Test that the same text produces the same embedding."""
         integration = CursorWorkingIntegration()
 
@@ -204,7 +209,7 @@ class TestCursorWorkingIntegration:
         assert (embedding1 == embedding2).all()
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_embedding_different_texts(self, mock_resolve_dsn):
+    def test_embedding_different_texts(self, _mock_resolve_dsn: Any):
         """Test that different texts produce different embeddings."""
         integration = CursorWorkingIntegration()
 
@@ -229,7 +234,7 @@ class TestCursorWorkingIntegration:
         assert integration.is_mock is True
 
     @patch("scripts.utilities.cursor_working_integration.resolve_dsn")
-    def test_mock_dsn_detection(self, mock_resolve_dsn):
+    def test_mock_dsn_detection(self, _mock_resolve_dsn: Any):
         """Test that mock DSNs are properly detected."""
         test_cases = [
             "mock://test",
@@ -242,7 +247,7 @@ class TestCursorWorkingIntegration:
             assert integration.is_mock is True, f"DSN {dsn} should be detected as mock"
 
     @patch("scripts.utilities.cursor_working_integration.psycopg.connect")
-    def test_real_dsn_detection(self, mock_connect):
+    def test_real_dsn_detection(self, mock_connect: Any):
         """Test that real DSNs are properly detected."""
         # Mock the database connection
         mock_conn = MagicMock()

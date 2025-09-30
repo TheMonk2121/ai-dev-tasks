@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 #!/usr/bin/env python3
 """
@@ -33,7 +32,7 @@ def record_case(test_name: str, payload: dict[str, Any]) -> None:
         row = {"test": test_name, **payload}
         p = _edge_cases_path()
         with p.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+            _ = f.write(json.dumps(row, ensure_ascii=False) + "\n")
     except Exception:
         # Never fail the test because of capture issues
         pass

@@ -21,7 +21,7 @@ Property tests for ConfidenceCalibrator bounds and stability.
     st.lists(st.booleans(), min_size=10, max_size=50),
 )
 @settings(max_examples=5, deadline=500)
-def test_temperature_calibration_bounds(scores, labels: Any):
+def test_temperature_calibration_bounds(scores: list[float], labels: Any):
     n = min(len(scores), len(labels))
     scores_array: Any = np.array(scores[:n])
     labels_array: Any = np.array([1 if b else 0 for b in labels[:n]])
@@ -29,7 +29,7 @@ def test_temperature_calibration_bounds(scores, labels: Any):
         pytest.skip("need enough samples")
     cfg = CalibrationConfig(temperature_scaling=True, isotonic_calibration=False, platt_calibration=False)
     c = ConfidenceCalibrator(cfg)
-    c.calibrate_confidence(scores_array, labels_array, method="temperature")
+    _ = c.calibrate_confidence(scores_array, labels_array, method="temperature")
     out: Any = c.apply_calibration(scores_array, method="temperature")
     assert np.all(np.isfinite(out))
     assert np.all(out >= 0.0) and np.all(out <= 1.0)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, Literal
 
 import pytest
 from hypothesis import given, settings
@@ -30,7 +30,7 @@ class TestSchemaTypeInvariants:
     def test_caseresult_numeric_fields_accept_only_numbers(
         self,
         case_id: str,
-        mode: str,
+        mode: Literal["rag", "baseline", "oracle"],
         query: str,
         precision: float | None,
         recall: float | None,
@@ -80,11 +80,11 @@ class TestSchemaTypeInvariants:
     )
     @settings(max_examples=10, deadline=200)
     def test_caseresult_rejects_invalid_types_for_numeric_fields(
-        self, case_id: str, mode: str, query: str, precision: str | dict | list | bool
+        self, case_id: str, mode: str, query: str, precision: str | dict[str, Any] | list[Any] | bool
     ) -> None:
         """Test that CaseResult rejects invalid types for numeric fields."""
         with pytest.raises(ValidationError) as exc_info:
-            CaseResult(
+            _ = CaseResult(
                 case_id=case_id,
                 mode=mode,  # type: ignore
                 query=query,
@@ -141,7 +141,7 @@ class TestSchemaTypeInvariants:
     ) -> None:
         """Test that GoldCase rejects invalid types for tags field."""
         with pytest.raises(ValidationError) as exc_info:
-            GoldCase(
+            _ = GoldCase(
                 id=case_id,
                 mode=Mode(mode),
                 query=query,
@@ -189,7 +189,7 @@ class TestSchemaTypeInvariants:
 
         # Test invalid mode
         with pytest.raises(ValidationError) as exc_info:
-            GoldCase(
+            _ = GoldCase(
                 id=case_id,
                 mode=invalid_mode,  # type: ignore
                 query=query,
