@@ -1328,7 +1328,7 @@ python scripts/lock_production_config.py
 
 ```bash
 # Run complete evaluation with locked configuration
-python scripts/production_evaluation.py
+uv run python evals/scripts/evaluation/core/production_evaluation.py
 ```
 
 #### **Step 3: Monitor Health**
