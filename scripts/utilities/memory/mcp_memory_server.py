@@ -22,9 +22,9 @@ import sys
 import tempfile
 import time
 import uuid
-from dataclasses import dataclass
 from collections import OrderedDict
 from collections.abc import Mapping
+from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
@@ -392,7 +392,7 @@ async def query_memory_system(args: Mapping[str, object]) -> MemoryResponse:
         role = cast(str, args.get("role", "general"))
 
         systems_arg = args.get("systems", ["ltst", "cursor", "prime"])
-        if isinstance(systems_arg, (list, tuple, set)):
+        if isinstance(systems_arg, list | tuple | set):
             systems = [str(system) for system in systems_arg]
         else:
             systems = ["ltst", "cursor", "prime"]

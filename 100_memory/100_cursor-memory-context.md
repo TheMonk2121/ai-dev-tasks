@@ -541,7 +541,8 @@ uv run python scripts/ragchecker_with_monitoring.py
 uv run python scripts/bedrock_cost_monitor.py --period today
 
 # Results analysis
-uv run python scripts/evaluation_analysis.py --period 7d --metric f1_score
+uv run python evals/scripts/evaluation/core/production_evaluation.py  # refresh metrics
+uv run python -m jupyter nbconvert --to notebook --execute evals/notebooks/evaluation_analysis.ipynb --output metrics/notebooks/evaluation_analysis-executed.ipynb
 uv run python scripts/baseline_comparison.py --baseline 20250830_141742 --current latest
 ```
 
